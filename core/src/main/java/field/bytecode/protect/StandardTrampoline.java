@@ -12,7 +12,6 @@ import field.namespace.context.CT.iStorage;
 import field.namespace.generic.Generics.Pair;
 import field.namespace.generic.ReflectionTools;
 import org.objectweb.asm.*;
-import org.objectweb.asm.commons.EmptyVisitor;
 import org.objectweb.asm.commons.Method;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.TraceClassVisitor;
@@ -30,7 +29,7 @@ import java.util.*;
  */
 public class StandardTrampoline extends Trampoline2 {
 
-	public class AnnotationMethodAdaptor extends MethodAdapter {
+	public class AnnotationMethodAdaptor extends MethodVisitor {
 
 		private final int access;
 
@@ -49,7 +48,7 @@ public class StandardTrampoline extends Trampoline2 {
 		private final String super_name;
 
 		public AnnotationMethodAdaptor(int access, String name, String desc, String signature, ClassVisitor classDelegate, MethodVisitor arg0, String super_name, byte[] originalByteCode, String class_name) {
-			super(arg0);
+			super(Opcodes.ASM5);
 			this.access = access;
 			this.name = name;
 			this.desc = desc;
@@ -76,7 +75,7 @@ public class StandardTrampoline extends Trampoline2 {
 				final AnnotationVisitor av = super.visitAnnotation(annotationName, vis);
 				final HashMap<String, Object> parameters = new HashMap<String, Object>();
 
-				return new AnnotationVisitor() {
+				return new AnnotationVisitor(Opcodes.ASM5) {
 
 					public void visit(String arg0, Object arg1) {
 						parameters.put(arg0, arg1);
@@ -125,7 +124,7 @@ public class StandardTrampoline extends Trampoline2 {
 		public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className);
 	}
 
-	public class InheritWovenMethodAdaptor extends MethodAdapter {
+	public class InheritWovenMethodAdaptor extends MethodVisitor {
 
 		private final int access;
 
@@ -138,7 +137,7 @@ public class StandardTrampoline extends Trampoline2 {
 		private final String super_name;
 
 		public InheritWovenMethodAdaptor(int access, String name, String desc, MethodVisitor arg0, String super_name, String[] interfaces) {
-			super(arg0);
+			super(Opcodes.ASM5);
 			this.access = access;
 			this.name = name;
 			this.desc = desc;
@@ -194,7 +193,7 @@ public class StandardTrampoline extends Trampoline2 {
 				} catch (SecurityException e) {
 					e.printStackTrace();
 				}
-				return new EmptyVisitor();
+				return EmptyVisitors.annotationVisitor;
 			}
 			return super.visitAnnotation(annotationName, vis);
 		}
@@ -929,7 +928,7 @@ public class StandardTrampoline extends Trampoline2 {
 					;// System.out.println(" checking for <"
 						// + class_name + "> <" +
 						// woven[0] + ">");
-				ClassAdapter adaptor = new ClassAdapter(new EmptyVisitor()) {
+				ClassVisitor adaptor =new ClassVisitor(Opcodes.ASM5) {
 					@Override
 					public void visit(int version, int access, String name, String signature, String supern, String[] interfac) {
 						superName[0] = supern;
@@ -945,10 +944,11 @@ public class StandardTrampoline extends Trampoline2 {
 					}
 
 					@Override
-					public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+					public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[]
+                exceptions) {
 						if (!isAnon)
 							return super.visitMethod(access, name, desc, signature, exceptions);
-						return new EmptyVisitor() {
+						return new MethodVisitor(Opcodes.ASM5) {
 							@Override
 							public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
 								if (desc.equals("Lfield/bytecode/protect/Woven;"))
@@ -1173,7 +1173,7 @@ public class StandardTrampoline extends Trampoline2 {
 
 				};
 				final byte[] fa = oa;
-				ClassAdapter adaptor = new ClassAdapter(writer) {
+				ClassVisitor adaptor = new ClassVisitor(Opcodes.ASM5,writer) {
 					@Override
 					public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 						super.visit(version, access, name, signature, superName, interfaces);
@@ -1221,7 +1221,7 @@ public class StandardTrampoline extends Trampoline2 {
 				ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 				CheckClassAdapter check = new CheckClassAdapter(writer);
 				final List<TraceMethodVisitor> traceMethods = new ArrayList<TraceMethodVisitor>();
-				ClassAdapter adaptor = new ClassAdapter(debug ? check : writer) {
+				ClassVisitor adaptor = new ClassVisitor(Opcodes.ASM5, debug ? check : writer) {
 
 					@Override
 					public MethodVisitor visitMethod(final int access, final String name, final String desc, String signature, String[] exceptions) {

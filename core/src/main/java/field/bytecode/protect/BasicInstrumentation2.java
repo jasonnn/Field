@@ -388,7 +388,7 @@ final public class BasicInstrumentation2 {
 				aliasedParameterSet.put(parameter, new Pair<String, String>(desc, null));
 
 				// rip out the name and argument
-				return new AnnotationVisitor() {
+				return new AnnotationVisitor(Opcodes.ASM5) {
 
 					public void visit(String name, Object value) {
 						aliasedParameterSet.put(parameter, new Pair<String, String>(desc, (String) value));

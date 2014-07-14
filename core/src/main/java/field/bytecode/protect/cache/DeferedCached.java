@@ -33,7 +33,7 @@ public final class DeferedCached extends BasicInstrumentation2.DeferCallingFast 
 		} else {
 			cache = new LinkedHashMap<ImmutableArrayWrapper, Object>() {
 				@Override
-				protected boolean removeEldestEntry(Entry<ImmutableArrayWrapper, Object> eldest) {
+				protected boolean removeEldestEntry(Map.Entry<ImmutableArrayWrapper, Object> eldest) {
 					if (size() > max)
 						return true;
 					return false;

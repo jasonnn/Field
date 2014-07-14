@@ -7,13 +7,13 @@
  */
 package field.bytecode.protect.analysis;
 
+import field.bytecode.protect.EmptyVisitors;
 import org.objectweb.asm.*;
-import org.objectweb.asm.commons.EmptyVisitor;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
-public abstract class TypesMethodVisitor implements MethodVisitor, Opcodes {
+public abstract class TypesMethodVisitor extends MethodVisitor implements Opcodes {
 	private TypesClassVisitor mClassVisitor = null;
 
 	private String mClassName = null;
@@ -35,6 +35,7 @@ public abstract class TypesMethodVisitor implements MethodVisitor, Opcodes {
 	private int mLabelcount = -1;
 
 	TypesMethodVisitor(TypesClassVisitor classVisitor, String className) {
+        super(ASM5);
 		mClassVisitor = classVisitor;
 		mClassName = className;
 		mClassNameInternal = mClassName.replace('.', '/');
@@ -1117,7 +1118,7 @@ public abstract class TypesMethodVisitor implements MethodVisitor, Opcodes {
 	 * @return a visitor to the visit the actual default value of this annotation interface method. The 'name' parameters passed to the methods of this annotation visitor are ignored. Moreover, exacly one visit method must be called on this annotation visitor, followed by visitEnd.
 	 */
 	public AnnotationVisitor visitAnnotationDefault() {
-		return new EmptyVisitor();
+		return EmptyVisitors.annotationVisitor;
 	}
 
 	/**
@@ -1130,7 +1131,7 @@ public abstract class TypesMethodVisitor implements MethodVisitor, Opcodes {
 	 * @return a visitor to visit the annotation values.
 	 */
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		return new EmptyVisitor();
+		return EmptyVisitors.annotationVisitor;
 	}
 
 	/**
@@ -1145,7 +1146,7 @@ public abstract class TypesMethodVisitor implements MethodVisitor, Opcodes {
 	 * @return a visitor to visit the annotation values.
 	 */
 	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
-		return new EmptyVisitor();
+		return EmptyVisitors.annotationVisitor;
 	}
 
 	/**

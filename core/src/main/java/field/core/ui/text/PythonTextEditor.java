@@ -1,10 +1,11 @@
 package field.core.ui.text;
 
-import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.Type;
+import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.impl.DefaultJavaType;
 import field.bytecode.protect.Trampoline2.MyClassLoader;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
@@ -363,7 +364,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
 	protected EditorExecutionInterface inter;
 
-	JavaDocBuilder db = new JavaDocBuilder();
+	JavaProjectBuilder db = new JavaProjectBuilder();
 
 	StringWriter output = new StringWriter();
 
@@ -994,11 +995,11 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
 	private Completion completionForPyMethod(final String leftText, final PyMethod f, boolean pythonOnly) {
 
-		if (f.im_func instanceof PyFunction) {
-			Completion c = completionForPyFunction(leftText, (PyFunction) f.im_func, true);
+		if (f.__func__ instanceof PyFunction) {
+			Completion c = completionForPyFunction(leftText, (PyFunction) f.__func__, true);
 			return c;
-		} else if (!pythonOnly && f.im_func instanceof PyReflectedFunction) {
-			PyReflectedFunction ff = ((PyReflectedFunction) f.im_func);
+		} else if (!pythonOnly && f.__func__ instanceof PyReflectedFunction) {
+			PyReflectedFunction ff = ((PyReflectedFunction) f.__func__);
 			Method m = (Method) ReflectionTools.illegalGetObject(ff.argslist[0], "data");
 
 			if (m.getDeclaringClass() == Object.class)
@@ -1692,7 +1693,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 			JavaClass jc = resolveJavaClass(declaringClass, name);
 
 			if (jc != null) {
-				Type[] types = new Type[m.getParameterTypes().length];
+				JavaType[] types = new JavaType[m.getParameterTypes().length];
 				for (int i = 0; i < m.getParameterTypes().length; i++) {
 					String typeName = Platform.getCanonicalName(m.getParameterTypes()[i]).replace("[", "").replace("]", "");
 
@@ -1730,16 +1731,16 @@ public class PythonTextEditor extends BaseTextEditor2 {
 						}
 					}
 
-					types[i] = new Type(typeName, m.getParameterTypes()[i].isArray() ? 1 : 0);
+					types[i] = new DefaultJavaType(typeName, m.getParameterTypes()[i].isArray() ? 1 : 0);
 				}
-				JavaMethod method = jc.getMethodBySignature(m.getName(), types);
+				JavaMethod method = jc.getMethodBySignature(m.getName(),Arrays.asList( types));
 
 				if (method != null) {
 					if (method.getParameters() != null) {
 
 						String ctext = "<b>" + staticprefix + m.getName() + "</b>" + " ( ";
-						for (int i = 0; i < method.getParameters().length; i++) {
-							ctext += strip(Platform.getCanonicalName(m.getParameterTypes()[i])) + " <b><i>" + method.getParameters()[i].getName() + "</i></b>" + (i != method.getParameters().length - 1 ? ", " : "");
+						for (int i = 0; i < method.getParameters().size(); i++) {
+							ctext += strip(Platform.getCanonicalName(m.getParameterTypes()[i])) + " <b><i>" + method.getParameters().get(i).getName() + "</i></b>" + (i != method.getParameters().size() - 1 ? ", " : "");
 						}
 						ctext += " )";
 
@@ -1831,12 +1832,12 @@ public class PythonTextEditor extends BaseTextEditor2 {
 			JavaClass jc = resolveJavaClass(declaringClass, name);
 
 			if (jc != null) {
-				Type[] types = new Type[parametertypes.length];
+				JavaType[] types = new JavaType[parametertypes.length];
 				for (int i = 0; i < parametertypes.length; i++) {
-					types[i] = new Type(Platform.getCanonicalName(parametertypes[i]).replace("[", "").replace("]", ""), parametertypes[i].isArray() ? 1 : 0);
+					types[i] = new DefaultJavaType(Platform.getCanonicalName(parametertypes[i]).replace("[", "").replace("]", ""), parametertypes[i].isArray() ? 1 : 0);
 				}
 
-				JavaMethod method = jc.getMethodBySignature(m.getDeclaringClass().getSimpleName(), types);
+				JavaMethod method = jc.getMethodBySignature(m.getDeclaringClass().getSimpleName(), Arrays.asList(types));
 
 				if (method != null) {
 					if (method.getParameters() != null) {
@@ -1846,8 +1847,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 						if (isNonStatisInnerClass)
 							ctext += "<i>" + declaringClass.getDeclaringClass().getSimpleName() + "</i>, ";
 
-						for (int i = 0; i < method.getParameters().length; i++) {
-							ctext += strip(Platform.getCanonicalName(parametertypes[i])) + " <i>" + method.getParameters()[i].getName() + "</i>" + (i != method.getParameters().length - 1 ? ", " : "");
+						for (int i = 0; i < method.getParameters().size(); i++) {
+							ctext += strip(Platform.getCanonicalName(parametertypes[i])) + " <i>" + method.getParameters().get(i).getName() + "</i>" + (i != method.getParameters().size() - 1 ? ", " : "");
 						}
 						ctext += " )";
 

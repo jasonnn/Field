@@ -6,6 +6,7 @@ import field.core.plugins.drawing.opengl.LineUtils;
 import field.math.linalg.Vector2;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class AdvancedTextToCachedLineCache {
@@ -53,7 +54,7 @@ public class AdvancedTextToCachedLineCache {
 	static public final int maxCacheSize = 500;
 	LinkedHashMap<CacheRecord, CacheRecord> cache = new LinkedHashMap<CacheRecord, CacheRecord>(){
 		@Override
-		protected boolean removeEldestEntry(Entry<CacheRecord, CacheRecord> eldest) {
+		protected boolean removeEldestEntry(Map.Entry<CacheRecord, CacheRecord> eldest) {
 			if (this.size() > maxCacheSize) { return true; }
 			return false;
 		}

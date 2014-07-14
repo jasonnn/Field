@@ -3,7 +3,8 @@ package field.core.plugins.help;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.Type;
+import com.thoughtworks.qdox.model.JavaType;
+import com.thoughtworks.qdox.model.impl.DefaultJavaType;
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.core.Platform;
 import field.core.ui.text.JavaDocCache;
@@ -245,7 +246,7 @@ public class ObjectToMarkDown {
 			JavaClass jc = resolveJavaClass(class1);
 
 			if (jc != null) {
-				Type[] types = new Type[m.getParameterTypes().length];
+				JavaType[] types = new JavaType[m.getParameterTypes().length];
 				for (int i = 0; i < m.getParameterTypes().length; i++) {
 					String typeName = Platform.getCanonicalName(m.getParameterTypes()[i]).replace("[", "").replace("]", "");
 
@@ -272,16 +273,16 @@ public class ObjectToMarkDown {
 						}
 					}
 
-					types[i] = new Type(typeName, m.getParameterTypes()[i].isArray() ? 1 : 0);
+					types[i] = new DefaultJavaType(typeName, m.getParameterTypes()[i].isArray() ? 1 : 0);
 				}
-				JavaMethod method = jc.getMethodBySignature(m.getName(), types);
+				JavaMethod method = jc.getMethodBySignature(m.getName(), Arrays.asList(types));
 
 				if (method != null) {
 					if (method.getParameters() != null) {
 
 						String ctext = "<b>" + m.getName() + "</b>" + " ( ";
-						for (int i = 0; i < method.getParameters().length; i++) {
-							ctext += strip(Platform.getCanonicalName(m.getParameterTypes()[i])) + " <b><i>" + method.getParameters()[i].getName() + "</i></b>" + (i != method.getParameters().length - 1 ? ", " : "");
+						for (int i = 0; i < method.getParameters().size(); i++) {
+							ctext += strip(Platform.getCanonicalName(m.getParameterTypes()[i])) + " <b><i>" + method.getParameters().get(i).getName() + "</i></b>" + (i != method.getParameters().size() - 1 ? ", " : "");
 						}
 						ctext += " )";
 
@@ -298,7 +299,7 @@ public class ObjectToMarkDown {
 
 						ss = "#### <a href='#" + q + "'> " + ctext + "</a>";
 
-						if (method.getParameters().length == 0) {
+						if (method.getParameters().size() == 0) {
 
 							String mapName = "___invoke_" + q + "__";
 

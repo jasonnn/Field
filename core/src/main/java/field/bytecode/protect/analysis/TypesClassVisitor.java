@@ -7,10 +7,10 @@
  */
 package field.bytecode.protect.analysis;
 
+import field.bytecode.protect.EmptyVisitors;
 import org.objectweb.asm.*;
-import org.objectweb.asm.commons.EmptyVisitor;
 
-abstract public class TypesClassVisitor implements ClassVisitor {
+abstract public class TypesClassVisitor extends ClassVisitor {
 	// private MetricsClassVisitor mMetrics = null;
 
 	private String mClassName = null;
@@ -26,6 +26,7 @@ abstract public class TypesClassVisitor implements ClassVisitor {
 	private int mLabelContextCounter = 0;
 
 	public TypesClassVisitor(String className, String entryMethod) {
+        super(Opcodes.ASM5);
 		// mMetrics = metrics;
 		mClassName = className;
 		mEntryMethod = entryMethod;
@@ -79,14 +80,14 @@ abstract public class TypesClassVisitor implements ClassVisitor {
 	}
 
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-		return new EmptyVisitor();
+		return  EmptyVisitors.fieldVisitor;
 	}
 
 	public void visitAttribute(Attribute attr) {
 	}
 
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		return new EmptyVisitor();
+		return EmptyVisitors.annotationVisitor;
 	}
 
 	public void visitEnd() {

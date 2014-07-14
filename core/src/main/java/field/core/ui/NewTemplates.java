@@ -14,6 +14,7 @@ import field.namespace.generic.Generics.Pair;
 import field.util.ChannelSerializer;
 import field.util.FloatBufferSerializer;
 import field.util.MarkerSerializer;
+import field.util.XStreamUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Point;
@@ -68,11 +69,7 @@ public class NewTemplates {
 	}
 
 	private String infoForFile(File ff) {
-		XStream stream = new XStream(new Sun14ReflectionProvider());
-		stream.registerConverter(new ChannelSerializer());
-		stream.registerConverter(new FloatBufferSerializer());
-		stream.registerConverter(new MarkerSerializer(stream.getClassMapper()));
-		stream.setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+		XStream stream = XStreamUtil.newDefaultXStream();
 
 		try {
 			ObjectInputStream input = stream.createObjectInputStream(new BufferedReader(new FileReader(ff)));
