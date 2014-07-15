@@ -8,6 +8,8 @@ import field.bytecode.protect.cache.DeferedFixedDuringUpdate;
 import field.bytecode.protect.cache.DeferredTrace;
 import field.bytecode.protect.dispatch.DispatchSupport;
 import field.bytecode.protect.dispatch.InsideSupport;
+import field.bytecode.protect.instrumentation.CallOnEntryAndExit_exceptionAware;
+import field.bytecode.protect.instrumentation.Yield2;
 import field.bytecode.protect.yield.YieldSupport;
 import field.namespace.context.ContextTopology;
 import field.namespace.context.iStorage;
@@ -20,6 +22,7 @@ import org.objectweb.asm.commons.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +30,7 @@ import java.util.logging.Logger;
  * Created by jason on 7/14/14.
  */
 public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
+
     WOVEN(Woven.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
@@ -36,7 +40,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     DISPATCH(DispatchOverTopology.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, final String className) {
-            return new BasicInstrumentation2.CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + DISPATCH.ordinal(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
 
                 DispatchSupport support = new DispatchSupport();
 
@@ -66,7 +70,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     INSIDE(Inside.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new BasicInstrumentation2.CallOnEntryAndExit_exceptionAware("inside+" + methodName + "+" + methodDesc + "+" + signature + "+" + INSIDE.ordinal(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("inside+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
 
                 @Override
                 public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
@@ -100,7 +104,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     YIELD(Yield.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new BasicInstrumentation2.Yield2("yield+" + methodName + "+" + methodDesc + "+" + YIELD.ordinal(), access, new Method(methodName, methodDesc), delegate, paramters, originalByteCode, className) {
+            return new Yield2("yield+" + methodName + "+" + methodDesc + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters, originalByteCode, className) {
                 final YieldSupport support = new YieldSupport();
 
                 @Override
@@ -184,7 +188,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     CONSTANT_CONTEXT(ConstantContext.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new BasicInstrumentation2.CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + CONSTANT_CONTEXT.ordinal(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
 
                 @Override
                 public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
@@ -202,7 +206,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     CONTEXT_BEGIN(Context_begin.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new BasicInstrumentation2.CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + CONTEXT_BEGIN.ordinal(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
                 Stack<Generics.Pair<ContextTopology, Object>> stack = new Stack<Generics.Pair<ContextTopology, Object>>();
 
                 @Override
@@ -240,7 +244,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     CONTEXT_SET(Context_set.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new BasicInstrumentation2.CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + CONTEXT_SET.ordinal(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
 
                 @Override
                 public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
@@ -278,7 +282,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     TIMING_STATS(TimingStatistics.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new BasicInstrumentation2.CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + TIMING_STATS.ordinal(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
 
                 TimingSupport support = new TimingSupport();
 
@@ -295,6 +299,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
             };
         }
     };
+    private static final AtomicInteger counter=new AtomicInteger(0);
 
     final String internalName;
 

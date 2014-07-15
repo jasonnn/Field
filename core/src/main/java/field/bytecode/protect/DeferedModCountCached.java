@@ -5,7 +5,8 @@ package field.bytecode.protect;
 
 import field.bytecode.protect.cache.ModCountArrayWrapper;
 import field.bytecode.protect.cache.ModCountCache;
-import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.bytecode.protect.instrumentation.DeferCallingFast;
+import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.namespace.generic.Bind.iFunction;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -14,7 +15,7 @@ import org.objectweb.asm.commons.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-public final class DeferedModCountCached extends BasicInstrumentation2.DeferCallingFast implements iFunction<Object, ModCountArrayWrapper> {
+public final class DeferedModCountCached extends DeferCallingFast implements iFunction<Object, ModCountArrayWrapper> {
 
 	ModCountCache<ModCountArrayWrapper, Object> cache = new ModCountCache<ModCountArrayWrapper, Object>(new ModCountArrayWrapper(null));
 
@@ -37,7 +38,7 @@ public final class DeferedModCountCached extends BasicInstrumentation2.DeferCall
 
 	public Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
 		if (original == null) {
-			java.lang.reflect.Method[] all = StandardTrampoline.getAllMethods(fromThis.getClass());
+			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
 			for (java.lang.reflect.Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;

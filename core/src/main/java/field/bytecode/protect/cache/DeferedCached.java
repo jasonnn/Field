@@ -3,9 +3,9 @@
  */
 package field.bytecode.protect.cache;
 
-import field.bytecode.protect.BasicInstrumentation2;
-import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.bytecode.protect.annotations.CacheParameter;
+import field.bytecode.protect.instrumentation.DeferCallingFast;
+import field.bytecode.protect.trampoline.TrampolineReflection;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Method;
@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public final class DeferedCached extends BasicInstrumentation2.DeferCallingFast {
+public final class DeferedCached extends DeferCallingFast {
 
 	private final HashMap<String, Object> parameters;
 
@@ -46,7 +46,7 @@ public final class DeferedCached extends BasicInstrumentation2.DeferCallingFast 
 	public Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
 		
 		if (original == null) {
-			java.lang.reflect.Method[] all = StandardTrampoline.getAllMethods(fromThis.getClass());
+			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
 			for (java.lang.reflect.Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;
@@ -58,7 +58,7 @@ public final class DeferedCached extends BasicInstrumentation2.DeferCallingFast 
 		}
 		if (implicatedFields == null) {
 			implicatedFields = new ArrayList<Field>();
-			Field[] allFields = StandardTrampoline.getAllFields(fromThis.getClass());
+			Field[] allFields = TrampolineReflection.getAllFields(fromThis.getClass());
 			for (Field f : allFields) {
 
 				CacheParameter ann = f.getAnnotation(CacheParameter.class);

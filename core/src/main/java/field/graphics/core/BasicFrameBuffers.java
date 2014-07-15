@@ -4,8 +4,8 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
 import field.core.dispatch.iVisualElement.Rect;
 import field.graphics.core.Base.*;
 import field.graphics.core.BasicGeometry.Instance;
@@ -2050,7 +2050,7 @@ public class BasicFrameBuffers {
 		}
 
 		public void savePNG(final FullScreenCanvasSWT canvas, final String filename, final ByteBuffer s) {
-            Cont.linkWith(canvas, FullScreenCanvasSWT.method_beforeFlush, new Cont.aRun() {
+            Cont.linkWith(canvas, FullScreenCanvasSWT.method_beforeFlush, new aRun() {
                 @Override
 				public ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
 
@@ -2082,7 +2082,7 @@ public class BasicFrameBuffers {
 
                     Cont.unlinkWith(canvas, FullScreenCanvasSWT.method_beforeFlush, this);
 
-					return ReturnCode.cont;
+					return ReturnCode.CONTINUE;
 				}
 			});
 		}
@@ -3034,7 +3034,7 @@ public class BasicFrameBuffers {
 		}
 
 		public void join(FullScreenCanvasSWT canvas) {
-			aRun arun = new Cont.aRun() {
+			aRun arun = new aRun() {
 				@Override
 				public ReturnCode head(Object calledOn, Object[] args) {
 					display();

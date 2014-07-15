@@ -2,8 +2,8 @@ package field.core.plugins.drawing.opengl;
 
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
 import field.core.dispatch.iVisualElement;
 import field.core.dispatch.iVisualElement.Rect;
 import field.core.dispatch.iVisualElementOverrides;
@@ -146,7 +146,7 @@ public class OnCanvasLines {
 			});
 
 		} else {
-			aRun arun = new Cont.aRun() {
+			aRun arun = new aRun() {
 
 				@Override
 				public ReturnCode head(Object calledOn, Object[] args) {
@@ -288,7 +288,7 @@ public class OnCanvasLines {
 		final LineInteraction3d interaction = new LineInteraction3d(canvas.getCamera());
 		context.setLineInteraction(interaction);
 
-		aRun arun = new Cont.aRun() {
+		aRun arun = new aRun() {
 
 			@Override
 			public ReturnCode head(Object calledOn, Object[] args) {

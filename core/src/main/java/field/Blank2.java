@@ -14,10 +14,12 @@ import field.util.MiscNative;
 import field.util.WorkspaceDirectory;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 @Woven
 public class Blank2 implements iLaunchable {
-	File openFileProvokation;
+    private static final Logger log = Logger.getLogger(Blank2.class.getName());
+    File openFileProvokation;
 	boolean finished = false;
 	PhantomFluidSheet loaded = null;
 
@@ -46,7 +48,7 @@ public class Blank2 implements iLaunchable {
 
 	@NextUpdate(delay = 2)
 	public void part2() {
-		System.out.println(" sheets are :" + FieldMenus2.fieldMenus.openSheets);
+		log.info(" sheets are :" + FieldMenus2.fieldMenus.openSheets);
 		if (FieldMenus2.fieldMenus.openSheets.size() > 0)
 			return;
 
@@ -65,11 +67,6 @@ public class Blank2 implements iLaunchable {
 
 		}
 
-		if (SystemProperties.getProperty("field.scratch", null) == null) {
-            // System.out.println(" -- FieldMenus2.fieldMenus --");
-            // return;
-
-		}
 
 		if (openFileProvokation == null) {
 			String mcName = SystemProperties.getProperty("main.class");
@@ -86,8 +83,6 @@ public class Blank2 implements iLaunchable {
 			// loaded =
 			// FieldMenus.fieldMenus.openSheet(SystemProperties.getProperty("field.scratch",
 			// mcName + ".field"), false);
-
-		} else {
 
 		}
 		String a = SystemProperties.getProperty("auto", "");

@@ -1,7 +1,7 @@
 package field.core.windowing;
 
-import field.bytecode.protect.DeferedInQueue.iProvidesQueue;
-import field.bytecode.protect.DeferedInQueue.iRegistersUpdateable;
+import field.bytecode.protect.iProvidesQueue;
+import field.bytecode.protect.iRegistersUpdateable;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.InQueue;

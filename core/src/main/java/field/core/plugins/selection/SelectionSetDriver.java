@@ -4,8 +4,8 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
 import field.core.Constants;
 import field.core.Platform;
 import field.core.Platform.OS;
@@ -957,7 +957,7 @@ public class SelectionSetDriver {
                                                      * .DefaultOverride>
                                                      */c, final String name) {
                                                          
-                                                         aRun arun = new Cont.aRun() {
+                                                         aRun arun = new aRun() {
                                                              @Override
                                                              public ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
                                                                  ComputedSelectionSets.ByClass select = new ComputedSelectionSets.ByClass(c);
@@ -994,7 +994,7 @@ public class SelectionSetDriver {
                                                      * .DefaultOverride>
                                                      */c, final String name) {
                                                          
-                                                         aRun arun = new Cont.aRun() {
+                                                         aRun arun = new aRun() {
                                                              @Override
                                                              public ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
                                                                  ComputedSelectionSets.ByComponentClass select = new ComputedSelectionSets.ByComponentClass(c);
@@ -1027,7 +1027,7 @@ public class SelectionSetDriver {
     
 	public void addNotibleOverridesClass(final Set<Class<?>> c, final String name) {
         
-		aRun arun = new Cont.aRun() {
+		aRun arun = new aRun() {
 			@Override
 			public ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
 				ComputedSelectionSets.ByClass select = new ComputedSelectionSets.ByClass(c);

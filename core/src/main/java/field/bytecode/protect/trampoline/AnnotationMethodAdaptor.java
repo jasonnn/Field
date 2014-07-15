@@ -50,6 +50,7 @@ public class AnnotationMethodAdaptor extends MethodVisitor {
         this.mv = mv;
     }
 
+
     @Override
     public AnnotationVisitor visitAnnotation(final String annotationName, boolean vis) {
 
@@ -94,10 +95,6 @@ public class AnnotationMethodAdaptor extends MethodVisitor {
         return super.visitParameterAnnotation(parameter, desc, visible);
     }
 
-    @Override
-    public void visitLineNumber(int arg0, Label arg1) {
-        // ;//System.out.println(" line number <"+arg0+"> <"+arg1+">");
-        super.visitLineNumber(arg0, arg1);
-    }
+
 
 }

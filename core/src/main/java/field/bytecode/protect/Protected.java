@@ -1,6 +1,7 @@
 package field.bytecode.protect;
 
 import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.bytecode.protect.trampoline.TrampolineReflection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,7 +19,7 @@ public class Protected {
 		try {
 			Class< ? > c = StandardTrampoline.trampoline.loader.loadClass("field.bytecode.NonProtected");
 
-			Method[] m = StandardTrampoline.getAllMethods(c);
+			Method[] m = TrampolineReflection.getAllMethods(c);
 			for (Method method : m) {
 				if (method.getName().equals("loadSerialized"))
 				{
@@ -48,7 +49,7 @@ public class Protected {
 		try {
 			Class< ? > c = StandardTrampoline.trampoline.loader.loadClass("field.bytecode.NonProtected");
 
-			Method[] m = StandardTrampoline.getAllMethods(c);
+			Method[] m = TrampolineReflection.getAllMethods(c);
 			for (Method method : m) {
 				if (method.getName().equals("run"))
 				{

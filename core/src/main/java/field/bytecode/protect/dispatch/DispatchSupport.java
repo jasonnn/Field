@@ -18,46 +18,7 @@ public class DispatchSupport {
 		}
 	};
 
-	public class Level {
-		String name;
-
-		Apply topology;
-
-		int seen;
-
-		public Object[] args;
-
-		public DispatchProvider provider;
-
-		@Override
-		public boolean equals(Object obj) {
-			if (!(obj instanceof Level)) return false;
-			return ((Level) obj).name.equals(name) && ((Level) obj).topology.equals(topology);
-		}
-
-		@Override
-		public int hashCode() {
-			return name.hashCode() + (topology == null ? 0 : topology.hashCode());
-		}
-	}
-
-	public interface Apply {
-		public void head(Object[] args);
-
-		public Object tail(Object[] args, Object returnWas);
-	}
-
-	public interface DispatchProvider {
-		public Apply getTopologyForEntrance(Object root, Map<String, Object> parameters, Object[] args, String className);
-
-		public Apply getTopologyForExit(Object root, Map<String, Object> parameters, Object[] args, String className);
-
-		public void notifyExecuteBegin(Object fromThis, Map<String, Object> parameterName);
-
-		public void notifyExecuteEnds(Object fromThis, Map<String, Object> parameterName);
-	}
-
-	public void enter(String uniq, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray, String className) {
+    public void enter(String uniq, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray, String className) {
 		if (StandardTrampoline.debug) if (StandardTrampoline.debug) ;//System.out.println(" ---- enter <" + uniq + ">");
 		// is this level already running?
 		Stack<Level> stack = ongoing.get();

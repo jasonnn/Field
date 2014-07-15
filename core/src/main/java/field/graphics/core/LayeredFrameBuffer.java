@@ -2,8 +2,8 @@ package field.graphics.core;
 
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
 import field.core.dispatch.iVisualElement.Rect;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iSceneListElement;
@@ -256,7 +256,7 @@ public class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDi
 	}
 
 	public void join(FullScreenCanvasSWT canvas) {
-		aRun arun = new Cont.aRun() {
+		aRun arun = new aRun() {
 			@Override
 			public ReturnCode head(Object calledOn, Object[] args) {
 				display();

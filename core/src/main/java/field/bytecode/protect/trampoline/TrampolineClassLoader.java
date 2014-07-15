@@ -3,6 +3,7 @@ package field.bytecode.protect.trampoline;
 import field.bytecode.protect.FastClassLoader;
 import field.bytecode.protect.Notable;
 import field.core.Platform;
+import field.launch.SystemProperties;
 import field.namespace.generic.ReflectionTools;
 
 import java.io.File;
@@ -10,11 +11,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by jason on 7/14/14.
  */
 public class TrampolineClassLoader extends FastClassLoader {
+    private static final Logger log = Logger.getLogger(TrampolineClassLoader.class.getName());
+
     private final TrampolineInstrumentation instrumentation;
 
     ClassLoader deferTo;
@@ -34,14 +39,23 @@ public class TrampolineClassLoader extends FastClassLoader {
     public TrampolineClassLoader(URL[] u, ClassLoader loader, TrampolineInstrumentation instrumentation) {
         super(u, loader);
         this.instrumentation = instrumentation;
+        addExtraIgnored();
+
+
     }
 
-
+    private void addExtraIgnored() {
+        String exceptions = SystemProperties.getProperty("trampolineExceptions", null);
+        if (exceptions != null) {
+            ignored.addAll(Arrays.asList(exceptions.split(":")));
+        }
+    }
 
 
     static List<String> getDefaultIgnored() {
         return getDefaultIgnored(true);
     }
+
     static List<String> getDefaultIgnored(boolean mutate) {
 
         return mutate ? new ArrayList<String>(DEFAULT_IGNORED) : DEFAULT_IGNORED;
@@ -114,12 +128,6 @@ public class TrampolineClassLoader extends FastClassLoader {
         }
     }
 
-    @Override
-    protected Class<?> findClass(String arg0) throws ClassNotFoundException {
-        // ;//System.out.println("ZZZZZ find class <" + arg0 +
-        // ">");
-        return super.findClass(arg0);
-    }
 
     private Class callDefineClass(ClassLoader parent, String class_name, byte[] bytes, int i, int length) {
 
@@ -232,7 +240,7 @@ public class TrampolineClassLoader extends FastClassLoader {
     @Override
     synchronized protected Class<?> loadClass(String class_name, boolean resolve) throws ClassNotFoundException {
 
-        System.out.println(" load :" + class_name);
+        log.log(Level.INFO, " load :" + class_name);
 
         if (alreadyFailed.contains(class_name))
             throw new ClassNotFoundException(class_name);
@@ -258,12 +266,7 @@ public class TrampolineClassLoader extends FastClassLoader {
                             loaded = getParent().loadClass(class_name);
                         } catch (ClassNotFoundException ex) {
                             classNotFound = ex;
-                            if (Trampoline2.debug)
-                                ;// System.out.println(ANSIColorUtils.red("-- class not found <"
-                            // +
-                            // class_name
-                            // +
-                            // ">"));
+                            log.log(Level.WARNING, "class {0} not found", class_name);
                         }
                     }
                 if (loaded == null) {
@@ -351,10 +354,10 @@ public class TrampolineClassLoader extends FastClassLoader {
                     // popped.equals(class_name);
                 }
                 if (classNotFound != null) {
-                    if (Trampoline2.debug) {
-                        System.err.println("exception (" + classNotFound.getClass() + "): while trying to load <" + class_name + " / <" + loading + ">");
-                        new Exception().printStackTrace();
-                    }
+
+                    log.log(Level.WARNING, "exception (" + classNotFound.getClass() + "): while trying to load <" + class_name + " / <" + loading + ">");
+                    new Exception().printStackTrace();
+
                     alreadyFailed.add(class_name);
 
                     throw classNotFound;

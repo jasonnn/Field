@@ -1,8 +1,8 @@
 package field.graphics.core;
 
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
 import field.core.Platform;
 import field.core.Platform.OS;
 import field.graphics.core.Base.StandardPass;
@@ -440,7 +440,7 @@ public class AdvancedTextures extends BasicTextures {
 				public ReturnCode head(Object calledOn, Object[] args) {
 					dirtyNow(upload);
 					Cont.unlinkWith(s, FullScreenCanvasSWT.method_display, this);
-					return ReturnCode.cont;
+					return ReturnCode.CONTINUE;
                 }
             };
             Cont.linkWith(s, FullScreenCanvasSWT.method_display, r);
@@ -451,7 +451,7 @@ public class AdvancedTextures extends BasicTextures {
 				public ReturnCode head(Object calledOn, Object[] args) {
 					dirtyNowSideways(upload);
 					Cont.unlinkWith(s, FullScreenCanvasSWT.method_display, this);
-					return ReturnCode.cont;
+					return ReturnCode.CONTINUE;
                 }
             };
             Cont.linkWith(s, FullScreenCanvasSWT.method_display, r);

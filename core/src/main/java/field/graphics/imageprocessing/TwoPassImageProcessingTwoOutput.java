@@ -1,8 +1,8 @@
 package field.graphics.imageprocessing;
 
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
 import field.core.dispatch.iVisualElement.Rect;
 import field.graphics.core.*;
 import field.graphics.core.Base.StandardPass;
@@ -72,7 +72,7 @@ public class TwoPassImageProcessingTwoOutput implements iImageProcessor {
 	}
 
 	public void join(FullScreenCanvasSWT c) {
-		aRun arun = new Cont.aRun() {
+		aRun arun = new aRun() {
 			@Override
 			public ReturnCode head(Object calledOn, Object[] args) {
 				update();

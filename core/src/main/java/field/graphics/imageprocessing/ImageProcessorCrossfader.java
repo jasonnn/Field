@@ -3,8 +3,8 @@ package field.graphics.imageprocessing;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.Yield;
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
 import field.bytecode.protect.yield.YieldUtilities;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.launch.iUpdateable;
@@ -71,7 +71,7 @@ public class ImageProcessorCrossfader implements iUpdateable{
 	}
 
 	public void join(FullScreenCanvasSWT canvas) {
-		aRun arun = new Cont.aRun(){
+		aRun arun = new aRun(){
 			@Override
 			public ReturnCode head(Object calledOn, Object[] args) {
 				update();

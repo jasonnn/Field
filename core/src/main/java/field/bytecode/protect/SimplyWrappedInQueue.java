@@ -1,6 +1,7 @@
 package field.bytecode.protect;
 
-import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.bytecode.protect.instrumentation.DeferCallingFast;
+import field.bytecode.protect.trampoline.TrampolineReflection;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Method;
@@ -8,7 +9,7 @@ import org.objectweb.asm.commons.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-public class SimplyWrappedInQueue extends BasicInstrumentation2.DeferCallingFast {
+public class SimplyWrappedInQueue extends DeferCallingFast {
 
 	public interface iWrappedExit {
 		public Object exit(Object o);
@@ -29,7 +30,7 @@ public class SimplyWrappedInQueue extends BasicInstrumentation2.DeferCallingFast
 	public Object handle(int fromName, final Object fromThis, final String originalMethod, final Object[] argArray) {
 
 		if (original == null) {
-			java.lang.reflect.Method[] all = StandardTrampoline.getAllMethods(fromThis.getClass());
+			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
 			outer: for (java.lang.reflect.Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					Class<?>[] p = m.getParameterTypes();
@@ -66,8 +67,8 @@ public class SimplyWrappedInQueue extends BasicInstrumentation2.DeferCallingFast
         }
 		original.setAccessible(true);
 
-		boolean doSaveAliasing = parameters.get("saveAliasing") == null ? true : ((Boolean) parameters.get("saveAliasing")).booleanValue();
-		boolean doSaveContextLocation = parameters.get("saveAliasing") == null ? true : ((Boolean) parameters.get("saveAliasing")).booleanValue();
+		boolean doSaveAliasing = parameters.get("saveAliasing") == null || (Boolean) parameters.get("saveAliasing");
+		boolean doSaveContextLocation = parameters.get("saveAliasing") == null || (Boolean) parameters.get("saveAliasing");
 
 	
 

@@ -1,6 +1,6 @@
 package field.bytecode.protect.trampoline;
 
-import field.bytecode.protect.BasicInstrumentation2;
+import field.bytecode.protect.instrumentation.BasicInstrumentation2;
 import field.bytecode.protect.EmptyVisitors;
 import field.namespace.generic.ReflectionTools;
 import org.objectweb.asm.*;
@@ -9,7 +9,6 @@ import org.objectweb.asm.util.TraceClassVisitor;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,126 +21,11 @@ public class StandardTrampoline extends Trampoline2 {
     public static boolean debug = true;
 
 
-    static HashMap<Class, Field[]> fieldsCache = new HashMap<Class, Field[]>();
-
-    static HashMap<Class, java.lang.reflect.Method[]> methodsCache = new HashMap<Class, java.lang.reflect.Method[]>();
-
-    public static void checkClass(byte[] aa) throws Exception {
-//		if (true)
-//			return;
-        // ClassReader cr = new ClassReader(aa);
-        //
-        // ClassNode cn = new ClassNode();
-        // cr.accept(new CheckClassAdapter(cn), true);
-        //
-        // List methods = cn.methods;
-        // for (int i = 0; i < methods.size(); ++i) {
-        // MethodNode method = (MethodNode) methods.get(i);
-        // if (method.instructions.size() > 0) {
-        // Analyzer a = new Analyzer(new SimpleVerifier(Type.getType("L"
-        // + cn.name + ";"), Type.getType("L" + cn.superName + ";"),
-        // (cn.access & Opcodes.ACC_INTERFACE) != 0));
-        // try {
-        // a.analyze(cn.name, method);
-        // // continue;
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        // final Frame[] frames = a.getFrames();
-        //
-        // if (StandardTrampoline.debug)
-        // ;//System.out.println(method.name + method.desc);
-        // TraceMethodVisitor mv = new TraceMethodVisitor() {
-        // @Override
-        // public void visitLocalVariable(String name, String desc,
-        // String signature, Label start, Label end, int index) {
-        // super.visitLocalVariable(name, desc, signature, start, end,
-        // index);
-        // }
-        //
-        // @Override
-        // public void visitMaxs(final int maxStack, final int
-        // maxLocals) {
-        // for (int i = 0; i < text.size(); ++i) {
-        // String s = frames[i] == null ? "null" : frames[i].toString();
-        // while (s.length() < maxStack + maxLocals + 1) {
-        // s += " ";
-        // }
-        // System.out.print(Integer.toString(i + 100000).substring(1));
-        // System.out.print(" " + s + " : " + text.get(i));
-        // }
-        // if (StandardTrampoline.debug)
-        // ;//System.out.println();
-        // }
-        // };
-        // for (int j = 0; j < method.instructions.size(); ++j) {
-        // ((AbstractInsnNode) method.instructions.get(j)).accept(mv);
-        // }
-        // mv.visitMaxs(method.maxStack, method.maxLocals);
-        // }
-        // }
-    }
-
-    static public Field[] getAllFields(Class of) {
-        Field[] ret = fieldsCache.get(of);
-        if (ret == null) {
-            List<Field> fieldsList = new ArrayList<Field>();
-            _getAllFields(of, fieldsList);
-            fieldsCache.put(of, ret = fieldsList.toArray(new Field[fieldsList.size()]));
-        }
-        return ret;
-    }
-
-    static public java.lang.reflect.Method[] getAllMethods(Class of) {
-        java.lang.reflect.Method[] ret = methodsCache.get(of);
-        if (ret == null) {
-            ArrayList<java.lang.reflect.Method> methodsList = new ArrayList<java.lang.reflect.Method>();
-            _getAllMethods(of, methodsList);
-            methodsCache.put(of, ret = methodsList.toArray(new java.lang.reflect.Method[methodsList.size()]));
-        }
-        return ret;
-    }
-
-    static public Field getFirstFIeldCalled(Class of, String name) {
-        Field[] allFields = getAllFields(of);
-        for (Field f : allFields) {
-            if (f.getName().equals(name)) {
-                f.setAccessible(true);
-                return f;
-            }
-        }
-        return null;
-    }
-
-    static protected void _getAllFields(Class of, List<Field> into) {
-        if (of == null)
-            return;
-        Field[] m = of.getDeclaredFields();
-        List<Field> list = Arrays.asList(m);
-        Collections.sort(list, FieldComparator.INSTANCE);
-        into.addAll(list);
-        _getAllFields(of.getSuperclass(), into);
-        Class[] interfaces = of.getInterfaces();
-        for (Class anInterface : interfaces) _getAllFields(anInterface, into);
-    }
-
-    static protected void _getAllMethods(Class of, List<java.lang.reflect.Method> into) {
-        if (of == null)
-            return;
-        java.lang.reflect.Method[] m = of.getDeclaredMethods();
-        List<java.lang.reflect.Method> list = Arrays.asList(m);
-        into.addAll(list);
-        _getAllMethods(of.getSuperclass(), into);
-        Class[] interfaces = of.getInterfaces();
-        for (Class anInterface : interfaces) _getAllMethods(anInterface, into);
-    }
-
     HashSet<String> alreadyLoaded = new HashSet<String>();
 
     Map<String, HandlesAnnontatedMethod> annotatedMethodHandlers = AnnotatedMethodHandlers.getHandlers();
 
     int inside = 0;
-
 
 
     public StandardTrampoline() {
@@ -203,8 +87,8 @@ public class StandardTrampoline extends Trampoline2 {
     private Class checkedLoadClass(String className) throws ClassNotFoundException {
 
         className = className.replace('/', '.');
-       // if (debug)
-            // System.out.println(" looking for <" + className +
+        // if (debug)
+        // System.out.println(" looking for <" + className +
         // "> in <" + alreadyLoaded + ">");
         if (alreadyLoaded.contains(className) || !shouldLoadLocal(className)) {
             return loader.loadClass(className);
@@ -215,8 +99,8 @@ public class StandardTrampoline extends Trampoline2 {
         // actually
         // instrument
         // it.
-       // URLClassPath path = (URLClassPath) ReflectionTools.illegalGetObject(deferTo, "ucp");
-       // Resource resource = path.getResource(className.replace('.', '/').concat(".class"), false);
+        // URLClassPath path = (URLClassPath) ReflectionTools.illegalGetObject(deferTo, "ucp");
+        // Resource resource = path.getResource(className.replace('.', '/').concat(".class"), false);
 
         InputStream stream = loader.getResourceAsStream(className.replace('.', '/').concat(".class"));
         byte[] bb = new byte[100];
@@ -251,7 +135,7 @@ public class StandardTrampoline extends Trampoline2 {
         // }
 
         //if (debug)
-            // System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  about to renter code with <"
+        // System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  about to renter code with <"
         // + className + "> and <" + bytes.length +
         // ">");
         byte[] o = bytes;
@@ -578,13 +462,13 @@ public class StandardTrampoline extends Trampoline2 {
                             return this == that
                                     || that.isSubclassOf(this)
                                     || that.implementsInterface(this)
-                                    ||(that.isInterface() && getType().getDescriptor().equals("Ljava/lang/Object;"));
+                                    || (that.isInterface() && getType().getDescriptor().equals("Ljava/lang/Object;"));
 
                         }
                     }
 
                 };
-               // final byte[] fa = oa;
+                // final byte[] fa = oa;
                 ClassVisitor adaptor = new ClassVisitor(Opcodes.ASM5, writer) {
                     @Override
                     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
@@ -594,7 +478,7 @@ public class StandardTrampoline extends Trampoline2 {
 
                     @Override
                     public MethodVisitor visitMethod(final int access, final String name, final String desc, String signature, String[] exceptions) {
-                        final MethodVisitor m = cv.visitMethod(access, name, desc, signature, exceptions);
+                      //  final MethodVisitor m = cv.visitMethod(access, name, desc, signature, exceptions);
                         return new InheritWovenMethodAdaptor(StandardTrampoline.this, name, desc, superName, interfaces);//.setDelegate(m);
                     }
 
@@ -620,10 +504,11 @@ public class StandardTrampoline extends Trampoline2 {
                 check();
                 ClassReader reader = new ClassReader(oa);
 
-                if (StandardTrampoline.debug)
-                    log.log(Level.WARNING, " ------- before instrumentation -----------------------------------------------------------------------------------");
+
+                if (debug)
+                    log.log(Level.INFO, " ------- before instrumentation -----------------------------------------------------------------------------------");
                 try {
-                    if (StandardTrampoline.debug)
+                    if (debug)
                         checkClass(oa);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -632,7 +517,7 @@ public class StandardTrampoline extends Trampoline2 {
                 final byte[] fa = oa;
                 ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
                 CheckClassAdapter check = new CheckClassAdapter(writer);
-               // final List<TraceMethodVisitor> traceMethods = new ArrayList<TraceMethodVisitor>();
+                // final List<TraceMethodVisitor> traceMethods = new ArrayList<TraceMethodVisitor>();
                 ClassVisitor adaptor = new ClassVisitor(Opcodes.ASM5, debug ? check : writer) {
 
                     @Override
@@ -647,8 +532,9 @@ public class StandardTrampoline extends Trampoline2 {
                 oa = writer.toByteArray();
                 check();
 
-                if (StandardTrampoline.debug)
-                    log.log(Level.WARNING, " ------- after instrumentation -----------------------------------------------------------------------------------");
+
+                if (debug)
+                    log.log(Level.INFO, " ------- after instrumentation -----------------------------------------------------------------------------------");
                 try {
                     checkClass(oa);
                 } catch (Exception e) {
@@ -667,6 +553,68 @@ public class StandardTrampoline extends Trampoline2 {
         }
         inside--;
         return oa;
+    }
+
+    public static void checkClass(byte[] aa) throws Exception {
+        StringWriter sw = new StringWriter();
+        CheckClassAdapter.verify(new ClassReader(aa), false, new PrintWriter(sw));
+        if (!sw.toString().isEmpty()) {
+            log.log(Level.SEVERE, sw.toString());
+            throw new RuntimeException(sw.toString());
+        }
+//		if (true)
+//			return;
+        // ClassReader cr = new ClassReader(aa);
+        //
+        // ClassNode cn = new ClassNode();
+        // cr.accept(new CheckClassAdapter(cn), true);
+        //
+        // List methods = cn.methods;
+        // for (int i = 0; i < methods.size(); ++i) {
+        // MethodNode method = (MethodNode) methods.get(i);
+        // if (method.instructions.size() > 0) {
+        // Analyzer a = new Analyzer(new SimpleVerifier(Type.getType("L"
+        // + cn.name + ";"), Type.getType("L" + cn.superName + ";"),
+        // (cn.access & Opcodes.ACC_INTERFACE) != 0));
+        // try {
+        // a.analyze(cn.name, method);
+        // // continue;
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
+        // final Frame[] frames = a.getFrames();
+        //
+        // if (StandardTrampoline.debug)
+        // ;//System.out.println(method.name + method.desc);
+        // TraceMethodVisitor mv = new TraceMethodVisitor() {
+        // @Override
+        // public void visitLocalVariable(String name, String desc,
+        // String signature, Label start, Label end, int index) {
+        // super.visitLocalVariable(name, desc, signature, start, end,
+        // index);
+        // }
+        //
+        // @Override
+        // public void visitMaxs(final int maxStack, final int
+        // maxLocals) {
+        // for (int i = 0; i < text.size(); ++i) {
+        // String s = frames[i] == null ? "null" : frames[i].toString();
+        // while (s.length() < maxStack + maxLocals + 1) {
+        // s += " ";
+        // }
+        // System.out.print(Integer.toString(i + 100000).substring(1));
+        // System.out.print(" " + s + " : " + text.get(i));
+        // }
+        // if (StandardTrampoline.debug)
+        // ;//System.out.println();
+        // }
+        // };
+        // for (int j = 0; j < method.instructions.size(); ++j) {
+        // ((AbstractInsnNode) method.instructions.get(j)).accept(mv);
+        // }
+        // mv.visitMaxs(method.maxStack, method.maxLocals);
+        // }
+        // }
     }
 
 }

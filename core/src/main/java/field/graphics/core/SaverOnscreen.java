@@ -2,8 +2,8 @@ package field.graphics.core;
 
 import com.sun.media.jai.codec.JPEGEncodeParam;
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.math.BaseMath;
 
@@ -181,7 +181,7 @@ public class SaverOnscreen {
 	}
 
 	public void join(FullScreenCanvasSWT canvas) {
-		aRun arun = new Cont.aRun() {
+		aRun arun = new aRun() {
 			@Override
 			public ReturnCode head(Object calledOn, Object[] args) {
 				update();

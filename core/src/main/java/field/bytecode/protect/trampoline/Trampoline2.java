@@ -74,7 +74,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         // if (c == null)
         // {
         String c = SystemProperties.getProperty("main.class");
-        // System.out.println(" class to launch :" + c +
+        log.info(" class to launch :" + c);
         // " memory dimensions " +
         // Runtime.getRuntime().maxMemory());
         // }
@@ -87,16 +87,16 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
             System.exit(1);
     }
 
-    private String[] ignored;
+    //  private String[] ignored;
 
     public TrampolineClassLoader loader = null;
 
     protected ClassLoader deferTo;
 
-    String indentation = "";
+    // String indentation = "";
 
-    Stack<String> loading = new Stack<String>();
-    private String[] allowed;
+    // Stack<String> loading = new Stack<String>();
+    //  private String[] allowed;
 
     public ClassLoader getClassLoader() {
         return loader;
@@ -334,7 +334,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
                 }
             }
         } else {
-            log.log(Level.WARNING," warning: wildcard path <" + aa + "> is not a directory or does not exist ");
+            log.log(Level.WARNING, " warning: wildcard path <" + aa + "> is not a directory or does not exist ");
         }
     }
 
@@ -480,8 +480,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
     }
 
     public byte[] instrumentClass(java.lang.ClassLoader deferTo, String class_name) {
-       // if (debug)
-            // System.out.println(" getResource <" + class_name +
+        // if (debug)
+        // System.out.println(" getResource <" + class_name +
         // "> <" +
         // deferTo.getResource(resourceNameForClassName(class_name))
         // + ">");
@@ -494,7 +494,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         // here we might cache modification dates
 
         //if (debug)
-            // System.out.println(indentation + "#" +
+        // System.out.println(indentation + "#" +
         // (class_name.replace('.', File.separatorChar))
         // + ">");
         BufferedInputStream stream = new BufferedInputStream(s, 80000);
@@ -502,7 +502,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
             byte[] a = new byte[stream.available()];
             int read = stream.read(a);
             //if (debug)
-                // System.out.println(" about to instrument <"
+            // System.out.println(" about to instrument <"
             // + class_name + "> inside <" + this +
             // "> !! ");
             a = instrumentBytecodes(a, class_name, deferTo);
@@ -524,15 +524,15 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         trampoline = this;
 
         String exceptions = SystemProperties.getProperty("trampolineExceptions", null);
-        ignored = new String[]{"apple.", "java.", "javax.", "sun.", "com.apple", "apple.", "field.namespace", "field.math", "field.launch.", "org.objectweb", "com.sun", "org.xml", "org.w3c", "$Prox", "org.eclipse", "main", "field.util.BetterWeak", "field.misc.ANSIColorUtils", "ch.rand", "org.python", "org.apache.batik", "org.antlr", "field.util.TaskQueue", "com.lowagie", "net.sf.cglib.proxy", "com.seaglasslookandfeel", "org.pushingpixels", "net.sourceforge.napkinlaf.", "com.kenai.jaffl"};
-        allowed = new String[]{"phobos", "com.sun.script.", "com.sun.scenario", "com.sun.stylesheet", "com.sun.opengl", "com.sun.gluegen", "javax.media.opengl", "javax.media.nativewindow", "javax.jmdns"};
-
-        if (exceptions != null) {
-
-            ArrayList<String> a = new ArrayList<String>(Arrays.asList(ignored));
-            a.addAll(Arrays.asList(exceptions.split(":")));
-            ignored = (String[]) a.toArray(ignored);
-        }
+//        ignored = new String[]{"apple.", "java.", "javax.", "sun.", "com.apple", "apple.", "field.namespace", "field.math", "field.launch.", "org.objectweb", "com.sun", "org.xml", "org.w3c", "$Prox", "org.eclipse", "main", "field.util.BetterWeak", "field.misc.ANSIColorUtils", "ch.rand", "org.python", "org.apache.batik", "org.antlr", "field.util.TaskQueue", "com.lowagie", "net.sf.cglib.proxy", "com.seaglasslookandfeel", "org.pushingpixels", "net.sourceforge.napkinlaf.", "com.kenai.jaffl"};
+//        allowed = new String[]{"phobos", "com.sun.script.", "com.sun.scenario", "com.sun.stylesheet", "com.sun.opengl", "com.sun.gluegen", "javax.media.opengl", "javax.media.nativewindow", "javax.jmdns"};
+//
+//        if (exceptions != null) {
+//
+//            ArrayList<String> a = new ArrayList<String>(Arrays.asList(ignored));
+//            a.addAll(Arrays.asList(exceptions.split(":")));
+//            ignored = (String[]) a.toArray(ignored);
+//        }
 
         loader = new TrampolineClassLoader(((URLClassLoader) this.getClass().getClassLoader()).getURLs(), (this.getClass().getClassLoader()), this);
         System.setSecurityManager(new PermissiveSecurityManager());
@@ -616,22 +616,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
     public boolean shouldLoadLocal(String s) {
 
-        s = s.replace('/', '.');
-        boolean failed = false;
-        for (String root : ignored) {
-            if (s.startsWith(root))
-                failed = true;
-        }
-
-        if (s.contains(".protect"))
-            failed = true;
-
-        if (failed)
-            for (String root : allowed)
-                if (s.contains(root))
-                    failed = false;
-
-        return !failed;
+        return loader.shouldLoadLocal(s);
     }
 
     private Set<Object> injectManifestProperties(Manifest manifest) {

@@ -1,7 +1,7 @@
 package field.core.plugins.snip;
 
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.Run;
+import field.bytecode.protect.dispatch.Run;
 import field.core.execution.PythonInterface;
 import field.core.util.PythonCallableMap;
 import field.core.windowing.GLComponentWindow;

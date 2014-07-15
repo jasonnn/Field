@@ -194,8 +194,8 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 
 		}
 
-		// 2. if any of these things stop running, delete this slider
-		// and stop the other ones
+		// 2. if any of these things STOP running, delete this slider
+		// and STOP the other ones
 
 		// todo
 
@@ -251,8 +251,8 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 
 		created.right.dependantRunners = dep;
 
-		// 2. if any of these things stop running, delete this slider
-		// and stop the other ones
+		// 2. if any of these things STOP running, delete this slider
+		// and STOP the other ones
 
 		// todo
 

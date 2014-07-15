@@ -33,7 +33,7 @@ import java.util.Stack;
  * a = oneToTen() print a.next() print a.next() print a.next() etc...
  * 
  * (no class is needed, although you can have one if you want) you'll get a
- * StopIteration exception when you should stop
+ * StopIteration exception when you should STOP
  * 
  * much easier, no ?
  * 
@@ -53,7 +53,7 @@ import java.util.Stack;
  * 
  * firstly, it lets you have a updateable/generator that registers, and
  * magically deregisters when it's done (at the last yield or a return). You can
- * stop reading here for basic usage. secondly, it lets you return / yield
+ * STOP reading here for basic usage. secondly, it lets you return / yield
  * another generator. this is placed on a stack and it will be executed until it
  * returns, at which point, control will pass back to the original generator.
  * This lets you nest generators quite nicely. One can make a generator called
@@ -228,7 +228,7 @@ public class PythonGeneratorStack implements iUpdateable {
 	}
 
 	/**
-	 * subclasses can override this to change the stop logic, for when stop
+	 * subclasses can override this to change the STOP logic, for when STOP
 	 * is called from outside class.
 	 */
 	public void stop() {
@@ -306,7 +306,7 @@ public class PythonGeneratorStack implements iUpdateable {
 	}
 
 	/**
-	 * subclasses can override this to change the stop logic, for when stop
+	 * subclasses can override this to change the STOP logic, for when STOP
 	 * is called becuase we're out of things to do
 	 */
 	protected void outOfThingsTodo() {

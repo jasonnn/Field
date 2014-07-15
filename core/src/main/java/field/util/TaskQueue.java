@@ -2,6 +2,7 @@ package field.util;
 
 import field.bytecode.protect.dispatch.iContainer;
 import field.bytecode.protect.iInside;
+import field.bytecode.protect.iRegistersUpdateable;
 import field.core.plugins.PythonOverridden;
 import field.core.plugins.PythonOverridden.Callable;
 import field.core.util.FieldPyObjectAdaptor.iCallable;
@@ -21,7 +22,7 @@ import java.util.*;
  * thread safe task queue
  */
 
-public class TaskQueue implements iUpdateable, field.bytecode.protect.DeferedInQueue.iRegistersUpdateable, iContainer, iCallable {
+public class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCallable {
 
 	static public class Gate extends Task {
 		private final iUpdateable up;

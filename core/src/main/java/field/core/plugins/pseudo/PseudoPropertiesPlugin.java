@@ -674,7 +674,7 @@ public class Ender implements iCallable {
     
     @Override
     public String toString() {
-        return "\u2014\u2014 if you 'call' this property that box will stop running. For example <b>_self.find['something'].end()</b> \u2014\u2014";
+        return "\u2014\u2014 if you 'call' this property that box will STOP running. For example <b>_self.find['something'].end()</b> \u2014\u2014";
     }
 }
 

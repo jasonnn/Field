@@ -1,7 +1,5 @@
 package field.bytecode.protect.dispatch;
 
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
 import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +47,7 @@ public class mRun<T> extends aRun {
 			// important for gc
 			cthis = null;
 		}
-		return ReturnCode.cont;
+		return ReturnCode.CONTINUE;
 	}
 	
 	protected void remove()
@@ -74,7 +72,7 @@ public class mRun<T> extends aRun {
 			// important for gc
 			cthis = null;
 		}
-		return ReturnCode.cont;
+		return ReturnCode.CONTINUE;
 	}
 
 }

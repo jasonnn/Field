@@ -5,9 +5,9 @@ import java.util.*;
 public class GraphNodeSearching {
 
 	static public class VisitCode {
-		static public final VisitCode cont = new VisitCode("cont");
+		static public final VisitCode cont = new VisitCode("CONTINUE");
 
-		static public final VisitCode stop = new VisitCode("stop");
+		static public final VisitCode stop = new VisitCode("STOP");
 
 		static public final VisitCode skip = new VisitCode("skip");
 

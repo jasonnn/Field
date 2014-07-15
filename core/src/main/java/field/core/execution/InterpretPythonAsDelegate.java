@@ -595,7 +595,7 @@ public class InterpretPythonAsDelegate {
 			 * r = (a,) does what you'd
 			 * expect (i.e. it's equivelent
 			 * to r = a) r = (a, b) uses a
-			 * for the start and stop and b
+			 * for the start and STOP and b
 			 * for the middle
 			 */
 

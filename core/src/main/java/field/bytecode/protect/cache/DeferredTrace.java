@@ -3,8 +3,8 @@
  */
 package field.bytecode.protect.cache;
 
-import field.bytecode.protect.BasicInstrumentation2;
-import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.bytecode.protect.instrumentation.DeferCallingFast;
+import field.bytecode.protect.trampoline.TrampolineReflection;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Method;
@@ -12,7 +12,7 @@ import org.objectweb.asm.commons.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-public final class DeferredTrace extends BasicInstrumentation2.DeferCallingFast {
+public final class DeferredTrace extends DeferCallingFast {
 
 	private final HashMap<String, Object> parameters;
 	java.lang.reflect.Method original = null;
@@ -25,7 +25,7 @@ public final class DeferredTrace extends BasicInstrumentation2.DeferCallingFast 
 	@Override
 	public Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
 		if (original == null) {
-			java.lang.reflect.Method[] all = StandardTrampoline.getAllMethods(fromThis.getClass());
+			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
 			for (java.lang.reflect.Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;

@@ -1,6 +1,7 @@
 package field.bytecode.protect;
 
-import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.bytecode.protect.instrumentation.DeferCallingFast;
+import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.launch.iUpdateable;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -12,15 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class DeferedInQueue extends BasicInstrumentation2.DeferCallingFast {
+public class DeferedInQueue extends DeferCallingFast {
 
 	private final boolean through;
 
-	public interface iProvidesQueue {
-		public iRegistersUpdateable getQueueFor(java.lang.reflect.Method m);
-	}
-
-	public DeferedInQueue(String name, int access, Method onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
+    public DeferedInQueue(String name, int access, Method onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
 		this(name, access, onMethod, classDelegate, delegateTo, signature, parameters, false);
 	}
 
@@ -71,19 +68,13 @@ public class DeferedInQueue extends BasicInstrumentation2.DeferCallingFast {
 		}
 	}
 
-	public interface iRegistersUpdateable {
-		public void deregisterUpdateable(iUpdateable up);
-	
-		public void registerUpdateable(iUpdateable up);
-	}
-
-	static AtomicIntegerMap<iRegistersUpdateable> inside = new AtomicIntegerMap<iRegistersUpdateable>();
+    static AtomicIntegerMap<iRegistersUpdateable> inside = new AtomicIntegerMap<iRegistersUpdateable>();
 
 	@Override
 	public Object handle(int fromName, final Object fromThis, final String originalMethod, final Object[] argArray) {
 
 		if (original == null) {
-			java.lang.reflect.Method[] all = StandardTrampoline.getAllMethods(fromThis.getClass());
+			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
 			outer: for (java.lang.reflect.Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					Class<?>[] p = m.getParameterTypes();

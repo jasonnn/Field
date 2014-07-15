@@ -1,7 +1,5 @@
 package field.bytecode.protect.dispatch;
 
-import field.bytecode.protect.dispatch.DispatchSupport.Apply;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -9,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ContainerTopology implements DispatchSupport.DispatchProvider {
+public class ContainerTopology implements DispatchProvider {
 
 	static public ThreadLocal<MethodUtilities> utilities = new ThreadLocal<MethodUtilities>() {
 		@Override

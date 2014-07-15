@@ -225,7 +225,7 @@ public class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable{
 			if (ref.get() == null)
 				ref.set((T) rootProperties.get(property));
 
-			// return VisitCode.stop;
+			// return VisitCode.STOP;
 		}
 		return VisitCode.cont;
 	}
@@ -358,7 +358,7 @@ public class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable{
 				a = a.getAliasedTo();
 			}
 			rootProperties.put(property, to.get());
-			// return VisitCode.stop;
+			// return VisitCode.STOP;
 		}
 
 		return VisitCode.cont;

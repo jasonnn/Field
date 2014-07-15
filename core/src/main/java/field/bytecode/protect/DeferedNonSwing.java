@@ -1,6 +1,7 @@
 package field.bytecode.protect;
 
-import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.bytecode.protect.instrumentation.DeferCallingFast;
+import field.bytecode.protect.trampoline.TrampolineReflection;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Method;
@@ -9,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DeferedNonSwing extends BasicInstrumentation2.DeferCallingFast {
+public class DeferedNonSwing extends DeferCallingFast {
 
 	public DeferedNonSwing(String name, int access, Method onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
 		super(name, access, onMethod, classDelegate, delegateTo, signature, parameters);
@@ -22,7 +23,7 @@ public class DeferedNonSwing extends BasicInstrumentation2.DeferCallingFast {
 
 		
 		if (original == null) {
-			java.lang.reflect.Method[] all = StandardTrampoline.getAllMethods(fromThis.getClass());
+			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
 			for (java.lang.reflect.Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;

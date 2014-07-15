@@ -1,6 +1,5 @@
 package field.bytecode.protect.dispatch;
 
-import field.bytecode.protect.dispatch.DispatchSupport.Apply;
 import field.launch.iUpdateable;
 import field.namespace.generic.ReflectionTools;
 
@@ -9,31 +8,9 @@ import java.rmi.server.UID;
 import java.util.*;
 
 
-public class Cont implements DispatchSupport.DispatchProvider {
+public class Cont implements DispatchProvider {
 
-	static public class aRun implements Run
-	{
-
-		public ReturnCode head(Object calledOn, Object[] args) {
-			return ReturnCode.cont;
-		}
-
-		public ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
-			return ReturnCode.cont;
-		}
-	}
-
-	public enum ReturnCode {
-        cont, stop
-    }
-
-	public interface Run {
-		public ReturnCode head(Object calledOn, Object[] args);
-
-		public ReturnCode tail(Object calledOn, Object[] args, Object returnWas);
-	}
-
-	static HashMap<Method, List<Run>> class_links = new HashMap<Method, List<Run>>();
+    static HashMap<Method, List<Run>> class_links = new HashMap<Method, List<Run>>();
 
 	public static WeakHashMap<Object, HashMap<Method, List<Run>>> instance_links = new WeakHashMap<Object, HashMap<Method, List<Run>>>();
 
@@ -165,11 +142,11 @@ public class Cont implements DispatchSupport.DispatchProvider {
 					public void head(Object[] args) {
 						if (r1 != null) for (Run run : new ArrayList<Run>(r1)) {
 							ReturnCode c = run.head(root, args);
-							if (c == ReturnCode.stop) return;
+							if (c == ReturnCode.STOP) return;
 						}
 						if (r2 != null) for (Run run : new ArrayList<Run>(r2)) {
 							ReturnCode c = run.head(root, args);
-							if (c == ReturnCode.stop) return;
+							if (c == ReturnCode.STOP) return;
 						}
 					}
 
@@ -208,11 +185,11 @@ public class Cont implements DispatchSupport.DispatchProvider {
 				public Object tail(Object[] args, Object returnWas) {
 					if (r1 != null) for (Run run : new ArrayList<Run>(r1)) {
 						ReturnCode c = run.tail(root, args, returnWas);
-						if (c == ReturnCode.stop) return returnWas;
+						if (c == ReturnCode.STOP) return returnWas;
 					}
 					if (r2 != null) for (Run run : new ArrayList<Run>(r2)) {
 						ReturnCode c = run.tail(root, args, returnWas);
-						if (c == ReturnCode.stop) return returnWas;
+						if (c == ReturnCode.STOP) return returnWas;
 					}
 					return returnWas;
 				}
@@ -233,12 +210,12 @@ public class Cont implements DispatchSupport.DispatchProvider {
 
 			public ReturnCode head(Object calledOn, Object[] args) {
 				enter.update();
-				return ReturnCode.cont;
+				return ReturnCode.CONTINUE;
 			}
 
 			public ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
 				exit.update();
-				return ReturnCode.cont;
+				return ReturnCode.CONTINUE;
 			}});
 
 

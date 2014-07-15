@@ -1,7 +1,7 @@
 package field.math.graph;
 
-import field.bytecode.protect.DeferedInQueue.iProvidesQueue;
-import field.bytecode.protect.DeferedInQueue.iRegistersUpdateable;
+import field.bytecode.protect.iProvidesQueue;
+import field.bytecode.protect.iRegistersUpdateable;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.InQueue;
 import field.math.graph.GraphNodeSearching.GraphNodeVisitor_depthFirst;

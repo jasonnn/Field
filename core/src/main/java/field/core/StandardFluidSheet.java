@@ -666,7 +666,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 				}, promise);
 			}
 
-			SnippetsPlugin.addText(source, "_self.find[\"" + source.getProperty(iVisualElement.name) + "\"].begin()\n_self.begin()\n_self.end()\n_self.find[\"" + source.getProperty(iVisualElement.name) + "\"].end()", "element started", new String[] { "start running an element", "start running </i>this<i> element", "stop running </i>this<i> element'", "stop running an element" }, "alternative form");
+			SnippetsPlugin.addText(source, "_self.find[\"" + source.getProperty(iVisualElement.name) + "\"].begin()\n_self.begin()\n_self.end()\n_self.find[\"" + source.getProperty(iVisualElement.name) + "\"].end()", "element started", new String[] { "start running an element", "start running </i>this<i> element", "STOP running </i>this<i> element'", "STOP running an element" }, "alternative form");
 
 			return VisitCode.cont;
 		} finally {
@@ -1610,7 +1610,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 			rootProperties.put(property, to.get());
 			// return
-			// VisitCode.stop;
+			// VisitCode.STOP;
 		}
 		if (property.getName().endsWith(".+")) {
 			if (vs != null) {

@@ -1,8 +1,8 @@
 package field.bytecode.protect;
 
-import field.bytecode.protect.BasicInstrumentation2.CallOnEntryFast;
-import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
+import field.bytecode.protect.dispatch.Run;
+import field.bytecode.protect.instrumentation.CallOnEntryFast;
+import field.bytecode.protect.dispatch.ReturnCode;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.Method;
@@ -21,7 +21,7 @@ import java.util.Map;
 final public class FastEntry extends CallOnEntryFast {
 	public static Map<String, Map<String, FastEntry>> knownEntries = new HashMap<String, Map<String, FastEntry>>();
 
-	static public void linkWith(java.lang.reflect.Method method, Class clazz, Cont.Run run) {
+	static public void linkWith(java.lang.reflect.Method method, Class clazz, Run run) {
 		String methodDescriptor = Type.getMethodDescriptor(method);
 		String methodName = method.getName();
 
@@ -30,11 +30,11 @@ final public class FastEntry extends CallOnEntryFast {
 		FastEntry entry = map.get(methodName + ":" + methodDescriptor);
 		assert entry != null;
 
-		if (entry.execute == null) entry.execute = new ArrayList<Cont.Run>();
+		if (entry.execute == null) entry.execute = new ArrayList<Run>();
 		entry.execute.add(run);
 	}
 
-	static public void unlinkWith(java.lang.reflect.Method method, Class clazz, Cont.Run run) {
+	static public void unlinkWith(java.lang.reflect.Method method, Class clazz, Run run) {
 		String methodDescriptor = Type.getMethodDescriptor(method);
 		String methodName = method.getName();
 
@@ -44,10 +44,10 @@ final public class FastEntry extends CallOnEntryFast {
 		assert entry != null;
 
 		if (entry.execute != null) entry.execute.remove(run);
-		if (entry.execute.size() == 0) entry.execute = null;
+		if ((entry.execute != null ? entry.execute.size() : 0) == 0) entry.execute = null;
 	}
 
-	List<Cont.Run> execute;
+	List<Run> execute;
 
 	public FastEntry(String name, int access, Method onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters, String className) {
 		super(name, access, onMethod, delegateTo, parameters);
@@ -62,9 +62,9 @@ final public class FastEntry extends CallOnEntryFast {
 	public void handle(int fromName, Object fromThis, Object[] argArray) {
 		if (execute == null) return;
 
-		for (int i = 0; i < execute.size(); i++) {
-			ReturnCode code = execute.get(i).head(fromThis, argArray);
-			// if (code == ReturnCode.stop) return;
-		}
+        for (Run anExecute : execute) {
+            ReturnCode code = anExecute.head(fromThis, argArray);
+            // if (code == ReturnCode.STOP) return;
+        }
 	}
 }

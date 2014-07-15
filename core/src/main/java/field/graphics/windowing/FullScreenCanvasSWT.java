@@ -5,8 +5,8 @@ import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
 import field.core.Platform;
 import field.core.plugins.drawing.opengl.OnCanvasLines;
 import field.core.plugins.drawing.threed.ThreedContext.iThreedDrawingSurface;
@@ -63,8 +63,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
-
-import java.util.List;
 
 @Woven
 public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, iAcceptsSceneListElement {
@@ -1033,7 +1031,7 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 				} finally {
 					Cont.unlinkWith(FullScreenCanvasSWT.this, method_beforeFlush, this);
 				}
-				return ReturnCode.cont;
+				return ReturnCode.CONTINUE;
 			}
 		};
 

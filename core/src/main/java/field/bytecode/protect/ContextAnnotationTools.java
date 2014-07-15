@@ -1,7 +1,7 @@
 package field.bytecode.protect;
 
 import field.bytecode.protect.annotations.FromContext;
-import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.namespace.context.*;
 import field.namespace.generic.Generics.Pair;
 import org.objectweb.asm.Type;
@@ -81,7 +81,7 @@ public class ContextAnnotationTools {
 		ArrayList<Pair<Field, FromContext>> parameters = cachedParameters.get().get(c);
 		if (parameters == null) {
 			parameters = new ArrayList<Pair<Field, FromContext>>();
-			Field[] fields = StandardTrampoline.getAllFields(c);
+			Field[] fields = TrampolineReflection.getAllFields(c);
 			for (Field f : fields) {
 				f.setAccessible(true);
 				FromContext ann = f.getAnnotation(FromContext.class);

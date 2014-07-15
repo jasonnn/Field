@@ -1,6 +1,7 @@
 package field.bytecode.protect;
 
-import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.bytecode.protect.instrumentation.DeferCallingFast;
+import field.bytecode.protect.trampoline.TrampolineReflection;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Method;
@@ -10,7 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 
-public class DeferedNewThread extends BasicInstrumentation2.DeferCallingFast {
+public class DeferedNewThread extends DeferCallingFast {
 
 	private int priority=0;
 
@@ -29,7 +30,7 @@ public class DeferedNewThread extends BasicInstrumentation2.DeferCallingFast {
 
 
 		if (original == null) {
-			java.lang.reflect.Method[] all = StandardTrampoline.getAllMethods(fromThis.getClass());
+			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
 			for (java.lang.reflect.Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;
