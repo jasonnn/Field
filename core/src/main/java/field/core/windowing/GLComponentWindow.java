@@ -739,7 +739,7 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 	static public boolean draft = SystemProperties.getIntProperty("presentationMode", 0) == 0;
 	static public boolean present = SystemProperties.getIntProperty("presentationMode", 0) == 1;
     
-	static public final SimpleContextTopology context = new SimpleContextTopology();
+	static public final SimpleContextTopology context =  SimpleContextTopology.newInstance();
     
 	static public boolean pure2d = true;
     

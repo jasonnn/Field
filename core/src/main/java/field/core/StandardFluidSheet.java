@@ -1,7 +1,7 @@
 package field.core;
 
 import com.thoughtworks.xstream.io.StreamException;
-import field.bytecode.protect.Trampoline2;
+import field.bytecode.protect.trampoline.Trampoline2;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.NextUpdate;
@@ -63,7 +63,7 @@ import field.math.graph.TopologyViewOfGraphNodes;
 import field.math.graph.iMutableContainer;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.context.CT.Dispatch;
+import field.namespace.context.Dispatch;
 import field.namespace.context.SimpleContextTopology;
 import field.namespace.generic.Generics.Triple;
 import field.util.Dict.Prop;
@@ -140,7 +140,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 	}
 
-	static public final SimpleContextTopology context = new SimpleContextTopology();
+	static public final SimpleContextTopology context =  SimpleContextTopology.newInstance();
 
 	static public final VisualElementProperty<VersioningSystem> versioningSystem = new VisualElementProperty<VersioningSystem>("versioningSystem_");
 

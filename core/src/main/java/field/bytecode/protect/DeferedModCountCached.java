@@ -5,6 +5,7 @@ package field.bytecode.protect;
 
 import field.bytecode.protect.cache.ModCountArrayWrapper;
 import field.bytecode.protect.cache.ModCountCache;
+import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.namespace.generic.Bind.iFunction;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;

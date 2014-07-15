@@ -80,7 +80,7 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 	static public final Method method_display = ReflectionTools.methodOf("display", FullScreenCanvasSWT.class);
 
 	@HiddenInAutocomplete
-	static public final SimpleContextTopology windowContextTree = new SimpleContextTopology();
+	static public final SimpleContextTopology windowContextTree = SimpleContextTopology.newInstance();
 
 	@HiddenInAutocomplete
 	static public int uniq = 0;

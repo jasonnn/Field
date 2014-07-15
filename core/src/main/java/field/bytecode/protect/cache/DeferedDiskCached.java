@@ -5,7 +5,7 @@ package field.bytecode.protect.cache;
 
 import field.bytecode.protect.BasicInstrumentation2;
 import field.bytecode.protect.Protected;
-import field.bytecode.protect.StandardTrampoline;
+import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.bytecode.protect.annotations.CacheParameter;
 import field.launch.SystemProperties;
 import field.util.ANSIColorUtils;

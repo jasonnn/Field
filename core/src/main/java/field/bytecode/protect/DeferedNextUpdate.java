@@ -1,5 +1,6 @@
 package field.bytecode.protect;
 
+import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.launch.Launcher;
 import field.launch.iUpdateable;
 import org.objectweb.asm.ClassVisitor;

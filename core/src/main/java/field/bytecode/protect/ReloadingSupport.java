@@ -1,5 +1,6 @@
 package field.bytecode.protect;
 
+import field.bytecode.protect.trampoline.Trampoline2;
 import field.namespace.generic.Bind.iFunction;
 
 import java.util.*;

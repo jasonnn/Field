@@ -4,7 +4,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
 import field.bytecode.protect.DeferedInQueue.iRegistersUpdateable;
 import field.bytecode.protect.FastEntry;
-import field.bytecode.protect.Trampoline2;
+import field.bytecode.protect.trampoline.Trampoline2;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.Cont.ReturnCode;
 import field.bytecode.protect.dispatch.Cont.aRun;

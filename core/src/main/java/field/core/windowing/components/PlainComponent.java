@@ -12,7 +12,7 @@ import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.launch.iUpdateable;
 import field.math.linalg.iCoordinateFrame;
-import field.namespace.context.CT.Dispatch;
+import field.namespace.context.Dispatch;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;

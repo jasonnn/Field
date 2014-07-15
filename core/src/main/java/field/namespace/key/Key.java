@@ -1,6 +1,6 @@
 package field.namespace.key;
 
-import field.namespace.context.CT.ContextTopology;
+import field.namespace.context.ContextTopology;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;

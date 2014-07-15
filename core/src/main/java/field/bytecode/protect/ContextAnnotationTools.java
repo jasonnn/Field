@@ -1,7 +1,8 @@
 package field.bytecode.protect;
 
 import field.bytecode.protect.annotations.FromContext;
-import field.namespace.context.CT.*;
+import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.namespace.context.*;
 import field.namespace.generic.Generics.Pair;
 import org.objectweb.asm.Type;
 
@@ -92,7 +93,7 @@ public class ContextAnnotationTools {
 		}
 
 		Dispatch d = new Dispatch(topology);
-		iStorage<?>  getter = (iStorage<?>) d.getBackwardsOverrideProxyFor(iStorage.class);
+		iStorage<?> getter = (iStorage<?>) d.getBackwardsOverrideProxyFor(iStorage.class);
 
 
 		for (Pair<Field, FromContext> p : parameters) {

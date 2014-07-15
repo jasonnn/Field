@@ -1,6 +1,6 @@
 package field.bytecode.protect.dispatch;
 
-import field.bytecode.protect.StandardTrampoline;
+import field.bytecode.protect.trampoline.StandardTrampoline;
 import org.objectweb.asm.Type;
 
 import java.util.Map;

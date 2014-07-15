@@ -2,6 +2,7 @@ package field.bytecode.protect;
 
 import field.bytecode.protect.analysis.TypesClassVisitor;
 import field.bytecode.protect.analysis.TypesContext;
+import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.namespace.generic.Generics.Pair;
 import field.namespace.generic.ReflectionTools;
 import org.objectweb.asm.*;
@@ -205,7 +206,7 @@ final public class BasicInstrumentation2 {
 
 		protected String name;
 
-		LinkedHashMap<Integer, Pair<String, String>> aliasedParameterSet = new LinkedHashMap<Integer, Pair<String, String>>();
+		protected LinkedHashMap<Integer, Pair<String, String>> aliasedParameterSet = new LinkedHashMap<Integer, Pair<String, String>>();
 
 		boolean isConstructor = false;
 

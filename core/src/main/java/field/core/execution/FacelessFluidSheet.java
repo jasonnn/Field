@@ -1,6 +1,6 @@
 package field.core.execution;
 
-import field.bytecode.protect.Trampoline2;
+import field.bytecode.protect.trampoline.Trampoline2;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.iVisualElement;
 import field.core.dispatch.iVisualElement.Rect;

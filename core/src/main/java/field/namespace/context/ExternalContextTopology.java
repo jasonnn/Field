@@ -2,9 +2,6 @@ package field.namespace.context;
 
 import field.bytecode.protect.BaseRef;
 import field.math.graph.GraphNodeSearching.VisitCode;
-import field.namespace.context.CT.ContextTopology;
-import field.namespace.context.CT.iContextStorage;
-import field.namespace.context.CT.iStorage;
 import field.util.BetterWeakHashMap.BaseWeakHashMapKey;
 
 import java.lang.ref.WeakReference;
@@ -19,19 +16,19 @@ import java.util.*;
  * @author marc
  *
  */
-public class ExternalContextTopology<t_Key> extends ContextTopology<t_Key, ExternalContextTopology<t_Key>.Context> {
+public class ExternalContextTopology<K> extends ContextTopology<K, ExternalContextTopology<K>.Context> {
 
 	public class Context extends BaseWeakHashMapKey implements iStorage {
-		WeakReference<t_Key> name;
+		WeakReference<K> name;
 
-		HashMap<t_Key, Context> children = new HashMap<t_Key, Context>();
+		HashMap<K, Context> children = new HashMap<K, Context>();
 
 		WeakReference<Context> parent;
 
 		HashMap<String, Object> values = new HashMap<String, Object>();
 
-		public Context(t_Key name) {
-			this.name = new WeakReference<t_Key>(name);
+		public Context(K name) {
+			this.name = new WeakReference<K>(name);
 		}
 
 		protected Context() {
@@ -64,14 +61,14 @@ public class ExternalContextTopology<t_Key> extends ContextTopology<t_Key, Exter
 
 	protected Context root = new Context();
 
-	WeakHashMap<t_Key, Context> knownContexts = new WeakHashMap<t_Key, Context>();
+	WeakHashMap<K, Context> knownContexts = new WeakHashMap<K, Context>();
 
-	public ExternalContextTopology(Class<t_Key> keyClass) {
+	public ExternalContextTopology(Class<K> keyClass) {
 		super(keyClass);
 		setInterfaceClass((Class<Context>) root.getClass());
 //		super(keyClass, Context.class);
-		this.storage = new iContextStorage<t_Key, Context>() {
-			public Context get(t_Key at, Method m) {
+		this.storage = new iContextStorage<K, Context>() {
+			public Context get(K at, Method m) {
 				return contextFor(null, at);
 			}
 		};
@@ -79,16 +76,16 @@ public class ExternalContextTopology<t_Key> extends ContextTopology<t_Key, Exter
 		knownContexts.put(null, new Context());
 	}
 
-	public void begin(t_Key k) {
+	public void begin(K k) {
 		setAt(contextFor(contextFor(null, getAt()), k).name.get());
 	}
 
 	@Override
-	public Set<t_Key> childrenOf(t_Key p) {
-		return new HashSet<t_Key>(contextFor(null, p).children.keySet());
+	public Set<K> childrenOf(K p) {
+		return new HashSet<K>(contextFor(null, p).children.keySet());
 	}
 
-	public Context contextFor(Context parent, t_Key k) {
+	public Context contextFor(Context parent, K k) {
 		if (k == null)
 			return root;
 
@@ -106,7 +103,7 @@ public class ExternalContextTopology<t_Key> extends ContextTopology<t_Key, Exter
 	}
 
 	@Override
-	public void delete(t_Key child) {
+	public void delete(K child) {
 		WeakReference<Context> p = contextFor(null, getAt()).parent;
 		if (p!=null && p.get()!=null)
 		{
@@ -116,10 +113,10 @@ public class ExternalContextTopology<t_Key> extends ContextTopology<t_Key, Exter
 	}
 
 	@Override
-	public void deleteChild(t_Key parent, t_Key name) {
+	public void deleteChild(K parent, K name) {
 		Context cp = contextFor(null, parent);
-		Set<Map.Entry<t_Key, Context>> e = cp.children.entrySet();
-		for (Map.Entry<t_Key, Context> ee : e) {
+		Set<Map.Entry<K, Context>> e = cp.children.entrySet();
+		for (Map.Entry<K, Context> ee : e) {
 			if (ee.getValue() == name) {
 				synchronized (getAt()) {
 					cp.children.remove(ee.getKey());
@@ -131,9 +128,9 @@ public class ExternalContextTopology<t_Key> extends ContextTopology<t_Key, Exter
 		return;
 	}
 
-	public void end(t_Key k) {
+	public void end(K k) {
 		assert getAt() == k : k + " " + getAt();
-		WeakReference<t_Key> nn = contextFor(null, getAt()).parent.get().name;
+		WeakReference<K> nn = contextFor(null, getAt()).parent.get().name;
 		if (nn == null)
 			setAt(null);
 		else
@@ -141,11 +138,11 @@ public class ExternalContextTopology<t_Key> extends ContextTopology<t_Key, Exter
 	}
 
 	@Override
-	public Set<t_Key> parentsOf(t_Key k) {
+	public Set<K> parentsOf(K k) {
 		WeakReference<Context> pp = contextFor(null, k).parent;
 		if (pp == null)
 			return null;
-		WeakReference<t_Key> n = pp.get().name;
+		WeakReference<K> n = pp.get().name;
 		if (n == null)
 			return null;
 
@@ -153,8 +150,8 @@ public class ExternalContextTopology<t_Key> extends ContextTopology<t_Key, Exter
 	}
 
 	public String pwd() {
-		HashSet<t_Key> seen = new HashSet<t_Key>();
-		t_Key aa = getAt();
+		HashSet<K> seen = new HashSet<K>();
+		K aa = getAt();
 		String p = "";
 		while (!seen.contains(aa) && aa != null) {
 			seen.add(aa);
@@ -168,11 +165,11 @@ public class ExternalContextTopology<t_Key> extends ContextTopology<t_Key, Exter
 	}
 
 	@Override
-	public t_Key root() {
+	public K root() {
 		return null;
 	}
 
-	protected void deleteChild(t_Key k) {
+	protected void deleteChild(K k) {
 		contextFor(null, getAt()).children.remove(k);
 	}
 

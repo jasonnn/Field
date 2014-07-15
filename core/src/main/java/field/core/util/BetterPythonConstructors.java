@@ -1,7 +1,7 @@
 package field.core.util;
 
-import field.bytecode.protect.Trampoline2;
-import field.bytecode.protect.Trampoline2.ClassLoadedNotification;
+import field.bytecode.protect.trampoline.Trampoline2;
+import field.bytecode.protect.trampoline.ClassLoadedNotification;
 import field.core.Platform;
 import field.core.execution.PythonInterface;
 import field.launch.iUpdateable;

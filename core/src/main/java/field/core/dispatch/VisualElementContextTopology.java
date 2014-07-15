@@ -1,7 +1,7 @@
 package field.core.dispatch;
 
-import field.namespace.context.CT.ContextTopology;
-import field.namespace.context.CT.iContextStorage;
+import field.namespace.context.ContextTopology;
+import field.namespace.context.iContextStorage;
 
 import java.lang.reflect.Method;
 import java.util.Collection;

@@ -1,5 +1,6 @@
 package field.bytecode.protect;
 
+import field.bytecode.protect.trampoline.StandardTrampoline;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Method;

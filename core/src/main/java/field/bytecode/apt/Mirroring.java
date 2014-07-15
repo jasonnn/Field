@@ -5,8 +5,8 @@ import field.math.abstraction.iAcceptor;
 import field.math.abstraction.iDoubleProvider;
 import field.math.abstraction.iFloatProvider;
 import field.math.abstraction.iProvider;
-import field.namespace.context.CT.ContextTopology;
-import field.namespace.context.CT.Dispatch;
+import field.namespace.context.ContextTopology;
+import field.namespace.context.Dispatch;
 import field.namespace.generic.Bind.iFunction;
 import field.namespace.generic.ReflectionTools;
 

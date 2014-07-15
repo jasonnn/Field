@@ -1,5 +1,7 @@
 package field.bytecode.protect;
 
+import field.bytecode.protect.trampoline.StandardTrampoline;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;

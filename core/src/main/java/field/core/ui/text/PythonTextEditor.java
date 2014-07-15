@@ -6,10 +6,10 @@ import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaType;
 import com.thoughtworks.qdox.model.impl.DefaultJavaType;
-import field.bytecode.protect.Trampoline2.MyClassLoader;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.annotations.NextUpdate;
+import field.bytecode.protect.trampoline.TrampolineClassLoader;
 import field.core.Constants;
 import field.core.Platform;
 import field.core.dispatch.iVisualElement;
@@ -2057,9 +2057,9 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		print(PySystemState.packageManager.topLevelPackage, "", allClassesMap);
 
 		ClassLoader m = this.getClass().getClassLoader();
-		assert m instanceof MyClassLoader : m.getClass();
+		assert m instanceof TrampolineClassLoader : m.getClass();
 
-		Set<Class> allLoadedClasses = ((MyClassLoader) m).getAllLoadedClasses();
+		Set<Class> allLoadedClasses = ((TrampolineClassLoader) m).getAllLoadedClasses();
 
 		for (Class c : allLoadedClasses) {
             // System.out.println(" class <" + c + ">");

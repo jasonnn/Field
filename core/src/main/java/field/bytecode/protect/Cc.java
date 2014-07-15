@@ -1,7 +1,7 @@
 package field.bytecode.protect;
 
 import field.bytecode.protect.annotations.ConstantContext;
-import field.namespace.context.CT.ContextTopology;
+import field.namespace.context.ContextTopology;
 import field.namespace.generic.Generics.Pair;
 import field.namespace.generic.ReflectionTools;
 import org.objectweb.asm.Type;

@@ -18,7 +18,7 @@ import java.util.*;
  */
 abstract public class CKey extends Key {
 	
-	static public final SimpleContextTopology tree= new SimpleContextTopology();
+	static public final SimpleContextTopology tree= SimpleContextTopology.newInstance();
 	protected final SimpleContextTopology localContextTree;
 
 	static boolean debug = false;

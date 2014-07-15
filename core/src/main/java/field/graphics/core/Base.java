@@ -24,7 +24,7 @@ import java.util.Map;
 public class Base {
 
 	//static public final iContextTree context = new LocalContextTree();
-	static public final SimpleContextTopology context = new SimpleContextTopology();
+	static public final SimpleContextTopology context =SimpleContextTopology.newInstance();
 	
 	// this is the id of vertex_data, taken from the spec (ARB_vertex_program)
 	static final public int vertex_id = 0;
