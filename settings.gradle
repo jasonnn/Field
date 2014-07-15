@@ -2,3 +2,6 @@ rootProject.name = 'Field'
 
 include 'core'
 
+include 'annotations'
+include 'annotation-processing'
+

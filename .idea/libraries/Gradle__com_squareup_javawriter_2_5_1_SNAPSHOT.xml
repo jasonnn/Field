@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: com.squareup:javawriter:2.5.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/squareup/javawriter/2.5.1-SNAPSHOT/javawriter-2.5.1-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
