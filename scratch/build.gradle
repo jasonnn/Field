@@ -1,0 +1,65 @@
+import com.google.common.base.Predicate
+import org.reflections.Reflections
+import org.reflections.scanners.TypeElementsScanner
+import org.reflections.serializers.JavaCodeSerializer
+import org.reflections.util.ConfigurationBuilder
+
+import java.util.concurrent.Executors
+
+import static com.google.common.base.Predicates.not
+
+buildscript {
+    apply plugin: 'groovy'
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath gradleApi()
+        classpath localGroovy()
+        classpath 'org.reflections:reflections:0.9.9-RC1'
+    }
+}
+
+apply plugin: 'groovy'
+
+dependencies {
+    compile project(':annotations')
+    compile(project(':core')) {
+        transitive = false //or just disable swt
+    }
+    compile 'org.reflections:reflections:0.9.9-RC1'
+}
+
+task('reflections') {
+
+
+    def location = project(':core').libsDir as File
+    def jars = location.listFiles().findAll { it.name.endsWith('.jar') }
+
+    def srcPath = sourceSets.main.java.srcDirs as Set<File>
+    assert srcPath.size() == 1
+    def serializeTo = srcPath.iterator().next().absolutePath + '/reflections.Model'
+
+
+    inputs.files(jars)
+    outputs.file(serializeTo.replace('.', '/') + '.java')
+
+    assert !jars.empty
+
+    def exclude = not({ String s ->
+        return s.startsWith('field.core.plugins') || s.startsWith('field.graphics')
+    } as Predicate<String>)
+
+    def conf = new ConfigurationBuilder()
+            .setUrls(jars.collect { it.toURI().toURL() })
+            .setScanners(new TypeElementsScanner())
+            .setExecutorService(Executors.newCachedThreadPool())
+            .setSerializer(new JavaCodeSerializer())
+            .filterInputsBy(exclude)
+
+
+
+    new Reflections(conf).save(serializeTo)
+
+}

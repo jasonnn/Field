@@ -9,9 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//import com.apple.eawt.ApplicationEvent;
 
 public class Launcher {
     static public final Object lock = new Object();
@@ -34,12 +34,12 @@ public class Launcher {
     static List<iOpenFileHandler> openFileHandlers = new ArrayList<iOpenFileHandler>();
     public Thread mainThread = null;
     protected List<iUpdateable> updateables = Collections.synchronizedList(new ArrayList<iUpdateable>());
-    protected List postUpdateables = Collections.synchronizedList(new ArrayList());
-    protected Set paused = Collections.synchronizedSet(new LinkedHashSet());
-    protected Set willPause = Collections.synchronizedSet(new LinkedHashSet());
-    protected Set willUnPause = Collections.synchronizedSet(new LinkedHashSet());
+    protected List<iUpdateable> postUpdateables = Collections.synchronizedList(new ArrayList<iUpdateable>());
+    protected Set<iUpdateable> paused = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
+    protected Set<iUpdateable> willPause = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
+    protected Set<iUpdateable> willUnPause = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
     protected Set<iUpdateable> willRemove = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
-    protected Set willAdd = Collections.synchronizedSet(new LinkedHashSet());
+    protected Set<iUpdateable> willAdd = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
     protected iUpdateable currentUpdating;
     protected boolean isPaused = false;
     boolean dying = false;
@@ -65,9 +65,9 @@ public class Launcher {
             trampoline = System.getProperty("main.class");
         boolean success = false;
         try {
-            final Class c = Class.forName(trampoline);
+            final Class<?> c = Class.forName(trampoline);
             try {
-                Method main = c.getDeclaredMethod("main", new String[0].getClass());
+                Method main = c.getDeclaredMethod("main", String[].class);
                 try {
                     main.invoke(null, new Object[]{args});
                     constructMainTimer();
@@ -81,7 +81,7 @@ public class Launcher {
             } catch (SecurityException e) {
                 e.printStackTrace();
                 return;
-            } catch (NoSuchMethodException e) {
+            } catch (NoSuchMethodException ignored) {
             }
 
             // swing utilities?
@@ -108,11 +108,7 @@ public class Launcher {
 
     public static void main(final String[] args) {
 
-        System.out.println(" hello ");
-
-        // ];//System.out.println(" main ? "+NSThread.isMainThread());
-
-        // GLProfile.initSingleton(true);
+        log.info(" hello ");
 
         display = new Display();
         Display.setAppName("Field");
@@ -123,19 +119,13 @@ public class Launcher {
                 Launcher.args = args;
 
                 if (SystemProperties.getIntProperty("headless", 0) == 1) {
-                    //System.out.println(" we are headless ");
+                   log.info(" we are headless ");
                     System.setProperty("java.awt.headless", "true");
                 }
 
-                //System.out.println(" args are <" + Arrays.asList(args) + ">");
-
-                // Application.getApplication().addAppEventListener(new
-                // AppEventListener() {
-                //
-                // });
 
                 launcher = new Launcher(args);
-                //new MiscNative().doSplash();
+                new MiscNative().doSplash();
 
                 if (Platform.getOS() == Platform.OS.mac && SystemProperties.getIntProperty("above", 0) == 1)
                     new AppleScript("tell application \"Field\"\n activate\nend tell", false);
@@ -159,13 +149,13 @@ public class Launcher {
     }
 
     static public void registerOpenHandler(iOpenFileHandler h) {
-        if (openFileHandlers.size() == 0) {
-            // for (ApplicationEvent a : openEvents) {
-            // h.open(a.getFilename());
-            // }
-            // openEvents.clear();
+        // if (openFileHandlers.size() == 0) {
+        // for (ApplicationEvent a : openEvents) {
+        // h.open(a.getFilename());
+        // }
+        // openEvents.clear();
 
-        }
+        //}
         openFileHandlers.add(h);
     }
 
@@ -264,7 +254,7 @@ public class Launcher {
                         try {
                             if (in == 1)
                                 for (int i = 0; i < getUpdateables().size(); i++) {
-                                    iUpdateable up = (iUpdateable) getUpdateables().get(i);
+                                    iUpdateable up = getUpdateables().get(i);
                                     if (!getPaused().contains(up))
                                         try {
                                             setCurrentUpdating(up);
@@ -276,7 +266,7 @@ public class Launcher {
                                             }
 
                                         } catch (Throwable tr) {
-                                            System.err.println(("Launcher reporting an exception while updating <" + up + ">"));
+                                            log.log(Level.WARNING,"Launcher reporting an exception while updating <" + up + ">",tr);
                                             tr.printStackTrace();
                                             handle(tr);
                                             if (SystemProperties.getIntProperty("exitOnException", 0) == 1)
@@ -316,8 +306,8 @@ public class Launcher {
     }
 
     public void handle(Throwable tr) {
-        for (int i = 0; i < exceptionHandlers.size(); i++)
-            if (exceptionHandlers.get(i).handle(tr))
+        for (iExceptionHandler exceptionHandler : exceptionHandlers)
+            if (exceptionHandler.handle(tr))
                 return;
     }
 
@@ -333,53 +323,53 @@ public class Launcher {
         this.currentUpdating = currentUpdating;
     }
 
-    protected Set getPaused() {
+    protected Set<iUpdateable> getPaused() {
         return paused;
     }
 
-    protected void setPaused(Set paused) {
-        this.paused = paused;
-    }
+//    protected void setPaused(Set paused) {
+//        this.paused = paused;
+//    }
 
     protected List<iUpdateable> getUpdateables() {
         return updateables;
     }
 
-    protected void setUpdateables(List<iUpdateable> updateables) {
-        this.updateables = updateables;
-    }
+//    protected void setUpdateables(List<iUpdateable> updateables) {
+//        this.updateables = updateables;
+//    }
 
-    protected Set getWillAdd() {
+    protected Set<iUpdateable> getWillAdd() {
         return willAdd;
     }
 
-    protected void setWillAdd(Set willAdd) {
-        this.willAdd = willAdd;
-    }
+//    protected void setWillAdd(Set willAdd) {
+//        this.willAdd = willAdd;
+//    }
 
-    protected Set getWillPause() {
+    protected Set<iUpdateable> getWillPause() {
         return willPause;
     }
 
-    protected void setWillPause(Set willPause) {
-        this.willPause = willPause;
-    }
+//    protected void setWillPause(Set willPause) {
+//        this.willPause = willPause;
+//    }
 
     protected Set<iUpdateable> getWillRemove() {
         return willRemove;
     }
 
-    protected void setWillRemove(Set willRemove) {
-        this.willRemove = willRemove;
-    }
+//    protected void setWillRemove(Set willRemove) {
+//        this.willRemove = willRemove;
+//    }
 
-    protected Set getWillUnPause() {
+    protected Set<iUpdateable> getWillUnPause() {
         return willUnPause;
     }
 
-    protected void setWillUnPause(Set willUnPause) {
-        this.willUnPause = willUnPause;
-    }
+//    protected void setWillUnPause(Set willUnPause) {
+//        this.willUnPause = willUnPause;
+//    }
 
     public void nextCycle(final iUpdateable updateable) {
         registerUpdateable(new iUpdateable() {
@@ -416,15 +406,15 @@ public class Launcher {
         shutdown.remove(shutdownhook);
     }
 
-    public interface iOpenFileHandler {
+    public static interface iOpenFileHandler {
         public void open(String file);
     }
 
-    public interface iContinuation {
+    public static interface iContinuation {
         public void next();
     }
 
-    public interface iExceptionHandler {
+    public static interface iExceptionHandler {
         public boolean handle(Throwable t);
     }
 

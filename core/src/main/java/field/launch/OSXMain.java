@@ -3,13 +3,13 @@ package field.launch;
 import com.apple.concurrent.Dispatch;
 
 /**
- * Created by jason on 7/14/14.
+ *
  */
-public class OSXLauncher {
+public class OSXMain {
     public static void main(final String[] args) {
         System.setProperty("main.class","field.Blank2");
         Dispatch.getInstance()
-                .getBlockingMainQueueExecutor()
+                .getNonBlockingMainQueueExecutor()
                 .execute(new Runnable() {
 
                     @Override

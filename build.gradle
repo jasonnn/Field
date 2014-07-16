@@ -15,8 +15,13 @@ subprojects {
     }
 }
 
-project('core'){
-    dependencies{
+project('core') {
+    dependencies {
+        compile project(':annotations')
+    }
+}
+project('annotation-processing') {
+    dependencies {
         compile project(':annotations')
     }
 }

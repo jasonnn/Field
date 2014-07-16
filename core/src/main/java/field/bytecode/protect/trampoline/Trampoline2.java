@@ -521,7 +521,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
     }
 
     public void launch() {
-        System.out.println("## trampoline <" + this.getClass() + ":" + this.getClass().getClassLoader() + ">");
+        log.log(Level.INFO,"## trampoline <this: {0} loader: {1} >",new Object[]{this.getClass(),this.getClass().getClassLoader()});
         trampoline = this;
 
         String exceptions = SystemProperties.getProperty("trampolineExceptions", null);
@@ -549,7 +549,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
             }
         }
 
-        Vector v = (Vector) ReflectionTools.illegalGetObject(this.getClass().getClassLoader(), "classes");
+     //   Vector v = (Vector) ReflectionTools.illegalGetObject(this.getClass().getClassLoader(), "classes");
         //if (debug)
         //     System.out.println(" already loaded all of <" + v +
         // ">");
@@ -571,7 +571,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
         try {
             // System.out.println(Arrays.asList(loader.getURLs()));
-            final Class c = (loader.loadClass(classToLaunch));
+            final Class<?> c = (loader.loadClass(classToLaunch));
             // System.out.println(" c = " + c + " " +
             // c.getClassLoader() + " " + loader);
             try {
