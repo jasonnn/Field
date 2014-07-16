@@ -2,7 +2,7 @@ package field.core.dispatch;
 
 import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.dispatch.iVisualElementOverrides.Ref;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.iMutable;
 
 import java.util.*;

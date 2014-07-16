@@ -17,7 +17,7 @@ import field.core.plugins.python.PythonPlugin;
 import field.launch.Launcher;
 import field.launch.iUpdateable;
 import field.math.abstraction.iFloatProvider;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutableContainer;
 import field.util.Dict.Prop;

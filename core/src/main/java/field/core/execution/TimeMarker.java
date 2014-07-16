@@ -17,7 +17,7 @@ import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.iDynamicMesh;
 import field.launch.Launcher;
 import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;

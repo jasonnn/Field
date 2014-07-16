@@ -7,7 +7,7 @@ import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
 import field.core.dispatch.iVisualElementOverrides_m;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.namespace.generic.Bind.iFunction;
 import field.util.Dict;
 import field.util.HashMapOfLists;

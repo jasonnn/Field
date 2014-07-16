@@ -1,7 +1,7 @@
 package field.core.dispatch;
 
 import field.core.dispatch.iVisualElementOverrides.iDefaultOverride;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.namespace.generic.Bind.iFunction;
 
 import java.lang.reflect.InvocationHandler;

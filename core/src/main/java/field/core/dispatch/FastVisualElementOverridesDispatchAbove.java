@@ -3,7 +3,7 @@ package field.core.dispatch;
 import field.core.dispatch.iVisualElement.Rect;
 import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.util.Dict.Prop;
 import org.eclipse.swt.widgets.Event;
 

@@ -5,6 +5,7 @@ package field.bytecode.protect.cache;
 
 import field.bytecode.protect.Protected;
 import field.bytecode.protect.annotations.CacheParameter;
+import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.launch.SystemProperties;
@@ -12,7 +13,6 @@ import field.util.ANSIColorUtils;
 import field.util.PythonUtils;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.Method;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public final class DeferedDiskCached extends DeferCallingFast {
@@ -32,11 +33,13 @@ public final class DeferedDiskCached extends DeferCallingFast {
 
 	List<Field> implicatedFields = null;
 
-	java.lang.reflect.Method original = null;
+	Method original = null;
 
 	Map<ImmutableArrayWrapper, Object> strongCache = new HashMap<ImmutableArrayWrapper, Object>();
 
-	public DeferedDiskCached(String name, int access, Method method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
+
+
+	public DeferedDiskCached(String name, int access, ASMMethod method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
 		super(name, access, method, delegate, to, signature, parameters);
 		this.parameters = parameters;
 	}
@@ -44,8 +47,8 @@ public final class DeferedDiskCached extends DeferCallingFast {
 	@Override
 	public Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
 		if (original == null) {
-			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
-			for (java.lang.reflect.Method m : all) {
+			Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
+			for (Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;
 					break;

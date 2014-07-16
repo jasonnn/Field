@@ -13,8 +13,8 @@ import field.core.plugins.log.AssemblingLogging.iUndoable;
 import field.core.plugins.log.ElementInvocationLogging.*;
 import field.core.plugins.log.Logging.*;
 import field.core.plugins.selection.SelectionSetDriver;
-import field.math.graph.GraphNodeSearching;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.util.PythonUtils;
 import field.util.TaskQueue;
 

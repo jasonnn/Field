@@ -4,7 +4,7 @@ import field.core.dispatch.iVisualElement;
 import field.core.dispatch.iVisualElement.Rect;
 import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.util.PythonCallableMap;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 
 public class DrawImageOverride extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
 

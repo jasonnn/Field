@@ -55,10 +55,9 @@ import field.launch.SystemProperties;
 import field.launch.iUpdateable;
 import field.math.abstraction.iAcceptor;
 import field.math.abstraction.iFloatProvider;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
-import field.math.graph.TopologySearching;
-import field.math.graph.TopologySearching.TopologyVisitor_breadthFirst;
+import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.math.graph.TopologyViewOfGraphNodes;
 import field.math.graph.iMutableContainer;
 import field.math.linalg.Vector2;
@@ -150,7 +149,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 	static public List<iVisualElement> allVisualElements(iVisualElement root) {
 		final List<iVisualElement> ret = new ArrayList<iVisualElement>();
-		new TopologySearching.TopologyVisitor_breadthFirst<iVisualElement>(true) {
+		new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 			@Override
 			protected VisitCode visit(iVisualElement n) {
 				ret.add(n);
@@ -164,7 +163,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 	static public iVisualElement findVisualElement(iVisualElement root, final String s) {
 		final iVisualElement[] ans = new iVisualElement[1];
 
-		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologySearching.TopologyVisitor_breadthFirst<iVisualElement>(true) {
+		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 			@Override
 			protected VisitCode visit(iVisualElement n) {
 				if (n.getUniqueID().equals(s)) {
@@ -186,7 +185,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 		final iVisualElement[] ans = new iVisualElement[1];
 
-		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologySearching.TopologyVisitor_breadthFirst<iVisualElement>(true) {
+		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 			@Override
 			protected VisitCode visit(iVisualElement n) {
 				String name = n.getProperty(iVisualElement.name);
@@ -209,7 +208,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 		final List<iVisualElement> ans = new ArrayList<iVisualElement>();
 
-		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologySearching.TopologyVisitor_breadthFirst<iVisualElement>(true) {
+		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 			@Override
 			protected VisitCode visit(iVisualElement n) {
 				String name = n.getProperty(iVisualElement.name);

@@ -9,7 +9,7 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
 import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.linalg.Vector4;
 
 import java.util.ArrayList;

@@ -47,7 +47,7 @@ class TypesInstruction {
 	}
 
 	public String toString() {
-		StringBuffer result = new StringBuffer(TypesOpcode.toString(mOpcode));
+		StringBuilder result = new StringBuilder(TypesOpcode.toString(mOpcode));
 		if (mArgument != -1) {
 			result.append(", ");
 			result.append(mArgument);

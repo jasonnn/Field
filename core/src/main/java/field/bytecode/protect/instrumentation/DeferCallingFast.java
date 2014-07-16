@@ -1,5 +1,6 @@
 package field.bytecode.protect.instrumentation;
 
+import field.bytecode.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -21,7 +22,7 @@ public abstract class DeferCallingFast extends GeneratorAdapter implements FastC
 
     private final String name;
 
-    private final Method onMethod;
+    private final ASMMethod onMethod;
 
     private final String parameterName;
 
@@ -31,11 +32,11 @@ public abstract class DeferCallingFast extends GeneratorAdapter implements FastC
 
     protected HashMap<String, Object> parameters;
 
-    public DeferCallingFast(String name, int access, Method onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
+    public DeferCallingFast(String name, int access, ASMMethod onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.access = access;
-        this.onMethod = onMethod;
+        this.onMethod = ASMMethod.from(onMethod);
         this.classDelegate = classDelegate;
         this.signature = signature;
         this.parameters = parameters;

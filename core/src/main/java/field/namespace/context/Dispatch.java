@@ -1,13 +1,12 @@
 package field.namespace.context;
 
-import field.math.graph.GraphNodeSearching;
+import field.math.graph.visitors.GraphNodeSearching;
 import field.math.graph.iTopology;
 import field.namespace.dispatch.DispatchOverTopology;
 import field.util.ProxyBuilder;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

@@ -14,7 +14,7 @@ import field.graphics.core.BasicCamera.State;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicSceneList;
 import field.graphics.core.CoreHelpers;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.linalg.Vector2;
 import org.eclipse.swt.widgets.Event;
 

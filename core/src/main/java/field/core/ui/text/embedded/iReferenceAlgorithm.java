@@ -4,9 +4,9 @@ import field.core.dispatch.iVisualElement;
 import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.dispatch.iVisualElementOverrides;
 import field.core.dispatch.iVisualElementOverrides.Ref;
-import field.math.graph.GraphNodeSearching.VisitCode;
-import field.math.graph.TopologySearching;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.TopologyViewOfGraphNodes;
+import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public interface iReferenceAlgorithm {
 
 
 			final List<iVisualElement> ret = new ArrayList<iVisualElement>();
-			new TopologySearching.TopologyVisitor_breadthFirst<iVisualElement>(true){
+			new TopologyVisitor_breadthFirst<iVisualElement>(true){
 				@Override
 				protected VisitCode visit(iVisualElement n) {
 					String name = n.getProperty(iVisualElement.name);

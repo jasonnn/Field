@@ -14,38 +14,7 @@ import java.util.WeakHashMap;
 
 public class Cc {
 
-	static public class ContextFor {
-		boolean constant = true;
-
-		Object contextOnCurrentEntry;
-
-		Object contextTarget;
-
-		int entryCount = 0;
-
-		boolean immediate = true;
-
-		ContextTopology  on = null;
-
-		boolean resets = true;
-
-		public void enter() {
-
-			if (entryCount == 0) contextOnCurrentEntry = on.getAt();
-			if (entryCount == 0 && contextTarget != null) on.setAt(contextTarget);
-			entryCount++;
-		}
-
-		public void exit() {
-			entryCount--;
-			if (entryCount == 0) if (immediate || on.getAt() != contextOnCurrentEntry) if (contextTarget == null || !constant) contextTarget = on.getAt();
-			if (resets && entryCount == 0) on.setAt(contextOnCurrentEntry);
-
-			assert entryCount >= 0;
-		}
-	}
-
-	static WeakHashMap<Object, Map<String, ContextFor>> contextMemories = new WeakHashMap<Object, Map<String, ContextFor>>();
+    static WeakHashMap<Object, Map<String, ContextFor>> contextMemories = new WeakHashMap<Object, Map<String, ContextFor>>();
 
 	static public void handle_entry(Object fromThis, String name, Map<String, Object> parameterName, Map<Integer, Pair<String, String>> markedArguments, Object[] arguments) {
 

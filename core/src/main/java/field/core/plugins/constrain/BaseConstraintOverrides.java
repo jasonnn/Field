@@ -5,7 +5,7 @@ import field.core.dispatch.iVisualElement.Rect;
 import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.dispatch.iVisualElementOverrides;
 import field.core.plugins.constrain.cassowary.ClConstraint;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 
 import java.util.Map;
 

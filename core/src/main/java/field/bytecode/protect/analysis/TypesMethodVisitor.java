@@ -7,7 +7,7 @@
  */
 package field.bytecode.protect.analysis;
 
-import field.bytecode.protect.EmptyVisitors;
+import field.bytecode.protect.asm.EmptyVisitors;
 import org.objectweb.asm.*;
 
 import java.util.HashMap;
@@ -868,7 +868,7 @@ public abstract class TypesMethodVisitor extends MethodVisitor implements Opcode
 			if (node.getIsSuccessor()) {
 				context = (TypesContext) preceeder_context.clone();
 			} else {
-				context = new TypesContext(preceeder_context.getVars(), preceeder_context.getStackClone());
+				context = new TypesContext(preceeder_context.getVars(), preceeder_context.getStackCopy());
 			}
 		}
 		node.setContext(context);

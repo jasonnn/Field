@@ -1,12 +1,13 @@
 package field.bytecode.protect;
 
+import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.Method;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -15,8 +16,8 @@ public class DeferedNewThread extends DeferCallingFast {
 
 	private int priority=0;
 
-	java.lang.reflect.Method original = null;
-	public DeferedNewThread(String name, int access, Method onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
+	Method original = null;
+	public DeferedNewThread(String name, int access, ASMMethod onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
 		super(name, access, onMethod, classDelegate, delegateTo, signature, parameters);
 
 		Integer p = (Integer)parameters.get("priority");
@@ -30,8 +31,8 @@ public class DeferedNewThread extends DeferCallingFast {
 
 
 		if (original == null) {
-			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
-			for (java.lang.reflect.Method m : all) {
+			Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
+			for (Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;
 					break;

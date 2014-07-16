@@ -18,7 +18,7 @@ import field.core.plugins.python.PythonPlugin;
 import field.core.util.FieldPyObjectAdaptor.iCallable;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor.iHandlesFindItem;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.iMutable;
 import field.util.WorkspaceDirectory;
 import org.python.core.Py;

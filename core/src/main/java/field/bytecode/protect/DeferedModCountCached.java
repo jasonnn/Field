@@ -3,6 +3,7 @@
  */
 package field.bytecode.protect;
 
+import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.cache.ModCountArrayWrapper;
 import field.bytecode.protect.cache.ModCountCache;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
@@ -10,20 +11,20 @@ import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.namespace.generic.Bind.iFunction;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.Method;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public final class DeferedModCountCached extends DeferCallingFast implements iFunction<Object, ModCountArrayWrapper> {
 
 	ModCountCache<ModCountArrayWrapper, Object> cache = new ModCountCache<ModCountArrayWrapper, Object>(new ModCountArrayWrapper(null));
 
-	java.lang.reflect.Method original = null;
+	Method original = null;
 
 	private final HashMap<String, Object> parameters;
 
-	private java.lang.reflect.Method ongoingMethod;
+	private Method ongoingMethod;
 
 	private Object[] ongoingArgs;
 
@@ -31,15 +32,15 @@ public final class DeferedModCountCached extends DeferCallingFast implements iFu
 
 	private Object originalTarget;
 
-	public DeferedModCountCached(String name, int access, Method method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
+	public DeferedModCountCached(String name, int access, ASMMethod method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
 		super(name, access, method, delegate, to, signature, parameters);
 		this.parameters = parameters;
 	}
 
 	public Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
 		if (original == null) {
-			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
-			for (java.lang.reflect.Method m : all) {
+			Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
+			for (Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;
 					break;

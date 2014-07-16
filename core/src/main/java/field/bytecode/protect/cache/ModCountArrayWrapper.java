@@ -1,7 +1,5 @@
 package field.bytecode.protect.cache;
 
-import field.bytecode.protect.cache.ModCountCache.iGetModCount;
-
 import java.util.Arrays;
 
 
@@ -51,8 +49,7 @@ public class ModCountArrayWrapper implements iGetModCount<ModCountArrayWrapper> 
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		final ModCountArrayWrapper other = (ModCountArrayWrapper) obj;
-		if (!Arrays.equals(a, other.a)) return false;
-		return true;
-	}
+        return Arrays.equals(a, other.a);
+    }
 
 }

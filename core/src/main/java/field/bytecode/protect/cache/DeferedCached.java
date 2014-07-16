@@ -4,6 +4,7 @@
 package field.bytecode.protect.cache;
 
 import field.bytecode.protect.annotations.CacheParameter;
+import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import org.objectweb.asm.ClassVisitor;
@@ -24,7 +25,7 @@ public final class DeferedCached extends DeferCallingFast {
 
 	java.lang.reflect.Method original = null;
 
-	public DeferedCached(String name, int access, Method method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
+	public DeferedCached(String name, int access, ASMMethod method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
 		super(name, access, method, delegate, to, signature, parameters);
 		this.parameters = parameters;
 		final Integer max = (Integer) parameters.get("max");
@@ -34,10 +35,8 @@ public final class DeferedCached extends DeferCallingFast {
 			cache = new LinkedHashMap<ImmutableArrayWrapper, Object>() {
 				@Override
 				protected boolean removeEldestEntry(Map.Entry<ImmutableArrayWrapper, Object> eldest) {
-					if (size() > max)
-						return true;
-					return false;
-				}
+                    return size() > max;
+                }
 			};
 		}
 	}

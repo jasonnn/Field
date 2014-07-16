@@ -1,13 +1,14 @@
 package field.bytecode.protect;
 
+import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.launch.iUpdateable;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.Method;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,28 +18,26 @@ public class DeferedInQueue extends DeferCallingFast {
 
 	private final boolean through;
 
-    public DeferedInQueue(String name, int access, Method onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
+    public DeferedInQueue(String name, int access, ASMMethod onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
 		this(name, access, onMethod, classDelegate, delegateTo, signature, parameters, false);
 	}
 
-	public DeferedInQueue(String name, int access, Method onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters, boolean through) {
+	public DeferedInQueue(String name, int access, ASMMethod onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters, boolean through) {
 		super(name, access, onMethod, classDelegate, delegateTo, signature, parameters);
 		this.through = through;
 	}
 
-	java.lang.reflect.Method original = null;
+	Method original = null;
 
 	static public class AtomicIntegerMap<T> {
 
-		Map<T, AtomicInteger> m = new HashMap<T, AtomicInteger>();
+		final Map<T, AtomicInteger> m = new HashMap<T, AtomicInteger>();
 
 		public boolean test(T t) {
 			synchronized (m) {
 				AtomicInteger o = m.get(t);
-				if (o == null || o.get() == 0)
-					return false;
-				return true;
-			}
+                return !(o == null || o.get() == 0);
+            }
 		}
 
 		public void inc(T t) {
@@ -74,8 +73,8 @@ public class DeferedInQueue extends DeferCallingFast {
 	public Object handle(int fromName, final Object fromThis, final String originalMethod, final Object[] argArray) {
 
 		if (original == null) {
-			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
-			outer: for (java.lang.reflect.Method m : all) {
+			Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
+			outer: for (Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					Class<?>[] p = m.getParameterTypes();
 					if (p.length == argArray.length) {
@@ -117,8 +116,8 @@ public class DeferedInQueue extends DeferCallingFast {
         }
 		original.setAccessible(true);
 
-		boolean doSaveAliasing = parameters.get("saveAliasing") == null ? true : ((Boolean) parameters.get("saveAliasing")).booleanValue();
-		boolean doSaveContextLocation = parameters.get("saveAliasing") == null ? true : ((Boolean) parameters.get("saveAliasing")).booleanValue();
+		boolean doSaveAliasing = parameters.get("saveAliasing") == null || (Boolean) parameters.get("saveAliasing");
+		boolean doSaveContextLocation = parameters.get("saveAliasing") == null || (Boolean) parameters.get("saveAliasing");
 
 
 		final iRegistersUpdateable queue = ((iProvidesQueue) fromThis).getQueueFor(original);

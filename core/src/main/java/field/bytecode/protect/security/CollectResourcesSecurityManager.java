@@ -1,54 +1,36 @@
-/**
- * 
- */
-package field.bytecode.protect;
+package field.bytecode.protect.security;
 
-import field.launch.SystemProperties;
-
-import java.io.FileDescriptor;
+import java.io.*;
 import java.net.InetAddress;
 import java.security.Permission;
 
-public class NoWriteSecurityManager extends
+@SuppressWarnings("deprecation")
+public class CollectResourcesSecurityManager extends
 		SecurityManager {
+	
+	private PrintWriter o;
+
+	public CollectResourcesSecurityManager()
+	{
+		try {
+			o = new PrintWriter(new FileWriter(new File("/var/tmp/field_resourcesTouched")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	@Override
 	public void checkWrite(
 			FileDescriptor fd) {
-		System.out.println("NoWriteSecurityManager.checkWrite(fd)");
-		//	Allow file descriptor writes:
-		//throw new SecurityException();
 	}
 
 	@Override
 	public void checkWrite(
 			String fd) {
-		
-		/*	Allow writes to temporary files, or to anywhere with (directory) prefix in property "writeableDirPrefixes".
-		 * 
-		 * 	This looks a little odd: add "/" to the end of the file we're checking, regardless of whether it's an actual
-		 * 	file or just a directory. That lets us match against "/okpath/" and allow "/okpath" but not "/okpathbutnotreally" -
-		 * 	but "/okpath/foo.txt/ will also pass." 
-		 */
-		
-		fd = fd + "/";
-
-		final String prop = "writeableDirPrefixes";
-		
-		String tmpdir = System.getProperty("java.io.tmpdir");
-		String[] whitelistedDirs = SystemProperties.getDirProperties(prop);
-
-		boolean ok = fd.startsWith(tmpdir);
-		
-		for (String d: whitelistedDirs) {
-			System.out.println(String.format("Checking %s against whitelist entry %s", fd, d));
-			ok = ok || fd.startsWith(d);
-		}
-		
-		System.out.println(String.format("NoWriteSecurityManager.checkWrite(fdslash='%s', tmp='%s', wl='%s') -> %s)",
-										 fd, tmpdir, SystemProperties.getProperty(prop), (ok ? "TRUE" : "FALSE")));
-
-		if (ok) return;
-		throw new SecurityException();
+		o.println("w "+fd);
 	}
 
 	@Override
@@ -90,11 +72,14 @@ public class NoWriteSecurityManager extends
 	@Override
 	public void checkDelete(
 			String file) {
-		throw new SecurityException();
+		o.println("d "+file);
+		o.flush();
 	}
 
 	@Override
 	public void checkExec(String cmd) {
+		o.println("e "+cmd);
+
 	}
 
 	@Override
@@ -103,6 +88,7 @@ public class NoWriteSecurityManager extends
 
 	@Override
 	public void checkLink(String lib) {
+		o.println("l "+lib);
 	}
 
 	@Override
@@ -169,11 +155,13 @@ public class NoWriteSecurityManager extends
 	public void checkRead(
 			String file,
 			Object context) {
+		o.println("r "+file);
 	}
 
 	@Override
 	public void checkRead(
 			String file) {
+		o.println("r "+file);
 	}
 
 	@Override

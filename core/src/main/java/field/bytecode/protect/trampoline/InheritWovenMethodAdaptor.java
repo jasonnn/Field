@@ -1,6 +1,6 @@
 package field.bytecode.protect.trampoline;
 
-import field.bytecode.protect.EmptyVisitors;
+import field.bytecode.protect.asm.EmptyVisitors;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

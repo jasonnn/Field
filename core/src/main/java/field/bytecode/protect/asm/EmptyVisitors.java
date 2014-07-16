@@ -1,4 +1,4 @@
-package field.bytecode.protect;
+package field.bytecode.protect.asm;
 
 import org.objectweb.asm.*;
 

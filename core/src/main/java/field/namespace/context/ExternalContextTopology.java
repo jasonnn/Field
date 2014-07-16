@@ -1,7 +1,7 @@
 package field.namespace.context;
 
 import field.bytecode.protect.BaseRef;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.util.BetterWeakHashMap.BaseWeakHashMapKey;
 
 import java.lang.ref.WeakReference;

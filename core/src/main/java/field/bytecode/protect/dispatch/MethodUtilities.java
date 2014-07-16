@@ -1,5 +1,6 @@
 package field.bytecode.protect.dispatch;
 
+import field.bytecode.protect.asm.ASMMethod;
 import field.namespace.generic.Generics.Pair;
 import org.objectweb.asm.Type;
 
@@ -16,9 +17,9 @@ import java.util.HashMap;
  */
 public class MethodUtilities {
 
-	HashMap<Pair<org.objectweb.asm.commons.Method, String>, Method> cache = new HashMap<Pair<org.objectweb.asm.commons.Method, String>,  Method>();
+	final HashMap<Pair<ASMMethod, String>, Method> cache = new HashMap<Pair<ASMMethod, String>,  Method>();
 
-	Pair<org.objectweb.asm.commons.Method, String> ch = new Pair<org.objectweb.asm.commons.Method, String>(null, null);
+	Pair<ASMMethod, String> ch = new Pair<ASMMethod, String>(null, null);
 
 	Method first = null;
 
@@ -34,15 +35,19 @@ public class MethodUtilities {
             //System.out.println(" -- trouble ");
             //System.out.println("  onClass <"+onClass+">");
             //System.out.println("   onClassLoader <" + onClass.getClassLoader() + ">");
-            for (int i = 0; i < classTypes.length; i++)
-				;//System.out.println("          " + classTypes[i].getClassLoader());
+           // for (int i = 0; i < classTypes.length; i++)
+				//System.out.println("          " + classTypes[i].getClassLoader());
 
 			throw new IllegalArgumentException(onClass + " " + name + " " + Arrays.asList(classTypes));
 		}
 		return m;
 	}
+    public Method getPossibleMethodFor(ClassLoader loader, org.objectweb.asm.commons.Method method, Class onClass, String className) {
+        return getPossibleMethodFor(loader, ASMMethod.from(method),onClass,className);
+    }
 
-	public Method getPossibleMethodFor(ClassLoader loader, org.objectweb.asm.commons.Method method, Class onClass, String className) {
+	@SuppressWarnings("unchecked")
+    public Method  getPossibleMethodFor(ClassLoader loader, ASMMethod method,Class onClass,String className){
 
 		ch.left = method;
 		ch.right = className;
@@ -126,31 +131,32 @@ public class MethodUtilities {
 		}
 
 		try {
-			java.lang.reflect.Method found = m = onClass.getDeclaredMethod(name, classTypes);
+            assert onClass != null;
+            java.lang.reflect.Method found = m = onClass.getDeclaredMethod(name, classTypes);
 			m.setAccessible(true);
 			cache.put(ch, found);
-			ch = new Pair<org.objectweb.asm.commons.Method, String>(null, null);
+			ch = new Pair<ASMMethod, String>(null, null);
 
 
 			first = m;
 			return m;
-		} catch (SecurityException e) {
-		} catch (NoSuchMethodException e) {
+		} catch (SecurityException ignored) {
+		} catch (NoSuchMethodException ignored) {
 		}
 		try {
-			java.lang.reflect.Method found = m = onClass.getMethod(name, classTypes);
+            java.lang.reflect.Method found = m = onClass.getMethod(name, classTypes);
 			m.setAccessible(true);
 			cache.put(ch, found);
-			ch = new Pair<org.objectweb.asm.commons.Method, String>(null, null);
+			ch = new Pair<ASMMethod, String>(null, null);
 
 			first = m;
 			return m;
-		} catch (SecurityException e) {
-		} catch (NoSuchMethodException e) {
+		} catch (SecurityException ignored) {
+		} catch (NoSuchMethodException ignored) {
 		}
 
 		cache.put(ch, null);
-		ch = new Pair<org.objectweb.asm.commons.Method, String>(null, null);
+		ch = new Pair<ASMMethod, String>(null, null);
 		return null;
 	}
 }

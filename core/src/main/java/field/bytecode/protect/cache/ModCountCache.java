@@ -13,17 +13,7 @@ public class ModCountCache<T, V> {
 
 	private final iGetModCount<T> modCount;
 
-	public interface iGetModCount<T> {
-		public int countFor(T t);
-	}
-
-	public class CacheRecord {
-		V value;
-
-		int atCount;
-	}
-
-	WeakHashMap<T, CacheRecord> cache = new WeakHashMap<T, CacheRecord>();
+    WeakHashMap<T, CacheRecord<V>> cache = new WeakHashMap<T, CacheRecord<V>>();
 
 	private final iFunction<V, T> defaultOr;
 
@@ -49,11 +39,9 @@ public class ModCountCache<T, V> {
 		return new iGetModCount<List<T>>(){
 			public int countFor(List<T> t) {
 				int z = 0;
-				for(int n=0;n<t.size();n++)
-				{
-					T tt = t.get(n);
-					z += tt.countFor(tt);
-				}
+                for (T tt : t) {
+                    z += tt.countFor(tt);
+                }
 				return z;
 			}
 		};
@@ -61,10 +49,10 @@ public class ModCountCache<T, V> {
 	
 
 	public V get(T t, iFunction<V, T> or) {
-		CacheRecord r = cache.get(t);
+		CacheRecord<V> r = cache.get(t);
 		if (r == null) {
 			V v = or.f(t);
-			r = new CacheRecord();
+			r = new CacheRecord<V>();
 			r.value = v;
 			r.atCount = modCount.countFor(t);
 			cache.put(t, r);
@@ -81,10 +69,10 @@ public class ModCountCache<T, V> {
 	}
 
 	public V get(T t) {
-		CacheRecord r = cache.get(t);
+		CacheRecord<V> r = cache.get(t);
 		if (r == null) {
 			V v = defaultOr.f(t);
-			r = new CacheRecord();
+			r = new CacheRecord<V>();
 			r.value = v;
 			r.atCount = modCount.countFor(t);
 			cache.put(t, r);

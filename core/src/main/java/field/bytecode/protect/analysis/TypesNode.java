@@ -13,115 +13,115 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 class TypesNode {
-	final static int REGULAR = 0;
+    final static int REGULAR = 0;
 
-	final static int EXCEPTION = 1;
+    final static int EXCEPTION = 1;
 
-	private ArrayList mInstructions = new ArrayList();
+    private final ArrayList<TypesInstruction> mInstructions = new ArrayList<TypesInstruction>();
 
-	private TypesNode mFollowingNode = null;
+    private TypesNode mFollowingNode = null;
 
-	private boolean mIsSuccessor = false;
+    private boolean mIsSuccessor = false;
 
-	private TypesSuccessor mSuccessors = null;
+    private TypesSuccessor mSuccessors = null;
 
-	private int mLevel = 0;
+    private int mLevel = 0;
 
-	private TypesContext mContext = null;
+    private TypesContext mContext = null;
 
-	private boolean mProcessed = false;
+    private boolean mProcessed = false;
 
-	private TypesNode mNextToProcess = null;
+    private TypesNode mNextToProcess = null;
 
-	private TypesNode mPreceeder = null;
+    private TypesNode mPreceeder = null;
 
-	private int mSort = REGULAR;
+    private int mSort = REGULAR;
 
-	void addInstruction(TypesInstruction instruction) {
-		mInstructions.add(instruction);
-	}
+    void addInstruction(TypesInstruction instruction) {
+        mInstructions.add(instruction);
+    }
 
-	Collection getInstructions() {
-		return mInstructions;
-	}
+    Collection getInstructions() {
+        return mInstructions;
+    }
 
-	void setSort(int type) {
-		mSort = type;
-	}
+    void setSort(int type) {
+        mSort = type;
+    }
 
-	int getSort() {
-		return mSort;
-	}
+    int getSort() {
+        return mSort;
+    }
 
-	void setFollowingNode(TypesNode followingNode) {
-		mFollowingNode = followingNode;
-	}
+    void setFollowingNode(TypesNode followingNode) {
+        mFollowingNode = followingNode;
+    }
 
-	TypesNode getFollowingNode() {
-		return mFollowingNode;
-	}
+    TypesNode getFollowingNode() {
+        return mFollowingNode;
+    }
 
-	void addSuccessor(Label label) {
-		TypesSuccessor successor = new TypesSuccessor();
+    void addSuccessor(Label label) {
+        TypesSuccessor successor = new TypesSuccessor();
 
-		successor.setLabel(label);
-		successor.setNextSuccessor(getSuccessors());
+        successor.setLabel(label);
+        successor.setNextSuccessor(getSuccessors());
 
-		setSuccessors(successor);
-	}
+        setSuccessors(successor);
+    }
 
-	void setSuccessors(TypesSuccessor successors) {
-		mSuccessors = successors;
-	}
+    void setSuccessors(TypesSuccessor successors) {
+        mSuccessors = successors;
+    }
 
-	TypesSuccessor getSuccessors() {
-		return mSuccessors;
-	}
+    TypesSuccessor getSuccessors() {
+        return mSuccessors;
+    }
 
-	void setNextToProcess(TypesNode nextNode) {
-		mNextToProcess = nextNode;
-	}
+    void setNextToProcess(TypesNode nextNode) {
+        mNextToProcess = nextNode;
+    }
 
-	TypesNode getNextToProcess() {
-		return mNextToProcess;
-	}
+    TypesNode getNextToProcess() {
+        return mNextToProcess;
+    }
 
-	void setPreceeder(boolean isSuccessor, TypesNode preceeder) {
-		mIsSuccessor = isSuccessor;
-		mPreceeder = preceeder;
+    void setPreceeder(boolean isSuccessor, TypesNode preceeder) {
+        mIsSuccessor = isSuccessor;
+        mPreceeder = preceeder;
 
-		if (mIsSuccessor) {
-			mLevel = mPreceeder.getLevel() + 1;
-		} else {
-			mLevel = mPreceeder.getLevel();
-		}
-	}
+        if (mIsSuccessor) {
+            mLevel = mPreceeder.getLevel() + 1;
+        } else {
+            mLevel = mPreceeder.getLevel();
+        }
+    }
 
-	TypesNode getPreceeder() {
-		return mPreceeder;
-	}
+    TypesNode getPreceeder() {
+        return mPreceeder;
+    }
 
-	boolean getIsSuccessor() {
-		return mIsSuccessor;
-	}
+    boolean getIsSuccessor() {
+        return mIsSuccessor;
+    }
 
-	void setProcessed(boolean processed) {
-		mProcessed = processed;
-	}
+    void setProcessed(boolean processed) {
+        mProcessed = processed;
+    }
 
-	boolean isProcessed() {
-		return mProcessed;
-	}
+    boolean isProcessed() {
+        return mProcessed;
+    }
 
-	void setContext(TypesContext previousContext) {
-		mContext = previousContext;
-	}
+    void setContext(TypesContext previousContext) {
+        mContext = previousContext;
+    }
 
-	TypesContext getContext() {
-		return mContext;
-	}
+    TypesContext getContext() {
+        return mContext;
+    }
 
-	int getLevel() {
-		return mLevel;
-	}
+    int getLevel() {
+        return mLevel;
+    }
 }

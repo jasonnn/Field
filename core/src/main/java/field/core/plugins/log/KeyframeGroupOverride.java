@@ -19,7 +19,7 @@ import field.core.ui.text.BaseTextEditor2;
 import field.core.ui.text.BaseTextEditor2.Completion;
 import field.core.ui.text.PythonTextEditor.EditorExecutionInterface;
 import field.math.abstraction.iFloatProvider;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.util.Dict;
 import org.python.core.PyObject;
 

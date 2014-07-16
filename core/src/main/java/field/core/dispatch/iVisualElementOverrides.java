@@ -8,7 +8,7 @@ import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.plugins.log.ElementInvocationLogging;
 import field.core.plugins.log.Logging;
 import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.TopologyViewOfGraphNodes;
 import field.namespace.dispatch.DispatchOverTopology;
 import field.util.Dict.Prop;

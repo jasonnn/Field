@@ -3,21 +3,22 @@
  */
 package field.bytecode.protect.cache;
 
+import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.Method;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public final class DeferredTrace extends DeferCallingFast {
 
 	private final HashMap<String, Object> parameters;
-	java.lang.reflect.Method original = null;
+	Method original = null;
 
-	public DeferredTrace(String name, int access, Method method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
+	public DeferredTrace(String name, int access, ASMMethod method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
 		super(name, access, method, delegate, to, signature, parameters);
 		this.parameters = parameters;
 	}
@@ -25,8 +26,8 @@ public final class DeferredTrace extends DeferCallingFast {
 	@Override
 	public Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
 		if (original == null) {
-			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
-			for (java.lang.reflect.Method m : all) {
+			Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
+			for (Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;
 					break;

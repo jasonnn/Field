@@ -36,8 +36,8 @@ import field.core.windowing.overlay.OverlayAnimationManager;
 import field.launch.Launcher;
 import field.launch.iUpdateable;
 import field.math.abstraction.iAcceptor;
-import field.math.graph.GraphNodeSearching.VisitCode;
-import field.math.graph.TopologySearching;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.math.graph.iTopology;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
@@ -330,7 +330,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 
 	static public void fireChange(final iVisualElement e) {
 
-		new TopologySearching.TopologyVisitor_breadthFirst<iVisualElement>(true) {
+		new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 			@Override
 			protected VisitCode visit(iVisualElement root) {
 				System.err.println(" fire change on <" + root + "> from <" + e + ">");

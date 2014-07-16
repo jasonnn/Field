@@ -27,15 +27,14 @@ public class ImmutableArrayList<E> extends ArrayList<E> implements iImmutableCon
 
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof ArrayList)) return false;
-		if (this == o) return true;
-		if (o instanceof ImmutableArrayList) {
+        if (!(o instanceof ArrayList)) return false;
+        if (this == o) return true;
+        if (o instanceof ImmutableArrayList) {
             if (hashCode() != o.hashCode()) return false;
             if (size() != ((ImmutableArrayList) o).size()) return false;
-		}
-		if (getBigBaseHashCode().equals(((ImmutableArrayList) o).getBigBaseHashCode())) return true;
-		return super.equals(o);
-	}
+        }
+        return getBigBaseHashCode().equals(((ImmutableArrayList) o).getBigBaseHashCode()) || super.equals(o);
+    }
 
 	public String getBigBaseHashCode() {
 		if (bigBaseHashCode != null) return bigBaseHashCode;
@@ -44,7 +43,7 @@ public class ImmutableArrayList<E> extends ArrayList<E> implements iImmutableCon
 	}
 
 	static public String getBigBaseHashCodeForIterable(Iterable i) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (Object o : i) {
 			int q = System.identityHashCode(o);
 			buffer.append(":");
@@ -54,7 +53,7 @@ public class ImmutableArrayList<E> extends ArrayList<E> implements iImmutableCon
 	}
 
 	static public String getBigBaseHashCodeForIterable(Object[] i) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (Object o : i) {
 			int q = System.identityHashCode(o);
 			buffer.append(":");

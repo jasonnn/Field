@@ -1,9 +1,9 @@
 package field.namespace.generic;
 
 import field.math.abstraction.iFloatProvider;
-import field.math.graph.TopologySearching;
-import field.math.graph.TopologySearching.AStarMetric;
-import field.math.graph.TopologySearching.TopologyAStarSearch;
+import field.math.graph.visitors.TopologySearching;
+import field.math.graph.visitors.TopologySearching.AStarMetric;
+import field.math.graph.visitors.TopologySearching.TopologyAStarSearch;
 import field.math.graph.iTopology;
 import field.namespace.generic.Generics.Pair;
 import field.namespace.generic.Generics.Triple;

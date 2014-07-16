@@ -1,7 +1,7 @@
 package field.core.plugins.history;
 
-import field.math.graph.GraphNodeSearching;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutable;
 

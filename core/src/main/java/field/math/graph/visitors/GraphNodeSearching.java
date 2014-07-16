@@ -1,4 +1,7 @@
-package field.math.graph;
+package field.math.graph.visitors;
+
+import field.math.graph.SimpleNode;
+import field.math.graph.iGraphNode;
 
 import java.util.*;
 

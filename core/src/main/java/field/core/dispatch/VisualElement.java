@@ -10,10 +10,9 @@ import field.core.windowing.components.*;
 import field.core.windowing.overlay.OverlayAnimationManager;
 import field.launch.iUpdateable;
 import field.math.abstraction.iAcceptor;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
-import field.math.graph.TopologySearching;
-import field.math.graph.TopologySearching.TopologyVisitor_breadthFirst;
+import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.math.graph.TopologyViewOfGraphNodes;
 import field.math.graph.iMutableContainer;
 import field.namespace.generic.Generics.Triple;
@@ -121,7 +120,7 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 	static public <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> Triple<T, S, U> createWithToken(final Object token, iVisualElement root, Rect bounds, Class<T> visualElementclass, Class<S> componentClass, Class<U> overrideClass) {
 		try {
 			final iVisualElement[] ans = new iVisualElement[1];
-			TopologyVisitor_breadthFirst<iVisualElement> search = new TopologySearching.TopologyVisitor_breadthFirst<iVisualElement>(true) {
+			TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 				@Override
 				protected VisitCode visit(iVisualElement n) {
 					Object tok = n.getProperty(iVisualElement.creationToken);
@@ -196,7 +195,7 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 
 	static public void deleteWithToken(final Object token, iVisualElement root) {
 		final iVisualElement[] ans = new iVisualElement[1];
-		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologySearching.TopologyVisitor_breadthFirst<iVisualElement>(true) {
+		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 			@Override
 			protected VisitCode visit(iVisualElement n) {
 				Object tok = n.getProperty(iVisualElement.creationToken);

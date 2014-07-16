@@ -142,7 +142,7 @@ public abstract class Yield extends GeneratorAdapter implements YieldHandler {
             Map m = (Map) ReflectionTools.illegalGetObject(this, "locals");
 
             int max = 0;
-            for (Map.Entry<Integer, String> localsToSave : ((Map<Integer, String>) context.getVars()).entrySet()) {
+            for (Map.Entry<Integer, String> localsToSave : (context.getVars()).entrySet()) {
                 // assert
                 // m.containsKey(localsToSave.getKey())
                 // : localsToSave.getKey() + " " + m;

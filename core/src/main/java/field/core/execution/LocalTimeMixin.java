@@ -4,7 +4,7 @@ import field.core.dispatch.Mixins;
 import field.core.dispatch.iVisualElement;
 import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 
 public class LocalTimeMixin extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
 

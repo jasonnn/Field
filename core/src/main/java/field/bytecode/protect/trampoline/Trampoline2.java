@@ -1,6 +1,7 @@
 package field.bytecode.protect.trampoline;
 
 import field.bytecode.protect.*;
+import field.bytecode.protect.security.*;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
 import field.launch.iLaunchable;
@@ -535,7 +536,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 //        }
 
         loader = new TrampolineClassLoader(((URLClassLoader) this.getClass().getClassLoader()).getURLs(), (this.getClass().getClassLoader()), this);
-        System.setSecurityManager(new PermissiveSecurityManager());
+        //System.setSecurityManager(new PermissiveSecurityManager());
+        Security.getInstance().usePermissiveSecurityManager();
 
         String extendedJars = SystemProperties.getProperty("extendedJars", null);
         if (extendedJars != null) {
@@ -606,11 +608,14 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         }
 
         if (SystemProperties.getIntProperty("nosave", 0) == 1)
-            System.setSecurityManager(new NoWriteSecurityManager());
+            Security.getInstance().useNoWriteSecurityManager();
+            //System.setSecurityManager(new NoWriteSecurityManager());
         else if (SystemProperties.getIntProperty("collectResources", 0) == 1)
-            System.setSecurityManager(new CollectResourcesSecurityManager());
+            Security.getInstance().useCollectResourcesSecurityManager();
+           // System.setSecurityManager(new CollectResourcesSecurityManager());
         else
-            System.setSecurityManager(new NoopSecurityManager());
+            Security.getInstance().useNoopSecurityManager();
+           // System.setSecurityManager(new NoopSecurityManager());
 
     }
 

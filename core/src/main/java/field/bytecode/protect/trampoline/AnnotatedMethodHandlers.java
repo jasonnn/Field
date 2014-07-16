@@ -2,6 +2,7 @@ package field.bytecode.protect.trampoline;
 
 import field.bytecode.protect.*;
 import field.bytecode.protect.annotations.*;
+import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.cache.DeferedCached;
 import field.bytecode.protect.cache.DeferedDiskCached;
 import field.bytecode.protect.cache.DeferedFixedDuringUpdate;
@@ -17,7 +18,6 @@ import field.namespace.generic.Generics;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.Method;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +40,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     DISPATCH(DispatchOverTopology.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, final String className) {
-            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
 
                 DispatchSupport support = new DispatchSupport();
 
@@ -70,7 +70,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     INSIDE(Inside.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new CallOnEntryAndExit_exceptionAware("inside+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("inside+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
 
                 @Override
                 public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
@@ -98,13 +98,13 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     FAST_DISPATCH(FastDispatch.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new FastEntry("testmethodannotation2", access, new Method(methodName, methodDesc), delegate, paramters, className);
+            return new FastEntry("testmethodannotation2", access, new ASMMethod(methodName, methodDesc), delegate, paramters, className);
         }
     },
     YIELD(Yield.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new Yield2("yield+" + methodName + "+" + methodDesc + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters, originalByteCode, className) {
+            return new Yield2("yield+" + methodName + "+" + methodDesc + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters, originalByteCode, className) {
                 final YieldSupport support = new YieldSupport();
 
                 @Override
@@ -128,67 +128,67 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     CACHED(Cached.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new DeferedCached("cancel", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters);
+            return new DeferedCached("cancel", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters);
         }
     },
     TRACED(Traced.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new DeferredTrace("cancel", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters);
+            return new DeferredTrace("cancel", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters);
         }
     },
     CACHED_PER_UPDATE(CachedPerUpdate.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new DeferedFixedDuringUpdate("cancelfix", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters);
+            return new DeferedFixedDuringUpdate("cancelfix", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters);
         }
     },
     DISK_CACHED(DiskCached.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new DeferedDiskCached("cancel", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters);
+            return new DeferedDiskCached("cancel", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters);
         }
     },
     NEW_THREAD(NewThread.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new DeferedNewThread("nt", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters);
+            return new DeferedNewThread("nt", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters);
         }
     },
     IN_QUEUE(InQueue.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new DeferedInQueue("nt", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters);
+            return new DeferedInQueue("nt", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters);
         }
     },
     IN_QUEUE_THROUGH(InQueueThrough.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new DeferedInQueue("nt", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters, true);
+            return new DeferedInQueue("nt", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters, true);
         }
     },
     SIMPLY_WRAPPED(SimplyWrapped.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new SimplyWrappedInQueue("nt", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters);
+            return new SimplyWrappedInQueue("nt", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters);
         }
     },
     NEXT_UPDATE(NextUpdate.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new DeferedNextUpdate("nu", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters);
+            return new DeferedNextUpdate("nu", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters);
         }
     },
     NON_SWING(NonSwing.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new DeferedNonSwing("nu", access, new Method(methodName, methodDesc), classDelegate, delegate, signature, paramters);
+            return new DeferedNonSwing("nu", access, new ASMMethod(methodName, methodDesc), classDelegate, delegate, signature, paramters);
         }
     },
     CONSTANT_CONTEXT(ConstantContext.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
 
                 @Override
                 public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
@@ -206,7 +206,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     CONTEXT_BEGIN(Context_begin.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
                 Stack<Generics.Pair<ContextTopology, Object>> stack = new Stack<Generics.Pair<ContextTopology, Object>>();
 
                 @Override
@@ -244,7 +244,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     CONTEXT_SET(Context_set.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
 
                 @Override
                 public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
@@ -282,7 +282,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     TIMING_STATS(TimingStatistics.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
-            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new Method(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
 
                 TimingSupport support = new TimingSupport();
 

@@ -1,9 +1,10 @@
-package field.bytecode.protect;
+package field.bytecode.protect.security;
 
 import java.io.FileDescriptor;
 import java.net.InetAddress;
 import java.security.Permission;
 
+@SuppressWarnings("deprecation")
 public class NoopSecurityManager extends SecurityManager {
 
 	@Override

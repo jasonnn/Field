@@ -7,7 +7,7 @@ import field.core.dispatch.iVisualElement;
 import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
 import field.core.plugins.python.PythonPluginEditor;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 
 import java.util.List;
 

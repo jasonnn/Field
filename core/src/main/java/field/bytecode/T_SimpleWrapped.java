@@ -1,7 +1,7 @@
 package field.bytecode;
 
-import field.bytecode.protect.SimplyWrappedInQueue.iProvidesWrapping;
-import field.bytecode.protect.SimplyWrappedInQueue.iWrappedExit;
+import field.bytecode.protect.iProvidesWrapping;
+import field.bytecode.protect.iWrappedExit;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.SimplyWrapped;
 import field.launch.iLaunchable;

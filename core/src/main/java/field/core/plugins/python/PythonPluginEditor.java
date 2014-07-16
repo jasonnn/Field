@@ -55,7 +55,7 @@ import field.core.windowing.overlay.OverlayAnimationManager;
 import field.launch.Launcher;
 import field.launch.iUpdateable;
 import field.math.abstraction.iProvider;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.linalg.Vector4;
 import field.namespace.generic.Bind.iFunction;
 import field.namespace.generic.Generics.Pair;

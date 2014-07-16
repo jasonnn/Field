@@ -1,7 +1,7 @@
 package field.namespace.context;
 
 import field.bytecode.protect.BaseRef;
-import field.math.graph.GraphNodeSearching;
+import field.math.graph.visitors.GraphNodeSearching;
 
 /**
 * Created by jason on 7/14/14.

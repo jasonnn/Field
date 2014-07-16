@@ -9,10 +9,7 @@ package field.bytecode.protect.analysis;
 
 import org.objectweb.asm.Type;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.TreeMap;
+import java.util.*;
 
 public class TypesContext implements Cloneable {
 	public final static String CAT1_BOOLEAN = "1Z";
@@ -51,56 +48,56 @@ public class TypesContext implements Cloneable {
 
 	public final static String NULL = "NULL";
 
-	private Map mVars = null;
+	private Map<Integer, String> mVars = null;
 
-	private Stack mStack = null;
+	private Deque<String> mStack = null;
 
 	private int mSort = TypesNode.REGULAR;
 
-	private String mDebugIndent = null;
+	//private String mDebugIndent = null;
 
 	TypesContext() {
-		mVars = new HashMap();
-		mStack = new Stack();
+		mVars = new HashMap<Integer, String>();
+		mStack = new ArrayDeque<String>();
 	}
 
-	TypesContext(Map vars, Stack stack) {
+	TypesContext(Map<Integer, String> vars, Deque<String> stack) {
 		mVars = vars;
 		mStack = stack;
 	}
 
-	public Map getVars() {
+	public Map<Integer, String> getVars() {
 //		return mVars;
 		
 		return new TreeMap<Integer, String>(mVars);
 		
 	}
 
-	public Stack getStack() {
+	public Deque<String> getStack() {
 		return mStack;
 	}
 
 	public boolean hasVar(int var) {
-		return mVars.containsKey(new Integer(var));
+		return mVars.containsKey(var);
 	}
 
 	public String getVar(int var) {
-		return (String) mVars.get(new Integer(var));
+		return mVars.get(var);
 	}
 
 	public void setVar(int var, String type) {
-		mVars.put(new Integer(var), type);
+		mVars.put(var, type);
 	}
 
 	public int getVarType(int var) {
 		String type = getVar(var);
-		if (CAT1_INT == type) {
+		if (CAT1_INT.equals(type)) {
 			return Type.INT;
-		} else if (CAT1_FLOAT == type) {
+		} else if (CAT1_FLOAT.equals(type)) {
 			return Type.FLOAT;
-		} else if (CAT2_LONG == type) {
+		} else if (CAT2_LONG.equals(type)) {
 			return Type.LONG;
-		} else if (CAT2_DOUBLE == type) {
+		} else if (CAT2_DOUBLE.equals(type)) {
 			return Type.DOUBLE;
 		} else {
 			return Type.OBJECT;
@@ -108,13 +105,13 @@ public class TypesContext implements Cloneable {
 	}
 
 	public String peek() {
-		return (String) mStack.peek();
+		return mStack.peek();
 	}
 
 	public String pop() {
 		String result = null;
 		if (mStack.size() > 0) {
-			result = (String) mStack.pop();
+			result = mStack.pop();
 		}
 		printStack();
 		return result;
@@ -125,12 +122,13 @@ public class TypesContext implements Cloneable {
 		printStack();
 	}
 
-	public Stack getStackClone() {
-		return (Stack) mStack.clone();
+	public Deque<String> getStackCopy() {
+        
+		return new ArrayDeque<String>(mStack);
 	}
 
 	public void cloneVars() {
-		mVars = new HashMap(mVars);
+		mVars = new HashMap<Integer, String>(mVars);
 	}
 
 	public void setSort(int type) {
@@ -144,12 +142,12 @@ public class TypesContext implements Cloneable {
 	void printStack() {
 	}
 
-	void setDebugIndent(String debugIndent) {
-		mDebugIndent = debugIndent;
-	}
+//	void setDebugIndent(String debugIndent) {
+//		mDebugIndent = debugIndent;
+//	}
 
 	TypesContext clone(TypesNode node) {
-		TypesContext new_context = new TypesContext(new HashMap(mVars), (Stack) mStack.clone());
+		TypesContext new_context = new TypesContext(new HashMap<Integer, String>(mVars), getStackCopy());
 		new_context.setSort(node.getSort());
 		return new_context;
 	}
@@ -163,8 +161,9 @@ public class TypesContext implements Cloneable {
 			e.printStackTrace();
 		}
 
-		new_context.mVars = new HashMap(mVars);
-		new_context.mStack = (Stack) mStack.clone();
+        assert new_context != null;
+        new_context.mVars = new HashMap<Integer, String>(mVars);
+		new_context.mStack = getStackCopy();
 
 		return new_context;
 	}

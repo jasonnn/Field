@@ -26,7 +26,7 @@ import field.core.windowing.components.*;
 import field.core.windowing.components.RootComponent.iPaintPeer;
 import field.core.windowing.components.SelectionGroup.iSelectionChanged;
 import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutableContainer;
 import field.namespace.generic.Bind.iFunction;

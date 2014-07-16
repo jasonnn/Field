@@ -1,7 +1,7 @@
 package field.bytecode.protect.trampoline;
 
 import field.bytecode.protect.instrumentation.BasicInstrumentation2;
-import field.bytecode.protect.EmptyVisitors;
+import field.bytecode.protect.asm.EmptyVisitors;
 import field.namespace.generic.ReflectionTools;
 import org.objectweb.asm.*;
 import org.objectweb.asm.util.CheckClassAdapter;

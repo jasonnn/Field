@@ -1,5 +1,6 @@
 package field.bytecode.protect.cache;
 
+import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.launch.Launcher;
@@ -25,7 +26,7 @@ public class DeferedFixedDuringUpdate extends DeferCallingFast {
 
 	WeakHashMap<Object, Object> cache = new WeakHashMap<Object, Object>();
 
-	public DeferedFixedDuringUpdate(String name, int access, org.objectweb.asm.commons.Method method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
+	public DeferedFixedDuringUpdate(String name, int access, ASMMethod method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
 		super(name, access, method, delegate, to, signature, parameters);
 		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
 
@@ -40,8 +41,8 @@ public class DeferedFixedDuringUpdate extends DeferCallingFast {
 	@Override
 	public Object handle(int fromName, Object fromThis, String originalMethod, Object[] args) {
 		if (original == null) {
-			java.lang.reflect.Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
-			for (java.lang.reflect.Method m : all) {
+			Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
+			for (Method m : all) {
 				if (m.getName().equals(originalMethod)) {
 					original = m;
 					break;

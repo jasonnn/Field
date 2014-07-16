@@ -11,9 +11,8 @@ import field.core.windowing.components.RootComponent.iPaintPeer;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
 import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
-import field.math.graph.TopologySearching;
-import field.math.graph.TopologySearching.TopologyVisitor_breadthFirst;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.math.graph.TopologyViewOfGraphNodes;
 import field.util.HashMapOfLists;
 
@@ -544,7 +543,7 @@ public class OfferedAlignment implements iDragParticipant, iPaintPeer {
 		currentFrames.clear();
 		currentFramesMinusOngoing.clear();
 
-		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologySearching.TopologyVisitor_breadthFirst<iVisualElement>(
+		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(
 				true) {
 			@Override
 			protected VisitCode visit(iVisualElement n) {

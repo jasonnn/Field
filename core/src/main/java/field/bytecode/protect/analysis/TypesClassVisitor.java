@@ -7,7 +7,7 @@
  */
 package field.bytecode.protect.analysis;
 
-import field.bytecode.protect.EmptyVisitors;
+import field.bytecode.protect.asm.EmptyVisitors;
 import org.objectweb.asm.*;
 
 abstract public class TypesClassVisitor extends ClassVisitor {
