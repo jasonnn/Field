@@ -90,6 +90,7 @@ public class Launcher {
                 mainThread = Thread.currentThread();
                 (mainInstance = (iLaunchable) c.newInstance()).launch();
             } else {
+                //StandardTrampoline is created here
                 (mainInstance = (iLaunchable) c.newInstance()).launch();
                 constructMainTimer();
             }
@@ -109,7 +110,7 @@ public class Launcher {
     public static void main(final String[] args) {
 
         log.info(" hello ");
-
+        //TODO swt/appkit/? doesnt seem to like this (when using OSXMain)
         display = new Display();
         Display.setAppName("Field");
         display.syncExec(new Runnable() {

@@ -480,6 +480,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
     }
 
+    @Override
     public byte[] instrumentClass(java.lang.ClassLoader deferTo, String class_name) {
         // if (debug)
         // System.out.println(" getResource <" + class_name +
@@ -506,8 +507,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
             // System.out.println(" about to instrument <"
             // + class_name + "> inside <" + this +
             // "> !! ");
-            a = instrumentBytecodes(a, class_name, deferTo);
-            return a;
+            return instrumentBytecodes(a, class_name, deferTo);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -571,6 +571,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
         try {
             // System.out.println(Arrays.asList(loader.getURLs()));
+            //field.Blank2 is loaded
             final Class<?> c = (loader.loadClass(classToLaunch));
             // System.out.println(" c = " + c + " " +
             // c.getClassLoader() + " " + loader);
@@ -672,11 +673,11 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         if (debug) {
             // System.out.println("/n/n");
 
-            Vector vThere = (Vector) ReflectionTools.illegalGetObject(deferTo, "classes");
+           // Vector vThere = (Vector) ReflectionTools.illegalGetObject(deferTo, "classes");
             // System.out.println("local: " + loader.already);
 
             // for (int i = 0; i < vThere.size(); i++)
-            ;// System.out.println("global:" + vThere.get(i)
+            // System.out.println("global:" + vThere.get(i)
             // + " " +
             // loader.already.containsValue(vThere.get(i)));
         }
@@ -697,6 +698,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 //        }
 //        return true;
     }
+
 
     protected byte[] instrumentBytecodes(byte[] a, String class_name, java.lang.ClassLoader deferTo) {
         return a;

@@ -217,61 +217,9 @@ public class StandardTrampoline extends Trampoline2 {
                 || class_name.startsWith("ch.")
                 || class_name.startsWith("com.")) return a;
         try {
+            log.log(Level.INFO, "begin instrumentation of: {0}", class_name);
 
-            // check
-            // for
-            // interesting
-            // annotation
-
-            ClassReader reader = new ClassReader(a);
-            // ClassWriter
-            // writer
-            // =
-            // new
-            // ClassWriter(true);
-            final boolean[] woven = {false};
-            final String[] superName = {null};
-            final String[][] interfaces = {null};
-
-            final boolean isAnon = class_name.contains("$");
-
-            //  if (StandardTrampoline.debug)
-            // System.out.println(" checking for <"
-            // + class_name + "> <" +
-            // woven[0] + ">");
-            ClassVisitor adaptor = new ClassVisitor(Opcodes.ASM5, EmptyVisitors.classVisitor) {
-                @Override
-                public void visit(int version, int access, String name, String signature, String supern, String[] interfac) {
-                    superName[0] = supern;
-                    interfaces[0] = interfac;
-                }
-
-                @Override
-                public AnnotationVisitor visitAnnotation(String name, boolean visibleAtRuntime) {
-                    if (name.equals("Lfield/bytecode/protect/Woven;")) {
-                        woven[0] = true;
-                    }
-                    return cv.visitAnnotation(name, visibleAtRuntime);
-                }
-
-                @Override
-                public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[]
-                        exceptions) {
-                    if (!isAnon)
-                        return super.visitMethod(access, name, desc, signature, exceptions);
-                    return new MethodVisitor(Opcodes.ASM5) {
-                        @Override
-                        public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-                            if (desc.equals("Lfield/bytecode/protect/Woven;"))
-                                woven[0] = true;
-                            return super.visitAnnotation(desc, visible);
-                        }
-                    };
-                }
-            };
-            check();
-            reader.accept(adaptor, 0);
-            check();
+            PreWeaveScanner.ScanResult scanResult = PreWeaveScanner.scan(a);
 
             //if (StandardTrampoline.debug)
             // System.out.println(" class name <" +
@@ -279,7 +227,7 @@ public class StandardTrampoline extends Trampoline2 {
             // woven[0] + "> <" + isAnon +
             // ">");
 
-            if (!woven[0]) {
+            if (!scanResult.isWoven) {
                 cache.state(class_name, false, modAt);
                 return a;
             } else {
@@ -287,7 +235,7 @@ public class StandardTrampoline extends Trampoline2 {
             }
 
             check();
-            a = weave(a, class_name, deferTo, superName[0], interfaces[0]);
+            a = weave(a, class_name, deferTo, scanResult.extendsClass, scanResult.getImplementsArray());
             check();
 
             if (debug) {
@@ -478,7 +426,7 @@ public class StandardTrampoline extends Trampoline2 {
 
                     @Override
                     public MethodVisitor visitMethod(final int access, final String name, final String desc, String signature, String[] exceptions) {
-                      //  final MethodVisitor m = cv.visitMethod(access, name, desc, signature, exceptions);
+                        //  final MethodVisitor m = cv.visitMethod(access, name, desc, signature, exceptions);
                         return new InheritWovenMethodAdaptor(StandardTrampoline.this, name, desc, superName, interfaces);//.setDelegate(m);
                     }
 
@@ -526,11 +474,11 @@ public class StandardTrampoline extends Trampoline2 {
                         return new AnnotationMethodAdaptor(annotatedMethodHandlers, access, name, desc, signature, cv, m, superName, fa, class_name);
                     }
                 };
-                check();
+                // check();
                 reader.accept(adaptor, ClassReader.EXPAND_FRAMES);
-                check();
+                //check();
                 oa = writer.toByteArray();
-                check();
+                // check();
 
 
                 if (debug)
@@ -540,12 +488,14 @@ public class StandardTrampoline extends Trampoline2 {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                check();
+                // check();
             }
             if (debug) {
                 check();
                 ClassReader reader = new ClassReader(oa);
-                reader.accept(new TraceClassVisitor(new PrintWriter(System.out)), ClassReader.EXPAND_FRAMES);
+                StringWriter sw = new StringWriter();
+                reader.accept(new TraceClassVisitor(new PrintWriter(sw)), ClassReader.EXPAND_FRAMES);
+                log.info(sw.toString());
                 check();
             }
         } catch (Throwable r) {
