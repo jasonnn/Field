@@ -2,25 +2,27 @@ package field.bytecode.protect.instrumentation;
 
 import field.bytecode.protect.analysis.TypesClassVisitor;
 import field.bytecode.protect.analysis.TypesContext;
+import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
 import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.namespace.generic.ReflectionTools;
 import org.objectweb.asm.*;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
+//import org.objectweb.asm.commons.GeneratorAdapter;
+//import org.objectweb.asm.commons.Method;
 
 import java.util.*;
 
 /**
 * Created by jason on 7/14/14.
 */
-public abstract class Yield extends GeneratorAdapter implements YieldHandler {
+public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHandler {
     private final int access;
 
     private final String className;
 
     private Label initialJumpLabel;
 
-    private final Method onMethod;
+    private final ASMMethod onMethod;
 
     private final byte[] originalByteCode;
 
@@ -44,7 +46,7 @@ public abstract class Yield extends GeneratorAdapter implements YieldHandler {
 
     int yieldNumber = 0;
 
-    public Yield(String name, int access, Method onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters, byte[] originalByteCode, String className) {
+    public Yield(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters, byte[] originalByteCode, String className) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.access = access;
@@ -98,7 +100,7 @@ public abstract class Yield extends GeneratorAdapter implements YieldHandler {
         push(name);
         loadThis();
         push(onMethod.getName());
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle_yieldIndex", Type.INT_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
+        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", Type.INT_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
 
         if (StandardTrampoline.debug)
             ;//System.out.println(" we have <" + jumpLabels.size() + "> <" + startLabel + ">");
@@ -182,7 +184,7 @@ public abstract class Yield extends GeneratorAdapter implements YieldHandler {
             push(onMethod.getName());
             push(jumpLabels.size());
 
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle_yieldStore", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(Object[].class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.INT_TYPE}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(Object[].class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.INT_TYPE}));
 
             // here it comes
             if (onMethod.getReturnType().getSort() == Type.OBJECT) {
@@ -208,7 +210,7 @@ public abstract class Yield extends GeneratorAdapter implements YieldHandler {
             loadThis();
             push(onMethod.getName());
 
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
 
             if (StandardTrampoline.debug)
                 ;//System.out.println(" --- load --- <" + newLabel + ">");

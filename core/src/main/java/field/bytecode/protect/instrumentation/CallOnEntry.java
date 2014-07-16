@@ -1,9 +1,9 @@
 package field.bytecode.protect.instrumentation;
 
+import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +11,13 @@ import java.util.Map;
 /**
 * Created by jason on 7/14/14.
 */
-public abstract class CallOnEntry extends GeneratorAdapter implements EntryHandler {
+public abstract class CallOnEntry extends FieldASMGeneratorAdapter implements EntryHandler {
 
     static int uniq = 0;
 
     private final String name;
 
-    private final Method onMethod;
+    private final ASMMethod onMethod;
 
     private final String parameterName;
 
@@ -25,7 +25,7 @@ public abstract class CallOnEntry extends GeneratorAdapter implements EntryHandl
 
     int returnNumber = 0;
 
-    public CallOnEntry(String name, int access, Method onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
+    public CallOnEntry(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.onMethod = onMethod;
@@ -48,7 +48,7 @@ public abstract class CallOnEntry extends GeneratorAdapter implements EntryHandl
         push(onMethod.getName());
         push(parameterName);
         loadArgArray();
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handleFast", Type.VOID_TYPE, new Type[] { Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(Object[].class) }));
+        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleFast", Type.VOID_TYPE, new Type[] { Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(Object[].class) }));
         super.visitCode();
     }
 }

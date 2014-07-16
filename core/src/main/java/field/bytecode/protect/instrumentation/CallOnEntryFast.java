@@ -1,28 +1,28 @@
 package field.bytecode.protect.instrumentation;
 
+import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
 
 import java.util.HashMap;
 
 /**
 * Created by jason on 7/14/14.
 */
-public abstract class CallOnEntryFast extends GeneratorAdapter implements FastEntryHandler {
+public abstract class CallOnEntryFast extends FieldASMGeneratorAdapter implements FastEntryHandler {
 
     static int uniq = 0;
 
     private final String name;
 
-    private final Method onMethod;
+    private final ASMMethod onMethod;
 
     protected final HashMap<String, Object> parameters;
 
     int returnNumber = 0;
 
-    public CallOnEntryFast(String name, int access, Method onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
+    public CallOnEntryFast(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.onMethod = onMethod;
@@ -45,7 +45,7 @@ public abstract class CallOnEntryFast extends GeneratorAdapter implements FastEn
         push(uniq);
         loadThis();
         loadArgArray();
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handleFast", Type.VOID_TYPE, new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(Object[].class)}));
+        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleFast", Type.VOID_TYPE, new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(Object[].class)}));
         super.visitCode();
     }
 }

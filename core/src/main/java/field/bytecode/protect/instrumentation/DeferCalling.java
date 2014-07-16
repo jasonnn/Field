@@ -1,11 +1,12 @@
 package field.bytecode.protect.instrumentation;
 
+import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,14 +14,14 @@ import java.util.Map;
 /**
 * Created by jason on 7/14/14.
 */
-public abstract class DeferCalling extends GeneratorAdapter implements DeferedHandler {
+public abstract class DeferCalling extends FieldASMGeneratorAdapter implements DeferedHandler {
     private final int access;
 
     private final ClassVisitor classDelegate;
 
     private final String name;
 
-    private final Method onMethod;
+    private final ASMMethod onMethod;
 
     private final String parameterName;
 
@@ -30,7 +31,7 @@ public abstract class DeferCalling extends GeneratorAdapter implements DeferedHa
 
     private final String signature;
 
-    public DeferCalling(String name, int access, Method onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
+    public DeferCalling(String name, int access, ASMMethod onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.access = access;
@@ -60,7 +61,7 @@ public abstract class DeferCalling extends GeneratorAdapter implements DeferedHa
         push(parameterName);
         loadArgArray();
 
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handleCancelFast", Type.VOID_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(Object[].class)}));
+        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", Type.VOID_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(Object[].class)}));
 
         visitInsn(Opcodes.RETURN);
 

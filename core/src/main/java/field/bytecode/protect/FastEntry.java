@@ -1,12 +1,13 @@
 package field.bytecode.protect;
 
+import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.dispatch.Run;
 import field.bytecode.protect.instrumentation.CallOnEntryFast;
 import field.bytecode.protect.dispatch.ReturnCode;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.Method;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.Map;
 final public class FastEntry extends CallOnEntryFast {
 	public static Map<String, Map<String, FastEntry>> knownEntries = new HashMap<String, Map<String, FastEntry>>();
 
-	static public void linkWith(java.lang.reflect.Method method, Class clazz, Run run) {
+	static public void linkWith(Method method, Class clazz, Run run) {
 		String methodDescriptor = Type.getMethodDescriptor(method);
 		String methodName = method.getName();
 
@@ -34,7 +35,7 @@ final public class FastEntry extends CallOnEntryFast {
 		entry.execute.add(run);
 	}
 
-	static public void unlinkWith(java.lang.reflect.Method method, Class clazz, Run run) {
+	static public void unlinkWith(Method method, Class clazz, Run run) {
 		String methodDescriptor = Type.getMethodDescriptor(method);
 		String methodName = method.getName();
 
@@ -49,7 +50,7 @@ final public class FastEntry extends CallOnEntryFast {
 
 	List<Run> execute;
 
-	public FastEntry(String name, int access, Method onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters, String className) {
+	public FastEntry(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters, String className) {
 		super(name, access, onMethod, delegateTo, parameters);
 
 		Map<String, FastEntry> methodMap = knownEntries.get(className);

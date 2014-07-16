@@ -1,19 +1,19 @@
 package field.bytecode.protect.instrumentation;
 
 import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
+
 
 import java.util.HashMap;
 
 /**
 * Created by jason on 7/14/14.
 */
-public abstract class DeferCallingFast extends GeneratorAdapter implements FastCancelHandler {
+public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implements FastCancelHandler {
     static int uniq = 0;
 
     private final int access;
@@ -69,7 +69,7 @@ public abstract class DeferCallingFast extends GeneratorAdapter implements FastC
         push(onMethod.getName() + "_original");
         loadArgArray();
 
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handleCancelFast", Type.getType(Object.class), new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(String.class), Type.getType(Object[].class)}));
+        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", Type.getType(Object.class), new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(String.class), Type.getType(Object[].class)}));
 
         if (onMethod.getReturnType().getSort() == Type.OBJECT) {
             checkCast(onMethod.getReturnType());

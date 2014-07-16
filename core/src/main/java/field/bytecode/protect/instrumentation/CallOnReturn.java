@@ -1,11 +1,11 @@
 package field.bytecode.protect.instrumentation;
 
+import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
 import field.bytecode.protect.trampoline.StandardTrampoline;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,11 +13,11 @@ import java.util.Map;
 /**
 * Created by jason on 7/14/14.
 */
-public abstract class CallOnReturn extends GeneratorAdapter implements ExitHandler {
+public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements ExitHandler {
 
     private final String name;
 
-    private final Method onMethod;
+    private final ASMMethod onMethod;
 
     private final String parameterName;
 
@@ -25,7 +25,7 @@ public abstract class CallOnReturn extends GeneratorAdapter implements ExitHandl
 
     int returnNumber = 0;
 
-    public CallOnReturn(String name, int access, Method onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
+    public CallOnReturn(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.onMethod = onMethod;
@@ -51,7 +51,7 @@ public abstract class CallOnReturn extends GeneratorAdapter implements ExitHandl
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             pop();
         } else if (op == Opcodes.IRETURN) {
             // dup();
@@ -62,7 +62,7 @@ public abstract class CallOnReturn extends GeneratorAdapter implements ExitHandl
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(Type.INT_TYPE);
         } else if (op == Opcodes.FRETURN) {
             // dup();
@@ -73,7 +73,7 @@ public abstract class CallOnReturn extends GeneratorAdapter implements ExitHandl
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(Type.FLOAT_TYPE);
         } else if (op == Opcodes.ARETURN) {
             // dup();
@@ -83,7 +83,7 @@ public abstract class CallOnReturn extends GeneratorAdapter implements ExitHandl
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
         }
 
         super.visitInsn(op);

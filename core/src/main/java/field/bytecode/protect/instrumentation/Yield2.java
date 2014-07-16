@@ -1,29 +1,29 @@
 package field.bytecode.protect.instrumentation;
 
+import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
 import field.bytecode.protect.trampoline.StandardTrampoline;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AnalyzerAdapter;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
-* Created by jason on 7/14/14.
-*/
-public abstract class Yield2 extends GeneratorAdapter implements YieldHandler {
+ * Created by jason on 7/14/14.
+ */
+public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHandler {
     private final int access;
 
     private final String className;
 
     private Label initialJumpLabel;
 
-    private final Method onMethod;
+    private final ASMMethod onMethod;
 
     private final byte[] originalByteCode;
 
@@ -47,7 +47,7 @@ public abstract class Yield2 extends GeneratorAdapter implements YieldHandler {
 
     AnalyzerAdapter analyzer;
 
-    public Yield2(String name, int access, Method onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters, byte[] originalByteCode, String className) {
+    public Yield2(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters, byte[] originalByteCode, String className) {
         // super(name, access, onMethod.getName(),
         // onMethod.getDescriptor(), delegateTo);
         super(new AnalyzerAdapter(className, access, onMethod.getName(), onMethod.getDescriptor(), delegateTo) {
@@ -95,7 +95,7 @@ public abstract class Yield2 extends GeneratorAdapter implements YieldHandler {
         push(name);
         loadThis();
         push(onMethod.getName());
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle_yieldIndex", Type.INT_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
+        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", Type.INT_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
 
         // if (StandardTrampoline.debug)
         //System.out.println(" we have <" + jumpLabels.size() + "> <" + startLabel + ">");
@@ -188,7 +188,7 @@ public abstract class Yield2 extends GeneratorAdapter implements YieldHandler {
             push(onMethod.getName());
             push(jumpLabels.size());
 
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle_yieldStore", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(Object[].class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.INT_TYPE}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(Object[].class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.INT_TYPE}));
 
             // here it comes
             if (onMethod.getReturnType().getSort() == Type.OBJECT) {
@@ -217,7 +217,7 @@ public abstract class Yield2 extends GeneratorAdapter implements YieldHandler {
             loadThis();
             push(onMethod.getName());
 
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
 
             if (StandardTrampoline.debug)
                 ;//System.out.println(" --- load --- <" + newLabel + ">");

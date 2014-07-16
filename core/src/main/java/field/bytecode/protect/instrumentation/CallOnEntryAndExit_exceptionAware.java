@@ -1,10 +1,11 @@
 package field.bytecode.protect.instrumentation;
 
+import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
 import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.namespace.generic.Generics;
 import org.objectweb.asm.*;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
+
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
 * Created by jason on 7/14/14.
 */
-public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter implements EntryHandler, ExitHandler {
+public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter implements EntryHandler, ExitHandler {
     private static final Type Type_Object = Type.getType(Object.class);
 
     private static final Type Type_String = Type.getType(String.class);
@@ -26,7 +27,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter
 
     private int exceptionLocal;
 
-    private final Method onMethod;
+    private final ASMMethod onMethod;
 
     private final String parameterName;
 
@@ -42,7 +43,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter
 
     Label startTryCatchLabel;
 
-    public CallOnEntryAndExit_exceptionAware(String name, int access, Method onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
+    public CallOnEntryAndExit_exceptionAware(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         access2 = access;
@@ -87,7 +88,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter
             push(onMethod.getName());
             push(parameterName);
             loadArgArray();
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type.VOID_TYPE, new Type[]{Type_String, Type_Object, Type_String, Type_String, Type.getType(Object[].class)}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type_String, Type_Object, Type_String, Type_String, Type.getType(Object[].class)}));
         }
         exceptionLocal = this.newLocal(Type.getType(Throwable.class));
 
@@ -109,7 +110,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type_Object, Type_handle_sig));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
 
             loadLocal(exceptionLocal);
             throwException();
@@ -132,10 +133,10 @@ public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type_Object, Type_handle_sig));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             pop();
-            if (StandardTrampoline.debug)
-                ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented RETURN"));
+           // if (StandardTrampoline.debug)
+                //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented RETURN"));
         } else if (op == Opcodes.IRETURN) {
             // dup();
             box(Type.INT_TYPE);
@@ -145,7 +146,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type_Object, Type_handle_sig));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             unbox(Type.INT_TYPE);
             if (StandardTrampoline.debug)
                 ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented IRETURN"));
@@ -158,7 +159,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type_Object, Type_handle_sig));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             unbox(Type.FLOAT_TYPE);
             if (StandardTrampoline.debug)
                 ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented FRETURN"));
@@ -170,7 +171,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type_Object, Type_handle_sig));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             checkCast(onMethod.getReturnType());
             if (StandardTrampoline.debug)
                 ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented ARETURN"));
@@ -198,7 +199,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends GeneratorAdapter
                 push(parameterName);
                 loadArgArray();
 
-                invokeStatic(Type.getType(BasicInstrumentation2.class), new Method("handle", Type.VOID_TYPE, new Type[]{Type_String, Type_Object, Type_String, Type_String, Type.getType(Object[].class)}));
+                invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type_String, Type_Object, Type_String, Type_String, Type.getType(Object[].class)}));
 
                 isConstructor = false;
             } else
