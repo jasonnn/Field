@@ -2,10 +2,10 @@ package field.bytecode.protect.analysis.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -13,9 +13,9 @@ import java.util.Set;
  */
 public class SimpleClassModel extends AbstractSimpleModel {
     @NotNull
-    public final Set<SimpleFieldModel> fields;// = new HashSet<SimpleFieldModel>();
+    public final Set<SimpleFieldModel> fields;
     @NotNull
-    public final Set<SimpleMethodModel> methods;// = new HashSet<SimpleMethodModel>();
+    public final Set<SimpleMethodModel> methods;
     @NotNull
     public final String superName;
     @Nullable
@@ -37,8 +37,17 @@ public class SimpleClassModel extends AbstractSimpleModel {
         this.methods = ensureNonNull(methods);
     }
 
-    public Type asType(){
+    public Type asType() {
         return Type.getObjectType(name);
+    }
+
+    //TODO this could be more robust (determined during visiting)
+    public boolean isInner() {
+        return name.indexOf('$') != -1;
+    }
+
+    public boolean isInterface() {
+        return (access & Opcodes.ACC_INTERFACE) != 0;
     }
 
     @SuppressWarnings("RedundantIfStatement")

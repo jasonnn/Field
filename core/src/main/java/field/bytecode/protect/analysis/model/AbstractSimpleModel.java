@@ -1,5 +1,6 @@
 package field.bytecode.protect.analysis.model;
 
+import field.bytecode.protect.asm.CommonTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +37,7 @@ public abstract class AbstractSimpleModel {
     }
 
     @SuppressWarnings("RedundantIfStatement")
-    protected boolean doEquals(Object o){
+    protected boolean doEquals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -49,6 +50,7 @@ public abstract class AbstractSimpleModel {
 
         return true;
     }
+
     protected int doHashCode() {
         int result = access;
         result = 31 * result + name.hashCode();
@@ -57,12 +59,12 @@ public abstract class AbstractSimpleModel {
         return result;
     }
 
-    private transient int hash=0;
+    private transient int hash = 0;
 
     @Override
     public final int hashCode() {
         int tmp = hash;
-        if(tmp==0) tmp=hash=doHashCode();
+        if (tmp == 0) tmp = hash = doHashCode();
         return tmp;
     }
 
@@ -81,6 +83,12 @@ public abstract class AbstractSimpleModel {
                 EMPTY_STRING_ARRAY : str.length == 0 ?
                 EMPTY_STRING_ARRAY : str;
     }
+
+
+    public boolean isWoven() {
+        return annotations.contains(CommonTypes.WOVEN.getClassName());
+    }
+
 
 
 }

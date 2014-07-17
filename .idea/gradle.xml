@@ -13,7 +13,6 @@
             <option value="$PROJECT_DIR$/annotation-processing" />
             <option value="$PROJECT_DIR$/annotations" />
             <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/scratch" />
           </set>
         </option>
       </GradleProjectSettings>

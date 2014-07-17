@@ -14,7 +14,7 @@ public class SimpleModelBuilder {
 
     public static SimpleClassModel buildModel(byte[] bytes) {
         SimpleModelClassVisitor modelBuilder = new SimpleModelClassVisitor(null);
-        new ClassReader(bytes).accept(modelBuilder, ClassReader.SKIP_CODE);
+        new ClassReader(bytes).accept(modelBuilder, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
         return modelBuilder.getModel();
     }
 

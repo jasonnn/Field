@@ -1,7 +1,8 @@
 package field.bytecode.protect.trampoline;
 
+import field.bytecode.protect.analysis.model.SimpleClassModel;
+import field.bytecode.protect.analysis.model.SimpleModelBuilder;
 import field.bytecode.protect.instrumentation.BasicInstrumentation2;
-import field.bytecode.protect.asm.EmptyVisitors;
 import field.namespace.generic.ReflectionTools;
 import org.objectweb.asm.*;
 import org.objectweb.asm.util.CheckClassAdapter;
@@ -9,7 +10,9 @@ import org.objectweb.asm.util.TraceClassVisitor;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -219,15 +222,11 @@ public class StandardTrampoline extends Trampoline2 {
         try {
             log.log(Level.INFO, "begin instrumentation of: {0}", class_name);
 
-            PreWeaveScanner.ScanResult scanResult = PreWeaveScanner.scan(a);
 
-            //if (StandardTrampoline.debug)
-            // System.out.println(" class name <" +
-            // class_name + "> is <" +
-            // woven[0] + "> <" + isAnon +
-            // ">");
+            SimpleClassModel classModel = SimpleModelBuilder.buildModel(a);
 
-            if (!scanResult.isWoven) {
+
+            if (!classModel.isWoven()) {
                 cache.state(class_name, false, modAt);
                 return a;
             } else {
@@ -235,14 +234,14 @@ public class StandardTrampoline extends Trampoline2 {
             }
 
             check();
-            a = weave(a, class_name, deferTo, scanResult.extendsClass, scanResult.getImplementsArray());
+            a = weave(a, class_name, deferTo, classModel.superName, classModel.interfaces);
             check();
 
-            if (debug) {
-                FileOutputStream os2 = new FileOutputStream(new File("/var/tmp/woven_" + class_name.replace('.', 'X') + ".class"));
-                os2.write(a);
-                os2.close();
-            }
+//            if (debug) {
+//                FileOutputStream os2 = new FileOutputStream(new File("/var/tmp/woven_" + class_name.replace('.', 'X') + ".class"));
+//                os2.write(a);
+//                os2.close();
+//            }
 
             return a;
         } catch (Throwable t) {

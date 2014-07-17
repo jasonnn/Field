@@ -1,14 +1,16 @@
 package field.bytecode.protect.trampoline;
 
+import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.asm.CommonTypes;
 import field.bytecode.protect.asm.EmptyVisitors;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.Method;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by jason on 7/14/14.
@@ -45,23 +47,26 @@ public class InheritWovenMethodAdaptor extends MethodVisitor {
 
     @Override
     public AnnotationVisitor visitAnnotation(final String annotationName, boolean vis) {
-        if (!annotationName.equals("Lfield/bytecode/protect/annotations/InheritWeave;")) {
+        if (!CommonTypes.INHERIT_WEAVE.getDescriptor().equals(annotationName)) {
             return super.visitAnnotation(annotationName, vis);
         }
+//        if (!annotationName.equals("Lfield/bytecode/protect/annotations/InheritWeave;")) {
+//            return super.visitAnnotation(annotationName, vis);
+//        }
         try {
 
-            Type[] at = new Method(name, desc).getArgumentTypes();
+            Type[] at = new ASMMethod(name, desc).getArgumentTypes();
             Annotation[] annotations = trampoline.getAllAnotationsForSuperMethodsOf(name, desc, at, super_name, interfaces);
 
             for (Annotation annotation : annotations) {
                 AnnotationVisitor va = mv.visitAnnotation("L" + annotation.annotationType().getName().replace('.', '/') + ";", true);
 
-                java.lang.reflect.Method[] annotationMethods = annotation.annotationType().getDeclaredMethods();
+                Method[] annotationMethods = annotation.annotationType().getDeclaredMethods();
 
                 if (annotation.annotationType().getClassLoader() != trampoline.loader)
                     assert !trampoline.shouldLoadLocal(annotation.annotationType().getName()) : "WARNING: leaked, " + annotation.annotationType().getClassLoader() + " " + annotation.annotationType();
 
-                for (java.lang.reflect.Method mm : annotationMethods) {
+                for (Method mm : annotationMethods) {
                     try {
                         Object r;
                         r = mm.invoke(annotation);
