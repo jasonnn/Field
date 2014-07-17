@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 @Woven
 public class Blank2 implements iLaunchable {
     private static final Logger log = Logger.getLogger(Blank2.class.getName());
-    File openFileProvokation;
+    File openFileProvocation;
     boolean finished = false;
     PhantomFluidSheet loaded = null;
 
@@ -72,7 +72,7 @@ public class Blank2 implements iLaunchable {
         }
 
 
-        if (openFileProvokation == null) {
+        if (openFileProvocation == null) {
             String mcName = SystemProperties.getProperty("main.class");
             // System.out.println(" main class <" + mcName + "> <"
             // + Platform.getCanonicalName(this.getClass())

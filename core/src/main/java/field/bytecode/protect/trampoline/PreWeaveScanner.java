@@ -12,11 +12,15 @@ import java.util.List;
 /**
  * Created by jason on 7/16/14.
  */
+
+@Deprecated
 public class PreWeaveScanner extends ClassVisitor {
+    @Deprecated
     public static ScanResult scan(byte[] bytes) {
         return scan(bytes, null);
     }
 
+    @Deprecated
     public static ScanResult scan(byte[] bytes, ClassVisitor delegate) {
         PreWeaveScanner scanner = new PreWeaveScanner(delegate);
         new ClassReader(bytes).accept(scanner, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);

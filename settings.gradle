@@ -5,5 +5,5 @@ include 'core'
 include 'annotations'
 include 'annotation-processing'
 
-include 'scratch'
+//include 'scratch'
 
