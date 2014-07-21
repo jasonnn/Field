@@ -3,7 +3,6 @@ package field.bytecode.protect.trampoline;
 import field.bytecode.protect.FastClassLoader;
 import field.bytecode.protect.Notable;
 import field.core.Platform;
-import field.launch.SystemProperties;
 import field.namespace.generic.ReflectionTools;
 
 import java.io.File;
@@ -33,48 +32,24 @@ public class TrampolineClassLoader extends FastClassLoader {
     HashSet<String> alreadyFailed = new HashSet<String>();
 
     HashMap<String, Class> already = new HashMap<String, Class>();
-    private List<String> ignored = getDefaultIgnored();
-    private List<String> allowed = getDefaultAllowed();
+
+    private final InstrumentationFilter filter = InstrumentationFilter.getInstance();
+
 
     public TrampolineClassLoader(URL[] u, ClassLoader loader, TrampolineInstrumentation instrumentation) {
         super(u, loader);
         this.instrumentation = instrumentation;
-        addExtraIgnored();
 
 
     }
 
-    private void addExtraIgnored() {
-        String exceptions = SystemProperties.getProperty("trampolineExceptions", null);
-        if (exceptions != null) {
-            ignored.addAll(Arrays.asList(exceptions.split(":")));
-        }
-    }
 
-
-    static List<String> getDefaultIgnored() {
-        return getDefaultIgnored(true);
-    }
-
-    static List<String> getDefaultIgnored(boolean mutate) {
-
-        return mutate ? new ArrayList<String>(DEFAULT_IGNORED) : DEFAULT_IGNORED;
-    }
-
-    static List<String> getDefaultAllowed() {
-        return getDefaultAllowed(false);
-    }
-
-    static List<String> getDefaultAllowed(boolean mutate) {
-
-        return mutate ? new ArrayList<String>(DEFAULT_ALLOWED) : DEFAULT_ALLOWED;
-    }
-
+    @Deprecated
     public boolean shouldLoadLocal(String s) {
 
         s = s.replace('/', '.');
         boolean failed = false;
-        for (String root : ignored) {
+        for (String root : filter.ignored) {
             if (s.startsWith(root))
                 failed = true;
         }
@@ -83,7 +58,7 @@ public class TrampolineClassLoader extends FastClassLoader {
             failed = true;
 
         if (failed)
-            for (String root : allowed)
+            for (String root : filter.allowed)
                 if (s.contains(root))
                     failed = false;
 
@@ -109,13 +84,14 @@ public class TrampolineClassLoader extends FastClassLoader {
         System.setProperty("java.class.path", oldCP);
     }
 
+    @SuppressWarnings("unchecked")
     public Set<Class> getAllLoadedClasses() {
         try {
             HashSet<Class> al = new HashSet<Class>();
             al.addAll(previous.values());
             al.addAll(already.values());
 
-            Vector vThere = (Vector) ReflectionTools.illegalGetObject(deferTo, "classes");
+            Vector<Class> vThere = (Vector) ReflectionTools.illegalGetObject(deferTo, "classes");
             al.addAll(vThere);
             return al;
         } catch (ConcurrentModificationException e) {
@@ -251,13 +227,6 @@ public class TrampolineClassLoader extends FastClassLoader {
 
             loading.push(class_name);
             try {
-                if (Trampoline2.debug) {
-                    // System.out.println(indentation
-                    // + "? entered " +
-                    // class_name + " " +
-                    // resolve);
-                    indentation += " ";
-                }
 
                 Class loaded = previous.get(class_name);
                 if (loaded == null)
@@ -286,7 +255,7 @@ public class TrampolineClassLoader extends FastClassLoader {
                                     try {
                                         definePackage(packageName, null, null, null, null, null, null, null);
                                     } catch (IllegalArgumentException e) {
-                                        // e.printStackTrace();
+                                        e.printStackTrace();
                                     }
                                     knownPackages.add(packageName);
                                 }
@@ -302,28 +271,13 @@ public class TrampolineClassLoader extends FastClassLoader {
                                     le.printStackTrace();
                                     return null;
                                 }
-                                // ;//System.out.println("
-                                // >>
-                                // about
-                                // to
-                                // resolve
-                                // <"+class_name+">
-                                // <"+resolve+">");
+
                                 if (resolve)
                                     resolveClass(loaded);
                                 previous.put(class_name, loaded);
-                            } else {
-                                // System.out.println(" loaded <"
-                                // +
-                                // class_name
-                                // +
-                                // "> in RS classloader");
                             }
                         }
-                        // ;//System.out.println("
-                        // >>
-                        // loaded
-                        // <"+class_name+">");
+
                     }
                 if (classNotFound == null)
                     if (loaded == null) {
@@ -335,28 +289,13 @@ public class TrampolineClassLoader extends FastClassLoader {
 
                         } catch (ClassNotFoundException ex) {
                             classNotFound = ex;
-                            if (Trampoline2.debug) {
-                                // System.out.println(ANSIColorUtils.red("-- class not found <"
-                                // +
-                                // class_name
-                                // +
-                                // ">"));
-                                ex.printStackTrace();
-                            }
+                            log.log(Level.WARNING, "?!", ex);
                         }
                     }
-                if (Trampoline2.debug) {
-                    indentation = indentation.substring(1);
-                    // System.out.println(indentation
-                    // + "?" + class_name +
-                    // " complete");
-                    // assert
-                    // popped.equals(class_name);
-                }
+
                 if (classNotFound != null) {
 
                     log.log(Level.WARNING, "exception (" + classNotFound.getClass() + "): while trying to load <" + class_name + " / <" + loading + ">");
-                    new Exception().printStackTrace();
 
                     alreadyFailed.add(class_name);
 
@@ -389,17 +328,4 @@ public class TrampolineClassLoader extends FastClassLoader {
 
     }
 
-    private static final List<String> DEFAULT_IGNORED = Arrays.asList(
-            "apple.", "java.", "javax.", "sun.", "com.apple", "apple.",
-            "field.namespace", "field.math", "field.launch.",
-            "org.objectweb", "com.sun", "org.xml", "org.w3c", "$Prox", "org.eclipse",
-            "main", "field.util.BetterWeak", "field.misc.ANSIColorUtils",
-            "ch.rand", "org.python", "org.apache.batik", "org.antlr",
-            "field.util.TaskQueue", "com.lowagie", "net.sf.cglib.proxy",
-            "com.seaglasslookandfeel", "org.pushingpixels", "net.sourceforge.napkinlaf.",
-            "com.kenai.jaffl");
-    private static final List<String> DEFAULT_ALLOWED = Arrays.asList(
-            "phobos", "com.sun.script.", "com.sun.scenario", "com.sun.stylesheet",
-            "com.sun.opengl", "com.sun.gluegen", "javax.media.opengl",
-            "javax.media.nativewindow", "javax.jmdns");
 }

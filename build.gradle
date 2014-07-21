@@ -11,6 +11,7 @@ subprojects {
     }
 
     dependencies {
+        compile 'org.jetbrains:annotations:13.0'
         testCompile group: 'junit', name: 'junit', version: '4.11'
     }
 }
@@ -18,6 +19,7 @@ subprojects {
 project('core') {
     dependencies {
         compile project(':annotations')
+        compile project(':asm')
     }
 }
 project('annotation-processing') {

@@ -1,18 +1,22 @@
-package field.bytecode.protect;
+package field.bytecode.protect.util;
 
 import java.util.*;
 
 /**
  * Created by jason on 7/16/14.
+ * Intended to be a replacement for TrampolineReflection
  */
 public class DeepReflection {
     private static final Class[] EMPTY_ARRAY = new Class[0];
 
-    static class MyDeque extends ArrayDeque<Class> {
-        public void addLast(Class[] classes) {
-
-
+    private static final ThreadLocal<MyDeque> dq = new ThreadLocal<MyDeque>() {
+        @Override
+        protected MyDeque initialValue() {
+            return new MyDeque();
         }
+    };
+
+    static class MyDeque extends ArrayDeque<Class> {
 
         public void pushAll(Class[] classes) {
             if (classes == null || classes.length == 0) return;
@@ -50,63 +54,48 @@ public class DeepReflection {
         return getHeirarchy(base, new LinkedHashSet<Class>(), true, false);
     }
 
-    public static Set<Class> getH(Class base) {
-        LinkedHashSet<Class> s = new LinkedHashSet<Class>();
-        if (base.isInterface()) return getInterfaces(base, s, true, false);
-
-        ArrayList<Class> parents = new ArrayList<Class>(getSuperClasses(base, s, true));
-        for (Class c : parents) {
-            getInterfaces(c, s, false, false);
-        }
-        return s;
-    }
 
     public static Set<Class> getHeirarchy(Class base, Set<Class> accum, boolean includeSelf, boolean depthFirst) {
         if (base.isInterface()) return getInterfaces(base, accum, includeSelf, depthFirst);
 
         MyDeque dq = new MyDeque();
 
-        getDirectParents(base, dq, depthFirst);
+        addDirectParents(base, dq, depthFirst);
         if (includeSelf) dq.push(base);
 
         while (!dq.isEmpty()) {
             Class next = dq.pop();
             accum.add(next);
-            getDirectParents(next, dq, depthFirst);
+            addDirectParents(next, dq, depthFirst);
         }
 
 
         return accum;
     }
 
-    static void getDirectParents(Class c, MyDeque deq, boolean depthFirst) {
+    static void addDirectParents(Class c, MyDeque deq, boolean depthFirst) {
         Class sup = c.getSuperclass();
         Class[] inter = c.getInterfaces();
         if (sup != null && sup != Object.class) {
-            if (inter != null && inter.length > 0) {
-                if (depthFirst) {
-                    deq.pushAll(inter);
-                    deq.push(sup);
-                } else {
-                    deq.addLast(sup);
-                    deq.addAllLast(inter);
-                }
+            if (depthFirst) {
+                deq.pushAll(inter);
+                deq.push(sup);
             } else {
-                if (depthFirst) {
-                    deq.push(sup);
-                } else {
-                    deq.addLast(sup);
-                }
+                deq.addLast(sup);
+                deq.addAllLast(inter);
             }
-
+        } else {
+            if (depthFirst) deq.pushAll(inter);
+            else deq.addAllLast(inter);
         }
+
     }
 
     static Collection<Class> getDirectParents(Class c) {
         Class sup = c.getSuperclass();
         Class[] inter = c.getInterfaces();
         if (sup != null && sup != Object.class) {
-            if (inter != null && inter.length > 0) {
+            if (inter.length > 0) {
                 LinkedHashSet<Class> accum = new LinkedHashSet<Class>(inter.length + 1);
                 accum.add(sup);
                 Collections.addAll(accum, inter);

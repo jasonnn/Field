@@ -1,15 +1,21 @@
 package field.bytecode.protect.trampoline;
 
-import field.bytecode.protect.analysis.model.SimpleClassModel;
-import field.bytecode.protect.analysis.model.SimpleModelBuilder;
+import field.bytecode.protect.asm.Utils;
 import field.bytecode.protect.instrumentation.BasicInstrumentation2;
 import field.namespace.generic.ReflectionTools;
+import field.protect.asm.ASMType;
+import field.protect.asm.model.SimpleClassModel;
+import field.protect.asm.model.SimpleModelBuilder;
 import org.objectweb.asm.*;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.TraceClassVisitor;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,7 +24,7 @@ import java.util.logging.Logger;
 
 /**
  */
-public class StandardTrampoline extends Trampoline2 {
+public class StandardTrampoline extends Trampoline2 implements InheritWovenHelper {
     private static final Logger log = Logger.getLogger(StandardTrampoline.class.getName());
 
     public static boolean debug = true;
@@ -38,15 +44,14 @@ public class StandardTrampoline extends Trampoline2 {
 
     }
 
-    public Annotation[] getAllAnotationsForSuperMethodsOf(String name, String desc, Type[] at, String super_name, String[] interfaces) throws ClassNotFoundException {
-
-        Class[] parameterClasses = new Class[at.length];
+    private Annotation[] doGetAllAnnotations(String name, ASMType[] types, String superName, String[] interfaces) throws IOException, ClassNotFoundException {
+        Class[] parameterClasses = new Class[types.length];
 
         for (int i = 0; i < parameterClasses.length; i++) {
-            parameterClasses[i] = getClassFor(at[i].getClassName());
+            parameterClasses[i] = getClassFor(types[i].getClassName());
         }
 
-        java.lang.reflect.Method javamethod = ReflectionTools.findMethodWithParametersUpwards(name, parameterClasses, checkedLoadClass(super_name));
+        Method javamethod = ReflectionTools.findMethodWithParametersUpwards(name, parameterClasses, checkedLoadClass(superName));
 
         if (javamethod == null) {
             for (String anInterface : interfaces) {
@@ -57,17 +62,32 @@ public class StandardTrampoline extends Trampoline2 {
             assert javamethod != null : " couldn't find method to inherit from in <" + name + "> with parameters <" + Arrays.asList(parameterClasses) + ">";
         }
 
-        try {
-            return javamethod.getAnnotations();
-        } catch (Throwable t) {
-            t.printStackTrace();
-            // System.exit(1);
-        }
-        return null;
+
+        return javamethod.getAnnotations();
 
     }
 
-    public Class getClassFor(String className) throws ClassNotFoundException {
+    @Override
+    public Annotation[] getAllAnotationsForSuperMethodsOf(String name,
+                                                          String desc,
+                                                          ASMType[] at,
+                                                          String super_name,
+                                                          String[] interfaces) {
+
+        Annotation[] result = null;
+        try {
+            result = doGetAllAnnotations(name, at, super_name, interfaces);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+
+    }
+
+    public Class getClassFor(String className) throws ClassNotFoundException, IOException {
         if (className.equals("int")) {
             return Integer.TYPE;
         }
@@ -87,12 +107,10 @@ public class StandardTrampoline extends Trampoline2 {
      *
      * @throws ClassNotFoundException
      */
-    private Class checkedLoadClass(String className) throws ClassNotFoundException {
+    private Class checkedLoadClass(String className) throws ClassNotFoundException, IOException {
 
         className = className.replace('/', '.');
-        // if (debug)
-        // System.out.println(" looking for <" + className +
-        // "> in <" + alreadyLoaded + ">");
+
         if (alreadyLoaded.contains(className) || !shouldLoadLocal(className)) {
             return loader.loadClass(className);
         }
@@ -106,87 +124,64 @@ public class StandardTrampoline extends Trampoline2 {
         // Resource resource = path.getResource(className.replace('.', '/').concat(".class"), false);
 
         InputStream stream = loader.getResourceAsStream(className.replace('.', '/').concat(".class"));
-        byte[] bb = new byte[100];
-        int cursor = 0;
-        try {
-            while (stream.available() > 0) {
-                int c = stream.read(bb, cursor, bb.length - cursor);
-                if (c <= 0)
-                    break;
-                cursor += c;
-                if (cursor > bb.length - 2) {
-                    byte[] b2 = new byte[bb.length * 2];
-                    System.arraycopy(bb, 0, b2, 0, bb.length);
-                    bb = b2;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        byte[] bytes = new byte[cursor];
-        System.arraycopy(bb, 0, bytes, 0, cursor);
 
-        // if (resource == null)
-        // System.err.println(" warning, couldn't find superclass ? :" +
-        // className + " " + path + " " + stream);
-        // byte[] bytes = null;
-        // try {
-        // bytes = resource.getBytes();
-        // } catch (IOException e1) {
-        // e1.printStackTrace();
-        // }
+        byte[] data = Utils.readFully(stream);
 
-        //if (debug)
-        // System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  about to renter code with <"
-        // + className + "> and <" + bytes.length +
-        // ">");
-        byte[] o = bytes;
+//        byte[] bb = new byte[100];
+//        int cursor = 0;
+//        try {
+//            while (stream.available() > 0) {
+//                int c = stream.read(bb, cursor, bb.length - cursor);
+//                if (c <= 0)
+//                    break;
+//                cursor += c;
+//                if (cursor > bb.length - 2) {
+//                    byte[] b2 = new byte[bb.length * 2];
+//                    System.arraycopy(bb, 0, b2, 0, bb.length);
+//                    bb = b2;
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        byte[] bytes = new byte[cursor];
+//        System.arraycopy(bb, 0, bytes, 0, cursor);
+//
+//        // if (resource == null)
+//        // System.err.println(" warning, couldn't find superclass ? :" +
+//        // className + " " + path + " " + stream);
+//        // byte[] bytes = null;
+//        // try {
+//        // bytes = resource.getBytes();
+//        // } catch (IOException e1) {
+//        // e1.printStackTrace();
+//        // }
+//
+//        //if (debug)
+//        // System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  about to renter code with <"
+//        // + className + "> and <" + bytes.length +
+//        // ">");
+//        byte[] o = bytes;
 
         check();
-        bytes = this.instrumentBytecodes(bytes, className, loader);
+        byte[] instrumented = instrumentBytecodes(data, className, loader);
         check();
-        if (debug) {
-            // System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< and out again <"
-            // + className + "> and <" + bytes.length +
-            // "> from <" + o.length + ">");
-            FileOutputStream os;
-            try {
-                os = new FileOutputStream(new File("/var/tmp/old_" + className.replace('.', 'X') + ".class"));
-                os.write(o);
-                os.close();
+        // if (debug) {
+        //TODO before and after, if needed
+        //  }
 
-                FileOutputStream os2 = new FileOutputStream(new File("/var/tmp/new_" + className.replace('.', 'X') + ".class"));
-                os2.write(bytes);
-                os2.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            // we
-            // need
-            // to
-            // cache
-            // annotations
-            // for
-            // all
-            // of
-            // the
-            // methods
-            check();
-            Class cc = loader._defineClass(className, bytes, 0, bytes.length);
-            check();
-            return cc;
-            // return
-            // cc;
-            // return
-            // loader.loadClass(className);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+
+        check();
+        Class cc = loader._defineClass(className, instrumented, 0, instrumented.length);
+        check();
+        return cc;
+        // return
+        // cc;
+        // return
+        // loader.loadClass(className);
+
         // catch
         // (IllegalAccessException
         // e) {
@@ -196,8 +191,7 @@ public class StandardTrampoline extends Trampoline2 {
         // e) {
         // e.printStackTrace();
         // }
-        assert false : "failure of grand plan for <" + className + ">";
-        return null;
+
     }
 
     @Override
@@ -422,6 +416,12 @@ public class StandardTrampoline extends Trampoline2 {
         // }
         // }
     }
+
+    @Override
+    public ClassLoader getLoader() {
+        return loader;
+    }
+
 
     private class MyClassWriter extends ClassWriter {
         public MyClassWriter() {

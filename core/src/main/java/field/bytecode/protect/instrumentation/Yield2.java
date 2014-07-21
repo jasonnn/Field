@@ -1,8 +1,8 @@
 package field.bytecode.protect.instrumentation;
 
-import field.bytecode.protect.asm.ASMMethod;
-import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
-import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.protect.asm.ASMMethod;
+import field.protect.asm.ASMType;
+import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -71,8 +71,8 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
 
     @Override
     public void visitCode() {
-        if (StandardTrampoline.debug)
-            ;//System.out.println(ANSIColorUtils.red(" yield begins "));
+        // if (StandardTrampoline.debug)
+        //System.out.println(ANSIColorUtils.red(" yield begins "));
         super.visitCode();
 
         initialJumpLabel = this.newLabel();
@@ -95,7 +95,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
         push(name);
         loadThis();
         push(onMethod.getName());
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", Type.INT_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
+        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", ASMType.INT_TYPE, new ASMType[]{ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class)}));
 
         // if (StandardTrampoline.debug)
         //System.out.println(" we have <" + jumpLabels.size() + "> <" + startLabel + ">");
@@ -188,21 +188,21 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             push(onMethod.getName());
             push(jumpLabels.size());
 
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(Object[].class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.INT_TYPE}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", ASMType.getType(Object.class), new ASMType[]{ASMType.getType(Object.class), ASMType.getType(Object[].class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.INT_TYPE}));
 
             // here it comes
-            if (onMethod.getReturnType().getSort() == Type.OBJECT) {
+            if (onMethod.getASMReturnType().getSort() == ASMType.OBJECT) {
                 visitInsn(Opcodes.ARETURN);
-            } else if (onMethod.getReturnType() == Type.INT_TYPE) {
+            } else if (onMethod.getASMReturnType() == ASMType.INT_TYPE) {
                 unbox(Type.INT_TYPE);
                 super.visitInsn(Opcodes.IRETURN);
-            } else if (onMethod.getReturnType() == Type.FLOAT_TYPE) {
+            } else if (onMethod.getASMReturnType() == ASMType.FLOAT_TYPE) {
                 unbox(Type.FLOAT_TYPE);
                 super.visitInsn(Opcodes.FRETURN);
-            } else if (onMethod.getReturnType() == Type.VOID_TYPE) {
+            } else if (onMethod.getASMReturnType() == ASMType.VOID_TYPE) {
                 super.visitInsn(Opcodes.RETURN);
             } else {
-                assert false : onMethod.getReturnType();
+                assert false : onMethod.getASMReturnType();
             }
 
             analyzer.locals = new ArrayList(wasLocals);
@@ -217,10 +217,11 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             loadThis();
             push(onMethod.getName());
 
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
-
-            if (StandardTrampoline.debug)
-                ;//System.out.println(" --- load --- <" + newLabel + ">");
+            //  invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
+            invokeStatic(Type.getType(BasicInstrumentation2.class),
+                    new ASMMethod("handle_yieldLoad", ASMType.OBJECT_ARRAY_TYPE, new ASMType[]{ASMType.STRING_TYPE, ASMType.OBJECT_TYPE, ASMType.STRING_TYPE}));
+            // if (StandardTrampoline.debug)
+            //System.out.println(" --- load --- <" + newLabel + ">");
 
             n = 0;
             int off = 1;

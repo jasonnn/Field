@@ -1,6 +1,7 @@
-package field.bytecode.protect.analysis.model;
+package field.protect.asm.model;
 
 
+import field.protect.asm.ASMType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,8 +26,16 @@ public class SimpleMethodModel extends AbstractSimpleModel {
                              @Nullable String[] exceptions) {
         super(access, name, signature, annotations);
         this.desc = desc;
+
         this.exceptions = ensureNonNull(exceptions);
+        Arrays.sort(this.exceptions);
+
     }
+
+    public ASMType[] getArgumentTypes() {
+        return ASMType.getArgumentTypes(signature);
+    }
+
 
     @SuppressWarnings("RedundantIfStatement")
     @Override

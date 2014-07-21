@@ -1,4 +1,4 @@
-package field.bytecode.protect.analysis.model;
+package field.protect.asm.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +18,7 @@ public class SimpleClassModel extends AbstractSimpleModel {
     public final Set<SimpleMethodModel> methods;
     @NotNull
     public final String superName;
-    @Nullable
+    @NotNull
     public final String[] interfaces;
 
 
@@ -35,6 +35,7 @@ public class SimpleClassModel extends AbstractSimpleModel {
         this.interfaces = ensureNonNull(interfaces);
         this.fields = ensureNonNull(fields);
         this.methods = ensureNonNull(methods);
+        Arrays.sort(this.interfaces);
     }
 
     public Type asType() {

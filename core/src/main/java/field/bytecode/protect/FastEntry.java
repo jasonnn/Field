@@ -1,9 +1,9 @@
 package field.bytecode.protect;
 
-import field.bytecode.protect.asm.ASMMethod;
+import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.Run;
 import field.bytecode.protect.instrumentation.CallOnEntryFast;
-import field.bytecode.protect.dispatch.ReturnCode;
+import field.protect.asm.ASMMethod;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 

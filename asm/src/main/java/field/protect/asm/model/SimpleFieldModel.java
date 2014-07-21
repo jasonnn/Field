@@ -1,4 +1,4 @@
-package field.bytecode.protect.analysis.model;
+package field.protect.asm.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

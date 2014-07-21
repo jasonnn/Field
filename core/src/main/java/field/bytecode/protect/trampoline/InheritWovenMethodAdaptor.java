@@ -1,8 +1,7 @@
 package field.bytecode.protect.trampoline;
 
-import field.bytecode.protect.asm.ASMMethod;
-import field.bytecode.protect.asm.CommonTypes;
-import field.bytecode.protect.asm.EmptyVisitors;
+import field.protect.asm.ASMMethod;
+import field.protect.asm.ASMType;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -13,11 +12,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Created by jason on 7/14/14.
+ * add annotations from parent classes to the class being instrumented
  */
 public class InheritWovenMethodAdaptor extends MethodVisitor {
 
-    private final StandardTrampoline trampoline;
+    private final InheritWovenHelper trampoline;
 
     //private final int access;
 
@@ -29,7 +28,7 @@ public class InheritWovenMethodAdaptor extends MethodVisitor {
 
     private final String super_name;
 
-    public InheritWovenMethodAdaptor(StandardTrampoline trampoline,
+    public InheritWovenMethodAdaptor(InheritWovenHelper trampoline,
                                      String name, String desc,
                                      String super_name, String[] interfaces) {
         super(Opcodes.ASM5);
@@ -47,15 +46,16 @@ public class InheritWovenMethodAdaptor extends MethodVisitor {
 
     @Override
     public AnnotationVisitor visitAnnotation(final String annotationName, boolean vis) {
-        if (!CommonTypes.INHERIT_WEAVE.getDescriptor().equals(annotationName)) {
+
+
+        if (!annotationName.equals("Lfield/bytecode/protect/annotations/InheritWeave;")) {
             return super.visitAnnotation(annotationName, vis);
         }
-//        if (!annotationName.equals("Lfield/bytecode/protect/annotations/InheritWeave;")) {
-//            return super.visitAnnotation(annotationName, vis);
-//        }
+
         try {
 
-            Type[] at = new ASMMethod(name, desc).getArgumentTypes();
+            ASMType[] at = new ASMMethod(name, desc).getASMArgumentTypes();
+
             Annotation[] annotations = trampoline.getAllAnotationsForSuperMethodsOf(name, desc, at, super_name, interfaces);
 
             for (Annotation annotation : annotations) {
@@ -63,7 +63,7 @@ public class InheritWovenMethodAdaptor extends MethodVisitor {
 
                 Method[] annotationMethods = annotation.annotationType().getDeclaredMethods();
 
-                if (annotation.annotationType().getClassLoader() != trampoline.loader)
+                if (annotation.annotationType().getClassLoader() != trampoline.getLoader())
                     assert !trampoline.shouldLoadLocal(annotation.annotationType().getName()) : "WARNING: leaked, " + annotation.annotationType().getClassLoader() + " " + annotation.annotationType();
 
                 for (Method mm : annotationMethods) {
@@ -85,12 +85,10 @@ public class InheritWovenMethodAdaptor extends MethodVisitor {
                 va.visitEnd();
             }
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-        return EmptyVisitors.annotationVisitor;
+        return null;////?????? THIS DOES NOT SEEM RIGHT???!
     }
 
 }

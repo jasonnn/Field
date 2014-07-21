@@ -1,14 +1,15 @@
 package field.bytecode.protect.instrumentation;
 
-import field.bytecode.protect.asm.ASMMethod;
-import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
+import field.protect.asm.ASMMethod;
+import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-//import org.objectweb.asm.commons.Method;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.*;
 
 /**
 * Created by jason on 7/14/14.
@@ -61,7 +62,7 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             push(onMethod.getName());
             push(parameterName);
             loadArgArray();
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(Object[].class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_V_SOSSo);
         }
         super.visitCode();
     }
@@ -75,7 +76,7 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_V_SOSSoc);
             pop();
         } else if (op == Opcodes.IRETURN) {
             box(Type.INT_TYPE);
@@ -85,7 +86,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_V_SOSSo);
+            // new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(Type.INT_TYPE);
         } else if (op == Opcodes.FRETURN) {
             box(Type.FLOAT_TYPE);
@@ -95,7 +97,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_V_SOSSo);
+            // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(Type.FLOAT_TYPE);
         } else if (op == Opcodes.ARETURN) {
             dup();
@@ -105,7 +108,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_V_SOSSo);
+            //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
         }
 
         super.visitInsn(op);
@@ -123,7 +127,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
                 push(parameterName);
                 loadArgArray();
 
-                invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(Object[].class)}));
+                invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_V_SOSSo);
+                //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(Object[].class)}));
 
                 isConstructor = false;
             } else

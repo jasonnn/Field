@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Field.iml" filepath="$PROJECT_DIR$/Field.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotation-processing/annotation-processing.iml" filepath="$PROJECT_DIR$/annotation-processing/annotation-processing.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotations/annotations.iml" filepath="$PROJECT_DIR$/annotations/annotations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/asm/asm.iml" filepath="$PROJECT_DIR$/asm/asm.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
     </modules>
   </component>

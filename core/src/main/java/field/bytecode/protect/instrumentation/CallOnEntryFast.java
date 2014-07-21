@@ -1,11 +1,13 @@
 package field.bytecode.protect.instrumentation;
 
-import field.bytecode.protect.asm.ASMMethod;
-import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
+import field.protect.asm.ASMMethod;
+import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
 
 import java.util.HashMap;
+
+import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE;
+import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.handleFast_V_IOo;
 
 /**
 * Created by jason on 7/14/14.
@@ -45,7 +47,9 @@ public abstract class CallOnEntryFast extends FieldASMGeneratorAdapter implement
         push(uniq);
         loadThis();
         loadArgArray();
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleFast", Type.VOID_TYPE, new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(Object[].class)}));
+        invokeStatic(BASIC_INSTRUMENTATION_TYPE, handleFast_V_IOo);
+
+        // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleFast", Type.VOID_TYPE, new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(Object[].class)}));
         super.visitCode();
     }
 }

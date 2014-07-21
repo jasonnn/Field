@@ -4,12 +4,11 @@
 package field.bytecode.protect.cache;
 
 import field.bytecode.protect.annotations.CacheParameter;
-import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
+import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.Method;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

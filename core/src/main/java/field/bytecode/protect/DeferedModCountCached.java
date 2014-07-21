@@ -3,12 +3,12 @@
  */
 package field.bytecode.protect;
 
-import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.cache.ModCountArrayWrapper;
 import field.bytecode.protect.cache.ModCountCache;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.namespace.generic.Bind.iFunction;
+import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 

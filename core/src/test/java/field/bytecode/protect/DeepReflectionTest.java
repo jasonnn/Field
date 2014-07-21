@@ -1,5 +1,6 @@
 package field.bytecode.protect;
 
+import field.bytecode.protect.util.DeepReflection;
 import org.junit.Test;
 
 import java.io.Serializable;
@@ -42,13 +43,31 @@ public class DeepReflectionTest {
     }
 
     @Test
-    public void testGetHeirarchy() throws Exception {
-        //breadth-first: [class java.util.ArrayList, class java.util.AbstractList, interface java.util.List, interface java.util.RandomAccess, interface java.lang.Cloneable, interface java.io.Serializable, class java.util.AbstractCollection]
-        //depth-first: [class java.util.ArrayList, class java.util.AbstractList, class java.util.AbstractCollection, interface java.util.List, interface java.util.RandomAccess, interface java.lang.Cloneable, interface java.io.Serializable]
-        //H: [class java.util.ArrayList, class java.util.AbstractList, class java.util.AbstractCollection, interface java.util.List, interface java.util.RandomAccess, interface java.lang.Cloneable, interface java.io.Serializable, interface java.util.Collection, interface java.lang.Iterable]
+    public void testGetHeirarchy_depthFirst() throws Exception {
 
-        Set<Class> hi = DeepReflection.getH(ArrayList.class);
-        System.out.println(hi);
+        Set<Class> expect = set(
+                ArrayList.class,
+                AbstractList.class,
+                AbstractCollection.class,
+                List.class, Collection.class, Iterable.class,
+                RandomAccess.class, Cloneable.class, Serializable.class);
+
+        Set<Class> hi = DeepReflection.getHeirarchyDF(ArrayList.class);
+        assertEquals(expect, hi);
+
+    }
+
+    @Test
+    public void testGetHeirarchy_breadthFirst() throws Exception {
+        Set<Class> expect = set(ArrayList.class,
+                AbstractList.class, List.class, RandomAccess.class, Cloneable.class, Serializable.class,
+                AbstractList.class,
+                AbstractCollection.class, List.class,
+                Collection.class,
+                Iterable.class);
+
+        Set<Class> actual = DeepReflection.getHeirarchyBF(ArrayList.class);
+        assertEquals(expect, actual);
 
     }
 }

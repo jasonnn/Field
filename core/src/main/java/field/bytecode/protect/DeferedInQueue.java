@@ -1,9 +1,9 @@
 package field.bytecode.protect;
 
-import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.launch.iUpdateable;
+import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 

@@ -1,4 +1,4 @@
-package field.bytecode.protect.asm;
+package field.protect.asm;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -27,4 +27,5 @@ public class FieldASMGeneratorAdapter extends GeneratorAdapter{
     public FieldASMGeneratorAdapter(int access, ASMMethod method, String signature, Type[] exceptions, ClassVisitor cv) {
         super(access, method, signature, exceptions, cv);
     }
+
 }

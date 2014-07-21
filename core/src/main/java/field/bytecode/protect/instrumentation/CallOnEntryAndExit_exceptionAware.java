@@ -1,25 +1,24 @@
 package field.bytecode.protect.instrumentation;
 
-import field.bytecode.protect.asm.ASMMethod;
-import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
-import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.namespace.generic.Generics;
+import field.protect.asm.ASMMethod;
+import field.protect.asm.ASMType;
+import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.*;
-
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.*;
+
 /**
 * Created by jason on 7/14/14.
 */
 public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter implements EntryHandler, ExitHandler {
-    private static final Type Type_Object = Type.getType(Object.class);
 
-    private static final Type Type_String = Type.getType(String.class);
 
-    private static final Type[] Type_handle_sig = new Type[]{Type_Object, Type_String, Type_Object, Type_String, Type_String, Type_String};
+    private static final ASMType[] Type_handle_sig = new ASMType[]{ASMType.OBJECT_TYPE, ASMType.STRING_TYPE, ASMType.OBJECT_TYPE, ASMType.STRING_TYPE, ASMType.STRING_TYPE, ASMType.STRING_TYPE};
 
     private final int access2;
 
@@ -68,8 +67,8 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
 
     @Override
     public void visitCode() {
-        if (StandardTrampoline.debug)
-            ;//System.out.println(ANSIColorUtils.red(" entryAndExit begins"));
+        // if (StandardTrampoline.debug)
+        //System.out.println(ANSIColorUtils.red(" entryAndExit begins"));
         super.visitCode();
 
         if (onMethod.getName().equals("<init>")) {
@@ -79,8 +78,8 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             isConstructor = true;
 
         } else {
-            if (StandardTrampoline.debug)
-                ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented entrance"));
+            //if (StandardTrampoline.debug)
+            // ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented entrance"));
 
             startTryCatchLabel = this.mark();
             push(name);
@@ -88,7 +87,8 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             push(onMethod.getName());
             push(parameterName);
             loadArgArray();
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type_String, Type_Object, Type_String, Type_String, Type.getType(Object[].class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_V_SOSSo);
+            // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type_String, Type_Object, Type_String, Type_String, Type.getType(Object[].class)}));
         }
         exceptionLocal = this.newLocal(Type.getType(Throwable.class));
 
@@ -100,8 +100,8 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
         if ((access2 & Opcodes.ACC_ABSTRACT) == 0) {
 
             endTryCatchLabel = this.mark();
-            if (StandardTrampoline.debug)
-                ;//System.out.println(" exception local is <" + exceptionLocal + ">");
+            // if (StandardTrampoline.debug)
+            //System.out.println(" exception local is <" + exceptionLocal + ">");
             storeLocal(exceptionLocal);
 
             push((String) null);
@@ -110,7 +110,8 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
+            //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
 
             loadLocal(exceptionLocal);
             throwException();
@@ -120,8 +121,8 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
         }
         super.visitMaxs(0, 0);
         super.visitEnd();
-        if (StandardTrampoline.debug)
-            ;//System.out.println(ANSIColorUtils.red(" entryAndExit ends"));
+        // if (StandardTrampoline.debug)
+        //System.out.println(ANSIColorUtils.red(" entryAndExit ends"));
     }
 
     @Override
@@ -133,7 +134,8 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
+            // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             pop();
            // if (StandardTrampoline.debug)
                 //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented RETURN"));
@@ -146,10 +148,11 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
+            //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             unbox(Type.INT_TYPE);
-            if (StandardTrampoline.debug)
-                ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented IRETURN"));
+            // if (StandardTrampoline.debug)
+            //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented IRETURN"));
         } else if (op == Opcodes.FRETURN) {
             // dup();
             box(Type.FLOAT_TYPE);
@@ -159,10 +162,11 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
+//            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             unbox(Type.FLOAT_TYPE);
-            if (StandardTrampoline.debug)
-                ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented FRETURN"));
+            //if (StandardTrampoline.debug)
+            //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented FRETURN"));
         } else if (op == Opcodes.ARETURN) {
             // dup();
 
@@ -171,10 +175,11 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
+//            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             checkCast(onMethod.getReturnType());
-            if (StandardTrampoline.debug)
-                ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented ARETURN"));
+            //if (StandardTrampoline.debug)
+            //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented ARETURN"));
         }
 
         super.visitInsn(op);
@@ -189,8 +194,8 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
         if (isConstructor) {
             if (opcode == Opcodes.INVOKESPECIAL) {
                 super.visitMethodInsn(opcode, owner, name, desc);
-                if (StandardTrampoline.debug)
-                    ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented entrance of constructor"));
+                //if (StandardTrampoline.debug)
+                //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented entrance of constructor"));
 
                 startTryCatchLabel = this.mark();
                 push(this.name);
@@ -198,8 +203,10 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
                 push(onMethod.getName());
                 push(parameterName);
                 loadArgArray();
+                invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_V_SOSSo);
 
-                invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type_String, Type_Object, Type_String, Type_String, Type.getType(Object[].class)}));
+
+                //     invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type_String, Type_Object, Type_String, Type_String, Type.getType(Object[].class)}));
 
                 isConstructor = false;
             } else
@@ -213,8 +220,8 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
     @Override
     public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc, boolean visible) {
 
-        if (StandardTrampoline.debug)
-            ;//System.out.println(" entryAndExit, visit parameter annotation <" + parameter + "> <" + desc + "> <" + visible + ">");
+        // if (StandardTrampoline.debug)
+        //System.out.println(" entryAndExit, visit parameter annotation <" + parameter + "> <" + desc + "> <" + visible + ">");
 
         if (BasicInstrumentation2.knownAliasingParameters.contains(desc)) {
             aliasedParameterSet.put(parameter, new Generics.Pair<String, String>(desc, null));

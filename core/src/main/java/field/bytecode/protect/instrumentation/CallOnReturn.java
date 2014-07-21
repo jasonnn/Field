@@ -1,14 +1,16 @@
 package field.bytecode.protect.instrumentation;
 
-import field.bytecode.protect.asm.ASMMethod;
-import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
-import field.bytecode.protect.trampoline.StandardTrampoline;
+import field.protect.asm.ASMMethod;
+import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE;
+import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.handle_O_OSOSSS;
 
 /**
 * Created by jason on 7/14/14.
@@ -42,8 +44,8 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
 
     @Override
     public void visitInsn(int op) {
-        if (StandardTrampoline.debug)
-            ;//System.out.println(" -- visit insn <" + op + "> <" + Opcodes.RETURN + ">");
+        //if (StandardTrampoline.debug)
+        //System.out.println(" -- visit insn <" + op + "> <" + Opcodes.RETURN + ">");
         if (op == Opcodes.RETURN) {
             push((String) null);
             push(name);
@@ -51,7 +53,8 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
+            //  invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             pop();
         } else if (op == Opcodes.IRETURN) {
             // dup();
@@ -62,7 +65,8 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
+            // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(Type.INT_TYPE);
         } else if (op == Opcodes.FRETURN) {
             // dup();
@@ -73,7 +77,8 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
+            // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(Type.FLOAT_TYPE);
         } else if (op == Opcodes.ARETURN) {
             // dup();
@@ -83,7 +88,8 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
+            //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
         }
 
         super.visitInsn(op);

@@ -5,10 +5,10 @@ package field.bytecode.protect.cache;
 
 import field.bytecode.protect.Protected;
 import field.bytecode.protect.annotations.CacheParameter;
-import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.launch.SystemProperties;
+import field.protect.asm.ASMMethod;
 import field.util.ANSIColorUtils;
 import field.util.PythonUtils;
 import org.objectweb.asm.ClassVisitor;

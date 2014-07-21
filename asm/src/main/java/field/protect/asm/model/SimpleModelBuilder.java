@@ -1,20 +1,25 @@
-package field.bytecode.protect.analysis.model;
+package field.protect.asm.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.*;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
  * Created by jason on 7/16/14.
  */
 public class SimpleModelBuilder {
+    static <T> Set<T> newSet() {
+        return new LinkedHashSet<T>();
+    }
+
 
     public static SimpleClassModel buildModel(byte[] bytes) {
         SimpleModelClassVisitor modelBuilder = new SimpleModelClassVisitor(null);
-        new ClassReader(bytes).accept(modelBuilder, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+        new ClassReader(bytes).accept(modelBuilder, ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
         return modelBuilder.getModel();
     }
 
@@ -25,7 +30,7 @@ public class SimpleModelBuilder {
 
         public String signature;
 
-        public final Set<String> annotations = new HashSet<String>();
+        public final Set<String> annotations = newSet();
 
         public abstract T build();
 
@@ -46,21 +51,24 @@ public class SimpleModelBuilder {
         public String desc;
         public String[] exceptions;
 
+
         public SimpleMethodModel build() {
             return new SimpleMethodModel(access, name, signature, annotations, desc, exceptions);
         }
     }
 
+
     static class ClassModelSpec extends AbstractModelSpec<SimpleClassModel> {
-        final Set<FieldModelSpec> fields = new HashSet<FieldModelSpec>();
-        final Set<MethodModelSpec> methods = new HashSet<MethodModelSpec>();
+        final Set<FieldModelSpec> fields = newSet();
+        final Set<MethodModelSpec> methods = newSet();
         public String superName;
         public String[] interfaces;
+
 
         private static <B extends AbstractSimpleModel, S extends AbstractModelSpec<B>>
         Set<B> buildSet(Set<S> specs) {
             if (specs.isEmpty()) return Collections.emptySet();
-            Set<B> built = new HashSet<B>(specs.size());
+            Set<B> built = new LinkedHashSet<B>(specs.size());
             for (S spec : specs) {
                 built.add(spec.build());
             }
@@ -88,11 +96,11 @@ public class SimpleModelBuilder {
             return clsModel.build();
         }
 
-        private static <T extends AbstractSimpleModel> Set<String> doAdd(AbstractModelSpec<T> spec, int access, String name, String signature) {
+
+        private static <T extends AbstractSimpleModel> void doAdd(AbstractModelSpec<T> spec, int access, String name, String signature) {
             spec.access = access;
             spec.name = name;
             spec.signature = signature;
-            return spec.annotations;
         }
 
         Set<String> addField(int access, @NotNull String name, @NotNull String signature, String desc, Object value) {
@@ -100,17 +108,18 @@ public class SimpleModelBuilder {
             fieldSpec.desc = desc;
             fieldSpec.value = value;
             clsModel.fields.add(fieldSpec);
-            return doAdd(fieldSpec, access, name, signature);
+            doAdd(fieldSpec, access, name, signature);
+            return fieldSpec.annotations;
 
         }
 
-        Set<String> addMethod(int access, String name, String desc, String signature, String[] exceptions) {
+        MethodModelSpec method(int access, String name, String desc, String signature, String[] exceptions) {
             MethodModelSpec methodSpec = new MethodModelSpec();
             methodSpec.desc = desc;
             methodSpec.exceptions = exceptions;
             clsModel.methods.add(methodSpec);
-            return doAdd(methodSpec, access, name, signature);
-
+            doAdd(methodSpec, access, name, signature);
+            return methodSpec;
         }
 
         public SimpleModelClassVisitor(ClassVisitor cv) {
@@ -148,8 +157,8 @@ public class SimpleModelBuilder {
             if (name.equals("<init>") || name.equals("<clinit>")) {
                 mv = super.visitMethod(access, name, desc, signature, exceptions);
             } else {
-                mv = new SimpleModelMethodVisitor(addMethod(access, name, desc, signature, exceptions),
-                        super.visitMethod(access, name, desc, signature, exceptions));
+                MethodModelSpec spec = method(access, name, desc, signature, exceptions);
+                mv = new SimpleModelMethodVisitor(new MethodNode(Opcodes.ASM5), spec.annotations);
             }
 
             return mv;
@@ -165,16 +174,19 @@ public class SimpleModelBuilder {
     static class SimpleModelMethodVisitor extends MethodVisitor {
         final Set<String> annotationCollector;
 
-        public SimpleModelMethodVisitor(Set<String> annotationCollector, MethodVisitor mv) {
+        public SimpleModelMethodVisitor(MethodVisitor mv, Set<String> annotationCollector) {
             super(Opcodes.ASM5, mv);
             this.annotationCollector = annotationCollector;
         }
+
 
         @Override
         public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
             annotationCollector.add(desc);
             return super.visitAnnotation(desc, visible);
         }
+
+
     }
 
     static class SimpleModelFieldVisitor extends FieldVisitor {

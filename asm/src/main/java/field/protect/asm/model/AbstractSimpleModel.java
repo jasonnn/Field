@@ -1,6 +1,5 @@
-package field.bytecode.protect.analysis.model;
+package field.protect.asm.model;
 
-import field.bytecode.protect.asm.CommonTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,6 +78,7 @@ public abstract class AbstractSimpleModel {
     protected static
     @NotNull
     String[] ensureNonNull(@Nullable String[] str) {
+
         return (str == null) ?
                 EMPTY_STRING_ARRAY : str.length == 0 ?
                 EMPTY_STRING_ARRAY : str;
@@ -86,7 +86,7 @@ public abstract class AbstractSimpleModel {
 
 
     public boolean isWoven() {
-        return annotations.contains(CommonTypes.WOVEN.getClassName());
+        return annotations.contains("Lfield/bytecode/protect/Woven;");
     }
 
 

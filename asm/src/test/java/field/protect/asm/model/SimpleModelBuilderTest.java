@@ -1,7 +1,7 @@
-package field.bytecode.protect.analysis.model;
+package field.protect.asm.model;
 
-import field.Blank2;
-import field.bytecode.BytecodeTestCase;
+import asm.BytecodeTestCase;
+import model.Impl;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -11,9 +11,10 @@ import static org.junit.Assert.*;
 
 public class SimpleModelBuilderTest extends BytecodeTestCase {
 
+
     @Test
     public void testBuildModel() throws Exception {
-        Class<?> cls = Blank2.class;
+        Class<?> cls = Impl.class;
 
         byte[] data = readClass(cls);
 
@@ -21,23 +22,23 @@ public class SimpleModelBuilderTest extends BytecodeTestCase {
         assertNotNull(model);
 
 
-        assertEquals("field/Blank2", model.name);
+        assertEquals("model/Impl", model.name);
         assertEquals("java/lang/Object", model.superName);
 
-        assertTrue(model.annotations.contains("Lfield/bytecode/protect/Woven;"));
+        assertTrue(model.annotations.contains("Lmodel/Ann;"));
+        assertFalse(model.isWoven());
+        assertFalse(model.isInner());
+        assertFalse(model.isInterface());
 
-        int expectedFields = 4;
+        int expectedFields = 1;
         Field[] rFields = cls.getDeclaredFields();
         assertEquals(expectedFields, rFields.length);
         assertEquals(expectedFields, model.fields.size());
 
-        int expectedMethods = 3;
+        int expectedMethods = 2;
         Method[] rMethods = cls.getDeclaredMethods();
         assertEquals(expectedMethods, rMethods.length);
         assertEquals(expectedMethods, model.methods.size());
-
-
-
-
     }
+
 }

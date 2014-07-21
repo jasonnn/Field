@@ -1,12 +1,11 @@
 package field.bytecode.protect.instrumentation;
 
-import field.bytecode.protect.asm.ASMMethod;
-import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
+import field.protect.asm.ASMMethod;
+import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-
 
 import java.util.HashMap;
 
@@ -45,7 +44,7 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
         BasicInstrumentation2.parameters.put(parameterName, parameters);
 
         // assert onMethod.getReturnType() == Type.VOID_TYPE :
-        // onMethod.getReturnType();
+        // onMethod.getASMReturnType();
 
         assert !BasicInstrumentation2.entryHandlers.containsKey(name);
         // deferedHandlers.put(name, this);
@@ -69,8 +68,8 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
         push(onMethod.getName() + "_original");
         loadArgArray();
 
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", Type.getType(Object.class), new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(String.class), Type.getType(Object[].class)}));
-
+        // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", Type.getType(Object.class), new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(String.class), Type.getType(Object[].class)}));
+        invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleCancelFast_O_IOSo);
         if (onMethod.getReturnType().getSort() == Type.OBJECT) {
             checkCast(onMethod.getReturnType());
             visitInsn(Opcodes.ARETURN);

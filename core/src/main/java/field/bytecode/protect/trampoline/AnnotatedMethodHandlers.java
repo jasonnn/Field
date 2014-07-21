@@ -2,7 +2,6 @@ package field.bytecode.protect.trampoline;
 
 import field.bytecode.protect.*;
 import field.bytecode.protect.annotations.*;
-import field.bytecode.protect.asm.ASMMethod;
 import field.bytecode.protect.cache.DeferedCached;
 import field.bytecode.protect.cache.DeferedDiskCached;
 import field.bytecode.protect.cache.DeferedFixedDuringUpdate;
@@ -15,6 +14,7 @@ import field.bytecode.protect.yield.YieldSupport;
 import field.namespace.context.ContextTopology;
 import field.namespace.context.iStorage;
 import field.namespace.generic.Generics;
+import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;

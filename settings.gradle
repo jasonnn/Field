@@ -7,3 +7,5 @@ include 'annotation-processing'
 
 //include 'scratch'
 
+include 'asm'
+

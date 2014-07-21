@@ -2,15 +2,15 @@ package field.bytecode.protect.instrumentation;
 
 import field.bytecode.protect.analysis.TypesClassVisitor;
 import field.bytecode.protect.analysis.TypesContext;
-import field.bytecode.protect.asm.ASMMethod;
-import field.bytecode.protect.asm.FieldASMGeneratorAdapter;
 import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.namespace.generic.ReflectionTools;
+import field.protect.asm.ASMMethod;
+import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.*;
-//import org.objectweb.asm.commons.GeneratorAdapter;
-//import org.objectweb.asm.commons.Method;
 
 import java.util.*;
+
+import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.*;
 
 /**
 * Created by jason on 7/14/14.
@@ -79,8 +79,8 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
 
     @Override
     public void visitCode() {
-        if (StandardTrampoline.debug)
-            ;//System.out.println(ANSIColorUtils.red(" yield begins "));
+        //if (StandardTrampoline.debug)
+        //System.out.println(ANSIColorUtils.red(" yield begins "));
         super.visitCode();
 
         initialJumpLabel = this.newLabel();
@@ -100,22 +100,23 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
         push(name);
         loadThis();
         push(onMethod.getName());
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", Type.INT_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
+        invokeStatic(BASIC_INSTRUMENTATION_TYPE, handleYieldIndex_I_SOS);
+        // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", Type.INT_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
 
-        if (StandardTrampoline.debug)
-            ;//System.out.println(" we have <" + jumpLabels.size() + "> <" + startLabel + ">");
+        //if (StandardTrampoline.debug)
+        //System.out.println(" we have <" + jumpLabels.size() + "> <" + startLabel + ">");
         this.visitTableSwitchInsn(0, jumpLabels.size() - 1, startLabel, jumpLabels.toArray(new Label[jumpLabels.size()]));
 
         super.visitMaxs(0, 0);
         super.visitEnd();
-        if (StandardTrampoline.debug)
-            ;//System.out.println(ANSIColorUtils.red(" yield ends"));
+        //if (StandardTrampoline.debug)
+        //System.out.println(ANSIColorUtils.red(" yield ends"));
     }
 
     @Override
     public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
-        if (StandardTrampoline.debug)
-            ;//System.out.println(" local variable <" + name + "> <" + desc + "> <" + signature + "> <" + start + "> <" + end + "> index = <" + index + ">");
+        //if (StandardTrampoline.debug)
+        //System.out.println(" local variable <" + name + "> <" + desc + "> <" + signature + "> <" + start + "> <" + end + "> index = <" + index + ">");
         super.visitLocalVariable(name, desc, signature, start, end, index);
     }
 
@@ -137,8 +138,8 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
 
             // push(validLocals.size());
             TypesContext context = typeAnalysis.nextPauseContext();
-            if (StandardTrampoline.debug)
-                ;//System.out.println(" vars are <" + context.getVars() + ">");
+            //if (StandardTrampoline.debug)
+            //System.out.println(" vars are <" + context.getVars() + ">");
 
             Map mm = new TreeMap<Integer, String>();
             Map m = (Map) ReflectionTools.illegalGetObject(this, "locals");
@@ -166,14 +167,14 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
 
                 Type t = Type.getType(typeName.contains("/") ? "L" + typeName + ";" : typeName.substring(1));
 
-                if (StandardTrampoline.debug)
-                    ;//System.out.println(" loading <" + localsToSave.getKey() + ">");
+                //if (StandardTrampoline.debug)
+                //System.out.println(" loading <" + localsToSave.getKey() + ">");
                 this.loadLocal(localsToSave.getKey().intValue(), t);
                 if (!typeName.contains("/"))
                     box(t);
 
-                if (StandardTrampoline.debug)
-                    ;//System.out.println(" type = <" + typeName + ">");
+                //if (StandardTrampoline.debug)
+                //System.out.println(" type = <" + typeName + ">");
 
                 // this.arrayStore(t);
                 mv.visitInsn(Opcodes.AASTORE);
@@ -184,7 +185,9 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
             push(onMethod.getName());
             push(jumpLabels.size());
 
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(Object[].class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.INT_TYPE}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handleYieldStore);
+
+            // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(Object[].class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.INT_TYPE}));
 
             // here it comes
             if (onMethod.getReturnType().getSort() == Type.OBJECT) {
@@ -210,10 +213,11 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
             loadThis();
             push(onMethod.getName());
 
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
+            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handleYieldLoad);
+            //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
 
-            if (StandardTrampoline.debug)
-                ;//System.out.println(" --- load --- <" + newLabel + ">");
+            // if (StandardTrampoline.debug)
+            //System.out.println(" --- load --- <" + newLabel + ">");
 
             i = validLocals.iterator();
             i2 = validLocalTypes.iterator();
@@ -235,8 +239,8 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
                 this.storeLocal(localsToSave.getKey().intValue(), t);
             }
 
-            if (StandardTrampoline.debug)
-                ;//System.out.println(ANSIColorUtils.red(" yield :instrumented yield"));
+            // if (StandardTrampoline.debug)
+            //System.out.println(ANSIColorUtils.red(" yield :instrumented yield"));
         }
 
         yieldNumber++;
@@ -248,8 +252,8 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
 
         Map m = (Map) ReflectionTools.illegalGetObject(this, "locals");
 
-        if (StandardTrampoline.debug)
-            ;//System.out.println(" var instruction <" + opcode + "> <" + var + "> <" + m.get(var) + ">");
+        //if (StandardTrampoline.debug)
+        //System.out.println(" var instruction <" + opcode + "> <" + var + "> <" + m.get(var) + ">");
 
         if (var != 0) {
             if (!validLocals.contains(var)) {

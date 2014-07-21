@@ -1,7 +1,7 @@
 package field.bytecode.protect.dispatch;
 
-import field.bytecode.protect.asm.ASMMethod;
 import field.namespace.generic.Generics.Pair;
+import field.protect.asm.ASMMethod;
 import org.objectweb.asm.Type;
 
 import java.lang.reflect.Array;
