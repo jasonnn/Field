@@ -1,6 +1,7 @@
 package field.graphics.core;
 
 import field.bytecode.protect.Woven;
+import field.bytecode.protect.annotations.ConstantContext;
 import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.InheritWeave;
 import field.bytecode.protect.dispatch.Cont;
@@ -107,7 +108,9 @@ public class BasicGeometry {
 
 		@Override
 		@InheritWeave
-		public void performPass() {
+        @DispatchOverTopology(topology = Cont.class)
+        @ConstantContext(immediate = false, topology = Base.class)
+        public void performPass() {
 
 			int id = BasicContextManager.getId(this);
 			if (/* first || */(id == BasicContextManager.ID_NOT_FOUND) || (!BasicContextManager.isValid(this))) {
@@ -346,8 +349,9 @@ public class BasicGeometry {
 
 		@Override
 		@InheritWeave
-		protected void doPerformPass() {
-			assert isNative;
+        @DispatchOverTopology(topology = Cont.class)
+        protected void doPerformPass() {
+            assert isNative;
 
 			// vertex(true);
 			//
@@ -491,8 +495,9 @@ public class BasicGeometry {
 
 		@Override
 		@InheritWeave
-		protected void doPerformPass() {
-			assert isNative;
+        @DispatchOverTopology(topology = Cont.class)
+        protected void doPerformPass() {
+            assert isNative;
 
 //			;//System.out.println(" -- drawing :" + triangleLimit);
 			if (triangleLimit == 0) {
@@ -609,8 +614,9 @@ public class BasicGeometry {
 
 		@Override
 		@InheritWeave
-		protected void doPerformPass() {
-			assert isNative;
+        @DispatchOverTopology(topology = Cont.class)
+        protected void doPerformPass() {
+            assert isNative;
 			CoreHelpers.glBindVertexArrayAPPLE(0);
 			int vertexObjectID = BasicContextManager.getId(this);
 
@@ -1267,8 +1273,9 @@ public class BasicGeometry {
 		 */
 		@Override
 		@InheritWeave
-		protected void doPerformPass() {
-			assert isNative;
+        @DispatchOverTopology(topology = Cont.class)
+        protected void doPerformPass() {
+            assert isNative;
 			// this.gl = BasicContextManager.getGl();
 			// this.glu = BasicContextManager.getGlu();
 
@@ -1619,8 +1626,9 @@ public class BasicGeometry {
 
 		@Override
 		@InheritWeave
-		protected void doPerformPass() {
-			assert isNative;
+        @DispatchOverTopology(topology = Cont.class)
+        protected void doPerformPass() {
+            assert isNative;
 			CoreHelpers.glBindVertexArrayAPPLE(0);
 
 			int vertexObjectID = BasicContextManager.getId(this);

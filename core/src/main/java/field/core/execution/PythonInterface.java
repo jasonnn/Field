@@ -1,6 +1,6 @@
 package field.core.execution;
 
-import field.bytecode.protect.trampoline.Trampoline2;
+import field.bytecode.protect.trampoline.ClassPath;
 import field.core.dispatch.iVisualElement;
 import field.core.plugins.log.ElementInvocationLogging;
 import field.core.plugins.log.Logging;
@@ -224,8 +224,8 @@ public class PythonInterface implements ScriptingInterface {
 		execString("_ex = ExtendedAssignment()");
 		execString("sys.executable=\"\"");
 		execString("from FluidTools import _now");
-		List<String> ex = Trampoline2.extendedClassPaths;
-		for (String s : ex) {
+        List<String> ex = ClassPath.getInstance().getExtendedClassPath();//Trampoline2.extendedClassPaths;
+        for (String s : ex) {
 			if (s.endsWith(".jar")) {
                 // System.out.println(" add package <" + s +
                 // ">");

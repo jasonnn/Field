@@ -1,11 +1,8 @@
 package field.bytecode.protect.trampoline;
 
-import field.bytecode.protect.FastClassLoader;
 import field.bytecode.protect.Notable;
-import field.core.Platform;
 import field.namespace.generic.ReflectionTools;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -16,15 +13,13 @@ import java.util.logging.Logger;
 /**
  * Created by jason on 7/14/14.
  */
-public class TrampolineClassLoader extends FastClassLoader {
+public class TrampolineClassLoader extends BaseTrampolineClassLoader {
     private static final Logger log = Logger.getLogger(TrampolineClassLoader.class.getName());
 
     private final TrampolineInstrumentation instrumentation;
 
     ClassLoader deferTo;
     final Stack<String> loading = new Stack<String>();
-    String indentation = "";
-
 
     private Method findLoadedClass_method1;
 
@@ -74,15 +69,6 @@ public class TrampolineClassLoader extends FastClassLoader {
         // callDefineClass(getParent(), name, b, off, l)
     }
 
-    @Override
-    public void addURL(URL url) {
-
-        super.addURL(url);
-
-        String oldCP = System.getProperty("java.class.path");
-        oldCP += ":" + url.getFile();
-        System.setProperty("java.class.path", oldCP);
-    }
 
     @SuppressWarnings("unchecked")
     public Set<Class> getAllLoadedClasses() {
@@ -104,27 +90,6 @@ public class TrampolineClassLoader extends FastClassLoader {
         }
     }
 
-
-    private Class callDefineClass(ClassLoader parent, String class_name, byte[] bytes, int i, int length) {
-
-        try {
-            Method cc = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, Integer.TYPE, Integer.TYPE);
-            cc.setAccessible(true);
-            return (Class) cc.invoke(parent, class_name, bytes, i, length);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return null;
-
-    }
 
     protected Class checkHasBeenLoaded(String s) {
         try {
@@ -164,52 +129,6 @@ public class TrampolineClassLoader extends FastClassLoader {
         return null;
     }
 
-    @Override
-    protected String findLibrary(String rawName) {
-
-        // System.out.println("####\n\n looking for <" + rawName
-        // + "> \n\n #############");
-        if (Platform.isMac()) {
-            String name = "lib" + rawName + ".dylib";
-
-//				System.out.println(extendedLibraryPaths);
-            for (String s : Trampoline2.extendedLibraryPaths) {
-                File file = new File(s, name);
-                if (file.exists()) {
-                    // System.out.println(" found it <"
-                    // + file + ">");
-                    return file.getAbsolutePath();
-                }
-            }
-            for (String s : Trampoline2.extendedClassPaths) {
-                File file = new File(s, name);
-                if (file.exists()) {
-                    // System.out.println(" found it <"
-                    // + file + ">");
-                    return file.getAbsolutePath();
-                }
-            }
-        }
-        if (Platform.isLinux()) {
-            String name = "lib" + rawName + ".so";
-
-            for (String s : Trampoline2.extendedLibraryPaths) {
-                File file = new File(s, name);
-                if (file.exists()) {
-//						System.out.println(" found it <" + file + ">");
-                    return file.getAbsolutePath();
-                }
-            }
-            for (String s : Trampoline2.extendedClassPaths) {
-                File file = new File(s, name);
-                if (file.exists()) {
-//						System.out.println(" found it <" + file + ">");
-                    return file.getAbsolutePath();
-                }
-            }
-        }
-        return super.findLibrary(rawName);
-    }
 
     LinkedHashSet<String> knownPackages = new LinkedHashSet<String>();
 
@@ -305,7 +224,7 @@ public class TrampolineClassLoader extends FastClassLoader {
                 already.put(class_name, loaded);
 
                 if (loaded.isAnnotationPresent(Notable.class)) {
-
+                    log.info(" CLASS IS NOTABLE :" + loaded + " " + Trampoline2.notifications);
                     // System.out.println(" CLASS IS NOTABLE :"+loaded+" "+notifications);
 
                     for (ClassLoadedNotification n : Trampoline2.notifications) {
