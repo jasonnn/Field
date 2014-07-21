@@ -1,6 +1,7 @@
 package field.bytecode.protect.instrumentation;
 
 import field.protect.asm.ASMMethod;
+import field.protect.asm.ASMType;
 import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -71,13 +72,13 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
         // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", Type.getType(Object.class), new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(String.class), Type.getType(Object[].class)}));
         invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleCancelFast_O_IOSo);
         if (onMethod.getReturnType().getSort() == Type.OBJECT) {
-            checkCast(onMethod.getReturnType());
+            checkCast(onMethod.getASMReturnType());
             visitInsn(Opcodes.ARETURN);
         } else if (onMethod.getReturnType() == Type.INT_TYPE) {
-            unbox(Type.INT_TYPE);
+            unbox(ASMType.INT_TYPE);
             super.visitInsn(Opcodes.IRETURN);
         } else if (onMethod.getReturnType() == Type.FLOAT_TYPE) {
-            unbox(Type.FLOAT_TYPE);
+            unbox(ASMType.FLOAT_TYPE);
             super.visitInsn(Opcodes.FRETURN);
         } else if (onMethod.getReturnType() == Type.VOID_TYPE) {
             super.visitInsn(Opcodes.RETURN);

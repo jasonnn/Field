@@ -141,7 +141,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
                 //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented RETURN"));
         } else if (op == Opcodes.IRETURN) {
             // dup();
-            box(Type.INT_TYPE);
+            box(ASMType.INT_TYPE);
 
             push(name);
             loadThis();
@@ -150,12 +150,12 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             push("" + returnNumber++);
             invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
             //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
-            unbox(Type.INT_TYPE);
+            unbox(ASMType.INT_TYPE);
             // if (StandardTrampoline.debug)
             //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented IRETURN"));
         } else if (op == Opcodes.FRETURN) {
             // dup();
-            box(Type.FLOAT_TYPE);
+            box(ASMType.FLOAT_TYPE);
 
             push(name);
             loadThis();
@@ -164,7 +164,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             push("" + returnNumber++);
             invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
 //            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
-            unbox(Type.FLOAT_TYPE);
+            unbox(ASMType.FLOAT_TYPE);
             //if (StandardTrampoline.debug)
             //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented FRETURN"));
         } else if (op == Opcodes.ARETURN) {
@@ -177,7 +177,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             push("" + returnNumber++);
             invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
 //            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
-            checkCast(onMethod.getReturnType());
+            checkCast(onMethod.getASMReturnType());
             //if (StandardTrampoline.debug)
             //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented ARETURN"));
         }

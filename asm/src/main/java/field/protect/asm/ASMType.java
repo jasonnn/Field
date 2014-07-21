@@ -31,6 +31,8 @@ package field.protect.asm;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -637,6 +639,10 @@ public class ASMType {
         return buf.toString();
     }
 
+    public Type toType() {
+        return Type.getType(getDescriptor());
+    }
+
     /**
      * Returns the descriptor corresponding to the given argument and return
      * types.
@@ -811,6 +817,29 @@ public class ASMType {
         return buf == null ? (off & 0xFF) : 1;
     }
 
+    /**
+     * Returns a JVM instruction opcode adapted to this Java type. This method
+     * must not be used for method types.
+     *
+     * @param opcode a JVM instruction opcode. This opcode must be one of ILOAD,
+     *               ISTORE, IALOAD, IASTORE, IADD, ISUB, IMUL, IDIV, IREM, INEG,
+     *               ISHL, ISHR, IUSHR, IAND, IOR, IXOR and IRETURN.
+     * @return an opcode that is similar to the given opcode, but adapted to
+     * this Java type. For example, if this type is <tt>float</tt> and
+     * <tt>opcode</tt> is IRETURN, this method returns FRETURN.
+     */
+    public int getOpcode(final int opcode) {
+        if (opcode == Opcodes.IALOAD || opcode == Opcodes.IASTORE) {
+            // the offset for IALOAD or IASTORE is in byte 1 of 'off' for
+            // primitive types (buf == null)
+            return opcode + (buf == null ? (off & 0xFF00) >> 8 : 4);
+        } else {
+            // the offset for other instructions is in byte 2 of 'off' for
+            // primitive types (buf == null)
+            return opcode + (buf == null ? (off & 0xFF0000) >> 16 : 4);
+        }
+    }
+
 
     // ------------------------------------------------------------------------
     // Equals, hashCode and toString
@@ -846,6 +875,7 @@ public class ASMType {
         }
         return true;
     }
+
 
     /**
      * Returns a hash code value for this type.

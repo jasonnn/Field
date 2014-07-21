@@ -5,6 +5,7 @@ import field.bytecode.protect.analysis.TypesContext;
 import field.bytecode.protect.trampoline.StandardTrampoline;
 import field.namespace.generic.ReflectionTools;
 import field.protect.asm.ASMMethod;
+import field.protect.asm.ASMType;
 import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.*;
 
@@ -158,14 +159,14 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
             }
 
             push(max);
-            newArray(Type.getType(Object.class));
+            newArray(ASMType.OBJECT_TYPE);
 
             for (Map.Entry<Integer, String> localsToSave : ((Map<Integer, String>) mm).entrySet()) {
                 dup();
                 push(localsToSave.getKey().intValue() - 1);
                 String typeName = localsToSave.getValue();
 
-                Type t = Type.getType(typeName.contains("/") ? "L" + typeName + ";" : typeName.substring(1));
+                ASMType t = ASMType.getType(typeName.contains("/") ? "L" + typeName + ";" : typeName.substring(1));
 
                 //if (StandardTrampoline.debug)
                 //System.out.println(" loading <" + localsToSave.getKey() + ">");
@@ -193,10 +194,10 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
             if (onMethod.getReturnType().getSort() == Type.OBJECT) {
                 visitInsn(Opcodes.ARETURN);
             } else if (onMethod.getReturnType() == Type.INT_TYPE) {
-                unbox(Type.INT_TYPE);
+                unbox(ASMType.INT_TYPE);
                 super.visitInsn(Opcodes.IRETURN);
             } else if (onMethod.getReturnType() == Type.FLOAT_TYPE) {
-                unbox(Type.FLOAT_TYPE);
+                unbox(ASMType.FLOAT_TYPE);
                 super.visitInsn(Opcodes.FRETURN);
             } else if (onMethod.getReturnType() == Type.VOID_TYPE) {
                 super.visitInsn(Opcodes.RETURN);
@@ -227,7 +228,7 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
                 push(localsToSave.getKey().intValue() - 1);
                 String typeName = localsToSave.getValue();
 
-                Type t = Type.getType(typeName.contains("/") ? "L" + typeName + ";" : typeName.substring(1));
+                ASMType t = ASMType.getType(typeName.contains("/") ? "L" + typeName + ";" : typeName.substring(1));
                 mv.visitInsn(Opcodes.AALOAD);
                 // this.arrayLoad(t);
 

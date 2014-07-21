@@ -1,13 +1,13 @@
 package field.bytecode.protect.instrumentation;
 
 import field.protect.asm.ASMMethod;
-import org.objectweb.asm.Type;
+import field.protect.asm.ASMType;
 
 /**
  * Created by jason on 7/20/14.
  */
 public class BasicInstrumentationConstants {
-    public static final Type BASIC_INSTRUMENTATION_TYPE = Type.getType("Lfield/bytecode/protect/instrumentation/BasicInstrumentation2;");
+    public static final ASMType BASIC_INSTRUMENTATION_TYPE = ASMType.getType("Lfield/bytecode/protect/instrumentation/BasicInstrumentation2;");
 
     // o == Object[]
 

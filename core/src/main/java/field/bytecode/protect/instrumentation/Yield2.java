@@ -6,7 +6,6 @@ import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AnalyzerAdapter;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
 
     List<Integer> validLocals = new ArrayList<Integer>();
 
-    List<Type> validLocalTypes = new ArrayList<Type>();
+    List<ASMType> validLocalTypes = new ArrayList<ASMType>();
 
     int yieldNumber = 0;
 
@@ -95,7 +94,8 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
         push(name);
         loadThis();
         push(onMethod.getName());
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", ASMType.INT_TYPE, new ASMType[]{ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class)}));
+        invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleYieldIndex_I_SOS);
+        // invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", ASMType.INT_TYPE, new ASMType[]{ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class)}));
 
         // if (StandardTrampoline.debug)
         //System.out.println(" we have <" + jumpLabels.size() + "> <" + startLabel + ">");
@@ -145,7 +145,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             //System.out.println(" inside yield, stack is <" + analyzer.stack + " / " + analyzer.locals + ">");
 
             push(analyzer.locals.size());
-            newArray(Type.getType(Object.class));
+            newArray(ASMType.OBJECT_TYPE);
 
             ArrayList wasLocals = new ArrayList(analyzer.locals);
             ArrayList wasStack = new ArrayList(analyzer.stack);
@@ -160,17 +160,17 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
                 dup();
                 push(n - 1);
 
-                Type t = null;
+                ASMType t = null;
                 if (o == Opcodes.INTEGER)
-                    this.loadLocal(n - 1, t = Type.INT_TYPE);
+                    this.loadLocal(n - 1, t = ASMType.INT_TYPE);
                 else if (o == Opcodes.FLOAT)
-                    this.loadLocal(n - 1, t = Type.FLOAT_TYPE);
+                    this.loadLocal(n - 1, t = ASMType.FLOAT_TYPE);
                 else if (o instanceof String)
-                    this.loadLocal(n - 1, t = Type.getObjectType(((String) o).contains("/") ? ((String) o) : ((String) o).substring(1)));
+                    this.loadLocal(n - 1, t = ASMType.getObjectType(((String) o).contains("/") ? ((String) o) : ((String) o).substring(1)));
                 else if (o == Opcodes.DOUBLE)
-                    this.loadLocal(n - 1, t = Type.DOUBLE_TYPE);
+                    this.loadLocal(n - 1, t = ASMType.DOUBLE_TYPE);
                 else if (o == Opcodes.LONG)
-                    this.loadLocal(n - 1, t = Type.LONG_TYPE);
+                    this.loadLocal(n - 1, t = ASMType.LONG_TYPE);
                 else
                     throw new IllegalStateException("unhandled <" + o + ">");
 
@@ -188,16 +188,17 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             push(onMethod.getName());
             push(jumpLabels.size());
 
-            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", ASMType.getType(Object.class), new ASMType[]{ASMType.getType(Object.class), ASMType.getType(Object[].class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.INT_TYPE}));
+            invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleYieldStore);
+            // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", ASMType.getType(Object.class), new ASMType[]{ASMType.getType(Object.class), ASMType.getType(Object[].class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.INT_TYPE}));
 
             // here it comes
             if (onMethod.getASMReturnType().getSort() == ASMType.OBJECT) {
                 visitInsn(Opcodes.ARETURN);
             } else if (onMethod.getASMReturnType() == ASMType.INT_TYPE) {
-                unbox(Type.INT_TYPE);
+                unbox(ASMType.INT_TYPE);
                 super.visitInsn(Opcodes.IRETURN);
             } else if (onMethod.getASMReturnType() == ASMType.FLOAT_TYPE) {
-                unbox(Type.FLOAT_TYPE);
+                unbox(ASMType.FLOAT_TYPE);
                 super.visitInsn(Opcodes.FRETURN);
             } else if (onMethod.getASMReturnType() == ASMType.VOID_TYPE) {
                 super.visitInsn(Opcodes.RETURN);
@@ -217,9 +218,10 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             loadThis();
             push(onMethod.getName());
 
+            invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleYieldLoad);
             //  invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
-            invokeStatic(Type.getType(BasicInstrumentation2.class),
-                    new ASMMethod("handle_yieldLoad", ASMType.OBJECT_ARRAY_TYPE, new ASMType[]{ASMType.STRING_TYPE, ASMType.OBJECT_TYPE, ASMType.STRING_TYPE}));
+            // invokeStatic(Type.getType(BasicInstrumentation2.class),
+            //       new ASMMethod("handle_yieldLoad", ASMType.OBJECT_ARRAY_TYPE, new ASMType[]{ASMType.STRING_TYPE, ASMType.OBJECT_TYPE, ASMType.STRING_TYPE}));
             // if (StandardTrampoline.debug)
             //System.out.println(" --- load --- <" + newLabel + ">");
 
@@ -235,18 +237,18 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
 
                 mv.visitInsn(Opcodes.AALOAD);
 
-                Type t = null;
+                ASMType t = null;
                 if (o == Opcodes.INTEGER)
-                    unbox(t = Type.INT_TYPE);
+                    unbox(t = ASMType.INT_TYPE);
                 else if (o == Opcodes.FLOAT)
-                    unbox(t = Type.FLOAT_TYPE);
+                    unbox(t = ASMType.FLOAT_TYPE);
                 else if (o instanceof String) {
-                    t = Type.getObjectType(((String) o).contains("/") ? ((String) o) : ((String) o).substring(1));
+                    t = ASMType.getObjectType(((String) o).contains("/") ? ((String) o) : ((String) o).substring(1));
                     checkCast(t);
                 } else if (o == Opcodes.DOUBLE) {
-                    unbox(t = Type.DOUBLE_TYPE);
+                    unbox(t = ASMType.DOUBLE_TYPE);
                 } else if (o == Opcodes.LONG) {
-                    unbox(t = Type.LONG_TYPE);
+                    unbox(t = ASMType.LONG_TYPE);
                 } else
                     throw new IllegalStateException("unhandled <" + o + ">");
 

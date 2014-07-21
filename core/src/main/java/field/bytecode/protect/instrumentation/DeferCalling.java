@@ -6,7 +6,6 @@ import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +60,8 @@ public abstract class DeferCalling extends FieldASMGeneratorAdapter implements D
         push(parameterName);
         loadArgArray();
 
-        invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", ASMType.VOID_TYPE, new ASMType[]{ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(Object[].class)}));
+        invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleCancelFast_O_IOSo);
+        // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", ASMType.VOID_TYPE, new ASMType[]{ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(Object[].class)}));
 
         visitInsn(Opcodes.RETURN);
 

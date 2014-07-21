@@ -11,6 +11,14 @@ public class TrampolineReflection {
     static HashMap<Class, Field[]> fieldsCache = new HashMap<Class, Field[]>();
     static HashMap<Class, Method[]> methodsCache = new HashMap<Class, Method[]>();
 
+    static class FieldComparator implements Comparator<Field> {
+        static final FieldComparator INSTANCE = new FieldComparator();
+
+        @Override
+        public int compare(Field o1, Field o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    }
 
 
     static public Field[] getAllFields(Class of) {
