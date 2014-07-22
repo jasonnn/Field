@@ -10,7 +10,7 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.RootComponent.iMousePeer;
 import field.launch.iUpdateable;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import field.util.Dict;
 import field.util.Dict.Prop;
 import field.util.PythonUtils;

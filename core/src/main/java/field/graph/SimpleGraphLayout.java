@@ -2,7 +2,7 @@ package field.graph;
 
 import field.math.linalg.Vector3;
 import field.namespace.generic.Bind.iFunction;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 
 import java.util.Collection;
 import java.util.HashMap;

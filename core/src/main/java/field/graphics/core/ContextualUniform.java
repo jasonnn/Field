@@ -2,7 +2,7 @@ package field.graphics.core;
 
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.math.abstraction.iProvider;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import field.util.BiMap;
 
 import java.util.ArrayList;

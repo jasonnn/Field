@@ -3,7 +3,7 @@ package field.core.ui.text.embedded;
 //import javax.swing.text.DefaultStyledDocument;
 
 import field.core.dispatch.iVisualElement;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import org.eclipse.swt.custom.StyledText;
 
 

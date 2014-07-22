@@ -1,15 +1,36 @@
 package field.bytecode;
 
+import org.junit.Before;
 import sun.misc.IOUtils;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
  * Created by jason on 7/16/14.
  */
 public class BytecodeTestCase {
+
+    static class TestClassLoader extends ClassLoader {
+
+        public Class<?> defineClass(String name, byte[] b) {
+            return defineClass(name, b, 0, b.length);
+        }
+    }
+
+    public TestClassLoader LOADER;// = new TestClassLoader();
+
+    @Before
+    public void setUp() throws Exception {
+        LOADER = new TestClassLoader();
+
+    }
+
+    public Class<?> loadClass(String name, byte[] b) {
+        return LOADER.defineClass(name, b);
+    }
+
+
     public static String pathToClassFile(Class cls) {
         return '/' + cls.getName().replace('.', '/') + ".class";
     }

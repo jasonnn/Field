@@ -17,7 +17,7 @@ import field.launch.Launcher;
 import field.launch.iUpdateable;
 import field.math.abstraction.iAcceptor;
 import field.math.abstraction.iPhasicAcceptor;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import field.namespace.key.OKey;
 import field.util.Dict;
 import field.util.PythonUtils.OKeyByName;

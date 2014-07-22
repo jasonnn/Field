@@ -10,12 +10,12 @@ import field.core.windowing.components.*;
 import field.core.windowing.overlay.OverlayAnimationManager;
 import field.launch.iUpdateable;
 import field.math.abstraction.iAcceptor;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
-import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.math.graph.TopologyViewOfGraphNodes;
 import field.math.graph.iMutableContainer;
-import field.namespace.generic.Generics.Triple;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.TopologyVisitor_breadthFirst;
+import field.namespace.generic.tuple.Triple;
 
 import java.rmi.server.UID;
 import java.util.*;

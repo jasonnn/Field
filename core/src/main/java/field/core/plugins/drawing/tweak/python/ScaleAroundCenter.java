@@ -3,7 +3,7 @@ package field.core.plugins.drawing.tweak.python;
 import field.core.plugins.drawing.tweak.TweakSplineUI.SelectedVertex;
 import field.core.plugins.drawing.tweak.TweakSplineUI.SubSelection;
 import field.math.linalg.Vector2;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 
 import java.util.List;
 

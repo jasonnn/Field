@@ -20,6 +20,12 @@ sourceSets {
             srcDir 'src/main/gen' //TODO << remove when new processor is ready
         }
     }
+    test {
+        java {
+            srcDir 'src/test/java'
+            srcDir 'src/test/testSrc'
+        }
+    }
 }
 
 repositories {

@@ -16,7 +16,7 @@ import field.math.linalg.Quaternion;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.tuple.Triple;
 import field.util.Dict;
 
 import java.awt.*;

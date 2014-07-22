@@ -7,10 +7,10 @@ import field.core.dispatch.iVisualElementOverrides;
 import field.core.persistance.VisualElementReference;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutableContainer;
-import field.namespace.generic.Generics.Pair;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.namespace.generic.tuple.Pair;
 import field.util.HashMapOfLists;
 import field.util.RectangleAllocator;
 

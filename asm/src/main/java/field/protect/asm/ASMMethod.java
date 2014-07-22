@@ -42,6 +42,7 @@ import org.objectweb.asm.commons.Method;
 public class ASMMethod extends Method {
 
     public static ASMMethod from(Method m) {
+        if (m instanceof ASMMethod) return (ASMMethod) m;
         return new ASMMethod(m.getName(), m.getDescriptor());
     }
 

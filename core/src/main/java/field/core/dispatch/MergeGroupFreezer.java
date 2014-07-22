@@ -6,7 +6,7 @@ import field.core.plugins.python.PythonPlugin;
 import field.core.ui.text.embedded.FreezeProperties;
 import field.core.ui.text.embedded.FreezeProperties.Freeze;
 import field.core.windowing.components.iComponent;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.tuple.Triple;
 import field.util.diff.Diff3;
 
 import java.util.HashMap;

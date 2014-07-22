@@ -1,8 +1,6 @@
 package field.core.ui;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
-import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
 import field.core.dispatch.iVisualElement;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin;
 import field.core.ui.SmallMenu.BetterPopup;
@@ -10,10 +8,7 @@ import field.core.ui.SmallMenu.iKeystrokeUpdate;
 import field.core.windowing.GLComponentWindow;
 import field.launch.iUpdateable;
 import field.math.abstraction.iAcceptor;
-import field.namespace.generic.Generics.Pair;
-import field.util.ChannelSerializer;
-import field.util.FloatBufferSerializer;
-import field.util.MarkerSerializer;
+import field.namespace.generic.tuple.Pair;
 import field.util.XStreamUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;

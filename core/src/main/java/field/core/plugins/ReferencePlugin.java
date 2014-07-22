@@ -17,12 +17,12 @@ import field.core.windowing.components.iComponent;
 import field.launch.iUpdateable;
 import field.math.abstraction.iFloatProvider;
 import field.math.abstraction.iProvider;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutableContainer;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Pair;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.tuple.Pair;
+import field.namespace.generic.tuple.Triple;
 
 import java.util.*;
 import java.util.Map.Entry;

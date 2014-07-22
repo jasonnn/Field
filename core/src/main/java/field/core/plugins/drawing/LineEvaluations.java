@@ -7,7 +7,7 @@ import field.core.plugins.drawing.opengl.Intersections;
 import field.core.plugins.drawing.opengl.LineUtils;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.math.linalg.Vector2;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 
 import java.util.Collections;
 import java.util.List;

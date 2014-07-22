@@ -6,13 +6,12 @@ import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
-* Created by jason on 7/14/14.
-*/
+ * Created by jason on 7/14/14.
+ */
 public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implements FastCancelHandler {
     static int uniq = 0;
 
@@ -20,28 +19,32 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
 
     private final ClassVisitor classDelegate;
 
-    private final String name;
+    //  private final String name;
 
     private final ASMMethod onMethod;
 
-    private final String parameterName;
-
-    private final int returnNumber;
+    // private final int returnNumber;
 
     private final String signature;
 
-    protected HashMap<String, Object> parameters;
+    protected final Map<String, Object> parameters;
 
-    public DeferCallingFast(String name, int access, ASMMethod onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
+    public DeferCallingFast(String name,
+                            int access,
+                            ASMMethod onMethod,
+                            ClassVisitor classDelegate,
+                            MethodVisitor delegateTo,
+                            String signature,
+                            Map<String, Object> parameters) {
         super(access, onMethod, delegateTo);
-        this.name = name;
+        // this.name = name;
         this.access = access;
-        this.onMethod = ASMMethod.from(onMethod);
+        this.onMethod = onMethod;
         this.classDelegate = classDelegate;
         this.signature = signature;
         this.parameters = parameters;
-        parameterName = "parameter:" + BasicInstrumentation2.uniq_parameter++;
-        returnNumber = 0;
+        String parameterName = "parameter:" + BasicInstrumentation2.uniq_parameter++;
+        // returnNumber = 0;
         BasicInstrumentation2.parameters.put(parameterName, parameters);
 
         // assert onMethod.getReturnType() == Type.VOID_TYPE :
@@ -50,11 +53,9 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
         assert !BasicInstrumentation2.entryHandlers.containsKey(name);
         // deferedHandlers.put(name, this);
 
-        assert !BasicInstrumentation2.entryHandlers.containsKey(name);
-        FastCancelHandler[] ne = new FastCancelHandler[BasicInstrumentation2.entryCancelList.length + 1];
-        System.arraycopy(BasicInstrumentation2.entryCancelList, 0, ne, 0, BasicInstrumentation2.entryCancelList.length);
-        ne[ne.length - 1] = this;
-        BasicInstrumentation2.entryCancelList = ne;
+        // assert !BasicInstrumentation2.entryHandlers.containsKey(name);
+
+        BasicInstrumentation2.addCancelHandler(this);
         uniq = BasicInstrumentation2.entryCancelList.length - 1;
 
     }
@@ -70,17 +71,20 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
         loadArgArray();
 
         // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", Type.getType(Object.class), new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(String.class), Type.getType(Object[].class)}));
+
         invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleCancelFast_O_IOSo);
-        if (onMethod.getReturnType().getSort() == Type.OBJECT) {
+
+        //TODO cleanup
+        if (onMethod.getASMReturnType().getSort() == ASMType.OBJECT) {
             checkCast(onMethod.getASMReturnType());
             visitInsn(Opcodes.ARETURN);
-        } else if (onMethod.getReturnType() == Type.INT_TYPE) {
+        } else if (onMethod.getASMReturnType() == ASMType.INT_TYPE) {
             unbox(ASMType.INT_TYPE);
             super.visitInsn(Opcodes.IRETURN);
-        } else if (onMethod.getReturnType() == Type.FLOAT_TYPE) {
+        } else if (onMethod.getASMReturnType() == ASMType.FLOAT_TYPE) {
             unbox(ASMType.FLOAT_TYPE);
             super.visitInsn(Opcodes.FRETURN);
-        } else if (onMethod.getReturnType() == Type.VOID_TYPE) {
+        } else if (onMethod.getASMReturnType() == ASMType.VOID_TYPE) {
             super.visitInsn(Opcodes.RETURN);
         } else {
             assert false : onMethod.getReturnType();

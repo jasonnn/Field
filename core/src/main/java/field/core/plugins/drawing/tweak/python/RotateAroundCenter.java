@@ -5,7 +5,7 @@ import field.core.plugins.drawing.tweak.TweakSplineUI.SubSelection;
 import field.math.linalg.Quaternion;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 
 import java.util.List;
 

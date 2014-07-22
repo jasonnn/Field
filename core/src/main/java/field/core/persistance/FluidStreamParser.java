@@ -2,7 +2,7 @@ package field.core.persistance;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import field.util.XStreamUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;

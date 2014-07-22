@@ -1,7 +1,9 @@
 package field.bytecode.protect.trampoline;
 
 import field.bytecode.protect.asm.Utils;
+import field.bytecode.protect.instrumentation.AnnotatedMethodHandlers;
 import field.bytecode.protect.instrumentation.BasicInstrumentation2;
+import field.bytecode.protect.instrumentation2.MainVisitorThing;
 import field.namespace.generic.ReflectionTools;
 import field.protect.asm.ASMType;
 import field.protect.asm.model.SimpleClassModel;
@@ -245,7 +247,16 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
         return a;
     }
 
-    protected byte[] weave(byte[] oa, final String class_name, ClassLoader deferTo, final String superName, final String[] interfaces) {
+    private byte[] weave(byte[] bytes, String className, ClassLoader deferTo, String superName, String[] interfaces) {
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+
+        new ClassReader(bytes).accept(new MainVisitorThing(cw), 0);
+
+
+        return cw.toByteArray();
+    }
+
+    protected byte[] weave_(byte[] oa, final String class_name, ClassLoader deferTo, final String superName, final String[] interfaces) {
         inside++;
         check();
 

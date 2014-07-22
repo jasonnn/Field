@@ -6,7 +6,7 @@ import field.core.dispatch.iVisualElementOverrides;
 import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutableContainer;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.Map;

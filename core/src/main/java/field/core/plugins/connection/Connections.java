@@ -17,11 +17,11 @@ import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
 import field.core.windowing.overlay.OverlayAnimationManager;
 import field.math.abstraction.iAcceptor;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutableContainer;
-import field.namespace.generic.Generics.Pair;
-import field.namespace.generic.Generics.Triple;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.namespace.generic.tuple.Pair;
+import field.namespace.generic.tuple.Triple;
 
 import java.util.ArrayList;
 import java.util.Collection;

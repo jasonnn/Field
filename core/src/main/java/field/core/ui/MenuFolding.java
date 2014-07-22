@@ -1,7 +1,7 @@
 package field.core.ui;
 
 import field.launch.iUpdateable;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 
 import java.util.*;
 import java.util.Map.Entry;

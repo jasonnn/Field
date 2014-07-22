@@ -11,8 +11,8 @@ import field.core.windowing.components.DraggableComponent;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGLSLangProgram.BasicGLSLangElement;
 import field.launch.iUpdateable;
-import field.namespace.generic.Generics.Pair;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.tuple.Pair;
+import field.namespace.generic.tuple.Triple;
 
 import java.io.*;
 import java.util.ArrayList;

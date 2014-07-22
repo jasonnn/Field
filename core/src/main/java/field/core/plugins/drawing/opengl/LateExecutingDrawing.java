@@ -6,7 +6,7 @@ import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import field.util.Dict;
 import org.python.core.Py;
 import org.python.core.PyFunction;
@@ -18,8 +18,8 @@ import java.util.List;
 
 public class LateExecutingDrawing {
 
-	HashMap<Pair<iVisualElement, Object>, CachedLine> knownLines = new HashMap<field.namespace.generic.Generics.Pair<iVisualElement, Object>, CachedLine>();
-	HashMap<Pair<iVisualElement, Object>, CachedLine.Event> knownEvents = new HashMap<field.namespace.generic.Generics.Pair<iVisualElement, Object>, CachedLine.Event>();
+    HashMap<Pair<iVisualElement, Object>, CachedLine> knownLines = new HashMap<Pair<iVisualElement, Object>, CachedLine>();
+    HashMap<Pair<iVisualElement, Object>, CachedLine.Event> knownEvents = new HashMap<Pair<iVisualElement, Object>, CachedLine.Event>();
 
 	static public class WrappedObject {
 		public WrappedObject(Object to, CapturedEnvironment variable) {

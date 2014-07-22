@@ -1,4 +1,4 @@
-package field.bytecode.protect.trampoline.inheritance;
+package inheritance;
 
 import java.lang.annotation.*;
 

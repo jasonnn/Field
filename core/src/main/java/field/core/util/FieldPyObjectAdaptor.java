@@ -11,7 +11,7 @@ import field.core.plugins.python.PythonPlugin;
 import field.core.ui.text.PythonTextEditor;
 import field.core.ui.text.protect.ClassDocumentationProtect.Comp;
 import field.math.abstraction.iHasScalar;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import field.util.Dict;
 import field.util.Dict.Prop;
 import org.python.core.*;

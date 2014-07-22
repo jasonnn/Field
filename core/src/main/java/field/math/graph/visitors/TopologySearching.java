@@ -2,9 +2,9 @@ package field.math.graph.visitors;
 
 import field.math.BaseMath;
 import field.math.BaseMath.MutableFloat;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.iTopology;
-import field.namespace.generic.Generics.Pair;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.namespace.generic.tuple.Pair;
 
 import java.util.*;
 

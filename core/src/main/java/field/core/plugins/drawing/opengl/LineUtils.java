@@ -13,7 +13,7 @@ import field.math.util.Brent;
 import field.math.util.Brent.F;
 import field.math.util.FitBox;
 import field.math.util.FitBox.Axis;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import field.util.Dict.Prop;
 
 import java.awt.*;

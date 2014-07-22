@@ -12,10 +12,10 @@ import field.core.plugins.iPlugin;
 import field.core.plugins.python.PythonPlugin;
 import field.core.plugins.python.PythonPluginEditor;
 import field.launch.SystemProperties;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutableContainer;
-import field.namespace.generic.Generics.Pair;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.namespace.generic.tuple.Pair;
 
 import java.util.*;
 import java.util.regex.Pattern;

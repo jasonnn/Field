@@ -1,5 +1,8 @@
 package field.bytecode.protect.instrumentation;
 
+import field.bytecode.protect.RefactorCarefully;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,7 +13,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author marc
  */
+@RefactorCarefully
 final public class BasicInstrumentation2 {
+
+    public static void addCancelHandler(FastCancelHandler handler) {
+        entryCancelList = Arrays.copyOf(entryCancelList, BasicInstrumentation2.entryCancelList.length + 1);
+        entryCancelList[entryCancelList.length - 1] = handler;
+
+    }
 
     static public HashSet<String> knownAliasingParameters = new HashSet<String>();
 
@@ -42,10 +52,10 @@ final public class BasicInstrumentation2 {
     static public void handle(String fromName, Object fromThis, String methodName, String parameterName, Object[] argArray, Class[] paramArray) {
         deferedHandlers.get(fromName).handle(fromName, fromThis, methodName, parameters.get(parameterName), argArray, paramArray);
 
-      //  java.lang.reflect.Method[] m = ReflectionTools.findAllMethodsCalled(fromThis.getClass(), methodName);
-      //  java.lang.reflect.Method mFound = ReflectionTools.findMethodWithParameters(paramArray, m);
-       // if (StandardTrampoline.debug)
-            //System.out.println(" found method <" + mFound + ">");
+        //  java.lang.reflect.Method[] m = ReflectionTools.findAllMethodsCalled(fromThis.getClass(), methodName);
+        //  java.lang.reflect.Method mFound = ReflectionTools.findMethodWithParameters(paramArray, m);
+        // if (StandardTrampoline.debug)
+        //System.out.println(" found method <" + mFound + ">");
     }
 
     static public int handle_yieldIndex(String fromName, Object fromThis, String methodName) {
@@ -57,8 +67,8 @@ final public class BasicInstrumentation2 {
     }
 
     static public Object handle_yieldStore(Object wasReturn, Object[] localStorage, String fromName, Object fromThis, String methodName, int resumeLabel) {
-       // if (StandardTrampoline.debug)
-            //System.out.println(" fromname is <" + wasReturn + "> <" + localStorage + "> <" + fromName + "> <" + fromThis + "> <" + methodName + ">");
+        // if (StandardTrampoline.debug)
+        //System.out.println(" fromname is <" + wasReturn + "> <" + localStorage + "> <" + fromName + "> <" + fromThis + "> <" + methodName + ">");
         return yieldHandlers.get(fromName).yieldStore(wasReturn, localStorage, fromName, fromThis, methodName, resumeLabel);
     }
 
@@ -67,7 +77,8 @@ final public class BasicInstrumentation2 {
     }
 
     static final AtomicInteger _counter = new AtomicInteger(0);
-    static int unique(){
+
+    static int unique() {
         return _counter.getAndIncrement();
     }
 

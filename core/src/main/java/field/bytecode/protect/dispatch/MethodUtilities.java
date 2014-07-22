@@ -1,6 +1,6 @@
 package field.bytecode.protect.dispatch;
 
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import field.protect.asm.ASMMethod;
 import org.objectweb.asm.Type;
 

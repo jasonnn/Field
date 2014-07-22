@@ -3,8 +3,8 @@ package field.core.plugins.history;
 import field.core.plugins.history.HistoryExplorerHG.DiffSetVertical;
 import field.core.plugins.history.HistoryExplorerHG.VersionNode;
 import field.namespace.diagram.DiagramZero.iMarker;
-import field.namespace.generic.Generics.Pair;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.tuple.Pair;
+import field.namespace.generic.tuple.Triple;
 import field.util.diff.ChannelDifferences;
 
 import java.util.*;

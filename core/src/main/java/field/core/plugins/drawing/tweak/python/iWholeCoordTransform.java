@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.tweak.python;
 
 import field.core.plugins.drawing.tweak.TweakSplineUI.SelectedVertex;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 
 import java.util.List;
 

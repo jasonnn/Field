@@ -1,4 +1,4 @@
-package field.bytecode.protect.trampoline.inheritance;
+package inheritance;
 
 /**
  * Created by jason on 7/16/14.

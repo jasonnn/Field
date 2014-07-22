@@ -16,7 +16,7 @@ import field.math.graph.iMutableContainer;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 
 import java.io.Serializable;
 import java.util.*;

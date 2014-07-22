@@ -8,7 +8,7 @@ import field.core.plugins.drawing.opengl.*;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.RootComponent.iMousePeer;
 import field.math.linalg.Vector2;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.tuple.Triple;
 import field.util.Dict.Prop;
 import org.eclipse.swt.widgets.Event;
 

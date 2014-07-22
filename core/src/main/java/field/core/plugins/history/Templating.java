@@ -20,8 +20,8 @@ import field.core.util.LoadInternalWorkspaceFile;
 import field.core.windowing.components.iComponent;
 import field.launch.SystemProperties;
 import field.namespace.generic.Bind.iFunction;
-import field.namespace.generic.Generics.Pair;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.tuple.Pair;
+import field.namespace.generic.tuple.Triple;
 
 import java.io.*;
 import java.util.*;

@@ -1,7 +1,7 @@
 package field.math.graph.visitors;
 
 import field.math.graph.iTopology;
-import field.namespace.generic.Generics;
+import field.namespace.generic.tuple.Pair;
 import field.util.HashMapOfLists;
 
 import java.util.*;
@@ -11,7 +11,7 @@ import java.util.*;
 */
 public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
 
-    public HashMapOfLists<T, Generics.Pair<T, List<T>>> knownPaths = new HashMapOfLists<T, Generics.Pair<T, List<T>>>();
+    public HashMapOfLists<T, Pair<T, List<T>>> knownPaths = new HashMapOfLists<T, Pair<T, List<T>>>();
 
     private final iTopology<T> t;
 
@@ -127,10 +127,10 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
     }
 
     protected List<T> getCachedPath(T from, T to) {
-        Collection<Generics.Pair<T, List<T>>> q = knownPaths.get(from);
+        Collection<Pair<T, List<T>>> q = knownPaths.get(from);
         if (q == null)
             return null;
-        for (Generics.Pair<T, List<T>> p : q) {
+        for (Pair<T, List<T>> p : q) {
             if (p.left.equals(to)) {
                 return p.right;
             }
@@ -140,7 +140,7 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
 
     protected void markPathAsCached(List<T> path) {
         for (int i = 0; i < path.size() - 1; i++) {
-            knownPaths.addToList(path.get(i), new Generics.Pair<T, List<T>>(path.get(path.size() - 1), path.subList(i + 1, path.size())));
+            knownPaths.addToList(path.get(i), new Pair<T, List<T>>(path.get(path.size() - 1), path.subList(i + 1, path.size())));
         }
     }
 

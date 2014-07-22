@@ -9,5 +9,4 @@ import java.lang.annotation.Target;
 @Target(value={ElementType.TYPE,ElementType.METHOD})
 @Retention(value=RetentionPolicy.RUNTIME)
 public @interface Woven {
-    // public static final ASMType TYPE = ASMType.getType(Woven.class);
 }

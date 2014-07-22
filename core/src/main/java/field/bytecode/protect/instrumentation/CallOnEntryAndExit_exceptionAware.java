@@ -1,12 +1,11 @@
 package field.bytecode.protect.instrumentation;
 
-import field.namespace.generic.Generics;
+import field.namespace.generic.tuple.Pair;
 import field.protect.asm.ASMMethod;
 import field.protect.asm.ASMType;
 import field.protect.asm.FieldASMGeneratorAdapter;
 import org.objectweb.asm.*;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,11 +17,8 @@ import static field.bytecode.protect.instrumentation.BasicInstrumentationConstan
 public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter implements EntryHandler, ExitHandler {
 
 
-    private static final ASMType[] Type_handle_sig = new ASMType[]{ASMType.OBJECT_TYPE, ASMType.STRING_TYPE, ASMType.OBJECT_TYPE, ASMType.STRING_TYPE, ASMType.STRING_TYPE, ASMType.STRING_TYPE};
 
     private final int access2;
-
-    private Label endTryCatchLabel;
 
     private int exceptionLocal;
 
@@ -30,24 +26,23 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
 
     private final String parameterName;
 
-    private final HashMap<String, Object> parameters;
 
     private int returnNumber;
 
     protected String name;
 
-    protected LinkedHashMap<Integer, Generics.Pair<String, String>> aliasedParameterSet = new LinkedHashMap<Integer, Generics.Pair<String, String>>();
+    protected LinkedHashMap<Integer, Pair<String, String>> aliasedParameterSet = new LinkedHashMap<Integer, Pair<String, String>>();
 
     boolean isConstructor = false;
 
     Label startTryCatchLabel;
 
-    public CallOnEntryAndExit_exceptionAware(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
+    public CallOnEntryAndExit_exceptionAware(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, Map<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         access2 = access;
         this.onMethod = onMethod;
-        this.parameters = parameters;
+        //  this.parameters = parameters;
         parameterName = "parameter:" + BasicInstrumentation2.uniq_parameter++;
         returnNumber = 0;
         BasicInstrumentation2.parameters.put(parameterName, parameters);
@@ -67,8 +62,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
 
     @Override
     public void visitCode() {
-        // if (StandardTrampoline.debug)
-        //System.out.println(ANSIColorUtils.red(" entryAndExit begins"));
+
         super.visitCode();
 
         if (onMethod.getName().equals("<init>")) {
@@ -78,10 +72,9 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             isConstructor = true;
 
         } else {
-            //if (StandardTrampoline.debug)
-            // ;//System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented entrance"));
 
-            startTryCatchLabel = this.mark();
+
+            startTryCatchLabel = mark();
             push(name);
             loadThis();
             push(onMethod.getName());
@@ -90,7 +83,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_V_SOSSo);
             // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type.VOID_TYPE, new Type[]{Type_String, Type_Object, Type_String, Type_String, Type.getType(Object[].class)}));
         }
-        exceptionLocal = this.newLocal(Type.getType(Throwable.class));
+        exceptionLocal = newLocal(Type.getType(Throwable.class));
 
     }
 
@@ -99,9 +92,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
 
         if ((access2 & Opcodes.ACC_ABSTRACT) == 0) {
 
-            endTryCatchLabel = this.mark();
-            // if (StandardTrampoline.debug)
-            //System.out.println(" exception local is <" + exceptionLocal + ">");
+            Label endTryCatchLabel = mark();
             storeLocal(exceptionLocal);
 
             push((String) null);
@@ -121,8 +112,6 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
         }
         super.visitMaxs(0, 0);
         super.visitEnd();
-        // if (StandardTrampoline.debug)
-        //System.out.println(ANSIColorUtils.red(" entryAndExit ends"));
     }
 
     @Override
@@ -137,8 +126,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
             // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             pop();
-           // if (StandardTrampoline.debug)
-                //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented RETURN"));
+
         } else if (op == Opcodes.IRETURN) {
             // dup();
             box(ASMType.INT_TYPE);
@@ -151,8 +139,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
             //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             unbox(ASMType.INT_TYPE);
-            // if (StandardTrampoline.debug)
-            //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented IRETURN"));
+
         } else if (op == Opcodes.FRETURN) {
             // dup();
             box(ASMType.FLOAT_TYPE);
@@ -165,8 +152,7 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
             invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle_O_OSOSSS);
 //            invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle", Type_Object, Type_handle_sig));
             unbox(ASMType.FLOAT_TYPE);
-            //if (StandardTrampoline.debug)
-            //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented FRETURN"));
+
         } else if (op == Opcodes.ARETURN) {
             // dup();
 
@@ -190,12 +176,10 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
     }
 
     @Override
-    public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+    public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
         if (isConstructor) {
             if (opcode == Opcodes.INVOKESPECIAL) {
-                super.visitMethodInsn(opcode, owner, name, desc);
-                //if (StandardTrampoline.debug)
-                //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented entrance of constructor"));
+                super.visitMethodInsn(opcode, owner, name, desc, itf);
 
                 startTryCatchLabel = this.mark();
                 push(this.name);
@@ -210,27 +194,25 @@ public abstract class CallOnEntryAndExit_exceptionAware extends FieldASMGenerato
 
                 isConstructor = false;
             } else
-                super.visitMethodInsn(opcode, owner, name, desc);
+                super.visitMethodInsn(opcode, owner, name, desc, itf);
 
         } else
-            super.visitMethodInsn(opcode, owner, name, desc);
-
+            super.visitMethodInsn(opcode, owner, name, desc, itf);
     }
+
 
     @Override
     public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc, boolean visible) {
 
-        // if (StandardTrampoline.debug)
-        //System.out.println(" entryAndExit, visit parameter annotation <" + parameter + "> <" + desc + "> <" + visible + ">");
 
         if (BasicInstrumentation2.knownAliasingParameters.contains(desc)) {
-            aliasedParameterSet.put(parameter, new Generics.Pair<String, String>(desc, null));
+            aliasedParameterSet.put(parameter, new Pair<String, String>(desc, null));
 
             // rip out the name and argument
             return new AnnotationVisitor(Opcodes.ASM5) {
 
                 public void visit(String name, Object value) {
-                    aliasedParameterSet.put(parameter, new Generics.Pair<String, String>(desc, (String) value));
+                    aliasedParameterSet.put(parameter, new Pair<String, String>(desc, (String) value));
                 }
 
                 public AnnotationVisitor visitAnnotation(String name, String desc) {

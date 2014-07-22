@@ -3,7 +3,7 @@ package field.bytecode.protect;
 import field.bytecode.protect.annotations.FromContext;
 import field.bytecode.protect.trampoline.TrampolineReflection;
 import field.namespace.context.*;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import org.objectweb.asm.Type;
 
 import java.lang.reflect.Field;

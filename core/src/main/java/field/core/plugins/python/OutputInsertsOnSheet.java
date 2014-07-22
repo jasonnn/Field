@@ -36,7 +36,7 @@ import field.math.linalg.Vector2;
 import field.math.linalg.iToFloatArray;
 import field.math.util.BreakpointFloat;
 import field.math.util.CubicInterpolatorDynamic;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.tuple.Triple;
 import field.util.MiscNative;
 import field.util.RectangleAllocator;
 import org.eclipse.swt.SWT;

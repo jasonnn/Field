@@ -1,6 +1,9 @@
 package field.bytecode.protect.trampoline;
 
-import org.objectweb.asm.*;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +30,16 @@ public class AnnotationMethodAdaptor extends MethodVisitor {
 
     private final String super_name;
 
-    public AnnotationMethodAdaptor(Map<String, HandlesAnnontatedMethod> annotatedMethodHandlers, int access, String name, String desc, String signature, ClassVisitor classDelegate, MethodVisitor arg0, String super_name, byte[] originalByteCode, String class_name) {
+    public AnnotationMethodAdaptor(Map<String, HandlesAnnontatedMethod> annotatedMethodHandlers,
+                                   int access,
+                                   String name,
+                                   String desc,
+                                   String signature,
+                                   ClassVisitor classDelegate,
+                                   MethodVisitor arg0,
+                                   String super_name,
+                                   byte[] originalByteCode,
+                                   String class_name) {
         super(Opcodes.ASM5);
         this.annotatedMethodHandlers = annotatedMethodHandlers;
 

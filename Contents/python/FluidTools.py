@@ -837,7 +837,7 @@ def LocalExtendedAssignment():
 	return KeyframeGroupOverrideHelper(_self, sys._getframe(1).f_locals, SimpleExtendedAssignment())
 
 
-from field.namespace.generic.Generics import Triple
+from field.namespace.generic.tuple.Generics import Triple
 
 def tripleIter(self):
 	ll = [self.left, self.middle, self.right]
@@ -845,7 +845,7 @@ def tripleIter(self):
 
 Triple.__iter__ = tripleIter
 
-from field.namespace.generic.Generics import Pair
+from field.namespace.generic.tuple.Generics import Pair
 
 def tripleIter(self):
 	ll = [self.left, self.right]

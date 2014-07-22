@@ -23,7 +23,7 @@ import field.launch.iUpdateable;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import field.util.Dict;
 import field.util.Dict.Prop;
 import field.util.TaskQueue;

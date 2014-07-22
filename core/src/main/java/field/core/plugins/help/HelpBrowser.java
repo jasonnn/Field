@@ -18,7 +18,7 @@ import field.core.ui.MacScrollbarHack;
 import field.launch.Launcher;
 import field.launch.iUpdateable;
 import field.math.abstraction.iProvider;
-import field.namespace.generic.Generics.Pair;
+import field.namespace.generic.tuple.Pair;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;

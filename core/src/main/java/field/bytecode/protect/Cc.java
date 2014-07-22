@@ -2,8 +2,8 @@ package field.bytecode.protect;
 
 import field.bytecode.protect.annotations.ConstantContext;
 import field.namespace.context.ContextTopology;
-import field.namespace.generic.Generics.Pair;
 import field.namespace.generic.ReflectionTools;
+import field.namespace.generic.tuple.Pair;
 import org.objectweb.asm.Type;
 
 import java.lang.reflect.Field;

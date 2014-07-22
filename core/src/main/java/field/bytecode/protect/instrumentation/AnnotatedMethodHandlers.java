@@ -1,19 +1,19 @@
-package field.bytecode.protect.trampoline;
+package field.bytecode.protect.instrumentation;
 
 import field.bytecode.protect.*;
 import field.bytecode.protect.annotations.*;
+import field.bytecode.protect.annotations.Yield;
 import field.bytecode.protect.cache.DeferedCached;
 import field.bytecode.protect.cache.DeferedDiskCached;
 import field.bytecode.protect.cache.DeferedFixedDuringUpdate;
 import field.bytecode.protect.cache.DeferredTrace;
 import field.bytecode.protect.dispatch.DispatchSupport;
 import field.bytecode.protect.dispatch.InsideSupport;
-import field.bytecode.protect.instrumentation.CallOnEntryAndExit_exceptionAware;
-import field.bytecode.protect.instrumentation.Yield2;
+import field.bytecode.protect.trampoline.HandlesAnnontatedMethod;
 import field.bytecode.protect.yield.YieldSupport;
 import field.namespace.context.ContextTopology;
 import field.namespace.context.iStorage;
-import field.namespace.generic.Generics;
+import field.namespace.generic.tuple.Pair;
 import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -207,12 +207,12 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, String className) {
             return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
-                Stack<Generics.Pair<ContextTopology, Object>> stack = new Stack<Generics.Pair<ContextTopology, Object>>();
+                Stack<Pair<ContextTopology, Object>> stack = new Stack<Pair<ContextTopology, Object>>();
 
                 @Override
                 public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
                     if (stack.size() > 0) {
-                        Generics.Pair<ContextTopology, Object> q = stack.pop();
+                        Pair<ContextTopology, Object> q = stack.pop();
                         ContextAnnotationTools.end(q.left, q.right);
                     }
                     return returningThis;
@@ -233,7 +233,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                         value = fromThis;
 
                     ContextAnnotationTools.begin(context, value);
-                    stack.push(new Generics.Pair<ContextTopology, Object>(context, value));
+                    stack.push(new Pair<ContextTopology, Object>(context, value));
 
                     ContextAnnotationTools.populateContexted(context, fromThis);
                 }

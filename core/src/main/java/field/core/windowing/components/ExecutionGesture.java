@@ -15,7 +15,7 @@ import field.launch.Launcher;
 import field.launch.iUpdateable;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.tuple.Triple;
 import org.eclipse.swt.widgets.Event;
 
 import java.awt.*;
