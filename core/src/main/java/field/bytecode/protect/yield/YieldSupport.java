@@ -25,8 +25,8 @@ public class YieldSupport {
 
 		YieldInfo yi = localYieldInfo.get(fromThis);
 		if (yi == null) {
-			// TODO:  handle recursion correctly
-			localYieldInfo.put(fromThis, yi = new YieldInfo());
+            // TODO:  handle2 recursion correctly
+            localYieldInfo.put(fromThis, yi = new YieldInfo());
 			globalYieldInfo.put(fromThis, yi);
 		}
 		return yi.next;

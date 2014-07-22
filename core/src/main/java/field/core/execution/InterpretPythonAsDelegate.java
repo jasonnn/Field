@@ -680,8 +680,8 @@ public class InterpretPythonAsDelegate {
 		// * if all else fails tries calling __iter__()
 		// on the pyObject.
 		// This might return somethng that we can
-		// handle.
-		// *
+        // handle2.
+        // *
 		// * often you write 'someGenerator' (which is
 		// actually a
 		// function that returns an iterator) rather

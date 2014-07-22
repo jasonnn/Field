@@ -256,8 +256,8 @@ public class BasicTextures {
 		/**
 		 * reads in the image data associated with the texture. It
 		 * assumes that the texture file is in the resources bundle. It
-		 * uses NSImage and NSBitmapImageRep, so it can handle
-		 * tif,jpg,bmp, and others.
+         * uses NSImage and NSBitmapImageRep, so it can handle2
+         * tif,jpg,bmp, and others.
 		 * 
 		 */
 		public boolean loadImage(String name) {

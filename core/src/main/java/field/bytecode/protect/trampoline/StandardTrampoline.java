@@ -2,7 +2,7 @@ package field.bytecode.protect.trampoline;
 
 import field.bytecode.protect.asm.Utils;
 import field.bytecode.protect.instrumentation.AnnotatedMethodHandlers;
-import field.bytecode.protect.instrumentation.BasicInstrumentation2;
+import field.bytecode.protect.instrumentation.FieldBytecodeAdapter;
 import field.bytecode.protect.instrumentation2.MainVisitorThing;
 import field.namespace.generic.ReflectionTools;
 import field.protect.asm.ASMType;
@@ -41,8 +41,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
 
     public StandardTrampoline() {
 
-        BasicInstrumentation2.knownAliasingParameters.add("Lfield/bytecode/protect/annotations/AliasingParameter;");
-        BasicInstrumentation2.knownAliasingParameters.add("Lfield/bytecode/protect/annotations/Value;");
+        FieldBytecodeAdapter.knownAliasingParameters.add("Lfield/bytecode/protect/annotations/AliasingParameter;");
+        FieldBytecodeAdapter.knownAliasingParameters.add("Lfield/bytecode/protect/annotations/Value;");
 
     }
 
@@ -250,7 +250,7 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
     private byte[] weave(byte[] bytes, String className, ClassLoader deferTo, String superName, String[] interfaces) {
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
-        new ClassReader(bytes).accept(new MainVisitorThing(cw), 0);
+        new ClassReader(bytes).accept(new MainVisitorThing(cw), ClassReader.EXPAND_FRAMES);
 
 
         return cw.toByteArray();

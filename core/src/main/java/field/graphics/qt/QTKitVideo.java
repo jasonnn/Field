@@ -28,7 +28,7 @@ public class QTKitVideo {
 	}
 
 //	public QTKitVideo openMovie(String path) {
-//		openMovie(handle, path);
+//		openMovie(handle2, path);
 //		return this;
 //	}
 

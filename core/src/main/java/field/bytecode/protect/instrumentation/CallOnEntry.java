@@ -7,8 +7,8 @@ import org.objectweb.asm.MethodVisitor;
 import java.util.HashMap;
 import java.util.Map;
 
-import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE;
-import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.handleFast_V_IOo;
+import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE;
+import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.handleFast_V_IOo;
 
 /**
 * Created by jason on 7/14/14.
@@ -32,12 +32,12 @@ public abstract class CallOnEntry extends FieldASMGeneratorAdapter implements En
         this.name = name;
         this.onMethod = onMethod;
         this.parameters = parameters;
-        parameterName = "parameter:" + BasicInstrumentation2.uniq_parameter++;
-        BasicInstrumentation2.parameters.put(parameterName, parameters);
+        parameterName = "parameter:" + FieldBytecodeAdapter.uniq_parameter++;
+        FieldBytecodeAdapter.parameters.put(parameterName, parameters);
         returnNumber = 0;
 
-        assert !BasicInstrumentation2.entryHandlers.containsKey(name);
-        BasicInstrumentation2.entryHandlers.put(name, this);
+        assert !FieldBytecodeAdapter.entryHandlers.containsKey(name);
+        FieldBytecodeAdapter.entryHandlers.put(name, this);
     }
 
     abstract public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray);

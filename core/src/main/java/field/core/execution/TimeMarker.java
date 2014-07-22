@@ -83,7 +83,7 @@ public class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 	@Override
 	public VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
 
-        //System.out.println(" handle keyboad event called <" + event + ">");
+        //System.out.println(" handle2 keyboad event called <" + event + ">");
         if (event == null)
 			return VisitCode.cont;
 

@@ -2113,7 +2113,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 	@Override
 	protected boolean completionKeyHandle(String leftText, LinkedHashMap<String, iUpdateable> items, final iKeystrokeUpdate u) {
 		leftText = leftText.trim();
-        // System.out.println(" completion key handle <" + leftText +
+        // System.out.println(" completion key handle2 <" + leftText +
         // ">");
 
 		String[] b = leftText.split("\\(\"");
@@ -2146,7 +2146,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 	}
 
 	private boolean interpretKeyHandleCompletionObject(final Object ex, final String after, LinkedHashMap<String, iUpdateable> items, final iKeystrokeUpdate u) {
-        // System.out.println(" interpret key handle completion object <"
+        // System.out.println(" interpret key handle2 completion object <"
         // + ex + "> <" + (ex == null ? null : ex.getClass()) +
 			// ">");
 		if (ex instanceof Collection) {

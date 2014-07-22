@@ -129,7 +129,7 @@ public class OSCInput implements iUpdateable {
     
 	protected void dispatch(String dest, List args) {
 		Handler h = (Handler) dispatchTable.get(dest);
-        //System.out.println(" handle <" + dest + "> <" + h + "> <" + dispatchTable + "> : " + args);
+        //System.out.println(" handle2 <" + dest + "> <" + h + "> <" + dispatchTable + "> : " + args);
         if (h != null)
 			dispatchTo(h, dest, args);
 		else if (dest.lastIndexOf("/") > 0) {
@@ -156,8 +156,8 @@ public class OSCInput implements iUpdateable {
 		if (h instanceof DispatchableHandler) {
 			((DispatchableHandler) h).handle(dest, args.toArray());
 		} else {
-			// call handle method through reflection
-			Method m = ReflectionTools.findFirstMethodCalled(h.getClass(), "handle");
+            // call handle2 method through reflection
+            Method m = ReflectionTools.findFirstMethodCalled(h.getClass(), "handle");
 			try {
 				m.invoke(h, args.toArray());
 			} catch (IllegalArgumentException e) {

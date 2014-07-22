@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * This class is used internally to handle OpenGL context dependent ids such as
+ * This class is used internally to handle2 OpenGL context dependent ids such as
  * DisplayList ids, texture ids, vertex object ids, etc. Since we want objects
  * to be able to be used in multiple contexts (and ids can't be shared across
  * contexts) we need a level of indirection. This is provided by this class.

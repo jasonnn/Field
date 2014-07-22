@@ -214,7 +214,7 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     };
     private static AtomicInteger counter = new AtomicInteger(0);
 
-    final String desc;
+    public final String desc;
 
     StandardMethodAnnotationHandlers(Class<? extends Annotation> annotationClass) {
         Target target = annotationClass.getAnnotation(Target.class);

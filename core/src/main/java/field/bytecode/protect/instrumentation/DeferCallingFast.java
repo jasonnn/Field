@@ -43,20 +43,20 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
         this.classDelegate = classDelegate;
         this.signature = signature;
         this.parameters = parameters;
-        String parameterName = "parameter:" + BasicInstrumentation2.uniq_parameter++;
+        String parameterName = "parameter:" + FieldBytecodeAdapter.uniq_parameter++;
         // returnNumber = 0;
-        BasicInstrumentation2.parameters.put(parameterName, parameters);
+        FieldBytecodeAdapter.parameters.put(parameterName, parameters);
 
         // assert onMethod.getReturnType() == Type.VOID_TYPE :
         // onMethod.getASMReturnType();
 
-        assert !BasicInstrumentation2.entryHandlers.containsKey(name);
+        assert !FieldBytecodeAdapter.entryHandlers.containsKey(name);
         // deferedHandlers.put(name, this);
 
         // assert !BasicInstrumentation2.entryHandlers.containsKey(name);
 
-        BasicInstrumentation2.addCancelHandler(this);
-        uniq = BasicInstrumentation2.entryCancelList.length - 1;
+        FieldBytecodeAdapter.addCancelHandler(this);
+        uniq = FieldBytecodeAdapter.entryCancelList.length - 1;
 
     }
 
@@ -72,7 +72,8 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
 
         // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", Type.getType(Object.class), new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(String.class), Type.getType(Object[].class)}));
 
-        invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleCancelFast_O_IOSo);
+        invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+                     FieldBytecodeAdapterConstants.handleCancelFast_O_IOSo);
 
         //TODO cleanup
         if (onMethod.getASMReturnType().getSort() == ASMType.OBJECT) {

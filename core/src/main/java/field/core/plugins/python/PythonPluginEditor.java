@@ -1369,7 +1369,7 @@ public class PythonPluginEditor extends PythonPlugin {
 			protected void handleMouseEventOnArea(MouseEvent e, Area currentArea) {
 				super.handleMouseEventOnArea(e, currentArea);
 
-                // System.out.println(" handle mouse on area <"
+                // System.out.println(" handle2 mouse on area <"
                 // + e + " " + currentArea + ">");
 
 				if ((e.stateMask & SWT.ALT) != 0 && currentArea != null && (e.stateMask & SWT.SHIFT) == 0) {

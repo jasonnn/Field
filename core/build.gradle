@@ -68,7 +68,7 @@ dependencies {
     compile 'com.thoughtworks.xstream:xstream:1.4.7'
     compile 'com.github.spullara.cli-parser:cli-parser:1.1.2'
 
-    compile 'org.ow2.asm:asm-all:5.0.3'
+    compile 'org.ow2.asm:asm-debug-all:5.0.3'
     compile 'com.thoughtworks.qdox:qdox:2.0-M1'
 
 

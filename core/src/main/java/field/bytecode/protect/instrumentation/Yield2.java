@@ -60,11 +60,11 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
         this.originalByteCode = originalByteCode;
         this.className = className;
 
-        parameterName = "parameter:" + BasicInstrumentation2.uniq_parameter++;
+        parameterName = "parameter:" + FieldBytecodeAdapter.uniq_parameter++;
         returnNumber = 0;
-        BasicInstrumentation2.parameters.put(parameterName, parameters);
+        FieldBytecodeAdapter.parameters.put(parameterName, parameters);
 
-        BasicInstrumentation2.yieldHandlers.put(name, this);
+        FieldBytecodeAdapter.yieldHandlers.put(name, this);
 
     }
 
@@ -94,7 +94,8 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
         push(name);
         loadThis();
         push(onMethod.getName());
-        invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleYieldIndex_I_SOS);
+        invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+                     FieldBytecodeAdapterConstants.handleYieldIndex_I_SOS);
         // invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", ASMType.INT_TYPE, new ASMType[]{ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class)}));
 
         // if (StandardTrampoline.debug)
@@ -188,7 +189,8 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             push(onMethod.getName());
             push(jumpLabels.size());
 
-            invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleYieldStore);
+            invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+                         FieldBytecodeAdapterConstants.handleYieldStore);
             // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", ASMType.getType(Object.class), new ASMType[]{ASMType.getType(Object.class), ASMType.getType(Object[].class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.INT_TYPE}));
 
             // here it comes
@@ -218,7 +220,8 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             loadThis();
             push(onMethod.getName());
 
-            invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleYieldLoad);
+            invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+                         FieldBytecodeAdapterConstants.handleYieldLoad);
             //  invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
             // invokeStatic(Type.getType(BasicInstrumentation2.class),
             //       new ASMMethod("handle_yieldLoad", ASMType.OBJECT_ARRAY_TYPE, new ASMType[]{ASMType.STRING_TYPE, ASMType.OBJECT_TYPE, ASMType.STRING_TYPE}));

@@ -14,10 +14,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author marc
  */
 @RefactorCarefully
-final public class BasicInstrumentation2 {
+final public
+class FieldBytecodeAdapter {
 
     public static void addCancelHandler(FastCancelHandler handler) {
-        entryCancelList = Arrays.copyOf(entryCancelList, BasicInstrumentation2.entryCancelList.length + 1);
+        entryCancelList = Arrays.copyOf(entryCancelList, FieldBytecodeAdapter.entryCancelList.length + 1);
         entryCancelList[entryCancelList.length - 1] = handler;
 
     }
@@ -40,16 +41,29 @@ final public class BasicInstrumentation2 {
 
     static Map<String, YieldHandler> yieldHandlers = new HashMap<String, YieldHandler>();
 
-    static public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, String parameterName, String methodReturnName) {
+    static public
+    Object handle0(Object returningThis,
+                   String fromName,
+                   Object fromThis,
+                   String methodName,
+                   String parameterName,
+                   String methodReturnName) {
         return exitHandlers.get(fromName).handle(returningThis, fromName, fromThis, methodName, parameters.get(parameterName), methodReturnName);
     }
 
-    static public void handle(String fromName, Object fromThis, String methodName, String parameterName, Object[] argArray) {
+    static public
+    void handle1(String fromName, Object fromThis, String methodName, String parameterName, Object[] argArray) {
         assert entryHandlers.containsKey(fromName) : fromName + " " + entryHandlers;
         entryHandlers.get(fromName).handle(fromName, fromThis, methodName, parameters.get(parameterName), argArray);
     }
 
-    static public void handle(String fromName, Object fromThis, String methodName, String parameterName, Object[] argArray, Class[] paramArray) {
+    static public
+    void handle2(String fromName,
+                 Object fromThis,
+                 String methodName,
+                 String parameterName,
+                 Object[] argArray,
+                 Class[] paramArray) {
         deferedHandlers.get(fromName).handle(fromName, fromThis, methodName, parameters.get(parameterName), argArray, paramArray);
 
         //  java.lang.reflect.Method[] m = ReflectionTools.findAllMethodsCalled(fromThis.getClass(), methodName);

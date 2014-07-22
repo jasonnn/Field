@@ -44,8 +44,12 @@ import java.lang.reflect.Method;
  * @author Eric Bruneton
  * @author Chris Nokleberg
  */
-@SuppressWarnings({"PointlessBitwiseExpression", "ForLoopReplaceableByForEach", "UnusedDeclaration", "StatementWithEmptyBody"})
-public class ASMType {
+@SuppressWarnings({"PointlessBitwiseExpression",
+                   "ForLoopReplaceableByForEach",
+                   "UnusedDeclaration",
+                   "StatementWithEmptyBody"})
+public
+class ASMType {
     public static final ASMType OBJECT_TYPE = ASMType.getType(Object.class);
     public static final ASMType OBJECT_ARRAY_TYPE = ASMType.getType(Object[].class);
     public static final ASMType STRING_TYPE = ASMType.getType(String.class);
@@ -114,56 +118,48 @@ public class ASMType {
     /**
      * The <tt>void</tt> type.
      */
-    public static final ASMType VOID_TYPE = new ASMType(VOID, null, ('V' << 24)
-            | (5 << 16) | (0 << 8) | 0, 1);
+    public static final ASMType VOID_TYPE = new ASMType(VOID, null, ('V' << 24) | (5 << 16) | (0 << 8) | 0, 1);
 
     /**
      * The <tt>boolean</tt> type.
      */
-    public static final ASMType BOOLEAN_TYPE = new ASMType(BOOLEAN, null, ('Z' << 24)
-            | (0 << 16) | (5 << 8) | 1, 1);
+    public static final ASMType BOOLEAN_TYPE = new ASMType(BOOLEAN, null, ('Z' << 24) | (0 << 16) | (5 << 8) | 1, 1);
 
     /**
      * The <tt>char</tt> type.
      */
-    public static final ASMType CHAR_TYPE = new ASMType(CHAR, null, ('C' << 24)
-            | (0 << 16) | (6 << 8) | 1, 1);
+    public static final ASMType CHAR_TYPE = new ASMType(CHAR, null, ('C' << 24) | (0 << 16) | (6 << 8) | 1, 1);
 
     /**
      * The <tt>byte</tt> type.
      */
-    public static final ASMType BYTE_TYPE = new ASMType(BYTE, null, ('B' << 24)
-            | (0 << 16) | (5 << 8) | 1, 1);
+    public static final ASMType BYTE_TYPE = new ASMType(BYTE, null, ('B' << 24) | (0 << 16) | (5 << 8) | 1, 1);
 
     /**
      * The <tt>short</tt> type.
      */
-    public static final ASMType SHORT_TYPE = new ASMType(SHORT, null, ('S' << 24)
-            | (0 << 16) | (7 << 8) | 1, 1);
+    public static final ASMType SHORT_TYPE = new ASMType(SHORT, null, ('S' << 24) | (0 << 16) | (7 << 8) | 1, 1);
 
     /**
      * The <tt>int</tt> type.
      */
-    public static final ASMType INT_TYPE = new ASMType(INT, null, ('I' << 24)
-            | (0 << 16) | (0 << 8) | 1, 1);
+    public static final ASMType INT_TYPE = new ASMType(INT, null, ('I' << 24) | (0 << 16) | (0 << 8) | 1, 1);
 
     /**
      * The <tt>float</tt> type.
      */
-    public static final ASMType FLOAT_TYPE = new ASMType(FLOAT, null, ('F' << 24)
-            | (2 << 16) | (2 << 8) | 1, 1);
+    public static final ASMType FLOAT_TYPE = new ASMType(FLOAT, null, ('F' << 24) | (2 << 16) | (2 << 8) | 1, 1);
 
     /**
      * The <tt>long</tt> type.
      */
-    public static final ASMType LONG_TYPE = new ASMType(LONG, null, ('J' << 24)
-            | (1 << 16) | (1 << 8) | 2, 1);
+    public static final ASMType LONG_TYPE = new ASMType(LONG, null, ('J' << 24) | (1 << 16) | (1 << 8) | 2, 1);
 
     /**
      * The <tt>double</tt> type.
      */
-    public static final ASMType DOUBLE_TYPE = new ASMType(DOUBLE, null, ('D' << 24)
-            | (3 << 16) | (3 << 8) | 2, 1);
+    public static final ASMType DOUBLE_TYPE = new ASMType(DOUBLE, null, ('D' << 24) | (3 << 16) | (3 << 8) | 2, 1);
+    public static ASMType THROWABLE_TYPE = ASMType.getType(Throwable.class);
 
     // ------------------------------------------------------------------------
     // Fields
@@ -205,7 +201,8 @@ public class ASMType {
      * @param off  the offset of this descriptor in the previous buffer.
      * @param len  the length of this descriptor.
      */
-    private ASMType(final int sort, final char[] buf, final int off, final int len) {
+    private
+    ASMType(final int sort, final char[] buf, final int off, final int len) {
         this.sort = sort;
         this.buf = buf;
         this.off = off;
@@ -219,7 +216,8 @@ public class ASMType {
      * @return the Java type corresponding to the given type descriptor.
      */
     @NotNull
-    public static ASMType getType(@NotNull final String typeDescriptor) {
+    public static
+    ASMType getType(@NotNull final String typeDescriptor) {
         return getType(typeDescriptor.toCharArray(), 0);
     }
 
@@ -230,7 +228,8 @@ public class ASMType {
      * @return the Java type corresponding to the given internal name.
      */
     @NotNull
-    public static ASMType getObjectType(@NotNull final String internalName) {
+    public static
+    ASMType getObjectType(@NotNull final String internalName) {
         char[] buf = internalName.toCharArray();
         return new ASMType(buf[0] == '[' ? ARRAY : OBJECT, buf, 0, buf.length);
     }
@@ -243,7 +242,8 @@ public class ASMType {
      * @return the Java type corresponding to the given method descriptor.
      */
     @NotNull
-    public static ASMType getMethodType(@NotNull final String methodDescriptor) {
+    public static
+    ASMType getMethodType(@NotNull final String methodDescriptor) {
         return getType(methodDescriptor.toCharArray(), 0);
     }
 
@@ -257,8 +257,8 @@ public class ASMType {
      * types.
      */
     @NotNull
-    public static ASMType getMethodType(@NotNull final ASMType returnType,
-                                        final ASMType... argumentTypes) {
+    public static
+    ASMType getMethodType(@NotNull final ASMType returnType, final ASMType... argumentTypes) {
         return getType(getMethodDescriptor(returnType, argumentTypes));
     }
 
@@ -269,28 +269,38 @@ public class ASMType {
      * @return the Java type corresponding to the given class.
      */
     @NotNull
-    public static ASMType getType(@NotNull final Class<?> c) {
+    public static
+    ASMType getType(@NotNull final Class<?> c) {
         if (c.isPrimitive()) {
             if (c == Integer.TYPE) {
                 return INT_TYPE;
-            } else if (c == Void.TYPE) {
+            }
+            else if (c == Void.TYPE) {
                 return VOID_TYPE;
-            } else if (c == Boolean.TYPE) {
+            }
+            else if (c == Boolean.TYPE) {
                 return BOOLEAN_TYPE;
-            } else if (c == Byte.TYPE) {
+            }
+            else if (c == Byte.TYPE) {
                 return BYTE_TYPE;
-            } else if (c == Character.TYPE) {
+            }
+            else if (c == Character.TYPE) {
                 return CHAR_TYPE;
-            } else if (c == Short.TYPE) {
+            }
+            else if (c == Short.TYPE) {
                 return SHORT_TYPE;
-            } else if (c == Double.TYPE) {
+            }
+            else if (c == Double.TYPE) {
                 return DOUBLE_TYPE;
-            } else if (c == Float.TYPE) {
+            }
+            else if (c == Float.TYPE) {
                 return FLOAT_TYPE;
-            } else /* if (c == Long.TYPE) */ {
+            }
+            else /* if (c == Long.TYPE) */ {
                 return LONG_TYPE;
             }
-        } else {
+        }
+        else {
             return getType(getDescriptor(c));
         }
     }
@@ -302,7 +312,8 @@ public class ASMType {
      * @return the Java method type corresponding to the given constructor.
      */
     @NotNull
-    public static ASMType getType(@NotNull final Constructor<?> c) {
+    public static
+    ASMType getType(@NotNull final Constructor<?> c) {
         return getType(getConstructorDescriptor(c));
     }
 
@@ -313,7 +324,8 @@ public class ASMType {
      * @return the Java method type corresponding to the given method.
      */
     @NotNull
-    public static ASMType getType(@NotNull final Method m) {
+    public static
+    ASMType getType(@NotNull final Method m) {
         return getType(getMethodDescriptor(m));
     }
 
@@ -326,7 +338,8 @@ public class ASMType {
      * method descriptor.
      */
     @NotNull
-    public static ASMType[] getArgumentTypes(@NotNull final String methodDescriptor) {
+    public static
+    ASMType[] getArgumentTypes(@NotNull final String methodDescriptor) {
         char[] buf = methodDescriptor.toCharArray();
         int off = 1;
         int size = 0;
@@ -334,11 +347,13 @@ public class ASMType {
             char car = buf[off++];
             if (car == ')') {
                 break;
-            } else if (car == 'L') {
+            }
+            else if (car == 'L') {
                 while (buf[off++] != ';') {
                 }
                 ++size;
-            } else if (car != '[') {
+            }
+            else if (car != '[') {
                 ++size;
             }
         }
@@ -362,7 +377,8 @@ public class ASMType {
      * method.
      */
     @NotNull
-    public static ASMType[] getArgumentTypes(@NotNull final Method method) {
+    public static
+    ASMType[] getArgumentTypes(@NotNull final Method method) {
         Class<?>[] classes = method.getParameterTypes();
         ASMType[] types = new ASMType[classes.length];
         for (int i = classes.length - 1; i >= 0; --i) {
@@ -380,7 +396,8 @@ public class ASMType {
      * method descriptor.
      */
     @NotNull
-    public static ASMType getReturnType(@NotNull final String methodDescriptor) {
+    public static
+    ASMType getReturnType(@NotNull final String methodDescriptor) {
         char[] buf = methodDescriptor.toCharArray();
         return getType(buf, methodDescriptor.indexOf(')') + 1);
     }
@@ -394,7 +411,8 @@ public class ASMType {
      * method.
      */
     @NotNull
-    public static ASMType getReturnType(@NotNull final Method method) {
+    public static
+    ASMType getReturnType(@NotNull final Method method) {
         return getType(method.getReturnType());
     }
 
@@ -408,29 +426,33 @@ public class ASMType {
      * <tt>(argSize &lt;&lt; 2) | retSize</tt> (argSize is therefore equal to
      * <tt>i &gt;&gt; 2</tt>, and retSize to <tt>i &amp; 0x03</tt>).
      */
-    public static int getArgumentsAndReturnSizes(@NotNull final String desc) {
+    public static
+    int getArgumentsAndReturnSizes(@NotNull final String desc) {
         int n = 1;
         int c = 1;
         while (true) {
             char car = desc.charAt(c++);
             if (car == ')') {
                 car = desc.charAt(c);
-                return n << 2
-                        | (car == 'V' ? 0 : (car == 'D' || car == 'J' ? 2 : 1));
-            } else if (car == 'L') {
+                return n << 2 | (car == 'V' ? 0 : (car == 'D' || car == 'J' ? 2 : 1));
+            }
+            else if (car == 'L') {
                 while (desc.charAt(c++) != ';') {
                 }
                 n += 1;
-            } else if (car == '[') {
+            }
+            else if (car == '[') {
                 while ((car = desc.charAt(c)) == '[') {
                     ++c;
                 }
                 if (car == 'D' || car == 'J') {
                     n -= 1;
                 }
-            } else if (car == 'D' || car == 'J') {
+            }
+            else if (car == 'D' || car == 'J') {
                 n += 2;
-            } else {
+            }
+            else {
                 n += 1;
             }
         }
@@ -446,7 +468,8 @@ public class ASMType {
      * @return the Java type corresponding to the given type descriptor.
      */
     @NotNull
-    private static ASMType getType(@NotNull final char[] buf, final int off) {
+    private static
+    ASMType getType(@NotNull final char[] buf, final int off) {
         int len;
         switch (buf[off]) {
             case 'V':
@@ -504,7 +527,8 @@ public class ASMType {
      * {@link #ARRAY ARRAY}, {@link #OBJECT OBJECT} or {@link #METHOD
      * METHOD}.
      */
-    public int getSort() {
+    public
+    int getSort() {
         return sort;
     }
 
@@ -514,7 +538,8 @@ public class ASMType {
      *
      * @return the number of dimensions of this array type.
      */
-    public int getDimensions() {
+    public
+    int getDimensions() {
         int i = 1;
         while (buf[off + i] == '[') {
             ++i;
@@ -529,7 +554,8 @@ public class ASMType {
      * @return Returns the type of the elements of this array type.
      */
     @NotNull
-    public ASMType getElementType() {
+    public
+    ASMType getElementType() {
         return getType(buf, off + getDimensions());
     }
 
@@ -540,7 +566,8 @@ public class ASMType {
      * @return the binary name of the class corresponding to this type.
      */
     @Nullable
-    public String getClassName() {
+    public
+    String getClassName() {
         switch (sort) {
             case VOID:
                 return "void";
@@ -582,7 +609,8 @@ public class ASMType {
      * @return the internal name of the class corresponding to this object type.
      */
     @NotNull
-    public String getInternalName() {
+    public
+    String getInternalName() {
         return new String(buf, off, len);
     }
 
@@ -593,7 +621,8 @@ public class ASMType {
      * @return the argument types of methods of this type.
      */
     @NotNull
-    public ASMType[] getArgumentTypes() {
+    public
+    ASMType[] getArgumentTypes() {
         return getArgumentTypes(getDescriptor());
     }
 
@@ -604,7 +633,8 @@ public class ASMType {
      * @return the return type of methods of this type.
      */
     @NotNull
-    public ASMType getReturnType() {
+    public
+    ASMType getReturnType() {
         return getReturnType(getDescriptor());
     }
 
@@ -619,7 +649,8 @@ public class ASMType {
      * (argSize is therefore equal to <tt>i &gt;&gt; 2</tt>,
      * and retSize to <tt>i &amp; 0x03</tt>).
      */
-    public int getArgumentsAndReturnSizes() {
+    public
+    int getArgumentsAndReturnSizes() {
         return getArgumentsAndReturnSizes(getDescriptor());
     }
 
@@ -633,13 +664,15 @@ public class ASMType {
      * @return the descriptor corresponding to this Java type.
      */
     @NotNull
-    public String getDescriptor() {
+    public
+    String getDescriptor() {
         StringBuilder buf = new StringBuilder();
         getDescriptor(buf);
         return buf.toString();
     }
 
-    public Type toType() {
+    public
+    Type toType() {
         return Type.getType(getDescriptor());
     }
 
@@ -653,8 +686,8 @@ public class ASMType {
      * types.
      */
     @NotNull
-    public static String getMethodDescriptor(@NotNull final ASMType returnType,
-                                             @NotNull final ASMType... argumentTypes) {
+    public static
+    String getMethodDescriptor(@NotNull final ASMType returnType, @NotNull final ASMType... argumentTypes) {
         StringBuilder buf = new StringBuilder();
         buf.append('(');
         for (int i = 0; i < argumentTypes.length; ++i) {
@@ -671,16 +704,19 @@ public class ASMType {
      *
      * @param buf the string buffer to which the descriptor must be appended.
      */
-    private void getDescriptor(@NotNull final StringBuilder buf) {
+    private
+    void getDescriptor(@NotNull final StringBuilder buf) {
         if (this.buf == null) {
             // descriptor is in byte 3 of 'off' for primitive types (buf ==
             // null)
             buf.append((char) ((off & 0xFF000000) >>> 24));
-        } else if (sort == OBJECT) {
+        }
+        else if (sort == OBJECT) {
             buf.append('L');
             buf.append(this.buf, off, len);
             buf.append(';');
-        } else { // sort == ARRAY || sort == METHOD
+        }
+        else { // sort == ARRAY || sort == METHOD
             buf.append(this.buf, off, len);
         }
     }
@@ -699,7 +735,8 @@ public class ASMType {
      * @return the internal name of the given class.
      */
     @NotNull
-    public static String getInternalName(@NotNull final Class<?> c) {
+    public static
+    String getInternalName(@NotNull final Class<?> c) {
         return c.getName().replace('.', '/');
     }
 
@@ -710,7 +747,8 @@ public class ASMType {
      * @return the descriptor corresponding to the given class.
      */
     @NotNull
-    public static String getDescriptor(final Class<?> c) {
+    public static
+    String getDescriptor(final Class<?> c) {
         StringBuilder buf = new StringBuilder();
         getDescriptor(buf, c);
         return buf.toString();
@@ -723,7 +761,8 @@ public class ASMType {
      * @return the descriptor of the given constructor.
      */
     @NotNull
-    public static String getConstructorDescriptor(@NotNull final Constructor<?> c) {
+    public static
+    String getConstructorDescriptor(@NotNull final Constructor<?> c) {
         Class<?>[] parameters = c.getParameterTypes();
         StringBuilder buf = new StringBuilder();
         buf.append('(');
@@ -740,7 +779,8 @@ public class ASMType {
      * @return the descriptor of the given method.
      */
     @NotNull
-    public static String getMethodDescriptor(@NotNull final Method m) {
+    public static
+    String getMethodDescriptor(@NotNull final Method m) {
         Class<?>[] parameters = m.getParameterTypes();
         StringBuilder buf = new StringBuilder();
         buf.append('(');
@@ -758,36 +798,47 @@ public class ASMType {
      * @param buf the string buffer to which the descriptor must be appended.
      * @param c   the class whose descriptor must be computed.
      */
-    private static void getDescriptor(@NotNull final StringBuilder buf, final Class<?> c) {
+    private static
+    void getDescriptor(@NotNull final StringBuilder buf, final Class<?> c) {
         Class<?> d = c;
         while (true) {
             if (d.isPrimitive()) {
                 char car;
                 if (d == Integer.TYPE) {
                     car = 'I';
-                } else if (d == Void.TYPE) {
+                }
+                else if (d == Void.TYPE) {
                     car = 'V';
-                } else if (d == Boolean.TYPE) {
+                }
+                else if (d == Boolean.TYPE) {
                     car = 'Z';
-                } else if (d == Byte.TYPE) {
+                }
+                else if (d == Byte.TYPE) {
                     car = 'B';
-                } else if (d == Character.TYPE) {
+                }
+                else if (d == Character.TYPE) {
                     car = 'C';
-                } else if (d == Short.TYPE) {
+                }
+                else if (d == Short.TYPE) {
                     car = 'S';
-                } else if (d == Double.TYPE) {
+                }
+                else if (d == Double.TYPE) {
                     car = 'D';
-                } else if (d == Float.TYPE) {
+                }
+                else if (d == Float.TYPE) {
                     car = 'F';
-                } else /* if (d == Long.TYPE) */ {
+                }
+                else /* if (d == Long.TYPE) */ {
                     car = 'J';
                 }
                 buf.append(car);
                 return;
-            } else if (d.isArray()) {
+            }
+            else if (d.isArray()) {
                 buf.append('[');
                 d = d.getComponentType();
-            } else {
+            }
+            else {
                 buf.append('L');
                 String name = d.getName();
                 int len = name.length();
@@ -812,7 +863,8 @@ public class ASMType {
      * @return the size of values of this type, i.e., 2 for <tt>long</tt> and
      * <tt>double</tt>, 0 for <tt>void</tt> and 1 otherwise.
      */
-    public int getSize() {
+    public
+    int getSize() {
         // the size is in byte 0 of 'off' for primitive types (buf == null)
         return buf == null ? (off & 0xFF) : 1;
     }
@@ -828,12 +880,14 @@ public class ASMType {
      * this Java type. For example, if this type is <tt>float</tt> and
      * <tt>opcode</tt> is IRETURN, this method returns FRETURN.
      */
-    public int getOpcode(final int opcode) {
+    public
+    int getOpcode(final int opcode) {
         if (opcode == Opcodes.IALOAD || opcode == Opcodes.IASTORE) {
             // the offset for IALOAD or IASTORE is in byte 1 of 'off' for
             // primitive types (buf == null)
             return opcode + (buf == null ? (off & 0xFF00) >> 8 : 4);
-        } else {
+        }
+        else {
             // the offset for other instructions is in byte 2 of 'off' for
             // primitive types (buf == null)
             return opcode + (buf == null ? (off & 0xFF0000) >> 16 : 4);
@@ -852,7 +906,8 @@ public class ASMType {
      * @return <tt>true</tt> if the given object is equal to this type.
      */
     @Override
-    public boolean equals(final Object o) {
+    public
+    boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -883,7 +938,8 @@ public class ASMType {
      * @return a hash code value for this type.
      */
     @Override
-    public int hashCode() {
+    public
+    int hashCode() {
         int hc = 13 * sort;
         if (sort >= ARRAY) {
             for (int i = off, end = i + len; i < end; i++) {
@@ -900,7 +956,8 @@ public class ASMType {
      */
     @NotNull
     @Override
-    public String toString() {
+    public
+    String toString() {
         return getDescriptor();
     }
 }

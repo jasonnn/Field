@@ -6,8 +6,8 @@ import org.objectweb.asm.MethodVisitor;
 
 import java.util.HashMap;
 
-import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE;
-import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.handleFast_V_IOo;
+import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE;
+import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.handleFast_V_IOo;
 
 /**
 * Created by jason on 7/14/14.
@@ -31,12 +31,12 @@ public abstract class CallOnEntryFast extends FieldASMGeneratorAdapter implement
         this.parameters = parameters;
         returnNumber = 0;
 
-        assert !BasicInstrumentation2.entryHandlers.containsKey(name);
-        FastEntryHandler[] ne = new FastEntryHandler[BasicInstrumentation2.entryHandlerList.length + 1];
-        System.arraycopy(BasicInstrumentation2.entryHandlerList, 0, ne, 0, BasicInstrumentation2.entryHandlerList.length);
+        assert !FieldBytecodeAdapter.entryHandlers.containsKey(name);
+        FastEntryHandler[] ne = new FastEntryHandler[FieldBytecodeAdapter.entryHandlerList.length + 1];
+        System.arraycopy(FieldBytecodeAdapter.entryHandlerList, 0, ne, 0, FieldBytecodeAdapter.entryHandlerList.length);
         ne[ne.length - 1] = this;
-        BasicInstrumentation2.entryHandlerList = ne;
-        uniq = BasicInstrumentation2.entryHandlerList.length - 1;
+        FieldBytecodeAdapter.entryHandlerList = ne;
+        uniq = FieldBytecodeAdapter.entryHandlerList.length - 1;
     }
 
     abstract public void handle(int fromName, Object fromThis, Object[] argArray);

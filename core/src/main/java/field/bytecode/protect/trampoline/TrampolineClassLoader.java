@@ -135,7 +135,6 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
     @Override
     synchronized protected Class<?> loadClass(String class_name, boolean resolve) throws ClassNotFoundException {
 
-        log.log(Level.INFO, " load :" + class_name);
 
         if (alreadyFailed.contains(class_name))
             throw new ClassNotFoundException(class_name);

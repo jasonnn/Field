@@ -38,14 +38,14 @@ public abstract class DeferCalling extends FieldASMGeneratorAdapter implements D
         this.classDelegate = classDelegate;
         this.signature = signature;
         this.parameters = parameters;
-        parameterName = "parameter:" + BasicInstrumentation2.uniq_parameter++;
+        parameterName = "parameter:" + FieldBytecodeAdapter.uniq_parameter++;
         returnNumber = 0;
-        BasicInstrumentation2.parameters.put(parameterName, parameters);
+        FieldBytecodeAdapter.parameters.put(parameterName, parameters);
 
         assert onMethod.getASMReturnType() == ASMType.VOID_TYPE : onMethod.getASMReturnType();
 
-        assert !BasicInstrumentation2.entryHandlers.containsKey(name);
-        BasicInstrumentation2.deferedHandlers.put(name, this);
+        assert !FieldBytecodeAdapter.entryHandlers.containsKey(name);
+        FieldBytecodeAdapter.deferedHandlers.put(name, this);
 
     }
 
@@ -60,7 +60,8 @@ public abstract class DeferCalling extends FieldASMGeneratorAdapter implements D
         push(parameterName);
         loadArgArray();
 
-        invokeStatic(BasicInstrumentationConstants.BASIC_INSTRUMENTATION_TYPE, BasicInstrumentationConstants.handleCancelFast_O_IOSo);
+        invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+                     FieldBytecodeAdapterConstants.handleCancelFast_O_IOSo);
         // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", ASMType.VOID_TYPE, new ASMType[]{ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(Object[].class)}));
 
         visitInsn(Opcodes.RETURN);

@@ -221,7 +221,7 @@ public class UDPNIOListener implements iUpdateable, Runnable {
 
 	public SocketAddress whereDidThisBufferComeFrom() {
 		if(buffercurrentlybeingprocessedbysubclass == -1){
-            //System.out.println("error, you cannot call \"whereDidThisBufferComeFrom\" unless you are calling it from PacketHandler.handle(..)");
+            //System.out.println("error, you cannot call \"whereDidThisBufferComeFrom\" unless you are calling it from PacketHandler.handle2(..)");
         }
 		return froms[buffercurrentlybeingprocessedbysubclass];
 	}

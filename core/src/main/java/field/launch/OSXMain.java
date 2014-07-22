@@ -8,9 +8,7 @@ import com.apple.concurrent.Dispatch;
 public class OSXMain {
     public static void main(final String[] args) {
         System.setProperty("main.class", "field.Blank2");
-        //assert Toolkit.getDefaultToolkit() != null : "awt not loaded";
-        Dispatch.getInstance()
-                .getNonBlockingMainQueueExecutor()
+        Dispatch.getInstance().getBlockingMainQueueExecutor()
                 .execute(new Runnable() {
 
                     @Override

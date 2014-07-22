@@ -11,7 +11,7 @@ import org.objectweb.asm.*;
 
 import java.util.*;
 
-import static field.bytecode.protect.instrumentation.BasicInstrumentationConstants.*;
+import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.*;
 
 /**
 * Created by jason on 7/14/14.
@@ -56,11 +56,11 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
         this.originalByteCode = originalByteCode;
         this.className = className;
 
-        parameterName = "parameter:" + BasicInstrumentation2.uniq_parameter++;
+        parameterName = "parameter:" + FieldBytecodeAdapter.uniq_parameter++;
         returnNumber = 0;
-        BasicInstrumentation2.parameters.put(parameterName, parameters);
+        FieldBytecodeAdapter.parameters.put(parameterName, parameters);
 
-        BasicInstrumentation2.yieldHandlers.put(name, this);
+        FieldBytecodeAdapter.yieldHandlers.put(name, this);
 
         ClassReader reader = new ClassReader(originalByteCode);
         typeAnalysis = new TypesClassVisitor(className, onMethod.getName() + onMethod.getDescriptor()) {

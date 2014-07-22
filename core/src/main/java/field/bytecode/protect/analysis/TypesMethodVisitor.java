@@ -837,8 +837,8 @@ public abstract class TypesMethodVisitor extends MethodVisitor implements Opcode
 				// iterate through the successors
 				successor = successor.getNextSuccessor();
 			}
-			// handle a possible following node
-			if (node.getFollowingNode() != null && !node.getFollowingNode().isProcessed()) {
+            // handle2 a possible following node
+            if (node.getFollowingNode() != null && !node.getFollowingNode().isProcessed()) {
 				following_node = node.getFollowingNode();
 
 				following_node.setProcessed(true);
