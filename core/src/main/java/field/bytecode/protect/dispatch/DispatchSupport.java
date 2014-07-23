@@ -1,6 +1,8 @@
 package field.bytecode.protect.dispatch;
 
 
+import org.objectweb.asm.Type;
+
 import java.util.Map;
 import java.util.Stack;
 
@@ -40,8 +42,8 @@ class DispatchSupport {
                     c = (DispatchProvider) parameters.get("topology_cached");
                 }
                 else {
-                    Class typeToInst = (Class) parameters.get("topology");
-                    Class classToInst = fromThis.getClass().getClassLoader().loadClass(typeToInst.getName());
+                    Type typeToInst = (Type) parameters.get("topology");
+                    Class classToInst = fromThis.getClass().getClassLoader().loadClass(typeToInst.getClassName());
                     c = (DispatchProvider) classToInst.newInstance();
                     parameters.put("topology_cached", c);
                 }

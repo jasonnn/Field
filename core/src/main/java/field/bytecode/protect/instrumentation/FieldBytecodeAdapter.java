@@ -1,11 +1,10 @@
 package field.bytecode.protect.instrumentation;
 
 import field.bytecode.protect.RefactorCarefully;
+import field.util.Registration;
+import field.util.Registrations;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -38,41 +37,107 @@ class FieldBytecodeAdapter {
     static Map<String, YieldHandler> yieldHandlers = new HashMap<String, YieldHandler>();
 
     public static
-    void registerParameters(String id, Map<String, Object> params) {
-        params.put(id, params);
+    Registration registerParameters(final String id, Map<String, Object> params) {
+        parameters.put(id, params);
+        return new Registration() {
+            @Override
+            public
+            void remove() {
+                unregisterParameters(id);
+            }
+        };
     }
 
     public static
-    void registerHandler(String name, Object handler) {
-        if (handler instanceof EntryHandler) registerEntryHandler(name, (EntryHandler) handler);
-        if (handler instanceof ExitHandler) registerExitHandler(name, (ExitHandler) handler);
-        if (handler instanceof YieldHandler) registerYieldHandler(name, (YieldHandler) handler);
-        if (handler instanceof DeferedHandler) registerDeferedHandler(name, (DeferedHandler) handler);
+    void unregisterParameters(String id) {
+        parameters.remove(id);
+    }
+
+    public static
+    Registration registerHandler(String name, Object handler) {
+        List<Registration> regs = new ArrayList<Registration>(4);
+        if (handler instanceof EntryHandler) regs.add(registerEntryHandler(name, (EntryHandler) handler));
+        if (handler instanceof ExitHandler) regs.add(registerExitHandler(name, (ExitHandler) handler));
+        if (handler instanceof YieldHandler) regs.add(registerYieldHandler(name, (YieldHandler) handler));
+        if (handler instanceof DeferedHandler) regs.add(registerDeferedHandler(name, (DeferedHandler) handler));
+        return new Registrations(regs);
+    }
+
+    public static
+    void unregisterHandler(String name) {
 
     }
 
     public static
-    void registerEntryHandler(String name, EntryHandler handler) {
+    void unregisterEntryHandler(String name) {
+        entryHandlers.remove(name);
+    }
+
+    public static
+    void unregisterExitHandler(String name) {
+        exitHandlers.remove(name);
+    }
+
+    public static
+    void unregisterYieldHandler(String name) {
+        yieldHandlers.remove(name);
+    }
+
+    public static
+    void unregisterDeferedHandler(String name) {
+        deferedHandlers.remove(name);
+    }
+
+    public static
+    Registration registerEntryHandler(final String name, EntryHandler handler) {
         assert !entryHandlers.containsKey(name);
         entryHandlers.put(name, handler);
+        return new Registration() {
+            @Override
+            public
+            void remove() {
+                unregisterEntryHandler(name);
+            }
+        };
     }
 
     public static
-    void registerExitHandler(String name, ExitHandler handler) {
+    Registration registerExitHandler(final String name, ExitHandler handler) {
         assert !exitHandlers.containsKey(name);
         exitHandlers.put(name, handler);
+        return new Registration() {
+            @Override
+            public
+            void remove() {
+                unregisterExitHandler(name);
+            }
+        };
     }
 
     public static
-    void registerYieldHandler(String name, YieldHandler handler) {
+    Registration registerYieldHandler(final String name, YieldHandler handler) {
         assert !yieldHandlers.containsKey(name);
         yieldHandlers.put(name, handler);
+        return new Registration() {
+            @Override
+            public
+            void remove() {
+                unregisterYieldHandler(name);
+            }
+        };
     }
 
     public static
-    void registerDeferedHandler(String name, DeferedHandler handler) {
+    Registration registerDeferedHandler(final String name, DeferedHandler handler) {
         assert !deferedHandlers.containsKey(name);
         deferedHandlers.put(name, handler);
+        return new Registration() {
+            @Override
+            public
+            void remove() {
+                unregisterDeferedHandler(name);
+            }
+        };
     }
 
     public static
