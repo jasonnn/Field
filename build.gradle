@@ -1,5 +1,7 @@
+apply plugin: 'build-dashboard'
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'project-report'
 
     sourceCompatibility = 1.6
     version = '1.0'
@@ -18,8 +20,12 @@ subprojects {
 
 project('core') {
     dependencies {
-        compile project(':annotations')
-        compile project(':asm')
+        compile(project(':annotations')) {
+            transitive = false
+        }
+        compile(project(':asm')) {
+            transitive = false
+        }
     }
 }
 project('annotation-processing') {

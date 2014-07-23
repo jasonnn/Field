@@ -65,19 +65,19 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
     }
 
     abstract public
-    Object handle(Object returningThis,
-                  String fromName,
-                  Object fromThis,
-                  String methodName,
-                  Map<String, Object> parameterName,
-                  String methodReturnName);
+    Object handleExit(Object returningThis,
+                      String fromName,
+                      Object fromThis,
+                      String methodName,
+                      Map<String, Object> parameterName,
+                      String methodReturnName);
 
     abstract public
-    void handle(String fromName,
-                Object fromThis,
-                String methodName,
-                Map<String, Object> parameterName,
-                Object[] argArray);
+    void handleEntry(String fromName,
+                     Object fromThis,
+                     String methodName,
+                     Map<String, Object> parameterName,
+                     Object[] argArray);
 
     @Override
     public
@@ -101,7 +101,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             push(onMethod.getName());
             push(parameterName);
             loadArgArray();
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle1_V_SOSSo);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleEntry_V_SOSSo);
         }
         exceptionLocal = newLocal(ASMType.THROWABLE_TYPE);
 
@@ -122,7 +122,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle0_O_OSOSSS);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
 
             loadLocal(exceptionLocal);
             throwException();
@@ -145,7 +145,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle0_O_OSOSSS);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             pop();
 
         }
@@ -158,7 +158,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle0_O_OSOSSS);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             unbox(ASMType.INT_TYPE);
 
         }
@@ -171,7 +171,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle0_O_OSOSSS);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             unbox(ASMType.FLOAT_TYPE);
 
         }
@@ -183,7 +183,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle0_O_OSOSSS);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             checkCast(onMethod.getASMReturnType());
             //if (StandardTrampoline.debug)
             //System.out.println(ANSIColorUtils.red(" entryAndExit :instrumented ARETURN"));
@@ -210,7 +210,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
                 push(onMethod.getName());
                 push(parameterName);
                 loadArgArray();
-                invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle1_V_SOSSo);
+                invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleEntry_V_SOSSo);
 
                 isConstructor = false;
             }

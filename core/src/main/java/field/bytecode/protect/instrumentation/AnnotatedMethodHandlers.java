@@ -45,7 +45,12 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                 DispatchSupport support = new DispatchSupport();
 
                 @Override
-                public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
+                public Object handleExit(Object returningThis,
+                                         String fromName,
+                                         Object fromThis,
+                                         String methodName,
+                                         Map<String, Object> parameterName,
+                                         String methodReturnName) {
                     try {
                         return support.exit(this.name, fromThis, returningThis, parameterName, className);
                     } catch (Throwable t) {
@@ -55,7 +60,11 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                 }
 
                 @Override
-                public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray) {
+                public void handleEntry(String fromName,
+                                        Object fromThis,
+                                        String methodName,
+                                        Map<String, Object> parameterName,
+                                        Object[] argArray) {
                     try {
                         support.enter(this.name, fromName, fromThis, methodName, parameterName, argArray, className);
                     } catch (Throwable t) {
@@ -73,7 +82,12 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
             return new CallOnEntryAndExit_exceptionAware("inside+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
 
                 @Override
-                public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
+                public Object handleExit(Object returningThis,
+                                         String fromName,
+                                         Object fromThis,
+                                         String methodName,
+                                         Map<String, Object> parameterName,
+                                         String methodReturnName) {
                     try {
                         InsideSupport.exit(fromThis, (String) parameterName.get("group"));
                         return returningThis;
@@ -84,7 +98,11 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                 }
 
                 @Override
-                public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray) {
+                public void handleEntry(String fromName,
+                                        Object fromThis,
+                                        String methodName,
+                                        Map<String, Object> parameterName,
+                                        Object[] argArray) {
                     try {
                         InsideSupport.enter(fromThis, (String) parameterName.get("group"));
                     } catch (Throwable t) {
@@ -191,13 +209,22 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
             return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
 
                 @Override
-                public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
+                public Object handleExit(Object returningThis,
+                                         String fromName,
+                                         Object fromThis,
+                                         String methodName,
+                                         Map<String, Object> parameterName,
+                                         String methodReturnName) {
                     Cc.handle_exit(fromThis, name, parameterName);
                     return returningThis;
                 }
 
                 @Override
-                public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray) {
+                public void handleEntry(String fromName,
+                                        Object fromThis,
+                                        String methodName,
+                                        Map<String, Object> parameterName,
+                                        Object[] argArray) {
                     Cc.handle_entry(fromThis, name, parameterName, aliasedParameterSet, argArray);
                 }
             };
@@ -210,7 +237,12 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                 Stack<Pair<ContextTopology, Object>> stack = new Stack<Pair<ContextTopology, Object>>();
 
                 @Override
-                public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
+                public Object handleExit(Object returningThis,
+                                         String fromName,
+                                         Object fromThis,
+                                         String methodName,
+                                         Map<String, Object> parameterName,
+                                         String methodReturnName) {
                     if (stack.size() > 0) {
                         Pair<ContextTopology, Object> q = stack.pop();
                         ContextAnnotationTools.end(q.left, q.right);
@@ -219,7 +251,11 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                 }
 
                 @Override
-                public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray) {
+                public void handleEntry(String fromName,
+                                        Object fromThis,
+                                        String methodName,
+                                        Map<String, Object> parameterName,
+                                        Object[] argArray) {
                     ContextTopology<?, ?> context;
                     try {
                         context = ContextAnnotationTools.contextFor(fromThis, parameterName, this.aliasedParameterSet, argArray);
@@ -247,12 +283,21 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
             return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
 
                 @Override
-                public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
+                public Object handleExit(Object returningThis,
+                                         String fromName,
+                                         Object fromThis,
+                                         String methodName,
+                                         Map<String, Object> parameterName,
+                                         String methodReturnName) {
                     return returningThis;
                 }
 
                 @Override
-                public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray) {
+                public void handleEntry(String fromName,
+                                        Object fromThis,
+                                        String methodName,
+                                        Map<String, Object> parameterName,
+                                        Object[] argArray) {
                     ContextTopology context;
                     try {
                         context = ContextAnnotationTools.contextFor(fromThis, parameterName, this.aliasedParameterSet, argArray);
@@ -287,13 +332,22 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                 TimingSupport support = new TimingSupport();
 
                 @Override
-                public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
+                public Object handleExit(Object returningThis,
+                                         String fromName,
+                                         Object fromThis,
+                                         String methodName,
+                                         Map<String, Object> parameterName,
+                                         String methodReturnName) {
                     support.handle_exit(fromThis, name, parameterName);
                     return returningThis;
                 }
 
                 @Override
-                public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray) {
+                public void handleEntry(String fromName,
+                                        Object fromThis,
+                                        String methodName,
+                                        Map<String, Object> parameterName,
+                                        Object[] argArray) {
                     support.handle_entry(fromThis, name, parameterName);
                 }
             };

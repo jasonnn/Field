@@ -72,7 +72,7 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
 
         // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", Type.getType(Object.class), new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(String.class), Type.getType(Object[].class)}));
 
-        invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+        invokeStatic(FieldBytecodeAdapterConstants.FIELD_BYTECODE_ADAPTER_TYPE,
                      FieldBytecodeAdapterConstants.handleCancelFast_O_IOSo);
 
         //TODO cleanup

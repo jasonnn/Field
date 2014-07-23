@@ -49,7 +49,12 @@ public abstract class DeferCalling extends FieldASMGeneratorAdapter implements D
 
     }
 
-    abstract public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameters, Object[] argArray, Class[] argTypeArray);
+    abstract public void handleDefered(String fromName,
+                                       Object fromThis,
+                                       String methodName,
+                                       Map<String, Object> parameters,
+                                       Object[] argArray,
+                                       Class[] argTypeArray);
 
     @Override
     public void visitCode() {
@@ -60,7 +65,7 @@ public abstract class DeferCalling extends FieldASMGeneratorAdapter implements D
         push(parameterName);
         loadArgArray();
 
-        invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+        invokeStatic(FieldBytecodeAdapterConstants.FIELD_BYTECODE_ADAPTER_TYPE,
                      FieldBytecodeAdapterConstants.handleCancelFast_O_IOSo);
         // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleCancelFast", ASMType.VOID_TYPE, new ASMType[]{ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(Object[].class)}));
 

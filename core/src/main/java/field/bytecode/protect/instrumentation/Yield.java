@@ -101,7 +101,7 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
         push(name);
         loadThis();
         push(onMethod.getName());
-        invokeStatic(BASIC_INSTRUMENTATION_TYPE, handleYieldIndex_I_SOS);
+        invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleYieldIndex_I_SOS);
         // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", Type.INT_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
 
         //if (StandardTrampoline.debug)
@@ -186,7 +186,7 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
             push(onMethod.getName());
             push(jumpLabels.size());
 
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handleYieldStore);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleYieldStore);
 
             // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", Type.getType(Object.class), new Type[]{Type.getType(Object.class), Type.getType(Object[].class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.INT_TYPE}));
 
@@ -214,7 +214,7 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
             loadThis();
             push(onMethod.getName());
 
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handleYieldLoad);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleYieldLoad);
             //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
 
             // if (StandardTrampoline.debug)

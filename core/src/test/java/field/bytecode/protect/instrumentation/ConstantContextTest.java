@@ -3,7 +3,6 @@ package field.bytecode.protect.instrumentation;
 import annotations.MyConstantContext;
 import field.bytecode.BytecodeTestCase;
 import field.bytecode.protect.annotations.ConstantContext;
-import field.bytecode.protect.instrumentation2.AnnotatedMethodHandler2;
 import field.bytecode.protect.instrumentation2.StandardMethodAnnotationHandlers;
 import field.graphics.core.Base;
 import org.junit.Test;
@@ -14,8 +13,6 @@ import org.objectweb.asm.util.TraceClassVisitor;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -50,18 +47,26 @@ class ConstantContextTest extends BytecodeTestCase {
         StringWriter pre = new StringWriter();
         StringWriter post = new StringWriter();
 
-        Map<String, AnnotatedMethodHandler2> handler =
-                Collections.<String, AnnotatedMethodHandler2>singletonMap(StandardMethodAnnotationHandlers.CONSTANT_CONTEXT.desc,
-                                                                          StandardMethodAnnotationHandlers.CONSTANT_CONTEXT);
 
         TestingMainVisitorThing mainVisitorThing =
                 new TestingMainVisitorThing(new CheckClassAdapter(new TraceClassVisitor(new PrintWriter(post))),
-                                            handler);
+                                            StandardMethodAnnotationHandlers.CONSTANT_CONTEXT);
 
-        new ClassReader(data).accept(new TraceClassVisitor(mainVisitorThing, new PrintWriter(pre)),
-                                     ClassReader.EXPAND_FRAMES);
+        try {
+            new ClassReader(data).accept(new TraceClassVisitor(mainVisitorThing, new PrintWriter(pre)),
+                                         ClassReader.EXPAND_FRAMES);
+
+
+        } catch (Exception e) {
+            System.out.println("pre:\n" + pre.toString());
+            System.out.println("\npost:\n" + post.toString());
+            throw e;
+        }
+
 
         System.out.println(pre.toString());
         // assertEquals(pre.toString(), post.toString());
     }
+
+
 }

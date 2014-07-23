@@ -7,7 +7,7 @@ import org.objectweb.asm.MethodVisitor;
 import java.util.HashMap;
 import java.util.Map;
 
-import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE;
+import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.FIELD_BYTECODE_ADAPTER_TYPE;
 import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.handleFast_V_IOo;
 
 /**
@@ -40,7 +40,11 @@ public abstract class CallOnEntry extends FieldASMGeneratorAdapter implements En
         FieldBytecodeAdapter.entryHandlers.put(name, this);
     }
 
-    abstract public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray);
+    abstract public void handleEntry(String fromName,
+                                     Object fromThis,
+                                     String methodName,
+                                     Map<String, Object> parameterName,
+                                     Object[] argArray);
 
     @Override
     public void visitCode() {
@@ -50,7 +54,7 @@ public abstract class CallOnEntry extends FieldASMGeneratorAdapter implements En
         push(onMethod.getName());
         push(parameterName);
         loadArgArray();
-        invokeStatic(BASIC_INSTRUMENTATION_TYPE, handleFast_V_IOo);
+        invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleFast_V_IOo);
         // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleFast", Type.VOID_TYPE, new Type[] { Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(Object[].class) }));
         super.visitCode();
     }

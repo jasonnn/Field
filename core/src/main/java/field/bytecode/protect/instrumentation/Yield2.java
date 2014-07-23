@@ -94,7 +94,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
         push(name);
         loadThis();
         push(onMethod.getName());
-        invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+        invokeStatic(FieldBytecodeAdapterConstants.FIELD_BYTECODE_ADAPTER_TYPE,
                      FieldBytecodeAdapterConstants.handleYieldIndex_I_SOS);
         // invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldIndex", ASMType.INT_TYPE, new ASMType[]{ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class)}));
 
@@ -189,7 +189,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             push(onMethod.getName());
             push(jumpLabels.size());
 
-            invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+            invokeStatic(FieldBytecodeAdapterConstants.FIELD_BYTECODE_ADAPTER_TYPE,
                          FieldBytecodeAdapterConstants.handleYieldStore);
             // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldStore", ASMType.getType(Object.class), new ASMType[]{ASMType.getType(Object.class), ASMType.getType(Object[].class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.INT_TYPE}));
 
@@ -220,7 +220,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             loadThis();
             push(onMethod.getName());
 
-            invokeStatic(FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE,
+            invokeStatic(FieldBytecodeAdapterConstants.FIELD_BYTECODE_ADAPTER_TYPE,
                          FieldBytecodeAdapterConstants.handleYieldLoad);
             //  invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle_yieldLoad", Type.getType(Object[].class), new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class)}));
             // invokeStatic(Type.getType(BasicInstrumentation2.class),

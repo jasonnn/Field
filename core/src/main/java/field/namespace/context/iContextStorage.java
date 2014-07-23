@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 public interface iContextStorage<K, I> {
 
     /**
-     * t_Interface has method m in it which returns VisitCode's
+     * I has method m in it which returns VisitCode's
      */
     public I get(K at, Method m);
 }

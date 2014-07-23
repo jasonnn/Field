@@ -6,7 +6,7 @@ import org.objectweb.asm.MethodVisitor;
 
 import java.util.HashMap;
 
-import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE;
+import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.FIELD_BYTECODE_ADAPTER_TYPE;
 import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.handleFast_V_IOo;
 
 /**
@@ -47,7 +47,7 @@ public abstract class CallOnEntryFast extends FieldASMGeneratorAdapter implement
         push(uniq);
         loadThis();
         loadArgArray();
-        invokeStatic(BASIC_INSTRUMENTATION_TYPE, handleFast_V_IOo);
+        invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleFast_V_IOo);
 
         // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handleFast", Type.VOID_TYPE, new Type[]{Type.getType(Integer.TYPE), Type.getType(Object.class), Type.getType(Object[].class)}));
         super.visitCode();

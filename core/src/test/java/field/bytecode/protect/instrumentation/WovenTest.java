@@ -58,6 +58,7 @@ public class WovenTest extends AnnotatedMethodHandlersTest {
 
     @Test
     public void testCreateInstance() throws Exception {
+        //need ClassWriter.COMPUTE_FRAMES for java7
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
         new ClassReader(readClass(toTest)).accept(new MainVisitorThing(cw), 0);

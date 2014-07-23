@@ -9,8 +9,8 @@ import org.objectweb.asm.Opcodes;
 import java.util.HashMap;
 import java.util.Map;
 
-import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.BASIC_INSTRUMENTATION_TYPE;
-import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.handle0_O_OSOSSS;
+import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.FIELD_BYTECODE_ADAPTER_TYPE;
+import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.handleExit_O_OSOSSS;
 
 /**
 * Created by jason on 7/14/14.
@@ -40,7 +40,12 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
         FieldBytecodeAdapter.exitHandlers.put(name, this);
     }
 
-    abstract public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName);
+    abstract public Object handleExit(Object returningThis,
+                                      String fromName,
+                                      Object fromThis,
+                                      String methodName,
+                                      Map<String, Object> parameterName,
+                                      String methodReturnName);
 
     @Override
     public void visitInsn(int op) {
@@ -53,7 +58,7 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle0_O_OSOSSS);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             //  invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
             pop();
         } else if (op == Opcodes.IRETURN) {
@@ -65,7 +70,7 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle0_O_OSOSSS);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             // invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
             unbox(ASMType.INT_TYPE);
         } else if (op == Opcodes.FRETURN) {
@@ -77,7 +82,7 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle0_O_OSOSSS);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             // invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
             unbox(ASMType.FLOAT_TYPE);
         } else if (op == Opcodes.ARETURN) {
@@ -88,7 +93,7 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             push(onMethod.getName());
             push(parameterName);
             push("" + returnNumber++);
-            invokeStatic(BASIC_INSTRUMENTATION_TYPE, handle0_O_OSOSSS);
+            invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             //invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
         }
 

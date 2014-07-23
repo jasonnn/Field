@@ -64,13 +64,22 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
             return new CallOnEntryAndExit_exceptionAware(name, ctx.access, new ASMMethod(ctx.name, ctx.desc), ctx.delegate, ctx.params) {
 
                 @Override
-                public Object handle(Object returningThis, String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, String methodReturnName) {
+                public Object handleExit(Object returningThis,
+                                         String fromName,
+                                         Object fromThis,
+                                         String methodName,
+                                         Map<String, Object> parameterName,
+                                         String methodReturnName) {
                     Cc.handle_exit(fromThis, name, parameterName);
                     return returningThis;
                 }
 
                 @Override
-                public void handle(String fromName, Object fromThis, String methodName, Map<String, Object> parameterName, Object[] argArray) {
+                public void handleEntry(String fromName,
+                                        Object fromThis,
+                                        String methodName,
+                                        Map<String, Object> parameterName,
+                                        Object[] argArray) {
                     Cc.handle_entry(fromThis, name, parameterName, aliasedParameterSet, argArray);
                 }
             };
