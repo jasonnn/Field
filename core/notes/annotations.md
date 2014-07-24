@@ -37,3 +37,30 @@ annotation usage
 |TimingStatistics   | 1     |
 |Traced             | 0     |
 |Yield              | 8     |
+
+DispatchOverTopology Calls
+===========================
+*TLDR
+    - i still have no idea what the purpose of any of this stuff is
+
+* begin->
+* FieldBytecodeAdapter.handleEntry(nameID, this, methodName, paramID, args);
+    - finds EntryHandler for nameId, params(Map) 
+      in this case the handler is DispatchOverTopologyHandler, which delegates to DispatchSupport
+* DispatchSupport.enter
+    -first run:
+        * reflectively create a new instance of 'context'(from params) 
+        * it must be an instanceof field.bytecode.protect.dispatch.DispatchProvider
+            * Cont or ContainerTopology. in this case i'm going to say it's a Cont.
+        * puts instance into params as 'context_cached'
+        * context.getTopologyForInstance(obj,params,args,clsName)->Apply
+        * all of this stuff then gets cached
+        * Apply.head(args)
+    -otherwise
+        * some stack thing
+        * DispatchProvider.notifyExecuteBegin 
+            - in Cont this is a noop
+*Cont
+    - Apply getTopologyForEntrance(final Object root, Map<String, Object> parameters, Object[] args, String className)
+        * reflectively gets the target method, puts into parameters with some gibberish string
+

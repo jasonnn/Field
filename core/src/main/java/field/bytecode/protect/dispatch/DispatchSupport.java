@@ -5,12 +5,14 @@ import org.objectweb.asm.Type;
 
 import java.util.Map;
 import java.util.Stack;
+import java.util.logging.Logger;
 
 /**
  * support for extensible dispatch over arbitrary iTopology
  */
 public
 class DispatchSupport {
+    private static final Logger log = Logger.getLogger(DispatchSupport.class.getName());
 
     static ThreadLocal<Stack<Level>> ongoing = new ThreadLocal<Stack<Level>>() {
         @Override
@@ -28,16 +30,15 @@ class DispatchSupport {
                Map<String, Object> parameters,
                Object[] argArray,
                String className) {
-        //if (StandardTrampoline.debug) if (StandardTrampoline.debug) ;//System.out.println(" ---- enter <" + uniq + ">");
+        log.fine(" ---- enter <" + uniq + ">");
         // is this level already running?
         Stack<Level> stack = ongoing.get();
         String name = (String) parameters.get("id");
         if (name == null) name = "";
         if (stack.size() == 0 || (!(stack.peek().name.equals(name)) || name.equals(""))) {
             try {
-                //if (StandardTrampoline.debug)
-                //	if (StandardTrampoline.debug) ;//System.out.println(" paramemters <" + parameterName + ">");
-                DispatchProvider c = null;
+                log.log(java.util.logging.Level.FINE, " paramemters <" + parameters + ">");
+                DispatchProvider c;
                 if (parameters.containsKey("topology_cached")) {
                     c = (DispatchProvider) parameters.get("topology_cached");
                 }
