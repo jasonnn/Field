@@ -244,7 +244,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		}
 
 		public boolean hasNext() {
-			Entry[] t = table;
+            BetterWeakHashMap.Entry[] t = table;
 
 			while (nextKey == null) {
 				Entry e = entry;
@@ -274,8 +274,9 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		}
 
 		/** The common parts of next() across different types of iterators */
-		protected Entry nextEntry() {
-			if (modCount != expectedModCount) throw new ConcurrentModificationException();
+        protected
+        BetterWeakHashMap.Entry nextEntry() {
+            if (modCount != expectedModCount) throw new ConcurrentModificationException();
 			if (nextKey == null && !hasNext()) throw new NoSuchElementException();
 
 			lastReturned = entry;

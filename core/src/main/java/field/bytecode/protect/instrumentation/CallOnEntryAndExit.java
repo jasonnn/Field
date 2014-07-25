@@ -84,7 +84,7 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleDefered_V_SOSSoc);
             pop();
         } else if (op == Opcodes.IRETURN) {
@@ -94,7 +94,7 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleEntry_V_SOSSo);
             // new ASMMethod("handle2", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(ASMType.INT_TYPE);
@@ -105,7 +105,7 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleEntry_V_SOSSo);
             // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle2", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(ASMType.FLOAT_TYPE);
@@ -116,7 +116,7 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleEntry_V_SOSSo);
             //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle2", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
         }

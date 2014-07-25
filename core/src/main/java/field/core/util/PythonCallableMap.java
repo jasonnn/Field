@@ -59,9 +59,10 @@ public class PythonCallableMap implements iCallable {
 	protected Callable newCallable(String name, iUpdateable f) {
 		return PythonOverridden.callableForUpdatable(name, f);
 	}
-	
-	protected Callable newCallable(String name, iFunction f) {
-		return PythonOverridden.callableForFunction(name, f);
+
+    protected static
+    Callable newCallable(String name, iFunction f) {
+        return PythonOverridden.callableForFunction(name, f);
 	}
 
 	protected void doRegister(String name, Callable newCallable, Callable oldCallable) {
@@ -75,8 +76,8 @@ public class PythonCallableMap implements iCallable {
 	long uniq = 0;
 
 	public PyFunction registerUniq(PyFunction f) {
-		return register("" + (uniq++), f);
-	}
+        return register(String.valueOf(uniq++), f);
+    }
 
 	public LinkedHashSet<String> clear = new LinkedHashSet<String>();
 	public String current;

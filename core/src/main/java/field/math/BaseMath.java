@@ -286,8 +286,8 @@ public class BaseMath {
 		}
 
 		public String toString() {
-			return "" + d;
-		}
+            return String.valueOf(d);
+        }
 
 		public float evaluate() {
 			return (float) d;

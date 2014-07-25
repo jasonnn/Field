@@ -267,8 +267,7 @@ public class ReflectionTools {
 		Field[] fields = of.getClass().getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			Object value;
-			if (fields[i].getName().indexOf("$") == -1)
-				try {
+            if (fields[i].getName().indexOf('$') == -1) try {
 					fields[i].setAccessible(true);
 					value = fields[i].get(of);
 
@@ -325,8 +324,7 @@ public class ReflectionTools {
 			Field[] fields = ofc.getDeclaredFields();
 			for (int i = 0; i < fields.length; i++) {
 				Object value;
-				if (fields[i].getName().indexOf("$") == -1)
-					try {
+                if (fields[i].getName().indexOf('$') == -1) try {
 						fields[i].setAccessible(true);
 						value = fields[i].get(of);
 
@@ -366,8 +364,8 @@ public class ReflectionTools {
 			if (methods[i].getName().equals(called))
 				r.add(methods[i]);
 		}
-		return r.toArray(new Method[0]);
-	}
+        return r.toArray(new Method[r.size()]);
+    }
 
 	/***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
 	 * @param string
@@ -576,8 +574,10 @@ public class ReflectionTools {
 		if (ret == null) {
 			List constructorsList = new ArrayList();
 			_getAllConstructors(of, constructorsList);
-			constructorsCache.put(of, ret = (Constructor[]) constructorsList.toArray(new Constructor[0]));
-		}
+            constructorsCache.put(of,
+                                  ret =
+                                          (Constructor[]) constructorsList.toArray(new Constructor[constructorsList.size()]));
+        }
 		return ret;
 	}
 
@@ -586,8 +586,8 @@ public class ReflectionTools {
 		if (ret == null) {
 			List fieldsList = new ArrayList();
 			_getAllFields(of, fieldsList);
-			fieldsCache.put(of, ret = (Field[]) fieldsList.toArray(new Field[0]));
-		}
+            fieldsCache.put(of, ret = (Field[]) fieldsList.toArray(new Field[fieldsList.size()]));
+        }
 		return ret;
 	}
 
@@ -596,8 +596,8 @@ public class ReflectionTools {
 		if (ret == null) {
 			ArrayList methodsList = new ArrayList();
 			_getAllMethods(of, methodsList);
-			methodsCache.put(of, ret = (Method[]) methodsList.toArray(new Method[0]));
-		}
+            methodsCache.put(of, ret = (Method[]) methodsList.toArray(new Method[methodsList.size()]));
+        }
 		return ret;
 	}
 

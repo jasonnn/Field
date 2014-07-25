@@ -1,12 +1,12 @@
 package field.core.windowing;
 
-import field.bytecode.protect.iProvidesQueue;
-import field.bytecode.protect.iRegistersUpdateable;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.InQueue;
 import field.bytecode.protect.annotations.Yield;
 import field.bytecode.protect.dispatch.Cont;
+import field.bytecode.protect.iProvidesQueue;
+import field.bytecode.protect.iRegistersUpdateable;
 import field.bytecode.protect.yield.YieldUtilities;
 import field.core.Constants;
 import field.core.Platform;
@@ -81,8 +81,8 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 	public LinkedHashMap<Object, String> extraTextStatusbarDescriptions = new LinkedHashMap<Object, String>();
     
 	static public boolean fieldStereo = SystemProperties.getIntProperty("fieldStereo", 0) == 1;
-    
-	static public Rectangle defaultRect = new AutoPersist().persist("canvas", new Rectangle(0, 0, 0, 0));
+
+    static public Rectangle defaultRect = AutoPersist.persist("canvas", new Rectangle(0, 0, 0, 0));
     
 	static public class ComponentContainer implements iComponent {
         
@@ -1809,9 +1809,10 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
         
 		return new Vector2(object1.get(0), object1.get(1));
 	}
-    
-	private String printMat4(IntBuffer viewport2) {
-		String r = "\n";
+
+    private static
+    String printMat4(IntBuffer viewport2) {
+        String r = "\n";
 		for (int i = 0; i < viewport2.capacity(); i++) {
 			if (i % 4 == 0)
 				r += "\n";
@@ -1819,9 +1820,10 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 		}
 		return r;
 	}
-    
-	private String printMat4(FloatBuffer viewport2) {
-		String r = "\n";
+
+    private static
+    String printMat4(FloatBuffer viewport2) {
+        String r = "\n";
 		for (int i = 0; i < viewport2.capacity(); i++) {
 			if (i % 4 == 0)
 				r += "\n";
@@ -2195,9 +2197,10 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 	public Set<Integer> getMouseButtonsDown() {
 		return handleEvent_mouseDown;
 	}
-    
-	public Object getGL() {
-		return new Object();
+
+    public static
+    Object getGL() {
+        return new Object();
 	}
     
 	public void togglePanelVisiblity() {

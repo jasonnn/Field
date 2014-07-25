@@ -80,8 +80,8 @@ public class Platform {
 		try {
 			return class1.getCanonicalName();
 		} catch (InternalError r) {
-			return ""+class1;
-		}
+            return String.valueOf(class1);
+        }
 	}
 
 	public static boolean is17() {

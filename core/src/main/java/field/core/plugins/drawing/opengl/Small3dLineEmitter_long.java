@@ -105,8 +105,9 @@ public abstract class Small3dLineEmitter_long {
 
 	}
 
-	private float control2for(List<Object> propertiesB) {
-		Object o = propertiesB.get(0);
+    private static
+    float control2for(List<Object> propertiesB) {
+        Object o = propertiesB.get(0);
 		if (o instanceof Number)
 			return ((Number) o).floatValue();
 		if (o instanceof Vector3)
@@ -114,8 +115,9 @@ public abstract class Small3dLineEmitter_long {
 		return 0;
 	}
 
-	private float control1for(List<Object> propertiesB) {
-		Object o = propertiesB.get(0);
+    private static
+    float control1for(List<Object> propertiesB) {
+        Object o = propertiesB.get(0);
 		if (o instanceof Number)
 			return ((Number) o).floatValue();
 		if (o instanceof Vector3)
@@ -123,8 +125,9 @@ public abstract class Small3dLineEmitter_long {
 		return 0;
 	}
 
-	private float depthFor(List<Object> propertiesA) {
-		Object o = propertiesA.get(0);
+    private static
+    float depthFor(List<Object> propertiesA) {
+        Object o = propertiesA.get(0);
 		if (o instanceof Number)
 			return ((Number) o).floatValue();
 		if (o instanceof Vector3)
@@ -159,8 +162,9 @@ public abstract class Small3dLineEmitter_long {
 
 	}
 
-	private List<Object> subdivide(List<Object> propertiesA, List<Object> propertiesB) {
-		List<Object> q = new ArrayList<Object>();
+    private static
+    List<Object> subdivide(List<Object> propertiesA, List<Object> propertiesB) {
+        List<Object> q = new ArrayList<Object>();
 		for (int i = 0; i < propertiesA.size(); i++) {
 			Object a = propertiesA.get(i);
 			Object b = propertiesB.get(i);

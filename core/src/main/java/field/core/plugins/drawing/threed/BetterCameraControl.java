@@ -213,8 +213,9 @@ public class BetterCameraControl implements iUpdateable {
 		return o;
 	}
 
-	public State fixUp(State o) {
-		Vector3 up = o.up;
+    public static
+    State fixUp(State o) {
+        Vector3 up = o.up;
 		Vector3 view = o.getView();
 
 		Vector3 left = new Vector3().cross(up, view);
@@ -344,8 +345,9 @@ public class BetterCameraControl implements iUpdateable {
 		return g;
 	}
 
-	private void addMeshes(BasicSceneList s, LinkedHashSet<iGeometry> g) {
-		List<iSceneListElement> e = s.getChildren();
+    private static
+    void addMeshes(BasicSceneList s, LinkedHashSet<iGeometry> g) {
+        List<iSceneListElement> e = s.getChildren();
 		for (iSceneListElement ee : e) {
 			if (ee instanceof iGeometry)
 				g.add((iGeometry) ee);

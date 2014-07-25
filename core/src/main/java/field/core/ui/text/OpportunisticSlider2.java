@@ -125,7 +125,8 @@ public class OpportunisticSlider2 {
 
 	}
 
-	protected boolean isInteger(String text) {
+    protected static
+    boolean isInteger(String text) {
 
 		try {
 			Integer.parseInt(text);
@@ -137,8 +138,9 @@ public class OpportunisticSlider2 {
 
 	}
 
-	protected boolean isFloat(String text) {
-		try {
+    protected static
+    boolean isFloat(String text) {
+        try {
 			Float.parseFloat(text);
 			return true;
 		} catch (NumberFormatException e) {
@@ -163,8 +165,8 @@ public class OpportunisticSlider2 {
 
 			int start = inside.ed.getSelectionRanges()[0];
             //System.out.println(" replace " + start + " " + inside.ed.getSelectionRanges()[1]);
-            inside.ed.replaceTextRange(start, inside.ed.getSelectionRanges()[1], "" + n);
-			inside.ed.setSelectionRange(start, ("" + n).length());
+            inside.ed.replaceTextRange(start, inside.ed.getSelectionRanges()[1], String.valueOf(n));
+            inside.ed.setSelectionRange(start, (String.valueOf(n)).length());
 
 			if (exec) {
 				deferedUpdate.new Task("q") {
@@ -197,8 +199,8 @@ public class OpportunisticSlider2 {
 
 			int start = inside.ed.getSelectionRanges()[0];
             //System.out.println(" replace " + start + " " + inside.ed.getSelectionRanges()[1]);
-            inside.ed.replaceTextRange(start, inside.ed.getSelectionRanges()[1], "" + u.toPlainString());
-			inside.ed.setSelectionRange(start, ("" + u.toPlainString()).length());
+            inside.ed.replaceTextRange(start, inside.ed.getSelectionRanges()[1], u.toPlainString());
+            inside.ed.setSelectionRange(start, (u.toPlainString()).length());
 
 			if (exec) {
 				deferedUpdate.new Task("q") {

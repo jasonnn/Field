@@ -68,7 +68,8 @@ public class MinimalStatsBox extends MinimalExpandable {
 		public float add(float f) {
 
 			if (autoSwap)
-				PythonPlugin.ongoingEnvironment.addTransientHandler("" + System.identityHashCode(this), new iUpdateable() {
+                PythonPlugin.ongoingEnvironment.addTransientHandler(String.valueOf(System.identityHashCode(this)),
+                                                                    new iUpdateable() {
 
 					public void update() {
 						swap();
@@ -746,7 +747,8 @@ public class MinimalStatsBox extends MinimalExpandable {
 
 	Color baseColor = new Color(1f, 0.3f, 0.3f, 0.4f);
 
-	protected void draw(float x1, float x2, float h, Graphics2D g, Rectangle size, Color c) {
+    protected static
+    void draw(float x1, float x2, float h, Graphics2D g, Rectangle size, Color c) {
 
 		g.setStroke(new BasicStroke(1));
 

@@ -120,7 +120,8 @@ public class Dict implements Serializable {
 		return result;
 	}
 
-	private int safeHash(Map<Prop, Object> d) {
+    private static
+    int safeHash(Map<Prop, Object> d) {
 
 		Set<Entry<Prop, Object>> ee = d.entrySet();
 		int c = 0;
@@ -206,8 +207,8 @@ public class Dict implements Serializable {
 
 	@Override
 	public String toString() {
-		return ""+dictionary;
-	}
+        return String.valueOf(dictionary);
+    }
 
 	public <T> T remove(Prop<T> t) {
 		Object x = dictionary.remove(t);

@@ -258,8 +258,11 @@ public class PythonOverridden extends DefaultOverride {
 	}
 
 	static public Callable callableForFunction(final PyObject call, final CapturedEnvironment e) {
-		return new Callable(call, call instanceof PyFunction ? ((PyFunction) call).__name__ : ("" + call.hashCode())) {
-			@Override
+        return new Callable(call,
+                            call instanceof PyFunction
+                            ? ((PyFunction) call).__name__
+                            : (String.valueOf(call.hashCode()))) {
+            @Override
 			public Object call(Method arg0, Object[] arg1) {
 				if (e != null)
 					e.enter();

@@ -251,7 +251,8 @@ public class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.gr
 		}
 	}
 
-	private void safePut(FloatBuffer to, FloatBuffer from) {
+    private static
+    void safePut(FloatBuffer to, FloatBuffer from) {
 
 		// if (true)
 		// {
@@ -274,7 +275,8 @@ public class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.gr
 		}
 	}
 
-	private void safePut(ShortBuffer to, ShortBuffer from) {
+    private static
+    void safePut(ShortBuffer to, ShortBuffer from) {
 
 		// if (true)
 		// {

@@ -259,8 +259,8 @@ public class PythonPluginEditor extends PythonPlugin {
 					{
 						CachedLine l = new CachedLine();
 						l.getInput().moveTo((float) (bounds.x + bounds.w + 12), (float) (bounds.y - 3));
-						l.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "" + num);
-						l.getInput().setPointAttribute(iLinearGraphicsContext.textIsBlured_v, false);
+                        l.getInput().setPointAttribute(iLinearGraphicsContext.text_v, String.valueOf(num));
+                        l.getInput().setPointAttribute(iLinearGraphicsContext.textIsBlured_v, false);
 						l.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new java.awt.Font("Gill Sans", java.awt.Font.BOLD, 20));
 						l.getInput().setPointAttribute(iLinearGraphicsContext.fillColor_v, new Vector4(1, 0, 0, 0.85f));
 						l.getProperties().put(iLinearGraphicsContext.containsText, true);
@@ -1116,11 +1116,11 @@ public class PythonPluginEditor extends PythonPlugin {
 				if (s == null || s.equals("")) {
 					int pos = ed.getCaretOffset();
 					String text = ed.getText();
-					int a = text.lastIndexOf("\n", pos - 1);
-					if (a == -1)
+                    int a = text.lastIndexOf('\n', pos - 1);
+                    if (a == -1)
 						a = 0;
-					int b = text.indexOf("\n", pos);
-					if (b == -1)
+                    int b = text.indexOf('\n', pos);
+                    if (b == -1)
 						b = text.length();
 					s = text.substring(a, b);
 					area = executionRuler.getExecutedAreas().execute(a + 2, b - 1, s);
@@ -1224,11 +1224,11 @@ public class PythonPluginEditor extends PythonPlugin {
 				if (s == null || s.equals("")) {
 					int pos = ed.getCaretOffset();
 					String text = ed.getText();
-					int a = text.lastIndexOf("\n", pos - 1);
-					if (a == -1)
+                    int a = text.lastIndexOf('\n', pos - 1);
+                    if (a == -1)
 						a = 0;
-					int b = text.indexOf("\n", pos);
-					if (b == -1)
+                    int b = text.indexOf('\n', pos);
+                    if (b == -1)
 						b = text.length();
 					s = text.substring(a, b);
 				}
@@ -1571,14 +1571,19 @@ public class PythonPluginEditor extends PythonPlugin {
 			}
 		};
 
-		String[] validProperties = new ArrayList<String>(knownPythonProperties.keySet()).toArray(new String[0]);
+        String[] validProperties =
+                new ArrayList<String>(knownPythonProperties.keySet()).toArray(new String[new ArrayList<String>(knownPythonProperties
+                                                                                                                       .keySet())
+                                                                                                 .size()]);
 
 		button = new BetterComboBox(toolbar, validProperties) {
 			@Override
 			public void updateLabels() {
 				if (currentlyEditing == null) {
-					setLabels(new ArrayList<String>(knownPythonProperties.keySet()).toArray(new String[0]));
-					return;
+                    setLabels(new ArrayList<String>(knownPythonProperties.keySet()).toArray(new String[new ArrayList<String>(knownPythonProperties
+                                                                                                                                     .keySet())
+                                                                                                               .size()]));
+                    return;
 				}
 
 				String[] lab = new String[knownPythonProperties.size()];
@@ -1660,9 +1665,15 @@ public class PythonPluginEditor extends PythonPlugin {
 	private void installHelpBrowser(final iVisualElement root) {
 		HelpBrowser h = HelpBrowser.helpBrowser.get(root);
 		ContextualHelp ch = h.getContextualHelp();
-		ch.addContextualHelpForWidget("textEditor", editor.getInputEditor(), ch.providerForStaticMarkdownResource("contextual/textInput.md"), 50);
-		ch.addContextualHelpForWidget("outputEditor", editor.getOutputEditor(), ch.providerForStaticMarkdownResource("contextual/textOutput.md"), 50);
-	}
+        ch.addContextualHelpForWidget("textEditor",
+                                      editor.getInputEditor(),
+                                      ContextualHelp.providerForStaticMarkdownResource("contextual/textInput.md"),
+                                      50);
+        ch.addContextualHelpForWidget("outputEditor",
+                                      editor.getOutputEditor(),
+                                      ContextualHelp.providerForStaticMarkdownResource("contextual/textOutput.md"),
+                                      50);
+    }
 
 	private void makeOutputActions() {
 		LinkedHashMap<String, iUpdateable> outputActions = new LinkedHashMap<String, iUpdateable>();
@@ -1701,8 +1712,9 @@ public class PythonPluginEditor extends PythonPlugin {
 		editor.setOutputActionMenu(outputActions);
 	}
 
-	private boolean canEdit(iVisualElement current) {
-		Number c = python_noEdit.get(current);
+    private static
+    boolean canEdit(iVisualElement current) {
+        Number c = python_noEdit.get(current);
 		if (c == null)
 			return true;
 		if (c.doubleValue() > 0)
@@ -1740,7 +1752,9 @@ public class PythonPluginEditor extends PythonPlugin {
 	}
 
 	private void updateLabels(BetterComboBox button) {
-		button.setLabels(new ArrayList<String>(knownPythonProperties.keySet()).toArray(new String[0]));
+        button.setLabels(new ArrayList<String>(knownPythonProperties.keySet()).toArray(new String[new ArrayList<String>(knownPythonProperties
+                                                                                                                                .keySet())
+                                                                                                          .size()]));
 
 		button.updateLabels();
 		editor.getToolbar().layout();
@@ -1856,8 +1870,9 @@ public class PythonPluginEditor extends PythonPlugin {
 		delete(node, root);
 	}
 
-	protected String filterFragment(String fragment) {
-		return fragment.replaceAll("r\"\"\".*\"\"\"", "(raw string)");
+    protected static
+    String filterFragment(String fragment) {
+        return fragment.replaceAll("r\"\"\".*\"\"\"", "(raw string)");
 	}
 
 	@Override

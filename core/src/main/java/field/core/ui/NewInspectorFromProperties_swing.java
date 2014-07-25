@@ -44,7 +44,8 @@ public class NewInspectorFromProperties_swing {
 		return new ArrayList<Inspected>(build.values());
 	}
 
-	public <A, B extends JComponent> Inspected<A, B> coallesce(final Inspected<A, B> a, final Inspected<A, B> b) {
+    public static
+    <A, B extends JComponent> Inspected<A, B> coallesce(final Inspected<A, B> a, final Inspected<A, B> b) {
 
         //System.out.println(" coallescing <" + a + "> <" + b + ">");
 
@@ -466,8 +467,9 @@ public class NewInspectorFromProperties_swing {
 		return complete();
 	}
 
-	private void setPopupMenu(JComponent editor, final VisualElementProperty p, final iVisualElement e) {
-		
+    private static
+    void setPopupMenu(JComponent editor, final VisualElementProperty p, final iVisualElement e) {
+
 		LinkedHashMap<String, iUpdateable> pop = new LinkedHashMap<String, iUpdateable>();
 		
 		pop.put("Property", null);
@@ -482,8 +484,9 @@ public class NewInspectorFromProperties_swing {
 //		editor.setComponentPopupMenu(new SmallMenu().createMenu(pop));
 	}
 
-	private Inspected<String, InfoControl> getHeading(final String string) {
-		Inspected<String, InfoControl> heading = new Inspected<String, InfoControl>() {
+    private static
+    Inspected<String, InfoControl> getHeading(final String string) {
+        Inspected<String, InfoControl> heading = new Inspected<String, InfoControl>() {
 
 			@Override
 			public String getValue() {

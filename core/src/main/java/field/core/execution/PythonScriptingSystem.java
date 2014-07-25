@@ -242,8 +242,8 @@ public class PythonScriptingSystem {
 		return pr;
 	}
 
-	protected float rewriteTime(float t, Promise p)
-	{
+    protected static
+    float rewriteTime(float t, Promise p) {
 		return t;
 	}
 

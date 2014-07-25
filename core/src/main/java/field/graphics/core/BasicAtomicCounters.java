@@ -25,8 +25,8 @@ public class BasicAtomicCounters extends TwoPassElement {
 
 	public BasicAtomicCounters(int id, StandardPass prePass,
 			StandardPass postPass, int num) {
-		super("" + id, prePass, postPass);
-		this.id = id;
+        super(String.valueOf(id), prePass, postPass);
+        this.id = id;
 		this.num = num;
 		current = new int[num];
 		

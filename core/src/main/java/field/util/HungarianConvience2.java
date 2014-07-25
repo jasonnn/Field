@@ -161,7 +161,15 @@ public class HungarianConvience2 {
 		}
 
 		Arrays.sort(distance);
-		r += ("  min <" + distance[0] + "> mode <" + distance[distance.length / 2] + "> max <" + distance[distance.length - 1] + "> max2 <" + (distance.length > 2 ? distance[distance.length - 2] + "" : "n/a") + ">\n");
+        r += ("  min <"
+              + distance[0]
+              + "> mode <"
+              + distance[distance.length / 2]
+              + "> max <"
+              + distance[distance.length - 1]
+              + "> max2 <"
+              + (distance.length > 2 ? String.valueOf(distance[distance.length - 2]) : "n/a")
+              + ">\n");
 
 		r += ("  distance <" + totalAssignmentDistanceSinkless() + " sinkless or " + totalAssignmentDistance() + " including sinks>");
 		return r;

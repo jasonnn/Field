@@ -24,8 +24,9 @@ import java.util.regex.Pattern;
 public class SmallMenu {
 
 	@Woven
-	public class BetterPopup {
-		public Shell shell;
+    public static
+    class BetterPopup {
+        public Shell shell;
 		public Table menu;
 		private final iKeystrokeUpdate u;
 		private final Decorations parent;
@@ -749,8 +750,12 @@ public class SmallMenu {
 					}
 
                     Object acc = event.item.getData("acc");
-                    if (acc != null)
-						drawAccelerator(event.gc, "" + acc, event.x, event.y, install.getSize().x, event.height);
+                    if (acc != null) drawAccelerator(event.gc,
+                                                     String.valueOf(acc),
+                                                     event.x,
+                                                     event.y,
+                                                     install.getSize().x,
+                                                     event.height);
 
                     Object c = event.item.getData("check");
                     if (c != null) {
@@ -872,8 +877,9 @@ public class SmallMenu {
 			return new Point(cx, gc.textExtent(textToDraw).y);
 		}
 
-		public class Area {
-			int start;
+        public static
+        class Area {
+            int start;
 			int end;
 			String text;
 			Font font;

@@ -250,7 +250,7 @@ public class SimpleExtendedAssignment extends InvocationLogging {
 			Field f = ReflectionTools.getFirstFIeldCalled(javaObject.getClass(), field);
 			Class<?> fieldType = f.getType();
 
-			Class<? extends Object> setToBeClass = setToBe.getClass();
+            Class<?> setToBeClass = setToBe.getClass();
 
 			Exception cause = null;
 			try {

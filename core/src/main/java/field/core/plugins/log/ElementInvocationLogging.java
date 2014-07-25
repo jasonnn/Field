@@ -39,15 +39,22 @@ public class ElementInvocationLogging {
 				value = ((PyObject)value).__tojava__(Object.class);
 			}
 
-			this.objectText = safeText("" + value);
-			this.o = value;
+            this.objectText = safeText(String.valueOf(value));
+            this.o = value;
 			if (storeStackTraces) stack = new StackTrace();
 
 		}
 
 		public String getLongDescription() {
-			return "<html><font color='#"+Constants.defaultTreeColor+"'>global, get: <b>" + name + "</b>\n value <b>" + (o == null ? objectText : "" + dress(o)) + "</b>"+(stack==null ? "" :stack.format());
-		}
+            return "<html><font color='#"
+                   + Constants.defaultTreeColor
+                   + "'>global, get: <b>"
+                   + name
+                   + "</b>\n value <b>"
+                   + (o == null ? objectText : dress(o))
+                   + "</b>"
+                   + (stack == null ? "" : stack.format());
+        }
 
 		public String getReplayExpression() {
 			return null;
@@ -58,8 +65,16 @@ public class ElementInvocationLogging {
 		}
 
 		public String getTextDescription() {
-			return "<html><font color='#"+Constants.defaultTreeColor+"'>"+smallerStill("global,")+" get: " + copyToClipboard(name,name) + " (" + (o == null ? objectText : ("" + (openInBrowser(name, ""+dress(o), o)))) + ")";
-		}
+            return "<html><font color='#"
+                   + Constants.defaultTreeColor
+                   + "'>"
+                   + smallerStill("global,")
+                   + " get: "
+                   + copyToClipboard(name, name)
+                   + " ("
+                   + (o == null ? objectText : (openInBrowser(name, "" + dress(o), o)))
+                   + ")";
+        }
 		public boolean isError() {
 			return false;
 		}
@@ -77,8 +92,8 @@ public class ElementInvocationLogging {
 			this.name = name;
 			this.element = target;
 			this.got = got;
-			this.gotText = "" + got;
-			if (storeStackTraces) stack = new StackTrace();
+            this.gotText = String.valueOf(got);
+            if (storeStackTraces) stack = new StackTrace();
 		}
 
 		public String getLongDescription() {
@@ -132,9 +147,16 @@ public class ElementInvocationLogging {
 		public String getLongDescription() {
 			String s = "<html><font color='#"+Constants.defaultTreeColor+"'>";
 
-			s+= PopupInfoWindow.title("Get Property \u2014 name:")+PopupInfoWindow.content(p.getName()+"")+"<BR>";
-			s+= PopupInfoWindow.title("Value:")+PopupInfoWindow.content(safeText(value+"")+(value==null ? "" : ("<font size=-3>("+value.getClass()+")</font>")))+"<BR>";
-			s+= PopupInfoWindow.title("From:")+PopupInfoWindow.content("element :"+describeElementLink(element))+"<BR>";
+            s += PopupInfoWindow.title("Get Property \u2014 name:") + PopupInfoWindow.content(p.getName()) + "<BR>";
+            s += PopupInfoWindow.title("Value:")
+                 + PopupInfoWindow.content(safeText(String.valueOf(value)) + (value
+                                                                              == null
+                                                                              ? ""
+                                                                              : ("<font size=-3>("
+                                                                                 + value.getClass()
+                                                                                 + ")</font>")))
+                 + "<BR>";
+            s+= PopupInfoWindow.title("From:")+PopupInfoWindow.content("element :"+describeElementLink(element))+"<BR>";
 			if (stack!=null)
 				s+= PopupInfoWindow.title("At:")+PopupInfoWindow.stackTrace(stack.trace)+"<BR>";
 
@@ -171,16 +193,24 @@ public class ElementInvocationLogging {
 
 		public DidSetLocalVariable(String name, Object value, Object was) {
 			this.name = name;
-			this.objectText = safeText("" + value);
-			this.o = value;
-			this.objectWasText = safeText("" + was);
-			this.ow = was;
+            this.objectText = safeText(String.valueOf(value));
+            this.o = value;
+            this.objectWasText = safeText(String.valueOf(was));
+            this.ow = was;
 			if (storeStackTraces) stack = new StackTrace();
 		}
 
 		public String getLongDescription() {
-			return "<html><font color='#"+Constants.defaultTreeColor+"'>global, set: <b>" + name + "</b>\n  \u2190 " + (o == null ? objectText : safeText("" + o)) + "\n was " + (ow == null ? objectWasText : safeText("" + ow))+(stack==null ? "" :stack.format());
-		}
+            return "<html><font color='#"
+                   + Constants.defaultTreeColor
+                   + "'>global, set: <b>"
+                   + name
+                   + "</b>\n  \u2190 "
+                   + (o == null ? objectText : safeText(String.valueOf(o)))
+                   + "\n was "
+                   + (ow == null ? objectWasText : safeText(String.valueOf(ow)))
+                   + (stack == null ? "" : stack.format());
+        }
 
 		public String getReplayExpression() {
 			return null;
@@ -191,10 +221,26 @@ public class ElementInvocationLogging {
 		}
 
 		public String getTextDescription() {
-			if (objectWasText.equals("null"))
-				return "<html><font color='#"+Constants.defaultTreeColor+"'>"+smallerStill("global,")+" new set: " + name + " = " + (o == null ? objectText : safeText("" + o));
-			return "<html><font color='#"+Constants.defaultTreeColor+"'>"+smallerStill("global,")+" set: " + name + " \u2190 " + (o == null ? objectText : safeText("" + o)) + " (was " + (ow == null ? objectWasText : safeText("" + ow)) + ")";
-		}
+			if (objectWasText.equals("null")) return "<html><font color='#"
+                                                     + Constants.defaultTreeColor
+                                                     + "'>"
+                                                     + smallerStill("global,")
+                                                     + " new set: "
+                                                     + name
+                                                     + " = "
+                                                     + (o == null ? objectText : safeText(String.valueOf(o)));
+            return "<html><font color='#"
+                   + Constants.defaultTreeColor
+                   + "'>"
+                   + smallerStill("global,")
+                   + " set: "
+                   + name
+                   + " \u2190 "
+                   + (o == null ? objectText : safeText(String.valueOf(o)))
+                   + " (was "
+                   + (ow == null ? objectWasText : safeText(String.valueOf(ow)))
+                   + ")";
+        }
 		public boolean isError() {
 			return false;
 		}
@@ -223,10 +269,20 @@ public class ElementInvocationLogging {
 		public String getLongDescription() {
 			String s = "<html><font color='#"+Constants.defaultTreeColor+"'>";
 
-			s+= PopupInfoWindow.title("Set Property \u2014 name:")+PopupInfoWindow.content(p.getName()+"")+"<BR>";
-			s+= PopupInfoWindow.title("From:")+PopupInfoWindow.content(safeText(newvalue+"")+(newvalue==null ? "" : ("<font size=-3>("+newvalue.getClass()+")</font>")))+"<BR>";
-			s+= PopupInfoWindow.title("To:")+PopupInfoWindow.content(safeText(oldvalue+"")+(oldvalue==null ? "" : ("<font size=-3>("+oldvalue.getClass()+")</font>")))+"<BR>";
-			if (stack!=null)
+            s += PopupInfoWindow.title("Set Property \u2014 name:") + PopupInfoWindow.content(p.getName()) + "<BR>";
+            s += PopupInfoWindow.title("From:") + PopupInfoWindow.content(safeText(String.valueOf(newvalue))
+                                                                          + (newvalue == null
+                                                                             ? ""
+                                                                             : ("<font size=-3>("
+                                                                                + newvalue.getClass()
+                                                                                + ")</font>"))) + "<BR>";
+            s += PopupInfoWindow.title("To:") + PopupInfoWindow.content(safeText(String.valueOf(oldvalue))
+                                                                        + (oldvalue == null
+                                                                           ? ""
+                                                                           : ("<font size=-3>("
+                                                                              + oldvalue.getClass()
+                                                                              + ")</font>"))) + "<BR>";
+            if (stack!=null)
 				s+= PopupInfoWindow.title("At:")+PopupInfoWindow.stackTrace(stack.trace)+"<BR>";
 
 			return s;
@@ -241,8 +297,15 @@ public class ElementInvocationLogging {
 		}
 
 		public String getTextDescription() {
-			return "<html><font color='#"+Constants.defaultTreeColor+"'>"+smallerStill("property,")+" set: <b>" + p.getName()+ "</b>\n  \u2190 " + newvalue+"";
-		}
+            return "<html><font color='#"
+                   + Constants.defaultTreeColor
+                   + "'>"
+                   + smallerStill("property,")
+                   + " set: <b>"
+                   + p.getName()
+                   + "</b>\n  \u2190 "
+                   + newvalue;
+        }
 
 		public boolean isError() {
 			return false;
@@ -551,8 +614,8 @@ public class ElementInvocationLogging {
 			this.name = name;
 			this.element = target;
 			this.got = got;
-			this.gotText =safeText( "" + got);
-			if (storeStackTraces) stack = new StackTrace();
+            this.gotText = safeText(String.valueOf(got));
+            if (storeStackTraces) stack = new StackTrace();
 		}
 
 		public String getLongDescription() {
@@ -668,13 +731,13 @@ public class ElementInvocationLogging {
 	static public String dress(Object o) {
 		if (o instanceof iVisualElement)
 			return SelectionSetDriver.nameFor((iVisualElement) o);
-		return safeText(""+o);
-	}
+        return safeText(String.valueOf(o));
+    }
 
 	static String copyToClipboard(String text, String toclip)
 	{
-		return UbiquitousLinks.links.link(text, UbiquitousLinks.links.code_copyTextToClipboard(toclip), null);
-	}
+        return UbiquitousLinks.link(text, UbiquitousLinks.code_copyTextToClipboard(toclip), null);
+    }
 
 	static String describeElement(iVisualElement e) {
 		if (e == null) return "\u2014\u2014unavailable\u2014\u2014";
@@ -690,13 +753,15 @@ public class ElementInvocationLogging {
 		if (name == null)
 			name = "no name";
 
-		return UbiquitousLinks.links.link("<b>"+name+"</b>", UbiquitousLinks.links.code_selectOrMarkByUID(e.getUniqueID()), null);
-	}
+        return UbiquitousLinks.link("<b>" + name + "</b>",
+                                    UbiquitousLinks.code_selectOrMarkByUID(e.getUniqueID()),
+                                    null);
+    }
 
 	static String openInBrowser(String name, String valueAsText, Object value)
 	{
-		return UbiquitousLinks.links.link(valueAsText, UbiquitousLinks.links.code_openInBrowser(name, value), null);
-	}
+        return UbiquitousLinks.link(valueAsText, UbiquitousLinks.links.code_openInBrowser(name, value), null);
+    }
 
 	static String smaller(String t) {
 		return "<i><font size=-2>"+t+"</font></i>";

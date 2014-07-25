@@ -394,8 +394,8 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 			try {
 
 				if (stereo) {
-					culler.enter();
-					if (leftOnly)
+                    DynamicFrameRateCuller.enter();
+                    if (leftOnly)
 						side = 1;
 
 					for (int i = 0; i < 2; i++) {
@@ -449,11 +449,11 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 							break;
 					}
 					frameNumber++;
-					culler.exit();
+                    DynamicFrameRateCuller.exit();
 
 				} else if (passiveStereo) {
-					culler.enter();
-					// ;//System.out.println(" -- in ");
+                    DynamicFrameRateCuller.enter();
+                    // ;//System.out.println(" -- in ");
 					if (leftOnly)
 						side = 1;
 
@@ -497,8 +497,8 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 							break;
 					}
 					frameNumber++;
-					culler.exit();
-					// ;//System.out.println(" -- out");
+                    DynamicFrameRateCuller.exit();
+                    // ;//System.out.println(" -- out");
 
 				} else {
 					windowContextTree.begin(getContextName());
@@ -712,8 +712,9 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 	}
 
 	@HiddenInAutocomplete
-	protected void displayChanged(boolean arg1, boolean arg2) {
-		glClearColor(0, 0, 0, 0);
+    protected static
+    void displayChanged(boolean arg1, boolean arg2) {
+        glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -976,8 +977,8 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 			}
 
 			private String pad(int n) {
-				String q = "" + n;
-				while (q.length() < 5)
+                String q = String.valueOf(n);
+                while (q.length() < 5)
 					q = "0" + q;
 				return q;
 			}

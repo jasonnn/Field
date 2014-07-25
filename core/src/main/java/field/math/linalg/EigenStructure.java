@@ -112,8 +112,9 @@ public class EigenStructure {
 	 is a MatrixN whose columns are the eigenvectors of A. Taken from NRC, 
 	 p. 467, with some modifications.
 	 */
-	private void jacobi(double[][] a, int n, float[] d, double[][] v) throws EigenStructureException {
-		int j, iq, ip, i, nrot;
+    private static
+    void jacobi(double[][] a, int n, float[] d, double[][] v) throws EigenStructureException {
+        int j, iq, ip, i, nrot;
 		double tresh, theta, tau, t, sm, s, h, g, c;
 
 		double b[] = new double[n];

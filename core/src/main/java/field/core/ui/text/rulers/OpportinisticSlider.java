@@ -106,9 +106,9 @@ public class OpportinisticSlider {
 
 	}
 
-	private int convertToLocation(int nrstart, int ncstart, int nrend,
-			int ncend, String now) {
-		String[] mm = now.split("\n");
+    private static
+    int convertToLocation(int nrstart, int ncstart, int nrend, int ncend, String now) {
+        String[] mm = now.split("\n");
 		int row = 0;
 		int offset = 0;
 		for (int i = 0; i < mm.length; i++) {
@@ -145,7 +145,7 @@ public class OpportinisticSlider {
 
 		dn = nn;
 
-		sn = "" + next;
+        sn = next;
 
 		return n;
 	}
@@ -171,7 +171,7 @@ public class OpportinisticSlider {
 
 		dn = nn;
 
-		sn = "" + roundLike(nn, sn);
+        sn = roundLike(nn, sn);
 
 		return n;
 	}

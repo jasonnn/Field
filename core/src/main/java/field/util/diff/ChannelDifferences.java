@@ -224,9 +224,10 @@ public class ChannelDifferences<A> {
 		}
 		return editRelationships;
 	}
-    
-	public <U, T extends Collection<? super U>> T unwrap(iChannel<U> in, T collection) {
-		iMarkerIterator<U> iterator = in.getIterator();
+
+    public static
+    <U, T extends Collection<? super U>> T unwrap(iChannel<U> in, T collection) {
+        iMarkerIterator<U> iterator = in.getIterator();
 		while (iterator.hasNext()) {
 			iMarker<U> m = iterator.next();
 			collection.add(m.getPayload());

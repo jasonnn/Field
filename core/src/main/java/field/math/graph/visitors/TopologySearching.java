@@ -389,8 +389,9 @@ public class TopologySearching {
 		protected void exit(T t) {
 		}
 
-		protected String spaces(int n) {
-			StringBuffer buf = new StringBuffer(n);
+        protected static
+        String spaces(int n) {
+            StringBuffer buf = new StringBuffer(n);
 			for (int i = 0; i < n; i++)
 				buf.append(' ');
 			return buf.toString();
@@ -540,8 +541,8 @@ public class TopologySearching {
 		private boolean invarients() {
 			for (int i = 1; i < fringe.size(); i++) {
 				if (fringe.get(i).accumulatedDistance > fringe.get(i - 1).accumulatedDistance) {
-					throw new Error("" + fringe);
-				}
+                    throw new Error(String.valueOf(fringe));
+                }
 			}
 			return true;
 		}

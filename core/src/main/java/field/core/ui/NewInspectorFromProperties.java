@@ -70,7 +70,8 @@ public class NewInspectorFromProperties {
 
 	}
 
-	public <A> iIO<A> coallesce(final iIO<A> a, final iIO<A> b) {
+    public static
+    <A> iIO<A> coallesce(final iIO<A> a, final iIO<A> b) {
 
         //System.out.println(" coallescing <" + a + "> <" + b + ">");
 

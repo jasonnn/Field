@@ -255,8 +255,9 @@ public class DirectLine {
 		return cache;
 	}
 
-	private Object blend(Object a, Object b, float f) {
-		if (a == null)
+    private static
+    Object blend(Object a, Object b, float f) {
+        if (a == null)
 			return b;
 		if (b == null)
 			return a;

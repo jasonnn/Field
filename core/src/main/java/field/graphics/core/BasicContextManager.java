@@ -137,13 +137,13 @@ public class BasicContextManager {
 	}
 
 	public static void markAsValidInThisContext(Object owner) {
-		currentValidMap.put(owner, new Boolean(true));
-	}
+        currentValidMap.put(owner, Boolean.TRUE);
+    }
 
 	public static boolean isValid(Object owner) {
 		Boolean b = currentValidMap.get(owner);
-		return b == null ? false : b.booleanValue();
-	}
+        return b != null && b;
+    }
 
 	public static void delete(Object owner) {
 		currentContextIdMap.remove(owner);

@@ -230,8 +230,8 @@ public class BasicTextures {
 			pixelsHigh = image.pixelsHigh();
 			if (pixelsWide != pixelsHigh)
 				use_gl_texture_rectangle_ext(true);
-			samplesPerPixel = image.samplesPerPixel();
-			hasAlpha = (samplesPerPixel == 4) ? true : false;
+            samplesPerPixel = ByteImage.samplesPerPixel();
+            hasAlpha = (samplesPerPixel == 4) ? true : false;
 		}
 
 		public void delete() {
@@ -266,8 +266,8 @@ public class BasicTextures {
 			pixelsHigh = image.pixelsHigh();
 			if ((pixelsWide != pixelsHigh) || (notPowerOfTwo(pixelsWide) || (notPowerOfTwo(pixelsHigh))))
 				use_gl_texture_rectangle_ext(true);
-			samplesPerPixel = image.samplesPerPixel();
-			hasAlpha = (samplesPerPixel == 4) ? true : false;
+            samplesPerPixel = ByteImage.samplesPerPixel();
+            hasAlpha = (samplesPerPixel == 4) ? true : false;
 
 			// ByteBuffer b = image.getImage();
 			//
@@ -306,8 +306,9 @@ public class BasicTextures {
 			return this;
 		}
 
-		protected boolean notPowerOfTwo(int pixelsWide2) {
-			return (pixelsWide2 & (pixelsWide2 - 1)) != 0;
+        protected static
+        boolean notPowerOfTwo(int pixelsWide2) {
+            return (pixelsWide2 & (pixelsWide2 - 1)) != 0;
 		}
 
 		@Override
@@ -466,8 +467,8 @@ public class BasicTextures {
 				if (i == 0) {
 					pixelsWide = image[0].pixelsWide();
 					pixelsHigh = image[0].pixelsHigh();
-					samplesPerPixel = image[0].samplesPerPixel();
-					hasAlpha = (samplesPerPixel == 4) ? true : false;
+                    samplesPerPixel = ByteImage.samplesPerPixel();
+                    hasAlpha = (samplesPerPixel == 4) ? true : false;
 				}
 			}
 			return true;
@@ -614,8 +615,9 @@ public class BasicTextures {
 			glActiveTexture(GL_TEXTURE0 + getUnit());
 		}
 
-		public void out(Object gl) {
-			glActiveTexture(GL_TEXTURE0);
+        public static
+        void out(Object gl) {
+            glActiveTexture(GL_TEXTURE0);
 		}
 
 		@Override
@@ -693,8 +695,9 @@ public class BasicTextures {
 			glActiveTexture(GL_TEXTURE0 + getUnit());
 		}
 
-		public void out(Object gl) {
-			glActiveTexture(GL_TEXTURE0);
+        public static
+        void out(Object gl) {
+            glActiveTexture(GL_TEXTURE0);
 		}
 
 		@Override

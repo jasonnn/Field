@@ -500,8 +500,8 @@ public class FluidCopyPastePersistence {
 				reader.moveDown();
 				Class cc = (Class) context.convertAnother(null, Class.class);
 				reader.moveUp();
-				iMixinProxy m = (iMixinProxy) new Mixins().make(cc, Mixins.visitCodeCombiner);
-				reader.moveDown();
+                iMixinProxy m = (iMixinProxy) Mixins.make(cc, Mixins.visitCodeCombiner);
+                reader.moveDown();
 				List ll = (List) context.convertAnother(m, List.class);
 				reader.moveUp();
 

@@ -379,24 +379,27 @@ public class ThreedContext extends BaseGLGraphicsContext implements iTransformin
 			mm[i] = subCamera.modelView[i];
 	}
 
-	private float control2for(Object o) {
-		if (o instanceof Number)
+    private static
+    float control2for(Object o) {
+        if (o instanceof Number)
 			return ((Number) o).floatValue();
 		if (o instanceof Vector3)
 			return ((Vector3) o).y;
 		return 0;
 	}
 
-	private float control1for(Object o) {
-		if (o instanceof Number)
+    private static
+    float control1for(Object o) {
+        if (o instanceof Number)
 			return ((Number) o).floatValue();
 		if (o instanceof Vector3)
 			return ((Vector3) o).x;
 		return 0;
 	}
 
-	private float depthFor(Object o) {
-		if (o instanceof Number)
+    private static
+    float depthFor(Object o) {
+        if (o instanceof Number)
 			return ((Number) o).floatValue();
 		if (o instanceof Vector3)
 			return ((Vector3) o).z;

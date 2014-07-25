@@ -673,12 +673,11 @@ public class PopupMarkingArea {
 		v.add(new Vector2(width * 0, height / 2));
 
 		for (MenuArea m : components) {
-			m.area = v.makeRegion(v.getContourForSite(m.site));
-			m.parea = v.makePath(v.getContourForSite(m.site));
-		}
+            m.area = SimpleVoronoi.makeRegion(v.getContourForSite(m.site));
+            m.parea = SimpleVoronoi.makePath(v.getContourForSite(m.site));
+        }
 
-		if (centerSite != null)
-			centerArea = v.makeRegion(v.getContourForSite(centerSite));
+		if (centerSite != null) centerArea = SimpleVoronoi.makeRegion(v.getContourForSite(centerSite));
 
 		Region all = new Region();
 		for (MenuArea m : components) {
@@ -875,8 +874,9 @@ public class PopupMarkingArea {
 	//
 	// }
 
-	protected void paintSplat(GC g, Vector2 poppedAt) {
-		int size = 3;
+    protected static
+    void paintSplat(GC g, Vector2 poppedAt) {
+        int size = 3;
 		g.setBackground(new Color(Launcher.display, 0, 0, 0));
 		g.setAlpha(40);
 		g.fillRectangle((int) poppedAt.x - size, (int) poppedAt.y - size, size * 2, size * 2);

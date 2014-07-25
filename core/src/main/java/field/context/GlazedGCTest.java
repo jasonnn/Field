@@ -9,8 +9,9 @@ import field.math.abstraction.iDoubleProvider;
 
 public class GlazedGCTest implements iLaunchable {
 
-	public class Banana {
-		double t;
+    public static
+    class Banana {
+        double t;
 
 		public Banana(double t) {
 			this.t = t;

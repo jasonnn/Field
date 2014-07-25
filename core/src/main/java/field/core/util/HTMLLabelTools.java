@@ -127,8 +127,9 @@ public class HTMLLabelTools {
 		return new Point(cx, gc.textExtent(textToDraw).y);
 	}
 
-	public class Area {
-		int start;
+    public static
+    class Area {
+        int start;
 		int end;
 		String text;
 		Font font;

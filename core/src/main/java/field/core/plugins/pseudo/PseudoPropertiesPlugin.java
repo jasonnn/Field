@@ -18,8 +18,8 @@ import field.core.plugins.python.PythonPlugin;
 import field.core.util.FieldPyObjectAdaptor.iCallable;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor.iHandlesFindItem;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.iMutable;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.util.WorkspaceDirectory;
 import org.python.core.Py;
 import org.python.core.PyObject;
@@ -73,8 +73,9 @@ public class PseudoPropertiesPlugin extends BaseSimplePlugin {
 			return "\u2014\u2014 lets you find elements by name. For example <b>_self.find['something.*else']</b> \u2014\u2014";
 		}
 	}
-    
-	public class Framer {
+
+    public static
+    class Framer {
         
 		private final iVisualElement on;
 		private Rect r;
@@ -244,8 +245,9 @@ public class PseudoPropertiesPlugin extends BaseSimplePlugin {
 		r.set(p);
 		return VisitCode.stop;
 	}
-    
-	public class SuperPropertier implements iHandlesAttributes {
+
+    public static
+    class SuperPropertier implements iHandlesAttributes {
         
 		private final iVisualElement on;
         
@@ -271,8 +273,9 @@ public class PseudoPropertiesPlugin extends BaseSimplePlugin {
 		}
         
 	}
-    
-	public class Wherer implements iHandlesAttributes {
+
+    public static
+    class Wherer implements iHandlesAttributes {
         
 		private final iVisualElement from;
         
@@ -423,7 +426,8 @@ return "\u2014\u2014 Doesn't return the property, returns the visual element tha
 }
 }
 
-public class Actioner implements iHandlesAttributes {
+    public static
+    class Actioner implements iHandlesAttributes {
     
     private final iVisualElement from;
     
@@ -455,7 +459,8 @@ public class Actioner implements iHandlesAttributes {
     }
 }
 
-public class Subelements implements iHandlesFindItem, List<iVisualElement> {
+    public static
+    class Subelements implements iHandlesFindItem, List<iVisualElement> {
     
     protected final iVisualElement from;
     
@@ -656,7 +661,8 @@ public class Superelements extends Subelements {
 // FieldPyObjectAdaptor2.isCallable(Beginner.class);
 // }
 
-public class Ender implements iCallable {
+    public static
+    class Ender implements iCallable {
     private final iVisualElement source;
     
     public Ender(iVisualElement source) {
@@ -678,7 +684,8 @@ public class Ender implements iCallable {
     }
 }
 
-public class Beginner implements iCallable {
+    public static
+    class Beginner implements iCallable {
     private final iVisualElement source;
     
     public Beginner(iVisualElement source) {

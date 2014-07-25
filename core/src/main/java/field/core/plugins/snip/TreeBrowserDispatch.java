@@ -267,14 +267,14 @@ public class TreeBrowserDispatch {
 		}
 		return r;
 	}
-    
-	private List<Class> linearize(Class<? extends Object> c) {
-		LinkedHashSet<Class> tot = new LinkedHashSet<Class>();
+
+    private static
+    List<Class> linearize(Class<? extends Object> c) {
+        LinkedHashSet<Class> tot = new LinkedHashSet<Class>();
 		while (c != null) {
 			tot.add(c);
-			for (Class cc : c.getInterfaces())
-				tot.add(cc);
-			c = c.getSuperclass();
+            Collections.addAll(tot, c.getInterfaces());
+            c = c.getSuperclass();
 		}
 		return new ArrayList<Class>(tot);
 	}

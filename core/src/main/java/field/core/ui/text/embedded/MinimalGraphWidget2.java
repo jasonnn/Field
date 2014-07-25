@@ -788,8 +788,9 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 
 	}
 
-	protected Vector2 transformRelativeToFrame(Rectangle bounds, Vector2 object) {
-		object.x = object.x * bounds.width;
+    protected static
+    Vector2 transformRelativeToFrame(Rectangle bounds, Vector2 object) {
+        object.x = object.x * bounds.width;
 		object.y = bounds.height - object.y * bounds.height;
 		return object;
 	}

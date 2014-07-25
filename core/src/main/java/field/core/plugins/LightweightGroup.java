@@ -62,11 +62,13 @@ public class LightweightGroup extends SplineComputingOverride {
 		return VisitCode.cont;
 	}
 
-	protected boolean subElementHasChangedWillChangeBounds() {
-		return true;
+    protected static
+    boolean subElementHasChangedWillChangeBounds() {
+        return true;
 	}
 
-	private Rect computeNewSubFrame(iVisualElement e, Rect newParentFrame, Rect oldParentFrame, Rect oldChildFrame, int out) {
+    private static
+    Rect computeNewSubFrame(iVisualElement e, Rect newParentFrame, Rect oldParentFrame, Rect oldChildFrame, int out) {
 
 		double x1 = (oldChildFrame.x - oldParentFrame.x) / oldParentFrame.w;
 		double y1 = (oldChildFrame.y - oldParentFrame.y) / oldParentFrame.h;
@@ -107,8 +109,9 @@ public class LightweightGroup extends SplineComputingOverride {
 		return new Rect(mx - out, my - out, out * 2 + xx - mx, out * 2 + yy - my);
 	}
 
-	protected boolean shouldBound(iVisualElement ve) {
-		return true;
+    protected static
+    boolean shouldBound(iVisualElement ve) {
+        return true;
 	}
 
 	protected int getOutset() {

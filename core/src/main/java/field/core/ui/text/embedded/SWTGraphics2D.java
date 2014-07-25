@@ -290,18 +290,20 @@ public class SWTGraphics2D extends Graphics2D {
                 style = style | SWT.ITALIC;
             }
 
-            String name = fontString.substring(0, fontString.indexOf(";"));
-            String size = fontString.substring(fontString.lastIndexOf(";") + 1, fontString.length());
+            String name = fontString.substring(0, fontString.indexOf(';'));
+            String size = fontString.substring(fontString.lastIndexOf(';') + 1, fontString.length());
             int sizeInt = 12;
             try {
-                sizeInt = Integer.parseInt(size.substring(size.indexOf("=") + 1, size.length()));
+                sizeInt = Integer.parseInt(size.substring(size.indexOf('=') + 1, size.length()));
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
             cachedFont = new org.eclipse.swt.graphics.Font(device,
-                    name.substring(name.indexOf("=") + 1, name.length()), sizeInt, style);
+                                                           name.substring(name.indexOf('=') + 1, name.length()),
+                                                           sizeInt,
+                                                           style);
             FONT_CACHE.put(fontString, cachedFont);
         }
         return cachedFont;

@@ -12,9 +12,7 @@ public class OptimizeCachedLineSet {
 		List<CachedLine> extra = new ArrayList<CachedLine>();
 
 		Set<String> ex = new LinkedHashSet<String>();
-		if (excludeKeys != null)
-			for (String s : excludeKeys)
-				ex.add(s);
+        if (excludeKeys != null) Collections.addAll(ex, excludeKeys);
 
 		for (CachedLine cc : c) {
 			long hash = getHashFor(cc, ex);

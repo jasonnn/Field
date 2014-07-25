@@ -51,8 +51,9 @@ public class BindingPlugin extends BaseSimplePlugin {
 		}
 	}
 
-	protected void added(iVisualElement e) {
-		String b = e.getProperty(iVisualElement.boundTo);
+    protected static
+    void added(iVisualElement e) {
+        String b = e.getProperty(iVisualElement.boundTo);
 		if (b != null && b.trim().length() > 0) {
 
             //System.out.println(" initializing boundto with <" + b + "> for <" + e + ">");
@@ -135,8 +136,8 @@ public class BindingPlugin extends BaseSimplePlugin {
 
 			@Override
 			public VisitCode added(iVisualElement source) {
-				BindingPlugin.this.added(source);
-				return super.added(source);
+                BindingPlugin.added(source);
+                return super.added(source);
 			}
 
 		};

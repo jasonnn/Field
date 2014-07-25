@@ -154,8 +154,9 @@ public class GraphNodeSearching {
 
 		abstract protected VisitCode visit(T n);
 
-		protected String spaces(int n) {
-			StringBuffer buf = new StringBuffer(n);
+        protected static
+        String spaces(int n) {
+            StringBuffer buf = new StringBuffer(n);
 			for (int i = 0; i < n; i++)
 				buf.append(' ');
 			return buf.toString();

@@ -77,7 +77,7 @@ public class FieldGraphics2D2 extends AbstractGraphics2D {
 			}
 		}
 
-		CachedLine c = new LineUtils().piToCachedLine(s.getPathIterator(needsTransform ? gc.getTransform() : null));
+        CachedLine c = LineUtils.piToCachedLine(s.getPathIterator(needsTransform ? gc.getTransform() : null));
 
 		if (c == null)
 			return;
@@ -108,7 +108,7 @@ public class FieldGraphics2D2 extends AbstractGraphics2D {
 //			needsTransform = false;
 //		}
 
-		CachedLine c = new LineUtils().piToCachedLine(s.getPathIterator(needsTransform ? gc.getTransform() : null));
+        CachedLine c = LineUtils.piToCachedLine(s.getPathIterator(needsTransform ? gc.getTransform() : null));
 
 		if (c == null)
 			return;

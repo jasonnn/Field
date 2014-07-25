@@ -194,10 +194,10 @@ public class OverlayAnimationManager {
 
 
 		java.awt.geom.RoundRectangle2D.Double rr = new RoundRectangle2D.Double(bounds.getX()-20, bounds.getY()-23, bounds.getWidth()+20+20, bounds.getHeight()+23+23, 30,30);
-		
-		CachedLine innerLine = new LineUtils().piToCachedLine(rr.getPathIterator(null));
-		
-		innerLine.getProperties().put(iLinearGraphicsContext.filled, true);
+
+        CachedLine innerLine = LineUtils.piToCachedLine(rr.getPathIterator(null));
+
+        innerLine.getProperties().put(iLinearGraphicsContext.filled, true);
 		innerLine.getProperties().put(iLinearGraphicsContext.stroked, false);
 		innerLine.getProperties().put(iLinearGraphicsContext.color, back);
 
@@ -243,10 +243,10 @@ public class OverlayAnimationManager {
 
 
 		java.awt.geom.RoundRectangle2D.Double rr = new RoundRectangle2D.Double(bounds.getX()-20, bounds.getY()-23, bounds.getWidth()+20+20, bounds.getHeight()+23+23, 30,30);
-		
-		CachedLine innerLine = new LineUtils().piToCachedLine(rr.getPathIterator(null));
-		
-		innerLine.getProperties().put(iLinearGraphicsContext.filled, true);
+
+        CachedLine innerLine = LineUtils.piToCachedLine(rr.getPathIterator(null));
+
+        innerLine.getProperties().put(iLinearGraphicsContext.filled, true);
 		innerLine.getProperties().put(iLinearGraphicsContext.stroked, false);
 		innerLine.getProperties().put(iLinearGraphicsContext.color, back);
 

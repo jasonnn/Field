@@ -142,8 +142,9 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 		return Py.java2py(r);
 	}
 
-	public int __len__() {
-		return 2;
+    public static
+    int __len__() {
+        return 2;
 	}
 
 	public void __setitem__(int value, PyObject v) {

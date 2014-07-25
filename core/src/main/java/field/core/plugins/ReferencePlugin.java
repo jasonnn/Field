@@ -112,7 +112,7 @@ public class ReferencePlugin implements iPlugin {
 
 	private SelectionGroup<iComponent> group;
 
-	final protected String pluginId = "//reference_plugin";
+    static final protected String pluginId = "//reference_plugin";
 
 	Set<iVisualElement> currentSelection = new HashSet<iVisualElement>();
 

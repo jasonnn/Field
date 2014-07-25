@@ -119,9 +119,10 @@ public class BetterComboBox {
     
 	protected void makeMenu() {
 	}
-    
-	private String dehtml(String string) {
-		return string.replaceAll("<(.+?)>", "");
+
+    private static
+    String dehtml(String string) {
+        return string.replaceAll("<(.+?)>", "");
 	}
     
 	public void addOption(String label) {

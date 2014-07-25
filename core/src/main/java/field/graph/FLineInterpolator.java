@@ -39,8 +39,9 @@ public class FLineInterpolator {
 		return ongoingInterpolator != null;
 	}
 
-	private float shape(float f) {
-		return CubicTools.smoothStep(f);
+    private static
+    float shape(float f) {
+        return CubicTools.smoothStep(f);
 	}
 
 	public void setTarget(List<CachedLine> next, String hash, int duration) {

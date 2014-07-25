@@ -165,8 +165,9 @@ public class ShaderPreprocessor {
 		}
 	}
 
-	class StringStream {
-		String a;
+    static
+    class StringStream {
+        String a;
 
 		int at = 0;
 

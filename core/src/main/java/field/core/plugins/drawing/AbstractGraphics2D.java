@@ -2525,7 +2525,8 @@ abstract class TransformStackElement implements Cloneable {
   /**
    * Multiplies two 2x3 matrices of double precision values
    */
-  private double[] matrixMultiply(double[] matrix1, double[] matrix2) {
+  private static
+  double[] matrixMultiply(double[] matrix1, double[] matrix2) {
     double[] product = new double[6];
     AffineTransform transform1 = new AffineTransform(matrix1);
     transform1.concatenate(new AffineTransform(matrix2));

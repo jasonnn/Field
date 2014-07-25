@@ -57,8 +57,9 @@ public class YieldSupport {
 		return yi.localStack;
 	}
 
-	public class YieldInfo {
-		public Object[] localStack;
+    public static
+    class YieldInfo {
+        public Object[] localStack;
 
 		public Object lastReturn;
 

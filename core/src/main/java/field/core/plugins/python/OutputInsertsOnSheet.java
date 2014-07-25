@@ -176,8 +176,8 @@ public class OutputInsertsOnSheet {
 					}
 
 					public void windowLostFocus(WindowEvent e) {
-						new MiscNative().disableScreenUpdates();
-						closeEditingWindow();
+                        MiscNative.disableScreenUpdates();
+                        closeEditingWindow();
 					}
 				});
 
@@ -206,8 +206,9 @@ public class OutputInsertsOnSheet {
 		}
 
 		@NextUpdate(delay = 1)
-		private void layoutHierarchy(Container c) {
-			c.validate();
+        private static
+        void layoutHierarchy(Container c) {
+            c.validate();
 			c.doLayout();
 			for (Component cc : c.getComponents()) {
 				cc.validate();
@@ -227,8 +228,9 @@ public class OutputInsertsOnSheet {
 		}
 
 		@NextUpdate(delay = 2)
-		public void deferredClosing(JFrame editingFrame) {
-			editingFrame.setVisible(false);
+        public static
+        void deferredClosing(JFrame editingFrame) {
+            editingFrame.setVisible(false);
 			editingFrame.dispose();
 		}
 	}
@@ -529,7 +531,7 @@ public class OutputInsertsOnSheet {
 			}
 
 			public iAcceptor<Object> set(Object to) {
-                tuple.updateValue("" + to);
+                tuple.updateValue(String.valueOf(to));
                 repaint();
 				return this;
 			}

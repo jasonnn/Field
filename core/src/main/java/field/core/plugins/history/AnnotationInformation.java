@@ -61,7 +61,7 @@ public class AnnotationInformation {
 
 	public void construct(String currentContents) {
         //System.out.println(" inside construct "+currentContents+" building graph ...");
-        Set<VersionNode> nodes = hgSupport.buildHistoryGraph(file);
+        Set<VersionNode> nodes = HistoryExplorerHG.buildHistoryGraph(file);
         //System.out.println(" history graph has <"+nodes.size()+">");
         versions = new ArrayList<VersionNode>(nodes);
 		Iterator<VersionNode> i = nodes.iterator();
@@ -165,8 +165,10 @@ public class AnnotationInformation {
 		return a;
 	}
 
-	private boolean equiv(ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> c, ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> x) {
-		//;//System.out.println(" equiv <" + c.size() + " " + x.size() + ">");
+    private static
+    boolean equiv(ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> c,
+                  ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> x) {
+        //;//System.out.println(" equiv <" + c.size() + " " + x.size() + ">");
 
 		if (c.size() != x.size())
 			return false;

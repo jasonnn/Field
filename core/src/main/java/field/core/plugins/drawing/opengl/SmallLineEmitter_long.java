@@ -37,8 +37,16 @@ public abstract class SmallLineEmitter_long {
 
 	abstract public void emitLinearFrame(Vector2 a, Vector2 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context);
 
-	public void emitCubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context) {
-		throw new IllegalArgumentException();
+    public static
+    void emitCubicFrame(Vector2 a,
+                        Vector2 c1,
+                        Vector2 c2,
+                        Vector2 b,
+                        List<Object> name,
+                        List<Object> name2,
+                        Dict properties,
+                        iLinearGraphicsContext context) {
+        throw new IllegalArgumentException();
     }
 
     protected Vector4 black = new Vector4(0, 0, 0, 1);
@@ -84,8 +92,9 @@ public abstract class SmallLineEmitter_long {
 		}
 	}
 
-	protected boolean shouldTerm(float flatness, Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, int n) {
-		return !(flatness > 0.3f && n < 10);
+    protected static
+    boolean shouldTerm(float flatness, Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, int n) {
+        return !(flatness > 0.3f && n < 10);
 	}
 
 	public void flattenLinearFrame(Vector2 a, Vector2 b, List<Object> propertiesA, List<Object> propertiesB, Dict properties, iLinearGraphicsContext context, int n) {
@@ -104,8 +113,9 @@ public abstract class SmallLineEmitter_long {
 		}
 	}
 
-	private List<Object> subdivide(List<Object> propertiesA, List<Object> propertiesB) {
-		List<Object> q = new ArrayList<Object>();
+    private static
+    List<Object> subdivide(List<Object> propertiesA, List<Object> propertiesB) {
+        List<Object> q = new ArrayList<Object>();
 		for (int i = 0; i < propertiesA.size(); i++) {
 			Object a = propertiesA.get(i);
 			Object b = propertiesB.get(i);

@@ -41,11 +41,12 @@ public class GraphNodeToTreeFancy {
 
 	}
 
-	private void populate(iMutable m, Widget i) {
+    private static
+    void populate(iMutable m, Widget i) {
 
 		TreeItem item = i instanceof TreeItem ? new TreeItem(((TreeItem) i), 0) : new TreeItem((Tree) i, 0);
-		item.setText(("" + m));
-		item.setData(m);
+        item.setText((String.valueOf(m)));
+        item.setData(m);
 
 		List<iMutable> c = m.getChildren();
 		for (iMutable cc : c) {
@@ -169,8 +170,9 @@ public class GraphNodeToTreeFancy {
 			return new Point(cx, gc.textExtent(textToDraw).y - (Platform.isLinux() ? 3 : 0));
 		}
 
-		public class Area {
-			int start;
+        public static
+        class Area {
+            int start;
 			int end;
 			String text;
 			Font font;

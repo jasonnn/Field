@@ -77,11 +77,13 @@ public class BinSelection {
 		return z / data.size();
 	}
 
-	private float gauss(float x, float w) {
-		return (float) (1 / Math.sqrt(2 * Math.PI) / w * Math.exp(-x * x / 2 / w / w));
+    private static
+    float gauss(float x, float w) {
+        return (float) (1 / Math.sqrt(2 * Math.PI) / w * Math.exp(-x * x / 2 / w / w));
 	}
 
-	private float cost(float w, List<? extends Number> data) {
+    private static
+    float cost(float w, List<? extends Number> data) {
 
 		float a = 0;
 		for (int i = 0; i < data.size(); i++) {

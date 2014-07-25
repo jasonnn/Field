@@ -160,27 +160,31 @@ public class TreeBrowser {
 		});
         
 	}
-    
-	protected List<String> selectionText(Object data) {
-		List o = TreeBrowserDispatch.selectionText.gather(data);
+
+    protected static
+    List<String> selectionText(Object data) {
+        List o = TreeBrowserDispatch.selectionText.gather(data);
 		return o;
 	}
-    
-	private Collection<Object> childrenOf(Object o) {
-		List cc = TreeBrowserDispatch.childrenOf.gather(o);
+
+    private static
+    Collection<Object> childrenOf(Object o) {
+        List cc = TreeBrowserDispatch.childrenOf.gather(o);
 		List<List<Object>> oo = cc;
 		List<Object> f = new ArrayList<Object>();
 		for (List<Object> ooo : oo)
 			f.addAll(ooo);
 		return f;
 	}
-    
-	protected void doubleClick(Object s) {
-		TreeBrowserDispatch.doubleClick.call(s);
+
+    protected static
+    void doubleClick(Object s) {
+        TreeBrowserDispatch.doubleClick.call(s);
 	}
-    
-	private String textFor(Object ff) {
-		return (String) TreeBrowserDispatch.textFor.call(ff);
+
+    private static
+    String textFor(Object ff) {
+        return (String) TreeBrowserDispatch.textFor.call(ff);
 	}
     
 	public void setRoot(Object r) {
@@ -195,9 +199,10 @@ public class TreeBrowser {
 		build(this.root, i);
 		saved.load(tree);
 	}
-    
-	private String limit(String textFor) {
-		if (textFor == null)
+
+    private static
+    String limit(String textFor) {
+        if (textFor == null)
 			return "(null)";
 		if (textFor.length() > 25)
 			return textFor.substring(0, 22) + "...";

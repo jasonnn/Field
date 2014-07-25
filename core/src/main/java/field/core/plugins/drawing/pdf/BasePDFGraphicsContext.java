@@ -179,8 +179,9 @@ public class BasePDFGraphicsContext extends iLinearGraphicsContext {
 		return false;
 	}
 
-	public CachedLine makePaper(Vector3 pc, Rect paperRect) {
-		CachedLine paper = new CachedLine();
+    public static
+    CachedLine makePaper(Vector3 pc, Rect paperRect) {
+        CachedLine paper = new CachedLine();
 		paper.getInput().moveTo((float)paperRect.x, (float)paperRect.y);
 		paper.getInput().lineTo((float)(paperRect.w+paperRect.x), (float)paperRect.y);
 		paper.getInput().lineTo((float)(paperRect.w+paperRect.x), (float)(paperRect.y+paperRect.h));

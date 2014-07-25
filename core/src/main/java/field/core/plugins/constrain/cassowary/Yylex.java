@@ -5,23 +5,23 @@ import com.sun.java_cup.internal.runtime.Scanner;
 import com.sun.java_cup.internal.runtime.Symbol;
 
 public class Yylex implements Scanner {
-	private final int YY_BUFFER_SIZE = 512;
+    private static final int YY_BUFFER_SIZE = 512;
 
-	private final int YY_F = -1;
+    private static final int YY_F = -1;
 
-	private final int YY_NO_STATE = -1;
+    private static final int YY_NO_STATE = -1;
 
-	private final int YY_NOT_ACCEPT = 0;
+    private static final int YY_NOT_ACCEPT = 0;
 
-	private final int YY_START = 1;
+    private static final int YY_START = 1;
 
-	private final int YY_END = 2;
+    private static final int YY_END = 2;
 
-	private final int YY_NO_ANCHOR = 4;
+    private static final int YY_NO_ANCHOR = 4;
 
-	private final int YY_BOL = 128;
+    private static final int YY_BOL = 128;
 
-	private final int YY_EOF = 129;
+    private static final int YY_EOF = 129;
 
 	// added code to lexer class
 	private java.util.Hashtable<String, ClVariable> m_variable_name_object_hash;
@@ -77,7 +77,7 @@ public class Yylex implements Scanner {
 
 	private boolean yy_eof_done = false;
 
-	private final int YYINITIAL = 0;
+    private static final int YYINITIAL = 0;
 
 	private final int yy_state_dtrans[] = { 0 };
 
@@ -163,9 +163,9 @@ public class Yylex implements Scanner {
 		return newbuf;
 	}
 
-	private final int YY_E_INTERNAL = 0;
+    private static final int YY_E_INTERNAL = 0;
 
-	private final int YY_E_MATCH = 1;
+    private static final int YY_E_MATCH = 1;
 
 	private java.lang.String yy_error_string[] = { "Error: Internal error.\n", "Error: Unmatched input.\n" };
 

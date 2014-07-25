@@ -426,8 +426,9 @@ public class Visitors {
 			return currentInput.after == null ? false : currentInput.after.method.equals(iLine_m.cubicTo_m);
 		}
 
-		public String info(WritingReturn previousReturn) {
-			return previousReturn.needsLeftTangent() + " " + previousReturn.needsRightTangent() + " " + previousReturn.getClass();
+        public static
+        String info(WritingReturn previousReturn) {
+            return previousReturn.needsLeftTangent() + " " + previousReturn.needsRightTangent() + " " + previousReturn.getClass();
 		}
 
 	}

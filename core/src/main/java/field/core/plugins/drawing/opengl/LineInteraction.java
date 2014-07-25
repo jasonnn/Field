@@ -33,16 +33,19 @@ public class LineInteraction implements iMousePeer {
 		public void begin() {
 		}
 
-		public boolean enter(Event e) {
-			return false;
+        public static
+        boolean enter(Event e) {
+            return false;
 		}
 
-		public boolean exit(Event e) {
-			return false;
+        public static
+        boolean exit(Event e) {
+            return false;
 		}
 
-		public boolean moved(Event e) {
-			return false;
+        public static
+        boolean moved(Event e) {
+            return false;
 		}
 
 		public boolean down(Event e) {
@@ -53,8 +56,9 @@ public class LineInteraction implements iMousePeer {
 			return false;
 		}
 
-		public boolean drag(Event e) {
-			return false;
+        public static
+        boolean drag(Event e) {
+            return false;
 		}
 		
 		public boolean scroll(Event e)
@@ -99,8 +103,9 @@ public class LineInteraction implements iMousePeer {
 		}
 
 
-		protected boolean key(Event k) {
-			return false;
+        protected static
+        boolean key(Event k) {
+            return false;
 		}
 }
 
@@ -113,9 +118,8 @@ public class LineInteraction implements iMousePeer {
 	}
 
 	public void keyTyped(ComponentContainer inside, Event arg0) {
-		if (last!=null)
-			last.right.key(arg0);
-	}
+		if (last!=null) EventHandler.key(arg0);
+    }
 
 	public void mouseClicked(ComponentContainer inside, Event arg0) {
 	}
@@ -143,8 +147,8 @@ public class LineInteraction implements iMousePeer {
 		{
 			Promise p = enter(last.left);
 			try {
-				b1 |= last.right.drag(arg0);
-			} catch (Exception e) {
+                b1 |= EventHandler.drag(arg0);
+            } catch (Exception e) {
 				e.printStackTrace();
 			} finally {
 				if (p != null)
@@ -224,8 +228,8 @@ public class LineInteraction implements iMousePeer {
 
 			Promise p = enter(last.left);
 			try {
-				b1 = last.right.exit(arg0);
-			} catch (Exception e) {
+                b1 = EventHandler.exit(arg0);
+            } catch (Exception e) {
 				e.printStackTrace();
 			} finally {
 				if (p != null)
@@ -235,8 +239,8 @@ public class LineInteraction implements iMousePeer {
 		if (h != null && !eq(h, last)) {
 			Promise p = enter(h.left);
 			try {
-				b1 = b1 | h.right.enter(arg0);
-			} catch (Exception e) {
+                b1 = b1 | EventHandler.enter(arg0);
+            } catch (Exception e) {
 				e.printStackTrace();
 			} finally {
 				if (p != null)
@@ -280,8 +284,9 @@ public class LineInteraction implements iMousePeer {
 		return false;
 	}
 
-	private boolean eq(Object a, Object b) {
-		if (a == null)
+    private static
+    boolean eq(Object a, Object b) {
+        if (a == null)
 			return b == null;
 		if (b == null)
 			return false;
@@ -329,8 +334,8 @@ public class LineInteraction implements iMousePeer {
 			Promise p = enter(lastDown.left);
 			try {
 				lastDown.right.up(arg0);
-				lastDown.right.exit(arg0);
-				if (inside!=null)
+                EventHandler.exit(arg0);
+                if (inside!=null)
 					inside.requestRedisplay();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -365,8 +370,9 @@ public class LineInteraction implements iMousePeer {
 		}
 	}
 
-	protected Promise enter(CachedLine cc) {
-		if (cc.properties != null) {
+    protected static
+    Promise enter(CachedLine cc) {
+        if (cc.properties != null) {
 			Object o = cc.properties.get(iLinearGraphicsContext.source);
 			if (!(o instanceof iVisualElement)) return null;
 			iVisualElement source = (iVisualElement)o;

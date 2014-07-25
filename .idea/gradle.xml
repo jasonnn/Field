@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/asm" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core-api" />
+            <option value="$PROJECT_DIR$/instrumentation-asm" />
             <option value="$PROJECT_DIR$/instrumentation-rt" />
             <option value="$PROJECT_DIR$/util" />
           </set>

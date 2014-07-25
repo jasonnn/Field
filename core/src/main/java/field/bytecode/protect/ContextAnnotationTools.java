@@ -76,7 +76,7 @@ public class ContextAnnotationTools {
 	}
 
 	static public void populateContexted(ContextTopology topology, Object inside) {
-		Class<? extends Object> c = inside.getClass();
+        Class<?> c = inside.getClass();
 
 		ArrayList<Pair<Field, FromContext>> parameters = cachedParameters.get().get(c);
 		if (parameters == null) {

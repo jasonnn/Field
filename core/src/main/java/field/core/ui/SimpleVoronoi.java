@@ -97,16 +97,18 @@ public class SimpleVoronoi {
 		return p;
 	}
 
-	protected double area(Pnt[] A) {
-		double a = 0;
+    protected static
+    double area(Pnt[] A) {
+        double a = 0;
 		for (int i = 0; i < A.length ; i++) {
 			a += A[i].coordinates[0] * A[(i+1)%A.length].coordinates[1] - A[(i+1)%A.length].coordinates[0] * A[i].coordinates[1];
 		}
 		return a / 2;
 	}
 
-	protected Vector2 centroid(Pnt[] A) {
-		double x = 0;
+    protected static
+    Vector2 centroid(Pnt[] A) {
+        double x = 0;
 		double y = 0;
 		double aa = 0;
 		for (int i = 0; i < A.length; i++) {
@@ -119,8 +121,9 @@ public class SimpleVoronoi {
 		return new Vector2(x, y).scale((float) (1 / (6 * aa)));
 	}
 
-	public GeneralPath makeArea(Pnt[] p) {
-		GeneralPath path = new GeneralPath();
+    public static
+    GeneralPath makeArea(Pnt[] p) {
+        GeneralPath path = new GeneralPath();
 		for (int i = 0; i < p.length; i++) {
 			if (i == 0)
 				path.moveTo((float) p[0].coord(0), (float) p[0].coord(1));
@@ -131,7 +134,8 @@ public class SimpleVoronoi {
 		return path;
 	}
 
-	public Region makeRegion(Pnt[] p) {
+    public static
+    Region makeRegion(Pnt[] p) {
 
 		Region path = new Region();
 
@@ -146,7 +150,8 @@ public class SimpleVoronoi {
 		return path;
 	}
 
-	public Path makePath(Pnt[] p) {
+    public static
+    Path makePath(Pnt[] p) {
 
 		Path path = new Path(Launcher.display);
 		for (int i = 0; i < p.length; i++) {
@@ -242,7 +247,8 @@ public class SimpleVoronoi {
 
 	}
 
-	public class Graph<N> {
+    public static
+    class Graph<N> {
 
 		private Map<N, Set<N>> theNeighbors = // Node -> adjacent nodes
 		new HashMap<N, Set<N>>();
@@ -917,9 +923,8 @@ public class SimpleVoronoi {
 		 * @return the triangle's circumcenter
 		 */
 		public Pnt getCircumcenter() {
-			if (circumcenter == null)
-				circumcenter = circumcenter(this.toArray(new Pnt[0]));
-			return circumcenter;
+			if (circumcenter == null) circumcenter = circumcenter(this.toArray(new Pnt[this.size()]));
+            return circumcenter;
 		}
 
 		/* The following two methods ensure that a Triangle is immutable */
@@ -981,8 +986,8 @@ public class SimpleVoronoi {
 		 *                the initial triangle
 		 */
 		public Triangulation(Triangle triangle) {
-			triGraph = new Graph<Triangle>();
-			triGraph.add(triangle);
+            triGraph = new Graph();
+            triGraph.add(triangle);
 			mostRecent = triangle;
 		}
 
@@ -1111,16 +1116,15 @@ public class SimpleVoronoi {
 				}
 				visited.add(triangle);
 				// Corner opposite point
-				Pnt corner = point.isOutside(triangle.toArray(new Pnt[0]));
-				if (corner == null)
+                Pnt corner = point.isOutside(triangle.toArray(new Pnt[triangle.size()]));
+                if (corner == null)
 					return triangle;
 				triangle = this.neighborOpposite(corner, triangle);
 			}
 			// No luck; try brute force
             //System.out.println("Warning: Checking all triangles for " + point);
             for (Triangle tri : this) {
-				if (point.isOutside(tri.toArray(new Pnt[0])) == null)
-					return tri;
+                if (point.isOutside(tri.toArray(new Pnt[tri.size()])) == null) return tri;
 			}
 			// No such triangle
             //System.out.println("Warning: No triangle holds " + point);
@@ -1175,8 +1179,7 @@ public class SimpleVoronoi {
 			marked.add(triangle);
 			while (!toBeChecked.isEmpty()) {
 				triangle = toBeChecked.remove();
-				if (site.vsCircumcircle(triangle.toArray(new Pnt[0])) == 1)
-					continue; // Site outside triangle =>
+                if (site.vsCircumcircle(triangle.toArray(new Pnt[triangle.size()])) == 1) continue; // Site outside triangle =>
 				// triangle not in
 				// cavity
 				encroached.add(triangle);

@@ -172,8 +172,10 @@ public class HelpBrowser extends BaseSimplePlugin {
 									// ")>");
 
 								FileInputStream fis = new FileInputStream(new File("../" + uri));
-								return new Response(HTTP_OK, uri.endsWith(".js") ? "application/javascript" : "text/html", fis);
-							} catch (IOException e) {
+                                return new Response(HTTP_OK,
+                                                    uri.endsWith(".js") ? "application/javascript" : "text/html",
+                                                    fis);
+                            } catch (IOException e) {
 								e.printStackTrace();
 							}
 						} else if (uri.startsWith("/field/run/")) {
@@ -466,8 +468,8 @@ public class HelpBrowser extends BaseSimplePlugin {
         // System.out.println(" subsection <" + start + " -> " + end);
         // System.out.println(" rewrote wiki page to <" + all + ">");
 
-		return server.new Response(NanoHTTPD.HTTP_OK, "text/html;charset=utf-8", all);
-	}
+        return new Response(NanoHTTPD.HTTP_OK, "text/html;charset=utf-8", all);
+    }
 
 	protected Response rewriteOnlineResource(String uri) throws IOException {
 
@@ -477,8 +479,8 @@ public class HelpBrowser extends BaseSimplePlugin {
         // connect.getHeaderFields());
 		InputStream s = connect.getInputStream();
 
-		return server.new Response(NanoHTTPD.HTTP_OK, "image/png", s);
-	}
+        return new Response(NanoHTTPD.HTTP_OK, "image/png", s);
+    }
 
 	protected void goHome() {
 		browser.setUrl(HOME);
@@ -657,8 +659,8 @@ public class HelpBrowser extends BaseSimplePlugin {
 			PythonInterface.getPythonInterface().setVariable(name, parseObject(parms.get(name)));
 		}
 		try {
-			return new ReaderInputStream(new StringReader("" + u.call()));
-		} catch (Exception e) {
+            return new ReaderInputStream(new StringReader(String.valueOf(u.call())));
+        } catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			Iterator<String> w = was.keySet().iterator();
@@ -685,7 +687,7 @@ public class HelpBrowser extends BaseSimplePlugin {
 			}
 			return s;
 		} catch (Exception e) {
-			return "" + object;
-		}
+            return String.valueOf(object);
+        }
     }
 }

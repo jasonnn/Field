@@ -29,8 +29,9 @@ public class MeshToPdfType4 {
 		rep = new CompleteEdgeRep2().add(mesh);
 	}
 
-	public class EdgeRecord {
-		int originalFace;
+    public static
+    class EdgeRecord {
+        int originalFace;
 
 		int addedVertex;
 

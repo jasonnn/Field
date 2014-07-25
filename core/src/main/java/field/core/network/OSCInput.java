@@ -132,17 +132,17 @@ public class OSCInput implements iUpdateable {
         //System.out.println(" handle2 <" + dest + "> <" + h + "> <" + dispatchTable + "> : " + args);
         if (h != null)
 			dispatchTo(h, dest, args);
-		else if (dest.lastIndexOf("/") > 0) {
-			String d2 = dest.substring(0, dest.lastIndexOf("/"));
-			do {
+        else if (dest.lastIndexOf('/') > 0) {
+            String d2 = dest.substring(0, dest.lastIndexOf('/'));
+            do {
 				h = (Handler) dispatchTable.get(d2);
 				// ;//System.out.println("   subhandle <"+d2+"> <"+h+">");
 				if (h != null) {
 					dispatchTo(h, dest, args);
 					return;
 				}
-                
-			} while (d2.lastIndexOf("/") > 1);
+
+            } while (d2.lastIndexOf('/') > 1);
             
 			if (defaultHandler != null)
                 
@@ -151,9 +151,10 @@ public class OSCInput implements iUpdateable {
 		} else if (defaultHandler != null)
 			dispatchTo(defaultHandler, dest, args);
 	}
-    
-	public void dispatchTo(Handler h, String dest, List args) {
-		if (h instanceof DispatchableHandler) {
+
+    public static
+    void dispatchTo(Handler h, String dest, List args) {
+        if (h instanceof DispatchableHandler) {
 			((DispatchableHandler) h).handle(dest, args.toArray());
 		} else {
             // call handle2 method through reflection
@@ -185,9 +186,10 @@ public class OSCInput implements iUpdateable {
 		pad4(b);
 		return ret;
 	}
-    
-	public Integer readInt(ByteBuffer b) {
-		int i1 = BaseMath.intify(b.get());
+
+    public static
+    Integer readInt(ByteBuffer b) {
+        int i1 = BaseMath.intify(b.get());
 		int i2 = BaseMath.intify(b.get());
 		int i3 = BaseMath.intify(b.get());
 		int i4 = BaseMath.intify(b.get());
@@ -209,9 +211,10 @@ public class OSCInput implements iUpdateable {
 		int l = readInt(b).intValue();
 		return new Float(Float.intBitsToFloat(l));
 	}
-    
-	protected void pad4(ByteBuffer b) {
-		if (b.remaining() == 0)
+
+    protected static
+    void pad4(ByteBuffer b) {
+        if (b.remaining() == 0)
 			return;
 		int i = (4 - (b.position() % 4)) % 4;
 		for (int n = 0; n < i; n++) {

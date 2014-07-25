@@ -595,8 +595,8 @@ public class PythonPlugin implements iPlugin {
 			attributeDicts.push(object);
 			PythonInterface.getPythonInterface().setVariable("_a", object);
 
-			toolsModule.__dict__.__setitem__("_self".intern(), Py.java2py(element));
-		}
+            toolsModule.__dict__.__setitem__("_self", Py.java2py(element));
+        }
 		CapturedEnvironment capenv = new CapturedEnvironment(element);
 		PythonInterface.getPythonInterface().setVariable("_environment", capenv);
 

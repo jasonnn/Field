@@ -109,8 +109,17 @@ public class SnippetsPlugin extends BaseSimplePlugin {
 		@Override
 		public String toString() {
 			String[] ss = text.split("\n");
-			return (multiline ? ("<b>" + ss[0] + "</b>" + " " + annotation + " " + smaller("and " + (ss.length - 1) + " " + subgroupname + "" + (ss.length == 2 ? "" : "s") + "")) : "<b>" + text + "</b>" + " " + annotation);
-		}
+            return (multiline
+                    ? ("<b>" + ss[0] + "</b>" + " " + annotation + " " + smaller("and "
+                                                                                 + (ss.length - 1)
+                                                                                 + " "
+                                                                                 + subgroupname
+                                                                                 + ""
+                                                                                 + (ss.length == 2
+                                                                                    ? ""
+                                                                                    : "s")))
+                    : "<b>" + text + "</b>" + " " + annotation);
+        }
 	}
 
 	Snippet root = new Snippet("root");

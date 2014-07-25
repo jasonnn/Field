@@ -424,7 +424,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		rootSheetElement.setProperty(iVisualElement.sheetView, this);
 		GlobalKeyboardShortcuts gks = new GlobalKeyboardShortcuts();
 		rootSheetElement.setProperty(GlobalKeyboardShortcuts.shortcuts, gks);
-		gks.add(gks.new Shortcut('s', Platform.getCommandModifier(), Platform.getCommandModifier()), new iUpdateable() {
+        gks.add(new GlobalKeyboardShortcuts.Shortcut('s', Platform.getCommandModifier(), Platform.getCommandModifier()),
+                new iUpdateable() {
 
 			@Override
 			public void update() {
@@ -432,13 +433,13 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			}
 		});
 
-		gks.add(gks.new Shortcut(0, 0, 0) {
-			@Override
+        gks.add(new GlobalKeyboardShortcuts.Shortcut(0, 0, 0) {
+            @Override
 			public boolean matches(char c, int code, int state) {
 				if ((state & Platform.getCommandModifier()) != 0) {
 					List<iVisualElement> e = allVisualElements(getRoot());
-					String match = "" + Character.toLowerCase(c);
-					for (iVisualElement ee : e) {
+                    String match = String.valueOf(Character.toLowerCase(c));
+                    for (iVisualElement ee : e) {
 						String s = ee.getProperty(keyboardShortcut);
 
 						if (s != null) {
@@ -851,7 +852,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
             // System.out.println(" copying file reference to clipboard ");
             tick = false;
 			File tmp = new PackageTools().newTempFileWithSelected(rootSheetElement, "copied");
-			new PackageTools().copyFileReferenceToClipboard(tmp.getAbsolutePath());
+            PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
 
 			OverlayAnimationManager.notifyAsText(getRoot(), "Copied to clipboard", null);
 
@@ -872,8 +873,9 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 				if (((List) data).get(0) instanceof File) {
 					if (((File) ((List) data).get(0)).getName().endsWith(".fieldpackage")) {
 						OverlayAnimationManager.notifyAsText(getRoot(), "Pasted from clipboard", null);
-						new PackageTools().importFieldPackage(rootSheetElement, ((File) ((List) data).get(0)).getAbsolutePath());
-					}
+                        PackageTools.importFieldPackage(rootSheetElement,
+                                                        ((File) ((List) data).get(0)).getAbsolutePath());
+                    }
 				} else {
 				}
 
@@ -1018,8 +1020,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 			if ((event.stateMask & Platform.getCommandModifier()) != 0 && event.type == SWT.KeyDown) {
 				{
-					String match = "" + Character.toLowerCase(event.character);
-					String s = keyboardShortcut.get(newSource);
+                    String match = String.valueOf(Character.toLowerCase(event.character));
+                    String s = keyboardShortcut.get(newSource);
 					if (s != null) {
 						if (s.equals(match)) {
 							tick = false;
@@ -1030,8 +1032,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 						}
 					}
 				}
-				String match = "" + Character.toLowerCase((char)event.keyCode);
-				String s = keyboardShortcut.get(newSource);
+                String match = String.valueOf(Character.toLowerCase((char) event.keyCode));
+                String s = keyboardShortcut.get(newSource);
 				if (s != null) {
 					if (s.equals(match)) {
 						tick = false;
@@ -1048,7 +1050,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		else if (tick) {
 
 			String m = "";
-			String c = ("" + event.character).toLowerCase();
+            String c = (String.valueOf(event.character)).toLowerCase();
 
 			String match = (m + c).trim().toLowerCase();
 
@@ -1285,8 +1287,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 										// +
 										// ">");
 
-									File tmp = new PackageTools().newTempFileWithSet(to2, copyPastePersisence, o);
-									String ff = templates.templateFolder + to + templates.suffix;
+                                    File tmp = PackageTools.newTempFileWithSet(to2, copyPastePersisence, o);
+                                    String ff = templates.templateFolder + to + templates.suffix;
                                     // System.out.println(" renaming file to <"
                                     // +
 										// ff
@@ -1347,8 +1349,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 				public void update() {
 					File tmp = new PackageTools().newTempFileWithSelected(rootSheetElement, "copied");
-					new PackageTools().copyFileReferenceToClipboard(tmp.getAbsolutePath());
-					OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(rootSheetElement), "Copied to clipboard", null, 1, new Vector4(1, 1, 1, 0.15f));
+                    PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
+                    OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(rootSheetElement), "Copied to clipboard", null, 1, new Vector4(1, 1, 1, 0.15f));
 				}
 			});
 
@@ -1370,8 +1372,9 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 						Object data = c.getData(DataFlavor.javaFileListFlavor);
 						if (((List) data).get(0) instanceof File) {
 							if (((File) ((List) data).get(0)).getName().endsWith(".fieldpackage")) {
-								new PackageTools().importFieldPackage(rootSheetElement, ((File) ((List) data).get(0)).getAbsolutePath());
-							}
+                                PackageTools.importFieldPackage(rootSheetElement,
+                                                                ((File) ((List) data).get(0)).getAbsolutePath());
+                            }
 						} else {
 						}
 
@@ -1795,7 +1798,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 					// x.y +=
 					// window.getFrame().getLocation().y;
 
-				new PackageTools().importFieldPackage(rootSheetElement, templates.templateFolder + to + templates.suffix, x2);
+                PackageTools.importFieldPackage(rootSheetElement, templates.templateFolder + to + templates.suffix, x2);
 
 				OverlayAnimationManager.notifyAsText(getRoot(), "Instantiated '" + to + "'", null);
 
@@ -1843,7 +1846,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 	}
 
 	@NextUpdate(delay = 200)
-	public void quitLater() {
+    public static
+    void quitLater() {
         // System.out.println(" attempting to exit in thread <" +
         // Thread.currentThread() + ">");
 		Runtime.getRuntime().halt(0);

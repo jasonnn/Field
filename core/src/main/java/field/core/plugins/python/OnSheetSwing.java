@@ -85,8 +85,8 @@ public class OnSheetSwing {
 		public void paint(ComponentContainer inside, iCoordinateFrame frameSoFar, boolean visible) {
 			super.paint(inside, frameSoFar, visible);
 			while (disabled > 0) {
-				new MiscNative().enableScreenUpdates();
-				disabled--;
+                MiscNative.enableScreenUpdates();
+                disabled--;
 			}
 		}
 
@@ -150,8 +150,9 @@ public class OnSheetSwing {
 		}
 
 		@NextUpdate(delay = 2)
-		public void deferredClosing(JFrame editingFrame) {
-			editingFrame.setVisible(false);
+        public static
+        void deferredClosing(JFrame editingFrame) {
+            editingFrame.setVisible(false);
 			editingFrame.dispose();
 		}
 	}

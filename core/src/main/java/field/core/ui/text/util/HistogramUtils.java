@@ -44,8 +44,9 @@ public class HistogramUtils {
 		return out;
 	}
 
-	public Rect bounds(Histogram<Number> h) {
-		final float[] minX = { Float.POSITIVE_INFINITY};
+    public static
+    Rect bounds(Histogram<Number> h) {
+        final float[] minX = { Float.POSITIVE_INFINITY};
 		final float[] maxX = { Float.NEGATIVE_INFINITY};
 		final float[] minY = { Float.POSITIVE_INFINITY};
 		final float[] maxY = { Float.NEGATIVE_INFINITY};

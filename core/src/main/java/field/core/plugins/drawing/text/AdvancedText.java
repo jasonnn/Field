@@ -72,8 +72,9 @@ public class AdvancedText {
 		}
 	}
 
-	public void acceptStringWrap(String string, iNativeTextLayoutVisitor visitor, float width, float al, float ju) {
-		throw new IllegalArgumentException(" not implemented ");
+    public static
+    void acceptStringWrap(String string, iNativeTextLayoutVisitor visitor, float width, float al, float ju) {
+        throw new IllegalArgumentException(" not implemented ");
 	}
 
 	public void setFont(String string, int size) {

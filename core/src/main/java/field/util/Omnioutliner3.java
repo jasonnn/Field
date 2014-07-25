@@ -223,8 +223,9 @@ public class Omnioutliner3 {
 		}
 	}
 
-	private void _findAllNodesCalled(Node node, List<Node> ret, String called) {
-		if (node.getNodeName().equals(called)) ret.add(node);
+    private static
+    void _findAllNodesCalled(Node node, List<Node> ret, String called) {
+        if (node.getNodeName().equals(called)) ret.add(node);
 		NodeList c = node.getChildNodes();
 		for (int i = 0; i < c.getLength(); i++) {
 			_findAllNodesCalled(c.item(i), ret, called);
@@ -232,9 +233,9 @@ public class Omnioutliner3 {
 	}
 
 
-
-	protected List<Node> getChildrenNodesCalled(Node node, Pattern called) {
-		NodeList childNodes = node.getChildNodes();
+    protected static
+    List<Node> getChildrenNodesCalled(Node node, Pattern called) {
+        NodeList childNodes = node.getChildNodes();
 		List<Node> ret = new ArrayList<Node>();
 		for (int i = 0; i < childNodes.getLength(); i++) {
 			Node n = childNodes.item(i);

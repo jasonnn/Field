@@ -37,9 +37,10 @@ public class UDPNIOSender {
 		this.channel = channel;
 		setup(channel, port, to);
 	}
-	
-	protected DatagramChannel makeChannel(int local_port){
-		DatagramSocket socket = null;
+
+    protected static
+    DatagramChannel makeChannel(int local_port) {
+        DatagramSocket socket = null;
 		DatagramChannel theChannel = null;
 		try{
 			theChannel = DatagramChannel.open();

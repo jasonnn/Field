@@ -36,8 +36,8 @@ public class ThreedComputingOverride extends SplineComputingOverride {
 	public VisualElementProperty<BasicSceneList> canvasLeft = new VisualElementProperty<BasicSceneList>("canvasLeft");
 	public VisualElementProperty<BasicSceneList> canvasRight = new VisualElementProperty<BasicSceneList>("canvasRight");
 
-	public BasicSceneList_fscshim list = new BasicSceneList_fscshim();
-	public BasicSceneList left = new BasicSceneList();
+    public BasicSceneList_fscshim list = new BasicSceneList_fscshim(forElement);
+    public BasicSceneList left = new BasicSceneList();
 	public BasicSceneList right = new BasicSceneList();
 
 	public VisualElementProperty<Number> orthoDisparity = new VisualElementProperty<Number>("orthoDisparity");
@@ -61,10 +61,16 @@ public class ThreedComputingOverride extends SplineComputingOverride {
 	 * _self.glassComponent.removeMousePeer(arc)
 	 */
 
-	public class BasicSceneList_fscshim extends BasicSceneList implements iHandlesAttributes {
+    public static
+    class BasicSceneList_fscshim extends BasicSceneList implements iHandlesAttributes {
+        final iVisualElement forElement;
 
-		public float width() {
-			return (float) forElement.getFrame(null).w;
+        public
+        BasicSceneList_fscshim(iVisualElement forElement) {this.forElement = forElement;}
+
+        public
+        float width() {
+            return (float) forElement.getFrame(null).w;
 		}
 
 		public float height() {

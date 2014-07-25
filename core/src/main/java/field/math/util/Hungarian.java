@@ -56,9 +56,9 @@ public class Hungarian
 
 	// the actual method
 	native public void perform(Buffer matrix, int rows, int cols, Buffer output);
-	
-	protected void rangeOf(FloatBuffer a, float[] out)
-	{
+
+    protected static
+    void rangeOf(FloatBuffer a, float[] out) {
 		out[0] = Float.NEGATIVE_INFINITY;
 		out[1] = Float.POSITIVE_INFINITY;
 		for(int i=0;i<a.capacity();i++)

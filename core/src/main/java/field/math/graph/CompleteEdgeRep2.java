@@ -860,8 +860,9 @@ public class CompleteEdgeRep2 implements Serializable {
 		return ret;
 	}
 
-	private Edge commonEdge(Face face1, Face face2) {
-		for (int i = 0; i < face1.edges.length; i++)
+    private static
+    Edge commonEdge(Face face1, Face face2) {
+        for (int i = 0; i < face1.edges.length; i++)
 			for (int j = 0; j < face2.edges.length; j++) {
 				if (face1.edges[i] == face2.edges[j])
 					return face1.edges[i];
@@ -869,8 +870,9 @@ public class CompleteEdgeRep2 implements Serializable {
 		return null;
 	}
 
-	private Face findFace(List list, Face isnt) {
-		assert list.size() == 2;
+    private static
+    Face findFace(List list, Face isnt) {
+        assert list.size() == 2;
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i) != isnt)
 				return (Face) list.get(i);
@@ -878,15 +880,17 @@ public class CompleteEdgeRep2 implements Serializable {
 		return null;
 	}
 
-	private Edge findEdgeThatDoesntContain(Edge[] edges, Vertex vtarget) {
-		for (int i = 0; i < edges.length; i++)
+    private static
+    Edge findEdgeThatDoesntContain(Edge[] edges, Vertex vtarget) {
+        for (int i = 0; i < edges.length; i++)
 			if ((edges[i].start != vtarget) && (edges[i].end != vtarget))
 				return edges[i];
 		return null;
 	}
 
-	private List findFace(Face[] nf1, Face[] nf2, Vertex vtarget) {
-		ArrayList list = new ArrayList(1);
+    private static
+    List findFace(Face[] nf1, Face[] nf2, Vertex vtarget) {
+        ArrayList list = new ArrayList(1);
 		for (int i = 0; i < nf1.length; i++)
 			if (indexOf(vtarget, nf1[i].vertex) != -1)
 				list.add(nf1[i]);
@@ -925,8 +929,9 @@ public class CompleteEdgeRep2 implements Serializable {
 		return v;
 	}
 
-	public Vertex otherVertex(Vertex start, Vertex end, Edge[] edges) {
-		for (int i = 0; i < edges.length; i++) {
+    public static
+    Vertex otherVertex(Vertex start, Vertex end, Edge[] edges) {
+        for (int i = 0; i < edges.length; i++) {
 			if (edges[i].start != start && edges[i].start != end)
 				return edges[i].start;
 			if (edges[i].end != end && edges[i].end != end)
@@ -1014,8 +1019,9 @@ public class CompleteEdgeRep2 implements Serializable {
 		}
 	}
 
-	public boolean edgeExists(Vertex o1, Vertex n1) {
-		for (int i = 0; i < o1.edges.size(); i++) {
+    public static
+    boolean edgeExists(Vertex o1, Vertex n1) {
+        for (int i = 0; i < o1.edges.size(); i++) {
             Edge e = o1.edges.get(i);
             if (e.start == n1)
 				return true;
@@ -1054,8 +1060,9 @@ public class CompleteEdgeRep2 implements Serializable {
 		return ret;
 	}
 
-	private boolean noDuplicates(ArrayList ret) {
-		for (int i = 0; i < ret.size(); i++) {
+    private static
+    boolean noDuplicates(ArrayList ret) {
+        for (int i = 0; i < ret.size(); i++) {
 			if (ret.lastIndexOf(ret.get(i)) != ret.indexOf(ret.get(i)))
 				return false;
 		}
@@ -1735,9 +1742,9 @@ public class CompleteEdgeRep2 implements Serializable {
 		_t1.setValue(vertex3.get(3 * i + 0), vertex3.get(3 * i + 1), vertex3.get(3 * i + 2));
 		_t2.setValue(vertex3.get(3 * j + 0), vertex3.get(3 * j + 1), vertex3.get(3 * j + 2));
 		_t3.setValue(vertex3.get(3 * k + 0), vertex3.get(3 * k + 1), vertex3.get(3 * k + 2));
-		_t1.sub(_t1, _t3, _t1);
-		_t2.sub(_t2, _t3, _t2);
-		_t3.cross(_t1, _t2);
+        Vector3.sub(_t1, _t3, _t1);
+        Vector3.sub(_t2, _t3, _t2);
+        _t3.cross(_t1, _t2);
 		return _t3.mag();
 	}
 
@@ -1749,8 +1756,9 @@ public class CompleteEdgeRep2 implements Serializable {
 
 	}
 
-	public Edge findEdge(Edge[] edges, Vertex vertex, Vertex vertex2) {
-		for (int i = 0; i < edges.length; i++) {
+    public static
+    Edge findEdge(Edge[] edges, Vertex vertex, Vertex vertex2) {
+        for (int i = 0; i < edges.length; i++) {
 			Edge e = edges[i];
 			if ((e.start == vertex && e.end == vertex2) || (e.start == vertex2 && e.end == vertex))
 				return e;
@@ -1762,8 +1770,9 @@ public class CompleteEdgeRep2 implements Serializable {
         return findEdge(v2.edges.toArray(new Edge[v2.edges.size()]), v2, v3);
     }
 
-	public Face getFaceBetweenEdges(Edge e1, Edge e2) {
-		for (int i = 0; i < e1.faces.size(); i++) {
+    public static
+    Face getFaceBetweenEdges(Edge e1, Edge e2) {
+        for (int i = 0; i < e1.faces.size(); i++) {
 			for (int j = 0; j < e2.faces.size(); j++) {
 				if (e1.faces.get(i).equals(e2.faces.get(j))) {
                     return e1.faces.get(i);
@@ -1782,8 +1791,9 @@ public class CompleteEdgeRep2 implements Serializable {
 		return -1;
 	}
 
-	public Object oneNotIn(Object[] v1, Object[] v2) {
-		for (int i = 0; i < v1.length; i++) {
+    public static
+    Object oneNotIn(Object[] v1, Object[] v2) {
+        for (int i = 0; i < v1.length; i++) {
 			boolean found = false;
 			for (int j = 0; j < v2.length; j++) {
 				if (v2[j].equals(v1[i]))

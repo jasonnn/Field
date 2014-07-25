@@ -84,12 +84,14 @@ public class MiscNative {
 
 	public native int connexionStart();
 
-	public boolean disableScreenUpdates() {
-		return true;
+    public static
+    boolean disableScreenUpdates() {
+        return true;
 	}
 
-	public boolean disableScreenUpdates(JComponent inside) {
-		// Graphics g = inside.getGraphics();
+    public static
+    boolean disableScreenUpdates(JComponent inside) {
+        // Graphics g = inside.getGraphics();
 		// if (g != null) {
 		// final SurfaceData sd;
 		// if (g instanceof sun.java2d.SunGraphics2D) {
@@ -112,8 +114,9 @@ public class MiscNative {
 		return false;
 	}
 
-	public void doSplash() {
-		//
+    public static
+    void doSplash() {
+        //
 		// new Thread(new Runnable() {
 		// public void run() {
 		// }
@@ -133,8 +136,9 @@ public class MiscNative {
 		});
 	}
 
-	public boolean enableScreenUpdates() {
-		return false;
+    public static
+    boolean enableScreenUpdates() {
+        return false;
 	}
 
 	native public void performFloat(Buffer matrix, int rows, int cols, Buffer output);

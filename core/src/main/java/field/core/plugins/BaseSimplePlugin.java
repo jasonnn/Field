@@ -62,8 +62,9 @@ public abstract class BaseSimplePlugin implements iPlugin {
 		}
 	}
 
-	protected class Overrides extends iVisualElementOverrides.DefaultOverride {
-	}
+    protected static
+    class Overrides extends iVisualElementOverrides.DefaultOverride {
+    }
 
 	protected iVisualElement element;
 	protected iVisualElementOverrides.DefaultOverride overrides;

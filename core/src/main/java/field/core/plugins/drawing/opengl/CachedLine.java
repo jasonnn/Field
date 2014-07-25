@@ -340,8 +340,9 @@ public class CachedLine {
 		}
 	}
 
-	class NotInterpolateable extends Exception {
-	}
+    static
+    class NotInterpolateable extends Exception {
+    }
 
 	protected Object interpolateProperty(Prop property, Object a, Object b, float alpha) throws NotInterpolateable {
 		if (a == null)
@@ -383,8 +384,9 @@ public class CachedLine {
 		return convertBack(oa, r);
 	}
 
-	protected float[] convert(Object o) {
-		if (o instanceof iToFloatArray)
+    protected static
+    float[] convert(Object o) {
+        if (o instanceof iToFloatArray)
             return ((iToFloatArray) o).get();
         if (o instanceof Float)
 			return new float[] { ((Number) o).floatValue() };
@@ -393,8 +395,9 @@ public class CachedLine {
 		return null;
 	}
 
-	protected Object convertBack(Object o, float[] now) {
-		if (o instanceof Vector4)
+    protected static
+    Object convertBack(Object o, float[] now) {
+        if (o instanceof Vector4)
 			return new Vector4(now[0], now[1], now[2], now[3]);
 		if (o instanceof Float)
 			return now[0];

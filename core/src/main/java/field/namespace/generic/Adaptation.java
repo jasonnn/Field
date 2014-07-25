@@ -33,7 +33,7 @@ public class Adaptation {
 
         @Override
         public String toString() {
-            return represents + "";
+            return String.valueOf(represents);
         }
     }
 

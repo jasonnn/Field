@@ -79,8 +79,8 @@ public class MinimalSlider extends JComponent implements iAcceptsInsertRendering
 
 		@Override
 		public String getCurrentRepresentedString() {
-			return value + "";
-		}
+            return String.valueOf(value);
+        }
 
 		@Override
 		public void makeNew() {
@@ -236,8 +236,8 @@ public class MinimalSlider extends JComponent implements iAcceptsInsertRendering
 		if (font == null) {
 			font = new Font(Constants.defaultFont, Font.PLAIN, 8);
 		}
-		String label = BaseMath.toDP(value, 3) + "";
-		g2.setFont(font);
+        String label = BaseMath.toDP(value, 3);
+        g2.setFont(font);
 		g2.setColor(new Color(1, 1, 1, on ? 1f : 0.75f));
 
 		int w = g2.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());

@@ -63,8 +63,9 @@ public class NewTemplates {
 		return aa;
 	}
 
-	private String infoForFile(File ff) {
-		XStream stream = XStreamUtil.newDefaultXStream();
+    private static
+    String infoForFile(File ff) {
+        XStream stream = XStreamUtil.newDefaultXStream();
 
 		try {
 			ObjectInputStream input = stream.createObjectInputStream(new BufferedReader(new FileReader(ff)));
@@ -125,8 +126,9 @@ public class NewTemplates {
 		return new SmallMenu().createMenu(up, r.getFrame(), u);
 	}
 
-	private String trim(String right) {
-		if (right.length() > 40)
+    private static
+    String trim(String right) {
+        if (right.length() > 40)
 			return right.substring(0, 40) + "\u2014";
 		return right;
 	}

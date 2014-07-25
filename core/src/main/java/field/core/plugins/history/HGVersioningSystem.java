@@ -61,8 +61,13 @@ public class HGVersioningSystem extends VersioningSystem {
 	}
 
 	public void rollbackDirectory(String string, long revision) {
-		executeCommand(fullPathToSheetDirectory, new String[] { hgCommand, "revert", "-r", "" + revision, new File(string).getAbsolutePath() });
-	}
+        executeCommand(fullPathToSheetDirectory,
+                       new String[]{hgCommand,
+                                    "revert",
+                                    "-r",
+                                    String.valueOf(revision),
+                                    new File(string).getAbsolutePath()});
+    }
 
 	@Override
 	public void scmAddFile(File path) {

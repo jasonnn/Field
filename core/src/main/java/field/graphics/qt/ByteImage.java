@@ -76,8 +76,9 @@ public class ByteImage {
 		return getHeight();
 	}
 
-	public int samplesPerPixel() {
-		return 4;
+    public static
+    int samplesPerPixel() {
+        return 4;
 	}
 
 	public ByteBuffer getImage() {

@@ -376,8 +376,9 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
 		}
 	}
 
-	public boolean isNosave() {
-		return SystemProperties.getIntProperty("nosave", 0)==1;
+    public static
+    boolean isNosave() {
+        return SystemProperties.getIntProperty("nosave", 0)==1;
 	}
 
 }

@@ -22,9 +22,10 @@ import java.util.Map;
 public class GlobalKeyboardShortcuts {
 
 	static public VisualElementProperty<GlobalKeyboardShortcuts> shortcuts = new VisualElementProperty<GlobalKeyboardShortcuts>("keyboardShortcuts_");
-	
-	public class Shortcut {
-		int keycode = -1;
+
+    public static
+    class Shortcut {
+        int keycode = -1;
 		char character = '\0';
 		int andMask = 0;
 		int equals = 0;

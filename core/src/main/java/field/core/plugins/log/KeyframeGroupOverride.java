@@ -84,7 +84,8 @@ public class KeyframeGroupOverride extends GroupOverride {
 	}
 
 	// a no-op group promise execution
-	public class GroupPromiseExecution implements iExecutesPromise {
+    public static
+    class GroupPromiseExecution implements iExecutesPromise {
 
 		public void addActive(iFloatProvider timeProvider, Promise p) {
 		}

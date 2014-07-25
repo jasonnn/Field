@@ -75,8 +75,9 @@ public class SimpleArrows {
 		return circleAt(p, size);
 	}
 
-	public CachedLine circleAt(Vector2 center, float r) {
-		float k = (float) (4 * (Math.sqrt(2) - 1) / 3);
+    public static
+    CachedLine circleAt(Vector2 center, float r) {
+        float k = (float) (4 * (Math.sqrt(2) - 1) / 3);
 
 		CachedLine c = new CachedLine();
 		c.getInput().moveTo(0, 1);

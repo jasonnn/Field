@@ -11,7 +11,8 @@ import java.util.Map;
 
 public class AdvancedTextToCachedLineCache {
 
-	public class CacheRecord {
+    public static
+    class CacheRecord {
 
 		String font;
 		String text;

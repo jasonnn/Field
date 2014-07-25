@@ -115,24 +115,24 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 
 		{
 
-			String label = "d:  " + BaseMath.toDP(minX, 3) + "";
-			g.setFont(font);
+            String label = "d:  " + BaseMath.toDP(minX, 3);
+            g.setFont(font);
 			g.setColor(baseColor);
 			int w = g.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());
 			g.drawString(label, 10, (int) (size.getHeight() - 10));
 		}
 		{
 
-			String label = "d: " + BaseMath.toDP(maxX, 3) + "";
-			g.setFont(font);
+            String label = "d: " + BaseMath.toDP(maxX, 3);
+            g.setFont(font);
 			g.setColor(baseColor);
 			int w = g.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());
 			g.drawString(label, (int) (size.getWidth() - 10 - w), (int) (size.getHeight() - 10));
 		}
 		{
 
-			String label = "r: " + BaseMath.toDP(maxY, 3) + "";
-			g.setFont(font);
+            String label = "r: " + BaseMath.toDP(maxY, 3);
+            g.setFont(font);
 			g.setColor(baseColor);
 			int w = g.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());
 			g.drawString(label, (int) ((maxYat - minX) / (maxX - minX) * size.getWidth() + 10), (10));
@@ -200,24 +200,24 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 
 		{
 
-			String label = "d:  " + BaseMath.toDP(minX, 3) + "";
-			g.setFont(font);
+            String label = "d:  " + BaseMath.toDP(minX, 3);
+            g.setFont(font);
 			g.setColor(baseColor);
 			int w = g.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());
 			g.drawString(label, 10, (int) (size.getHeight() - 10));
 		}
 		{
 
-			String label = "d: " + BaseMath.toDP(maxX, 3) + "";
-			g.setFont(font);
+            String label = "d: " + BaseMath.toDP(maxX, 3);
+            g.setFont(font);
 			g.setColor(baseColor);
 			int w = g.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());
 			g.drawString(label, (int) (size.getWidth() - 10 - w), (int) (size.getHeight() - 10));
 		}
 		{
 
-			String label = "r: " + BaseMath.toDP(maxY, 3) + "";
-			g.setFont(font);
+            String label = "r: " + BaseMath.toDP(maxY, 3);
+            g.setFont(font);
 			g.setColor(baseColor);
 			int w = g.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());
 			g.drawString(label, (int) ((maxYat - minX) / (maxX - minX) * size.getWidth() + 10), (10));

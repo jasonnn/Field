@@ -21,8 +21,9 @@ public class Mixins {
 		public List<T> getCallList();
 	}
 
-	public <T> T make(final Class<T> t, final iFunction<Object, List<Object>> combine, T... over) {
-		final iMixinProxy<T> m = new iMixinProxy<T>() {
+    public static
+    <T> T make(final Class<T> t, final iFunction<Object, List<Object>> combine, T... over) {
+        final iMixinProxy<T> m = new iMixinProxy<T>() {
 			List<T> callList = new ArrayList<T>();
 
 			public List<T> getCallList() {

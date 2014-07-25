@@ -39,8 +39,8 @@ public class Templating {
 	}
 
 	static public iVisualElement elementFromKnownTemplate(String name, iVisualElement root) throws IOException {
-		File found = new LoadInternalWorkspaceFile().findTemplateCalled(name);
-		if (found == null)
+        File found = LoadInternalWorkspaceFile.findTemplateCalled(name);
+        if (found == null)
 			return null;
 
 		String canonicalPath = found.getCanonicalPath();
@@ -155,13 +155,15 @@ public class Templating {
 		for (Entry<Object, Object> e : es) {
 			VisualElementProperty key = (VisualElementProperty) e.getKey();
 			if (key.containsSuffix("v")) {
-				Object originalText = liwf.getOriginalText(copy, key);
-				if (originalText instanceof String) {
+                Object originalText = LoadInternalWorkspaceFile.getOriginalText(copy, key);
+                if (originalText instanceof String) {
                     boolean c = LoadInternalWorkspaceFile.diff3DoesConflict((String) e.getValue(), (String) originalText, (String) source.getProperty(key));
                     if (c) {
 						if (becomeVisual) {
-							String o = liwf.performThreeWayMerge((String) e.getValue(), (String) source.getProperty(key), (String) originalText);
-							key.set(copy, copy, o);
+                            String o = LoadInternalWorkspaceFile.performThreeWayMerge((String) e.getValue(),
+                                                                                      (String) source.getProperty(key),
+                                                                                      (String) originalText);
+                            key.set(copy, copy, o);
 						} else {
 							performCopy(source, (VisualElement) copy, key, source.getProperty(key));
 						}
@@ -216,7 +218,8 @@ public class Templating {
 					e1.printStackTrace();
 				}
 			}
-			iVisualElementOverrides newOver = new Mixins().make(iVisualElementOverrides.class, Mixins.visitCodeCombiner, over);
+            iVisualElementOverrides newOver =
+                    Mixins.make(iVisualElementOverrides.class, Mixins.visitCodeCombiner, over);
 
 			((iDefaultOverride) newOver).setVisualElement(created.left);
 			created.left.setElementOverride(newOver);

@@ -102,8 +102,8 @@ public class ExecutionGesture {
 				d.getProperties().put(iLinearGraphicsContext.containsText, true);
 				d.getProperties().put(iLinearGraphicsContext.color, new Vector4(Constants.execution_color.x, Constants.execution_color.y, Constants.execution_color.z, 0.5));
 				d.getProperties().put(iLinearGraphicsContext.fillColor, new Vector4(Constants.execution_color.x, Constants.execution_color.y, Constants.execution_color.z, 0.5));
-				d.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "" + i);
-				d.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new Font(Constants.defaultFont, Font.BOLD, 15));
+                d.getInput().setPointAttribute(iLinearGraphicsContext.text_v, String.valueOf(i));
+                d.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new Font(Constants.defaultFont, Font.BOLD, 15));
 
 				GLComponentWindow.getCurrentWindow(null).currentContext.submitLine(d, d.getProperties());
 			}

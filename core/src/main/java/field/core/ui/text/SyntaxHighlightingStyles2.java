@@ -17,19 +17,21 @@ import java.lang.reflect.InvocationTargetException;
 
 public class SyntaxHighlightingStyles2 {
 
-	public static final Color4 tab = new AutoPersist().persist("Color4_tab", new Color4(0, 0, 0, 0.1f));
-	public static final Color4 self = new AutoPersist().persist("Color4_self", new Color4(0.5f, 0.5f, 0.4f, 1f));
-	public static final Color4 localTemp = new AutoPersist().persist("Color4_localTemp", new Color4(0.5f, 0.5f, 0.6f, 1f));
-	public static final Color4 localPersistant = new AutoPersist().persist("Color4_localPersistant", new Color4(0.6f, 0.5f, 0.5f, 1f));
-	public static final Color4 number = new AutoPersist().persist("Color4_number", new Color4(0.6f, 0.8f, 1, 1f));
-	public static final Color4 operator = new AutoPersist().persist("Color4_operator", new Color4(1, 0.7f, 0.75f, 1f));
-	public static final Color4 identifier = new AutoPersist().persist("Color4_identifier", new Color4(1, 1, 1, 1f));
-	public static final Color4 string = new AutoPersist().persist("Color4_string", new Color4(0.7f, 0.7f, 1, 1f));
-	public static final Color4 keyword = new AutoPersist().persist("Color4_keyword", new Color4(0.75f, 0.8f, 1, 1f));
-	public static final Color4 decorator = new AutoPersist().persist("Color4_decorator", new Color4(1.0f, 1.0f, 1.0f, 1f));
-	public static final Color4 comment = new AutoPersist().persist("Color4_comment", new Color4(0.0f, 0.0f, 0.0f, 0.5f));
-	public static final Color4 background = new AutoPersist().persist("Color4_background", new Color4(85 / 255f, 85 / 255f, 85 / 255f, 1f));
-	public static final float[] fontSizeMod = new AutoPersist().persist("FontSizeMod", new float[] { 0 });
+    public static final Color4 tab = AutoPersist.persist("Color4_tab", new Color4(0, 0, 0, 0.1f));
+    public static final Color4 self = AutoPersist.persist("Color4_self", new Color4(0.5f, 0.5f, 0.4f, 1f));
+    public static final Color4 localTemp = AutoPersist.persist("Color4_localTemp", new Color4(0.5f, 0.5f, 0.6f, 1f));
+    public static final Color4 localPersistant =
+            AutoPersist.persist("Color4_localPersistant", new Color4(0.6f, 0.5f, 0.5f, 1f));
+    public static final Color4 number = AutoPersist.persist("Color4_number", new Color4(0.6f, 0.8f, 1, 1f));
+    public static final Color4 operator = AutoPersist.persist("Color4_operator", new Color4(1, 0.7f, 0.75f, 1f));
+    public static final Color4 identifier = AutoPersist.persist("Color4_identifier", new Color4(1, 1, 1, 1f));
+    public static final Color4 string = AutoPersist.persist("Color4_string", new Color4(0.7f, 0.7f, 1, 1f));
+    public static final Color4 keyword = AutoPersist.persist("Color4_keyword", new Color4(0.75f, 0.8f, 1, 1f));
+    public static final Color4 decorator = AutoPersist.persist("Color4_decorator", new Color4(1.0f, 1.0f, 1.0f, 1f));
+    public static final Color4 comment = AutoPersist.persist("Color4_comment", new Color4(0.0f, 0.0f, 0.0f, 0.5f));
+    public static final Color4 background =
+            AutoPersist.persist("Color4_background", new Color4(85 / 255f, 85 / 255f, 85 / 255f, 1f));
+    public static final float[] fontSizeMod = AutoPersist.persist("FontSizeMod", new float[]{0});
 
 	static public void initStyles(Color[] colors, StyledText target) {
 

@@ -167,8 +167,8 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
 
                         if (bytes != null) {
 
-                            if (class_name.lastIndexOf(".") != -1) {
-                                String packageName = class_name.substring(0, class_name.lastIndexOf("."));
+                            if (class_name.lastIndexOf('.') != -1) {
+                                String packageName = class_name.substring(0, class_name.lastIndexOf('.'));
                                 if (!knownPackages.contains(packageName)) {
                                     try {
                                         definePackage(packageName, null, null, null, null, null, null, null);

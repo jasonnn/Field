@@ -224,10 +224,22 @@ public class SelectionSetDriver {
 			if (type == SelectionSetNodeType.label)
 				return getLabel() + " " + smaller("(" + this.getChildren().size() + " " + getContentsDescription() + (this.getChildren().size() == 1 ? "" : "s") + ")");
 			if (type == SelectionSetNodeType.computed)
-				return (getLabel() != null ? (getLabel()) : ("" + payload())) + " " + smaller("(" + this.getChildren().size() + " " + getContentsDescription() + (this.getChildren().size() == 1 ? "" : "s") + ")");
-            
-			return (modifier != SelectionSetModifer.or ? ("(" + modifier + ") ") : "") + (getLabel() != null ? (getLabel()) : ("" + payload())) + "";
-		}
+                return (getLabel() != null ? (getLabel()) : (String.valueOf(payload()))) + " " + smaller("("
+                                                                                                         + this.getChildren()
+                                                                                                               .size()
+                                                                                                         + " "
+                                                                                                         + getContentsDescription()
+                                                                                                         + (this.getChildren()
+                                                                                                                .size()
+                                                                                                            == 1
+                                                                                                            ? ""
+                                                                                                            : "s")
+                                                                                                         + ")");
+
+            return (modifier != SelectionSetModifer.or ? ("(" + modifier + ") ") : "") + (getLabel() != null
+                                                                                          ? (getLabel())
+                                                                                          : (String.valueOf(payload())));
+        }
         
 		protected String getContentsDescription() {
 			return "element";
@@ -544,7 +556,7 @@ public class SelectionSetDriver {
 							iVisualElement element = currentSelectionSet.iterator().next();
 							String name = element.getProperty(iVisualElement.name);
 							File tmp = new PackageTools().newTempFileWithSelected(root, name);
-							new PackageTools().copyFileReferenceToClipboard(tmp.getAbsolutePath());
+                            PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
                             
 							// TODO set flash window
 							// with message
@@ -779,8 +791,8 @@ public class SelectionSetDriver {
 		for (iSelectionAxis ax : selectionAxes) {
 			vp.add(ax.getName());
 		}
-        
-		BetterComboBox button = new BetterComboBox(selectionUI.toolbar, vp.toArray(new String[0])) {
+
+        BetterComboBox button = new BetterComboBox(selectionUI.toolbar, vp.toArray(new String[vp.size()])) {
             
 			@Override
 			public void updateLabels() {
@@ -948,8 +960,11 @@ public class SelectionSetDriver {
 	private void installHelpBrowser(final iVisualElement root) {
 		HelpBrowser h = HelpBrowser.helpBrowser.get(root);
 		ContextualHelp ch = h.getContextualHelp();
-		ch.addContextualHelpForWidget("selection", selectionUI.tree, ch.providerForStaticMarkdownResource("contextual/selection.md"), 50);
-	}
+        ch.addContextualHelpForWidget("selection",
+                                      selectionUI.tree,
+                                      ContextualHelp.providerForStaticMarkdownResource("contextual/selection.md"),
+                                      50);
+    }
     
 	public void addNotibleOverridesClass(final Class/*
                                                      * <? extends
@@ -1133,9 +1148,10 @@ public class SelectionSetDriver {
         
 		return TreeState.save(selectionUI.getTree());
 	}
-    
-	private void saveState(TreeItem item, List<Boolean> bb) {
-		for (int j = 0; j < item.getItemCount(); j++) {
+
+    private static
+    void saveState(TreeItem item, List<Boolean> bb) {
+        for (int j = 0; j < item.getItemCount(); j++) {
 			bb.add(item.getItem(j).getExpanded());
 			if (item.getItem(j).getExpanded()) {
 				saveState(item.getItem(j), bb);
@@ -1205,8 +1221,9 @@ public class SelectionSetDriver {
 	}
     
 	@NextUpdate(delay = 2)
-	protected void markOnly(Set<iVisualElement> currentSet, Set<iVisualElement> newSet) {
-		// suspendSelectionProcessing = true;
+    protected static
+    void markOnly(Set<iVisualElement> currentSet, Set<iVisualElement> newSet) {
+        // suspendSelectionProcessing = true;
 		try {
 			for (iVisualElement c : currentSet) {
 				iComponent component = iVisualElement.localView.get(c);
@@ -1533,14 +1550,16 @@ public class SelectionSetDriver {
 		}
 		return false;
 	}
-    
-	private String shorter(String name) {
-		if (name.length() < 20)
+
+    private static
+    String shorter(String name) {
+        if (name.length() < 20)
 			return name;
 		return name.substring(0, 17) + " ... " + name.substring(name.length() - 3, name.length());
 	}
-    
-	private void sortByName(ArrayList<iVisualElement> q) {
+
+    private static
+    void sortByName(ArrayList<iVisualElement> q) {
         
 		Collections.sort(q, new Comparator<iVisualElement>() {
 			public int compare(iVisualElement o1, iVisualElement o2) {

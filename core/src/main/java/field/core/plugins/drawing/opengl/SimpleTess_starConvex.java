@@ -82,9 +82,10 @@ public abstract class SimpleTess_starConvex {
 
 	abstract protected int nextVertex(Vector3 a, Map<Integer, Object> center);
 	abstract protected void nextFace(int a, int b, int c);
-	
-	private Object div(Object v, Integer c) {
-		if (v==null) return null;
+
+    private static
+    Object div(Object v, Integer c) {
+        if (v==null) return null;
 		if (v instanceof Number)
 			return ((Number)v).floatValue()/c;
 		if (v instanceof Vector2)
@@ -96,8 +97,9 @@ public abstract class SimpleTess_starConvex {
 		return null;
 	}
 
-	private Object add(Object o, Object value) {
-		if (o == null) return value;
+    private static
+    Object add(Object o, Object value) {
+        if (o == null) return value;
 		if (value == null) return o;
 		
 		if (o instanceof Number)

@@ -61,8 +61,8 @@ public class SimpleTextDrawing {
 								f = 1f;
 
 							mesh.open();
-							String s = e.attributes.getMap().get(iLinearGraphicsContext.text_v) + "";
-							float ts = e.attributes.getFloat(iLinearGraphicsContext.textScale_v, 1f);//getGlobalScale();
+                            String s = String.valueOf(e.attributes.getMap().get(iLinearGraphicsContext.text_v));
+                            float ts = e.attributes.getFloat(iLinearGraphicsContext.textScale_v, 1f);//getGlobalScale();
 
 							float z = 0.5f;
 							Object zz = e.attributes.getMap().get(iLinearGraphicsContext.z_v);
@@ -114,8 +114,9 @@ public class SimpleTextDrawing {
 					else
 						font = font.deriveFont(font.getSize() * scale);
 
-					Triple<String, Font, String> c = new Triple<String, Font, String>(string, font, blur + "" + colorFor);
-					RectangularLabel r = cache.get(c);
+                    Triple<String, Font, String> c =
+                            new Triple<String, Font, String>(string, font, blur + String.valueOf(colorFor));
+                    RectangularLabel r = cache.get(c);
 					if (r == null) {
 						r = TextSystem.textSystem.new RectangularLabel(string, font, 0);
 
@@ -234,8 +235,8 @@ public class SimpleTextDrawing {
 								f = 1f;
 
 							mesh.open();
-							String s = e.attributes.getMap().get(iLinearGraphicsContext.text_v) + "";
-							float ts = e.attributes.getFloat(iLinearGraphicsContext.textScale_v, 1f);
+                            String s = String.valueOf(e.attributes.getMap().get(iLinearGraphicsContext.text_v));
+                            float ts = e.attributes.getFloat(iLinearGraphicsContext.textScale_v, 1f);
 
 							float z = 0.5f;
 							Object zz = e.attributes.getMap().get(iLinearGraphicsContext.z_v);
@@ -281,8 +282,9 @@ public class SimpleTextDrawing {
 					else
 						font = font.deriveFont(font.getSize() * scale);
 
-					Triple<String, Font, String> c = new Triple<String, Font, String>(string, font, blur + "" + colorFor);
-					RectangularLabel r = cache.get(c);
+                    Triple<String, Font, String> c =
+                            new Triple<String, Font, String>(string, font, blur + String.valueOf(colorFor));
+                    RectangularLabel r = cache.get(c);
 					if (r == null) {
 						r = TextSystem.textSystem.new RectangularLabel(string, font, 0);
 

@@ -101,8 +101,9 @@ public class TripleQuote {
 		}
 	}
 
-	private void drawHighlightRect(Shape m, Graphics2D g) {
-		g.setColor(new Color(0, 0, 0, 0.1f));
+    private static
+    void drawHighlightRect(Shape m, Graphics2D g) {
+        g.setColor(new Color(0, 0, 0, 0.1f));
 		g.fill(m);
 		g.draw(m);
 	}

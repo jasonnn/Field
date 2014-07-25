@@ -13,8 +13,9 @@ import java.util.LinkedHashSet;
  */
 public class KeyboardControlledCamera extends CoordinateFrameCamera implements KeyListener {
 
-	class CharacterIsDown {
-		char character;
+    static
+    class CharacterIsDown {
+        char character;
 
 		boolean isShift;
 		int code;

@@ -37,7 +37,10 @@ public class ElementFileSystemTreePlugin extends BaseSimplePlugin {
 	private void installHelpBrowser(final iVisualElement root) {
 		HelpBrowser h = HelpBrowser.helpBrowser.get(root);
 		ContextualHelp ch = h.getContextualHelp();
-		ch.addContextualHelpForWidget("filesyste", efst.tree, ch.providerForStaticMarkdownResource("contextual/filesystem.md"), 50);
-	}
+        ch.addContextualHelpForWidget("filesyste",
+                                      efst.tree,
+                                      ContextualHelp.providerForStaticMarkdownResource("contextual/filesystem.md"),
+                                      50);
+    }
 
 }

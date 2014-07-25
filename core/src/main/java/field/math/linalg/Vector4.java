@@ -160,8 +160,9 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 		return Py.java2py(r);
 	}
 
-	public int __len__() {
-		return 4;
+    public static
+    int __len__() {
+        return 4;
 	}
 
 	public void __setitem__(int value, PyObject v) {

@@ -82,8 +82,9 @@ public class BetterComboBoxToolItem {
 
 	}
 
-	private String dehtml(String string) {
-		return string.replaceAll("<(.+?)>", "");
+    private static
+    String dehtml(String string) {
+        return string.replaceAll("<(.+?)>", "");
 	}
 
 	public void addOption(String label) {
@@ -177,7 +178,8 @@ public class BetterComboBoxToolItem {
 		} while (shouldSkip(currentlySelected) && n < 100);
 	}
 
-	protected boolean shouldSkip(int index) {
-		return false;
+    protected static
+    boolean shouldSkip(int index) {
+        return false;
 	}
 }

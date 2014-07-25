@@ -127,11 +127,11 @@ public class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializabl
 	}
 
 	public void registerListener(iNotification<iMutable<C>> note) {
-		notes.add(new MWeakReference<iNotification<iMutable<C>>>(note));
-	}
-	
-	public class MWeakReference<T> extends WeakReference<T>
-	{
+        notes.add(new MWeakReference(note));
+    }
+
+    public static
+    class MWeakReference<T> extends WeakReference<T> {
 
 		public MWeakReference(T referent) {
 			super(referent);

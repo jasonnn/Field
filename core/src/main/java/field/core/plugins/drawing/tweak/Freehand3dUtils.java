@@ -61,7 +61,8 @@ public class Freehand3dUtils {
 		return l;
 	}
 
-	private Vector3 singleProject(Vector2 v, Projector p, State s, Rect frame) {
+    private static
+    Vector3 singleProject(Vector2 v, Projector p, State s, Rect frame) {
 
 		Vector3 o1 = new Vector3();
 		Vector3 o2 = new Vector3();

@@ -15,8 +15,9 @@ public class DynamicFrameRateCuller {
 
 	static float targetFPS = 25f;
 
-	public void enter() {
-		long time = System.currentTimeMillis();
+    public static
+    void enter() {
+        long time = System.currentTimeMillis();
 
 		long delta = time - lastAt;
 		if (delta > 500)
@@ -31,8 +32,9 @@ public class DynamicFrameRateCuller {
 		inside = true;
 	}
 
-	public void exit() {
-		inside = false;
+    public static
+    void exit() {
+        inside = false;
 	}
 
 	static WeakHashMap<Object, Integer> last = new WeakHashMap<Object, Integer>();

@@ -26,11 +26,12 @@ public class GraphNodeToTree {
 
 	}
 
-	private void populate(iMutableContainer m, Widget i) {
-		
-		TreeItem item = i instanceof TreeItem ? new TreeItem(((TreeItem)i), 0) : new TreeItem((Tree)i, 0);
-		item.setText(""+m);
-		item.setData(m.payload());
+    private static
+    void populate(iMutableContainer m, Widget i) {
+
+        TreeItem item = i instanceof TreeItem ? new TreeItem(((TreeItem)i), 0) : new TreeItem((Tree)i, 0);
+        item.setText(String.valueOf(m));
+        item.setData(m.payload());
 
 		List<iMutableContainer> c = m.getChildren();
 		for(iMutableContainer cc : c)

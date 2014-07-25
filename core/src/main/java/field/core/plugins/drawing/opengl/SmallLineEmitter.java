@@ -106,8 +106,9 @@ public abstract class SmallLineEmitter {
 		}
 	}
 
-	private List<Object> subdivide(List<Object> propertiesA, List<Object> propertiesB) {
-		List<Object> q = new ArrayList<Object>();
+    private static
+    List<Object> subdivide(List<Object> propertiesA, List<Object> propertiesB) {
+        List<Object> q = new ArrayList<Object>();
 		for (int i = 0; i < propertiesA.size(); i++) {
 			Object a = propertiesA.get(i);
 			Object b = propertiesB.get(i);

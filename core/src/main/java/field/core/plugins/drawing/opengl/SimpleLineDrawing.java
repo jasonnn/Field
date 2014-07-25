@@ -1110,8 +1110,9 @@ public class SimpleLineDrawing {
 
 	static public int cacheUniq = 0;
 
-	private Float uniqueFor(BiMap<Float, iDynamicMesh> allreadyConstructedLines) {
-		float f = (float) Math.random() + cacheUniq;
+    private static
+    Float uniqueFor(BiMap<Float, iDynamicMesh> allreadyConstructedLines) {
+        float f = (float) Math.random() + cacheUniq;
 		while (allreadyConstructedLines.containsKey(f + cacheUniq)) {
 			cacheUniq++;
 			f = (float) Math.random();
@@ -1162,8 +1163,9 @@ public class SimpleLineDrawing {
 		return nl;
 	}
 
-	public DynamicMesh_long getCachedMeshLate(BaseGLGraphicsContext context) {
-		float f = -2;
+    public static
+    DynamicMesh_long getCachedMeshLate(BaseGLGraphicsContext context) {
+        float f = -2;
 		DynamicMesh_long nl = DynamicMesh_long.unshadedMesh(StandardPass.postRender);
 		context.getVertexProgram().addChild(nl.getUnderlyingGeometry());
 
@@ -1230,20 +1232,27 @@ public class SimpleLineDrawing {
 		return this;
 	}
 
-	public float widthFor(BaseGLGraphicsContext context, Dict properties) {
-		Number f = properties.get(iLinearGraphicsContext.thickness);
+    public static
+    float widthFor(BaseGLGraphicsContext context, Dict properties) {
+        Number f = properties.get(iLinearGraphicsContext.thickness);
 		Number m = context.getGlobalProperties().get(iLinearGraphicsContext.strokeThicknessMul);
 
 		return (f == null ? 1 : f.floatValue()) * (m == null ? 1 : m.floatValue());
 	}
 
-	private void ensureParent(BaseGLGraphicsContext context, iDynamicMesh already) {
-		if (!context.getVertexProgram().isChild(already.getUnderlyingGeometry())) {
+    private static
+    void ensureParent(BaseGLGraphicsContext context, iDynamicMesh already) {
+        if (!context.getVertexProgram().isChild(already.getUnderlyingGeometry())) {
 			context.getVertexProgram().addChild(already.getUnderlyingGeometry());
 		}
 	}
 
-	public void drawInto(CachedLine line, Dict properties, iDynamicMesh outputLine, BaseGLGraphicsContext context, Small3dLineEmitter_long lineEmitter) {
+    public static
+    void drawInto(CachedLine line,
+                  Dict properties,
+                  iDynamicMesh outputLine,
+                  BaseGLGraphicsContext context,
+                  Small3dLineEmitter_long lineEmitter) {
 
 		CachedLineCursor cursor = new CachedLineCursor(line);
 

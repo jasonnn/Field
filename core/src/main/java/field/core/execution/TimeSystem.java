@@ -131,8 +131,9 @@ public class TimeSystem implements iDoubleProvider {
 		return processingTime;
 	}
 
-	public boolean isSpeculative() {
-		return false;
+    public static
+    boolean isSpeculative() {
+        return false;
 	}
 
 	public boolean setSuppressNewStackAdditions(boolean supress) {

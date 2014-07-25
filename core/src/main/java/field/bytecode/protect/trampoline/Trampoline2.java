@@ -350,7 +350,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         }
     }
 
-    protected boolean prohibitExtension(String substring) {
+    protected static
+    boolean prohibitExtension(String substring) {
         String p = SystemProperties.getProperty("withoutExtensions", null);
         if (p == null)
             return false;
@@ -363,7 +364,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         return false;
     }
 
-    protected boolean alsoAcceptExtension(String substring) {
+    protected static
+    boolean alsoAcceptExtension(String substring) {
         String p = SystemProperties.getProperty("withExtensions", null);
         if (p == null)
             return false;
@@ -378,7 +380,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
     //static public List<String> extendedLibraryPaths = new ArrayList<String>();
 
-    private void extendLibraryPath(String s) {
+    private static
+    void extendLibraryPath(String s) {
         ClassPath.getInstance().addLibraryPath(s);
         //extendedLibraryPaths.add(s);
         System.setProperty("java.library.path", System.getProperty("java.library.path") + File.pathSeparator + s);
@@ -483,7 +486,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
     }
 
-    protected String resourceNameForClassName(String class_name) {
+    protected static
+    String resourceNameForClassName(String class_name) {
         return class_name.replace('.', File.separatorChar) + ".class";
     }
 
@@ -628,7 +632,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         return ks;
     }
 
-    private String pathify(String value) {
+    private static
+    String pathify(String value) {
         try {
             if (new File(value).exists())
                 return new File(value).getCanonicalPath();
@@ -639,7 +644,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         }
     }
 
-    private void printInfo() {
+    private static
+    void printInfo() {
         if (debug) {
             // System.out.println("/n/n");
 
@@ -653,7 +659,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         }
     }
 
-    protected boolean check() {
+    protected static
+    boolean check() {
         // if (!debug)
         return true;
 //        Vector vThere = (Vector) ReflectionTools.illegalGetObject(deferTo, "classes");

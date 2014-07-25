@@ -52,7 +52,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                                          Map<String, Object> parameterName,
                                          String methodReturnName) {
                     try {
-                        return support.exit(this.name, fromThis, returningThis, parameterName, className);
+                        return DispatchSupport.exit(this.name, fromThis, returningThis, parameterName, className);
                     } catch (Throwable t) {
                         t.printStackTrace();
                         throw new IllegalArgumentException(t);
@@ -66,7 +66,13 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                                         Map<String, Object> parameterName,
                                         Object[] argArray) {
                     try {
-                        support.enter(this.name, fromName, fromThis, methodName, parameterName, argArray, className);
+                        DispatchSupport.enter(this.name,
+                                              fromName,
+                                              fromThis,
+                                              methodName,
+                                              parameterName,
+                                              argArray,
+                                              className);
                     } catch (Throwable t) {
                         t.printStackTrace();
                         throw new IllegalArgumentException(t);

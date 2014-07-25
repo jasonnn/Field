@@ -41,7 +41,7 @@ class DispatchOverTopologyHandler implements EntryHandler, ExitHandler {
                      Map<String, Object> parameters,
                      Object[] argArray) {
         try {
-            support.enter(name, fromName, fromThis, methodName, parameters, argArray, className);
+            DispatchSupport.enter(name, fromName, fromThis, methodName, parameters, argArray, className);
         } catch (Throwable t) {
             t.printStackTrace();
             throw new IllegalArgumentException(t);
@@ -58,7 +58,7 @@ class DispatchOverTopologyHandler implements EntryHandler, ExitHandler {
                       Map<String, Object> parameters,
                       String methodReturnName) {
         try {
-            return support.exit(this.name, fromThis, returningThis, parameters, className);
+            return DispatchSupport.exit(this.name, fromThis, returningThis, parameters, className);
         } catch (Throwable t) {
             t.printStackTrace();
             throw new IllegalArgumentException(t);

@@ -132,7 +132,7 @@ public class JavaDocCache {
 //		}
 
         if (r == null && !triedAndFailed.contains(className)) {
-            String matchName = className.substring(className.lastIndexOf(".") + 1);
+            String matchName = className.substring(className.lastIndexOf('.') + 1);
 
             for (JavaClass c : classes) {
                 if (c.getName().equals(matchName)) {

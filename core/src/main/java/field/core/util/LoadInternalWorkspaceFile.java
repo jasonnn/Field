@@ -41,7 +41,7 @@ public class LoadInternalWorkspaceFile {
 		public boolean mergeToProperty(boolean visualOnConflict) throws IOException {
 			String currentProperty = (String) property.get(inside);
 			String currentFile = new LoadInternalWorkspaceFile().loadPlainText(internalFile);
-			String ancestor = (String) new LoadInternalWorkspaceFile().getOriginalText(inside, property);
+            String ancestor = (String) LoadInternalWorkspaceFile.getOriginalText(inside, property);
 
 			// the fast cases
 			if (currentProperty.equals(ancestor)) {
@@ -54,8 +54,9 @@ public class LoadInternalWorkspaceFile {
 				boolean conflict = diff3DoesConflict(currentProperty, ancestor, currentFile);
 				if (conflict) {
 					if (visualOnConflict) {
-						String m = new LoadInternalWorkspaceFile().performThreeWayMerge(currentProperty, currentFile, ancestor);
-						copyToProperty();
+                        String m =
+                                LoadInternalWorkspaceFile.performThreeWayMerge(currentProperty, currentFile, ancestor);
+                        copyToProperty();
 						property.set(inside, inside, m);
 						return true;
 					} else {
@@ -145,8 +146,9 @@ public class LoadInternalWorkspaceFile {
 		targetProperty.set(targetElement, targetElement, loadPlainText(filename));
 	}
 
-	public Object  getOriginalText(iVisualElement targetElement, VisualElementProperty<String> targetProperty) {
-		VersioningSystem vs = StandardFluidSheet.versioningSystem.get(targetElement);
+    public static
+    Object getOriginalText(iVisualElement targetElement, VisualElementProperty<String> targetProperty) {
+        VersioningSystem vs = StandardFluidSheet.versioningSystem.get(targetElement);
 		Object o = new HGTools(vs).getOriginatingCopyFor(targetElement.getUniqueID() + "/" + targetProperty.getName() + ".property");
 		return o;
 	}
@@ -207,8 +209,9 @@ public class LoadInternalWorkspaceFile {
 
 	}
 
-	public String performThreeWayMerge(String left, String right, String ancestor) throws IOException {
-		File f1 = File.createTempFile("currentProperty", "field");
+    public static
+    String performThreeWayMerge(String left, String right, String ancestor) throws IOException {
+        File f1 = File.createTempFile("currentProperty", "field");
 		File f2 = File.createTempFile("currentFile", "field");
 		File f3 = File.createTempFile("ancestor", "field");
 		File f4 = File.createTempFile("output", "field");
@@ -242,8 +245,9 @@ public class LoadInternalWorkspaceFile {
 		return s.toString();
 	}
 
-	public File findTemplateCalled(final String templateName) {
-		File dir = new File(SystemProperties.getDirProperty("versioning.dir"));
+    public static
+    File findTemplateCalled(final String templateName) {
+        File dir = new File(SystemProperties.getDirProperty("versioning.dir"));
 		File[] files = dir.listFiles(new FileFilter() {
 			public boolean accept(File pathname) {
 				try {

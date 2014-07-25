@@ -392,8 +392,9 @@ public class OnCanvasLines {
 		}
 	}
 
-	protected Object filter(PyObject o) {
-		if (o instanceof PyObject) {
+    protected static
+    Object filter(PyObject o) {
+        if (o instanceof PyObject) {
             PyObject ll = o.__getattr__("line");
             if (ll != null) {
 				Object cl = ll.__tojava__(CachedLine.class);
@@ -466,8 +467,9 @@ public class OnCanvasLines {
 		return l;
 	}
 
-	public class DirectLayer {
-		private CachedLineLayer line;
+    public static
+    class DirectLayer {
+        private CachedLineLayer line;
 		private CachedLineLayer mesh;
 		private CachedLineLayer point;
 		private List<CachedLine> fallback;

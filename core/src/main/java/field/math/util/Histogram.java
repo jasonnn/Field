@@ -257,8 +257,8 @@ public class Histogram<T> implements iHistogram<T>, Serializable {
 
 	@Override
 	public String toString() {
-		return "" + counts;
-	}
+        return String.valueOf(counts);
+    }
 
 	public float visit(T t, float p) {
 		MutableFloat f = counts.get(t);

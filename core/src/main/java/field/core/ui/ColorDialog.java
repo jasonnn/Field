@@ -184,8 +184,9 @@ public class ColorDialog extends JDialog implements ChangeListener {
 		super.paint(g);
 	}
 
-	private float clamp(float v) {
-		return Math.max(0F, Math.min(1F, v));
+    private static
+    float clamp(float v) {
+        return Math.max(0F, Math.min(1F, v));
 	}
 
 	public void setColor(Color color) {
@@ -595,10 +596,10 @@ public class ColorDialog extends JDialog implements ChangeListener {
 
 	public class ColorSlider extends JComponent {
 		private ColorPanel panel;
-		private final int WIDTH_OFFSET = 8;
-		private final int HALF_WIDTH_OFFSET = WIDTH_OFFSET / 2;
-		private final int HEIGHT_OFFSET = 10;
-		private final int ARROW_HEIGHT = 6;
+        private static final int WIDTH_OFFSET = 8;
+        private final int HALF_WIDTH_OFFSET = WIDTH_OFFSET / 2;
+        private static final int HEIGHT_OFFSET = 10;
+        private static final int ARROW_HEIGHT = 6;
 
 		public ColorSlider(ColorPanel panel) {
 			this.panel = panel;

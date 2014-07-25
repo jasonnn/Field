@@ -43,8 +43,9 @@ public class AppleScript {
 		return scrub(o);
 	}
 
-	private String scrub(String o) {
-		StringBuffer b = new StringBuffer(o.length());
+    private static
+    String scrub(String o) {
+        StringBuffer b = new StringBuffer(o.length());
 		for(int i=0;i<o.length();i++)
 		{
 			char c = o.charAt(i);

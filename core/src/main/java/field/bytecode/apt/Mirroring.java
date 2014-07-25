@@ -547,11 +547,13 @@ public class Mirroring {
 			};
 		}
 
-		public <A extends t_class> iFunction<Collection<? extends Object>, t_accepts> function(final Collection<A> to) {
-			return new iFunction<Collection<? extends Object>, t_accepts>() {
-				@SuppressWarnings("unchecked")
-				public Collection<? extends Object> f(t_accepts in) {
-					if (to.size() == 0)
+        public
+        <A extends t_class> iFunction<Collection<?>, t_accepts> function(final Collection<A> to) {
+            return new iFunction<Collection<?>, t_accepts>() {
+                @SuppressWarnings("unchecked")
+                public
+                Collection<?> f(t_accepts in) {
+                    if (to.size() == 0)
 						return Collections.EMPTY_LIST;
 					if (to.size() == 1)
 						return Collections.singletonList(invoke(to.iterator().next(), in));
@@ -651,9 +653,10 @@ public class Mirroring {
 			};
 		}
 
-		public <A extends t_class> iFunction<Collection<? extends Object>, Object> function(final Collection<A> to) {
-			return new iFunction<Collection<? extends Object>, Object>() {
-				@SuppressWarnings("unchecked")
+        public
+        <A extends t_class> iFunction<Collection<?>, Object> function(final Collection<A> to) {
+            return new iFunction<Collection<?>, Object>() {
+                @SuppressWarnings("unchecked")
 				public Collection<Object> f(Object in) {
 					for (A a : to)
 						invoke(to);

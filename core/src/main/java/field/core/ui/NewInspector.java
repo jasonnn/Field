@@ -90,8 +90,9 @@ public class NewInspector {
 		this.menu = menu;
 	}
 
-	public Inspected<String, TextControl> debugTextControl(String name, final String s) {
-		Inspected<String, TextControl> i = new Inspected<String, TextControl>() {
+    public static
+    Inspected<String, TextControl> debugTextControl(String name, final String s) {
+        Inspected<String, TextControl> i = new Inspected<String, TextControl>() {
 
 			@Override
 			public String getValue() {
@@ -115,8 +116,9 @@ public class NewInspector {
 		return i;
 	}
 
-	public Inspected<Integer, IntControl> debugIntControl(String name, final Integer s) {
-		Inspected<Integer, IntControl> i = new Inspected<Integer, IntControl>() {
+    public static
+    Inspected<Integer, IntControl> debugIntControl(String name, final Integer s) {
+        Inspected<Integer, IntControl> i = new Inspected<Integer, IntControl>() {
 
 			@Override
 			public Integer getValue() {
@@ -140,8 +142,9 @@ public class NewInspector {
 		return i;
 	}
 
-	public Inspected debugColorControl(String name, final Vector4 s) {
-		Inspected<Vector4, ColorControl> i = new Inspected<Vector4, ColorControl>() {
+    public static
+    Inspected debugColorControl(String name, final Vector4 s) {
+        Inspected<Vector4, ColorControl> i = new Inspected<Vector4, ColorControl>() {
 
 			@Override
 			public Vector4 getValue() {
@@ -165,8 +168,9 @@ public class NewInspector {
 		return i;
 	}
 
-	public Inspected debugBooleanControl(String name, final Boolean s) {
-		Inspected<Boolean, BooleanControl> i = new Inspected<Boolean, BooleanControl>() {
+    public static
+    Inspected debugBooleanControl(String name, final Boolean s) {
+        Inspected<Boolean, BooleanControl> i = new Inspected<Boolean, BooleanControl>() {
 
 			@Override
 			public Boolean getValue() {
@@ -484,8 +488,8 @@ public class NewInspector {
 
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			i.setValue((int) Float.parseFloat("" + textField.getValue()));
-		}
+            i.setValue((int) Float.parseFloat(String.valueOf(textField.getValue())));
+        }
 
 		@Override
 		public void paint(Graphics g) {

@@ -253,11 +253,11 @@ public class ExecutionRuler implements iRuler {
 			if (minIs == null && selectionStart == selectionEnd) {
 
 				String text = p.getText();
-				int a = text.lastIndexOf("\n", caretPosition - 1);
-				if (a == -1)
+                int a = text.lastIndexOf('\n', caretPosition - 1);
+                if (a == -1)
 					a = 0;
-				int b = text.indexOf("\n", caretPosition);
-				if (b == -1)
+                int b = text.indexOf('\n', caretPosition);
+                if (b == -1)
 					b = text.length();
 				String s = text.substring(a, b);
 				minIs = getExecutedAreas().execute(a + 2, b - 1, s);
@@ -439,14 +439,16 @@ public class ExecutionRuler implements iRuler {
 			if (pix > 2000)
 				break;
 
-			Point e = g.textExtent("" + (i + 1));
+            Point e = g.textExtent(String.valueOf(i + 1));
 
 			if ((last + 1) / 10 != (i + 1) / 10)
 				g.setAlpha(128);
 			else
 				g.setAlpha(64);
 
-            g.drawString("" + (i + 1), ruler.getClientArea().width - 5 - e.x, pix + 4 + (Platform.isLinux() ? -2 : 0));
+            g.drawString(String.valueOf(i + 1),
+                         ruler.getClientArea().width - 5 - e.x,
+                         pix + 4 + (Platform.isLinux() ? -2 : 0));
             at += splat[i].length() + 1;
 
 			last = i;

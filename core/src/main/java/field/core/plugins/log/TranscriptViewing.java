@@ -1,9 +1,9 @@
 package field.core.plugins.log;
 
-import field.bytecode.protect.iProvidesQueue;
-import field.bytecode.protect.iRegistersUpdateable;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.InQueue;
+import field.bytecode.protect.iProvidesQueue;
+import field.bytecode.protect.iRegistersUpdateable;
 import field.core.Constants;
 import field.core.dispatch.iVisualElement;
 import field.core.plugins.log.AssemblingLogging.Link;
@@ -67,8 +67,9 @@ public class TranscriptViewing {
 		}
 
 		@InQueue
-		protected void removeChild(LoggingEventModel model, LoggingEventModel child) {
-			model.removeChild(child);
+        protected static
+        void removeChild(LoggingEventModel model, LoggingEventModel child) {
+            model.removeChild(child);
 		}
 		
 		@Override
@@ -131,8 +132,9 @@ public class TranscriptViewing {
 		}
 
 		@InQueue
-		protected void removeChild(LoggingEventModel model, LoggingEventModel child) {
-			model.removeChild(child);
+        protected static
+        void removeChild(LoggingEventModel model, LoggingEventModel child) {
+            model.removeChild(child);
 		}
 		
 		@Override
@@ -214,8 +216,9 @@ public class TranscriptViewing {
 		}
 
 		@InQueue
-		protected void insertParent(LoggingEventModel parent, LoggingEventModel intermediate, LoggingEventModel child) {
-			if (intermediate == null)
+        protected static
+        void insertParent(LoggingEventModel parent, LoggingEventModel intermediate, LoggingEventModel child) {
+            if (intermediate == null)
 				return;
 
 			if (!parent.getChildren().contains(intermediate))
@@ -226,8 +229,9 @@ public class TranscriptViewing {
 		}
 
 		@InQueue
-		protected void removeChild(LoggingEventModel model, LoggingEventModel child) {
-			model.removeChild(child);
+        protected static
+        void removeChild(LoggingEventModel model, LoggingEventModel child) {
+            model.removeChild(child);
 		}
 		
 		@Override
@@ -306,13 +310,15 @@ public class TranscriptViewing {
 		}
 
 		@InQueue
-		protected void addChild(LoggingEventModel model, LoggingEventModel child) {
-			model.addChild(child);
+        protected static
+        void addChild(LoggingEventModel model, LoggingEventModel child) {
+            model.addChild(child);
 		}
 
 		@InQueue
-		protected void removeChild(LoggingEventModel model, LoggingEventModel child) {
-			model.removeChild(child);
+        protected static
+        void removeChild(LoggingEventModel model, LoggingEventModel child) {
+            model.removeChild(child);
 		}
 		
 		@Override

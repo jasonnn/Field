@@ -61,7 +61,8 @@ public class NanoHTTPD {
     /**
      * HTTP response. Return one of these from serve().
      */
-    public class Response {
+    public static
+    class Response {
         /**
          * HTTP status code after processing, e.g. "200 OK", HTTP_OK
          */
@@ -462,8 +463,9 @@ public class NanoHTTPD {
      */
     public Response serveFile(String uri, Properties header, File homeDir, boolean allowDirectoryListing) {
         // Make sure we won't die of an exception later
-        if (!homeDir.isDirectory())
-            return new Response(HTTP_INTERNALERROR, MIME_PLAINTEXT, "INTERNAL ERRROR: serveFile(): given homeDir is not a directory.");
+        if (!homeDir.isDirectory()) return new Response(HTTP_INTERNALERROR,
+                                                        MIME_PLAINTEXT,
+                                                        "INTERNAL ERRROR: serveFile(): given homeDir is not a directory.");
 
         // Remove URL arguments
         uri = uri.trim().replace(File.separatorChar, '/');
@@ -484,7 +486,13 @@ public class NanoHTTPD {
             // directory, send a redirect.
             if (!uri.endsWith("/")) {
                 uri += "/";
-                Response r = new Response(HTTP_REDIRECT, MIME_HTML, "<html><body>Redirected: <a href=\"" + uri + "\">" + uri + "</a></body></html>");
+                Response r = new Response(HTTP_REDIRECT,
+                                          MIME_HTML,
+                                          "<html><body>Redirected: <a href=\""
+                                          + uri
+                                          + "\">"
+                                          + uri
+                                          + "</a></body></html>");
                 r.addHeader("Location", uri);
                 return r;
             }
@@ -568,8 +576,8 @@ public class NanoHTTPD {
             FileInputStream fis = new FileInputStream(f);
             fis.skip(startFrom);
             Response r = new Response(HTTP_OK, mime, fis);
-            r.addHeader("Content-length", "" + (f.length() - startFrom));
-            r.addHeader("Content-range", "" + startFrom + "-" + (f.length() - 1) + "/" + f.length());
+            r.addHeader("Content-length", String.valueOf(f.length() - startFrom));
+            r.addHeader("Content-range", startFrom + "-" + (f.length() - 1) + "/" + f.length());
             return r;
         } catch (IOException ioe) {
             return new Response(HTTP_FORBIDDEN, MIME_PLAINTEXT, "FORBIDDEN: Reading file failed.");

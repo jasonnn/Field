@@ -121,7 +121,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
 
             loadLocal(exceptionLocal);
@@ -144,7 +144,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             pop();
 
@@ -157,7 +157,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             unbox(ASMType.INT_TYPE);
 
@@ -170,7 +170,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             unbox(ASMType.FLOAT_TYPE);
 
@@ -182,7 +182,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             checkCast(onMethod.getASMReturnType());
             //if (StandardTrampoline.debug)

@@ -1,7 +1,7 @@
 package field.core.util;
 
-import field.bytecode.protect.trampoline.Trampoline2;
 import field.bytecode.protect.trampoline.ClassLoadedNotification;
+import field.bytecode.protect.trampoline.Trampoline2;
 import field.core.Platform;
 import field.core.execution.PythonInterface;
 import field.launch.iUpdateable;
@@ -67,15 +67,15 @@ public class BetterPythonConstructors implements ClassLoadedNotification {
                         clazz = n.split("\\$")[1];
 						pack = n.split("\\$")[0];
 
-						String pack2 = pack.substring(0, pack.lastIndexOf("."));
-						String clazz2 = pack.substring(pack.lastIndexOf(".") + 1);
+                        String pack2 = pack.substring(0, pack.lastIndexOf('.'));
+                        String clazz2 = pack.substring(pack.lastIndexOf('.') + 1);
 
                         //System.out.println(" import <" + clazz2 + "> <" + pack2 + ">");
                         PythonInterface.getPythonInterface().importJava(pack2, clazz2);
 					} else {
-						pack = n.substring(0, n.lastIndexOf("."));
-						clazz = n.substring(n.lastIndexOf(".") + 1);
-					}
+                        pack = n.substring(0, n.lastIndexOf('.'));
+                        clazz = n.substring(n.lastIndexOf('.') + 1);
+                    }
                     //System.out.println(" import2 <" + clazz + "> <" + pack + ">");
 
 					PythonInterface.getPythonInterface().importJava(pack, clazz);

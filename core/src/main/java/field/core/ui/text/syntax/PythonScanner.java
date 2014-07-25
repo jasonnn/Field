@@ -12,8 +12,9 @@ import java.util.regex.Pattern;
 @Woven
 public class PythonScanner {
 
-	public class Cache {
-		int advance;
+    public static
+    class Cache {
+        int advance;
 
 		int token;
 
@@ -24,8 +25,9 @@ public class PythonScanner {
 		}
 	}
 
-	public class Token {
-		private final Pattern pattern;
+    public static
+    class Token {
+        private final Pattern pattern;
 
 		int num;
 
@@ -66,7 +68,8 @@ public class PythonScanner {
 		tokens.add(new Token("^[\uf800-\uff00]", TokenTypes.embedded_control.ordinal()));
 
 		// a decorator
-		tokens.add(new Token("^@\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*", TokenTypes.decorator.ordinal()));
+        tokens.add(new Token("^@\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*",
+                             TokenTypes.decorator.ordinal()));
 
 		// a # comment
 		tokens.add(new Token("^#.*", TokenTypes.comment.ordinal()));
@@ -99,9 +102,10 @@ public class PythonScanner {
 		tokens.add(new Token("^\\p{Space}+", TokenTypes.whitespace.ordinal()));
 
 		// a keyword
-		tokens.add(new Token("(^and|^del|^from|^not|^while|^as|^elif|^global|^or|^with|^assert|^else|^if|^pass|^yield|^break|^except|^import|^print|^class|^exec|^in|^raise|^continue|^finally|^is|^return|^def|^for|^lambda|^try)[\\p{Space}$]", TokenTypes.keyword.ordinal()));
-		
-		// an identifier
+        tokens.add(new Token("(^and|^del|^from|^not|^while|^as|^elif|^global|^or|^with|^assert|^else|^if|^pass|^yield|^break|^except|^import|^print|^class|^exec|^in|^raise|^continue|^finally|^is|^return|^def|^for|^lambda|^try)[\\p{Space}$]",
+                             TokenTypes.keyword.ordinal()));
+
+        // an identifier
 		tokens.add(new Token("^\\p{Alpha}\\p{Alnum}*", TokenTypes.identifier.ordinal()));
 
 	}

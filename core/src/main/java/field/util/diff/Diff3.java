@@ -123,7 +123,8 @@ public class Diff3 {
 		return result;
     }
 
-    private Channel toArray(String l) {
+    private static
+    Channel toArray(String l) {
         Channel<Character> c = new Channel<Character>();
 		for (int i = 0; i < l.length(); i++) {
 			c.makeMarker(c, i, 1f, l.charAt(i));

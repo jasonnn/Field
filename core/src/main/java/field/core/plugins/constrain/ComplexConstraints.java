@@ -174,8 +174,9 @@ public class ComplexConstraints implements iPlugin {
 		}
 	}
 
-	public class VariablesForRect {
-		public iVisualElement rect;
+    public static
+    class VariablesForRect {
+        public iVisualElement rect;
 
 		public ClVariable variableX;
 

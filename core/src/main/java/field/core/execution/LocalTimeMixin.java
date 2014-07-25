@@ -46,8 +46,9 @@ public class LocalTimeMixin extends field.core.dispatch.iVisualElementOverrides.
 		return forElement.getParents().contains(source);
 	}
 
-	protected PythonScriptingSystem makeLocalPSS() {
-		return new PythonScriptingSystem();
+    protected static
+    PythonScriptingSystem makeLocalPSS() {
+        return new PythonScriptingSystem();
 	}
 
 }

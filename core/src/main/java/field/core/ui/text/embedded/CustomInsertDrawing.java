@@ -405,7 +405,8 @@ public class CustomInsertDrawing {
 	}
 
 	@NextUpdate
-	protected void deferedRedraw(StyledText target) {
+    protected static
+    void deferedRedraw(StyledText target) {
         //System.out.println(" -- inside defered redraw --");
         target.redraw();
 	}

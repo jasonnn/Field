@@ -35,14 +35,16 @@ public class CL {
 		System.err.println("- " + s);
 	}
 
-	protected void _assert(boolean f, String description) throws ExCLInternalError {
-		if (!f) {
+    protected static
+    void _assert(boolean f, String description) throws ExCLInternalError {
+        if (!f) {
 			throw new ExCLInternalError("_assertion failed:" + description);
 		}
 	}
 
-	protected void _assert(boolean f) throws ExCLInternalError {
-		if (!f) {
+    protected static
+    void _assert(boolean f) throws ExCLInternalError {
+        if (!f) {
 			throw new ExCLInternalError("_assertion failed");
 		}
 	}

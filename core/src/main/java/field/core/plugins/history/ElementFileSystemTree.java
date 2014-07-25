@@ -306,8 +306,9 @@ public class ElementFileSystemTree {
 		new MacScrollbarHack(tree);
 	}
 
-	protected void disposeChildren(TreeItem item) {
-		TreeItem[] items = item.getItems();
+    protected static
+    void disposeChildren(TreeItem item) {
+        TreeItem[] items = item.getItems();
 		for (int i = 0; i < items.length; i++) {
 			items[i].dispose();
 		}
@@ -421,8 +422,8 @@ public class ElementFileSystemTree {
 						GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
 						Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas().getParent().getBounds().x) * gk.getXScale() + gk.getXTranslation(), (event.y - gk.getFrame().getBounds().y) * gk.getXScale() + gk.getYTranslation());
 
-						new PackageTools().importFieldPackage(root, ((TemplateMarker) event.data).f.getAbsolutePath(), a);
-					}
+                        PackageTools.importFieldPackage(root, ((TemplateMarker) event.data).f.getAbsolutePath(), a);
+                    }
 
 				}
 
@@ -487,7 +488,8 @@ public class ElementFileSystemTree {
 			});
 		}
 
-		protected void importFile(String s, iVisualElement root, Vector2 a) {
+        protected static
+        void importFile(String s, iVisualElement root, Vector2 a) {
 
 			try {
 
@@ -524,8 +526,9 @@ public class ElementFileSystemTree {
 		}
 	}
 
-	private String safePrint(Object value) {
-		String x = value.toString();
+    private static
+    String safePrint(Object value) {
+        String x = value.toString();
 		if (x.length() > 30)
 			if (x instanceof String) {
 				String[] x0 = x.split("\n");

@@ -184,8 +184,7 @@ public class AdvancedTextToCachedLine {
 		};
 		if (wrap==0)
 			at.acceptString(text, vv);
-		else
-			at.acceptStringWrap(text, vv, wrap*200f/fontSize, alignment, justification);
+		else AdvancedText.acceptStringWrap(text, vv, wrap * 200f / fontSize, alignment, justification);
 
 		lastCachedLine = cl;
 

@@ -56,8 +56,16 @@ public class InvocationLogging {
 		linkSetAttr(in, name, value, isRoot, path, from, getDefaultTypeRecovery(), defaultTypeRecoveryForces);
 	}
 
-	public void linkSetAttr(PyObject in, String name, PyObject value, boolean isRoot, String path, PyObject from, iTypeErrorRecovery er, boolean forceRecovery) {
-		if (forceRecovery) {
+    public static
+    void linkSetAttr(PyObject in,
+                     String name,
+                     PyObject value,
+                     boolean isRoot,
+                     String path,
+                     PyObject from,
+                     iTypeErrorRecovery er,
+                     boolean forceRecovery) {
+        if (forceRecovery) {
 			
 			//beta1
 //			if (in instanceof PyJavaInstance) 
@@ -86,8 +94,9 @@ public class InvocationLogging {
 		}
 	}
 
-	public PyObject lookup(PyClass in, String name) {
-		return in.__findattr__(name);
+    public static
+    PyObject lookup(PyClass in, String name) {
+        return in.__findattr__(name);
 	}
 
 	protected iTypeErrorRecovery getDefaultTypeRecovery() {

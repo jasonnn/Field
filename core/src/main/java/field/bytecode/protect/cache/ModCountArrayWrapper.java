@@ -11,8 +11,9 @@ public class ModCountArrayWrapper implements iGetModCount<ModCountArrayWrapper> 
 		this.a = a;
 	}
 
-	private int computeModCount(Object o) {
-		int m = 0;
+    private static
+    int computeModCount(Object o) {
+        int m = 0;
 		if (o instanceof iGetModCount) {
 			return ((iGetModCount) o).countFor(o);
 		} else if (o instanceof Iterable) {

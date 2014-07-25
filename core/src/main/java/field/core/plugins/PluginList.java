@@ -345,8 +345,8 @@ public class PluginList {
 							String n = f.getName();
 							n = f.getParentFile().getName()+"_"+n;
 							if (n.indexOf('.') != -1) {
-								n = n.substring(0, n.indexOf("."));
-							}
+                                n = n.substring(0, n.indexOf('.'));
+                            }
 							try {
 								BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir2 + "/" + n + "_extension.mf")));
 								writer.write("Field-Property-Append-python-path: " + f.getCanonicalPath() + "\n");
@@ -367,8 +367,8 @@ public class PluginList {
 							String n = f.getName();
 							n = f.getParentFile().getName()+"_"+n;
 							if (n.indexOf('.') != -1) {
-								n = n.substring(0, n.indexOf("."));
-							}
+                                n = n.substring(0, n.indexOf('.'));
+                            }
 							try {
 								BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir2 + "/" + n + "_extension.mf")));
 								writer.write("Field-Property-Append-java-source-paths: " + f.getCanonicalPath() + "\n");
@@ -542,8 +542,11 @@ public class PluginList {
 	private void installHelpBrowser(final iVisualElement root) {
 		HelpBrowser h = HelpBrowser.helpBrowser.get(root);
 		ContextualHelp ch = h.getContextualHelp();
-		ch.addContextualHelpForWidget("plugins", selectionUI.getTree(), ch.providerForStaticMarkdownResource("contextual/plugins.md"), 50);
-	}
+        ch.addContextualHelpForWidget("plugins",
+                                      selectionUI.getTree(),
+                                      ContextualHelp.providerForStaticMarkdownResource("contextual/plugins.md"),
+                                      50);
+    }
 
 	protected void toJDK(String string) {
 		String ll = loadInfoPList();
@@ -576,8 +579,9 @@ public class PluginList {
 		return false;
 	}
 
-	private String loadInfoPList() {
-		String ll = "";
+    private static
+    String loadInfoPList() {
+        String ll = "";
 		try {
 			File f = new File("../../Info.plist");
 			BufferedReader reader = new BufferedReader(new FileReader(f));
@@ -807,7 +811,8 @@ public class PluginList {
 
 	}
 
-	protected void flipFile(File f) {
+    protected static
+    void flipFile(File f) {
 
         //System.out.println(" flipping file :" + f);
 

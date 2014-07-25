@@ -104,15 +104,17 @@ public class OverDrawing {
 		}
 	}
 
-	private Color toColor(Vector4 a, Vector4 b) {
-		if (a==null) a = b;
+    private static
+    Color toColor(Vector4 a, Vector4 b) {
+        if (a==null) a = b;
         if (b == null) return Launcher.display.getSystemColor(SWT.COLOR_BLACK);
 
         return new Color(Launcher.display, (int) Math.max(0, Math.min(255, 255 * a.x)), (int) Math.max(0, Math.min(255, 255 * a.y)), (int) Math.max(0, Math.min(255, 255 * a.z)));
     }
 
-	private int toAlpha(Vector4 a, Vector4 b) {
-		if (a==null) a = b;
+    private static
+    int toAlpha(Vector4 a, Vector4 b) {
+        if (a==null) a = b;
 		if (b==null) return 255;
 		
 		return (int)Math.max(0, Math.min(255, 255*a.w));

@@ -14,8 +14,9 @@ public abstract class SimpleTess {
 
 	GLUtessellatorImpl tess = new GLUtessellatorImpl();
 
-	public class VInfo {
-		int vertex = -1;
+    public static
+    class VInfo {
+        int vertex = -1;
 
 		Vector3 position = new Vector3();
 
@@ -51,8 +52,10 @@ public abstract class SimpleTess {
 			public void combineData(double[] coords, Object[] data, float[] weight, Object[] outdata, Object arg4) {
 
 				// todo, interpolate properties correctly
-				outdata[0] = new VInfo(-1, new Vector3(coords[0], coords[1], coords[2]), interpolateProperites(data, weight));
-			}
+                outdata[0] = new VInfo(-1,
+                                       new Vector3(coords[0], coords[1], coords[2]),
+                                       interpolateProperites(data, weight));
+            }
 		});
 		tess.gluTessCallback(GLU.GLU_EDGE_FLAG, new GLUtessellatorCallbackAdapter() {
 		});

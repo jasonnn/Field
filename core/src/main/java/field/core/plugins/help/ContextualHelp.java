@@ -88,8 +88,9 @@ public class ContextualHelp {
 
 	}
 
-	public iProvider<String> providerForStaticMarkdownResource(final String name) {
-		final File m = new File(HelpBrowser.documentationDirectory + name);
+    public static
+    iProvider<String> providerForStaticMarkdownResource(final String name) {
+        final File m = new File(HelpBrowser.documentationDirectory + name);
 		return new iProvider<String>() {
 
 			@Override

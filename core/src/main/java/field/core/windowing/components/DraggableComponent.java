@@ -468,9 +468,8 @@ public class DraggableComponent implements iComponent, iDraggableComponent {
         
 		if (arg0.button == 2)
 			return;
-        
-		if (decoration.drag(arg0))
-			inside.requestRedisplay();
+
+        if (ExecutionDecoration2.drag(arg0)) inside.requestRedisplay();
         
 		if ((arg0.stateMask & SWT.ALT) != 0)
 			return;
@@ -655,7 +654,7 @@ if (arg0.button == SWT.BUTTON2)
 return;
 arg0.doit = false;
 
-if (decoration.up(arg0))
+    if (ExecutionDecoration2.up(arg0))
 inside.requestRedisplay();
 
 if ((arg0.stateMask & SWT.ALT) != 0) {

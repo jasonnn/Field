@@ -383,8 +383,9 @@ public class ExecutedAreas {
 		lastExecuted = s.lastExecuted;
 	}
 
-	private boolean overlaps(Area newArea, Area a) {
-		if (newArea.allocation == a.allocation
+    private static
+    boolean overlaps(Area newArea, Area a) {
+        if (newArea.allocation == a.allocation
 				&& newArea.lineStart <= a.lineEnd
 				&& newArea.lineEnd >= a.lineStart)
 			return true;

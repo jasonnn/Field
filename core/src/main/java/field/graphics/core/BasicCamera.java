@@ -707,13 +707,15 @@ public class BasicCamera extends BasicUtilities.OnePassListElement implements iB
 				return false;
 			return true;
 		}
-        
-		private boolean cmp(float a, float b) {
-			return Math.abs(a - b) > 1e-4;
+
+        private static
+        boolean cmp(float a, float b) {
+            return Math.abs(a - b) > 1e-4;
 		}
-        
-		private boolean cmp(Vector3 a, Vector3 b) {
-			if (a == null)
+
+        private static
+        boolean cmp(Vector3 a, Vector3 b) {
+            if (a == null)
 				return b != null;
 			if (b == null)
 				return true;
@@ -1110,10 +1112,8 @@ public class BasicCamera extends BasicUtilities.OnePassListElement implements iB
     
 	@HiddenInAutocomplete
 	public void getProjectionMatrix(float[] o) {
-		for (int i = 0; i < o.length; i++) {
-			o[i] = projection[i];
-		}
-	}
+        System.arraycopy(projection, 0, o, 0, o.length);
+    }
     
 	@HiddenInAutocomplete
 	public void getProjectionMatrix(FloatBuffer model) {
@@ -1542,9 +1542,10 @@ public class BasicCamera extends BasicUtilities.OnePassListElement implements iB
 		Vector3 ip = lu.add(ld);
 		return ip;
 	}
-    
-	private String arrayToString(float[] p) {
-		String s = "";
+
+    private static
+    String arrayToString(float[] p) {
+        String s = "";
 		for (int i = 0; i < p.length; i++)
 			s += p[i] + " ";
 		return s;

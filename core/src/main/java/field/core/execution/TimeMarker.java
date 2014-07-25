@@ -351,8 +351,9 @@ public class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 		}
 	}
 
-	protected float getOngoingSpeedNow() {
-		try {
+    protected static
+    float getOngoingSpeedNow() {
+        try {
 			boolean on = field.core.Platform.getOS()==OS.mac && Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
 			return on ? 0.3333f : 1;
 		} catch (UnsupportedOperationException e) {

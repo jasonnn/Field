@@ -272,8 +272,9 @@ public class RBFInterpolator implements Serializable {
 	/**
 	 * this is the linear part. The ith basis is the i+1th component of the input x, with i = 0 being the constant factor 1.0
 	 */
-	private double linearBasis(VectorN x, int i) {
-		if (i == 0)
+    private static
+    double linearBasis(VectorN x, int i) {
+        if (i == 0)
 			return 1.0;
 		else
 			return x.get(i - 1);

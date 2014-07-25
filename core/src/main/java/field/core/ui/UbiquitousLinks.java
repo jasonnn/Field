@@ -51,8 +51,9 @@ public class UbiquitousLinks {
 
 	}
 
-	public void injectCSS(StyleSheet styleSheet) {
-		styleSheet.addRule("body { font-family: \"" + Constants.defaultFont + "\"; color:#444444}");
+    public static
+    void injectCSS(StyleSheet styleSheet) {
+        styleSheet.addRule("body { font-family: \"" + Constants.defaultFont + "\"; color:#444444}");
 		styleSheet.addRule(".wellspaced { padding-top: 7px; padding-bottom:7px; margin-top:0px; margin-bottom:0px;}");
 		styleSheet.addRule(".wellspacedBlack { color:#000000; padding-top: 7px; padding-bottom:7px; margin-top:0px; margin-bottom:0px;}");
 		styleSheet.addRule(".wellspacedIndented { color:#000000;  font: '" + Constants.defaultFont + "' margin-left:20px; padding-top: 7px; padding-bottom:7px; margin-top:0px; margin-bottom:0px;}");
@@ -68,18 +69,21 @@ public class UbiquitousLinks {
 		styleSheet.addRule("pre{ font-family:\"" + Constants.defaultFont + "\"}");
 	}
 
-	public String code_copyTextToClipboard(String string) {
-		String code = "_l.popupMenu( {'copy to clipboard': lambda : _l.copyTextToClipboard('" + string + "')}, _component, _event.getPoint())";
+    public static
+    String code_copyTextToClipboard(String string) {
+        String code = "_l.popupMenu( {'copy to clipboard': lambda : _l.copyTextToClipboard('" + string + "')}, _component, _event.getPoint())";
 		return code;
 	}
 
-	public String code_revealInFinder(String path) {
-		String code = "_l.popupMenu( {'reveal in finder': lambda : _l.showPathInFinder('" + path + "')}, _component, _event.getPoint())";
+    public static
+    String code_revealInFinder(String path) {
+        String code = "_l.popupMenu( {'reveal in finder': lambda : _l.showPathInFinder('" + path + "')}, _component, _event.getPoint())";
 		return code;
 	}
 
-	public String code_revealInSafari(String path) {
-		String code = "_l.popupMenu( {'open in new Web Browser': lambda : _l.showPathInSafari('" + path + "')}, _component, _event.getPoint())";
+    public static
+    String code_revealInSafari(String path) {
+        String code = "_l.popupMenu( {'open in new Web Browser': lambda : _l.showPathInSafari('" + path + "')}, _component, _event.getPoint())";
 		return code;
 	}
 
@@ -89,26 +93,30 @@ public class UbiquitousLinks {
 		return code;
 	}
 
-	public String code_selectOrMarkByUID(String uid) {
-		String code = "_l.popupMenu( {'select': lambda : _l.selectElementByUID('" + uid + "'), 'mark': lambda : _l.markElementByUID('" + uid + "'), 'go to' : lambda : _l.gotoElementByUID('" + uid + "')}, _component, _event.getPoint())";
+    public static
+    String code_selectOrMarkByUID(String uid) {
+        String code = "_l.popupMenu( {'select': lambda : _l.selectElementByUID('" + uid + "'), 'mark': lambda : _l.markElementByUID('" + uid + "'), 'go to' : lambda : _l.gotoElementByUID('" + uid + "')}, _component, _event.getPoint())";
 		return code;
 	}
 
-	public String code_openInEclipse(String name, int line) {
-		String code = "_l.popupMenu( {'open in eclipse': lambda : _l.openInEclipse(\'" + name + "\'," + line + ")}, _component, _event.getPoint())";
+    public static
+    String code_openInEclipse(String name, int line) {
+        String code = "_l.popupMenu( {'open in eclipse': lambda : _l.openInEclipse(\'" + name + "\'," + line + ")}, _component, _event.getPoint())";
 		return code;
 	}
 
-	public boolean copyTextToClipboard(String text) {
+    public static
+    boolean copyTextToClipboard(String text) {
         //System.out.println(" copy text to clip <" + text + ">");
         Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
 		c.setContents(new StringSelection(text), null);
 		return true;
 	}
-	
-	public String simpleLink(String href) {
-		
-		return href;
+
+    public static
+    String simpleLink(String href) {
+
+        return href;
 		
 	}
 	
@@ -123,13 +131,15 @@ public class UbiquitousLinks {
 		return true;
 	}
 
-	public Object dereference(String id) {
+    public static
+    Object dereference(String id) {
         //System.out.println(" get <" + id + "> from <" + shortTermObjectStore + "> <" + System.identityHashCode(this) + ">");
         return shortTermObjectStore.get(id);
 	}
 
-	public void install(final JLabel label) {
-		label.addMouseListener(new MouseListener() {
+    public static
+    void install(final JLabel label) {
+        label.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent e) {
 
@@ -207,8 +217,9 @@ public class UbiquitousLinks {
 		});
 	}
 
-	public void install(final JButton label) {
-		label.addMouseListener(new MouseListener() {
+    public static
+    void install(final JButton label) {
+        label.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent e) {
 
@@ -286,8 +297,9 @@ public class UbiquitousLinks {
 		});
 	}
 
-	public void install(final JTree tree) {
-		tree.addMouseListener(new MouseListener() {
+    public static
+    void install(final JTree tree) {
+        tree.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent e) {
 				AccessibleComponent at = ((AccessibleComponent) tree.getAccessibleContext());
@@ -398,16 +410,19 @@ public class UbiquitousLinks {
 		});
 	}
 
-	public void showPathInSafari(String href) {
-		new ExecuteCommand(".", new String[] { "/usr/bin/open", href }, false);
+    public static
+    void showPathInSafari(String href) {
+        new ExecuteCommand(".", new String[] { "/usr/bin/open", href }, false);
 	}
 
-	public String link(String linkText, String onclick, String onrightclick) {
-		return "<a href='http://' color='#" + Constants.defaultTreeColor + "' onclick=\"" + (onclick == null ? "" : onclick) + "\" onrightclick=\"" + (onrightclick == null ? "" : onrightclick) + "\"><i>" + linkText + "</i></a>";
+    public static
+    String link(String linkText, String onclick, String onrightclick) {
+        return "<a href='http://' color='#" + Constants.defaultTreeColor + "' onclick=\"" + (onclick == null ? "" : onclick) + "\" onrightclick=\"" + (onrightclick == null ? "" : onrightclick) + "\"><i>" + linkText + "</i></a>";
 	}
 
-	public boolean markElementByUID(String uid) {
-		for (StandardFluidSheet s : sheets) {
+    public static
+    boolean markElementByUID(String uid) {
+        for (StandardFluidSheet s : sheets) {
 			SelectionGroup<iComponent> selectionGroup = iVisualElement.markingGroup.get(s.getRoot());
 			selectionGroup.deselectAll();
             iVisualElement found = StandardFluidSheet.findVisualElement(s.getRoot(), uid);
@@ -420,7 +435,8 @@ public class UbiquitousLinks {
 		return true;
 	}
 
-	public boolean gotoElementByUID(String uid) {
+    public static
+    boolean gotoElementByUID(String uid) {
 
 		Rect bound = null;
 		GLComponentWindow window = null;
@@ -447,16 +463,17 @@ public class UbiquitousLinks {
 //		BrowserTools.browse(o, null, root);
 	}
 
-	
 
-	public String reference(Object o) {
-		String uid = new UID().toString();
+    public static
+    String reference(Object o) {
+        String uid = new UID().toString();
 		shortTermObjectStore.put(uid, o);
 		return uid;
 	}
 
-	public boolean selectElementByUID(String uid) {
-		for (StandardFluidSheet s : sheets) {
+    public static
+    boolean selectElementByUID(String uid) {
+        for (StandardFluidSheet s : sheets) {
 			SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(s.getRoot());
 			selectionGroup.deselectAll();
             iVisualElement found = StandardFluidSheet.findVisualElement(s.getRoot(), uid);
@@ -469,8 +486,9 @@ public class UbiquitousLinks {
 		return true;
 	}
 
-	public void openInEclipse(String name, int line) {
-		new OpenInEclipse(name, line);
+    public static
+    void openInEclipse(String name, int line) {
+        new OpenInEclipse(name, line);
 	}
 
 	public String link(String linkText, String perform) {

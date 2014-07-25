@@ -276,8 +276,9 @@ public class BasicFrameBuffers {
 			return this;
 		}
 
-		public void unbindForFrameBuffer(int a) {
-			glBindFramebuffer(GL_FRAMEBUFFER, a);
+        public static
+        void unbindForFrameBuffer(int a) {
+            glBindFramebuffer(GL_FRAMEBUFFER, a);
 		}
 
 		protected void createInitialLists() {
@@ -1735,8 +1736,9 @@ public class BasicFrameBuffers {
 			assert glGetError() == 0;
 		}
 
-		public void exit() {
-			assert glGetError() == 0;
+        public static
+        void exit() {
+            assert glGetError() == 0;
 			CoreHelpers.glMatrixMode(GL_PROJECTION);
 			CoreHelpers.glMatrixMode(GL_MODELVIEW);
 
@@ -2391,8 +2393,8 @@ public class BasicFrameBuffers {
 							assert glGetError() == 0;
 							glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, 0, 0, NTextureCrossfader.this.source.width, NTextureCrossfader.this.source.height);
 							assert glGetError() == 0;
-							textureAWrapped[i].out(gl);
-							textureAWrapped[i].post();
+                            TextureUnit.out(gl);
+                            textureAWrapped[i].post();
 							assert glGetError() == 0;
 							copyToA[i] = false;
 						}
@@ -3425,8 +3427,8 @@ public class BasicFrameBuffers {
 						glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, 0, 0, TextureCrossfader.this.source.width, TextureCrossfader.this.source.height);
 						long c = System.currentTimeMillis();
 						assert glGetError() == 0;
-						textureAWrapped.out(gl);
-						textureAWrapped.post();
+                        TextureUnit.out(gl);
+                        textureAWrapped.post();
 						assert glGetError() == 0;
 						long d = System.currentTimeMillis();
 
@@ -3442,8 +3444,8 @@ public class BasicFrameBuffers {
 						glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, 0, 0, TextureCrossfader.this.source.width, TextureCrossfader.this.source.height);
 						assert glGetError() == 0;
 						assert glGetError() == 0;
-						textureBWrapped.out(gl);
-						textureBWrapped.post();
+                        TextureUnit.out(gl);
+                        textureBWrapped.post();
 						assert glGetError() == 0;
 					}
 					copyToA = false;
@@ -3555,8 +3557,8 @@ public class BasicFrameBuffers {
 						assert glGetError() == 0;
 						glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, TextureCrossfader2.this.width, TextureCrossfader2.this.height);
 						assert glGetError() == 0;
-						textureAWrapped.out(gl);
-						textureAWrapped.post();
+                        TextureUnit.out(gl);
+                        textureAWrapped.post();
 						assert glGetError() == 0;
 
                         // System.out.println(" copy to a ");
@@ -3572,8 +3574,8 @@ public class BasicFrameBuffers {
 						glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, TextureCrossfader2.this.width, TextureCrossfader2.this.height);
 						assert glGetError() == 0;
 						assert glGetError() == 0;
-						textureBWrapped.out(gl);
-						textureBWrapped.post();
+                        TextureUnit.out(gl);
+                        textureBWrapped.post();
 						assert glGetError() == 0;
 
                         // System.out.println(" copy to b ");

@@ -4,8 +4,9 @@ import field.core.ui.FieldMenus2;
 
 public class AutoPersist {
 
-	public <T> T persist(final String name, T defaultValue) {
-		T t = defaultValue;
+    public static
+    <T> T persist(final String name, T defaultValue) {
+        T t = defaultValue;
 		final String filename = FieldMenus2.fieldDir + "/" + name + ".xml";
 		try {
 			t = (T) new PythonUtils().loadAsXML(filename);

@@ -223,8 +223,9 @@ public class VersionMenu {
 	protected void swapInText(iVisualElement element, String contents) {
 	}
 
-	private void streamline(String[] s) {
-		List<String[]> m = new ArrayList<String[]>();
+    private static
+    void streamline(String[] s) {
+        List<String[]> m = new ArrayList<String[]>();
 		int d = -1;
 		for (String ss : s) {
 			m.add(ss.split("[ \\:]"));

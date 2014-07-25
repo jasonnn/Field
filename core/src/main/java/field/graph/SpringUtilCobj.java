@@ -51,8 +51,9 @@ public class SpringUtilCobj {
 
 	}
 
-	private Vector2 initialPosition(Cobj v) {
-		return new Vector2().noise(1);
+    private static
+    Vector2 initialPosition(Cobj v) {
+        return new Vector2().noise(1);
 	}
 
 	public void step() {

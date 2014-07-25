@@ -77,7 +77,8 @@ public class BaseTrampolineClassLoader extends FastClassLoader {
         return result;
     }
 
-    private Class callDefineClass(ClassLoader parent, String class_name, byte[] bytes, int i, int length) {
+    private static
+    Class callDefineClass(ClassLoader parent, String class_name, byte[] bytes, int i, int length) {
 
         try {
             Method cc = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, Integer.TYPE, Integer.TYPE);

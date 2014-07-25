@@ -59,8 +59,9 @@ import java.util.List;
 @Woven
 public class BaseTextEditor2 {
 
-	public abstract class Completion implements iUpdateable {
-		public String text;
+    public abstract static
+    class Completion implements iUpdateable {
+        public String text;
 
 		public boolean enabled;
 		public boolean isDocumentation = false;
@@ -83,13 +84,13 @@ public class BaseTextEditor2 {
 
 	public String frameName = "";
 
-	private final int transpInsetX = 50;
+    private static final int transpInsetX = 50;
 
-	private final int transpInsetY = 25;
+    private static final int transpInsetY = 25;
 
-	private final int transpWidth = 40;
+    private static final int transpWidth = 40;
 
-	private final int transpHeight = 200;
+    private static final int transpHeight = 200;
 
 	// private final JPanel toolbarPanel;
 
@@ -129,7 +130,7 @@ public class BaseTextEditor2 {
 
 	private ToolBar toolbar;
 
-	static public Rectangle defaultRect = new AutoPersist().persist("textEditorPosition", new Rectangle(500, 50, 500, 600));
+    static public Rectangle defaultRect = AutoPersist.persist("textEditorPosition", new Rectangle(500, 50, 500, 600));
 
 	private StyledTextUndo undoHelper;
 
@@ -139,8 +140,9 @@ public class BaseTextEditor2 {
 
 	String searchString = null;
 
-	class LineRec {
-		int offset;
+    static
+    class LineRec {
+        int offset;
 		String string;
 
 		public LineRec(int offset, String string) {
@@ -1264,8 +1266,8 @@ public class BaseTextEditor2 {
 
 				if (!Character.isISOControl(arg0.character)) {
                     // System.out.println(" inserting character ");
-                    ed.insert("" + arg0.character);
-					ed.setCaretOffset(ed.getCaretOffset() + 1);
+                    ed.insert(String.valueOf(arg0.character));
+                    ed.setCaretOffset(ed.getCaretOffset() + 1);
 					completionHandle(publicOnly);
 					return true;
 				}
@@ -1308,8 +1310,8 @@ public class BaseTextEditor2 {
 				insert.put(c + "_optional", new Documentation("\n\n" + c.optionalDocumentation));
 			}
 			if (c.isDocumentation) {
-				insert.put("" + c, new Documentation(c.text));
-			} else if (c.enabled) {
+                insert.put(String.valueOf(c), new Documentation(c.text));
+            } else if (c.enabled) {
 				insert.put(c.text, c);
 			} else {
 				insert.put(c.text, null);
@@ -1472,8 +1474,8 @@ public class BaseTextEditor2 {
 			public boolean update(Event arg0) {
 				if (!Character.isISOControl(arg0.character)) {
                     // System.out.println(" inserting character ");
-                    ed.insert("" + arg0.character);
-					ed.setCaretOffset(ed.getCaretOffset() + 1);
+                    ed.insert(String.valueOf(arg0.character));
+                    ed.setCaretOffset(ed.getCaretOffset() + 1);
 					completionQuotedHandle();
 					return true;
 				}
@@ -1624,8 +1626,8 @@ public class BaseTextEditor2 {
 		LinkedHashMap<String, iUpdateable> insert = new LinkedHashMap<String, iUpdateable>();
 		for (Completion c : completions) {
 			if (c.isDocumentation) {
-				insert.put("" + c, new Documentation(c.text));
-			} else if (c.enabled) {
+                insert.put(String.valueOf(c), new Documentation(c.text));
+            } else if (c.enabled) {
 				insert.put("\u21e0 " + c.text, c);
 			} else {
 				insert.put(c.text, null);
@@ -1642,8 +1644,8 @@ public class BaseTextEditor2 {
 
 				if (!Character.isISOControl(arg0.character)) {
                     // System.out.println(" inserting character ");
-                    ed.insert("" + arg0.character);
-					ed.setCaretOffset(ed.getCaretOffset() + 1);
+                    ed.insert(String.valueOf(arg0.character));
+                    ed.setCaretOffset(ed.getCaretOffset() + 1);
 					importHandle();
 					return true;
 				}
@@ -1846,8 +1848,9 @@ public class BaseTextEditor2 {
 	}
 
 	@NextUpdate(delay = 5)
-	private void deferredRedraw(final StyledText ed) {
-		ed.redraw();
+    private static
+    void deferredRedraw(final StyledText ed) {
+        ed.redraw();
 	}
 
 }

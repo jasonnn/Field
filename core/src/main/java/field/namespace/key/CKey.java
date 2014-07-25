@@ -134,8 +134,9 @@ abstract public class CKey extends Key {
 		return this;
 	}
 
-	protected class Otherwise implements StackElement {
-		Phi f;
+    protected static
+    class Otherwise implements StackElement {
+        Phi f;
 
 		public Otherwise(Phi f) {
 			this.f = f;
@@ -152,8 +153,9 @@ abstract public class CKey extends Key {
 		}
 	}
 
-	protected class Defaults implements StackElement {
-		Phi f;
+    protected static
+    class Defaults implements StackElement {
+        Phi f;
 
 		public Defaults(Phi f) {
 			this.f = f;

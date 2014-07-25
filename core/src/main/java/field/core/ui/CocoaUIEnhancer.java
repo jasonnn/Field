@@ -224,7 +224,8 @@ public class CocoaUIEnhancer {
         return convertToLong( object );
     }
 
-    private long convertToLong( Object object ) {
+    private static
+    long convertToLong(Object object) {
         if ( object instanceof Integer ) {
             Integer i = (Integer) object;
             return i.longValue();
@@ -272,7 +273,8 @@ public class CocoaUIEnhancer {
         }
     }
 
-    private Class<?> classForName( String classname ) {
+    private static
+    Class<?> classForName(String classname) {
         try {
             Class<?> cls = Class.forName( classname );
             return cls;
@@ -285,7 +287,8 @@ public class CocoaUIEnhancer {
         return invoke( cls, methodName, (Class<?>[]) null, (Object[]) null );
     }
 
-    private Object invoke( Class<?> cls, String methodName, Class<?>[] paramTypes, Object... arguments ) {
+    private static
+    Object invoke(Class<?> cls, String methodName, Class<?>[] paramTypes, Object... arguments) {
         try {
             Method m = cls.getDeclaredMethod( methodName, paramTypes );
             return m.invoke( null, arguments );
@@ -298,7 +301,8 @@ public class CocoaUIEnhancer {
         return invoke(obj, methodName, null, (Object[]) null);
     }
 
-    private Object invoke( Object obj, String methodName, Class<?>[] paramTypes, Object... arguments ) {
+    private static
+    Object invoke(Object obj, String methodName, Class<?>[] paramTypes, Object... arguments) {
         try {
             Method m = obj.getClass().getDeclaredMethod( methodName, paramTypes );
             return m.invoke( obj, arguments );

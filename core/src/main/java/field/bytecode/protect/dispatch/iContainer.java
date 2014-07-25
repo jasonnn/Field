@@ -23,8 +23,8 @@ public interface iContainer {
 			return (T) Proxy.newProxyInstance(on.getClass().getClassLoader(), new Class[]{interfase}, new InvocationHandler(){
 			
 				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-					container.dispatch(tag, interfase, method, on, args);
-					return null;
+                    DispatchOverContainer.dispatch(tag, interfase, method, on, args);
+                    return null;
 				}
 			});
 		}
@@ -32,8 +32,8 @@ public interface iContainer {
 	
 	static public class DispatchOverContainer
 	{
-		public void dispatch(String tag, Class clazz, Method method, iContainer on, Object... args)
-		{
+        public static
+        void dispatch(String tag, Class clazz, Method method, iContainer on, Object... args) {
 			if (clazz == null) clazz = on.getClass();
 			
 			List list = on.propagateTo(tag, clazz, method, args);

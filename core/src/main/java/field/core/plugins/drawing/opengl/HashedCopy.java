@@ -11,8 +11,9 @@ public class HashedCopy {
 	public HashedCopy() {
 	}
 
-	public class CopyRecord {
-		int index;
+    public static
+    class CopyRecord {
+        int index;
 		long accumulatedHash;
 		float next = 0;
 		

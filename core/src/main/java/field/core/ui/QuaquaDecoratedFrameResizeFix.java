@@ -59,8 +59,8 @@ public class QuaquaDecoratedFrameResizeFix implements MouseListener, MouseMotion
 
 	public void mouseDragged(MouseEvent e) {
 		if (inside) {
-			new MiscNative().disableScreenUpdates();
-			redispatchMouseMotion(e, false);
+            MiscNative.disableScreenUpdates();
+            redispatchMouseMotion(e, false);
 			frame.repaint();
 		}
 	}

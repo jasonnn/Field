@@ -137,8 +137,8 @@ public class WeakArrayList<T> implements List<T> {
 	}
 
 	public <T> T[] toArray(T [] a) {
-		WeakReference[] r = list.toArray(new WeakReference[0]);
-		if (a.length != r.length)
+        WeakReference[] r = list.toArray(new WeakReference[list.size()]);
+        if (a.length != r.length)
 		{
 			a = (T[]) new Object[r.length];
 		}

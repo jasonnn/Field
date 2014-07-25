@@ -17,8 +17,9 @@ import java.util.Map.Entry;
  */
 public class KeyboardControlledCamera_smooth extends CoordinateFrameCamera implements KeyListener, org.eclipse.swt.events.KeyListener, org.eclipse.swt.events.GestureListener {
 
-	class CharacterIsDown {
-		char character;
+    static
+    class CharacterIsDown {
+        char character;
 
 		boolean isShift;
 		int code;

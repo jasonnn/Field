@@ -66,8 +66,9 @@ public class FreehandTool3d_tweak implements iSimpleSelectionTool {
 		}
 	}
 
-	protected String getPluginNameImpl() {
-		return "freehand";
+    protected static
+    String getPluginNameImpl() {
+        return "freehand";
 	}
 
 	public FreehandTool3d_tweak() {
@@ -251,8 +252,9 @@ public class FreehandTool3d_tweak implements iSimpleSelectionTool {
 		return e;
 	}
 
-	protected void handleNewRawSplineData(iVisualElement v, RawSplineData data) {
-		rawSplineData.addToList(ArrayList.class, v, data);
+    protected static
+    void handleNewRawSplineData(iVisualElement v, RawSplineData data) {
+        rawSplineData.addToList(ArrayList.class, v, data);
         //System.out.println(" adding new raw spline data to element <" + rawSplineData.get(v) + ">");
 
 		data.elementFrameAtDrawTime = v.getFrame(null);
@@ -267,7 +269,8 @@ public class FreehandTool3d_tweak implements iSimpleSelectionTool {
 		SplineComputingOverride.executeMain(v);
 	}
 
-	public Vector3 getPressureDataNow() {
+    public static
+    Vector3 getPressureDataNow() {
 
 		// try {
 		// NSEvent v = NSApplication.sharedApplication().currentEvent();

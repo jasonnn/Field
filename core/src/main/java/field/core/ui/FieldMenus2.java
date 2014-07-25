@@ -320,7 +320,7 @@ public class FieldMenus2 {
     public void openAnyFile(String path, Shell parent) {
 
         if (path.endsWith(".fieldpackage")) {
-            new PackageTools().importFieldPackage(openSheets.get(0).sheet.getRoot(), path);
+            PackageTools.importFieldPackage(openSheets.get(0).sheet.getRoot(), path);
         } else if (path.startsWith(getCanonicalVersioningDir())) {
             open(path.substring(getCanonicalVersioningDir().length()));
         } else {

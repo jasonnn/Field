@@ -847,8 +847,9 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 		return o;
 	}
 
-	public Vector3 sub(Vector3 a, Vector3 b, Vector3 o) {
-		if (o == null)
+    public static
+    Vector3 sub(Vector3 a, Vector3 b, Vector3 o) {
+        if (o == null)
 			o = new Vector3();
 
 		o.x = -b.x + a.x;
@@ -1046,8 +1047,9 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 		return Py.java2py(r);
 	}
 
-	public int __len__() {
-		return 3;
+    public static
+    int __len__() {
+        return 3;
 	}
 
 	public Vector3 noise(double tt) {

@@ -158,16 +158,16 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
                 @Override
                 protected void callPainter(PyObject painter, Graphics2D g, Rect r) {
 					PythonInterface.getPythonInterface().setVariable("_self", inside);
-					PythonPlugin.toolsModule.__dict__.__setitem__("_self".intern(), Py.java2py(inside));
-					PyObject[] args = { Py.java2py(new OKeyByName(name, null)), Py.java2py(g), Py.java2py(r) };
+                    PythonPlugin.toolsModule.__dict__.__setitem__("_self", Py.java2py(inside));
+                    PyObject[] args = { Py.java2py(new OKeyByName(name, null)), Py.java2py(g), Py.java2py(r) };
 					painter.__call__(args);
 				}
 
 				@Override
 				protected Map<String, iUpdateable> callMenu(PyObject painter) {
 					PythonInterface.getPythonInterface().setVariable("_self", inside);
-					PythonPlugin.toolsModule.__dict__.__setitem__("_self".intern(), Py.java2py(inside));
-					PyObject[] args = { Py.java2py(new OKeyByName(name, null)) };
+                    PythonPlugin.toolsModule.__dict__.__setitem__("_self", Py.java2py(inside));
+                    PyObject[] args = { Py.java2py(new OKeyByName(name, null)) };
 					PyObject o = painter.__call__(args);
 					if (o == null)
 						return null;
@@ -482,10 +482,10 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 		try {
 			Object method = PythonInterface.getPythonInterface().getVariable(name(this.getText()));
 			if (method != null && method instanceof PyObject) {
-				PyObject found = ((PyObject) method).__findattr__("paint".intern());
-				if (found != null) {
-					PyObject painter = ((PyObject) method).__getattr__("paint".intern());
-					if (painter != null) {
+                PyObject found = ((PyObject) method).__findattr__("paint");
+                if (found != null) {
+                    PyObject painter = ((PyObject) method).__getattr__("paint");
+                    if (painter != null) {
 						callPainter(painter, g2, new Rect(loc.x, loc.y + loc.h, loc.w, lower.y - loc.y - loc.h));
 					}
 				}
@@ -535,11 +535,11 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 			try {
 				Object method = PythonInterface.getPythonInterface().getVariable(name(this.getText()));
 				if (method != null && method instanceof PyObject) {
-					PyObject found = ((PyObject) method).__findattr__("menu".intern());
+                    PyObject found = ((PyObject) method).__findattr__("menu");
 
 					if (found != null) {
-						PyObject painter = ((PyObject) method).__getattr__("menu".intern());
-						if (painter != null) {
+                        PyObject painter = ((PyObject) method).__getattr__("menu");
+                        if (painter != null) {
 							additional = callMenu(painter);
 						}
 					}

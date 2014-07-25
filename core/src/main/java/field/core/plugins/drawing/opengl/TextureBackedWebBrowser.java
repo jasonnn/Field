@@ -169,8 +169,15 @@ public class TextureBackedWebBrowser {
 	public void doClick(Event e) {
 		// window.setVisible(false);
 
-		browser.execute(" var evt = document.createEvent(\"MouseEvents\");\n" + "  evt.initMouseEvent(\"click\", true, true, window,\n" + "    0, 0, 0, 0, 0, false, false, false, false, 0, null);\n" + "document.elementFromPoint(" + e.x + "," + e.y + ").dispatchEvent(evt)" + "");
-		needsUpdate++;
+        browser.execute(" var evt = document.createEvent(\"MouseEvents\");\n"
+                        + "  evt.initMouseEvent(\"click\", true, true, window,\n"
+                        + "    0, 0, 0, 0, 0, false, false, false, false, 0, null);\n"
+                        + "document.elementFromPoint("
+                        + e.x
+                        + ","
+                        + e.y
+                        + ").dispatchEvent(evt)");
+        needsUpdate++;
 		updateTextureNow();
 		// e.x += window.getLocation().x;
 		// e.y += window.getLocation().y;

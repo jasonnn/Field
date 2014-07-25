@@ -12,8 +12,9 @@ public class PathFlattener {
 
 	private final CachedLine c;
 
-	public class Mapping {
-		float dotStart; // node.t
+    public static
+    class Mapping {
+        float dotStart; // node.t
 		float dotEnd; // node.t
 		Vector2 start;
 		Vector2 end;

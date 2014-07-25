@@ -11,9 +11,9 @@ import field.core.windowing.components.RootComponent.iPaintPeer;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
 import field.launch.iUpdateable;
+import field.math.graph.TopologyViewOfGraphNodes;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.visitors.TopologyVisitor_breadthFirst;
-import field.math.graph.TopologyViewOfGraphNodes;
 import field.util.HashMapOfLists;
 
 import java.util.*;
@@ -228,9 +228,9 @@ public class OfferedAlignment implements iDragParticipant, iPaintPeer {
 			addOffering(o, c);
 	}
 
-	public HashMapOfLists<ConstraintOrigin, iOffering> getAdditionalOfferings(
-			iVisualElement forElement) {
-		HashMapOfLists<ConstraintOrigin, iOffering> r = new HashMapOfLists<ConstraintOrigin, iOffering>();
+    public static
+    HashMapOfLists<ConstraintOrigin, iOffering> getAdditionalOfferings(iVisualElement forElement) {
+        HashMapOfLists<ConstraintOrigin, iOffering> r = new HashMapOfLists<ConstraintOrigin, iOffering>();
 		List<DynamicAlignment> t = guides.accumulateList(forElement);
 
 		for (Object tt : t) {
@@ -305,8 +305,9 @@ public class OfferedAlignment implements iDragParticipant, iPaintPeer {
 				false);
 	}
 
-	private boolean isTrue(Boolean property) {
-		if (property == null)
+    private static
+    boolean isTrue(Boolean property) {
+        if (property == null)
 			return false;
 		return property;
 	}

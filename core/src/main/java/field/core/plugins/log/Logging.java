@@ -97,8 +97,15 @@ public class Logging {
 		}
 
 		public String getLongDescription() {
-			return "<html><font color='#" + Constants.defaultTreeColor + "'>" + PopupInfoWindow.title("update cycle at") + PopupInfoWindow.content("" + this.time / 1000f + " seconds") + "<BR>" + PopupInfoWindow.title("cycle number") + PopupInfoWindow.content("" + this.num);
-		}
+            return "<html><font color='#"
+                   + Constants.defaultTreeColor
+                   + "'>"
+                   + PopupInfoWindow.title("update cycle at")
+                   + PopupInfoWindow.content(this.time / 1000f + " seconds")
+                   + "<BR>"
+                   + PopupInfoWindow.title("cycle number")
+                   + PopupInfoWindow.content(String.valueOf(this.num));
+        }
 
 		public String getReplayExpression() {
 			return "";

@@ -235,8 +235,9 @@ public interface iProvider<T> {
 	}
 
 	static public class ProxyProvider<T> {
-		public <T> T makeProxyFor(Class<T> clazz, final iProvider< ? extends T> p) {
-			return (T) Proxy.newProxyInstance(p.getClass().getClassLoader(), new Class[] { clazz}, new InvocationHandler(){
+        public static
+        <T> T makeProxyFor(Class<T> clazz, final iProvider<? extends T> p) {
+            return (T) Proxy.newProxyInstance(p.getClass().getClassLoader(), new Class[] { clazz}, new InvocationHandler(){
 
 				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 					return method.invoke(p.get(), args);

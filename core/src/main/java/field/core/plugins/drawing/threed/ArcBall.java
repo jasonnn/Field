@@ -253,8 +253,9 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 	protected void updateCamera() {
 	}
 
-	private Vector3 sphereMap(Vector2 a) {
-		float length = a.mag() / 2;
+    private static
+    Vector3 sphereMap(Vector2 a) {
+        float length = a.mag() / 2;
 		if (length > 1)
 			return new Vector3(a.x, -a.y, 0).normalize();
 		return new Vector3(a.x, -a.y, Math.sqrt(1 - length)).normalize();
@@ -676,8 +677,9 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 
 	}
 
-	private boolean compare(Vector3 a, Vector3 b) {
-		if (a == null)
+    private static
+    boolean compare(Vector3 a, Vector3 b) {
+        if (a == null)
 			return b == null;
 		if (b == null)
 			return false;

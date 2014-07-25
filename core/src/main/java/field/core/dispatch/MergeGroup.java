@@ -163,8 +163,9 @@ public class MergeGroup {
 		return  lastWasNew;
 	}
 
-	public int getPropertyHash(VisualElement element) {
-		Map<Object, Object> name = element.payload();
+    public static
+    int getPropertyHash(VisualElement element) {
+        Map<Object, Object> name = element.payload();
 		return name.hashCode();
 	}
 
@@ -178,8 +179,9 @@ public class MergeGroup {
 		return this;
 	}
 
-	private List< ? extends iMutable<iVisualElement>> getElementsForSynchronization(iVisualElement owner) {
-		return owner.getParents();
+    private static
+    List<? extends iMutable<iVisualElement>> getElementsForSynchronization(iVisualElement owner) {
+        return owner.getParents();
 	}
 
 	protected <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> void alreadyCreated(Triple<T, S, U> triple) {

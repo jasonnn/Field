@@ -145,8 +145,8 @@ public class ChangeBlending {
 
 	protected Object getBlended(Object previousValue, Object value, float amount) {
 
-		Class< ? extends Object> c = previousValue.getClass();
-		iBlendSupport support = blendCache.get(c);
+        Class<?> c = previousValue.getClass();
+        iBlendSupport support = blendCache.get(c);
 		if (support == null) {
 			for (int i = 0; i < blenders.size(); i++) {
 				if (blenders.get(i).isBlendSupported(previousValue)) {

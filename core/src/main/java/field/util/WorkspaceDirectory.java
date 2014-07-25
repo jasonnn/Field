@@ -19,9 +19,9 @@ public class WorkspaceDirectory {
 
 	static public String[] dir = { null };
 
-	static public final String[] hgbinary = new AutoPersist().persist("hgbinary", new String[] { null });
-	static public final String[] gitBinary = new AutoPersist().persist("gitbinary", new String[] { null });
-	static public boolean useGit = SystemProperties.getIntProperty("useGit", 0) == 1;
+    static public final String[] hgbinary = AutoPersist.persist("hgbinary", new String[]{null});
+    static public final String[] gitBinary = AutoPersist.persist("gitbinary", new String[]{null});
+    static public boolean useGit = SystemProperties.getIntProperty("useGit", 0) == 1;
 
 	public WorkspaceDirectory() {
 
@@ -38,7 +38,8 @@ public class WorkspaceDirectory {
 
 		System.err.println("--- into workspace directory, in search of bug #142:");
 
-		dir = new AutoPersist().persist("workspacedirectory", new String[] { System.getProperty("user.home") + "/Documents/FieldWorkspace" });
+        dir = AutoPersist.persist("workspacedirectory",
+                                  new String[]{System.getProperty("user.home") + "/Documents/FieldWorkspace"});
 
 		d = dir[0];
 		System.err.println("   versioning dir is set to <" + d + "> which exists? <" + new File(d).exists() + ">");
@@ -154,8 +155,9 @@ public class WorkspaceDirectory {
 		SystemProperties.setProperty("versioning.dir", dir[0]);
 	}
 
-	private void makeIntoRepository(File f) {
-		if (useGit) {
+    private static
+    void makeIntoRepository(File f) {
+        if (useGit) {
 			ExecuteCommand c = new ExecuteCommand(f.getAbsolutePath(), new String[] { GitVersioningSystem.gitCommand, "init" }, true);
 			int w = c.waitFor();
             // System.out.println(" return code <" + w + ">");
@@ -170,7 +172,8 @@ public class WorkspaceDirectory {
 		}
 	}
 
-	protected void checkHGInstalled() {
+    protected static
+    void checkHGInstalled() {
 
 		if (hgbinary != null && hgbinary[0] != null) {
 			if (new File(hgbinary[0]).exists())
@@ -201,7 +204,8 @@ public class WorkspaceDirectory {
 
 	}
 
-	protected void checkGitInstalled() {
+    protected static
+    void checkGitInstalled() {
 
 		if (gitBinary != null && gitBinary[0] != null) {
 			if (new File(gitBinary[0]).exists())

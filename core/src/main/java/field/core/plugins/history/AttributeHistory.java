@@ -83,8 +83,12 @@ public class AttributeHistory {
 
 	public AttributeHistory(HistoryExplorerHG ex,iVisualElement e, VisualElementProperty propertyName)
 	{
-		Set<VersionNode> versions = ex.buildHistoryGraph(ex.getSheetPrefix()+e.getUniqueID()+"/"+propertyName.getName()+".property");
-		for(VersionNode n : versions)
+        Set<VersionNode> versions = HistoryExplorerHG.buildHistoryGraph(ex.getSheetPrefix()
+                                                                        + e.getUniqueID()
+                                                                        + "/"
+                                                                        + propertyName.getName()
+                                                                        + ".property");
+        for(VersionNode n : versions)
 		{
 			Object versionProperty = ex.getVersionProperty(n.revision, ex.getSheetPrefix()+e.getUniqueID()+"/", propertyName);
 			values.add(new Pair<VersionNode, Object>(n, versionProperty));

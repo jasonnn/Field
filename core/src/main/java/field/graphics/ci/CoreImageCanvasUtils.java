@@ -436,8 +436,7 @@ public class CoreImageCanvasUtils {
 
 		public Image(String url) {
 
-			if (url.indexOf(":") == -1)
-				try {
+            if (url.indexOf(':') == -1) try {
 					url = new File(url).toURL().toExternalForm();
 				} catch (MalformedURLException e) {
 				}

@@ -15,8 +15,9 @@ public class Protected {
 		public Object run();
 	}
 
-	public Object loadSerialized(String filename) {
-		try {
+    public static
+    Object loadSerialized(String filename) {
+        try {
 			Class< ? > c = StandardTrampoline.trampoline.loader.loadClass("field.bytecode.NonProtected");
 
 			Method[] m = TrampolineReflection.getAllMethods(c);
@@ -44,8 +45,8 @@ public class Protected {
 	}
 
 	// doesn't work
-	public Object run(iShim r)
-	{
+    public static
+    Object run(iShim r) {
 		try {
 			Class< ? > c = StandardTrampoline.trampoline.loader.loadClass("field.bytecode.NonProtected");
 

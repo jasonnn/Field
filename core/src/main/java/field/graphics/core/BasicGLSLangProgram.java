@@ -626,7 +626,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             post();
         }
 
-        public boolean compare(float[] a, float[] b) {
+        public static
+        boolean compare(float[] a, float[] b) {
             if (a == null || b == null)
                 return false;
             if (a.length != b.length)

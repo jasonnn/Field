@@ -29,8 +29,9 @@ public class TristateCheckBox extends JCheckBox {
 		public abstract TristateState next();
 	}
 
-	public class TristateButtonModel extends ToggleButtonModel {
-		private TristateState state = TristateState.DESELECTED;
+    public static
+    class TristateButtonModel extends ToggleButtonModel {
+        private TristateState state = TristateState.DESELECTED;
 
 		public TristateButtonModel(TristateState state) {
 			setState(state);

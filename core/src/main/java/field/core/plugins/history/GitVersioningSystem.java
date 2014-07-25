@@ -36,7 +36,8 @@ public class GitVersioningSystem extends VersioningSystem {
 		executeCommand(fullPathToRepositoryDirectory, gitCommand, "add", file.getAbsolutePath());
 	}
 
-	protected String executeCommand(String dir, String... command) {
+    protected static
+    String executeCommand(String dir, String... command) {
         //System.out.println(":: " + dir + " @ " + Arrays.asList(command));
         ExecuteCommand c = new ExecuteCommand(dir, command, true);
 		c.echo = false;

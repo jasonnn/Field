@@ -57,7 +57,7 @@ public class ObjectToMarkDown {
 		if (o instanceof Map)
 			return convertMap((Map) o);
 
-		Class<? extends Object> c = o.getClass();
+        Class<?> c = o.getClass();
 
 		String s = "";
 
@@ -83,11 +83,29 @@ public class ObjectToMarkDown {
 				Object n = f.get(o);
 
 				if (f.getType().isPrimitive() && n == null) {
-					s += "#### <a href=\"#" + q + "\">" + f.getName() + "</a> = " + n + "<sub> (*" + trim("" + f.getType()) + "*) </sub>\n";
-				} else {
+                    s += "#### <a href=\"#"
+                         + q
+                         + "\">"
+                         + f.getName()
+                         + "</a> = "
+                         + n
+                         + "<sub> (*"
+                         + trim(String.valueOf(f.getType()))
+                         + "*) </sub>\n";
+                } else {
 					String uniq = makeUniq(n);
-					s += "#### <a href=\"#" + q + "\">" + f.getName() + "</a> = <a href=\"http://localhost:10010/otmd/" + uniq + "\">" + n + "</a><sub> (*" + trim("" + f.getType()) + "*) </sub>\n";
-				}
+                    s += "#### <a href=\"#"
+                         + q
+                         + "\">"
+                         + f.getName()
+                         + "</a> = <a href=\"http://localhost:10010/otmd/"
+                         + uniq
+                         + "\">"
+                         + n
+                         + "</a><sub> (*"
+                         + trim(String.valueOf(f.getType()))
+                         + "*) </sub>\n";
+                }
 				if (n != null & cc != null) {
 					s += "\n[fold]\n\n";
 					JavaField fbm = cc.getFieldByName(f.getName());
@@ -207,8 +225,8 @@ public class ObjectToMarkDown {
 			forward.put(q, new SoftReference(n));
 			return q;
 		} else {
-			q = (n == null ? "" : ("" + System.identityHashCode(n)));
-			backward.put(n, q);
+            q = (n == null ? "" : (String.valueOf(System.identityHashCode(n))));
+            backward.put(n, q);
 			forward.put(q, new SoftReference(n));
 			return q;
 		}
@@ -224,8 +242,8 @@ public class ObjectToMarkDown {
 
 	static public String urlForString(String m) {
 		stringUrlUniq++;
-		browsed.put("" + stringUrlUniq, m);
-		return "http://localhost:10010/browsed/" + stringUrlUniq;
+        browsed.put(String.valueOf(stringUrlUniq), m);
+        return "http://localhost:10010/browsed/" + stringUrlUniq;
 	}
 
 	private String getCompletionFor(final Object ret, Class<? extends Object> class1, final Method m, final String right) {

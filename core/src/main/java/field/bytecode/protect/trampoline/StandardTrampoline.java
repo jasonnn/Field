@@ -1,5 +1,6 @@
 package field.bytecode.protect.trampoline;
 
+import field.bytecode.protect.ModificationCache;
 import field.bytecode.protect.asm.Utils;
 import field.bytecode.protect.instrumentation.AnnotatedMethodHandlers;
 import field.bytecode.protect.instrumentation.FieldBytecodeAdapter;
@@ -202,7 +203,7 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
         alreadyLoaded.add(class_name);
         check();
 
-        long modAt = cache.modificationForURL(deferTo.getResource(resourceNameForClassName(class_name)));
+        long modAt = ModificationCache.modificationForURL(deferTo.getResource(resourceNameForClassName(class_name)));
         if (!cache.is(class_name, true, modAt))
             return a;
 
@@ -247,7 +248,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
         return a;
     }
 
-    private byte[] weave(byte[] bytes, String className, ClassLoader deferTo, String superName, String[] interfaces) {
+    private static
+    byte[] weave(byte[] bytes, String className, ClassLoader deferTo, String superName, String[] interfaces) {
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
         new ClassReader(bytes).accept(new MainVisitorThing(cw), ClassReader.EXPAND_FRAMES);

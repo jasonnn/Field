@@ -26,8 +26,16 @@ public class PopupInfoWindow {
 		String s = "<p class='wellspacedIndentedWhite'>";
 		for (StackTraceElement e : stack) {
             //System.out.println(" stack trace <" + e + ">");
-            s += "<b>" + e.getClassName() + "</b>( <u><a href=\"'http://\" onclick=\"" + UbiquitousLinks.links.code_openInEclipse(e.getFileName(), e.getLineNumber()) + "\">" + e.getFileName() + ":<i>" + e.getLineNumber() + "</a></u></i>)";
-			s += "<BR>";
+            s += "<b>"
+                 + e.getClassName()
+                 + "</b>( <u><a href=\"'http://\" onclick=\""
+                 + UbiquitousLinks.code_openInEclipse(e.getFileName(), e.getLineNumber())
+                 + "\">"
+                 + e.getFileName()
+                 + ":<i>"
+                 + e.getLineNumber()
+                 + "</a></u></i>)";
+            s += "<BR>";
 		}
 		s += "<BR></p>";
 		return s;
@@ -83,8 +91,8 @@ public class PopupInfoWindow {
 			};
 
 			HTMLEditorKit k = new HTMLEditorKit();
-			UbiquitousLinks.links.injectCSS(k.getStyleSheet());
-			k.install(infoText);
+            UbiquitousLinks.injectCSS(k.getStyleSheet());
+            k.install(infoText);
 
 			infoText.setContentType("text/html");
 			infoText.setDocument(new HTMLDocument());

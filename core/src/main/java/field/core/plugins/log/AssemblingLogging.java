@@ -10,9 +10,9 @@ import field.launch.iUpdateable;
 import field.math.abstraction.iBlendAlgebra;
 import field.math.abstraction.iBlendable;
 import field.math.abstraction.iProvider;
+import field.math.graph.NodeImpl;
 import field.math.graph.visitors.GraphNodeSearching;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
-import field.math.graph.NodeImpl;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.namespace.generic.ReflectionTools;
@@ -50,8 +50,9 @@ public class AssemblingLogging extends InvocationLogging {
 		public boolean isConstructionSupported(Object o);
 	}
 
-	public class ImmutableCloner<T> implements iCloneSupport<T> {
-		private final Class<T> c;
+    public static
+    class ImmutableCloner<T> implements iCloneSupport<T> {
+        private final Class<T> c;
 
 		public ImmutableCloner(Class<T> c) {
 			this.c = c;
@@ -96,8 +97,9 @@ public class AssemblingLogging extends InvocationLogging {
 		public String getUndoExpression();
 	}
 
-	public class Link {
-		LinkType type;
+    public static
+    class Link {
+        LinkType type;
 
 		String name;
 
@@ -547,8 +549,9 @@ public class AssemblingLogging extends InvocationLogging {
 		}
 	}
 
-	public abstract class SimpleChange {
-		Object value;
+    public abstract static
+    class SimpleChange {
+        Object value;
 
 		Object previousValue;
 
@@ -627,9 +630,9 @@ public class AssemblingLogging extends InvocationLogging {
 				return new Vector4(t);
 			}
 		});
-		cloners.add(new ImmutableCloner<String>(String.class));
-		cloners.add(new ImmutableCloner<Number>(Number.class));
-		cloners.add(new ImmutableCloner<iLaunchable>(iLaunchable.class));
+        cloners.add(new ImmutableCloner(String.class));
+        cloners.add(new ImmutableCloner(Number.class));
+        cloners.add(new ImmutableCloner(iLaunchable.class));
 
 		cloners.add(new iCloneSupport() {
 			public boolean isCloneSupported(Object o) {
@@ -673,8 +676,8 @@ public class AssemblingLogging extends InvocationLogging {
 		});
 		constructions.add(new iConstructionSupport<Number>() {
 			public String construct(Number t) {
-				return "" + t;
-			}
+                return String.valueOf(t);
+            }
 
 			public boolean isConstructionSupported(Object o) {
 				return o instanceof Number;
@@ -1296,21 +1299,22 @@ public class AssemblingLogging extends InvocationLogging {
 
         //System.out.println(" before set <" + set.before + " " + set.to + " " + set.current + ">");
 
-		super.linkSetAttr(in, name, value, isRoot, path, from, new iTypeErrorRecovery() {
-			public void recover(Object javaObject, String field, Object setToBe) {
+        linkSetAttr(in, name, value, isRoot, path, from, new iTypeErrorRecovery() {
+            public
+            void recover(Object javaObject, String field, Object setToBe) {
 
-				Object c = getCloneFor(setToBe);
-				if (c instanceof PartiallyEvaluatedFunction) {
-					PartiallyEvaluatedFunction f = ((PartiallyEvaluatedFunction) c);
+                Object c = getCloneFor(setToBe);
+                if (c instanceof PartiallyEvaluatedFunction) {
+                    PartiallyEvaluatedFunction f = ((PartiallyEvaluatedFunction) c);
 
-					f.env = (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment");
+                    f.env = (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment");
 
-					Object q = f.evalautedTo;
-					ReflectionTools.illegalSetObjectPrimativeAware(javaObject, field, q);
-					set.tainted = true;
-				}
-			}
-		}, false);
+                    Object q = f.evalautedTo;
+                    ReflectionTools.illegalSetObjectPrimativeAware(javaObject, field, q);
+                    set.tainted = true;
+                }
+            }
+        }, false);
 
 		set.after = getCloneFor(super.linkGetAttr(in, name, isRoot, path, from).__tojava__(Object.class));
 

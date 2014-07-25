@@ -207,8 +207,8 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 				}
 
 				if (imax < 0) {
-					throw new RuntimeException("" + imax);
-				}
+                    throw new RuntimeException(String.valueOf(imax));
+                }
 
 				// Is a row exchange necessary?
 				if (j != imax) {

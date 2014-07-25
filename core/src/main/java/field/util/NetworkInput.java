@@ -240,8 +240,9 @@ public class NetworkInput implements Runnable {
 		return new String(result);
 	}
 
-	private Object[] decodeObject(byte[] buffer, int at) {
-		ByteArrayInputStream bis = new ByteArrayInputStream(buffer, at, buffer.length - at);
+    private static
+    Object[] decodeObject(byte[] buffer, int at) {
+        ByteArrayInputStream bis = new ByteArrayInputStream(buffer, at, buffer.length - at);
 		try {
 			ObjectInputStream ois = new ObjectInputStream(bis);
 			Object[] o = (Object[]) ois.readObject();

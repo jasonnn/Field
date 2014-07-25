@@ -474,15 +474,16 @@ public class PythonInterface implements ScriptingInterface {
         
 		handlePythonException(null, null, t);
 	}
-    
-	private String moduleNameFor(String m) {
-		if (m.indexOf("[") == -1)
-			return m;
+
+    private static
+    String moduleNameFor(String m) {
+        if (m.indexOf('[') == -1) return m;
 		return m.split("\\[")[0];
 	}
-    
-	private PyObject eval(final PythonInterpreter i, final String fragment) {
-		// if (ThreadedLauncher.isTimer2Thread())
+
+    private static
+    PyObject eval(final PythonInterpreter i, final String fragment) {
+        // if (ThreadedLauncher.isTimer2Thread())
 		return i.eval(fragment);
 		// else {
 		// final PyObject[] ret = { null };
@@ -901,9 +902,10 @@ public class PythonInterface implements ScriptingInterface {
 			insideShared = false;
 		}
 	}
-    
-	private OutputStream wrapWriter(final Writer error) {
-		return new OutputStream() {
+
+    private static
+    OutputStream wrapWriter(final Writer error) {
+        return new OutputStream() {
 			@Override
 			public void write(int b) throws IOException {
 				error.append((char) b);
@@ -929,9 +931,10 @@ public class PythonInterface implements ScriptingInterface {
 	 * line' and is useful for making text transformations in a white-space
 	 * sensitive language.
 	 */
-    
-	private String clean(String script) {
-		if (!script.contains("\u000b"))
+
+    private static
+    String clean(String script) {
+        if (!script.contains("\u000b"))
 			return script;
 
         // System.out.println(" cleaning <" + script + ">");
@@ -995,10 +998,10 @@ public class PythonInterface implements ScriptingInterface {
                 // Arrays.asList(trace) + ">");
 				if (t instanceof PyException) {
 					PyException ee = ((PyException) t);
-                    
-					m += PopupInfoWindow.title("Python Information " + ee.type + "");
-					if (ee.value.toString().trim().length() > 0)
-						m += PopupInfoWindow.content("" + ee.value) + "<br>";
+
+                    m += PopupInfoWindow.title("Python Information " + ee.type);
+                    if (ee.value.toString().trim().length() > 0)
+                        m += PopupInfoWindow.content(String.valueOf(ee.value)) + "<br>";
                     
 					m += PopupInfoWindow.content(ee.toString().replace("\n", "<br>"));
 					m += PopupInfoWindow.title("Java Stack");
@@ -1074,8 +1077,8 @@ public class PythonInterface implements ScriptingInterface {
             
 			@Override
 			public void write(int b) throws IOException {
-				print("" + (char) b);
-			}
+                print(String.valueOf((char) b));
+            }
 		});
         
 	}
@@ -1085,8 +1088,8 @@ public class PythonInterface implements ScriptingInterface {
             
 			@Override
 			public void write(int b) throws IOException {
-				printError("" + (char) b);
-			}
+                printError(String.valueOf((char) b));
+            }
 		});
         
 	}

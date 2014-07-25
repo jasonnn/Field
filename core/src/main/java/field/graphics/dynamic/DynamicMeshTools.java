@@ -107,8 +107,9 @@ public class DynamicMeshTools {
 		}
 
 		// no need for fast random here...?
-		private void fill(FloatBuffer buffer) {
-			buffer.rewind();
+        private static
+        void fill(FloatBuffer buffer) {
+            buffer.rewind();
 			for (int i = 0; i < buffer.capacity(); i++) {
 				buffer.put((float) (Math.random() - 0.5));
 			}

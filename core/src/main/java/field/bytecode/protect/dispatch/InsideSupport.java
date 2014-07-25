@@ -46,8 +46,9 @@ public class InsideSupport {
 		}
 	}
 
-	private static Collection<Field> findFieldsForGroupAndClass(Class< ? extends Object> clazz, String group) {
-		ArrayList<Field> ret = new ArrayList<Field>();
+    private static
+    Collection<Field> findFieldsForGroupAndClass(Class<?> clazz, String group) {
+        ArrayList<Field> ret = new ArrayList<Field>();
 
 		Field[] allFields = ReflectionTools.getAllFields(clazz);
 		for (Field f : allFields) {

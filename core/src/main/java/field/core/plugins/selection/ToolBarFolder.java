@@ -46,7 +46,7 @@ public class ToolBarFolder {
 
 	private HashMap<ToolItem, SelectionListener> listeners = new HashMap<ToolItem, SelectionListener>();
 
-	static public Rectangle defaultRect = new AutoPersist().persist("toolBarPosition", new Rectangle(700, 150, 300, 400));
+    static public Rectangle defaultRect = AutoPersist.persist("toolBarPosition", new Rectangle(700, 150, 300, 400));
 
 	public ToolBarFolder() {
 		this(defaultRect);

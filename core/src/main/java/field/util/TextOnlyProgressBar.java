@@ -20,8 +20,9 @@ public class TextOnlyProgressBar {
 		start = System.currentTimeMillis();
 	}
 
-	private String num(int w, String string) {
-		if (w<0) return "";
+    private static
+    String num(int w, String string) {
+        if (w<0) return "";
 		
 		StringBuffer f = new StringBuffer(w);
 		for (int i = 0; i < w; i++) {

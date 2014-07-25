@@ -128,8 +128,8 @@ public final class DeferedDiskCached extends DeferCallingFast {
                         t.printStackTrace();
 					}
 				} else {
-					loaded = new Protected().loadSerialized(filename);
-				}
+                    loaded = Protected.loadSerialized(filename);
+                }
 
 				if (loaded != null) {
 					cache.put(iaw, loaded);

@@ -161,12 +161,14 @@ public class Globals {
 		};
 	}
 
-	private String declForName(String name) {
-		return "_a.python_globals_.declare(_self, \"" + name + "\")\n";
+    private static
+    String declForName(String name) {
+        return "_a.python_globals_.declare(_self, \"" + name + "\")\n";
 	}
 
-	private String declForNameNew(String name) {
-		return "_self.python_globals_.declare(_self, \"" + name + "\")\n";
+    private static
+    String declForNameNew(String name) {
+        return "_self.python_globals_.declare(_self, \"" + name + "\")\n";
 	}
 
 	protected Object trapAutoExec(iVisualElement e, String name) {
@@ -241,7 +243,7 @@ public class Globals {
 					// ;
 
 					PythonInterface.getPythonInterface().setVariable("_self", e);
-					PythonPlugin.toolsModule.__dict__.__setitem__("_self".intern(), Py.java2py(e));
+                    PythonPlugin.toolsModule.__dict__.__setitem__("_self", Py.java2py(e));
 
 					PyObject now = PythonInterface.getPythonInterface().getLocalDictionary().__superfinditem__(name);
                     //System.out.println(" executed and now we get <" + now + ">");

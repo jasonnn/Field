@@ -22,7 +22,7 @@ class DispatchSupport {
         }
     };
 
-    public
+    public static
     void enter(String uniq,
                String fromName,
                Object fromThis,
@@ -76,7 +76,7 @@ class DispatchSupport {
         //if (StandardTrampoline.debug) if (StandardTrampoline.debug) ;//System.out.println(" stack is now <" + stack + ">");
     }
 
-    public
+    public static
     Object exit(String string,
                 Object fromThis,
                 Object returningThis,

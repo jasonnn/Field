@@ -194,8 +194,8 @@ public class ConnectiveThickArc2 implements iUpdateable {
 			final float e = endThickness.evaluate();
 			final float s = startThickness.evaluate();
 			lines.remove(destination);
-			destination = new LineUtils().piToCachedLine(shape.getPathIterator(null));
-			lines.add(destination);
+            destination = LineUtils.piToCachedLine(shape.getPathIterator(null));
+            lines.add(destination);
 		}
 	}
 }

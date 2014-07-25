@@ -12,8 +12,9 @@ import java.util.Set;
  * Created by jason on 7/16/14.
  */
 public class SimpleMethodModel extends AbstractSimpleModel {
+    //private static final
     @Nullable
-    public final String desc;
+    public final String desc; //TODO when is this null? <init>?
     @NotNull
     public final String[] exceptions;
 

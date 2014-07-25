@@ -15,8 +15,9 @@ public class Bounce {
 		PythonInterface.getPythonInterface().execString("__pid = os.getpid()");
 		Object pid = PythonInterface.getPythonInterface().getVariable("__pid");
 
-		ExecuteCommand ex = new ExecuteCommand(".", new String[] { "/bin/ps", "" + pid, "-o command=\"\"" }, true);
-		ex.waitFor();
+        ExecuteCommand ex =
+                new ExecuteCommand(".", new String[]{"/bin/ps", String.valueOf(pid), "-o command=\"\""}, true);
+        ex.waitFor();
 
 		String commandline = ex.getOutput().split("\n")[1];
 		final ArrayList args = new ArrayList();
@@ -34,6 +35,6 @@ public class Bounce {
 	@Override
 	protected void finalize() throws Throwable {
 		System.err.println(" -- and bouncing");
-		new ExecuteCommand(".", (String[])args.toArray(new String[]{}), true);
-	}
+        new ExecuteCommand(".", (String[]) args.toArray(new String[args.size()]), true);
+    }
 }

@@ -299,13 +299,14 @@ public class BasicRunner extends Runner implements iExecutesPromise {
 		continueToBeActiveCanCreate = true;
 	}
 
-	private String info(Promise p) {
-		return p.toString();
+    private static
+    String info(Promise p) {
+        return p.toString();
 	}
 
 	private float rewriteTime(float t, Promise p) {
-		return system.rewriteTime(t, p);
-	}
+        return PythonScriptingSystem.rewriteTime(t, p);
+    }
 
 	protected Delegate createDelegateForPromise(float t, Promise p, boolean forwards, boolean noDefaultBackwards) {
 
@@ -320,8 +321,8 @@ public class BasicRunner extends Runner implements iExecutesPromise {
 		t = InterpretPythonAsDelegate.clamp(t);
 		PythonInterface.getPythonInterface().setVariable("_t", new Float(t));
 		PythonInterface.getPythonInterface().setVariable("_dt", new Float(0));
-		PythonInterface.getPythonInterface().setVariable("_forwards", new Boolean(forwards));
-		Object ret = null;
+        PythonInterface.getPythonInterface().setVariable("_forwards", Boolean.valueOf(forwards));
+        Object ret = null;
 
 		if (Logging.enabled())
 			Logging.logging.addEvent(new ElementTextWasExecuted(text));
@@ -358,8 +359,13 @@ public class BasicRunner extends Runner implements iExecutesPromise {
 		return ret;
 	}
 
-	protected Delegate delegateForReturnValue(float t, Promise p, boolean forwards, Object ret, final boolean noDefaultBackwards) {
-		Delegate d = InterpretPythonAsDelegate.delegateForReturnValue_impl(t, p, forwards, ret, noDefaultBackwards);
+    protected static
+    Delegate delegateForReturnValue(float t,
+                                    Promise p,
+                                    boolean forwards,
+                                    Object ret,
+                                    final boolean noDefaultBackwards) {
+        Delegate d = InterpretPythonAsDelegate.delegateForReturnValue_impl(t, p, forwards, ret, noDefaultBackwards);
 
 		return d;
 	}

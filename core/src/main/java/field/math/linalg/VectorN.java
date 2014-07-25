@@ -154,10 +154,8 @@ public final class VectorN implements Cloneable, Serializable {
 	protected static float[] copyArray(float[] a) {
 		try {
 			float[] cpy = new float[a.length];
-			for (int i = 0; i < a.length; i++) {
-				cpy[i] = a[i];
-			}
-			return cpy;
+            System.arraycopy(a, 0, cpy, 0, a.length);
+            return cpy;
 
 		} catch (Exception e) {
 			error(e.toString());

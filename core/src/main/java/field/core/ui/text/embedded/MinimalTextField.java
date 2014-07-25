@@ -158,7 +158,11 @@ public class MinimalTextField extends JTextField implements iOutOfBandDrawing, i
 		this.putClientProperty("caretWidth", 3);
 	}
 
-	public void allViewHierarchy(List<Object> into, MinimalTextField from, HashSet<Object> seen, iFunction<Boolean, Object> predicate) {
+    public static
+    void allViewHierarchy(List<Object> into,
+                          MinimalTextField from,
+                          HashSet<Object> seen,
+                          iFunction<Boolean, Object> predicate) {
 
         //System.out.println(" all view hierarchy <" + from.insertRenderingContext + ">");
 

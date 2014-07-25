@@ -42,8 +42,18 @@ project('instrumentation-rt'){
         proj(':annotations')
     }
 }
+project('instrumentation-asm') {
+    dependencies {
+        proj(':core-api')
+        proj(':instrumentation-rt')
+        proj(':asm')
+        proj(':util')
+    }
+}
 project('annotation-processing') {
     dependencies {
         compile project(':annotations')
     }
+
+
 }

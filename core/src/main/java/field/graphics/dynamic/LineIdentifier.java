@@ -77,10 +77,10 @@ public class LineIdentifier implements iLineIdentifier {
 
 	public LineIdentifier stripFirst() {
 		LineIdentifier i = new LineIdentifier();
-		int index = this.path.indexOf("/");
-		if (index != -1) {
-			i.path = this.path.substring(this.path.indexOf("/") + 1, this.path.length());
-			if (this.parts != null) {
+        int index = this.path.indexOf('/');
+        if (index != -1) {
+            i.path = this.path.substring(this.path.indexOf('/') + 1, this.path.length());
+            if (this.parts != null) {
 				i.parts = new String[this.parts.length - 1];
 				System.arraycopy(this.parts, 1, i.parts, 0, i.parts.length);
 			}

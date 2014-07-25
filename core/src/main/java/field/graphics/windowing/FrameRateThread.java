@@ -13,8 +13,9 @@ public class FrameRateThread {
 		init(canvas);
 	}
 
-	private void init(final FullScreenCanvasSWT canvas) {
-		new Thread(new Runnable() {
+    private static
+    void init(final FullScreenCanvasSWT canvas) {
+        new Thread(new Runnable() {
 
 			public void run() {
 				while (true) {

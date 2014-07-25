@@ -220,8 +220,8 @@ public class CoordinateFrameCamera implements iUpdateable {
 		positionInWorld(at);
 
 		Vector3 ray = new Vector3();
-		ray.sub(look, at, ray);
-		if (ray.mag() == 0)
+        Vector3.sub(look, at, ray);
+        if (ray.mag() == 0)
 			return;
 		ray.normalize();
 
@@ -311,7 +311,7 @@ public class CoordinateFrameCamera implements iUpdateable {
 		lookInWorld(look);
 		Vector3 at = new Vector3();
 		positionInWorld(at);
-		ray.sub(at, look, ray);
+        Vector3.sub(at, look, ray);
 
 		tmp.cross(ray, up);
 		realUp.cross(tmp, ray);
@@ -507,7 +507,7 @@ public class CoordinateFrameCamera implements iUpdateable {
 		lookInWorld(look);
 		Vector3 at = new Vector3();
 		positionInWorld(at);
-		ray.sub(at, look, ray);
+        Vector3.sub(at, look, ray);
 
 		tmp.cross(ray, up);
 		realUp.cross(tmp, ray);
@@ -578,7 +578,7 @@ public class CoordinateFrameCamera implements iUpdateable {
 		lookInWorld(look);
 		Vector3 at = new Vector3();
 		positionInWorld(at);
-		ray.sub(at, look, ray);
+        Vector3.sub(at, look, ray);
 
 		Vector3 right = new Vector3();
 		Vector3 up = new Vector3();

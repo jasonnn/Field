@@ -988,7 +988,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 					}
 				}
 
-				if (imax < 0) { throw new RuntimeException("" + imax); }
+                if (imax < 0) { throw new RuntimeException(String.valueOf(imax)); }
 
 				// Is a row exchange necessary?
 				if (j != imax) {

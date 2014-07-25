@@ -45,7 +45,7 @@ public class FieldGraphics2D extends Graphics2D {
 			}
 		}
 
-		CachedLine c = new LineUtils().piToCachedLine(s.getPathIterator(null));
+        CachedLine c = LineUtils.piToCachedLine(s.getPathIterator(null));
 
 		Dict p = c.getProperties();
 		p.put(iLinearGraphicsContext.stroked, true);
@@ -104,7 +104,7 @@ public class FieldGraphics2D extends Graphics2D {
 	@Override
 	public void fill(Shape s) {
 
-		CachedLine c = new LineUtils().piToCachedLine(s.getPathIterator(null));
+        CachedLine c = LineUtils.piToCachedLine(s.getPathIterator(null));
 
 		Dict p = c.getProperties();
 		p.put(iLinearGraphicsContext.stroked, false);

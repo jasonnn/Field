@@ -29,10 +29,8 @@ public class ClSymbolicWeight {
 	public ClSymbolicWeight(double[] weights) {
 		final int cLevels = weights.length;
 		_values = new double[cLevels];
-		for (int i = 0; i < cLevels; i++) {
-			_values[i] = weights[i];
-		}
-	}
+        System.arraycopy(weights, 0, _values, 0, cLevels);
+    }
 
 	public static final ClSymbolicWeight clsZero = new ClSymbolicWeight(0.0, 0.0, 0.0);
 

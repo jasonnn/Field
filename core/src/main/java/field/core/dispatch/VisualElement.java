@@ -377,8 +377,8 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 		ps.add(new Comp("", "<i>Psuedo</i>properties (generally read only)").setTitle(true));
 		for (VisualElementProperty p : PseudoPropertiesPlugin.properties) {
 			if (p.getName().startsWith(prefix)) {
-				ps.add(new Comp(p.getName(), PythonTextEditor.limit("" + p.get(adaptor))));
-			}
+                ps.add(new Comp(p.getName(), PythonTextEditor.limit(String.valueOf(p.get(adaptor)))));
+            }
 		}
 		if (ps.size() > 1)
 			c.addAll(ps);

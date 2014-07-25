@@ -89,7 +89,7 @@ public class SystemProperties {
 	}
 	static public double getDoubleProperty(String s, double def)
 	{
-		String p= getProperty(s,""+def);
+        String p = getProperty(s, String.valueOf(def));
 
 		double ret= def;
 		try
@@ -104,7 +104,7 @@ public class SystemProperties {
 
 	static public int getIntProperty(String s, int def)
 	{
-		String p= getProperty(s,""+def);
+        String p = getProperty(s, String.valueOf(def));
 
 		int ret= def;
 		try

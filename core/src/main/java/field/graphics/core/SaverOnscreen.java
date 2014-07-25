@@ -110,9 +110,10 @@ public class SaverOnscreen {
 			on = false;
 	}
 
-	private String pad(int i) {
-		String s = i + "";
-		while (s.length() < 5)
+    private static
+    String pad(int i) {
+        String s = String.valueOf(i);
+        while (s.length() < 5)
 			s = "0" + s;
 		return s;
 	}

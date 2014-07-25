@@ -39,8 +39,8 @@ public abstract class PointOffering implements iOffering {
 			this.from = from;
 			this.to = to;
 
-			this.token = uid + "" + to;
-		}
+            this.token = uid + to;
+        }
 
 		public void draw(OfferedAlignment alignment) {
 

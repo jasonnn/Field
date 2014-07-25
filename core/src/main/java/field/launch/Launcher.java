@@ -126,7 +126,7 @@ public class Launcher {
 
 
                 launcher = new Launcher(args);
-                new MiscNative().doSplash();
+                MiscNative.doSplash();
 
                 if (Platform.getOS() == Platform.OS.mac && SystemProperties.getIntProperty("above", 0) == 1)
                     new AppleScript("tell application \"Field\"\n activate\nend tell", false);

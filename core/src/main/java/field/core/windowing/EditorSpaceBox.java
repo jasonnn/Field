@@ -164,8 +164,9 @@ public class EditorSpaceBox {
 
 	}
 
-	private void transform(Vector2 p, Vector4 from, Vector4 to) {
-		p.x = (p.x - from.z) / from.x;
+    private static
+    void transform(Vector2 p, Vector4 from, Vector4 to) {
+        p.x = (p.x - from.z) / from.x;
 		p.y = (p.y - from.w) / from.y;
 
 		p.x = p.x * to.x + to.z;

@@ -73,8 +73,9 @@ public class TweakSplineUI {
 		float lastOy = 0;
 	}
 
-	public class Selectable {
-		SelectedVertex current;
+    public static
+    class Selectable {
+        SelectedVertex current;
 
 		Set<SubSelection> add;
 
@@ -82,8 +83,9 @@ public class TweakSplineUI {
 
 		public Selectable(SelectedVertex v, SubSelection... s) {
 			current = v;
-			add = new HashSet<SubSelection>(Arrays.asList(s));
-		}
+            add = EnumSet.noneOf(SubSelection.class);
+            Collections.addAll(add, s);
+        }
 
 		@Override
 		public String toString() {
@@ -102,15 +104,15 @@ public class TweakSplineUI {
 
 		boolean writeToThawInstead = false;
 
-		HashMap<SubSelection, Vector2> frozenPosition = new HashMap<SubSelection, Vector2>();
+        Map<SubSelection, Vector2> frozenPosition = new EnumMap<SubSelection, Vector2>(SubSelection.class);
 
-		HashMap<SubSelection, Vector2> absPosition = new HashMap<SubSelection, Vector2>();
+        Map<SubSelection, Vector2> absPosition = new EnumMap<SubSelection, Vector2>(SubSelection.class);
 
-		HashMap<SubSelection, Float> amountSelected = new LinkedHashMap<SubSelection, Float>();
+        Map<SubSelection, Float> amountSelected = new EnumMap<SubSelection, Float>(SubSelection.class);
 
 		public SelectedVertex(CachedLine l, CachedLineCursor c) {
-			whatSelected = new HashSet<SubSelection>();
-			whatSelected.add(SubSelection.postion);
+            whatSelected = EnumSet.noneOf(SubSelection.class);//new EnumSet<SubSelection>();
+            whatSelected.add(SubSelection.postion);
 			vertex = c.getCurrent();
 			vertexIndex = c.getCurrentIndex();
 			onLine = l;
@@ -120,8 +122,8 @@ public class TweakSplineUI {
 			onLine = line;
 			vertex = onLine.events.get(nodeNumber);
 			vertexIndex = nodeNumber;
-			whatSelected = new HashSet<SubSelection>();
-		}
+            whatSelected = EnumSet.noneOf(SubSelection.class); //new HashSet<SubSelection>();
+        }
 
 		public void freeze() {
 
@@ -611,8 +613,8 @@ public class TweakSplineUI {
 
 				System.err.println(" mouse released");
 				if (justAdded != null) {
-					if (firstDrag == true) {
-						if ((arg0.stateMask & SWT.SHIFT) == 0) {
+                    if (firstDrag) {
+                        if ((arg0.stateMask & SWT.SHIFT) == 0) {
 							known.clear();
 							selection.clear();
 						}
@@ -620,8 +622,9 @@ public class TweakSplineUI {
 						fireRepaint();
 						justAdded = null;
 					}
-				} else if (justAdded == null && firstDrag == true) {
-					if ((arg0.stateMask & SWT.SHIFT) == 0) {
+                }
+                else if (justAdded == null && firstDrag) {
+                    if ((arg0.stateMask & SWT.SHIFT) == 0) {
 						known.clear();
 						selection.clear();
 					}
@@ -829,8 +832,8 @@ public class TweakSplineUI {
 
 		upup.put("Live tools ...", null);
 		for (final Map.Entry<String, BaseTool> m : knownLiveTools.entrySet()) {
-			upup.put("" + (m.getValue() == currentTool ? "!" : "") + " \u2333 <b>" + m.getKey() + "</b>", new iUpdateable() {
-				public void update() {
+            upup.put((m.getValue() == currentTool ? "!" : "") + " \u2333 <b>" + m.getKey() + "</b>", new iUpdateable() {
+                public void update() {
 					currentTool = m.getValue();
 				}
 			});
@@ -1188,8 +1191,10 @@ public class TweakSplineUI {
 
 							if (known.containsKey(cursor.getCurrent()) && known.get(cursor.getCurrent()).whatSelected.contains(SubSelection.postion)) {
 							} else {
-								selectedableVertex.put(at, new Selectable(new SelectedVertex(l, cursor), SubSelection.postion));
-							}
+                                selectedableVertex.put(at,
+                                                       new Selectable(new SelectedVertex(l, cursor),
+                                                                      SubSelection.postion));
+                            }
 						}
 					}
 				}

@@ -237,8 +237,9 @@ public class CachedLineInterpolator {
 		}
 	}
 
-	private CachedLine find(HashMapOfLists<String, CachedLine> right2, String key, int i) {
-		Collection<CachedLine> kk = right2.get(key);
+    private static
+    CachedLine find(HashMapOfLists<String, CachedLine> right2, String key, int i) {
+        Collection<CachedLine> kk = right2.get(key);
 		if (kk == null)
 			return null;
 		if (kk.size() <= i)
@@ -246,8 +247,9 @@ public class CachedLineInterpolator {
 		return ((List<CachedLine>) kk).get(i);
 	}
 
-	public abstract class Blender {
-		abstract public List<CachedLine> blend(float alpha);
+    public abstract static
+    class Blender {
+        abstract public List<CachedLine> blend(float alpha);
 	}
 
 	private HashMapOfLists<String, CachedLine> makeMap(List<CachedLine> list, Prop hash) {
@@ -255,7 +257,7 @@ public class CachedLineInterpolator {
 		HashMapOfLists<String, CachedLine> r = new HashMapOfLists<String, CachedLine>();
 
 		for (CachedLine ll : list) {
-			String m = ll.getProperties().get(hash) + "";
+            String m = String.valueOf(ll.getProperties().get(hash));
 
 			r.addToList(m, ll);
 		}

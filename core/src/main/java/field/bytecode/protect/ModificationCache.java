@@ -42,10 +42,10 @@ public class ModificationCache {
 	{
 		known.put(name, new Modification(is, at));
 	}
-	
 
-	public long modificationForURL(URL u)
-	{
+
+    public static
+    long modificationForURL(URL u) {
 		if (u==null) return 0;
 		String external = u.toExternalForm();
 		if (external.startsWith("file:"))
@@ -60,10 +60,11 @@ public class ModificationCache {
         //System.out.println(" no modification date available from <"+u.toExternalForm()+">");
         return 0;
 	}
-	
-	
-	public <T> T persist(String name, T defaultValue) {
-		T t = defaultValue;
+
+
+    public static
+    <T> T persist(String name, T defaultValue) {
+        T t = defaultValue;
 		final String filename = System.getProperty("user.home") + "/Library/Application Support/Field" + "/" + name + ".xml";
 		try {
 

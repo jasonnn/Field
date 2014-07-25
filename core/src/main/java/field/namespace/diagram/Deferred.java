@@ -227,12 +227,14 @@ public class Deferred {
 			lastProducedAt -= this.durationBetweenEvents;
 		}
 
-		protected boolean delete(iMarker m, iChannel from) {
-			return false;
+        protected static
+        boolean delete(iMarker m, iChannel from) {
+            return false;
 		}
 
-		protected iMarker makeMarker(double now, iChannel into) {
-			return null;
+        protected static
+        iMarker makeMarker(double now, iChannel into) {
+            return null;
 		}
 
 		protected void produce(double now) {
@@ -347,21 +349,24 @@ public class Deferred {
 			active.clear();
 		}
 
-		protected void start(iMarker<Object> m) {
-			Object p = m.getPayload();
+        protected static
+        void start(iMarker<Object> m) {
+            Object p = m.getPayload();
 			if (p instanceof Executable) {
 				((Executable) p).start();
 			}
 		}
 
-		protected void stop(iMarker<Object> m) {
-			Object p = m.getPayload();
+        protected static
+        void stop(iMarker<Object> m) {
+            Object p = m.getPayload();
 			if (p instanceof Executable) {
 				((Executable) p).stop();
 			}
 		}
 
-		protected void update(iMarker<Object> m) {
+        protected static
+        void update(iMarker<Object> m) {
 
 			Object p = m.getPayload();
 

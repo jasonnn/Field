@@ -47,8 +47,9 @@ public class GitVersioningQueries {
 
 	}
 
-	public class Snippet {
-		int start, stop;
+    public static
+    class Snippet {
+        int start, stop;
 		String contents;
 
 		public Snippet() {

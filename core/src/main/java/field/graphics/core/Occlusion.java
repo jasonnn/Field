@@ -72,8 +72,8 @@ public class Occlusion {
 
 			aq = new ArrayList<AsynchronousQuery>();
 			for (int i = 0; i < bins.length - 1; i++) {
-				aq.add(new AsynchronousQuery("" + i, StandardPass.preTransform, StandardPass.postRender));
-			}
+                aq.add(new AsynchronousQuery(String.valueOf(i), StandardPass.preTransform, StandardPass.postRender));
+            }
 
 			queue.new Task() {
 

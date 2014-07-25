@@ -28,8 +28,9 @@ public class FitBox {
 
 	EigenStructure structure;
 
-	public class Axis {
-		public Vector3 direction = new Vector3();
+    public static
+    class Axis {
+        public Vector3 direction = new Vector3();
 
 		public float length;
 

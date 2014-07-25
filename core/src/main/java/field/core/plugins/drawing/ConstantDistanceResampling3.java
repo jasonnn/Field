@@ -331,8 +331,9 @@ public class ConstantDistanceResampling3 {
 
 	}
 
-	protected void convertStreamToSmoothSpline(List<Vector3> stream, iLine resampledIn) {
-		if (stream.size() < 3)
+    protected static
+    void convertStreamToSmoothSpline(List<Vector3> stream, iLine resampledIn) {
+        if (stream.size() < 3)
 			return;
 		for (int i = 0; i < stream.size(); i++) {
 			if (i == 0) {

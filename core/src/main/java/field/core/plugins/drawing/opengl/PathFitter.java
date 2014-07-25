@@ -17,8 +17,9 @@ public class PathFitter {
 		this.error = error;
 	}
 
-	public class Curve {
-		public Curve(Vector2 pt1, Vector2 t1, Vector2 t2, Vector2 pt2) {
+    public static
+    class Curve {
+        public Curve(Vector2 pt1, Vector2 t1, Vector2 t2, Vector2 pt2) {
 			this.a = new Vector2(pt1);
 			this.b = new Vector2(pt2);
 			this.t1 = new Vector2(t1);
@@ -229,7 +230,10 @@ public class PathFitter {
 
         //System.out.println(" generate bez <"+alpha1+" "+alpha2+">");
 
-        return new Curve(pt1, new Vector2(pt1).add(new Vector2(tan1).normalize().scale(alpha1)), new Vector2(pt2).add(new Vector2(tan2).normalize().scale(alpha2)), pt2);
+        return new Curve(pt1,
+                         new Vector2(pt1).add(new Vector2(tan1).normalize().scale(alpha1)),
+                         new Vector2(pt2).add(new Vector2(tan2).normalize().scale(alpha2)),
+                         pt2);
 
 	}
 

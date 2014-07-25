@@ -12,7 +12,8 @@ import java.util.List;
 
 public class Soften implements iNodeSelection {
 
-	public class AllNodesFrom implements iNodeSelection {
+    public static
+    class AllNodesFrom implements iNodeSelection {
 
 		private final iNodeSelection[] s2;
 

@@ -7,6 +7,7 @@ import field.graphics.core.BasicUtilities.OnePassElement;
 import field.launch.iUpdateable;
 import field.util.Dict.Prop;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,7 +48,9 @@ public class When {
 		}
 	};
 
-	HashMap<Base.StandardPass, BasicUtilities.OnePassElement> shims = new LinkedHashMap<StandardPass, OnePassElement>();
+    Map<Base.StandardPass, BasicUtilities.OnePassElement> shims =
+            new EnumMap<StandardPass, OnePassElement>(StandardPass.class);
+//new LinkedHashMap<StandardPass, OnePassElement>();
 
 	public PythonCallableMap getMap(Base.StandardPass pass) {
 		this.pass = pass;

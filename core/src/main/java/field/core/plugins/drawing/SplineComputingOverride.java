@@ -1352,8 +1352,9 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 
 	}
 
-	protected boolean injectFocused(CachedLine c, boolean f) {
-		if (f) {
+    protected static
+    boolean injectFocused(CachedLine c, boolean f) {
+        if (f) {
 			if (c.getProperties().isTrue(iLinearGraphicsContext.noHit, false)) {
 			} else {
 				c.getProperties().put(iLinearGraphicsContext.shouldHighlight, true);

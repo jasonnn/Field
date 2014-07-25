@@ -184,8 +184,9 @@ public class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
 
 	}
 
-	public void allViewHierarchy(List<Object> into, Object from, HashSet<Object> seen, iFunction<Boolean, Object> predicate) {
-		if (seen.contains(from))
+    public static
+    void allViewHierarchy(List<Object> into, Object from, HashSet<Object> seen, iFunction<Boolean, Object> predicate) {
+        if (seen.contains(from))
 			return;
 
 		seen.add(from);
@@ -254,8 +255,9 @@ public class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
 		return new Dimension(p.width, height);
 	}
 
-	public Object getTransformerBody() {
-		// TODO Auto-generated method stub
+    public static
+    Object getTransformerBody() {
+        // TODO Auto-generated method stub
 		return null;
 	}
 
@@ -377,8 +379,9 @@ public class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
 		super.paintComponent(g);
 	}
 
-	protected void paintBorderPath(Graphics2D g2, GeneralPath path) {
-		g2.draw(path);
+    protected static
+    void paintBorderPath(Graphics2D g2, GeneralPath path) {
+        g2.draw(path);
 	}
 
 	@Override

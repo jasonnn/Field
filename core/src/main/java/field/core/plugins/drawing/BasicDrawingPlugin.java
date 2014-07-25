@@ -342,7 +342,8 @@ public class BasicDrawingPlugin implements iPlugin {
 		return installedContext;
     }
 
-    public boolean shouldConstrain(iVisualElement source) {
+    public static
+    boolean shouldConstrain(iVisualElement source) {
         Number m = allwaysConstrain.get(source);
 		return m == null ? false : m.floatValue() > 0;
 	}

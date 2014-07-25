@@ -333,8 +333,9 @@ public class BasicGeometry {
 			triangleBuffer.dirty();
 		}
 
-		private float clamp(float f) {
-			if (f < 0.01f)
+        private static
+        float clamp(float f) {
+            if (f < 0.01f)
 				f = 0.01f;
 			if (f > 40)
 				f = 40;
@@ -485,8 +486,9 @@ public class BasicGeometry {
 			triangleBuffer.dirty();
 		}
 
-		private float clamp(float f) {
-			if (f < 0.0001f)
+        private static
+        float clamp(float f) {
+            if (f < 0.0001f)
 				f = 0.0001f;
 			if (f > 140)
 				f = 140;
@@ -1882,8 +1884,8 @@ public class BasicGeometry {
 			f.setAccessible(true);
 			long address = f.getLong(i);
             //System.out.println(" address is <" + address + ">");
-            return address + "";
-		} catch (SecurityException e) {
+            return String.valueOf(address);
+        } catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();

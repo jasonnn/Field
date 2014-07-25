@@ -107,8 +107,8 @@ public class Jvec
 			Field f= Buffer.class.getDeclaredField("address");
 			f.setAccessible(true);
 			long address= f.getLong(i);
-			return address + "";
-		}
+            return String.valueOf(address);
+        }
 		catch (SecurityException e)
 		{
 			e.printStackTrace();
@@ -334,8 +334,8 @@ public class Jvec
 	public void vadd(FloatBuffer one, float scalar, FloatBuffer result)
 	{
 		// coded out underneal
-		if (one.capacity()%4!=0)throw new IllegalArgumentException(one.capacity()+"");
-		vaddS(one, scalar, result, one.capacity());
+        if (one.capacity() % 4 != 0) throw new IllegalArgumentException(String.valueOf(one.capacity()));
+        vaddS(one, scalar, result, one.capacity());
 	}
 
 	public void vadd(FloatBuffer one, FloatBuffer two, FloatBuffer result)
@@ -377,9 +377,9 @@ public class Jvec
 	public void vdiv(FloatBuffer one, FloatBuffer two, FloatBuffer result)
 	{
 		// coded out underneath
-		if (one.capacity()%4!=0)throw new IllegalArgumentException(one.capacity()+"");
-		if (two.capacity()%4!=0)throw new IllegalArgumentException(two.capacity()+"");
-		vdiv(one, two, result, one.capacity());
+        if (one.capacity() % 4 != 0) throw new IllegalArgumentException(String.valueOf(one.capacity()));
+        if (two.capacity() % 4 != 0) throw new IllegalArgumentException(String.valueOf(two.capacity()));
+        vdiv(one, two, result, one.capacity());
 	}
 
 	// note, long's are not accelerated it appears, this code, despite the name, isn't accelerated.

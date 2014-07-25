@@ -55,8 +55,9 @@ public class HyperlinkedErrorMessage {
 	protected void goButton(String uidDesc, int parseInt) {
 	}
 
-	private AttributeSet getAttributeSetForComponent(JComponent component) {
-		Style style = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+    private static
+    AttributeSet getAttributeSetForComponent(JComponent component) {
+        Style style = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 		StyleConstants.setComponent(style, component);
 		return style;
 	}

@@ -14,8 +14,9 @@ public class ClassDocumentation {
 		public List<Comp> getCompletionDocumentationFor(String prefix);
 	}
 
-	public List<Comp> getPackageCustomCompletion(String packageName, String prefix) {
-		if (!packageName.endsWith("."))
+    public static
+    List<Comp> getPackageCustomCompletion(String packageName, String prefix) {
+        if (!packageName.endsWith("."))
 			packageName = packageName + ".";
 		packageName = packageName.replace("<b>", "");
 		try {
@@ -33,7 +34,8 @@ public class ClassDocumentation {
 		return null;
 	}
 
-	public List<Comp> getClassCustomCompletion(String prefix, Object ret, Class c) {
+    public static
+    List<Comp> getClassCustomCompletion(String prefix, Object ret, Class c) {
         //System.out.println(" looking for custom completion on class <" + c + ">");
         try {
 			Method method = c.getDeclaredMethod("getClassCustomCompletion", String.class, Object.class);
@@ -54,8 +56,9 @@ public class ClassDocumentation {
 		return null;
 	}
 
-	public String getClassDocumentation(String prefix, Object ret, Class c) {
-		try {
+    public static
+    String getClassDocumentation(String prefix, Object ret, Class c) {
+        try {
 			Method method = c.getMethod("getClassDocumentation", String.class, Object.class);
 			String documentation = (String) method.invoke(null, prefix, ret);
 			return documentation;

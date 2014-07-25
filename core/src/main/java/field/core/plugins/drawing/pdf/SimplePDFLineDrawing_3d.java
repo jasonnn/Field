@@ -93,7 +93,8 @@ public class SimplePDFLineDrawing_3d {
 
 	static public PythonCallableMap thicknessOpacity = new PythonCallableMap();
 
-	protected Pair<Float, Float> filteredThickness(float thick, float w) {
+    protected static
+    Pair<Float, Float> filteredThickness(float thick, float w) {
 
 		if (!thicknessOpacity.isEmpty()) {
 			Vector2 v = (Vector2) thicknessOpacity.invokeChained(thick, w);
@@ -105,7 +106,8 @@ public class SimplePDFLineDrawing_3d {
 
 	static public PythonCallableMap colorTransform = new PythonCallableMap();
 
-	protected Vector4 filteredColor(Vector4 c) {
+    protected static
+    Vector4 filteredColor(Vector4 c) {
 
 		if (!colorTransform.isEmpty()) {
 			Vector4 v = (Vector4) colorTransform.invokeChained(c);
@@ -1196,7 +1198,12 @@ public class SimplePDFLineDrawing_3d {
 	public SimplePDFLineDrawing_3d() {
 	}
 
-	public void drawInto(CachedLine line, Dict properties, iDynamicMesh outputLine, iLinearGraphicsContext context, SmallLineEmitter lineEmitter) {
+    public static
+    void drawInto(CachedLine line,
+                  Dict properties,
+                  iDynamicMesh outputLine,
+                  iLinearGraphicsContext context,
+                  SmallLineEmitter lineEmitter) {
 
 		CachedLineCursor cursor = new CachedLineCursor(line);
 
@@ -1244,7 +1251,12 @@ public class SimplePDFLineDrawing_3d {
 			outputLine.close();
 	}
 
-	public void drawInto(CachedLine line, Dict properties, iDynamicMesh outputLine, iLinearGraphicsContext context, Small3dLineEmitter_long lineEmitter) {
+    public static
+    void drawInto(CachedLine line,
+                  Dict properties,
+                  iDynamicMesh outputLine,
+                  iLinearGraphicsContext context,
+                  Small3dLineEmitter_long lineEmitter) {
 
 		CachedLineCursor cursor = new CachedLineCursor(line);
 
@@ -1308,8 +1320,9 @@ public class SimplePDFLineDrawing_3d {
 		context.addDrawingAcceptor(new PlainPDFLine(context));
 	}
 
-	protected float clamp(float z) {
-		return Math.min(1, Math.max(0, z));
+    protected static
+    float clamp(float z) {
+        return Math.min(1, Math.max(0, z));
 	}
 
 	protected void beginTransform(CachedLine line, Dict properties) {

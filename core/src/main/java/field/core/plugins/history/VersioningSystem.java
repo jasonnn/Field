@@ -334,8 +334,9 @@ public abstract class VersioningSystem {
 
 	}
 
-	private String propertyNameFor(String p) {
-		String[] s = p.split("/");
+    private static
+    String propertyNameFor(String p) {
+        String[] s = p.split("/");
 		return s[s.length - 1].replace(".property", "");
 	}
 
@@ -477,8 +478,9 @@ public abstract class VersioningSystem {
 		return false;
 	}
 
-	protected String stringRepresentationFor(Object property) {
-		if (property instanceof String) {
+    protected static
+    String stringRepresentationFor(Object property) {
+        if (property instanceof String) {
 			return "string>" + property;
 		} else {
 			XStream stream = new XStream(new Sun14ReflectionProvider());

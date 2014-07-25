@@ -14,8 +14,9 @@ import java.util.List;
 
 public class TessLineEmitter extends SmallLineEmitter {
 
-	public class VInfo {
-		int vertex = -1;
+    public static
+    class VInfo {
+        int vertex = -1;
 
 		Vector2 position = new Vector2();
 

@@ -352,7 +352,13 @@ public class SimpleWebpageDrawing {
 			refreshHandle.update();
 	}
 
-	protected void rewriteEvent(final Dict properties, final Vector3 v, Vector3 right, Vector3 down, final BasicCamera camera, Vector2 e) {
+    protected static
+    void rewriteEvent(final Dict properties,
+                      final Vector3 v,
+                      Vector3 right,
+                      Vector3 down,
+                      final BasicCamera camera,
+                      Vector2 e) {
         //System.out.println(" up event at :" + e);
 
 		Vector3 r1 = new Vector3();
@@ -392,7 +398,13 @@ public class SimpleWebpageDrawing {
 		e.y = (int) yy;
 	}
 
-	protected void rewriteEvent(final Dict properties, final Vector3 v, Vector3 right, Vector3 down, final BasicCamera camera, Event e) {
+    protected static
+    void rewriteEvent(final Dict properties,
+                      final Vector3 v,
+                      Vector3 right,
+                      Vector3 down,
+                      final BasicCamera camera,
+                      Event e) {
         //System.out.println(" up event at :" + e);
 
 		Vector3 r1 = new Vector3();

@@ -108,12 +108,12 @@ public class ContextualUniform {
 		public void setAttribute(String name, Object value) {
 			for (Pair<String, String> q : m) {
 				if (q.left.equals(name)) {
-					q.right = "" + value;
-					return;
+                    q.right = String.valueOf(value);
+                    return;
 				}
 			}
-			add(name, "" + value);
-		}
+            add(name, String.valueOf(value));
+        }
 
 		public Matches(T value) {
 			this.value = value;

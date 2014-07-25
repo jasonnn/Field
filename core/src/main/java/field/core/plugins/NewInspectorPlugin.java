@@ -121,7 +121,7 @@ public class NewInspectorPlugin implements iPlugin {
 
 	private iVisualElement currentInspection;
 
-	final protected String pluginId = "//inspector_python";
+    static final protected String pluginId = "//inspector_python";
 
 	protected LocalVisualElement lve;
 
@@ -219,8 +219,11 @@ public class NewInspectorPlugin implements iPlugin {
 	private void installHelpBrowser(final iVisualElement root) {
 		HelpBrowser h = HelpBrowser.helpBrowser.get(root);
 		ContextualHelp ch = h.getContextualHelp();
-		ch.addContextualHelpForWidget("inspector", inspector.getContents(), ch.providerForStaticMarkdownResource("contextual/inspector.md"), 50);
-	}
+    ch.addContextualHelpForWidget("inspector",
+                                  inspector.getContents(),
+                                  ContextualHelp.providerForStaticMarkdownResource("contextual/inspector.md"),
+                                  50);
+}
 	public void setPersistanceInformation(Object o) {
 	}
 

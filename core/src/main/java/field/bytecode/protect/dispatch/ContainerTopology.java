@@ -82,8 +82,15 @@ public class ContainerTopology implements DispatchProvider {
 		alreadyDone.remove(fromThis);
 	}
 
-	protected void applyToBackwards(Object root, Object[] args, Method m, ClassLoader loader, org.objectweb.asm.commons.Method method, String className, String id) {
-		if (root instanceof iContainer) {
+    protected static
+    void applyToBackwards(Object root,
+                          Object[] args,
+                          Method m,
+                          ClassLoader loader,
+                          org.objectweb.asm.commons.Method method,
+                          String className,
+                          String id) {
+        if (root instanceof iContainer) {
 			List list = ((iContainer) root).propagateTo(id, null, m, args);
 			if (list == null)
 				return;
@@ -111,8 +118,15 @@ public class ContainerTopology implements DispatchProvider {
 		}
 	}
 
-	protected void applyToForwards(Object root, Object[] args, Method m, ClassLoader loader, org.objectweb.asm.commons.Method method, String className, String id) {
-		if (root instanceof iContainer) {
+    protected static
+    void applyToForwards(Object root,
+                         Object[] args,
+                         Method m,
+                         ClassLoader loader,
+                         org.objectweb.asm.commons.Method method,
+                         String className,
+                         String id) {
+        if (root instanceof iContainer) {
 			List list = ((iContainer) root).propagateTo(id, null, m, args);
 			if (list == null)
 				return;

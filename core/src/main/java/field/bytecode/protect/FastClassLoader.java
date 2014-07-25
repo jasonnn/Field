@@ -56,7 +56,7 @@ public class FastClassLoader extends URLClassLoader {
                     Map<String, String> a = FastClassLoader.this.a;
                     FastClassLoader.this.a = new HashMap<String, String>();
 
-                    a.put("__maphash__", "" + maphash);
+                    a.put("__maphash__", String.valueOf(maphash));
 
                     ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(new File(filename))));
                     oos.writeObject(a);

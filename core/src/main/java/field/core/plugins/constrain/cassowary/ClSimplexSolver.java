@@ -368,8 +368,9 @@ public class ClSimplexSolver extends ClTableau {
 	// Re-initialize this solver from the original constraints, thus
 	// getting rid of any accumulated numerical problems.  (Actually, we
 	// haven't definitely observed any such problems yet)
-	public final void reset() throws ExCLInternalError {
-		if (fTraceOn)
+    public static
+    void reset() throws ExCLInternalError {
+        if (fTraceOn)
 			fnenterprint("reset");
 		throw new ExCLInternalError("reset not implemented");
 	}

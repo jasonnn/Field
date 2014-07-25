@@ -408,7 +408,7 @@ public class CustomInsertSystem implements iCustomInsertSystem {
 
 	public static String stringForTag(int tag) {
 
-		return "" + (char) (0xf800 + tag);
+        return String.valueOf((char) (0xf800 + tag));
 
 		// return "XXX" + (char) ('0' + tag) + "XXX";
 

@@ -57,7 +57,7 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             //  invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
             pop();
@@ -69,7 +69,7 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             // invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
             unbox(ASMType.INT_TYPE);
@@ -81,7 +81,7 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             // invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
             unbox(ASMType.FLOAT_TYPE);
@@ -92,7 +92,7 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             loadThis();
             push(onMethod.getName());
             push(parameterName);
-            push("" + returnNumber++);
+            push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             //invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
         }

@@ -171,8 +171,9 @@ public class HistoryExplorerHG {
 		return ret;
 	}
 
-	public Set<VersionNode> buildHistoryGraph(String string) {
-		System.err.println(" building history graph for file <" + string + ">");
+    public static
+    Set<VersionNode> buildHistoryGraph(String string) {
+        System.err.println(" building history graph for file <" + string + ">");
 		HGLog log = new HGLog(string);
 		List<VersionNode> vn = log.getVersionNodes();
 

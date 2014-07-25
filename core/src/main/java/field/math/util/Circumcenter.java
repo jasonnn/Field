@@ -5,8 +5,9 @@ import field.math.linalg.Vector3;
 
 public class Circumcenter {
 
-	public Vector3 circumcenterOf(Vector3 A, Vector3 B, Vector3 C) {
-		Vector3 r = new Vector3();
+    public static
+    Vector3 circumcenterOf(Vector3 A, Vector3 B, Vector3 C) {
+        Vector3 r = new Vector3();
 		if (A.z == 0.0 && B.z == 0.0 && C.z == 0.0) {
 			double u = ((A.x - B.x) * (A.x + B.x) + (A.y - B.y) * (A.y + B.y)) / 2.0;
 			double v = ((B.x - C.x) * (B.x + C.x) + (B.y - C.y) * (B.y + C.y)) / 2.0;
@@ -32,8 +33,9 @@ public class Circumcenter {
 		return r;
 	}
 
-	public Vector2 circumcenterOf(Vector2 A, Vector2 B, Vector2 C) {
-		Vector2 r = new Vector2();
+    public static
+    Vector2 circumcenterOf(Vector2 A, Vector2 B, Vector2 C) {
+        Vector2 r = new Vector2();
 
 		Vector2 BmA = new Vector2();
 		Vector2 CmA = new Vector2();

@@ -105,8 +105,9 @@ public class AutoExecutePythonPlugin implements iPlugin {
 		lve = new LocalVisualElement();
 	}
 
-	public void autoExecute(final iVisualElement newSource, final String string) {
-		assert false;
+    public static
+    void autoExecute(final iVisualElement newSource, final String string) {
+        assert false;
 	}
 
 	TreeSet<iVisualElement> elements = new TreeSet<iVisualElement>(new Comparator<iVisualElement>() {

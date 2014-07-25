@@ -122,12 +122,14 @@ public abstract class ExecutionDecoration2 {
 
 	abstract protected void continueToBeActiveAfterUp();
 
-	public boolean drag(Event arg0) {
-		return false;
+    public static
+    boolean drag(Event arg0) {
+        return false;
 	}
 
-	public boolean up(Event arg0) {
-		return false;
+    public static
+    boolean up(Event arg0) {
+        return false;
 	}
 
 	public void paintNow() {

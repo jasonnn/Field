@@ -75,7 +75,8 @@ public class PathNotInWorkspaceHelperMenu2 {
 		new ExecuteCommand(".", new String[] { "/bin/cp", "-r", filename, to.getAbsolutePath() }, true).waitFor();
 	}
 
-	private File uniqName(Shell fc, String filename, iAcceptor<File> acceptor) {
+    private static
+    File uniqName(Shell fc, String filename, iAcceptor<File> acceptor) {
 
 		String name = new File(filename).getName();
 		if (!name.endsWith(".field"))

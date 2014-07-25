@@ -301,8 +301,9 @@ public class CachedLineCursor {
 		return null;
 	}
 
-	private float interpret(Object object, int i) {
-		if (object == null)
+    private static
+    float interpret(Object object, int i) {
+        if (object == null)
 			return 0;
 		if (object instanceof Number)
 			return ((Number) object).floatValue();
@@ -585,4 +586,20 @@ public class CachedLineCursor {
 		return false;
 	}
 
+    @Override
+    public
+    String toString() {
+        return "CachedLineCursor{" +
+               "before=" + before +
+               ", current=" + current +
+               ", after=" + after +
+               ", on=" + on +
+               ", currentIndex=" + currentIndex +
+               ", lastMoveTo=" + lastMoveTo +
+               ", ta=" + ta +
+               ", tc1=" + tc1 +
+               ", tc2=" + tc2 +
+               ", tb=" + tb +
+               '}';
+    }
 }

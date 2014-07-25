@@ -39,8 +39,8 @@ public class PopupTextBox {
 				if (Character.isISOControl(arg0.character))
 					return false;
 
-				textBox.append("" + arg0.character);
-				completion(textBox, this);
+                textBox.append(String.valueOf(arg0.character));
+                completion(textBox, this);
 				return false;
 			}
 		});
@@ -181,8 +181,8 @@ public class PopupTextBox {
         }
 
 		static public void getFloat(Point at, String label, float def, final iAcceptor<Float> result) {
-			new PopupTextBox(def + "", at, label) {
-				@Override
+            new PopupTextBox(String.valueOf(def), at, label) {
+                @Override
 				protected boolean validateText() {
 					try {
 						Float.parseFloat(textBox.getText());
@@ -200,8 +200,8 @@ public class PopupTextBox {
 		}
 
 		static public void getInteger(Point at, String label, float def, final iAcceptor<Integer> result) {
-			new PopupTextBox(def + "", at, label) {
-				@Override
+            new PopupTextBox(String.valueOf(def), at, label) {
+                @Override
 				protected boolean validateText() {
 					try {
 						Integer.parseInt(textBox.getText());

@@ -50,8 +50,9 @@ public class PackageTools {
 		}
 	}
 
-	public boolean isPackage(String file) {
-		boolean endsWith = file.endsWith(".fieldpackage");
+    public static
+    boolean isPackage(String file) {
+        boolean endsWith = file.endsWith(".fieldpackage");
 		try {
 			if (endsWith && !new File(file).getCanonicalFile().getPath().startsWith(FieldMenus2.getCanonicalVersioningDir()))
 				return true;
@@ -153,7 +154,8 @@ public class PackageTools {
 		return newTempFileWithSet(suggestedName, copier, v);
 	}
 
-	public File newTempFileWithSet(String suggestedName, FluidCopyPastePersistence copier, Set<iVisualElement> v) {
+    public static
+    File newTempFileWithSet(String suggestedName, FluidCopyPastePersistence copier, Set<iVisualElement> v) {
         //System.out.println(" output is <" + v + ">");
 
 		File tmpFile = null;
@@ -176,8 +178,9 @@ public class PackageTools {
 		return null;
 	}
 
-	public String getSuggestedFileName(String filename) {
-		XStream stream = new XStream(new Sun14ReflectionProvider());
+    public static
+    String getSuggestedFileName(String filename) {
+        XStream stream = new XStream(new Sun14ReflectionProvider());
 		try {
 			ObjectInputStream o = stream.createObjectInputStream(new BufferedReader(new FileReader(filename)));
 			String suggested = (String) o.readObject();
@@ -195,8 +198,9 @@ public class PackageTools {
 		return null;
 	}
 
-	public void importFieldPackage(iVisualElement root, String filename) {
-		FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
+    public static
+    void importFieldPackage(iVisualElement root, String filename) {
+        FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
 
 		SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
 		selectionGroup.deselectAll();
@@ -220,8 +224,9 @@ public class PackageTools {
 		}
 	}
 
-	public void importFieldPackage(iVisualElement root, String filename, Vector2 centerOn) {
-		FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
+    public static
+    void importFieldPackage(iVisualElement root, String filename, Vector2 centerOn) {
+        FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
 
 		SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
 		selectionGroup.deselectAll();
@@ -255,7 +260,8 @@ public class PackageTools {
 		}
 	}
 
-	public void copyFileReferenceToClipboard(final String file) {
+    public static
+    void copyFileReferenceToClipboard(final String file) {
 
 		try {
 			new AppleScript("set the clipboard to (\"" + new File(file).toURL().toExternalForm() + "\" as POSIX file)\n", true);

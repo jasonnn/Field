@@ -277,8 +277,10 @@ public class OutputInserts {
 
 	private static void println(Object o, OutputInserts oi) {
 		try {
-			oi.document.insertString(oi.document.getEndPosition().getOffset() - 1, "" + o + "\n", oi.document.getStyle("regular"));
-		} catch (BadLocationException e) {
+            oi.document.insertString(oi.document.getEndPosition().getOffset() - 1,
+                                     o + "\n",
+                                     oi.document.getStyle("regular"));
+        } catch (BadLocationException e) {
 			e.printStackTrace();
 		}
     }

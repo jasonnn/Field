@@ -418,8 +418,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 				final ClassRecord rr = allClasses.get(i);
 
 				if (rr.firstName.contains("$")) {
-					if (Character.isDigit(rr.firstName.charAt(rr.firstName.lastIndexOf("$") + 1))) {
-						i++;
+                    if (Character.isDigit(rr.firstName.charAt(rr.firstName.lastIndexOf('$') + 1))) {
+                        i++;
 						continue;
 					}
 				}
@@ -427,9 +427,13 @@ public class PythonTextEditor extends BaseTextEditor2 {
 					@Override
 					public void update() {
 						if (PythonInterface.getPythonInterface().getVariable(rr.firstName) == null) {
-							if (rr.firstName.indexOf("$") == -1) {
-								String aa = "from " + rr.fullName.substring(0, rr.fullName.lastIndexOf(".")) + " import " + rr.firstName + "\n";
-								PythonInterface.getPythonInterface().execString(aa);
+                            if (rr.firstName.indexOf('$') == -1) {
+                                String aa = "from "
+                                            + rr.fullName.substring(0, rr.fullName.lastIndexOf('.'))
+                                            + " import "
+                                            + rr.firstName
+                                            + "\n";
+                                PythonInterface.getPythonInterface().execString(aa);
 								ed.getContent().replaceTextRange(0, 0, aa);
 
 								int old = ed.getCaretOffset();
@@ -439,10 +443,20 @@ public class PythonTextEditor extends BaseTextEditor2 {
 							} else {
 								String[] xx = rr.firstName.split("\\$");
 
-								String aa1 = "from " + rr.fullName.substring(0, rr.fullName.lastIndexOf(".")) + " import " + xx[0] + "\n";
-								PythonInterface.getPythonInterface().execString(aa1);
-								String aa2 = "from " + rr.fullName.substring(0, rr.fullName.lastIndexOf(".")) + "." + xx[0] + " import " + xx[1] + "\n";
-								PythonInterface.getPythonInterface().execString(aa2);
+                                String aa1 = "from "
+                                             + rr.fullName.substring(0, rr.fullName.lastIndexOf('.'))
+                                             + " import "
+                                             + xx[0]
+                                             + "\n";
+                                PythonInterface.getPythonInterface().execString(aa1);
+                                String aa2 = "from "
+                                             + rr.fullName.substring(0, rr.fullName.lastIndexOf('.'))
+                                             + "."
+                                             + xx[0]
+                                             + " import "
+                                             + xx[1]
+                                             + "\n";
+                                PythonInterface.getPythonInterface().execString(aa2);
 								ed.getContent().replaceTextRange(0, 0, aa2);
 								ed.getContent().replaceTextRange(0, 0, aa1);
 
@@ -482,21 +496,23 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
 		for (int x = 0; x < r.size(); x++) {
 			Completion c = r.get(x);
-			if (!c.text.substring(0, c.text.indexOf(".")).equals(old)) {
-				Completion heading = new Completion() {
+            if (!c.text.substring(0, c.text.indexOf('.')).equals(old)) {
+                Completion heading = new Completion() {
 
 					@Override
 					public void update() {
 					}
 
 				};
-				heading.text = old = c.text.substring(0, c.text.indexOf(".")) + "</b>";
-				heading.enabled = false;
+                heading.text = old = c.text.substring(0, c.text.indexOf('.')) + "</b>";
+                heading.enabled = false;
 				r.add(x, heading);
 				x++;
 			}
-			if (!c.text.substring(0, c.text.lastIndexOf(".")).equals(old2)) {
-				List<Comp> customcomp = new ClassDocumentation().getPackageCustomCompletion(c.text.substring(0, c.text.lastIndexOf(".")), c.text.substring(c.text.lastIndexOf(".")));
+            if (!c.text.substring(0, c.text.lastIndexOf('.')).equals(old2)) {
+                List<Comp> customcomp =
+                        ClassDocumentation.getPackageCustomCompletion(c.text.substring(0, c.text.lastIndexOf(".")),
+                                                                      c.text.substring(c.text.lastIndexOf(".")));
 
 				if (customcomp != null) {
 					for (Comp co : customcomp) {
@@ -700,8 +716,9 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		}
 	}
 
-	private void addSourceDirToAllClasses(String root, String s, Map<String, ClassRecord> allClassesMap) {
-		try {
+    private static
+    void addSourceDirToAllClasses(String root, String s, Map<String, ClassRecord> allClassesMap) {
+        try {
 			File d = new File(s);
             // System.out.println(" add source dir to all classes :"
             // + d);
@@ -824,8 +841,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 						// c.optionalDocumentation =
 						// convertPythonDoc(doc);
 
-						PyObject constructor = t.getDict().__findattr__("__init__".intern());
-						if (constructor != null && constructor != Py.None) {
+                        PyObject constructor = t.getDict().__findattr__("__init__");
+                        if (constructor != null && constructor != Py.None) {
                             // System.out.println(" constructor class is <"
                             // +
 								// constructor.getClass()
@@ -1100,8 +1117,10 @@ public class PythonTextEditor extends BaseTextEditor2 {
 								continue;
 						} else if (!pythonOnly && a instanceof PyObjectDerived) {
 							Object o = Py.tojava(a, Object.class);
-							c.text += "- " + limit(o) + " " + (o == null ? "" : smaller(strip("" + o.getClass())));
-						} else {
+                            c.text += "- " + limit(o) + " " + (o == null
+                                                               ? ""
+                                                               : smaller(strip(String.valueOf(o.getClass()))));
+                        } else {
 							if (pythonOnly)
 								continue;
 							// PyObject doc =
@@ -1140,8 +1159,9 @@ public class PythonTextEditor extends BaseTextEditor2 {
 	protected void doContextualHelpFor(Class c) {
 	}
 
-	protected String rewriteOperator(String name) {
-		return knownOperators.containsKey(name) ? knownOperators.get(name) : name;
+    protected static
+    String rewriteOperator(String name) {
+        return knownOperators.containsKey(name) ? knownOperators.get(name) : name;
 	}
 
 	public void completionsFromReflectingUpon(Object ret, final String right, ArrayList<Completion> comp, boolean publicOnly) {
@@ -1181,8 +1201,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		if (ret instanceof PyJavaType) {
 			Class c = (Class) ((PyJavaType) ret).__tojava__(Class.class);
 
-			String doc = new ClassDocumentation().getClassDocumentation(right, null, c);
-			if (doc != null) {
+            String doc = ClassDocumentation.getClassDocumentation(right, null, c);
+            if (doc != null) {
 				Completion cc = new Completion() {
 
 					@Override
@@ -1194,8 +1214,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 				comp.add(cc);
 			}
 
-			List<Comp> customcomp = new ClassDocumentation().getClassCustomCompletion(right, null, c);
-			if (customcomp != null) {
+            List<Comp> customcomp = ClassDocumentation.getClassCustomCompletion(right, null, c);
+            if (customcomp != null) {
 				for (Comp cc : customcomp) {
 					makeCompletion(right, comp, cc);
 				}
@@ -1216,8 +1236,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
                 // + poClass + ">");
 			}
 
-			String doc = new ClassDocumentation().getClassDocumentation(right, ret, poClass);
-			if (doc != null) {
+            String doc = ClassDocumentation.getClassDocumentation(right, ret, poClass);
+            if (doc != null) {
 				Completion cc = new Completion() {
 
 					@Override
@@ -1229,16 +1249,16 @@ public class PythonTextEditor extends BaseTextEditor2 {
 				comp.add(cc);
 			}
 
-			List<Comp> customcomp = new ClassDocumentation().getClassCustomCompletion(right, ret, po.getClass());
-			if (customcomp != null) {
+            List<Comp> customcomp = ClassDocumentation.getClassCustomCompletion(right, ret, po.getClass());
+            if (customcomp != null) {
 				for (Comp c : customcomp) {
 					makeCompletion(right, comp, c);
 				}
 			}
 
 			if (right.equals("")) {
-				PyObject pythonDoc = po.__findattr__("__doc__".intern());
-				if (pythonDoc != null && pythonDoc != Py.None) {
+                PyObject pythonDoc = po.__findattr__("__doc__");
+                if (pythonDoc != null && pythonDoc != Py.None) {
 					Completion cc = new Completion() {
 
 						@Override
@@ -1300,8 +1320,9 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		return convertPythonDoc(ascii, "");
 	}
 
-	private String convertPythonDoc(String ascii, String defaultTitle) {
-		ascii = ascii.trim();
+    private static
+    String convertPythonDoc(String ascii, String defaultTitle) {
+        ascii = ascii.trim();
 
 		if (ascii == null)
 			return "";
@@ -1373,12 +1394,14 @@ public class PythonTextEditor extends BaseTextEditor2 {
 			completionsFromReflectingUponClass(right, comp, c, publicOnly);
 	}
 
-	private boolean notHidden(Field f) {
-		return f.getAnnotation(HiddenInAutocomplete.class) == null && Modifier.isPublic(f.getModifiers());
+    private static
+    boolean notHidden(Field f) {
+        return f.getAnnotation(HiddenInAutocomplete.class) == null && Modifier.isPublic(f.getModifiers());
 	}
 
-	private boolean notHidden(Method m) {
-		boolean nh = m.getAnnotation(HiddenInAutocomplete.class) == null && Modifier.isPublic(m.getModifiers());
+    private static
+    boolean notHidden(Method m) {
+        boolean nh = m.getAnnotation(HiddenInAutocomplete.class) == null && Modifier.isPublic(m.getModifiers());
 
         // System.out.println(" not hidden ? :" + m + " " + nh + " " +
         // Arrays.asList(m.getAnnotations()));
@@ -1412,8 +1435,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
 		if ((!publicOnly || notHidden(class1))) {
 
-			String doc = new ClassDocumentation().getClassDocumentation(right, ret, class1);
-			if (doc != null) {
+            String doc = ClassDocumentation.getClassDocumentation(right, ret, class1);
+            if (doc != null) {
 				Completion cc = new Completion() {
 
 					@Override
@@ -1425,8 +1448,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 				comp.add(cc);
 			}
 
-			List<Comp> customcomp = new ClassDocumentation().getClassCustomCompletion(right, ret, class1);
-			if (customcomp != null) {
+            List<Comp> customcomp = ClassDocumentation.getClassCustomCompletion(right, ret, class1);
+            if (customcomp != null) {
 				for (Comp c : customcomp) {
 					makeCompletion(right, comp, c);
 				}
@@ -1471,7 +1494,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 			completionsFromReflectingUponInstance(ret, right, comp, c, publicOnly);
 	}
 
-	private boolean notHidden(Class<? extends Object> class1) {
+    private static
+    boolean notHidden(Class<? extends Object> class1) {
 
         // System.out.println(" checking class for annotation <" +
         // class1 + " " +
@@ -1527,8 +1551,9 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		}
 	}
 
-	protected String detab(String s) {
-		int n = 0;
+    protected static
+    String detab(String s) {
+        int n = 0;
 		while (n < s.length() && s.charAt(n) == '\n') {
 			n++;
 		}
@@ -1548,8 +1573,9 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		return s;
 	}
 
-	private String dress(String fullName) {
-		int m = fullName.lastIndexOf('.');
+    private static
+    String dress(String fullName) {
+        int m = fullName.lastIndexOf('.');
 		if (m != -1)
 			return fullName.substring(0, m) + "<b>" + fullName.substring(m) + "</b>";
 		else
@@ -1770,8 +1796,9 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		return c;
 	}
 
-	private ZipEntry findEntry(JarFile jar, String simpleName) {
-		Enumeration<JarEntry> e = jar.entries();
+    private static
+    ZipEntry findEntry(JarFile jar, String simpleName) {
+        Enumeration<JarEntry> e = jar.entries();
 		while (e.hasMoreElements()) {
 			JarEntry j = e.nextElement();
 			String name = j.getName();
@@ -1781,7 +1808,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		return null;
 	}
 
-	public String formatSource(String source) {
+    public static
+    String formatSource(String source) {
 
 		source = source.replace("\t", "  ");
 		String[] ll = source.split("\n");
@@ -1899,8 +1927,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 			public void update() {
             }
         };
-        c.text = "from " + class1.getName() + "";
-		c.enabled = false;
+        c.text = "from " + class1.getName();
+        c.enabled = false;
 		return c;
 	}
 
@@ -1971,7 +1999,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		return s;
 	}
 
-	private void print(PyJavaPackage topLevelPackage, String prefix, Map<String, ClassRecord> allClassesMap) {
+    private static
+    void print(PyJavaPackage topLevelPackage, String prefix, Map<String, ClassRecord> allClassesMap) {
 
 		// + " has:");
 		PyStringMap clsSet = topLevelPackage.clsSet;
@@ -2004,14 +2033,15 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		}
 	}
 
-	private String printValue(Field f, Object ret) {
+    private static
+    String printValue(Field f, Object ret) {
         // System.out.println(" print value <" + f + "> <" + ret +
         // ">");
 		String v = "";
 		try {
 			f.setAccessible(true);
-			v = "" + f.get(ret);
-		} catch (IllegalArgumentException e) {
+            v = String.valueOf(f.get(ret));
+        } catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -2033,7 +2063,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		return s;
 	}
 
-	private String strip(String name) {
+    private static
+    String strip(String name) {
 
 		if (name.indexOf('.') != -1) {
 			String[] sp = name.split("\\.");
@@ -2283,8 +2314,9 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
 	}
 
-	protected String balanceBack(String leftText) {
-		int round = 0;
+    protected static
+    String balanceBack(String leftText) {
+        int round = 0;
 		int square = 0;
 		int curly = 0;
 
@@ -2362,7 +2394,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 					cc.isDocumentation = false;
 					cc.optionalDocumentation = "";
 					cc.optionalPlainText = "";
-					cc.text = "\u22f6  <b>" + name + "</b>" + " [" + ("" + i.get(1)) + "] " + i.get(3);
+                    cc.text = "\u22f6  <b>" + name + "</b>" + " [" + (String.valueOf(i.get(1))) + "] " + i.get(3);
 
 					comp.add(cc);
 				}
@@ -2385,7 +2417,11 @@ public class PythonTextEditor extends BaseTextEditor2 {
 					cc.isDocumentation = false;
 					cc.optionalDocumentation = "";
 					cc.optionalPlainText = "";
-					cc.text = "\u1d3e  <b>" + strip(rewriteOperator(name)) + " (</b>" + ("" + i.get(2)) + "<b>) </b> ";
+                    cc.text = "\u1d3e  <b>"
+                              + strip(rewriteOperator(name))
+                              + " (</b>"
+                              + (String.valueOf(i.get(2)))
+                              + "<b>) </b> ";
 
 					comp.add(cc);
 
@@ -2408,7 +2444,11 @@ public class PythonTextEditor extends BaseTextEditor2 {
 					cc.isDocumentation = false;
 					cc.optionalDocumentation = "";
 					cc.optionalPlainText = "";
-					cc.text = "\u1d3e  <b>" + strip(rewriteOperator(name)) + " (</b>" + ("" + i.get(2)) + "<b>) </b> ";
+                    cc.text = "\u1d3e  <b>"
+                              + strip(rewriteOperator(name))
+                              + " (</b>"
+                              + (String.valueOf(i.get(2)))
+                              + "<b>) </b> ";
 
 					comp.add(cc);
 				}
@@ -2493,8 +2533,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
 		Object o = PythonInterface.getPythonInterface().getVariable(t);
 		if (o != null) {
-			return "" + o;
-		}
+            return String.valueOf(o);
+        }
 		return "";
 	}
 

@@ -143,7 +143,8 @@ public class GroupOverride extends iVisualElementOverrides.DefaultOverride{
 		return VisitCode.cont;
 	}
 
-	private Rect computeNewSubFrame(iVisualElement e, Rect newParentFrame, Rect oldParentFrame, Rect oldChildFrame, int out) {
+    private static
+    Rect computeNewSubFrame(iVisualElement e, Rect newParentFrame, Rect oldParentFrame, Rect oldChildFrame, int out) {
 
 		double x1 = (oldChildFrame.x - oldParentFrame.x) / oldParentFrame.w;
 		double y1 = (oldChildFrame.y - oldParentFrame.y) / oldParentFrame.h;
@@ -158,8 +159,14 @@ public class GroupOverride extends iVisualElementOverrides.DefaultOverride{
 		return new Rect(x1, y1, x2 - x1, y2 - y1);
 	}
 
-	protected Rect computeNewBoundingFrame(List<iVisualElement> c, iVisualElement source, Rect newSourceFrame, Rect oldSourceFrame, Rect oldParentFrame, int out) {
-		if (c.size() == 0) return oldParentFrame;
+    protected static
+    Rect computeNewBoundingFrame(List<iVisualElement> c,
+                                 iVisualElement source,
+                                 Rect newSourceFrame,
+                                 Rect oldSourceFrame,
+                                 Rect oldParentFrame,
+                                 int out) {
+        if (c.size() == 0) return oldParentFrame;
 		float mx = Float.POSITIVE_INFINITY;
 		float my = Float.POSITIVE_INFINITY;
 		float xx = Float.NEGATIVE_INFINITY;

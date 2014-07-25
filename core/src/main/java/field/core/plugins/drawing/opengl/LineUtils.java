@@ -985,8 +985,8 @@ public class LineUtils {
 		if (!touched)
 			return null;
 
-		Axis[] axis = fb.fit(points.toArray(new Vector3[0]));
-		fb.closeFit(axis, points);
+        Axis[] axis = fb.fit(points.toArray(new Vector3[points.size()]));
+        fb.closeFit(axis, points);
 
 		return new Pair<FitBox, Axis[]>(fb, axis);
 	}
@@ -1360,8 +1360,9 @@ public class LineUtils {
 		return path;
 	}
 
-	public CachedLine piToCachedLine(PathIterator pi) {
-		CachedLine ret = new CachedLine();
+    public static
+    CachedLine piToCachedLine(PathIterator pi) {
+        CachedLine ret = new CachedLine();
 		iLine in = ret.getInput();
 		float[] cc = new float[6];
 
@@ -1428,7 +1429,8 @@ public class LineUtils {
 		return ret;
 	}
 
-	public void piToCachedLine(PathIterator pi, CachedLine contInto, boolean firstIsMoveto, boolean fixClose) {
+    public static
+    void piToCachedLine(PathIterator pi, CachedLine contInto, boolean firstIsMoveto, boolean fixClose) {
 
 		iLine in = contInto.getInput();
 		float[] cc = new float[6];
@@ -1496,8 +1498,9 @@ public class LineUtils {
 		piToCachedLine(pi, contInto, firstIsMoveto, false);
 	}
 
-	public CachedLine piToCachedLine(PathIterator pi, float tol) {
-		CachedLine ret = new CachedLine();
+    public static
+    CachedLine piToCachedLine(PathIterator pi, float tol) {
+        CachedLine ret = new CachedLine();
 		iLine in = ret.getInput();
 		float[] cc = new float[6];
 
@@ -2149,8 +2152,9 @@ public class LineUtils {
 	 *
 	 *
 	 */
-	public Pair<Vector2, Vector2> controlPointsFor(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Number t1, Number t2) {
-		t1 = t1==null ? b.distanceFrom(a) / (b.distanceFrom(a) + c.distanceFrom(b) + d.distanceFrom(c)) : t1.floatValue();
+    public static
+    Pair<Vector2, Vector2> controlPointsFor(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Number t1, Number t2) {
+        t1 = t1==null ? b.distanceFrom(a) / (b.distanceFrom(a) + c.distanceFrom(b) + d.distanceFrom(c)) : t1.floatValue();
 		t2 = t2==null ? 1-(c.distanceFrom(d) / (b.distanceFrom(a) + c.distanceFrom(b) + d.distanceFrom(c))) : t2.floatValue();
 
 		System.out.println(" t1 :"+t1+" "+t2);

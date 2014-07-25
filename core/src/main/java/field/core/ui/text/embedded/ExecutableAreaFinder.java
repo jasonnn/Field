@@ -33,12 +33,12 @@ public class ExecutableAreaFinder {
 				
 				return string.substring(startAt, endAt);
 			} else {
-				return findExecutableSubstring(string, ""+key);
-				
-			}
+                return findExecutableSubstring(string, String.valueOf(key));
+
+            }
 		}
-		return findExecutableSubstring(string, ""+key);
-	}
+        return findExecutableSubstring(string, String.valueOf(key));
+    }
 
 
 	public String findExecutableSubstring(String string, String key) {
