@@ -1,11 +1,12 @@
 package field.core.plugins.drawing.opengl;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import field.core.util.FieldPyObjectAdaptor.iExtensible;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.math.linalg.iToFloatArray;
-import field.util.BiMap;
 import field.util.Dict;
 import field.util.Dict.Prop;
 
@@ -16,6 +17,8 @@ import java.lang.reflect.Proxy;
 import java.util.*;
 import java.util.List;
 
+//import field.util.BiMap;
+
 /**
  * this is like a LineProperties3 class for extremely high level caching of
  * lines
@@ -25,7 +28,7 @@ import java.util.List;
  */
 public class CachedLine {
 
-	static public BiMap<Method, String> methodMap = new BiMap<Method, String>();
+	static public BiMap<Method, String> methodMap = HashBiMap.create(); //new BiMap<Method, String>();
 	static {
 		methodMap.put(iLine_m.moveTo_m, "m");
 		methodMap.put(iLine_m.lineTo_m, "l");

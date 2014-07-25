@@ -1,20 +1,23 @@
 package field.graphics.core;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.math.abstraction.iProvider;
 import field.namespace.generic.tuple.Pair;
-import field.util.BiMap;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+//import field.util.BiMap;
+
 public class ContextualUniform {
 
 	static public final ThreadLocal<BiMap<String, String>> tags = new ThreadLocal<BiMap<String, String>>() {
 		protected BiMap<String, String> initialValue() {
-			return new BiMap<String, String>();
+			return HashBiMap.create();//return new BiMap<String, String>();
         }
     };
 

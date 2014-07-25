@@ -1,5 +1,7 @@
 package field.core.plugins.drawing.opengl;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import field.bytecode.protect.annotations.GenerateMethods;
 import field.bytecode.protect.annotations.Mirror;
 import field.core.windowing.GLComponentWindow;
@@ -19,7 +21,6 @@ import field.math.abstraction.iProvider;
 import field.math.linalg.Vector4;
 import field.namespace.generic.ReflectionTools;
 import field.namespace.generic.tuple.Pair;
-import field.util.BiMap;
 import field.util.Dict;
 import field.util.TaskQueue;
 
@@ -28,6 +29,8 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import static org.lwjgl.opengl.GL11.*;
+
+//import field.util.BiMap;
 
 @GenerateMethods
 public class BaseGLGraphicsContext extends iLinearGraphicsContext {
@@ -56,7 +59,8 @@ public class BaseGLGraphicsContext extends iLinearGraphicsContext {
 		public DrawingResult accept(List<iDynamicMesh> soFar, T line, Dict properties);
 	}
 
-	public class InternalLine {
+	public static
+    class InternalLine {
 
 		List<iDynamicMesh> outputTo = new ArrayList<iDynamicMesh>();
 
@@ -95,7 +99,7 @@ public class BaseGLGraphicsContext extends iLinearGraphicsContext {
 
 	LinkedHashSet<Pair<CachedLine, Dict>> needingCreating = new LinkedHashSet<Pair<CachedLine, Dict>>();
 
-	public BiMap<Float, iDynamicMesh> allreadyConstructedLines = new BiMap<Float, iDynamicMesh>();
+	public BiMap<Float, iDynamicMesh> allreadyConstructedLines = HashBiMap.create();//new BiMap<Float, iDynamicMesh>();
 
 	BaseGLGraphicsContext_m baseGLGraphicsContext_m = new BaseGLGraphicsContext_m(this);
 
@@ -496,7 +500,8 @@ public class BaseGLGraphicsContext extends iLinearGraphicsContext {
 
 		} else if (probation.get(o) > 5) {
 			o.remove();
-			allreadyConstructedLines.removeBackwards(o);
+            allreadyConstructedLines.inverse().remove(o);
+			//allreadyConstructedLines.removeBackwards(o);
 			probation.remove(o);
 		} else {
 			probation.put(o, probation.get(o) + 1);

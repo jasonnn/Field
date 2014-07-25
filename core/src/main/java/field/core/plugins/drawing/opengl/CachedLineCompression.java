@@ -113,7 +113,7 @@ public class CachedLineCompression {
 		for (int i = 0; i < ccl.allProperties.size(); i++) {
 			Event e = ret.new Event();
 			e.args = ccl.allArgs.get(i);
-			e.method = CachedLine.methodMap.getBackwards(ccl.allMethods.get(i));
+			e.method = CachedLine.methodMap.inverse().get(ccl.allMethods.get(i));
 			e.attributes = ccl.allProperties.get(i);
 			ret.events.add(e);
 		}

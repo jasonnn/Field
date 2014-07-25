@@ -1,5 +1,6 @@
 package field.core.plugins.drawing.opengl;
 
+import com.google.common.collect.BiMap;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.DrawingResult;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.DrawingResultCode;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.iDrawingAcceptor;
@@ -16,7 +17,6 @@ import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.namespace.generic.Bind.iFunction;
-import field.util.BiMap;
 import field.util.Dict;
 import field.util.Dict.Prop;
 
@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+//import field.util.BiMap;
 
 public class SimpleLineDrawing {
 
