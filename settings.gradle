@@ -11,3 +11,7 @@ include 'asm'
 
 //include 'python'
 
+include 'util'
+include 'core-api'
+include 'instrumentation-rt'
+

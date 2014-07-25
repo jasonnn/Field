@@ -25,7 +25,6 @@ import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLineCompression;
 import field.core.util.FieldPyObjectAdaptor.PyVisualElement;
 import field.core.windowing.components.iComponent;
-import field.math.util.CubicInterpolatorDynamic;
 import field.namespace.key.Key;
 import field.util.PythonUtils;
 import org.python.core.PyObject;
@@ -74,10 +73,7 @@ public class FluidPersistence {
 							return SplineComputingOverride.PLineList.class;
 						}
 						
-						if (elementName.equals("field.math.util.CubicInterpolatorDynamic$1"))
-						{
-							return CubicInterpolatorDynamic.MComparator.class;
-						}
+
 						
 						if (elementName.equals(iMixinProxy.class.getName().replace("$", "-")))
 							return iMixinProxy.class;

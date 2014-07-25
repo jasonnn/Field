@@ -18,14 +18,28 @@ subprojects {
     }
 }
 
+DependencyHandler.metaClass.proj = {String name ->
+    if(!name.startsWith(':')) name=':'+name
+    compile(project(name)) {
+        transitive = false
+    }
+}
+
 project('core') {
     dependencies {
-        compile(project(':annotations')) {
-            transitive = false
-        }
-        compile(project(':asm')) {
-            transitive = false
-        }
+        proj(':annotations')
+        proj(':asm')
+        proj(':util')
+        proj(':core-api')
+    }
+
+}
+project('instrumentation-rt'){
+    dependencies{
+        proj(':core-api')
+        proj(':util')
+        proj(':asm')
+        proj(':annotations')
     }
 }
 project('annotation-processing') {

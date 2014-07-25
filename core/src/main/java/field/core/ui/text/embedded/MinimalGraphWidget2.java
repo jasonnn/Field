@@ -70,9 +70,9 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 
 			if (interpolator == null) {
 				interpolator = new CubicInterpolatorDynamic<BreakpointFloat>();
-				interpolator.new Sample(new BreakpointFloat(0.5f), 0);
-				interpolator.new Sample(new BreakpointFloat(0.7f), 0.5f);
-				interpolator.new Sample(new BreakpointFloat(0.5f), 1);
+				interpolator.sample(new BreakpointFloat(0.5f), 0);
+				interpolator.sample(new BreakpointFloat(0.7f), 0.5f);
+				interpolator.sample(new BreakpointFloat(0.5f), 1);
 			}
 
 			((MinimalGraphWidget2) component).setInterpolator(interpolator);
@@ -145,9 +145,9 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 
 			if (interpolator == null) {
 				interpolator = new InterpolatorWithWidget();
-				interpolator.new Sample(new BreakpointFloat(0.5f), 0);
-				interpolator.new Sample(new BreakpointFloat(0.7f), 0.5f);
-				interpolator.new Sample(new BreakpointFloat(0.5f), 1);
+				interpolator.sample(new BreakpointFloat(0.5f), 0);
+				interpolator.sample(new BreakpointFloat(0.7f), 0.5f);
+				interpolator.sample(new BreakpointFloat(0.5f), 1);
 			}
 
 			((MinimalGraphWidget2) component).setInterpolator(interpolator);
@@ -294,7 +294,7 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 		return interpolator.getSample(i).data.value;
 	}
 
-	protected void drawBox(Graphics2D g2, CubicInterpolatorDynamic<BreakpointFloat>.Sample breakpointFilter, Vector2 p, CubicInterpolatorDynamic<BreakpointFloat>.Sample before, CubicInterpolatorDynamic<BreakpointFloat>.Sample after) {
+	protected void drawBox(Graphics2D g2, CubicInterpolatorDynamic.Sample<BreakpointFloat> breakpointFilter, Vector2 p, CubicInterpolatorDynamic.Sample<BreakpointFloat> before, CubicInterpolatorDynamic.Sample<BreakpointFloat> after) {
 		int width = 5;
 		Rectangle r = new Rectangle((int) (p.x - width / 2), (int) (p.y - width / 2), width, width);
 		g2.setColor(new Color(0.85f, 0.85f, 0.85f, 0.7f));
@@ -400,7 +400,7 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 		// next lets draw the control points
 
 		for (int i = 0; i < interpolator.getNumSamples(); i++) {
-			CubicInterpolatorDynamic<BreakpointFloat>.Sample sample = interpolator.getSample(i);
+			Sample<BreakpointFloat> sample = interpolator.getSample(i);
 			transformRelativeToFrame(bounds, p.set(sample.time, sample.data.value));
 			drawBox(g2, sample, p, i == 0 ? null : interpolator.getSample(i - 1), i == interpolator.getNumSamples() - 1 ? null : interpolator.getSample(i + 1));
 		}
@@ -561,7 +561,7 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 				float alpha = x / (float) this.bounds().width;
 				float t = y / (float) this.bounds().height;
 
-				interpolator.new Sample(new BreakpointFloat(t), alpha);
+				interpolator.sample(new BreakpointFloat(t), alpha);
 				for (int i = 0; i < interpolator.getNumSamples(); i++) {
 					int leftX = leftX(i);
 					int rightX = rightX(i);
@@ -756,35 +756,35 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 	}
 
 	protected void setValue(int on, float x, float y) {
-		CubicInterpolatorDynamic<BreakpointFloat>.Sample sample = interpolator.getSample(on);
+		Sample<BreakpointFloat> sample = interpolator.getSample(on);
 		interpolator.removeSample(sample);
 		boolean changed = sample.time != x || sample.data.value != y;
 		BreakpointFloat bf = new BreakpointFloat(y);
 		bf.setValue(sample.data);
 		bf.value = y;
-		Sample s2 = interpolator.new Sample(bf, x);
+		Sample s2 = interpolator.sample(bf,x);
 
 	}
 
 	protected void setControlNext(int on, float x, float y) {
-		CubicInterpolatorDynamic<BreakpointFloat>.Sample sample = interpolator.getSample(on);
+        Sample<BreakpointFloat> sample = interpolator.getSample(on);
 		interpolator.removeSample(sample);
 		boolean changed = sample.time != x || sample.data.value != y;
 		BreakpointFloat bf = new BreakpointFloat(sample.data.value);
 		bf.setValue(sample.data);
 		bf.controlNext = y;
-		Sample s2 = interpolator.new Sample(bf, x);
+        Sample s2 = interpolator.sample(bf,x);
 
 	}
 
 	protected void setControlPrevious(int on, float x, float y) {
-		CubicInterpolatorDynamic<BreakpointFloat>.Sample sample = interpolator.getSample(on);
+        Sample<BreakpointFloat> sample = interpolator.getSample(on);
 		interpolator.removeSample(sample);
 		boolean changed = sample.time != x || sample.data.value != y;
 		BreakpointFloat bf = new BreakpointFloat(sample.data.value);
 		bf.setValue(sample.data);
 		bf.controlPrevious = y;
-		Sample s2 = interpolator.new Sample(bf, x);
+        Sample s2 = interpolator.sample(bf,x);
 
 	}
 
