@@ -1,8 +1,6 @@
 package field.bytecode.protect.instrumentation;
 
 import field.bytecode.BytecodeTestCase;
-import field.bytecode.protect.trampoline.AnnotationMethodAdaptor;
-import field.bytecode.protect.trampoline.HandlesAnnontatedMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 

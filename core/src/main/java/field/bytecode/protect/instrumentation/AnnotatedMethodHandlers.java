@@ -9,7 +9,6 @@ import field.bytecode.protect.cache.DeferedFixedDuringUpdate;
 import field.bytecode.protect.cache.DeferredTrace;
 import field.bytecode.protect.dispatch.DispatchSupport;
 import field.bytecode.protect.dispatch.InsideSupport;
-import field.bytecode.protect.trampoline.HandlesAnnontatedMethod;
 import field.bytecode.protect.yield.YieldSupport;
 import field.namespace.context.ContextTopology;
 import field.namespace.context.iStorage;
