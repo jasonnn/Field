@@ -1,6 +1,6 @@
 package field.util;
 
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 
 import java.io.File;
 import java.io.IOException;

@@ -15,7 +15,7 @@ import field.launch.SystemProperties;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutableContainer;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 
 import java.util.*;
 import java.util.regex.Pattern;

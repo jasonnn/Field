@@ -9,7 +9,7 @@ import field.core.plugins.python.OutputInsertsOnSheet;
 import field.core.ui.NewInspector.*;
 import field.launch.iUpdateable;
 import field.math.linalg.Vector4;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;

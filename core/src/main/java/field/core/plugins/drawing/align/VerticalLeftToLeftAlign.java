@@ -14,7 +14,7 @@ import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.PlainDraggableComponent;
 import field.math.linalg.*;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

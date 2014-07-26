@@ -6,7 +6,7 @@ import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.Dict;
 import org.python.core.Py;
 import org.python.core.PyFunction;

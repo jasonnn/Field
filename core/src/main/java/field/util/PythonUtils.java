@@ -24,7 +24,7 @@ import field.math.util.CubicInterpolatorDynamic;
 import field.namespace.generic.Adaptation;
 import field.namespace.generic.Bind.iFunction;
 import field.namespace.generic.ReflectionTools;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 import field.namespace.key.FKey;
 import field.namespace.key.Key;
 import field.namespace.key.OKey;

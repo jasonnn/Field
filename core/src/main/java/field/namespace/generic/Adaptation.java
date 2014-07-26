@@ -5,8 +5,8 @@ import field.math.graph.iTopology;
 import field.math.graph.visitors.TopologySearching;
 import field.math.graph.visitors.TopologySearching.AStarMetric;
 import field.math.graph.visitors.TopologySearching.TopologyAStarSearch;
-import field.namespace.generic.tuple.Pair;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Pair;
+import field.util.collect.tuple.Triple;
 
 import java.util.*;
 

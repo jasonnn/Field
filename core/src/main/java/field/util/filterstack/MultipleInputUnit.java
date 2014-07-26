@@ -2,7 +2,7 @@ package field.util.filterstack;
 
 import field.math.abstraction.iFloatProvider;
 import field.math.abstraction.iProvider;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 
 import java.util.*;
 import java.util.Map.Entry;

@@ -36,7 +36,7 @@ import field.math.graph.iMutableContainer;
 import field.math.graph.visitors.GraphNodeSearching;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.namespace.generic.Bind.iFunction;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.ANSIColorUtils;
 import org.python.core.Py;
 import org.python.core.PyModule;

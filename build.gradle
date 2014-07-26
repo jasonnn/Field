@@ -50,6 +50,11 @@ project('instrumentation-asm') {
         proj(':util')
     }
 }
+project('asm'){
+    dependencies{
+        proj(':util')
+    }
+}
 project('annotation-processing') {
     dependencies {
         compile project(':annotations')

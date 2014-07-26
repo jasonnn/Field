@@ -32,7 +32,7 @@ import field.math.graph.iTopology;
 import field.math.linalg.Vector2;
 import field.math.util.CubicTools;
 import field.namespace.generic.ReflectionTools;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.HashMapOfLists;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;

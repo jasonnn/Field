@@ -5,7 +5,7 @@ import field.namespace.diagram.Channel.Marker;
 import field.namespace.diagram.DiagramZero.iChannel;
 import field.namespace.diagram.DiagramZero.iMarker;
 import field.namespace.diagram.DiagramZero.iMarkerIterator;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.ExternalHashMap.iEquality;
 import field.util.diff.Diff.Change;
 

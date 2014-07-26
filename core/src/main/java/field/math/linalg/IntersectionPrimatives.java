@@ -1,7 +1,7 @@
 package field.math.linalg;
 
 import field.core.dispatch.iVisualElement.Rect;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;

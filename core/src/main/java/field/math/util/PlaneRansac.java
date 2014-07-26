@@ -2,7 +2,7 @@ package field.math.util;
 
 import field.math.linalg.Vector3;
 import field.math.util.FitBox.Axis;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 
 import java.util.ArrayList;
 import java.util.List;

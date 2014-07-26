@@ -20,7 +20,7 @@ import field.launch.iUpdateable;
 import field.math.abstraction.iMetric;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.Dict;
 import field.util.Dict.Prop;
 

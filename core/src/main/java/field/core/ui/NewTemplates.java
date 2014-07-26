@@ -8,7 +8,7 @@ import field.core.ui.SmallMenu.iKeystrokeUpdate;
 import field.core.windowing.GLComponentWindow;
 import field.launch.iUpdateable;
 import field.math.abstraction.iAcceptor;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.XStreamUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;

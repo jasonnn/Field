@@ -6,7 +6,7 @@ import field.core.dispatch.iVisualElementOverrides.Ref;
 import field.core.plugins.python.PythonPluginEditor;
 import field.core.windowing.components.iComponent;
 import field.math.graph.iMutable;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 
 import java.util.HashMap;
 import java.util.Iterator;

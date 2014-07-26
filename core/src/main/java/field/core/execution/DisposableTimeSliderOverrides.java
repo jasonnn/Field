@@ -19,7 +19,7 @@ import field.math.abstraction.iFloatProvider;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 import org.eclipse.swt.widgets.Event;
 
 import java.util.*;

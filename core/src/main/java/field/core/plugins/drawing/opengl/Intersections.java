@@ -3,7 +3,7 @@ package field.core.plugins.drawing.opengl;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.math.linalg.Vector2;
 import field.namespace.generic.ReflectionTools;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.Dict;
 
 import java.util.ArrayList;

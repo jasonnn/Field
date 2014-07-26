@@ -38,7 +38,7 @@ import field.math.abstraction.iAcceptor;
 import field.math.abstraction.iFilter;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.ANSIColorUtils;
 import field.util.Dict;
 import field.util.PythonUtils;

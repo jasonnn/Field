@@ -20,7 +20,7 @@ import field.math.graph.NodeImpl;
 import field.math.graph.iMutable;
 import field.math.linalg.Vector4;
 import field.namespace.generic.Bind.iFunction;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;

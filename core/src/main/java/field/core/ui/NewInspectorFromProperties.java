@@ -7,7 +7,7 @@ import field.core.dispatch.iVisualElementOverrides;
 import field.core.ui.NewInspector2.*;
 import field.launch.iUpdateable;
 import field.math.linalg.Vector4;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;

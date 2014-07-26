@@ -14,7 +14,7 @@ import field.core.windowing.components.iComponent;
 import field.launch.Launcher;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;

@@ -1,6 +1,6 @@
 package field.bytecode.protect.instrumentation;
 
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.protect.asm.ASMMethod;
 import field.protect.asm.ASMType;
 import field.protect.asm.FieldASMGeneratorAdapter;

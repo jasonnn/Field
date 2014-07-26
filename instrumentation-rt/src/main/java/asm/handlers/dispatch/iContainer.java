@@ -94,12 +94,12 @@ interface iContainer {
 
 //    public
 //    interface iContainerUpdateable extends iContainer, iUpdateable {
-//        public static final Method method_update = ReflectionTools.methodOf("update", iContainerUpdateable.class);
+//        public static final Method UPDATE_METHOD = ReflectionTools.methodOf("update", iContainerUpdateable.class);
 //    }
 //
 //    public
 //    interface iContainerUpdateableAtTime extends iContainer {
-//        public static final Method method_update =
+//        public static final Method UPDATE_METHOD =
 //                ReflectionTools.methodOf("update", iContainerUpdateable.class, Double.TYPE);
 //
 //        public

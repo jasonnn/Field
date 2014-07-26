@@ -5,7 +5,7 @@ import field.core.execution.PythonInterface;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.core.plugins.python.PythonPluginEditor;
 import field.launch.iUpdateable;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import org.python.core.PyFunction;
 
 import java.util.ArrayList;

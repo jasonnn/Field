@@ -64,7 +64,7 @@ import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.namespace.context.Dispatch;
 import field.namespace.context.SimpleContextTopology;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 import field.util.Dict.Prop;
 import field.util.PythonUtils;
 import field.util.TaskQueue;

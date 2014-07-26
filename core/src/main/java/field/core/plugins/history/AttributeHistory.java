@@ -5,7 +5,7 @@ import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.plugins.history.HistoryExplorerHG.VersionNode;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor2;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import org.python.core.Py;
 import org.python.core.PyObject;
 

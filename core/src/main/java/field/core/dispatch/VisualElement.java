@@ -15,7 +15,7 @@ import field.math.graph.TopologyViewOfGraphNodes;
 import field.math.graph.iMutableContainer;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.visitors.TopologyVisitor_breadthFirst;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 
 import java.rmi.server.UID;
 import java.util.*;

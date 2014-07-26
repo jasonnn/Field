@@ -1,7 +1,7 @@
 package asm.handlers.ctx;
 
 import field.protect.asm.ASMType;
-import field.util.MapOfMaps;
+import field.util.collect.MapOfMaps;
 import org.objectweb.asm.ClassVisitor;
 
 import java.lang.annotation.Annotation;

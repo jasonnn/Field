@@ -25,7 +25,7 @@ import field.launch.iUpdateable;
 import field.math.graph.NodeImpl;
 import field.math.graph.iMutableContainer;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;

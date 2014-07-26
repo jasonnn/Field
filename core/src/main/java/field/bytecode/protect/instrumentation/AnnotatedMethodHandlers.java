@@ -12,7 +12,7 @@ import field.bytecode.protect.dispatch.InsideSupport;
 import field.bytecode.protect.yield.YieldSupport;
 import field.namespace.context.ContextTopology;
 import field.namespace.context.iStorage;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;

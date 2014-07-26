@@ -7,7 +7,7 @@ import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.log.ElementInvocationLogging;
 import field.core.plugins.log.Logging;
 import field.core.plugins.python.PythonPlugin;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.HashMapOfLists;
 import org.python.core.Py;
 import org.python.core.PyObject;

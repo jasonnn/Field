@@ -23,8 +23,8 @@ import field.math.abstraction.iProvider;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.generic.tuple.Pair;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Pair;
+import field.util.collect.tuple.Triple;
 import field.util.PythonUtils;
 import org.eclipse.swt.widgets.Event;
 import org.python.core.PyFunction;
@@ -166,7 +166,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
         created.left.setFrame(new Rect(1, 0, 0, 0));
         final BasicRunner runner =
                 new BasicRunner(sheet.getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem), 1);
-        Cont.linkWith(sheet, iUpdateable.method_update, new mRun<StandardFluidSheet>(iUpdateable.method_update) {
+        Cont.linkWith(sheet, iUpdateable.UPDATE_METHOD, new mRun<StandardFluidSheet>(iUpdateable.UPDATE_METHOD) {
             float last = 1;
 
             public

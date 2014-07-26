@@ -4,7 +4,7 @@ import field.math.BaseMath;
 import field.math.BaseMath.MutableFloat;
 import field.math.graph.iTopology;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 
 import java.util.*;
 

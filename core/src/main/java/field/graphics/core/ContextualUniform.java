@@ -4,7 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.math.abstraction.iProvider;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

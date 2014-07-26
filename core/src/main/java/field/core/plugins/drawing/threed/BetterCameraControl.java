@@ -12,7 +12,7 @@ import field.math.linalg.IntersectionPrimatives;
 import field.math.linalg.IntersectionPrimatives.LinePointIntersectionInfo;
 import field.math.linalg.Vector3;
 import field.math.util.CubicTools;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.TaskQueue;
 
 import java.nio.FloatBuffer;

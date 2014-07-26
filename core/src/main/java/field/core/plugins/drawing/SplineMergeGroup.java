@@ -8,7 +8,7 @@ import field.core.persistance.VEList;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.windowing.components.PlainDraggableComponent;
 import field.core.windowing.components.iComponent;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 
 import java.util.ArrayList;
 

@@ -11,7 +11,7 @@ import field.math.abstraction.iProvider.HasChanged;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.namespace.generic.ReflectionTools;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;

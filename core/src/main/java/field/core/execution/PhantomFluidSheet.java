@@ -12,7 +12,7 @@ import field.core.windowing.components.PlainDraggableComponent;
 import field.launch.SystemProperties;
 import field.launch.iPhasic;
 import field.math.abstraction.iFloatProvider;
-import field.namespace.generic.tuple.Triple;
+import field.util.collect.tuple.Triple;
 
 import java.io.*;
 

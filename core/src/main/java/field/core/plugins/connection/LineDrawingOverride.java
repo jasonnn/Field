@@ -26,7 +26,7 @@ import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.namespace.generic.Bind;
 import field.namespace.generic.Bind.iFunction;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import org.eclipse.swt.widgets.Event;
 
 import java.awt.*;

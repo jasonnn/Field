@@ -3,7 +3,7 @@ package field.core.plugins.drawing.opengl;
 import field.core.dispatch.iVisualElement.Rect;
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.Projector;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.Dict.Prop;
 import org.eclipse.swt.widgets.Event;
 

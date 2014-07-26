@@ -1,7 +1,7 @@
 package field.math.graph.visitors;
 
 import field.math.graph.iTopology;
-import field.namespace.generic.tuple.Pair;
+import field.util.collect.tuple.Pair;
 import field.util.HashMapOfLists;
 
 import java.util.*;
