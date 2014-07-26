@@ -1,4 +1,4 @@
-package field.bytecode.protect.dispatch;
+package asm.handlers.dispatch;
 
 
 import org.objectweb.asm.Type;

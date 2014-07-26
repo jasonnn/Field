@@ -7,7 +7,6 @@ import org.objectweb.asm.ClassVisitor;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Created by jason on 7/21/14.
@@ -20,7 +19,15 @@ class ASMClassCtx {
     public String superName;
     public String[] interfaces;
     public ClassVisitor cv;
-    public MapOfMaps<String, String, Object> annotations;
+    public  MapOfMaps<String, String, Object> annotations;
+
+    ASMClassCtx(MapOfMaps<String, String, Object> annotations) {
+        this.annotations = annotations;
+    }
+
+    ASMClassCtx() {
+        this(MapOfMaps.<String, String, Object>create());
+    }
 
 
     public
@@ -30,16 +37,8 @@ class ASMClassCtx {
 
     public
     Map<String, Object> annotation(String desc) {
-        return getAnnotations().get(desc);
+        return annotations.get(desc);
     }
-
-    public
-    MapOfMaps<String, String, Object> getAnnotations() {
-        MapOfMaps<String, String, Object> ann = annotations;
-        if (ann == null) ann = annotations = MapOfMaps.create();
-        return ann;
-    }
-
 
     void copyTo(ASMClassCtx other) {
         copy(this, other);
@@ -58,6 +57,7 @@ class ASMClassCtx {
         to.superName = from.superName;
         to.interfaces = from.interfaces == null ? null : Arrays.copyOf(from.interfaces, from.interfaces.length);
         to.cv = from.cv;
+        to.annotations=from.annotations.copy();
     }
 
 //    public

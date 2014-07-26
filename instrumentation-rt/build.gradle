@@ -1,3 +1,9 @@
+apply plugin: 'java'
+jar{
+    manifest{
+        from file('src/main/resources/META-INF/MANIFEST.MF')
+    }
+}
 
 dependencies{
     compile 'org.ow2.asm:asm-debug-all:5.0.3'

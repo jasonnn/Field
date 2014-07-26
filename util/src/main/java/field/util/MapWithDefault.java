@@ -78,9 +78,13 @@ class MapWithDefault<K, V> extends ForwardingMap<K, V> {
         }
     }
 
+    protected
+    MapWithDefault(Map<K, V> delegate) {
+        this.delegate = delegate;
+    }
+    public MapWithDefault(){}
 
-
-    private Map<K, V> delegate;
+    protected Map<K, V> delegate;
 
     @Override
     protected
@@ -108,4 +112,6 @@ class MapWithDefault<K, V> extends ForwardingMap<K, V> {
         }
         return val;
     }
+
+
 }
