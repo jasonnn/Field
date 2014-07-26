@@ -21,176 +21,195 @@ import java.io.*;
  * the sheet
  *
  * @author marc
- *
  */
-public class PhantomFluidSheet implements iHasVisualElementRoot {
+public
+class PhantomFluidSheet implements iHasVisualElementRoot {
 
-	public interface iPhasicForElement extends iPhasic {
-		public PhantomFluidSheet getPhantom();
+    public
+    interface iPhasicForElement extends iPhasic {
+        public
+        PhantomFluidSheet getPhantom();
 
-		public iVisualElement getVisualElement();
-	}
+        public
+        iVisualElement getVisualElement();
+    }
 
-	private FacelessFluidSheet faceless;
+    private FacelessFluidSheet faceless;
 
-	private String filename;
+    private String filename;
 
-	private StandardFluidSheet facefull;
+    private StandardFluidSheet facefull;
 
-	private BasicRunner runner;
+    private BasicRunner runner;
 
-	private float lastT;
+    private float lastT;
 
-	private TimeSystem ts;
+    private TimeSystem ts;
 
-	private Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> slider;
+    private Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> slider;
 
-	private String windowIdentifier;
+    private String windowIdentifier;
 
 
-	boolean closed = false;
+    boolean closed = false;
 
-	boolean useTimeSystem = false;
+    boolean useTimeSystem = false;
 
-	public PhantomFluidSheet(final String filename) {
-		this(filename, true, false);
-	}
+    public
+    PhantomFluidSheet(final String filename) {
+        this(filename, true, false);
+    }
 
-	public PhantomFluidSheet(final String filename, boolean useTimeSystem, boolean startOpen) {
-		this.useTimeSystem = useTimeSystem;
-		this.filename = filename;
+    public
+    PhantomFluidSheet(final String filename, boolean useTimeSystem, boolean startOpen) {
+        this.useTimeSystem = useTimeSystem;
+        this.filename = filename;
 
-		if (startOpen) {
-			facefull = StandardFluidSheet.versionedScratch(filename);
-			runner = facefull.getBasicRunner();
-			
-			
-		} else {
-			faceless = new FacelessFluidSheet();
-			faceless.standard(SystemProperties.getDirProperty("versioning.dir") + '/' + filename + "/sheet.xml");
-			runner = new BasicRunner(faceless.getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem), 1);
-		}
+        if (startOpen) {
+            facefull = StandardFluidSheet.versionedScratch(filename);
+            runner = facefull.getBasicRunner();
 
-		if (useTimeSystem) {
 
-			ts = new TimeSystem();
-			getRoot().setProperty(TemporalSliderOverrides.currentTimeSystem, ts);
+        }
+        else {
+            faceless = new FacelessFluidSheet();
+            faceless.standard(SystemProperties.getDirProperty("versioning.dir") + '/' + filename + "/sheet.xml");
+            runner = new BasicRunner(faceless.getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem), 1);
+        }
 
-			Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created = TemporalSliderOverrides.newTemporalSlider("time", getRoot());
-			if (!startOpen)
-				created.right.drivenByTimeSystem(new Ref<TimeSystem>(ts));
-			slider = created;
-			getRoot().setProperty(TemporalSliderOverrides.currentTimeSystem, ts);
-		}
-	}
+        if (useTimeSystem) {
 
-	public void close() {
-		if (facefull != null) {
-			facefull.close();
+            ts = new TimeSystem();
+            getRoot().setProperty(TemporalSliderOverrides.currentTimeSystem, ts);
 
-		} else if (faceless != null) {
-			try {
-				if (!isNosave())
-					faceless.save(new BufferedWriter(new FileWriter(new File(SystemProperties.getDirProperty("versioning.dir") + '/'
-                                                                             + filename + "/sheet.xml"))));
-			} catch (FileNotFoundException e) {
-			} catch (IOException e) {
-			}
-			faceless = null;
-		}
-		closed = true;
+            Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created =
+                    TemporalSliderOverrides.newTemporalSlider("time", getRoot());
+            if (!startOpen) created.right.drivenByTimeSystem(new Ref<TimeSystem>(ts));
+            slider = created;
+            getRoot().setProperty(TemporalSliderOverrides.currentTimeSystem, ts);
+        }
+    }
 
-	}
+    public
+    void close() {
+        if (facefull != null) {
+            facefull.close();
 
-	public void closeUI() {
-		if (closed)
-			return;
-		if (faceless == null)
-			fromVisual();
-	}
+        }
+        else if (faceless != null) {
+            try {
+                if (!isNosave())
+                    faceless.save(new BufferedWriter(new FileWriter(new File(SystemProperties.getDirProperty("versioning.dir")
+                                                                             + '/'
+                                                                             + filename
+                                                                             + "/sheet.xml"))));
+            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
+            }
+            faceless = null;
+        }
+        closed = true;
 
-	public iVisualElement findElement(String description) {
-		return StandardFluidSheet.findVisualElementWithName(getRoot(), description);
-	}
+    }
 
-	public iVisualElement getRoot() {
-		if (faceless != null)
-			return faceless.getRoot();
-		return facefull.getRoot();
-	}
+    public
+    void closeUI() {
+        if (closed) return;
+        if (faceless == null) fromVisual();
+    }
 
-	public TimeSystem getTimeSystem()
-	{
-		return ts;
-	}
+    public
+    iVisualElement findElement(String description) {
+        return StandardFluidSheet.findVisualElementWithName(getRoot(), description);
+    }
 
-	public StandardFluidSheet getUI() {
-		if (closed)
-			return null;
-		return facefull;
-	}
+    public
+    iVisualElement getRoot() {
+        if (faceless != null) return faceless.getRoot();
+        return facefull.getRoot();
+    }
 
-	public PhantomFluidSheet openUI() {
-		if (closed)
-			return this;
+    public
+    TimeSystem getTimeSystem() {
+        return ts;
+    }
 
-		if (facefull == null)
-			toVisual();
-		return this;
-	}
+    public
+    StandardFluidSheet getUI() {
+        if (closed) return null;
+        return facefull;
+    }
 
-	public iPhasicForElement phasicForDescription(final String description, final iFloatProvider fp, final boolean local) {
+    public
+    PhantomFluidSheet openUI() {
+        if (closed) return this;
 
-		// right now this is very simple (could be xpath, if we needed
-		// it)
+        if (facefull == null) toVisual();
+        return this;
+    }
 
-		return new iPhasicForElement() {
-			private Ref<PythonScriptingSystem> refPss;
+    public
+    iPhasicForElement phasicForDescription(final String description, final iFloatProvider fp, final boolean local) {
 
-			boolean started = false;
+        // right now this is very simple (could be xpath, if we needed
+        // it)
 
-			iExecutesPromise runner = null;
+        return new iPhasicForElement() {
+            private Ref<PythonScriptingSystem> refPss;
 
-			iVisualElement running = null;
+            boolean started = false;
 
-			boolean first = true;
+            iExecutesPromise runner = null;
 
-			public void begin() {
-				rebegin();
-			}
+            iVisualElement running = null;
 
-			public void close() {
-			}
+            boolean first = true;
 
-			public void end() {
-				if (runner != null)
-					runner.stopAll(0);
-			}
+            public
+            void begin() {
+                rebegin();
+            }
 
-			public PhantomFluidSheet getPhantom() {
-				return PhantomFluidSheet.this;
-			}
+            public
+            void close() {
+            }
 
-			public iVisualElement getVisualElement() {
-				return running;
-			}
+            public
+            void end() {
+                if (runner != null) runner.stopAll(0);
+            }
 
-			public void open() {
-			}
+            public
+            PhantomFluidSheet getPhantom() {
+                return PhantomFluidSheet.this;
+            }
 
-			public void rebegin() {
-				if (started) {
-					runner.stopAll(0);
-				}
+            public
+            iVisualElement getVisualElement() {
+                return running;
+            }
 
-				running = findElement(description);
-				if (running != null) {
+            public
+            void open() {
+            }
 
-					refPss = new Ref<PythonScriptingSystem>(null);
-					new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running).getProperty(running, PythonScriptingSystem.pythonScriptingSystem, refPss);
-					assert refPss.get() != null;
+            public
+            void rebegin() {
+                if (started) {
+                    runner.stopAll(0);
+                }
 
-					Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
+                running = findElement(description);
+                if (running != null) {
+
+                    refPss = new Ref<PythonScriptingSystem>(null);
+                    new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running)
+                                                                   .getProperty(running,
+                                                                                PythonScriptingSystem.pythonScriptingSystem,
+                                                                                refPss);
+                    assert refPss.get() != null;
+
+                    Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
                     if (local) {
                         refRunner.set(new BasicRunner(getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem),
                                                       1));
@@ -204,95 +223,97 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
                         //System.err.println(" runner is <" + refRunner.get().getClass() + ">");
                     }
 
-					first = true;
+                    first = true;
 
-					runner = refRunner.get();
-				} else {
-					System.err.println(" no element for <" + description + "> in sheet <" + filename + '>');
-				}
+                    runner = refRunner.get();
+                }
+                else {
+                    System.err.println(" no element for <" + description + "> in sheet <" + filename + '>');
+                }
 
-			}
+            }
 
-			public void update() {
+            public
+            void update() {
 
-				if (first) {
-					System.err.println(" pss is <" + refPss.get() + '>');
-					Promise promise = refPss.get().promiseForKey(running);
+                if (first) {
+                    System.err.println(" pss is <" + refPss.get() + '>');
+                    Promise promise = refPss.get().promiseForKey(running);
 
-					if (promise != null) {
-						runner.addActive(fp, promise);
+                    if (promise != null) {
+                        runner.addActive(fp, promise);
 
-						started = true;
-					} else
-						System.err.println(" no promis for <" + running + '>');
-					first = false;
-				}
+                        started = true;
+                    }
+                    else System.err.println(" no promis for <" + running + '>');
+                    first = false;
+                }
 
-				if (runner != null) {
-					if (local)
-						((BasicRunner) runner).update(0);
-				} else {
-				}
-			}
+                if (runner != null) {
+                    if (local) ((BasicRunner) runner).update(0);
+                }
+                else {
+                }
+            }
 
-		};
+        };
 
-	}
-	
-	public void saveFacefull() throws IOException
-	{
+    }
+
+    public
+    void saveFacefull() throws IOException {
 //		facefull.save(new BufferedWriter(new FileWriter(SystemProperties.getDirProperty("versioning.dir") + "/" + filename + "/sheet.xml"), 1024 * 16 * 1024));
-		facefull.saveTwoPart(SystemProperties.getDirProperty("versioning.dir") + '/' + filename + "/sheet.xml");
-	}
+        facefull.saveTwoPart(SystemProperties.getDirProperty("versioning.dir") + '/' + filename + "/sheet.xml");
+    }
 
-	public void setFilename(String f) {
-		setFilename(f, true);
-	}
+    public
+    void setFilename(String f) {
+        setFilename(f, true);
+    }
 
-	public void setFilename(String f, boolean b) {
-		filename = f;
-		if (facefull != null) {
+    public
+    void setFilename(String f, boolean b) {
+        filename = f;
+        if (facefull != null) {
 
             //System.out.println(ANSIColorUtils.red(" setting filename on current sheet"));
             facefull.setFilename(f);
-			if (!isNosave())
-				try {
-                    //System.out.println(ANSIColorUtils.red(" saving sheet to :"+(filename + "/sheet.xml")));
-                    facefull.save(new BufferedWriter(new FileWriter(filename + "/sheet.xml"), 1024 * 16 * 1024));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+            if (!isNosave()) try {
+                //System.out.println(ANSIColorUtils.red(" saving sheet to :"+(filename + "/sheet.xml")));
+                facefull.save(new BufferedWriter(new FileWriter(filename + "/sheet.xml"), 1024 * 16 * 1024));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             //System.out.println(" about to call close");
 
             facefull.close();
 
-			facefull = null;
+            facefull = null;
 
             //System.out.println(" about to go visual again");
 
-			if (b)
-				toVisual();
-			else
-				close();
-		}
-	}
-	
-	public PhantomFluidSheet setUseTimeSystem(boolean useTimeSystem) {
-		this.useTimeSystem = useTimeSystem;
-		return this;
-	}
+            if (b) toVisual();
+            else close();
+        }
+    }
 
-	public void setWindowIdentifier(String name) {
-		windowIdentifier = name;
-	}
+    public
+    PhantomFluidSheet setUseTimeSystem(boolean useTimeSystem) {
+        this.useTimeSystem = useTimeSystem;
+        return this;
+    }
 
-	public void update(float time) {
-		if (closed)
-			return;
+    public
+    void setWindowIdentifier(String name) {
+        windowIdentifier = name;
+    }
 
-		if (facefull != null)
-			return;
+    public
+    void update(float time) {
+        if (closed) return;
+
+        if (facefull != null) return;
 
         if (useTimeSystem) {
             ts.update();
@@ -312,80 +333,87 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
             runner.update(time);
             if (faceless != null) faceless.update();
         }
-	}
+    }
 
-	protected void fromVisual() {
-		try {
-			if (!isNosave())
-				facefull.save(new BufferedWriter(new FileWriter(SystemProperties.getDirProperty("versioning.dir") + '/'
-                                                                + filename + "/sheet.xml"), 1024 * 16 * 1024));
-			facefull.close();
-			facefull = null;
+    protected
+    void fromVisual() {
+        try {
+            if (!isNosave())
+                facefull.save(new BufferedWriter(new FileWriter(SystemProperties.getDirProperty("versioning.dir")
+                                                                + '/'
+                                                                + filename
+                                                                + "/sheet.xml"), 1024 * 16 * 1024));
+            facefull.close();
+            facefull = null;
 
 
-			faceless = new FacelessFluidSheet();
-			faceless.standard(SystemProperties.getDirProperty("versioning.dir") + '/' + filename + "/sheet.xml");
+            faceless = new FacelessFluidSheet();
+            faceless.standard(SystemProperties.getDirProperty("versioning.dir") + '/' + filename + "/sheet.xml");
 
-			if (runner != null) {
-				runner.stopAll(lastT);
-			}
-			if (slider != null) {
-				slider.right.driveTimeSystem(new Ref<TimeSystem>(ts));
-			}
-			runner = new BasicRunner(faceless.getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem), 1);
+            if (runner != null) {
+                runner.stopAll(lastT);
+            }
+            if (slider != null) {
+                slider.right.driveTimeSystem(new Ref<TimeSystem>(ts));
+            }
+            runner = new BasicRunner(faceless.getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem), 1);
 
-			if (useTimeSystem) {
-				Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created = TemporalSliderOverrides.newTemporalSlider("time", getRoot());
-				created.right.drivenByTimeSystem(new Ref<TimeSystem>(ts));
-				slider = created;
-				getRoot().setProperty(TemporalSliderOverrides.currentTimeSystem, ts);
-			}
+            if (useTimeSystem) {
+                Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created =
+                        TemporalSliderOverrides.newTemporalSlider("time", getRoot());
+                created.right.drivenByTimeSystem(new Ref<TimeSystem>(ts));
+                slider = created;
+                getRoot().setProperty(TemporalSliderOverrides.currentTimeSystem, ts);
+            }
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	protected void toVisual() {
-		try {
-			if (faceless != null)
-				try {
-					if (!isNosave())
-						faceless.save(new BufferedWriter(new FileWriter(new File(SystemProperties.getDirProperty("versioning.dir") + '/'
-                                                                                 + filename + "/sheet.xml"))));
-				} catch (FileNotFoundException e) {
-				}
-			faceless = null;
+    protected
+    void toVisual() {
+        try {
+            if (faceless != null) try {
+                if (!isNosave())
+                    faceless.save(new BufferedWriter(new FileWriter(new File(SystemProperties.getDirProperty("versioning.dir")
+                                                                             + '/'
+                                                                             + filename
+                                                                             + "/sheet.xml"))));
+            } catch (FileNotFoundException e) {
+            }
+            faceless = null;
 
-			facefull = StandardFluidSheet.versionedScratch(filename);
+            facefull = StandardFluidSheet.versionedScratch(filename);
 
-			if (runner != null) {
-				runner.stopAll(lastT);
-			}
+            if (runner != null) {
+                runner.stopAll(lastT);
+            }
 
-			if (slider != null) {
-				slider.right.driveTimeSystem(new Ref<TimeSystem>(ts));
-			}
+            if (slider != null) {
+                slider.right.driveTimeSystem(new Ref<TimeSystem>(ts));
+            }
 
-			runner = facefull.getBasicRunner();
+            runner = facefull.getBasicRunner();
 
-			if (useTimeSystem) {
-				// need to connect runner to time slider
-				// right here
-				Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created = TemporalSliderOverrides.newTemporalSlider("time", getRoot());
-				created.right.drivenByTimeSystem(new Ref<TimeSystem>(ts));
-				slider = created;
-				getRoot().setProperty(TemporalSliderOverrides.currentTimeSystem, ts);
-			}
+            if (useTimeSystem) {
+                // need to connect runner to time slider
+                // right here
+                Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created =
+                        TemporalSliderOverrides.newTemporalSlider("time", getRoot());
+                created.right.drivenByTimeSystem(new Ref<TimeSystem>(ts));
+                slider = created;
+                getRoot().setProperty(TemporalSliderOverrides.currentTimeSystem, ts);
+            }
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static
     boolean isNosave() {
-        return SystemProperties.getIntProperty("nosave", 0)==1;
-	}
+        return SystemProperties.getIntProperty("nosave", 0) == 1;
+    }
 
 }

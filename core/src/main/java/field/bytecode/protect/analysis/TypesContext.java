@@ -11,160 +11,179 @@ import org.objectweb.asm.Type;
 
 import java.util.*;
 
-public class TypesContext implements Cloneable {
-	public static final String CAT1_BOOLEAN = "1Z";
+public
+class TypesContext implements Cloneable {
+    public static final String CAT1_BOOLEAN = "1Z";
 
-	public static final String CAT1_CHAR = "1C";
+    public static final String CAT1_CHAR = "1C";
 
-	public static final String CAT1_FLOAT = "1F";
+    public static final String CAT1_FLOAT = "1F";
 
-	public static final String CAT1_BYTE = "1B";
+    public static final String CAT1_BYTE = "1B";
 
-	public static final String CAT1_SHORT = "1S";
+    public static final String CAT1_SHORT = "1S";
 
-	public static final String CAT1_INT = "1I";
+    public static final String CAT1_INT = "1I";
 
-	public static final String CAT1_ADDRESS = "1A";
+    public static final String CAT1_ADDRESS = "1A";
 
-	public static final String CAT2_DOUBLE = "2D";
+    public static final String CAT2_DOUBLE = "2D";
 
-	public static final String CAT2_LONG = "2J";
+    public static final String CAT2_LONG = "2J";
 
-	public static final String ARRAY_BOOLEAN = "[Z";
+    public static final String ARRAY_BOOLEAN = "[Z";
 
-	public static final String ARRAY_CHAR = "[C";
+    public static final String ARRAY_CHAR = "[C";
 
-	public static final String ARRAY_FLOAT = "[F";
+    public static final String ARRAY_FLOAT = "[F";
 
-	public static final String ARRAY_BYTE = "[B";
+    public static final String ARRAY_BYTE = "[B";
 
-	public static final String ARRAY_SHORT = "[S";
+    public static final String ARRAY_SHORT = "[S";
 
-	public static final String ARRAY_INT = "[I";
+    public static final String ARRAY_INT = "[I";
 
-	public static final String ARRAY_DOUBLE = "[D";
+    public static final String ARRAY_DOUBLE = "[D";
 
-	public static final String ARRAY_LONG = "[J";
+    public static final String ARRAY_LONG = "[J";
 
-	public static final String NULL = "NULL";
+    public static final String NULL = "NULL";
 
-	private Map<Integer, String> mVars = null;
+    private Map<Integer, String> mVars = null;
 
-	private Deque<String> mStack = null;
+    private Deque<String> mStack = null;
 
-	private int mSort = TypesNode.REGULAR;
+    private int mSort = TypesNode.REGULAR;
 
-	//private String mDebugIndent = null;
+    //private String mDebugIndent = null;
 
-	TypesContext() {
-		mVars = new HashMap<Integer, String>();
-		mStack = new ArrayDeque<String>();
-	}
+    TypesContext() {
+        mVars = new HashMap<Integer, String>();
+        mStack = new ArrayDeque<String>();
+    }
 
-	TypesContext(Map<Integer, String> vars, Deque<String> stack) {
-		mVars = vars;
-		mStack = stack;
-	}
+    TypesContext(Map<Integer, String> vars, Deque<String> stack) {
+        mVars = vars;
+        mStack = stack;
+    }
 
-	public Map<Integer, String> getVars() {
+    public
+    Map<Integer, String> getVars() {
 //		return mVars;
-		
-		return new TreeMap<Integer, String>(mVars);
-		
-	}
 
-	public Deque<String> getStack() {
-		return mStack;
-	}
+        return new TreeMap<Integer, String>(mVars);
 
-	public boolean hasVar(int var) {
-		return mVars.containsKey(var);
-	}
+    }
 
-	public String getVar(int var) {
-		return mVars.get(var);
-	}
+    public
+    Deque<String> getStack() {
+        return mStack;
+    }
 
-	public void setVar(int var, String type) {
-		mVars.put(var, type);
-	}
+    public
+    boolean hasVar(int var) {
+        return mVars.containsKey(var);
+    }
 
-	public int getVarType(int var) {
-		String type = getVar(var);
-		if (CAT1_INT.equals(type)) {
-			return Type.INT;
-		} else if (CAT1_FLOAT.equals(type)) {
-			return Type.FLOAT;
-		} else if (CAT2_LONG.equals(type)) {
-			return Type.LONG;
-		} else if (CAT2_DOUBLE.equals(type)) {
-			return Type.DOUBLE;
-		} else {
-			return Type.OBJECT;
-		}
-	}
+    public
+    String getVar(int var) {
+        return mVars.get(var);
+    }
 
-	public String peek() {
-		return mStack.peek();
-	}
+    public
+    void setVar(int var, String type) {
+        mVars.put(var, type);
+    }
 
-	public String pop() {
-		String result = null;
-		if (!mStack.isEmpty()) {
-			result = mStack.pop();
-		}
-		printStack();
-		return result;
-	}
+    public
+    int getVarType(int var) {
+        String type = getVar(var);
+        if (CAT1_INT.equals(type)) {
+            return Type.INT;
+        }
+        else if (CAT1_FLOAT.equals(type)) {
+            return Type.FLOAT;
+        }
+        else if (CAT2_LONG.equals(type)) {
+            return Type.LONG;
+        }
+        else if (CAT2_DOUBLE.equals(type)) {
+            return Type.DOUBLE;
+        }
+        else {
+            return Type.OBJECT;
+        }
+    }
 
-	public void push(String type) {
-		mStack.push(type);
-		printStack();
-	}
+    public
+    String peek() {
+        return mStack.peek();
+    }
 
-	public Deque<String> getStackCopy() {
-        
-		return new ArrayDeque<String>(mStack);
-	}
+    public
+    String pop() {
+        String result = null;
+        if (!mStack.isEmpty()) {
+            result = mStack.pop();
+        }
+        printStack();
+        return result;
+    }
 
-	public void cloneVars() {
-		mVars = new HashMap<Integer, String>(mVars);
-	}
+    public
+    void push(String type) {
+        mStack.push(type);
+        printStack();
+    }
 
-	public void setSort(int type) {
-		mSort = type;
-	}
+    public
+    Deque<String> getStackCopy() {
 
-	public int getSort() {
-		return mSort;
-	}
+        return new ArrayDeque<String>(mStack);
+    }
 
-	void printStack() {
-	}
+    public
+    void cloneVars() {
+        mVars = new HashMap<Integer, String>(mVars);
+    }
+
+    public
+    void setSort(int type) {
+        mSort = type;
+    }
+
+    public
+    int getSort() {
+        return mSort;
+    }
+
+    void printStack() {
+    }
 
 //	void setDebugIndent(String debugIndent) {
 //		mDebugIndent = debugIndent;
 //	}
 
-	TypesContext clone(TypesNode node) {
-		TypesContext new_context = new TypesContext(new HashMap<Integer, String>(mVars), getStackCopy());
-		new_context.setSort(node.getSort());
-		return new_context;
-	}
+    TypesContext clone(TypesNode node) {
+        TypesContext new_context = new TypesContext(new HashMap<Integer, String>(mVars), getStackCopy());
+        new_context.setSort(node.getSort());
+        return new_context;
+    }
 
-	public Object clone() {
-		TypesContext new_context = null;
-		try {
-			new_context = (TypesContext) super.clone();
-		} catch (CloneNotSupportedException e) {
-			// this should never happen
-			e.printStackTrace();
-		}
+    public
+    Object clone() {
+        TypesContext new_context = null;
+        try {
+            new_context = (TypesContext) super.clone();
+        } catch (CloneNotSupportedException e) {
+            // this should never happen
+            e.printStackTrace();
+        }
 
         assert new_context != null;
         new_context.mVars = new HashMap<Integer, String>(mVars);
-		new_context.mStack = getStackCopy();
+        new_context.mStack = getStackCopy();
 
-		return new_context;
-	}
+        return new_context;
+    }
 }

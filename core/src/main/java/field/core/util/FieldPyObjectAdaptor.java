@@ -22,702 +22,792 @@ import org.python.core.adapter.PyObjectAdapter;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class FieldPyObjectAdaptor {
+public
+class FieldPyObjectAdaptor {
 
-	public static
+    public static
     class CallableToCallableJavaInstance implements PyObjectAdapter {
 
-		public CallableToCallableJavaInstance() {
-		}
+        public
+        CallableToCallableJavaInstance() {
+        }
 
-		public PyObject adapt(Object o) {
-			return new PyCallableJavaInstance((iCallable) o);
-		}
+        public
+        PyObject adapt(Object o) {
+            return new PyCallableJavaInstance((iCallable) o);
+        }
 
-		public boolean canAdapt(Object o) {
-			return o instanceof iCallable;
-		}
+        public
+        boolean canAdapt(Object o) {
+            return o instanceof iCallable;
+        }
 
-	}
+    }
 
-	public static
+    public static
     class CallableAndAttributesToCallableAndAttributesJavaInstance implements PyObjectAdapter {
 
-		public CallableAndAttributesToCallableAndAttributesJavaInstance() {
-		}
+        public
+        CallableAndAttributesToCallableAndAttributesJavaInstance() {
+        }
 
-		public PyObject adapt(Object o) {
-			return new PyCallableAndAttributesJavaInstance((iHandlesAttributesAndCallable) o);
-		}
+        public
+        PyObject adapt(Object o) {
+            return new PyCallableAndAttributesJavaInstance((iHandlesAttributesAndCallable) o);
+        }
 
-		public boolean canAdapt(Object o) {
-			return o instanceof iHandlesAttributesAndCallable;
-		}
+        public
+        boolean canAdapt(Object o) {
+            return o instanceof iHandlesAttributesAndCallable;
+        }
 
-	}
+    }
 
-	public static
+    public static
     class DictToPyFieldDict extends ClassAdapter {
 
-		public DictToPyFieldDict() {
-			super(Dict.class);
-		}
+        public
+        DictToPyFieldDict() {
+            super(Dict.class);
+        }
 
-		public PyObject adapt(Object o) {
-			return new PyFieldDict((Dict) o);
-		}
+        public
+        PyObject adapt(Object o) {
+            return new PyFieldDict((Dict) o);
+        }
 
-	}
+    }
 
-	public static
+    public static
     class ExtensibleToExtensibleJavaInstance implements PyObjectAdapter {
 
-		public ExtensibleToExtensibleJavaInstance() {
-		}
+        public
+        ExtensibleToExtensibleJavaInstance() {
+        }
 
-		public PyObject adapt(Object o) {
-			return new PyExtensibleJavaInstance((iExtensible) o);
-		}
+        public
+        PyObject adapt(Object o) {
+            return new PyExtensibleJavaInstance((iExtensible) o);
+        }
 
-		public boolean canAdapt(Object o) {
-			return o instanceof iExtensible;
-		}
+        public
+        boolean canAdapt(Object o) {
+            return o instanceof iExtensible;
+        }
 
-	}
+    }
 
-	public static
+    public static
     class HandlesAttributesToPyHandlesAttributes implements PyObjectAdapter {
 
-		public HandlesAttributesToPyHandlesAttributes() {
-		}
+        public
+        HandlesAttributesToPyHandlesAttributes() {
+        }
 
-		public PyObject adapt(Object o) {
-			return new PyHandlesAttributes((iHandlesAttributes) o);
-		}
+        public
+        PyObject adapt(Object o) {
+            return new PyHandlesAttributes((iHandlesAttributes) o);
+        }
 
-		public boolean canAdapt(Object o) {
-			return o instanceof iHandlesAttributes;
-		}
+        public
+        boolean canAdapt(Object o) {
+            return o instanceof iHandlesAttributes;
+        }
 
-	}
+    }
 
-	public static
+    public static
     class HasScalarToPyHasScalar implements PyObjectAdapter {
 
-		public HasScalarToPyHasScalar() {
-		}
+        public
+        HasScalarToPyHasScalar() {
+        }
 
-		public PyObject adapt(Object o) {
-			return new PyHasScalar((iHasScalar) o);
-		}
+        public
+        PyObject adapt(Object o) {
+            return new PyHasScalar((iHasScalar) o);
+        }
 
-		public boolean canAdapt(Object o) {
-			return o instanceof iHasScalar;
-		}
+        public
+        boolean canAdapt(Object o) {
+            return o instanceof iHasScalar;
+        }
 
-	}
+    }
 
-	public interface iCallable {
-		public Object call(Object[] args);
-	}
+    public
+    interface iCallable {
+        public
+        Object call(Object[] args);
+    }
 
-	public interface iCallable_keywords extends iCallable{
-		public Object callWithKeywords(Object[] args, Map<String, Object> kw);
-	}
+    public
+    interface iCallable_keywords extends iCallable {
+        public
+        Object callWithKeywords(Object[] args, Map<String, Object> kw);
+    }
 
-	
-	public interface iExtensible {
-		public Dict getDict();
-	}
 
-	public interface iHandlesAttributes {
-		public Object getAttribute(String name);
+    public
+    interface iExtensible {
+        public
+        Dict getDict();
+    }
 
-		public void setAttribute(String name, Object value);
-	}
+    public
+    interface iHandlesAttributes {
+        public
+        Object getAttribute(String name);
 
-	public interface iHandlesDeletionOfAttributes {
-		public void deleteAttribute(String name);
-	}
-	
-	public interface iHandlesAttributesAndCallable {
-		public Object getAttribute(String name);
+        public
+        void setAttribute(String name, Object value);
+    }
 
-		public void setAttribute(String name, Object value);
+    public
+    interface iHandlesDeletionOfAttributes {
+        public
+        void deleteAttribute(String name);
+    }
 
-		public Object call(Object[] args);
-	}
+    public
+    interface iHandlesAttributesAndCallable {
+        public
+        Object getAttribute(String name);
 
-	public interface iHandlesFindItem extends iHandlesAttributes {
-		public Object getItem(Object object);
+        public
+        void setAttribute(String name, Object value);
 
-		public void setItem(Object name, Object value);
-	}
+        public
+        Object call(Object[] args);
+    }
 
-	public static
+    public
+    interface iHandlesFindItem extends iHandlesAttributes {
+        public
+        Object getItem(Object object);
+
+        public
+        void setItem(Object name, Object value);
+    }
+
+    public static
     class PairToPyTuple extends ClassAdapter {
 
-		public PairToPyTuple() {
-			super(Pair.class);
-		}
+        public
+        PairToPyTuple() {
+            super(Pair.class);
+        }
 
-		public PairToPyTuple(Class<? extends iVisualElement> c) {
-			super(c);
-		}
+        public
+        PairToPyTuple(Class<? extends iVisualElement> c) {
+            super(c);
+        }
 
-		public PyObject adapt(Object o) {
-			Pair p = (Pair) o;
+        public
+        PyObject adapt(Object o) {
+            Pair p = (Pair) o;
             return new PyTuple(Py.java2py(p.left), Py.java2py(p.right));
         }
 
-	}
+    }
 
-	public static
+    public static
     class PyCallableJavaInstance extends PyObjectDerived {
-		iCallable contents;
+        iCallable contents;
 
-		public PyCallableJavaInstance(iCallable e) {
-			super(PyType.fromClass(e.getClass()));
-			this.contents = e;
-			this.javaProxy = e;
-		}
+        public
+        PyCallableJavaInstance(iCallable e) {
+            super(PyType.fromClass(e.getClass()));
+            this.contents = e;
+            this.javaProxy = e;
+        }
 
-		@Override
-		public PyObject __call__(PyObject[] args, String[] keywords) {
-			Object[] x = new Object[args.length];
-			for (int i = 0; i < x.length; i++) {
-				x[i] = args[i].__tojava__(Object.class);
-			}
+        @Override
+        public
+        PyObject __call__(PyObject[] args, String[] keywords) {
+            Object[] x = new Object[args.length];
+            for (int i = 0; i < x.length; i++) {
+                x[i] = args[i].__tojava__(Object.class);
+            }
 
-			Object r = contents.call(x);
-			PyObject p = Py.java2py(r);
-			return p;
-		}
+            Object r = contents.call(x);
+            PyObject p = Py.java2py(r);
+            return p;
+        }
 
-	}
+    }
 
-	public static
+    public static
     class PyCallableAndAttributesJavaInstance extends PyObjectDerived {
-		iHandlesAttributesAndCallable contents;
+        iHandlesAttributesAndCallable contents;
 
-		public PyCallableAndAttributesJavaInstance(iHandlesAttributesAndCallable e) {
-			super(PyType.fromClass(e.getClass()));
-			this.contents = e;
-			this.javaProxy = contents;
+        public
+        PyCallableAndAttributesJavaInstance(iHandlesAttributesAndCallable e) {
+            super(PyType.fromClass(e.getClass()));
+            this.contents = e;
+            this.javaProxy = contents;
 
-		}
+        }
 
-		@Override
-		public PyObject __call__(PyObject[] args, String[] keywords) {
-			Object[] x = new Object[args.length];
-			for (int i = 0; i < x.length; i++) {
-				x[i] = args[i].__tojava__(Object.class);
-			}
+        @Override
+        public
+        PyObject __call__(PyObject[] args, String[] keywords) {
+            Object[] x = new Object[args.length];
+            for (int i = 0; i < x.length; i++) {
+                x[i] = args[i].__tojava__(Object.class);
+            }
 
-			Object r = contents.call(x);
-			PyObject p = Py.java2py(r);
-			return p;
-		}
+            Object r = contents.call(x);
+            PyObject p = Py.java2py(r);
+            return p;
+        }
 
-		@Override
-		public PyObject __findattr_ex__(String name) {
-			PyObject alt = null;
-			try {
-				alt = super.__findattr_ex__(name);
-			} catch (PyException e) {
-			}
-			if (alt == null) {
-				Object o = contents.getAttribute(name);
-				if (o == null)
-					return null;
-				return Py.java2py(o);
-			}
-			return alt;
-		}
+        @Override
+        public
+        PyObject __findattr_ex__(String name) {
+            PyObject alt = null;
+            try {
+                alt = super.__findattr_ex__(name);
+            } catch (PyException e) {
+            }
+            if (alt == null) {
+                Object o = contents.getAttribute(name);
+                if (o == null) return null;
+                return Py.java2py(o);
+            }
+            return alt;
+        }
 
-		// beta1
-		// @Override
-		// protected PyObject ifindfunction(String name) {
-		// PyObject found = super.ifindfunction(name);
-		// if (found == null) {
-		// Object o = contents.getAttribute(name);
-		// if (o == null)
-		// return null;
-		// return Py.java2py(o);
-		// }
-		// return found;
-		// }
+        // beta1
+        // @Override
+        // protected PyObject ifindfunction(String name) {
+        // PyObject found = super.ifindfunction(name);
+        // if (found == null) {
+        // Object o = contents.getAttribute(name);
+        // if (o == null)
+        // return null;
+        // return Py.java2py(o);
+        // }
+        // return found;
+        // }
 
-		@Override
-		public PyObject __finditem__(PyObject key) {
-			if (contents instanceof iHandlesFindItem) {
-				Object x = ((iHandlesFindItem) contents).getItem(key.__tojava__(Object.class));
-				return Py.java2py(x);
-			} else
-				return super.__finditem__(key);
-		}
+        @Override
+        public
+        PyObject __finditem__(PyObject key) {
+            if (contents instanceof iHandlesFindItem) {
+                Object x = ((iHandlesFindItem) contents).getItem(key.__tojava__(Object.class));
+                return Py.java2py(x);
+            }
+            else return super.__finditem__(key);
+        }
 
-		@Override
-		public PyObject __getitem__(PyObject key) {
-			return __finditem__(key);
-		}
+        @Override
+        public
+        PyObject __getitem__(PyObject key) {
+            return __finditem__(key);
+        }
 
-		@Override
-		public void __setattr__(String name, PyObject value) {
-			if (super.__findattr__(name) != null) {
-				super.__setattr__(name, value);
-			} else {
-				contents.setAttribute(name, value.__tojava__(Object.class));
-			}
-		}
+        @Override
+        public
+        void __setattr__(String name, PyObject value) {
+            if (super.__findattr__(name) != null) {
+                super.__setattr__(name, value);
+            }
+            else {
+                contents.setAttribute(name, value.__tojava__(Object.class));
+            }
+        }
 
-		@Override
-		public void __setitem__(PyObject key, PyObject value) {
-			if (contents instanceof iHandlesFindItem) {
-				((iHandlesFindItem) contents).setItem(key.__tojava__(Object.class), value.__tojava__(Object.class));
-			} else
-				super.__setitem__(key, value);
-		}
+        @Override
+        public
+        void __setitem__(PyObject key, PyObject value) {
+            if (contents instanceof iHandlesFindItem) {
+                ((iHandlesFindItem) contents).setItem(key.__tojava__(Object.class), value.__tojava__(Object.class));
+            }
+            else super.__setitem__(key, value);
+        }
 
-		@Override
-		public Object __tojava__(Class arg0) {
-			return contents;
-		}
-	}
+        @Override
+        public
+        Object __tojava__(Class arg0) {
+            return contents;
+        }
+    }
 
-	public static
+    public static
     class PyExtensibleJavaInstance extends PyObject {
-		iExtensible contents;
-		PyObjectDerived instance;
+        iExtensible contents;
+        PyObjectDerived instance;
 
-		public PyExtensibleJavaInstance(iExtensible e) {
-			super();
-			this.contents = e;
-			instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
-		}
+        public
+        PyExtensibleJavaInstance(iExtensible e) {
+            super();
+            this.contents = e;
+            instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
+        }
 
-		@Override
-		public PyObject __findattr_ex__(String name) {
-			PyObject alt = null;
-			try {
-				alt = instance.__findattr_ex__(name);
-			} catch (PyException e) {
-			}
+        @Override
+        public
+        PyObject __findattr_ex__(String name) {
+            PyObject alt = null;
+            try {
+                alt = instance.__findattr_ex__(name);
+            } catch (PyException e) {
+            }
             if (alt == null) {
                 Dict d = contents.getDict();
-				Object o = d.get(new Prop(name));
-				if (o == null)
-					return Py.None;
-				return Py.java2py(o);
-			}
-			return alt;
-		}
+                Object o = d.get(new Prop(name));
+                if (o == null) return Py.None;
+                return Py.java2py(o);
+            }
+            return alt;
+        }
 
-		@Override
-		public void __setattr__(String name, PyObject value) {
-			if (instance.__findattr__(name) != null) {
-				instance.__setattr__(name, value);
-			} else {
-				Dict d = contents.getDict();
-				d.put(new Prop(name), value.__tojava__(Object.class));
-			}
-		}
+        @Override
+        public
+        void __setattr__(String name, PyObject value) {
+            if (instance.__findattr__(name) != null) {
+                instance.__setattr__(name, value);
+            }
+            else {
+                Dict d = contents.getDict();
+                d.put(new Prop(name), value.__tojava__(Object.class));
+            }
+        }
 
-		@Override
-		public Object __tojava__(Class c) {
-			return contents;
-		}
+        @Override
+        public
+        Object __tojava__(Class c) {
+            return contents;
+        }
 
-		@Override
-		public String toString() {
-			return contents.toString();
-		}
+        @Override
+        public
+        String toString() {
+            return contents.toString();
+        }
 
-	}
+    }
 
-	public static
+    public static
     class PyFieldDict extends PyObject {
-		Dict contents;
-		PyObjectDerived instance;
+        Dict contents;
+        PyObjectDerived instance;
 
-		public PyFieldDict(Dict e) {
-			this.contents = e;
-			instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
-		}
+        public
+        PyFieldDict(Dict e) {
+            this.contents = e;
+            instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
+        }
 
-		@Override
-		public PyObject __findattr_ex__(String name) {
-			PyObject alt = null;
-			try {
-				alt = instance.__findattr_ex__(name);
-			} catch (PyException e) {
-			}
-			if (alt == null) {
-				Object o = contents.get(new Prop(name));
-				if (o == null)
-					return Py.None;
-				return Py.java2py(o);
-			}
-			return Py.None;
-		}
+        @Override
+        public
+        PyObject __findattr_ex__(String name) {
+            PyObject alt = null;
+            try {
+                alt = instance.__findattr_ex__(name);
+            } catch (PyException e) {
+            }
+            if (alt == null) {
+                Object o = contents.get(new Prop(name));
+                if (o == null) return Py.None;
+                return Py.java2py(o);
+            }
+            return Py.None;
+        }
 
-		@Override
-		public void __setattr__(String name, PyObject value) {
-			contents.put(new Prop(name), value.__tojava__(Object.class));
-		}
+        @Override
+        public
+        void __setattr__(String name, PyObject value) {
+            contents.put(new Prop(name), value.__tojava__(Object.class));
+        }
 
-		@Override
-		public Object __tojava__(Class c) {
-			return contents;
-		}
+        @Override
+        public
+        Object __tojava__(Class c) {
+            return contents;
+        }
 
-	}
+    }
 
-	public static
+    public static
     class PyHandlesAttributes extends PyObject {
-		iHandlesAttributes contents;
-		PyObjectDerived instance;
+        iHandlesAttributes contents;
+        PyObjectDerived instance;
 
-		public PyHandlesAttributes(iHandlesAttributes e) {
-			this.contents = e;
-			instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
-		}
+        public
+        PyHandlesAttributes(iHandlesAttributes e) {
+            this.contents = e;
+            instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
+        }
 
-		@Override
-		public PyObject __findattr_ex__(String name) {
+        @Override
+        public
+        PyObject __findattr_ex__(String name) {
 
-			PyObject alt = null;
-			
-			try {
-				alt = instance.__findattr_ex__(name);
+            PyObject alt = null;
 
-			} catch (PyException e) {
-			}
-			
-			if (alt == null) {
-				Object o = contents.getAttribute(name);
-				if (o == null)
-					return null;
-				return Py.java2py(o);
-			}
-			return alt;
-		}
+            try {
+                alt = instance.__findattr_ex__(name);
 
-		@Override
-		public PyObject __finditem__(PyObject key) {
-			if (contents instanceof iHandlesFindItem) {
-				Object x = ((iHandlesFindItem) contents).getItem(key.__tojava__(Object.class));
-				return Py.java2py(x);
-			} else
-				return super.__finditem__(key);
-		}
+            } catch (PyException e) {
+            }
 
-		@Override
-		public PyObject __getitem__(PyObject key) {
-			return __finditem__(key);
-		}
+            if (alt == null) {
+                Object o = contents.getAttribute(name);
+                if (o == null) return null;
+                return Py.java2py(o);
+            }
+            return alt;
+        }
 
-		@Override
-		public void __setattr__(String name, PyObject value) {
-			if (instance.__findattr__(name) != null) {
-				instance.__setattr__(name, value);
-			} else {
-				contents.setAttribute(name, value.__tojava__(Object.class));
-			}
-		}
+        @Override
+        public
+        PyObject __finditem__(PyObject key) {
+            if (contents instanceof iHandlesFindItem) {
+                Object x = ((iHandlesFindItem) contents).getItem(key.__tojava__(Object.class));
+                return Py.java2py(x);
+            }
+            else return super.__finditem__(key);
+        }
 
-		@Override
-		public void __setitem__(PyObject key, PyObject value) {
-			if (instance instanceof iHandlesFindItem) {
-				((iHandlesFindItem) instance).setItem(key.__tojava__(Object.class), value.__tojava__(Object.class));
-			} else
-				super.__setitem__(key, value);
-		}
+        @Override
+        public
+        PyObject __getitem__(PyObject key) {
+            return __finditem__(key);
+        }
 
-		@Override
-		public Object __tojava__(Class c) {
-			return contents;
-		}
+        @Override
+        public
+        void __setattr__(String name, PyObject value) {
+            if (instance.__findattr__(name) != null) {
+                instance.__setattr__(name, value);
+            }
+            else {
+                contents.setAttribute(name, value.__tojava__(Object.class));
+            }
+        }
 
-	}
+        @Override
+        public
+        void __setitem__(PyObject key, PyObject value) {
+            if (instance instanceof iHandlesFindItem) {
+                ((iHandlesFindItem) instance).setItem(key.__tojava__(Object.class), value.__tojava__(Object.class));
+            }
+            else super.__setitem__(key, value);
+        }
 
-	public static
+        @Override
+        public
+        Object __tojava__(Class c) {
+            return contents;
+        }
+
+    }
+
+    public static
     class PyHasScalar extends PyFloat {
 
-		private final iHasScalar contents;
-		private final PyObjectDerived instance;
+        private final iHasScalar contents;
+        private final PyObjectDerived instance;
 
-		public PyHasScalar(iHasScalar e) {
-			super(e.getDoubleValue());
-			this.contents = e;
-			instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
-		}
+        public
+        PyHasScalar(iHasScalar e) {
+            super(e.getDoubleValue());
+            this.contents = e;
+            instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
+        }
 
-		@Override
-		public PyObject __findattr_ex__(String name) {
-			return instance.__findattr_ex__(name);
-		}
+        @Override
+        public
+        PyObject __findattr_ex__(String name) {
+            return instance.__findattr_ex__(name);
+        }
 
-		@Override
-		public Object __tojava__(Class c) {
-			return contents;
-		}
+        @Override
+        public
+        Object __tojava__(Class c) {
+            return contents;
+        }
 
-		@Override
-		public double getValue() {
-			return contents.getDoubleValue();
-		}
+        @Override
+        public
+        double getValue() {
+            return contents.getDoubleValue();
+        }
 
-	}
+    }
 
-	public static Map<String, PyObject> injectedSelfMethods = new HashMap<String, PyObject>();
+    public static Map<String, PyObject> injectedSelfMethods = new HashMap<String, PyObject>();
 
-	public static
+    public static
     class PyVisualElement extends PyObject {
-		iVisualElement contents;
+        iVisualElement contents;
 
-		PyObjectDerived instance;
+        PyObjectDerived instance;
 
-		public PyVisualElement(iVisualElement e) {
-			this.contents = e;
-			instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
-		}
+        public
+        PyVisualElement(iVisualElement e) {
+            this.contents = e;
+            instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
+        }
 
-		@Override
-		public PyObject __call__() {
-			SplineComputingOverride.executeMain(contents);
-			return Py.None;
-		}
+        @Override
+        public
+        PyObject __call__() {
+            SplineComputingOverride.executeMain(contents);
+            return Py.None;
+        }
 
-		@Override
-		public PyObject __call__(PyObject arg0) {
-			String s = (String) arg0.__tojava__(String.class);
-			SplineComputingOverride.executeMainWithLabel(contents, s);
-			return Py.None;
-		}
+        @Override
+        public
+        PyObject __call__(PyObject arg0) {
+            String s = (String) arg0.__tojava__(String.class);
+            SplineComputingOverride.executeMainWithLabel(contents, s);
+            return Py.None;
+        }
 
-		@Override
-		public PyObject __call__(PyObject[] args, String[] keywords) {
-			if (args.length == 0)
-				return __call__();
-			if (args.length == 1)
-				return __call__(args[0]);
-			throw new PyException(Py.TypeError, " PyVisualElement not callable with <" + args.length + "> <" + keywords.length + '>');
-		}
+        @Override
+        public
+        PyObject __call__(PyObject[] args, String[] keywords) {
+            if (args.length == 0) return __call__();
+            if (args.length == 1) return __call__(args[0]);
+            throw new PyException(Py.TypeError,
+                                  " PyVisualElement not callable with <" + args.length + "> <" + keywords.length + '>');
+        }
 
-		@Override
-		public boolean isCallable() {
-			return true;
-		}
+        @Override
+        public
+        boolean isCallable() {
+            return true;
+        }
 
-		@Override
-		public int __cmp__(PyObject other) {
-			if (other == this)
-				return 0;
-			if (other instanceof PyVisualElement)
-				return equals(other) ? 0 : 1;
-			return -2;
-		}
-		
-		@Override
-		public PyObject __findattr_ex__(String name) {
+        @Override
+        public
+        int __cmp__(PyObject other) {
+            if (other == this) return 0;
+            if (other instanceof PyVisualElement) return equals(other) ? 0 : 1;
+            return -2;
+        }
 
-			PyObject alt = null;
+        @Override
+        public
+        PyObject __findattr_ex__(String name) {
 
-			try {
-				alt = instance.__findattr_ex__(name);
-			} catch (Exception e) {
-				// e.printStackTrace();
-			}
+            PyObject alt = null;
+
+            try {
+                alt = instance.__findattr_ex__(name);
+            } catch (Exception e) {
+                // e.printStackTrace();
+            }
             //System.out.println(" alt <" + alt + ">");
             // frame is both a field and
-			// something that we want to be
-			// a (psuedo) property
+            // something that we want to be
+            // a (psuedo) property
 
-			final PyObject found = injectedSelfMethods.get(name);
-			if (found != null) {
-				return Py.java2py(new iCallable() {
+            final PyObject found = injectedSelfMethods.get(name);
+            if (found != null) {
+                return Py.java2py(new iCallable() {
 
-					public Object call(Object[] args) {
-						PyObject[] args2 = new PyObject[args.length + 1];
-						for (int i = 0; i < args.length; i++) {
-							args2[i + 1] = Py.java2py(args[i]);
-						}
-						args2[0] = PyVisualElement.this;
-						return found.__call__(args2);
-					}
-				});
-			}
+                    public
+                    Object call(Object[] args) {
+                        PyObject[] args2 = new PyObject[args.length + 1];
+                        for (int i = 0; i < args.length; i++) {
+                            args2[i + 1] = Py.java2py(args[i]);
+                        }
+                        args2[0] = PyVisualElement.this;
+                        return found.__call__(args2);
+                    }
+                });
+            }
 
-			if (alt == null || alt == Py.None || alt.__tojava__(Object.class) instanceof VisualElementProperty || "frame".equals(name)) {
-				Object o = PythonPlugin.getAttr(contents, name);
+            if (alt == null
+                || alt == Py.None
+                || alt.__tojava__(Object.class) instanceof VisualElementProperty
+                || "frame".equals(name)) {
+                Object o = PythonPlugin.getAttr(contents, name);
 
                 //System.out.println(" parent lookup <" + o + ">");
 
-				if (o == null)
-					return Py.None;
-				return Py.java2py(o);
-			} else
-				return alt;
-		}
+                if (o == null) return Py.None;
+                return Py.java2py(o);
+            }
+            else return alt;
+        }
 
-		@Override
-		public PyString __repr__() {
-			return new PyString(contents.toString());
-		}
+        @Override
+        public
+        PyString __repr__() {
+            return new PyString(contents.toString());
+        }
 
-		@Override
-		public void __setattr__(String name, PyObject value) {
-			if ("frame".equals(name)) {
-				contents.getProperty(iVisualElement.overrides).shouldChangeFrame(contents, ((Rect) value.__tojava__(Rect.class)), contents.getFrame(null), true);
-			} else
-				PythonPlugin.setAttr(contents, contents, name, value.__tojava__(Object.class));
-		}
+        @Override
+        public
+        void __setattr__(String name, PyObject value) {
+            if ("frame".equals(name)) {
+                contents.getProperty(iVisualElement.overrides)
+                        .shouldChangeFrame(contents,
+                                           ((Rect) value.__tojava__(Rect.class)),
+                                           contents.getFrame(null),
+                                           true);
+            }
+            else PythonPlugin.setAttr(contents, contents, name, value.__tojava__(Object.class));
+        }
 
-		@Override
-		public PyString __str__() {
-			return new PyString("!ve: " + contents.getProperty(iVisualElement.name));
-		}
+        @Override
+        public
+        PyString __str__() {
+            return new PyString("!ve: " + contents.getProperty(iVisualElement.name));
+        }
 
-		@Override
-		public Object __tojava__(Class c) {
-			return contents;
-		}
+        @Override
+        public
+        Object __tojava__(Class c) {
+            return contents;
+        }
 
-		@Override
-		public boolean equals(Object ob_other) {
-			if (ob_other == null)
-				return false;
-			if (!(ob_other instanceof PyVisualElement || ob_other instanceof VisualElement))
-				return false;
-			if (ob_other instanceof PyVisualElement)
-				return ((PyVisualElement) ob_other).contents.equals(contents);
-			if (ob_other instanceof iVisualElement)
-                return ob_other.equals(contents);
+        @Override
+        public
+        boolean equals(Object ob_other) {
+            if (ob_other == null) return false;
+            if (!(ob_other instanceof PyVisualElement || ob_other instanceof VisualElement)) return false;
+            if (ob_other instanceof PyVisualElement) return ((PyVisualElement) ob_other).contents.equals(contents);
+            if (ob_other instanceof iVisualElement) return ob_other.equals(contents);
             return false;
-		}
+        }
 
-		@Override
-		public int hashCode() {
-			return contents.hashCode();
-		}
+        @Override
+        public
+        int hashCode() {
+            return contents.hashCode();
+        }
 
-		public static
+        public static
         List<Comp> getClassCustomCompletion(String prefix, Object of) {
-			PyVisualElement adaptor = ((PyVisualElement) of);
-			List<Comp> c = new ArrayList<Comp>();
-			if (prefix.length() == 0) {
-				c
-					.add(new Comp(
-						"<h3>The <i>_self</i> variable and other visual element references<hr noshade='none'></h3><div class='wellspacedblack'><i>_self</i> is a special variable that refers to this <i>visual element</i> (i.e. box). It gives you read and write access to <i>properties</i> which are stored in this element or it's parents. A great many things in Field are properties, and understanding them is often the key to managing the power of many visual elements or customizing the behavior of Field.</div>"));
-			} else {
-				String name = iVisualElement.name.get(adaptor.contents);
-				if (name == null)
-					name = "unnamed element";
-				c.add(new Comp("<h3><i><font color='#555555' >\u2014\u2014</font> " + name + " <font color='#555555' >\u2014\u2014</font></i> . " + prefix + " <font color='#555555' size=+3>\u2041\u2014</font></h3>"));
-			}
+            PyVisualElement adaptor = ((PyVisualElement) of);
+            List<Comp> c = new ArrayList<Comp>();
+            if (prefix.length() == 0) {
+                c.add(new Comp("<h3>The <i>_self</i> variable and other visual element references<hr noshade='none'></h3><div class='wellspacedblack'><i>_self</i> is a special variable that refers to this <i>visual element</i> (i.e. box). It gives you read and write access to <i>properties</i> which are stored in this element or it's parents. A great many things in Field are properties, and understanding them is often the key to managing the power of many visual elements or customizing the behavior of Field.</div>"));
+            }
+            else {
+                String name = iVisualElement.name.get(adaptor.contents);
+                if (name == null) name = "unnamed element";
+                c.add(new Comp("<h3><i><font color='#555555' >\u2014\u2014</font> "
+                               + name
+                               + " <font color='#555555' >\u2014\u2014</font></i> . "
+                               + prefix
+                               + " <font color='#555555' size=+3>\u2041\u2014</font></h3>"));
+            }
 
-			List<Comp> ps = new ArrayList<Comp>();
-			ps.add(new Comp("", "<i>Psuedo</i>properties (generally read only)").setTitle(true));
-			for (VisualElementProperty p : PseudoPropertiesPlugin.properties) {
-				if (p.getName().startsWith(prefix)) {
+            List<Comp> ps = new ArrayList<Comp>();
+            ps.add(new Comp("", "<i>Psuedo</i>properties (generally read only)").setTitle(true));
+            for (VisualElementProperty p : PseudoPropertiesPlugin.properties) {
+                if (p.getName().startsWith(prefix)) {
                     ps.add(new Comp(p.getName(), PythonTextEditor.limit(String.valueOf(p.get(adaptor.contents)))));
                 }
-			}
-			if (ps.size() > 1)
-				c.addAll(ps);
-			Map<Object, Object> set = adaptor.contents.payload();
-			String groupname = "Already set, local to this element";
-			addPropertiesByInspection(prefix, adaptor.contents, c, set, groupname);
-			return c;
-		}
+            }
+            if (ps.size() > 1) c.addAll(ps);
+            Map<Object, Object> set = adaptor.contents.payload();
+            String groupname = "Already set, local to this element";
+            addPropertiesByInspection(prefix, adaptor.contents, c, set, groupname);
+            return c;
+        }
 
-		private static void addPropertiesByInspection(String prefix, iVisualElement visualElement, List<Comp> c, Map<Object, Object> set, String groupname) {
-			if (set.size() > 0) {
-				List<Comp> sub = new ArrayList<Comp>();
-				Set<Entry<Object, Object>> e = set.entrySet();
-				for (Entry<Object, Object> ee : e) {
-					VisualElementProperty k = (VisualElementProperty) ee.getKey();
-					String name = k.getName();
-					if (name.startsWith(prefix)) {
-						Object value = ee.getValue();
+        private static
+        void addPropertiesByInspection(String prefix,
+                                       iVisualElement visualElement,
+                                       List<Comp> c,
+                                       Map<Object, Object> set,
+                                       String groupname) {
+            if (set.size() > 0) {
+                List<Comp> sub = new ArrayList<Comp>();
+                Set<Entry<Object, Object>> e = set.entrySet();
+                for (Entry<Object, Object> ee : e) {
+                    VisualElementProperty k = (VisualElementProperty) ee.getKey();
+                    String name = k.getName();
+                    if (name.startsWith(prefix)) {
+                        Object value = ee.getValue();
 
-						Comp cc = new Comp(name, PythonTextEditor.limit("\u2190" + value));
-						sub.add(cc);
-					}
-				}
-				if (sub.size() > 0) {
-					Comp t = new Comp("", groupname).setTitle(true);
-					c.add(t);
-					c.addAll(sub);
-				}
-			}
-			List<iVisualElement> childern = visualElement.getChildren();
-			if (c != null) {
-				for (iVisualElement vv : childern) {
-					Map<Object, Object> setp = vv.payload();
-					String name = vv.getProperty(iVisualElement.name);
-					if (name == null)
-						name = vv.getClass().getName();
-					addPropertiesByInspection(prefix, vv, c, setp, "Set in parent <b>" + name + "</b>");
-				}
-			}
-		}
-	}
+                        Comp cc = new Comp(name, PythonTextEditor.limit("\u2190" + value));
+                        sub.add(cc);
+                    }
+                }
+                if (sub.size() > 0) {
+                    Comp t = new Comp("", groupname).setTitle(true);
+                    c.add(t);
+                    c.addAll(sub);
+                }
+            }
+            List<iVisualElement> childern = visualElement.getChildren();
+            if (c != null) {
+                for (iVisualElement vv : childern) {
+                    Map<Object, Object> setp = vv.payload();
+                    String name = vv.getProperty(iVisualElement.name);
+                    if (name == null) name = vv.getClass().getName();
+                    addPropertiesByInspection(prefix, vv, c, setp, "Set in parent <b>" + name + "</b>");
+                }
+            }
+        }
+    }
 
-	public static
+    public static
     class VisualElementToPyVisualElement extends ClassAdapter {
 
-		public VisualElementToPyVisualElement() {
-			super(VisualElement.class);
-		}
+        public
+        VisualElementToPyVisualElement() {
+            super(VisualElement.class);
+        }
 
-		public VisualElementToPyVisualElement(Class<? extends iVisualElement> c) {
-			super(c);
-		}
+        public
+        VisualElementToPyVisualElement(Class<? extends iVisualElement> c) {
+            super(c);
+        }
 
-		public PyObject adapt(Object o) {
-			return new PyVisualElement((iVisualElement) o);
-		}
+        public
+        PyObject adapt(Object o) {
+            return new PyVisualElement((iVisualElement) o);
+        }
 
-	}
+    }
 
-	public static FieldPyObjectAdaptor fieldPyObjectAdaptor;
+    public static FieldPyObjectAdaptor fieldPyObjectAdaptor;
 
-	public static ExtensiblePyObjectAdapter adaptor;
+    public static ExtensiblePyObjectAdapter adaptor;
 
-	protected static boolean initialized = false;
+    protected static boolean initialized = false;
 
-	public static void initialize() {
-		
-		if (true)
-			return;
-		
-		if (!initialized) {
+    public static
+    void initialize() {
+
+        if (true) return;
+
+        if (!initialized) {
 
             //System.out.println(" initializing adaptor ");
 
-			ExtensiblePyObjectAdapter a = Py.getAdapter();
-			fieldPyObjectAdaptor = new FieldPyObjectAdaptor(a);
-			adaptor = a;
-			initialized = true;
-		}
-	}
+            ExtensiblePyObjectAdapter a = Py.getAdapter();
+            fieldPyObjectAdaptor = new FieldPyObjectAdaptor(a);
+            adaptor = a;
+            initialized = true;
+        }
+    }
 
-	protected FieldPyObjectAdaptor(ExtensiblePyObjectAdapter ex) {
-		ex.addPreClass(new CallableAndAttributesToCallableAndAttributesJavaInstance());
-		ex.addPreClass(new ExtensibleToExtensibleJavaInstance());
-		ex.addPreClass(new CallableToCallableJavaInstance());
-		ex.addPreClass(new HasScalarToPyHasScalar());
-		ex.addPreClass(new HandlesAttributesToPyHandlesAttributes());
-		ex.add(new VisualElementToPyVisualElement() {
-		});
-		ex.add(new VisualElementToPyVisualElement(RootSheetElement.class) {
-		});
+    protected
+    FieldPyObjectAdaptor(ExtensiblePyObjectAdapter ex) {
+        ex.addPreClass(new CallableAndAttributesToCallableAndAttributesJavaInstance());
+        ex.addPreClass(new ExtensibleToExtensibleJavaInstance());
+        ex.addPreClass(new CallableToCallableJavaInstance());
+        ex.addPreClass(new HasScalarToPyHasScalar());
+        ex.addPreClass(new HandlesAttributesToPyHandlesAttributes());
+        ex.add(new VisualElementToPyVisualElement() {
+        });
+        ex.add(new VisualElementToPyVisualElement(RootSheetElement.class) {
+        });
 //		ex.add(new DictToPyFieldDict() {
 //		});
-		ex.add(new PairToPyTuple());
+        ex.add(new PairToPyTuple());
 
-	}
+    }
 
 }

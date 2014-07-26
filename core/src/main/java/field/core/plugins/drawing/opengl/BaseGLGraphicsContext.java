@@ -33,485 +33,510 @@ import static org.lwjgl.opengl.GL11.*;
 //import field.util.BiMap;
 
 @GenerateMethods
-public class BaseGLGraphicsContext extends iLinearGraphicsContext {
+public
+class BaseGLGraphicsContext extends iLinearGraphicsContext {
 
-	public static
+    public static
     class DrawingResult {
-		DrawingResultCode code;
+        DrawingResultCode code;
 
-		List<iDynamicMesh> ret;
+        List<iDynamicMesh> ret;
 
-		iUpdateable compute;
-		public iUpdateable finalize;
+        iUpdateable compute;
+        public iUpdateable finalize;
 
-		public DrawingResult(DrawingResultCode code, iUpdateable up, iDynamicMesh... ret) {
-			super();
-			this.code = code;
-			this.ret = Arrays.asList(ret);
-			this.compute = up;
-		}
-	}
+        public
+        DrawingResult(DrawingResultCode code, iUpdateable up, iDynamicMesh... ret) {
+            super();
+            this.code = code;
+            this.ret = Arrays.asList(ret);
+            this.compute = up;
+        }
+    }
 
-	public enum DrawingResultCode {
+    public
+    enum DrawingResultCode {
         cont, stop, replace, abort
     }
 
-	public interface iDrawingAcceptor<T> {
-		public DrawingResult accept(List<iDynamicMesh> soFar, T line, Dict properties);
-	}
+    public
+    interface iDrawingAcceptor<T> {
+        public
+        DrawingResult accept(List<iDynamicMesh> soFar, T line, Dict properties);
+    }
 
-	public static
+    public static
     class InternalLine {
 
-		List<iDynamicMesh> outputTo = new ArrayList<iDynamicMesh>();
+        List<iDynamicMesh> outputTo = new ArrayList<iDynamicMesh>();
 
-		iDynamicMesh outputTo_list = ReflectionTools.listProxy(outputTo, iDynamicMesh.class);
+        iDynamicMesh outputTo_list = ReflectionTools.listProxy(outputTo, iDynamicMesh.class);
 
-		List<iUpdateable> updateTo = new ArrayList<iUpdateable>();
-		List<iUpdateable> finalizeTo = new ArrayList<iUpdateable>();
+        List<iUpdateable> updateTo = new ArrayList<iUpdateable>();
+        List<iUpdateable> finalizeTo = new ArrayList<iUpdateable>();
 
-		iUpdateable updateTo_list = ReflectionTools.listProxy(updateTo, iUpdateable.class);
-		iUpdateable finalizeTo_list = ReflectionTools.listProxy(finalizeTo, iUpdateable.class);
+        iUpdateable updateTo_list = ReflectionTools.listProxy(updateTo, iUpdateable.class);
+        iUpdateable finalizeTo_list = ReflectionTools.listProxy(finalizeTo, iUpdateable.class);
 
-		Dict properties;
+        Dict properties;
 
-		boolean touched = true;
-	}
+        boolean touched = true;
+    }
 
-	public boolean draft = true;
+    public boolean draft = true;
 
-	public String layersOn = ".*";
+    public String layersOn = ".*";
 
-	public String layersOff = "\\!.*";
+    public String layersOff = "\\!.*";
 
-	private BasicGLSLangProgram textureProgram;
+    private BasicGLSLangProgram textureProgram;
 
-	protected List<iDrawingAcceptor<CachedLine>> lineAcceptors = new ArrayList<iDrawingAcceptor<CachedLine>>();
+    protected List<iDrawingAcceptor<CachedLine>> lineAcceptors = new ArrayList<iDrawingAcceptor<CachedLine>>();
 
-	protected final iAcceptsSceneListElement inside;
+    protected final iAcceptsSceneListElement inside;
 
-	protected iAcceptsSceneListElement vertexProgram;
+    protected iAcceptsSceneListElement vertexProgram;
 
-	protected Dict globalProperties = new Dict();
+    protected Dict globalProperties = new Dict();
 
-	iLinearGraphicsContext parallel = null;
+    iLinearGraphicsContext parallel = null;
 
-	LinkedHashMap<CachedLine, InternalLine> cache = new LinkedHashMap<CachedLine, InternalLine>();
+    LinkedHashMap<CachedLine, InternalLine> cache = new LinkedHashMap<CachedLine, InternalLine>();
 
-	LinkedHashSet<Pair<CachedLine, Dict>> needingCreating = new LinkedHashSet<Pair<CachedLine, Dict>>();
+    LinkedHashSet<Pair<CachedLine, Dict>> needingCreating = new LinkedHashSet<Pair<CachedLine, Dict>>();
 
-	public BiMap<Float, iDynamicMesh> allreadyConstructedLines = HashBiMap.create();//new BiMap<Float, iDynamicMesh>();
+    public BiMap<Float, iDynamicMesh> allreadyConstructedLines = HashBiMap.create();//new BiMap<Float, iDynamicMesh>();
 
-	BaseGLGraphicsContext_m baseGLGraphicsContext_m = new BaseGLGraphicsContext_m(this);
+    BaseGLGraphicsContext_m baseGLGraphicsContext_m = new BaseGLGraphicsContext_m(this);
 
-	HashMap<iDynamicMesh, Integer> probation = new HashMap<iDynamicMesh, Integer>();
+    HashMap<iDynamicMesh, Integer> probation = new HashMap<iDynamicMesh, Integer>();
 
-	TaskQueue endQueue = new TaskQueue();
+    TaskQueue endQueue = new TaskQueue();
 
-	boolean insideWindow = false;
+    boolean insideWindow = false;
 
-	private TaskQueue preswapQueue;
+    private TaskQueue preswapQueue;
 
-	public BaseGLGraphicsContext(iAcceptsSceneListElement inside) {
-		this.inside = inside;
-		vertexProgram = inside;
-	}
+    public
+    BaseGLGraphicsContext(iAcceptsSceneListElement inside) {
+        this.inside = inside;
+        vertexProgram = inside;
+    }
 
-	public BaseGLGraphicsContext(iAcceptsSceneListElement inside, boolean saturate) {
-		this.inside = inside;
+    public
+    BaseGLGraphicsContext(iAcceptsSceneListElement inside, boolean saturate) {
+        this.inside = inside;
 
-		if (inside instanceof BasicGLSLangProgram) {
-			vertexProgram = inside;
-		} else {
+        if (inside instanceof BasicGLSLangProgram) {
+            vertexProgram = inside;
+        }
+        else {
 
-			vertexProgram = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex_withPointsize.glslang", "content/shaders/VertexColorFragment.glslang").setDoPointSize();
-			// vertexProgram = new
-			// BasicGLSLangProgram("content/shaders/TestGLSLangVertex.glslang",
-			// "content/shaders/WhiteFragment.glslang");//.setDoPointSize();
-			inside.addChild((BasicGLSLangProgram) vertexProgram);
-			if (saturate) {
-				vertexProgram.addChild(new BasicUtilities.Smooth());
-				vertexProgram.addChild(new BasicUtilities.SetBlendMode(Base.StandardPass.preRender, GL_SRC_ALPHA_SATURATE, GL_ONE));
+            vertexProgram = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex_withPointsize.glslang",
+                                                    "content/shaders/VertexColorFragment.glslang").setDoPointSize();
+            // vertexProgram = new
+            // BasicGLSLangProgram("content/shaders/TestGLSLangVertex.glslang",
+            // "content/shaders/WhiteFragment.glslang");//.setDoPointSize();
+            inside.addChild((BasicGLSLangProgram) vertexProgram);
+            if (saturate) {
+                vertexProgram.addChild(new BasicUtilities.Smooth());
+                vertexProgram.addChild(new BasicUtilities.SetBlendMode(Base.StandardPass.preRender,
+                                                                       GL_SRC_ALPHA_SATURATE,
+                                                                       GL_ONE));
 
-				textureProgram = new BasicGLSLangProgram("content/shaders/glComponentVertex.glslang", "content/shaders/glComponentGLSLangFragment.glslang");
-				textureProgram.new SetIntegerUniform("tex", new iProvider.Constant<Integer>(1));
-				textureProgram.new SetIntegerUniform("texture2", new iProvider.Constant<Integer>(0));
-				textureProgram.new SetUniform("mul", new Vector4(1, 1, 1, 1));
-				textureProgram.new SetUniform("add", new Vector4(0, 0, 0, 0));
+                textureProgram = new BasicGLSLangProgram("content/shaders/glComponentVertex.glslang",
+                                                         "content/shaders/glComponentGLSLangFragment.glslang");
+                textureProgram.new SetIntegerUniform("tex", new iProvider.Constant<Integer>(1));
+                textureProgram.new SetIntegerUniform("texture2", new iProvider.Constant<Integer>(0));
+                textureProgram.new SetUniform("mul", new Vector4(1, 1, 1, 1));
+                textureProgram.new SetUniform("add", new Vector4(0, 0, 0, 0));
 
-			} else {
-				vertexProgram.addChild(new BasicUtilities.Smooth());
-				vertexProgram.addChild(new BasicUtilities.SetBlendMode(Base.StandardPass.preRender, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+            }
+            else {
+                vertexProgram.addChild(new BasicUtilities.Smooth());
+                vertexProgram.addChild(new BasicUtilities.SetBlendMode(Base.StandardPass.preRender,
+                                                                       GL_SRC_ALPHA,
+                                                                       GL_ONE_MINUS_SRC_ALPHA));
 
-				textureProgram = new BasicGLSLangProgram("content/shaders/glComponentVertex.glslang", "content/shaders/glComponentGLSLangFragment.glslang");
-				// textureProgram = new
-				// BasicGLSLangProgram("content/shaders/TestGLSLangVertex.glslang",
-				// "content/shaders/WhiteFragment.glslang");
-				textureProgram.new SetIntegerUniform("tex", new iProvider.Constant<Integer>(1));
-				textureProgram.new SetIntegerUniform("texture2", new iProvider.Constant<Integer>(0));
-				textureProgram.new SetUniform("mul", new Vector4(1, 1, 1, 1));
-				textureProgram.new SetUniform("add", new Vector4(0, 0, 0, 0));
+                textureProgram = new BasicGLSLangProgram("content/shaders/glComponentVertex.glslang",
+                                                         "content/shaders/glComponentGLSLangFragment.glslang");
+                // textureProgram = new
+                // BasicGLSLangProgram("content/shaders/TestGLSLangVertex.glslang",
+                // "content/shaders/WhiteFragment.glslang");
+                textureProgram.new SetIntegerUniform("tex", new iProvider.Constant<Integer>(1));
+                textureProgram.new SetIntegerUniform("texture2", new iProvider.Constant<Integer>(0));
+                textureProgram.new SetUniform("mul", new Vector4(1, 1, 1, 1));
+                textureProgram.new SetUniform("add", new Vector4(0, 0, 0, 0));
 
-			}
-		}
-	}
+            }
+        }
+    }
 
-	public void addAcceptor(iDrawingAcceptor a) {
-		lineAcceptors.add(a);
-	}
+    public
+    void addAcceptor(iDrawingAcceptor a) {
+        lineAcceptors.add(a);
+    }
 
-	public void addAcceptorHead(iDrawingAcceptor a) {
-		lineAcceptors.add(0, a);
-	}
+    public
+    void addAcceptorHead(iDrawingAcceptor a) {
+        lineAcceptors.add(0, a);
+    }
 
-	public Set<CachedLine> getAllLines() {
-		return cache.keySet();
-	}
+    public
+    Set<CachedLine> getAllLines() {
+        return cache.keySet();
+    }
 
-	public TaskQueue getEndQueue() {
-		return endQueue;
-	}
+    public
+    TaskQueue getEndQueue() {
+        return endQueue;
+    }
 
-	public TaskQueue getPreSwapQueue() {
-		return preswapQueue;
-	}
+    public
+    TaskQueue getPreSwapQueue() {
+        return preswapQueue;
+    }
 
-	@Override
-	public Dict getGlobalProperties() {
-		return globalProperties;
-	}
+    @Override
+    public
+    Dict getGlobalProperties() {
+        return globalProperties;
+    }
 
-	public iAcceptsSceneListElement getVertexProgram() {
+    public
+    iAcceptsSceneListElement getVertexProgram() {
         return vertexProgram;
     }
-	
-	public iAcceptsSceneListElement getTextureProgram() {
+
+    public
+    iAcceptsSceneListElement getTextureProgram() {
         return textureProgram;
     }
 
-	public void setVertexProgram(BasicGLSLangProgram program) {
-		inside.addChild(program);
+    public
+    void setVertexProgram(BasicGLSLangProgram program) {
+        inside.addChild(program);
         List<iSceneListElement> c = new ArrayList<iSceneListElement>(program.getChildren());
         for (iSceneListElement cc : c) {
-			// if (cc instanceof BasicMesh)
-			{
-				program.addChild(cc);
-				vertexProgram.removeChild(cc);
-			}
-		}
+            // if (cc instanceof BasicMesh)
+            {
+                program.addChild(cc);
+                vertexProgram.removeChild(cc);
+            }
+        }
 
-		vertexProgram = program;
-		inside.removeChild((iSceneListElement) vertexProgram);
-	}
+        vertexProgram = program;
+        inside.removeChild((iSceneListElement) vertexProgram);
+    }
 
-	public void install(GLComponentWindow window) {
-		window.getPreQueue().addUpdateable(baseGLGraphicsContext_m.windowDisplayEnter);
-		window.getPostQueue().addUpdateable(baseGLGraphicsContext_m.windowDisplayExit);
-		preswapQueue = window.getRunQueue();
-		insideWindow = true;
-	}
+    public
+    void install(GLComponentWindow window) {
+        window.getPreQueue().addUpdateable(baseGLGraphicsContext_m.windowDisplayEnter);
+        window.getPostQueue().addUpdateable(baseGLGraphicsContext_m.windowDisplayExit);
+        preswapQueue = window.getRunQueue();
+        insideWindow = true;
+    }
 
-	public boolean isLayer(CachedLine l) {
-		String layer = l.getProperties().get(iLinearGraphicsContext.layer);
-		if (layer == null)
-			layer = "none";
-		Pattern on = Pattern.compile(layersOn);
-		Pattern off = Pattern.compile(layersOff);
+    public
+    boolean isLayer(CachedLine l) {
+        String layer = l.getProperties().get(iLinearGraphicsContext.layer);
+        if (layer == null) layer = "none";
+        Pattern on = Pattern.compile(layersOn);
+        Pattern off = Pattern.compile(layersOff);
 
         return on.matcher(layer).matches() && !off.matcher(layer).matches();
     }
 
-	@Override
-	public void resubmitLine(CachedLine line, Dict properties) {
+    @Override
+    public
+    void resubmitLine(CachedLine line, Dict properties) {
 
-		if (lineInteraction != null)
-			lineInteraction.uncache(line);
-		properties.remove(iLinearGraphicsContext.forceNew);
+        if (lineInteraction != null) lineInteraction.uncache(line);
+        properties.remove(iLinearGraphicsContext.forceNew);
 
-		InternalLine internalLine = cache.get(line);
-		if (internalLine == null) {
-			submitLine(line, properties);
-		} else {
-			needingCreating.add(new Pair<CachedLine, Dict>(line, properties));
-			for (iDynamicMesh m : internalLine.outputTo) {
-				m.open();
-				m.close();
-			}
-			cache.remove(line);
-		}
+        InternalLine internalLine = cache.get(line);
+        if (internalLine == null) {
+            submitLine(line, properties);
+        }
+        else {
+            needingCreating.add(new Pair<CachedLine, Dict>(line, properties));
+            for (iDynamicMesh m : internalLine.outputTo) {
+                m.open();
+                m.close();
+            }
+            cache.remove(line);
+        }
 
-		if (parallel != null)
-			parallel.resubmitLine(line, properties);
-	}
+        if (parallel != null) parallel.resubmitLine(line, properties);
+    }
 
-	public void setParallel(iLinearGraphicsContext parallel) {
-		this.parallel = parallel;
-	}
+    public
+    void setParallel(iLinearGraphicsContext parallel) {
+        this.parallel = parallel;
+    }
 
-	LateExecutingDrawing later = new LateExecutingDrawing();
+    LateExecutingDrawing later = new LateExecutingDrawing();
 
-	private iLinearGraphicsContext wasContext;
+    private iLinearGraphicsContext wasContext;
 
-	private LineInteraction lineInteraction;
+    private LineInteraction lineInteraction;
 
-	@Override
-	public void submitLine(CachedLine line, Dict properties) {
+    @Override
+    public
+    void submitLine(CachedLine line, Dict properties) {
 
-		if (!draft && properties.isTrue(iLinearGraphicsContext.notForExport, false))
-			return;
-		if (properties.isTrue(iLinearGraphicsContext.ignoreInPreview, false))
-			return;
+        if (!draft && properties.isTrue(iLinearGraphicsContext.notForExport, false)) return;
+        if (properties.isTrue(iLinearGraphicsContext.ignoreInPreview, false)) return;
 
-		if (properties.isTrue(iLinearGraphicsContext.forceNew, false)) {
-			resubmitLine(line, properties);
-			return;
-		}
+        if (properties.isTrue(iLinearGraphicsContext.forceNew, false)) {
+            resubmitLine(line, properties);
+            return;
+        }
 
-		InternalLine internalLine = cache.get(line);
-		if (internalLine == null) {
-			needingCreating.add(new Pair<CachedLine, Dict>(line, properties));
-		} else {
-			internalLine.touched = true;
-			reviseProperties(internalLine.properties, properties);
-		}
+        InternalLine internalLine = cache.get(line);
+        if (internalLine == null) {
+            needingCreating.add(new Pair<CachedLine, Dict>(line, properties));
+        }
+        else {
+            internalLine.touched = true;
+            reviseProperties(internalLine.properties, properties);
+        }
 
-		if (parallel != null)
-			parallel.submitLine(line, properties);
-	}
+        if (parallel != null) parallel.submitLine(line, properties);
+    }
 
-	public void toggleDraft() {
-		draft = !draft;
-	}
+    public
+    void toggleDraft() {
+        draft = !draft;
+    }
 
-	public void uninstall(GLComponentWindow window) {
-	}
+    public
+    void uninstall(GLComponentWindow window) {
+    }
 
-	public void uninstall(OverlayAnimationManager window) {
-	}
+    public
+    void uninstall(OverlayAnimationManager window) {
+    }
 
-	@Mirror
-	public void windowDisplayEnter() {
+    @Mirror
+    public
+    void windowDisplayEnter() {
 
-		if (insideWindow)
-			wasContext = GLComponentWindow.currentContext;
-		else
-			wasContext = GLComponentWindow.fastContext;
+        if (insideWindow) wasContext = GLComponentWindow.currentContext;
+        else wasContext = GLComponentWindow.fastContext;
 
-		if (insideWindow)
-			GLComponentWindow.currentContext = this;
-		else
-			GLComponentWindow.fastContext = this;
-	}
+        if (insideWindow) GLComponentWindow.currentContext = this;
+        else GLComponentWindow.fastContext = this;
+    }
 
-	@Mirror
-	public void windowDisplayExit() {
+    @Mirror
+    public
+    void windowDisplayExit() {
 
-		try {
+        try {
 
-			later.begin();
+            later.begin();
 
-			if (textureProgram != null)
-				textureProgram.performPass(null);
+            if (textureProgram != null) textureProgram.performPass(null);
 
-			HashSet<iDynamicMesh> allLines = new HashSet<iDynamicMesh>();
-			for (InternalLine il : cache.values())
-				allLines.addAll(il.outputTo);
+            HashSet<iDynamicMesh> allLines = new HashSet<iDynamicMesh>();
+            for (InternalLine il : cache.values())
+                allLines.addAll(il.outputTo);
 
-			for (iDynamicMesh m : allreadyConstructedLines.values()) {
-				// m.open();
-				// m.close();
-				m.open();
-			}
+            for (iDynamicMesh m : allreadyConstructedLines.values()) {
+                // m.open();
+                // m.close();
+                m.open();
+            }
 
-			for (InternalLine il : cache.values())
-				if (il.touched) {
-					allLines.removeAll(il.outputTo);
-					probation.remove(il.outputTo);
-				}
+            for (InternalLine il : cache.values())
+                if (il.touched) {
+                    allLines.removeAll(il.outputTo);
+                    probation.remove(il.outputTo);
+                }
 
-			Iterator<Map.Entry<CachedLine, InternalLine>> ii = cache.entrySet().iterator();
-			while (ii.hasNext()) {
-				Entry<CachedLine, InternalLine> e = ii.next();
-				if (!e.getValue().touched) {
-					ii.remove();
-					e.getValue().finalizeTo_list.update();
-				} else {
-					later.scanLine(e.getKey(), e.getKey().properties);
-				}
-			}
+            Iterator<Map.Entry<CachedLine, InternalLine>> ii = cache.entrySet().iterator();
+            while (ii.hasNext()) {
+                Entry<CachedLine, InternalLine> e = ii.next();
+                if (!e.getValue().touched) {
+                    ii.remove();
+                    e.getValue().finalizeTo_list.update();
+                }
+                else {
+                    later.scanLine(e.getKey(), e.getKey().properties);
+                }
+            }
 
-			for (iDynamicMesh o : allLines)
-				removeLine(o);
+            for (iDynamicMesh o : allLines)
+                removeLine(o);
 
-			for (Pair<CachedLine, Dict> p : needingCreating) {
-				later.scanLine(p.left, p.right);
-			}
+            for (Pair<CachedLine, Dict> p : needingCreating) {
+                later.scanLine(p.left, p.right);
+            }
 
-			for (Pair<CachedLine, Dict> p : needingCreating) {
-				later.prepLine(p.left, p.right);
+            for (Pair<CachedLine, Dict> p : needingCreating) {
+                later.prepLine(p.left, p.right);
 
-				InternalLine line = create(p);
-				if (line != null)
-					cache.put(p.left, line);
-			}
-			for (Map.Entry<CachedLine, InternalLine> il : cache.entrySet()) {
-				for (iDynamicMesh mm : il.getValue().outputTo)
-					mm.open();
-			}
+                InternalLine line = create(p);
+                if (line != null) cache.put(p.left, line);
+            }
+            for (Map.Entry<CachedLine, InternalLine> il : cache.entrySet()) {
+                for (iDynamicMesh mm : il.getValue().outputTo)
+                    mm.open();
+            }
 
-			needingCreating.clear();
+            needingCreating.clear();
 
-			for (InternalLine il : cache.values()) {
-				if (il.touched) {
-					try {
-						il.updateTo_list.update();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+            for (InternalLine il : cache.values()) {
+                if (il.touched) {
+                    try {
+                        il.updateTo_list.update();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-				}
-			}
+                }
+            }
 
-			// finallize all dynamic lines
-			// untouch everything
+            // finallize all dynamic lines
+            // untouch everything
 
-			for (InternalLine il : cache.values()) {
-				for (iDynamicMesh mm : il.outputTo)
-					mm.close();
-				il.touched = false;
-				for (iDynamicMesh m : il.outputTo)
-					probation.remove(m);
-			}
+            for (InternalLine il : cache.values()) {
+                for (iDynamicMesh mm : il.outputTo)
+                    mm.close();
+                il.touched = false;
+                for (iDynamicMesh m : il.outputTo)
+                    probation.remove(m);
+            }
 
-			for (iDynamicMesh m : allreadyConstructedLines.values()) {
-				m.close();
-				if (m instanceof DynamicLine)
-					assert ((DynamicLine) m).isClosed();
-				if (m instanceof DynamicLine_long)
-					assert ((DynamicLine_long) m).isClosed();
-			}
+            for (iDynamicMesh m : allreadyConstructedLines.values()) {
+                m.close();
+                if (m instanceof DynamicLine) assert ((DynamicLine) m).isClosed();
+                if (m instanceof DynamicLine_long) assert ((DynamicLine_long) m).isClosed();
+            }
 
-			parallel = null;
+            parallel = null;
 
-			if (lineInteraction != null)
-				lineInteraction.setAllCachedLines(cache.keySet());
+            if (lineInteraction != null) lineInteraction.setAllCachedLines(cache.keySet());
 
-			endQueue.update();
+            endQueue.update();
 
-			if (insideWindow) {
-				GLComponentWindow.currentContext = wasContext;
-			} else
-				GLComponentWindow.fastContext = wasContext;
+            if (insideWindow) {
+                GLComponentWindow.currentContext = wasContext;
+            }
+            else GLComponentWindow.fastContext = wasContext;
 
-			List<iSceneListElement> c = ((BasicGLSLangProgram) vertexProgram).getChildren();
+            List<iSceneListElement> c = ((BasicGLSLangProgram) vertexProgram).getChildren();
 
-			final List<InternalLine> indexer = new ArrayList<InternalLine>(cache.values());
+            final List<InternalLine> indexer = new ArrayList<InternalLine>(cache.values());
 
-			Collections.sort(c, new Comparator<iSceneListElement>() {
+            Collections.sort(c, new Comparator<iSceneListElement>() {
 
-				@Override
-				public int compare(iSceneListElement arg0, iSceneListElement arg1) {
+                @Override
+                public
+                int compare(iSceneListElement arg0, iSceneListElement arg1) {
 
-					int a = arg0 instanceof LineList_long ? 2 : (arg0 instanceof TriangleMesh_long ? 1 : 0);
-					int b = arg1 instanceof LineList_long ? 2 : (arg1 instanceof TriangleMesh_long ? 1 : 0);
+                    int a = arg0 instanceof LineList_long ? 2 : (arg0 instanceof TriangleMesh_long ? 1 : 0);
+                    int b = arg1 instanceof LineList_long ? 2 : (arg1 instanceof TriangleMesh_long ? 1 : 0);
 
-					for (int i = 0; i < indexer.size(); i++) {
-						if (indexer.get(i).outputTo.contains(arg0)) {
-							a = i;
-						}
-						if (indexer.get(i).outputTo.contains(arg1)) {
-							b = i;
-						}
-					}
+                    for (int i = 0; i < indexer.size(); i++) {
+                        if (indexer.get(i).outputTo.contains(arg0)) {
+                            a = i;
+                        }
+                        if (indexer.get(i).outputTo.contains(arg1)) {
+                            b = i;
+                        }
+                    }
 
-					return Float.compare(a, b);
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+                    return Float.compare(a, b);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	protected InternalLine create(Pair<CachedLine, Dict> p) {
-		List<iDynamicMesh> meshes = new ArrayList<iDynamicMesh>();
-		List<iUpdateable> computes = new ArrayList<iUpdateable>();
-		List<iUpdateable> finalize = new ArrayList<iUpdateable>();
-		for (iDrawingAcceptor a : lineAcceptors) {
-			try {
-				DrawingResult ret = a.accept(meshes, p.left, p.right);
-				if (ret != null) {
-					if (ret.code == DrawingResultCode.abort)
-						return null;
-					if (ret.code == DrawingResultCode.cont) {
-						meshes.addAll(ret.ret);
-						computes.add(ret.compute);
-						if (ret.finalize != null)
-							finalize.add(ret.finalize);
-						continue;
-					}
-					if (ret.code == DrawingResultCode.replace) {
-						meshes.clear();
-						meshes.addAll(ret.ret);
-						computes.clear();
-						computes.add(ret.compute);
-						if (ret.finalize != null)
-							finalize.add(ret.finalize);
-						continue;
-					}
-					if (ret.code == DrawingResultCode.stop) {
-						meshes.clear();
-						meshes.addAll(ret.ret);
-						computes.clear();
-						computes.add(ret.compute);
-						if (ret.finalize != null)
-							finalize.add(ret.finalize);
-						break;
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+    protected
+    InternalLine create(Pair<CachedLine, Dict> p) {
+        List<iDynamicMesh> meshes = new ArrayList<iDynamicMesh>();
+        List<iUpdateable> computes = new ArrayList<iUpdateable>();
+        List<iUpdateable> finalize = new ArrayList<iUpdateable>();
+        for (iDrawingAcceptor a : lineAcceptors) {
+            try {
+                DrawingResult ret = a.accept(meshes, p.left, p.right);
+                if (ret != null) {
+                    if (ret.code == DrawingResultCode.abort) return null;
+                    if (ret.code == DrawingResultCode.cont) {
+                        meshes.addAll(ret.ret);
+                        computes.add(ret.compute);
+                        if (ret.finalize != null) finalize.add(ret.finalize);
+                        continue;
+                    }
+                    if (ret.code == DrawingResultCode.replace) {
+                        meshes.clear();
+                        meshes.addAll(ret.ret);
+                        computes.clear();
+                        computes.add(ret.compute);
+                        if (ret.finalize != null) finalize.add(ret.finalize);
+                        continue;
+                    }
+                    if (ret.code == DrawingResultCode.stop) {
+                        meshes.clear();
+                        meshes.addAll(ret.ret);
+                        computes.clear();
+                        computes.add(ret.compute);
+                        if (ret.finalize != null) finalize.add(ret.finalize);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-		if (meshes.size() == 0)
-			return null;
+        if (meshes.size() == 0) return null;
 
-		InternalLine il = new InternalLine();
-		il.outputTo.clear();
-		il.outputTo.addAll(meshes);
-		il.updateTo.clear();
-		il.updateTo.addAll(computes);
-		il.finalizeTo.clear();
-		il.finalizeTo.addAll(finalize);
+        InternalLine il = new InternalLine();
+        il.outputTo.clear();
+        il.outputTo.addAll(meshes);
+        il.updateTo.clear();
+        il.updateTo.addAll(computes);
+        il.finalizeTo.clear();
+        il.finalizeTo.addAll(finalize);
 
-		return il;
+        return il;
 
-	}
+    }
 
-	protected void removeLine(iDynamicMesh o) {
-		if (!probation.containsKey(o)) {
-			probation.put(o, 0);
+    protected
+    void removeLine(iDynamicMesh o) {
+        if (!probation.containsKey(o)) {
+            probation.put(o, 0);
 
-			// vertexProgram.removeChild(o.getUnderlyingGeometry());
-			List<iSceneListElement> p = (List<iSceneListElement>) o.getUnderlyingGeometry().getParents();
-			for (iSceneListElement pp : new ArrayList<iSceneListElement>(p))
-				pp.removeChild(o.getUnderlyingGeometry());
+            // vertexProgram.removeChild(o.getUnderlyingGeometry());
+            List<iSceneListElement> p = (List<iSceneListElement>) o.getUnderlyingGeometry().getParents();
+            for (iSceneListElement pp : new ArrayList<iSceneListElement>(p))
+                pp.removeChild(o.getUnderlyingGeometry());
 
-		} else if (probation.get(o) > 5) {
-			o.remove();
+        }
+        else if (probation.get(o) > 5) {
+            o.remove();
             allreadyConstructedLines.inverse().remove(o);
-			//allreadyConstructedLines.removeBackwards(o);
-			probation.remove(o);
-		} else {
-			probation.put(o, probation.get(o) + 1);
-		}
-	}
+            //allreadyConstructedLines.removeBackwards(o);
+            probation.remove(o);
+        }
+        else {
+            probation.put(o, probation.get(o) + 1);
+        }
+    }
 
-	protected void reviseProperties(Dict currentProperties, Dict newProperties) {
-	}
+    protected
+    void reviseProperties(Dict currentProperties, Dict newProperties) {
+    }
 
-	public void setLineInteraction(LineInteraction lineInteraction) {
-		this.lineInteraction = lineInteraction;
-	}
+    public
+    void setLineInteraction(LineInteraction lineInteraction) {
+        this.lineInteraction = lineInteraction;
+    }
 
 }

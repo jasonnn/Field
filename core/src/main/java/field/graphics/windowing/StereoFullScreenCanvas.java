@@ -1,5 +1,6 @@
 package field.graphics.windowing;
 
-public class StereoFullScreenCanvas {
+public
+class StereoFullScreenCanvas {
 
 }

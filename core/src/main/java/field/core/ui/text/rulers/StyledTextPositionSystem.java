@@ -9,88 +9,97 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
-public class StyledTextPositionSystem {
+public
+class StyledTextPositionSystem {
 
-	public static final WeakHashMap<StyledText, StyledTextPositionSystem> systems = new WeakHashMap<StyledText, StyledTextPositionSystem>();
+    public static final WeakHashMap<StyledText, StyledTextPositionSystem> systems =
+            new WeakHashMap<StyledText, StyledTextPositionSystem>();
 
-	private final StyledText on;
-	boolean installed = false;
-	private TextChangeListener listener;
+    private final StyledText on;
+    boolean installed = false;
+    private TextChangeListener listener;
 
-	public StyledTextPositionSystem(StyledText on) {
-		this.on = on;
-	}
+    public
+    StyledTextPositionSystem(StyledText on) {
+        this.on = on;
+    }
 
-	public static
+    public static
     class Position {
-		public int at;
-		public int was;
-		boolean valid = true;
-	}
+        public int at;
+        public int was;
+        boolean valid = true;
+    }
 
-	List<Position> positions = new ArrayList<Position>();
+    List<Position> positions = new ArrayList<Position>();
 
-	public void install() {
-		if (installed)
-			return;
+    public
+    void install() {
+        if (installed) return;
 
-		on.getContent().addTextChangeListener(listener = new TextChangeListener() {
+        on.getContent().addTextChangeListener(listener = new TextChangeListener() {
 
-			@Override
-			public void textSet(TextChangedEvent event) {
-			}
+            @Override
+            public
+            void textSet(TextChangedEvent event) {
+            }
 
-			@Override
-			public void textChanging(TextChangingEvent event) {
-				int start = event.start;
-				int end = event.replaceCharCount + start;
+            @Override
+            public
+            void textChanging(TextChangingEvent event) {
+                int start = event.start;
+                int end = event.replaceCharCount + start;
 
-				int newend = event.newCharCount + start;
+                int newend = event.newCharCount + start;
 
-				for (Position p : positions) {
-					if (p.at >= end) {
-						p.at += newend - end;
-					} else if (p.at < start) {
+                for (Position p : positions) {
+                    if (p.at >= end) {
+                        p.at += newend - end;
+                    }
+                    else if (p.at < start) {
 
-					} else if (p.at > start && p.at < end) {
-						p.at = start;
-						p.valid = false;
-					} else {
-					}
+                    }
+                    else if (p.at > start && p.at < end) {
+                        p.at = start;
+                        p.valid = false;
+                    }
+                    else {
+                    }
 
-				}
-			}
+                }
+            }
 
-			@Override
-			public void textChanged(TextChangedEvent event) {
-			}
-		});
-		installed = true;
-	}
+            @Override
+            public
+            void textChanged(TextChangedEvent event) {
+            }
+        });
+        installed = true;
+    }
 
-	public Position createPosition(int i) {
-		Position p = new Position();
-		p.at = i;
-		p.valid = true;
-		positions.add(p);
-		return p;
-	}
+    public
+    Position createPosition(int i) {
+        Position p = new Position();
+        p.at = i;
+        p.valid = true;
+        positions.add(p);
+        return p;
+    }
 
-	public void deinstall() {
-		if (!installed)
-			return;
+    public
+    void deinstall() {
+        if (!installed) return;
 
-		installed = false;
-		on.getContent().removeTextChangeListener(listener);
-		positions.clear();
-	}
+        installed = false;
+        on.getContent().removeTextChangeListener(listener);
+        positions.clear();
+    }
 
-	public static
+    public static
     StyledTextPositionSystem get(StyledText t) {
-		StyledTextPositionSystem m = systems.get(t);
-		if (m == null)
-			systems.put(t, m = new StyledTextPositionSystem(t));
-		m.install();
-		return m;
-	}
+        StyledTextPositionSystem m = systems.get(t);
+        if (m == null) systems.put(t, m = new StyledTextPositionSystem(t));
+        m.install();
+        return m;
+    }
 }

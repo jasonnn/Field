@@ -4,10 +4,13 @@ import field.core.dispatch.iVisualElement.Rect;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
 
-public interface iOutOfBandDrawing {
-	
-	public void paintOutOfBand(GC gc, StyledText ed);
-	
-	public void expandDamage(Rect d);
-	
+public
+interface iOutOfBandDrawing {
+
+    public
+    void paintOutOfBand(GC gc, StyledText ed);
+
+    public
+    void expandDamage(Rect d);
+
 }

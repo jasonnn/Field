@@ -14,151 +14,167 @@ import java.util.WeakHashMap;
 
 /**
  * for quickly grabbing statistics about numbers and things
- * @author marc
  *
+ * @author marc
  */
-public class Taps {
+public
+class Taps {
 
-	public abstract static
+    public abstract static
     class StatisticsPackage {
 
-		public abstract
+        public abstract
         void accept(Number n);
 
-		public abstract
+        public abstract
         String descriptiveString();
 
-		public abstract
+        public abstract
         void output(String key, CapturedEnvironment env, iVisualElement inside);
-	}
+    }
 
-	public static
+    public static
     class DefaultStats extends StatisticsPackage {
-		float min = Float.POSITIVE_INFINITY;
+        float min = Float.POSITIVE_INFINITY;
 
-		float max = Float.NEGATIVE_INFINITY;
+        float max = Float.NEGATIVE_INFINITY;
 
-		float total = 0;
+        float total = 0;
 
-		int num;
+        int num;
 
-		ArrayList<Float> rawData = new ArrayList<Float>();
+        ArrayList<Float> rawData = new ArrayList<Float>();
 
-		@Override
-		public void accept(Number n) {
-			if (n == null)
-				return;
-			float ff = n.floatValue();
-			if (ff < min)
-				min = ff;
-			if (ff > max)
-				max = ff;
-			total += ff;
-			num += 1;
-			rawData.add(ff);
-		}
+        @Override
+        public
+        void accept(Number n) {
+            if (n == null) return;
+            float ff = n.floatValue();
+            if (ff < min) min = ff;
+            if (ff > max) max = ff;
+            total += ff;
+            num += 1;
+            rawData.add(ff);
+        }
 
-		public float getMedian() {
-			if (rawData.size() == 0)
-				return Float.NaN;
-			if (rawData.size() % 2 == 1)
-				return rawData.get(rawData.size() / 2);
-			return (rawData.get(rawData.size() / 2 - 1) + rawData.get(rawData.size() / 2));
-		}
+        public
+        float getMedian() {
+            if (rawData.size() == 0) return Float.NaN;
+            if (rawData.size() % 2 == 1) return rawData.get(rawData.size() / 2);
+            return (rawData.get(rawData.size() / 2 - 1) + rawData.get(rawData.size() / 2));
+        }
 
-		public float getAverage() {
-			return total / num;
-		}
+        public
+        float getAverage() {
+            return total / num;
+        }
 
-		public Histogram<Number> getHistogram(int numBins) {
-			Histogram<Number> h1 = new Histogram<Number>();
+        public
+        Histogram<Number> getHistogram(int numBins) {
+            Histogram<Number> h1 = new Histogram<Number>();
 
-			for (int i = 0; i < rawData.size(); i++) {
-				float mm = rawData.get(i);
-				mm = (float) (((long) mm * 1000) / 1000.0);
-				h1.visit(mm, 1);
-			}
+            for (int i = 0; i < rawData.size(); i++) {
+                float mm = rawData.get(i);
+                mm = (float) (((long) mm * 1000) / 1000.0);
+                h1.visit(mm, 1);
+            }
 
-			if (h1.getNumBins() > numBins * 2)
+            if (h1.getNumBins() > numBins * 2)
 
-			{
+            {
 
-				Histogram<Number> h = new Histogram<Number>();
+                Histogram<Number> h = new Histogram<Number>();
 
-				for (int i = 0; i < rawData.size(); i++) {
-					float mm = rawData.get(i);
-					int bin = (int) (numBins * (mm - min) / (1e-5 + max - min));
-					float fbin = (float) (bin * (1e-5 + max - min) / numBins + min);
-					h.visit(fbin, 1);
-				}
-				return h;
-			}
-			return h1;
-		}
+                for (int i = 0; i < rawData.size(); i++) {
+                    float mm = rawData.get(i);
+                    int bin = (int) (numBins * (mm - min) / (1e-5 + max - min));
+                    float fbin = (float) (bin * (1e-5 + max - min) / numBins + min);
+                    h.visit(fbin, 1);
+                }
+                return h;
+            }
+            return h1;
+        }
 
-		@Override
-		public String descriptiveString() {
-			return BaseMath.toDP(min, 4) + " -> " + BaseMath.toDP(max, 4) + " a:" + BaseMath.toDP(getAverage(), 4) + " m:" + BaseMath.toDP(getMedian(), 4) + " n:" + num;
-		}
+        @Override
+        public
+        String descriptiveString() {
+            return BaseMath.toDP(min, 4)
+                   + " -> "
+                   + BaseMath.toDP(max, 4)
+                   + " a:"
+                   + BaseMath.toDP(getAverage(), 4)
+                   + " m:"
+                   + BaseMath.toDP(getMedian(), 4)
+                   + " n:"
+                   + num;
+        }
 
-		@Override
-		public void output(String key, CapturedEnvironment env, iVisualElement inside) {
-			OutputInserts.printHistogram(key + ": " + descriptiveString(), key, inside, getHistogram(15));
-		}
-	}
+        @Override
+        public
+        void output(String key, CapturedEnvironment env, iVisualElement inside) {
+            OutputInserts.printHistogram(key + ": " + descriptiveString(), key, inside, getHistogram(15));
+        }
+    }
 
-	static WeakHashMap<Object, Map<String, StatisticsPackage>> stats = new WeakHashMap<Object, Map<String, StatisticsPackage>>();
+    static WeakHashMap<Object, Map<String, StatisticsPackage>> stats =
+            new WeakHashMap<Object, Map<String, StatisticsPackage>>();
 
-	public static
+    public static
     void tap(Number n, Object executionUID, String key) {
-		StatisticsPackage p = getPackage(executionUID, key);
-		p.accept(n);
+        StatisticsPackage p = getPackage(executionUID, key);
+        p.accept(n);
 
-	}
+    }
 
-	public static
-    void tapAndPrint(Number n, final Object executionUID, final String key, final CapturedEnvironment env, final iVisualElement inside) {
-		if (!env.hasExitHandler(key)) {
-			env.addExitHandler(key, new iUpdateable() {
-				public void update() {
-					if (hasPackage(executionUID, key)) {
-						StatisticsPackage p = getPackage(executionUID, key);
-						p.output(key, env, inside);
+    public static
+    void tapAndPrint(Number n,
+                     final Object executionUID,
+                     final String key,
+                     final CapturedEnvironment env,
+                     final iVisualElement inside) {
+        if (!env.hasExitHandler(key)) {
+            env.addExitHandler(key, new iUpdateable() {
+                public
+                void update() {
+                    if (hasPackage(executionUID, key)) {
+                        StatisticsPackage p = getPackage(executionUID, key);
+                        p.output(key, env, inside);
 
-					}
-				}
-			});
-		}
-		tap(n, executionUID, key);
-	}
+                    }
+                }
+            });
+        }
+        tap(n, executionUID, key);
+    }
 
-	public static
+    public static
     void finish(Object executionUID) {
-		stats.remove(executionUID);
-	}
+        stats.remove(executionUID);
+    }
 
-	public static boolean hasPackage(Object executionUID, String key) {
-		if (stats.get(executionUID) == null)
-			return false;
-		if (!stats.get(executionUID).containsKey(key))
-			return false;
-		return true;
-	}
+    public static
+    boolean hasPackage(Object executionUID, String key) {
+        if (stats.get(executionUID) == null) return false;
+        if (!stats.get(executionUID).containsKey(key)) return false;
+        return true;
+    }
 
-	public static StatisticsPackage getPackage(Object executionUID, String key) {
-		Map<String, StatisticsPackage> map = getMap(executionUID);
-		StatisticsPackage sp = map.get(key);
-		if (sp == null) {
-			map.put(key, sp = new DefaultStats());
-		}
-		return sp;
-	}
+    public static
+    StatisticsPackage getPackage(Object executionUID, String key) {
+        Map<String, StatisticsPackage> map = getMap(executionUID);
+        StatisticsPackage sp = map.get(key);
+        if (sp == null) {
+            map.put(key, sp = new DefaultStats());
+        }
+        return sp;
+    }
 
-	private static Map<String, StatisticsPackage> getMap(Object executionUID) {
-		Map<String, StatisticsPackage> m = stats.get(executionUID);
-		if (m == null)
-			stats.put(executionUID, m = new WeakHashMap<String, StatisticsPackage>());
-		return m;
-	}
+    private static
+    Map<String, StatisticsPackage> getMap(Object executionUID) {
+        Map<String, StatisticsPackage> m = stats.get(executionUID);
+        if (m == null) stats.put(executionUID, m = new WeakHashMap<String, StatisticsPackage>());
+        return m;
+    }
 
 }

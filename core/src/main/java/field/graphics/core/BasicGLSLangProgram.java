@@ -35,19 +35,26 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 @Woven
-public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements iSceneListElement {
+public
+class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements iSceneListElement {
 
-    public interface iErrorHandler {
-        public void beginError();
+    public
+    interface iErrorHandler {
+        public
+        void beginError();
 
-        public void errorOnLine(int line, String error);
+        public
+        void errorOnLine(int line, String error);
 
-        public void endError();
+        public
+        void endError();
 
-        public void noError();
+        public
+        void noError();
     }
 
-    public class BasicGLSLangElement {
+    public
+    class BasicGLSLangElement {
 
         public final ElementType isFragment;
 
@@ -57,35 +64,42 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
         private File[] originalFiles = {};
 
-        public BasicGLSLangElement(File code, ElementType isFragment) {
+        public
+        BasicGLSLangElement(File code, ElementType isFragment) {
             this(new String[]{readFile(code)}, isFragment);
             originalFiles = new File[]{code};
         }
 
-        public BasicGLSLangElement(File[] code, ElementType isFragment) {
+        public
+        BasicGLSLangElement(File[] code, ElementType isFragment) {
             this(readFiles(code), isFragment);
             originalFiles = code;
         }
 
-        public BasicGLSLangElement(String code, ElementType isFragment) {
+        public
+        BasicGLSLangElement(String code, ElementType isFragment) {
             this(new String[]{code}, isFragment);
         }
 
-        public BasicGLSLangElement(String[] code, ElementType isFragment) {
+        public
+        BasicGLSLangElement(String[] code, ElementType isFragment) {
             this.code = code;
             this.isFragment = isFragment;
             programs.add(this);
         }
 
-        public File[] getFiles() {
+        public
+        File[] getFiles() {
             return originalFiles;
         }
 
-        protected void delete() {
+        protected
+        void delete() {
             GL20.glDeleteShader(shader);
         }
 
-        protected void reload() {
+        protected
+        void reload() {
             if (originalFiles != null) {
                 code = readFiles(originalFiles);
                 // System.out.println(" code is <" + code +
@@ -93,29 +107,28 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             }
         }
 
-        public void reload(String code) {
+        public
+        void reload(String code) {
             this.code[0] = code;
         }
 
         iErrorHandler onError;
 
-        public void reload(String code, iErrorHandler handler) {
+        public
+        void reload(String code, iErrorHandler handler) {
             this.code[0] = code;
             onError = handler;
         }
 
-        protected void setup() {
-            if ((code == null) || (code.length == 0))
-                return;
+        protected
+        void setup() {
+            if ((code == null) || (code.length == 0)) return;
             boolean found = false;
             for (String s : code) {
-                if (s == null)
-                    return;
-                if (!s.trim().isEmpty())
-                    found = true;
+                if (s == null) return;
+                if (!s.trim().isEmpty()) found = true;
             }
-            if (!found)
-                return;
+            if (!found) return;
 
             // System.out.println(" compiling <" + isFragment +
             // "> <" + code[0] + "> from <" +
@@ -161,7 +174,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
                     onError.endError();
                 }
                 // throw new IllegalStateException();
-            } else {
+            }
+            else {
                 if (onError != null) {
                     onError.noError();
                 }
@@ -170,41 +184,48 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
         }
 
-        public String getCode() {
+        public
+        String getCode() {
             return code[0];
         }
     }
 
-    public class CachedAttrib {
+    public
+    class CachedAttrib {
         public String name;
 
         int id = -1;
 
-        public int getID() {
+        public
+        int getID() {
             return (id != -1) ? id : (id = glGetAttribLocation(getProgram(), name));
         }
     }
 
     private final HashMap<Object, UniformCache> uniformCache = new HashMap<Object, UniformCache>();
 
-    public enum ElementType {
+    public
+    enum ElementType {
         vertex(GL_VERTEX_SHADER), geometry(GL_GEOMETRY_SHADER), fragment(GL_FRAGMENT_SHADER), tessControl(GL40.GL_TESS_CONTROL_SHADER), tessEval(GL40.GL_TESS_EVALUATION_SHADER), compute(GL43.GL_COMPUTE_SHADER);
 
         public int gl;
 
-        private ElementType(int gl) {
+        private
+        ElementType(int gl) {
             this.gl = gl;
         }
     }
 
-    static public class ModelView implements iProvider<Matrix4> {
+    static public
+    class ModelView implements iProvider<Matrix4> {
         float[] o = new float[16];
 
         Matrix4 m = new Matrix4();
 
         FloatBuffer f = ByteBuffer.allocateDirect(4 * 16).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-        public Matrix4 get() {
+        public
+        Matrix4 get() {
             f.rewind();
             glGetFloat(GL_MODELVIEW_MATRIX, f);
             f.get(o);
@@ -213,15 +234,21 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         }
     }
 
-    static public class ModelViewFromCurrentCamera implements iProvider<Matrix4> {
-        public Matrix4 get() {
+    static public
+    class ModelViewFromCurrentCamera implements iProvider<Matrix4> {
+        public
+        Matrix4 get() {
             return new Matrix4(BasicCamera.currentCamera.modelView);
         }
     }
 
-    static public class PreviousModelViewFromCurrentCamera implements iProvider<Matrix4> {
-        public Matrix4 get() {
-            return new Matrix4(BasicCamera.currentCamera.previousModelView == null ? BasicCamera.currentCamera.modelView : BasicCamera.currentCamera.previousModelView);
+    static public
+    class PreviousModelViewFromCurrentCamera implements iProvider<Matrix4> {
+        public
+        Matrix4 get() {
+            return new Matrix4(BasicCamera.currentCamera.previousModelView == null
+                               ? BasicCamera.currentCamera.modelView
+                               : BasicCamera.currentCamera.previousModelView);
         }
     }
 
@@ -248,13 +275,16 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
     // }
     // }
 
-    public static class None extends BasicUtilities.OnePassElement {
-        public None() {
+    public static
+    class None extends BasicUtilities.OnePassElement {
+        public
+        None() {
             super(StandardPass.postRender);
         }
 
         @Override
-        public void performPass() {
+        public
+        void performPass() {
             GL20.glUseProgram(0);
         }
     }
@@ -273,7 +303,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
     // }
     // }
     //
-    static public class ProjectionFromCamera implements iProvider<Matrix4> {
+    static public
+    class ProjectionFromCamera implements iProvider<Matrix4> {
         private final BasicCamera c;
         float[] o = new float[16];
 
@@ -281,11 +312,13 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
         FloatBuffer f = ByteBuffer.allocateDirect(4 * 16).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-        public ProjectionFromCamera(BasicCamera c) {
+        public
+        ProjectionFromCamera(BasicCamera c) {
             this.c = c;
         }
 
-        public Matrix4 get() {
+        public
+        Matrix4 get() {
             f.rewind();
             glGetFloat(GL_PROJECTION_MATRIX, f);
             f.get(o);
@@ -294,16 +327,19 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         }
     }
 
-    public class SetIntegerUniform extends TaskQueue.Task {
+    public
+    class SetIntegerUniform extends TaskQueue.Task {
         public iProvider<Integer> value;
         public String name;
 
-        public SetIntegerUniform(String string, int i) {
+        public
+        SetIntegerUniform(String string, int i) {
             this(string, new iProvider.Constant<Integer>(i));
             this.name = string;
         }
 
-        public SetIntegerUniform(String name, iProvider<Integer> value) {
+        public
+        SetIntegerUniform(String name, iProvider<Integer> value) {
             parameterQueue.super();
             this.value = value;
             this.name = name;
@@ -312,7 +348,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         int previous = -1;
 
         @Override
-        protected void run() {
+        protected
+        void run() {
             int id = getUniformCache().find(gl, getProgram(), name);
 
             if (id != -1) {
@@ -327,25 +364,29 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
                     previous = i;
                 }
-            } else {
+            }
+            else {
             }
             recur();
         }
     }
 
-    static public class SetIntegerUniformElement extends BasicUtilities.OnePassListElement {
+    static public
+    class SetIntegerUniformElement extends BasicUtilities.OnePassListElement {
 
         private final iProvider<Integer> to;
 
         private final String name;
 
-        public SetIntegerUniformElement(StandardPass requestPass, String name, iProvider<Integer> to) {
+        public
+        SetIntegerUniformElement(StandardPass requestPass, String name, iProvider<Integer> to) {
             super(requestPass, requestPass);
             this.name = name;
             this.to = to;
         }
 
-        public SetIntegerUniformElement(String name, iProvider<Integer> to) {
+        public
+        SetIntegerUniformElement(String name, iProvider<Integer> to) {
             super(StandardPass.preRender, StandardPass.preRender);
             this.name = name;
             this.to = to;
@@ -354,7 +395,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         int previous = -1;
 
         @Override
-        public void performPass() {
+        public
+        void performPass() {
             assert currentProgram != null;
             pre();
 
@@ -363,27 +405,32 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             if (id != -1) {
                 int a = to.get();
 
-                if (a != previous || currentProgram.getUniformCache().lastWasNew || !currentProgram.getUniformCache().get(name).equals(a))
+                if (a != previous || currentProgram.getUniformCache().lastWasNew || !currentProgram.getUniformCache()
+                                                                                                   .get(name)
+                                                                                                   .equals(a))
                     glUniform1i(id, a);
 
                 currentProgram.getUniformCache().set(name, a);
 
                 previous = a;
 
-            } else {
+            }
+            else {
             }
             post();
         }
     }
 
-    public class SetMatrixUniform extends TaskQueue.Task {
+    public
+    class SetMatrixUniform extends TaskQueue.Task {
         public iProvider<Matrix4> value;
 
         float[] mm = new float[16];
 
         public String name;
 
-        public SetMatrixUniform(String name, iProvider<Matrix4> value) {
+        public
+        SetMatrixUniform(String name, iProvider<Matrix4> value) {
             parameterQueue.super();
             this.value = value;
             this.name = name;
@@ -392,7 +439,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         FloatBuffer matrix = ByteBuffer.allocateDirect(4 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
         @Override
-        protected void run() {
+        protected
+        void run() {
             int id = getUniformCache().find(gl, getProgram(), name);
             if (id != -1) {
                 Matrix4 i = value.get();
@@ -408,22 +456,27 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
                     // glUniformMatrix4fv(id, 1, false,
                     // i.get(mm), 0);
                 }
-            } else {
+            }
+            else {
             }
             recur();
         }
     }
 
-    public class PreviousLeftCamera extends SetMatrixUniform {
-        public PreviousLeftCamera(String name) {
+    public
+    class PreviousLeftCamera extends SetMatrixUniform {
+        public
+        PreviousLeftCamera(String name) {
             super(name, new iProvider<Matrix4>() {
 
                 @Override
-                public Matrix4 get() {
+                public
+                Matrix4 get() {
                     BasicCamera c = BasicCamera.currentCamera;
                     if (c instanceof StereoCamera) {
                         return new Matrix4(((StereoCamera) c).previousModelViewLeft);
-                    } else {
+                    }
+                    else {
                         return new Matrix4(c.previousModelView);
                     }
                 }
@@ -432,16 +485,20 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
     }
 
 
-    public class PreviousCenterCamera extends SetMatrixUniform {
-        public PreviousCenterCamera(String name) {
+    public
+    class PreviousCenterCamera extends SetMatrixUniform {
+        public
+        PreviousCenterCamera(String name) {
             super(name, new iProvider<Matrix4>() {
 
                 @Override
-                public Matrix4 get() {
+                public
+                Matrix4 get() {
                     BasicCamera c = BasicCamera.currentCamera;
                     if (c instanceof LayeredStereoCamera) {
                         return new Matrix4(((LayeredStereoCamera) c).previousModelView);
-                    } else {
+                    }
+                    else {
                         return new Matrix4(c.previousModelView);
                     }
                 }
@@ -449,16 +506,20 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         }
     }
 
-    public class PreviousRightCamera extends SetMatrixUniform {
-        public PreviousRightCamera(String name) {
+    public
+    class PreviousRightCamera extends SetMatrixUniform {
+        public
+        PreviousRightCamera(String name) {
             super(name, new iProvider<Matrix4>() {
 
                 @Override
-                public Matrix4 get() {
+                public
+                Matrix4 get() {
                     BasicCamera c = BasicCamera.currentCamera;
                     if (c instanceof StereoCamera) {
                         return new Matrix4(((StereoCamera) c).previousModelViewRight);
-                    } else {
+                    }
+                    else {
                         return new Matrix4(c.previousModelView);
                     }
                 }
@@ -466,7 +527,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         }
     }
 
-    static public class SetMatrixUniformElement extends BasicUtilities.OnePassListElement {
+    static public
+    class SetMatrixUniformElement extends BasicUtilities.OnePassListElement {
 
         private final iProvider<Matrix4> to;
 
@@ -474,13 +536,15 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
         float[] mm = new float[16];
 
-        public SetMatrixUniformElement(StandardPass requestPass, String name, iProvider<Matrix4> to) {
+        public
+        SetMatrixUniformElement(StandardPass requestPass, String name, iProvider<Matrix4> to) {
             super(requestPass, requestPass);
             this.name = name;
             this.to = to;
         }
 
-        public SetMatrixUniformElement(String name, iProvider<Matrix4> to) {
+        public
+        SetMatrixUniformElement(String name, iProvider<Matrix4> to) {
             super(StandardPass.preRender, StandardPass.preRender);
             this.name = name;
             this.to = to;
@@ -489,7 +553,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         FloatBuffer matrix = ByteBuffer.allocateDirect(4 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
         @Override
-        public void performPass() {
+        public
+        void performPass() {
             pre();
             assert currentProgram != null;
 
@@ -509,17 +574,20 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
                     // glUniformMatrix4fv(id, 1, false,
                     // i.get(mm), 0);
                 }
-            } else {
+            }
+            else {
             }
             post();
         }
     }
 
-    public class SetUniform extends TaskQueue.Task {
+    public
+    class SetUniform extends TaskQueue.Task {
         public iToFloatArray to;
         public String name;
 
-        public SetUniform(String name, iToFloatArray to) {
+        public
+        SetUniform(String name, iToFloatArray to) {
             parameterQueue.super();
             this.name = demungeArrayName(name);
             this.to = to;
@@ -528,48 +596,47 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         float[] previous = null;
 
         @Override
-        protected void run() {
+        protected
+        void run() {
 
             int id = getUniformCache().find(gl, getProgram(), name);
             // ;//System.out.println(" SU :"+name+" running @ "+id);
             if (id != -1) {
                 float[] a = to.get();
 
-                if (!compare(a, previous) || getUniformCache().lastWasNew || !compare((float[]) getUniformCache().get(name), a)) {
+                if (!compare(a, previous)
+                    || getUniformCache().lastWasNew
+                    || !compare((float[]) getUniformCache().get(name), a)) {
 
-                    if (a.length == 1)
-                        glUniform1f(id, a[0]);
-                    if (a.length == 2)
-                        glUniform2f(id, a[0], a[1]);
-                    if (a.length == 3)
-                        glUniform3f(id, a[0], a[1], a[2]);
-                    if (a.length == 4)
-                        glUniform4f(id, a[0], a[1], a[2], a[3]);
+                    if (a.length == 1) glUniform1f(id, a[0]);
+                    if (a.length == 2) glUniform2f(id, a[0], a[1]);
+                    if (a.length == 3) glUniform3f(id, a[0], a[1], a[2]);
+                    if (a.length == 4) glUniform4f(id, a[0], a[1], a[2], a[3]);
                     previous = a;
 
                     getUniformCache().set(name, a);
 
-                } else {
+                }
+                else {
                 }
                 // String xx = "";
                 // for (int i = 0; i < a.length; i++)
                 // xx += a[i] + " ";
 
-            } else {
+            }
+            else {
             }
 
             assert glGetError() == 0 : name + " WRONG DIMENSION ?";
             recur();
         }
 
-        public boolean compare(float[] a, float[] b) {
-            if (a == null || b == null)
-                return false;
-            if (a.length != b.length)
-                return false;
+        public
+        boolean compare(float[] a, float[] b) {
+            if (a == null || b == null) return false;
+            if (a.length != b.length) return false;
             for (int i = 0; i < a.length; i++) {
-                if (Math.abs(a[i] - b[i]) > 1e-9)
-                    return false;
+                if (Math.abs(a[i] - b[i]) > 1e-9) return false;
             }
             return true;
         }
@@ -578,19 +645,22 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
     /**
      * to be added to individual pieces of geometry
      */
-    static public class SetUniformElement extends BasicUtilities.OnePassListElement {
+    static public
+    class SetUniformElement extends BasicUtilities.OnePassListElement {
 
         private final iToFloatArray to;
 
         private final String name;
 
-        public SetUniformElement(StandardPass requestPass, String name, iToFloatArray to) {
+        public
+        SetUniformElement(StandardPass requestPass, String name, iToFloatArray to) {
             super(requestPass, requestPass);
             this.name = demungeArrayName(name);
             this.to = to;
         }
 
-        public SetUniformElement(String name, iToFloatArray to) {
+        public
+        SetUniformElement(String name, iToFloatArray to) {
             super(StandardPass.preRender, StandardPass.preRender);
             this.name = demungeArrayName(name);
             this.to = to;
@@ -599,7 +669,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         float[] previous = null;
 
         @Override
-        public void performPass() {
+        public
+        void performPass() {
             pre();
             assert currentProgram != null;
 
@@ -607,34 +678,31 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             if (id != -1) {
                 float[] a = to.get();
 
-                if (!compare(a, previous) || currentProgram.getUniformCache().lastWasNew || !compare(a, (float[]) currentProgram.getUniformCache().get(name))) {
+                if (!compare(a, previous) || currentProgram.getUniformCache().lastWasNew || !compare(a,
+                                                                                                     (float[]) currentProgram
+                                                                                                                       .getUniformCache()
+                                                                                                                       .get(name))) {
 
-                    if (a.length == 1)
-                        glUniform1f(id, a[0]);
-                    if (a.length == 2)
-                        glUniform2f(id, a[0], a[1]);
-                    if (a.length == 3)
-                        glUniform3f(id, a[0], a[1], a[2]);
-                    if (a.length == 4)
-                        glUniform4f(id, a[0], a[1], a[2], a[3]);
+                    if (a.length == 1) glUniform1f(id, a[0]);
+                    if (a.length == 2) glUniform2f(id, a[0], a[1]);
+                    if (a.length == 3) glUniform3f(id, a[0], a[1], a[2]);
+                    if (a.length == 4) glUniform4f(id, a[0], a[1], a[2], a[3]);
                     currentProgram.getUniformCache().set(name, a);
                 }
 
                 previous = a;
-            } else {
+            }
+            else {
             }
             post();
         }
 
         public static
         boolean compare(float[] a, float[] b) {
-            if (a == null || b == null)
-                return false;
-            if (a.length != b.length)
-                return false;
+            if (a == null || b == null) return false;
+            if (a.length != b.length) return false;
             for (int i = 0; i < a.length; i++) {
-                if (Math.abs(a[i] - b[i]) > 1e-4)
-                    return false;
+                if (Math.abs(a[i] - b[i]) > 1e-4) return false;
             }
             return true;
         }
@@ -642,23 +710,25 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
     public static BasicGLSLangProgram currentProgram;
 
-    public static String[] readFiles(File[] code) {
+    public static
+    String[] readFiles(File[] code) {
         String[] ret = new String[code.length];
         for (int i = 0; i < ret.length; i++)
             ret[i] = readFile(code[i]);
         return ret;
     }
 
-    static public String demungeArrayName(String name) {
+    static public
+    String demungeArrayName(String name) {
         int ii = name.indexOf("__");
-        if (ii == -1)
-            return name;
+        if (ii == -1) return name;
 
         return name.substring(0, ii) + '[' + name.substring(ii + 2) + ']';
 
     }
 
-    public static File[] resources(String[] names) {
+    public static
+    File[] resources(String[] names) {
         File[] f = new File[names.length];
         for (int i = 0; i < names.length; i++) {
             // names[i] = names[i].replaceAll("content/shaders/",
@@ -681,7 +751,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         return f;
     }
 
-    public static File[] resources(String[] names, ClassLoader loader) {
+    public static
+    File[] resources(String[] names, ClassLoader loader) {
         File[] f = new File[names.length];
         for (int i = 0; i < names.length; i++) {
 
@@ -708,15 +779,15 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         return f;
     }
 
-    public static String readFile(File code) {
+    public static
+    String readFile(File code) {
         if (code.getPath().contains(".jar!")) {
             String p = code.getPath();
 
             // if (p.startsWith("file"))
             p = "jar:" + p;
 
-            if (p.startsWith("jar:http:/"))
-                p = p.replace("jar:http:/", "jar:http://");
+            if (p.startsWith("jar:http:/")) p = p.replace("jar:http:/", "jar:http://");
 
             // System.out.println(" trying url :" + p);
 
@@ -747,7 +818,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
             return s.toString();
 
-        } else {
+        }
+        else {
 
             BufferedReader reader = null;
             StringBuilder s = new StringBuilder();
@@ -788,44 +860,58 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
     int geometryVertexOutType = GL_TRIANGLE_STRIP;
 
-    public BasicGLSLangProgram() {
+    public
+    BasicGLSLangProgram() {
         super(StandardPass.preRender, StandardPass.preRender);
     }
 
-    public BasicGLSLangProgram(String vertex, ShaderPreprocessor fragmentProc, String reading) throws PreprocessorException {
+    public
+    BasicGLSLangProgram(String vertex, ShaderPreprocessor fragmentProc, String reading) throws PreprocessorException {
         super(StandardPass.preRender, StandardPass.preRender);
-        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{vertex}, this.getClass().getClassLoader()), ElementType.vertex);
+        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{vertex}, this.getClass().getClassLoader()),
+                                ElementType.vertex);
         new BasicGLSLangElement(fragmentProc.read(fragmentProc.filenameToString(reading)), ElementType.fragment);
         this.vertexFile = vertex;
         this.fragmentFile = null;
     }
 
-    public BasicGLSLangProgram(String vertex, String fragment) {
+    public
+    BasicGLSLangProgram(String vertex, String fragment) {
         super(StandardPass.preRender, StandardPass.preRender);
-        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{vertex}, this.getClass().getClassLoader()), ElementType.vertex);
-        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{fragment}, this.getClass().getClassLoader()), ElementType.fragment);
+        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{vertex}, this.getClass().getClassLoader()),
+                                ElementType.vertex);
+        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{fragment}, this.getClass().getClassLoader()),
+                                ElementType.fragment);
         this.vertexFile = vertex;
         this.fragmentFile = fragment;
     }
 
-    public BasicGLSLangProgram(String vertex, String fragment, StandardPass postRender) {
+    public
+    BasicGLSLangProgram(String vertex, String fragment, StandardPass postRender) {
         super(postRender, StandardPass.preRender);
-        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{vertex}, this.getClass().getClassLoader()), ElementType.vertex);
-        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{fragment}, this.getClass().getClassLoader()), ElementType.fragment);
+        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{vertex}, this.getClass().getClassLoader()),
+                                ElementType.vertex);
+        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{fragment}, this.getClass().getClassLoader()),
+                                ElementType.fragment);
         this.vertexFile = vertex;
         this.fragmentFile = fragment;
     }
 
-    public BasicGLSLangProgram(String vertex, String geometry, String fragment) {
+    public
+    BasicGLSLangProgram(String vertex, String geometry, String fragment) {
         super(StandardPass.preRender, StandardPass.preRender);
-        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{geometry}, this.getClass().getClassLoader()), ElementType.geometry);
-        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{vertex}, this.getClass().getClassLoader()), ElementType.vertex);
-        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{fragment}, this.getClass().getClassLoader()), ElementType.fragment);
+        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{geometry}, this.getClass().getClassLoader()),
+                                ElementType.geometry);
+        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{vertex}, this.getClass().getClassLoader()),
+                                ElementType.vertex);
+        new BasicGLSLangElement(BasicGLSLangProgram.resources(new String[]{fragment}, this.getClass().getClassLoader()),
+                                ElementType.fragment);
         this.vertexFile = vertex;
         this.fragmentFile = fragment;
     }
 
-    public void delete() {
+    public
+    void delete() {
         BasicContextManager.markAsInvalidInAllContexts(this);
         BasicContextManager.markAsNoIDInAllContexts(this);
         for (BasicGLSLangElement element : programs)
@@ -833,26 +919,31 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         GL20.glDeleteProgram(getProgram());
     }
 
-    public String getLog(int i) {
+    public
+    String getLog(int i) {
 
         return GL20.glGetShaderInfoLog(shader, 5000);
     }
 
-    public TaskQueue getParameterTaskQueue() {
+    public
+    TaskQueue getParameterTaskQueue() {
         return parameterQueue;
     }
 
-    public int getProgram() {
+    public
+    int getProgram() {
         return shader;
     }
 
-    public List<BasicGLSLangElement> getPrograms() {
+    public
+    List<BasicGLSLangElement> getPrograms() {
         return programs;
     }
 
     int numx, numy, numz;
 
-    public BasicGLSLangProgram setupWorkgroups(int numx, int numy, int numz) {
+    public
+    BasicGLSLangProgram setupWorkgroups(int numx, int numy, int numz) {
         this.numx = numx;
         this.numy = numy;
         this.numz = numz;
@@ -866,7 +957,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
     @InheritWeave
     @DispatchOverTopology(topology = Cont.class)
     @ConstantContext(immediate = false, topology = Base.class)
-    public void performPass() {
+    public
+    void performPass() {
 
         if (needsReloading) {
             needsReloading = false;
@@ -890,10 +982,12 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
                     System.out.println(" warning: running a compute shader without having setup it's workgroups");
                 }
                 GL43.glDispatchCompute(numx, numy, numz);
-            } else {
+            }
+            else {
                 GL20.glUseProgram(shader);
             }
-        } else {
+        }
+        else {
         }
 
         currentProgram = this;
@@ -904,10 +998,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         parameterQueue.update();
         assert glGetError() == 0 : getLog(getProgram());
 
-        if (doPointSize)
-            glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-        else
-            glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
+        if (doPointSize) glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+        else glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
         post();
         assert glGetError() == 0 : getLog(getProgram());
@@ -917,7 +1009,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         // debugPrintUniforms();
     }
 
-    public void bindNow() {
+    public
+    void bindNow() {
         if (needsReloading) {
             needsReloading = false;
             clearUniformCache();
@@ -942,7 +1035,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         bound = true;
         if (currentProgram != this && good) {
             GL20.glUseProgram(shader);
-        } else {
+        }
+        else {
         }
 
         currentProgram = this;
@@ -951,13 +1045,12 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         parameterQueue.update();
         assert glGetError() == 0 : getLog(getProgram());
 
-        if (doPointSize)
-            glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-        else
-            glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
+        if (doPointSize) glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+        else glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
     }
 
-    public void reload() {
+    public
+    void reload() {
         // System.out.println(" reloading programs");
         delete();
         for (BasicGLSLangElement element : programs)
@@ -966,16 +1059,19 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
     boolean needsReloading = false;
 
-    public void deferReload() {
+    public
+    void deferReload() {
         needsReloading = true;
     }
 
-    public BasicGLSLangProgram setDoPointSize() {
+    public
+    BasicGLSLangProgram setDoPointSize() {
         doPointSize = true;
         return this;
     }
 
-    public void setGeometryShaderParameters(int numOut, int typeIn, int typeOut) {
+    public
+    void setGeometryShaderParameters(int numOut, int typeIn, int typeOut) {
         this.geometryVertexInType = typeIn;
         this.geometryVertexOutType = typeOut;
         this.geometryVertexNumOut = numOut;
@@ -983,11 +1079,11 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
     static public boolean noMoreParameterTaskQueue = false;
 
-    public void updateParameterTaskQueue() {
+    public
+    void updateParameterTaskQueue() {
         // assert bound;
 
-        if (noMoreParameterTaskQueue)
-            return;
+        if (noMoreParameterTaskQueue) return;
 
         if (currentProgram == this) {
             parameterQueue.update();
@@ -996,7 +1092,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
     boolean good = false;
 
-    protected void fix() {
+    protected
+    void fix() {
 
         assert BasicContextManager.getGl() != null;
         good = false;
@@ -1091,7 +1188,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             System.err.println(" program failed to link");
             System.err.println(" log is <" + ret + ">");
             throw new IllegalStateException();
-        } else {
+        }
+        else {
         }
 
         glValidateProgram(shader);
@@ -1102,7 +1200,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             System.err.println(" program failed to validate");
             System.err.println(" log is <" + this.getLog(getProgram()) + ">");
             throw new IllegalStateException();
-        } else {
+        }
+        else {
             System.err.println(" validated ");
         }
 
@@ -1113,24 +1212,28 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         assert glGetError() == 0 : getLog(getProgram());
     }
 
-    private void clearUniformCache() {
+    private
+    void clearUniformCache() {
         for (UniformCache c : uniformCache.values())
             c.clear();
     }
 
-    protected void setup() {
+    protected
+    void setup() {
         shader = GL20.glCreateProgram();
         // shader = glCreateProgramObjectARB();
         BasicContextManager.putId(this, shader);
     }
 
-    public int getShader() {
+    public
+    int getShader() {
         return shader;
     }
 
     HashMap<FullScreenCanvasSWT, OnCanvasLines> cachedOCPL = new LinkedHashMap<FullScreenCanvasSWT, OnCanvasLines>();
 
-    public OnCanvasLines getOnCanvasPLine(FullScreenCanvasSWT canvas) {
+    public
+    OnCanvasLines getOnCanvasPLine(FullScreenCanvasSWT canvas) {
         OnCanvasLines c = cachedOCPL.get(canvas);
         if (c == null) {
             cachedOCPL.put(canvas, c = new OnCanvasLines(this, canvas));
@@ -1138,7 +1241,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         return c;
     }
 
-    public OnCanvasLines getOnCanvasLines(FullScreenCanvasSWT canvas) {
+    public
+    OnCanvasLines getOnCanvasLines(FullScreenCanvasSWT canvas) {
         OnCanvasLines c = cachedOCPL.get(canvas);
         if (c == null) {
             cachedOCPL.put(canvas, c = new OnCanvasLines(this, canvas));
@@ -1146,11 +1250,13 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         return c;
     }
 
-    public List<Object> lines(FullScreenCanvasSWT canvas) {
+    public
+    List<Object> lines(FullScreenCanvasSWT canvas) {
         return getOnCanvasPLine(canvas).submit;
     }
 
-    public void debugPrintUniforms() {
+    public
+    void debugPrintUniforms() {
 
         new Exception().printStackTrace();
 
@@ -1159,8 +1265,7 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             System.out.println("    loaded from :" + Arrays.asList(e.originalFiles));
         }
         for (Task t : getParameterTaskQueue().getTasks()) {
-            if (t instanceof SetUniform)
-                System.out.println(((SetUniform) t).name + "  = " + ((SetUniform) t).to);
+            if (t instanceof SetUniform) System.out.println(((SetUniform) t).name + "  = " + ((SetUniform) t).to);
             if (t instanceof SetIntegerUniform)
                 System.out.println(((SetIntegerUniform) t).name + "  = " + ((SetIntegerUniform) t).value);
         }
@@ -1170,15 +1275,18 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
     String name;
 
-    public void setName(String name) {
+    public
+    void setName(String name) {
         this.name = name;
     }
 
-    public String getName() {
+    public
+    String getName() {
         return name;
     }
 
-    public String getAllCode() {
+    public
+    String getAllCode() {
         StringBuffer b = new StringBuffer();
         for (BasicGLSLangElement e : getPrograms()) {
             b.append(e.getCode() + "\n");
@@ -1186,7 +1294,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         return b.toString();
     }
 
-    public UniformCache getUniformCache() {
+    public
+    UniformCache getUniformCache() {
         UniformCache c = uniformCache.get(BasicContextManager.getCurrentContext());
         if (c == null) {
             uniformCache.put(BasicContextManager.getCurrentContext(), c = new UniformCache());

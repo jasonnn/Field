@@ -2,12 +2,13 @@ package field.namespace.diagram;
 
 import field.namespace.diagram.DiagramZero.iMarker;
 
-public interface iExtendedMarkerPredicate<T>{
+public
+interface iExtendedMarkerPredicate<T> {
 
-	enum PredicateReturn
-	{
+    enum PredicateReturn {
         is, better, worse
     }
 
-    public PredicateReturn is(iMarker<T> newMarker, iMarker<T> currentMarker);
+    public
+    PredicateReturn is(iMarker<T> newMarker, iMarker<T> currentMarker);
 }

@@ -3,27 +3,32 @@ package field.core.windowing;
 import org.eclipse.swt.opengl.GLCanvas;
 import org.eclipse.swt.widgets.Canvas;
 
-public class LinuxCanvasInterface implements iCanvasInterface {
+public
+class LinuxCanvasInterface implements iCanvasInterface {
 
-	private final GLCanvas c;
+    private final GLCanvas c;
 
-	public LinuxCanvasInterface(Canvas c) {
-		this.c = (GLCanvas) c;
-	}
+    public
+    LinuxCanvasInterface(Canvas c) {
+        this.c = (GLCanvas) c;
+    }
 
-	@Override
-	public void setCurrent() {
-		c.setCurrent();
-	}
+    @Override
+    public
+    void setCurrent() {
+        c.setCurrent();
+    }
 
-	long last = 0;
-	@Override
-	public void swapBuffers() {
-		c.swapBuffers();
-		
+    long last = 0;
+
+    @Override
+    public
+    void swapBuffers() {
+        c.swapBuffers();
+
 //		GL11.glFlush();
 //		GL11.glFinish();
-		
-	}
+
+    }
 
 }

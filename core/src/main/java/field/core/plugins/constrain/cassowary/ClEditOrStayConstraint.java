@@ -11,37 +11,44 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-abstract class ClEditOrStayConstraint extends ClConstraint {
-	public ClEditOrStayConstraint(ClVariable var, ClStrength strength, double weight) {
-		super(strength, weight);
-		_variable = var;
-		_expression = new ClLinearExpression(_variable, -1.0, _variable.value());
-	}
+abstract
+class ClEditOrStayConstraint extends ClConstraint {
+    public
+    ClEditOrStayConstraint(ClVariable var, ClStrength strength, double weight) {
+        super(strength, weight);
+        _variable = var;
+        _expression = new ClLinearExpression(_variable, -1.0, _variable.value());
+    }
 
-	public ClEditOrStayConstraint(ClVariable var, ClStrength strength) {
-		this(var, strength, 1.0);
-	}
+    public
+    ClEditOrStayConstraint(ClVariable var, ClStrength strength) {
+        this(var, strength, 1.0);
+    }
 
-	public ClEditOrStayConstraint(ClVariable var) {
-		this(var, ClStrength.required, 1.0);
-		_variable = var;
-	}
+    public
+    ClEditOrStayConstraint(ClVariable var) {
+        this(var, ClStrength.required, 1.0);
+        _variable = var;
+    }
 
-	public ClVariable variable() {
-		return _variable;
-	}
+    public
+    ClVariable variable() {
+        return _variable;
+    }
 
-	@Override
-	public ClLinearExpression expression() {
-		return _expression;
-	}
+    @Override
+    public
+    ClLinearExpression expression() {
+        return _expression;
+    }
 
-	private void setVariable(ClVariable v) {
-		_variable = v;
-	}
+    private
+    void setVariable(ClVariable v) {
+        _variable = v;
+    }
 
-	protected ClVariable _variable;
+    protected ClVariable _variable;
 
-	// cache the expresion
-	private final ClLinearExpression _expression;
+    // cache the expresion
+    private final ClLinearExpression _expression;
 }

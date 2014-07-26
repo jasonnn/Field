@@ -1,6 +1,5 @@
 package field.bytecode.protect.instrumentation;
 
-import field.bytecode.protect.instrumentation.HandlesAnnontatedMethod;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -12,7 +11,8 @@ import java.util.Map;
 /**
  * Created by jason on 7/14/14.
  */
-public class AnnotationMethodAdaptor extends MethodVisitor {
+public
+class AnnotationMethodAdaptor extends MethodVisitor {
 
     private final Map<String, HandlesAnnontatedMethod> annotatedMethodHandlers;
     private final int access;
@@ -31,16 +31,17 @@ public class AnnotationMethodAdaptor extends MethodVisitor {
 
     private final String super_name;
 
-    public AnnotationMethodAdaptor(Map<String, HandlesAnnontatedMethod> annotatedMethodHandlers,
-                                   int access,
-                                   String name,
-                                   String desc,
-                                   String signature,
-                                   ClassVisitor classDelegate,
-                                   MethodVisitor arg0,
-                                   String super_name,
-                                   byte[] originalByteCode,
-                                   String class_name) {
+    public
+    AnnotationMethodAdaptor(Map<String, HandlesAnnontatedMethod> annotatedMethodHandlers,
+                            int access,
+                            String name,
+                            String desc,
+                            String signature,
+                            ClassVisitor classDelegate,
+                            MethodVisitor arg0,
+                            String super_name,
+                            byte[] originalByteCode,
+                            String class_name) {
         super(Opcodes.ASM5);
         this.annotatedMethodHandlers = annotatedMethodHandlers;
 
@@ -55,17 +56,20 @@ public class AnnotationMethodAdaptor extends MethodVisitor {
     }
 
     @Override
-    public void visitFrame(int type, int nLocal, Object[] local, int nStack, Object[] stack) {
+    public
+    void visitFrame(int type, int nLocal, Object[] local, int nStack, Object[] stack) {
         super.visitFrame(type, nLocal, local, nStack, stack);
     }
 
-    public void setDelegate(MethodVisitor mv) {
+    public
+    void setDelegate(MethodVisitor mv) {
         this.mv = mv;
     }
 
 
     @Override
-    public AnnotationVisitor visitAnnotation(final String annotationName, boolean vis) {
+    public
+    AnnotationVisitor visitAnnotation(final String annotationName, boolean vis) {
 
         if (annotatedMethodHandlers.containsKey(annotationName)) {
             final AnnotationVisitor av = super.visitAnnotation(annotationName, vis);
@@ -73,41 +77,55 @@ public class AnnotationMethodAdaptor extends MethodVisitor {
 
             return new AnnotationVisitor(Opcodes.ASM5) {
 
-                public void visit(String arg0, Object arg1) {
+                public
+                void visit(String arg0, Object arg1) {
                     parameters.put(arg0, arg1);
                     av.visit(arg0, arg1);
                 }
 
-                public AnnotationVisitor visitAnnotation(String arg0, String arg1) {
+                public
+                AnnotationVisitor visitAnnotation(String arg0, String arg1) {
                     return av.visitAnnotation(arg0, arg1);
                 }
 
-                public AnnotationVisitor visitArray(String arg0) {
+                public
+                AnnotationVisitor visitArray(String arg0) {
                     return av.visitArray(arg0);
                 }
 
-                public void visitEnd() {
+                public
+                void visitEnd() {
                     av.visitEnd();
-                    MethodVisitor m = annotatedMethodHandlers.get(annotationName).handleEnd(access, name, desc, signature, cv, mv, parameters, originalByteCode, class_name);
-                    if (m != null)
-                        mv = m;
+                    MethodVisitor m = annotatedMethodHandlers.get(annotationName)
+                                                             .handleEnd(access,
+                                                                        name,
+                                                                        desc,
+                                                                        signature,
+                                                                        cv,
+                                                                        mv,
+                                                                        parameters,
+                                                                        originalByteCode,
+                                                                        class_name);
+                    if (m != null) mv = m;
                 }
 
-                public void visitEnum(String arg0, String arg1, String arg2) {
+                public
+                void visitEnum(String arg0, String arg1, String arg2) {
                     av.visitEnum(arg0, arg1, arg2);
                 }
 
             };
-        } else {
+        }
+        else {
             return super.visitAnnotation(annotationName, vis);
         }
     }
 
     @Override
-    public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+    public
+    AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
         return super.visitParameterAnnotation(parameter, desc, visible);
     }
-
 
 
 }

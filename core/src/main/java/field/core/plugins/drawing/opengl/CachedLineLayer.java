@@ -9,232 +9,247 @@ import field.graphics.dynamic.DynamicPointlist;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
-public class CachedLineLayer {
+public
+class CachedLineLayer {
 
-	public ArrayList_Mod<CachedLine> line = new ArrayList_Mod<CachedLine>();
+    public ArrayList_Mod<CachedLine> line = new ArrayList_Mod<CachedLine>();
 
-	LinkedHashSet<CachedLine> previous = new LinkedHashSet<CachedLine>();
+    LinkedHashSet<CachedLine> previous = new LinkedHashSet<CachedLine>();
 
-	DynamicMesh_long geometry = null;
-	DynamicPointlist geometry_points = null;
+    DynamicMesh_long geometry = null;
+    DynamicPointlist geometry_points = null;
 
-	int previousMod = -1;
-	
-	public CachedLineLayer() {
+    int previousMod = -1;
 
-	}
+    public
+    CachedLineLayer() {
 
-	public class UpdateMesh extends BasicUtilities.OnePassElement {
+    }
 
-		private final DynamicMesh_long target;
-		private final DirectMesh m;
+    public
+    class UpdateMesh extends BasicUtilities.OnePassElement {
 
-		public UpdateMesh(DynamicMesh_long target, DirectMesh m) {
-			super(Base.StandardPass.transform);
-			this.target = target;
-			this.m = m;
-		}
+        private final DynamicMesh_long target;
+        private final DirectMesh m;
 
-		@Override
-		public void performPass() {
-			updateMesh(target, m);
-		}
+        public
+        UpdateMesh(DynamicMesh_long target, DirectMesh m) {
+            super(Base.StandardPass.transform);
+            this.target = target;
+            this.m = m;
+        }
 
-		public CachedLineLayer getLayer() {
-			return CachedLineLayer.this;
-		}
+        @Override
+        public
+        void performPass() {
+            updateMesh(target, m);
+        }
 
-	}
+        public
+        CachedLineLayer getLayer() {
+            return CachedLineLayer.this;
+        }
 
-	public class UpdatePoint extends BasicUtilities.OnePassElement {
+    }
 
-		private final DynamicPointlist target;
-		private final DirectPoint m;
+    public
+    class UpdatePoint extends BasicUtilities.OnePassElement {
 
-		public UpdatePoint(DynamicPointlist target, DirectPoint m) {
-			super(Base.StandardPass.transform);
-			this.target = target;
-			this.m = m;
-		}
+        private final DynamicPointlist target;
+        private final DirectPoint m;
 
-		@Override
-		public void performPass() {
-			updatePoint(target, m);
-		}
+        public
+        UpdatePoint(DynamicPointlist target, DirectPoint m) {
+            super(Base.StandardPass.transform);
+            this.target = target;
+            this.m = m;
+        }
 
-		public CachedLineLayer getLayer() {
-			return CachedLineLayer.this;
-		}
+        @Override
+        public
+        void performPass() {
+            updatePoint(target, m);
+        }
 
-	}
+        public
+        CachedLineLayer getLayer() {
+            return CachedLineLayer.this;
+        }
 
-	public class UpdateLine extends BasicUtilities.OnePassElement {
+    }
 
-		private final DynamicLine_long target;
-		private final DirectLine m;
+    public
+    class UpdateLine extends BasicUtilities.OnePassElement {
 
-		public UpdateLine(DynamicLine_long target, DirectLine m) {
-			super(Base.StandardPass.transform);
-			this.target = target;
-			this.m = m;
-		}
+        private final DynamicLine_long target;
+        private final DirectLine m;
 
-		@Override
-		public void performPass() {
+        public
+        UpdateLine(DynamicLine_long target, DirectLine m) {
+            super(Base.StandardPass.transform);
+            this.target = target;
+            this.m = m;
+        }
+
+        @Override
+        public
+        void performPass() {
 //			;//System.out.println(" update line :"+target+" "+m);
-			updateLine(target, m);
-		}
+            updateLine(target, m);
+        }
 
-		public CachedLineLayer getLayer() {
-			return CachedLineLayer.this;
-		}
+        public
+        CachedLineLayer getLayer() {
+            return CachedLineLayer.this;
+        }
 
-	}
+    }
 
-	protected void updatePoint(DynamicPointlist target, DirectPoint dp) {
-		
-		if (line.getMod()==previousMod)
-		{
-			for (CachedLine c : line) {
-				Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
-				if (n != null) {
-					c.getProperties().remove(iLinearGraphicsContext.forceNew);
-					c.mod();
-				}
-			}
-			return;
-		}
-			
-		
-		LinkedHashSet<CachedLine> newLines = new LinkedHashSet<CachedLine>();
-		LinkedHashSet<CachedLine> goneLines = new LinkedHashSet<CachedLine>();
+    protected
+    void updatePoint(DynamicPointlist target, DirectPoint dp) {
 
-		goneLines.addAll(previous);
-		goneLines.removeAll(line);
+        if (line.getMod() == previousMod) {
+            for (CachedLine c : line) {
+                Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
+                if (n != null) {
+                    c.getProperties().remove(iLinearGraphicsContext.forceNew);
+                    c.mod();
+                }
+            }
+            return;
+        }
 
-		newLines.addAll(line);
-		newLines.removeAll(previous);
 
-		for (CachedLine c : line) {
-			Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
-			if (n != null) {
-				c.getProperties().remove(iLinearGraphicsContext.forceNew);
-				c.mod();
-			}
-		}
+        LinkedHashSet<CachedLine> newLines = new LinkedHashSet<CachedLine>();
+        LinkedHashSet<CachedLine> goneLines = new LinkedHashSet<CachedLine>();
 
-		for (CachedLine c : newLines) {
-			dp.wire(target, c);
-			float ps = c.getProperties().getFloat(iLinearGraphicsContext.pointSize, 1f);
-			target.getUnderlyingGeometry().setSize(ps);
-		}
+        goneLines.addAll(previous);
+        goneLines.removeAll(line);
 
-		for (CachedLine c : goneLines) {
-			dp.unwire(target, c);
-		}
+        newLines.addAll(line);
+        newLines.removeAll(previous);
 
-		previous.clear();
-		previous.addAll(line);
-		previousMod = line.getMod();
+        for (CachedLine c : line) {
+            Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
+            if (n != null) {
+                c.getProperties().remove(iLinearGraphicsContext.forceNew);
+                c.mod();
+            }
+        }
 
-	}
+        for (CachedLine c : newLines) {
+            dp.wire(target, c);
+            float ps = c.getProperties().getFloat(iLinearGraphicsContext.pointSize, 1f);
+            target.getUnderlyingGeometry().setSize(ps);
+        }
 
-	protected void updateMesh(DynamicMesh_long target, DirectMesh dm) {
-		if (line.getMod()==previousMod)
-		{
-			for (CachedLine c : line) {
-				Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
-				if (n != null) {
-					c.getProperties().remove(iLinearGraphicsContext.forceNew);
-					c.mod();
-				}
-			}
-			return;
-		}
+        for (CachedLine c : goneLines) {
+            dp.unwire(target, c);
+        }
 
-		LinkedHashSet<CachedLine> newLines = new LinkedHashSet<CachedLine>();
-		LinkedHashSet<CachedLine> goneLines = new LinkedHashSet<CachedLine>();
+        previous.clear();
+        previous.addAll(line);
+        previousMod = line.getMod();
 
-		goneLines.addAll(previous);
-		goneLines.removeAll(line);
+    }
 
-		newLines.addAll(line);
-		newLines.removeAll(previous);
+    protected
+    void updateMesh(DynamicMesh_long target, DirectMesh dm) {
+        if (line.getMod() == previousMod) {
+            for (CachedLine c : line) {
+                Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
+                if (n != null) {
+                    c.getProperties().remove(iLinearGraphicsContext.forceNew);
+                    c.mod();
+                }
+            }
+            return;
+        }
 
-		for (CachedLine c : line) {
-			Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
-			if (n != null) {
-				c.getProperties().remove(iLinearGraphicsContext.forceNew);
-				c.mod();
-			}
-		}
+        LinkedHashSet<CachedLine> newLines = new LinkedHashSet<CachedLine>();
+        LinkedHashSet<CachedLine> goneLines = new LinkedHashSet<CachedLine>();
 
-		for (CachedLine c : newLines) {
-			dm.wire(target, c);
-		}
+        goneLines.addAll(previous);
+        goneLines.removeAll(line);
 
-		for (CachedLine c : goneLines) {
-			dm.unwire(target, c);
-		}
+        newLines.addAll(line);
+        newLines.removeAll(previous);
 
-		previous.clear();
-		previous.addAll(line);
-		previousMod = line.getMod();
+        for (CachedLine c : line) {
+            Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
+            if (n != null) {
+                c.getProperties().remove(iLinearGraphicsContext.forceNew);
+                c.mod();
+            }
+        }
 
-	}
+        for (CachedLine c : newLines) {
+            dm.wire(target, c);
+        }
 
-	protected void updateLine(DynamicLine_long target, DirectLine dm) {
-		
-		if (line.getMod()==previousMod)
-		{
-			for (CachedLine c : line) {
-				Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
-				if (n != null) {
-					c.getProperties().remove(iLinearGraphicsContext.forceNew);
-					c.mod();
-				}
-			}
-			return;
-		}
+        for (CachedLine c : goneLines) {
+            dm.unwire(target, c);
+        }
 
-		LinkedHashSet<CachedLine> newLines = new LinkedHashSet<CachedLine>();
-		LinkedHashSet<CachedLine> goneLines = new LinkedHashSet<CachedLine>();
+        previous.clear();
+        previous.addAll(line);
+        previousMod = line.getMod();
 
-		goneLines.addAll(previous);
-		goneLines.removeAll(line);
+    }
 
-		newLines.addAll(line);
-		newLines.removeAll(previous);
+    protected
+    void updateLine(DynamicLine_long target, DirectLine dm) {
 
-		for (CachedLine c : line) {
-			Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
-			if (n != null) {
-				c.getProperties().remove(iLinearGraphicsContext.forceNew);
-				c.mod();
-			}
-		}
+        if (line.getMod() == previousMod) {
+            for (CachedLine c : line) {
+                Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
+                if (n != null) {
+                    c.getProperties().remove(iLinearGraphicsContext.forceNew);
+                    c.mod();
+                }
+            }
+            return;
+        }
 
-		for (CachedLine c : newLines) {
-			dm.wire(target, c);
-			float ps = c.getProperties().getFloat(iLinearGraphicsContext.thickness, 1f);
-			target.getUnderlyingGeometry().setWidth(ps);
-		}
+        LinkedHashSet<CachedLine> newLines = new LinkedHashSet<CachedLine>();
+        LinkedHashSet<CachedLine> goneLines = new LinkedHashSet<CachedLine>();
 
-		for (CachedLine c : goneLines) {
-			dm.unwire(target, c);
-		}
+        goneLines.addAll(previous);
+        goneLines.removeAll(line);
 
-		previous.clear();
-		previous.addAll(line);
-		
-		previousMod = line.getMod();
+        newLines.addAll(line);
+        newLines.removeAll(previous);
 
-	}
+        for (CachedLine c : line) {
+            Integer n = c.getProperties().get(iLinearGraphicsContext.forceNew);
+            if (n != null) {
+                c.getProperties().remove(iLinearGraphicsContext.forceNew);
+                c.mod();
+            }
+        }
 
-	static public class ArrayList_Mod<T> extends ArrayList<T> {
-		int getMod() {
-			return modCount;
-		}
-	}
+        for (CachedLine c : newLines) {
+            dm.wire(target, c);
+            float ps = c.getProperties().getFloat(iLinearGraphicsContext.thickness, 1f);
+            target.getUnderlyingGeometry().setWidth(ps);
+        }
+
+        for (CachedLine c : goneLines) {
+            dm.unwire(target, c);
+        }
+
+        previous.clear();
+        previous.addAll(line);
+
+        previousMod = line.getMod();
+
+    }
+
+    static public
+    class ArrayList_Mod<T> extends ArrayList<T> {
+        int getMod() {
+            return modCount;
+        }
+    }
 
 }

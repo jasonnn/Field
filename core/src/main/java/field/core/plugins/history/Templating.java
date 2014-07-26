@@ -27,241 +27,268 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class Templating {
+public
+class Templating {
 
-	public static HashMap<String, VisualElementProperty<String>> shortForms = new HashMap<String, VisualElementProperty<String>>();
-	static {
-		shortForms.put("main", PythonPlugin.python_source);
-		shortForms.put("update", SplineComputingOverride.onChange);
-		shortForms.put("resize", SplineComputingOverride.onFrameChange);
-		shortForms.put("select", SplineComputingOverride.onSelection);
-		shortForms.put("tweak", SplineComputingOverride.tweak);
-	}
+    public static HashMap<String, VisualElementProperty<String>> shortForms =
+            new HashMap<String, VisualElementProperty<String>>();
 
-	public static
+    static {
+        shortForms.put("main", PythonPlugin.python_source);
+        shortForms.put("update", SplineComputingOverride.onChange);
+        shortForms.put("resize", SplineComputingOverride.onFrameChange);
+        shortForms.put("select", SplineComputingOverride.onSelection);
+        shortForms.put("tweak", SplineComputingOverride.tweak);
+    }
+
+    public static
     iVisualElement elementFromKnownTemplate(String name, iVisualElement root) throws IOException {
         File found = LoadInternalWorkspaceFile.findTemplateCalled(name);
-        if (found == null)
-			return null;
+        if (found == null) return null;
 
-		String canonicalPath = found.getCanonicalPath();
+        String canonicalPath = found.getCanonicalPath();
 
-		if (canonicalPath.endsWith("/"))
-			canonicalPath = canonicalPath.substring(0, canonicalPath.length() - 1);
-		String[] split = canonicalPath.split("/");
+        if (canonicalPath.endsWith("/")) canonicalPath = canonicalPath.substring(0, canonicalPath.length() - 1);
+        String[] split = canonicalPath.split("/");
 
-		String uid = split[split.length - 1];
-		String sheetname = split[split.length - 2];
+        String uid = split[split.length - 1];
+        String sheetname = split[split.length - 2];
 
-		HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(Collections.singleton(uid), new File(canonicalPath).getParent() + "/sheet.xml", root, iVisualElement.copyPaste.get(root));
+        HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(Collections.singleton(uid),
+                                                                                     new File(canonicalPath).getParent()
+                                                                                     + "/sheet.xml",
+                                                                                     root,
+                                                                                     iVisualElement.copyPaste.get(root));
 
-		for (iVisualElement e : loaded) {
-			PythonPluginEditor.python_isTemplateHead.delete(e, e);
-		}
+        for (iVisualElement e : loaded) {
+            PythonPluginEditor.python_isTemplateHead.delete(e, e);
+        }
 
-		return loaded.iterator().next();
-	}
+        return loaded.iterator().next();
+    }
 
-	public static
+    public static
     ArrayList<iVisualElement> elementsFromKnownSheet(String name, iVisualElement root) throws IOException {
-		File sheetName = new File(SystemProperties.getDirProperty("versioning.dir") + name);
-		if (!sheetName.exists())
-			return null;
+        File sheetName = new File(SystemProperties.getDirProperty("versioning.dir") + name);
+        if (!sheetName.exists()) return null;
 
-		HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(null, sheetName.getCanonicalPath() + "/sheet.xml", root, iVisualElement.copyPaste.get(root));
+        HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(null,
+                                                                                     sheetName.getCanonicalPath()
+                                                                                     + "/sheet.xml",
+                                                                                     root,
+                                                                                     iVisualElement.copyPaste.get(root));
 
-		return new ArrayList<iVisualElement>(loaded);
-	}
+        return new ArrayList<iVisualElement>(loaded);
+    }
 
-	public static
+    public static
     ArrayList<iVisualElement> elementsFromKnownSheetNoTimeslider(String name, iVisualElement root) throws IOException {
-		File sheetName = new File(SystemProperties.getDirProperty("versioning.dir") + name);
-		if (!sheetName.exists())
-			return null;
+        File sheetName = new File(SystemProperties.getDirProperty("versioning.dir") + name);
+        if (!sheetName.exists()) return null;
 
-		HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloadedPredicate(new iFunction<Boolean, iVisualElement>() {
-			public Boolean f(iVisualElement in) {
+        HashSet<iVisualElement> loaded =
+                FluidCopyPastePersistence.copyFromNonloadedPredicate(new iFunction<Boolean, iVisualElement>() {
+                    public
+                    Boolean f(iVisualElement in) {
 
-				iVisualElementOverrides i = in.getProperty(iVisualElement.overrides);
-				if (i == null)
-					return false;
-				if (i instanceof TemporalSliderOverrides)
-					return false;
-				return true;
+                        iVisualElementOverrides i = in.getProperty(iVisualElement.overrides);
+                        if (i == null) return false;
+                        if (i instanceof TemporalSliderOverrides) return false;
+                        return true;
 
-			}
-		}, sheetName.getCanonicalPath() + "/sheet.xml", root, iVisualElement.copyPaste.get(root));
+                    }
+                }, sheetName.getCanonicalPath() + "/sheet.xml", root, iVisualElement.copyPaste.get(root));
 
-		return new ArrayList<iVisualElement>(loaded);
-	}
+        return new ArrayList<iVisualElement>(loaded);
+    }
 
-	public static
+    public static
     Pair<String, String> findTemplateInstance(final String templateName) {
-		File dir = new File(SystemProperties.getDirProperty("versioning.dir"));
-		File[] files = dir.listFiles(new FileFilter() {
-			public boolean accept(File pathname) {
-				try {
-					if (pathname.isDirectory() && new File(pathname.getCanonicalPath() + "/sheet.xml").exists())
-						return true;
-				} catch (IOException e) {
-				}
-				return false;
-			}
-		});
+        File dir = new File(SystemProperties.getDirProperty("versioning.dir"));
+        File[] files = dir.listFiles(new FileFilter() {
+            public
+            boolean accept(File pathname) {
+                try {
+                    if (pathname.isDirectory() && new File(pathname.getCanonicalPath() + "/sheet.xml").exists())
+                        return true;
+                } catch (IOException e) {
+                }
+                return false;
+            }
+        });
 
-		final Pair<String, String> ret = new Pair<String, String>(null, null);
+        final Pair<String, String> ret = new Pair<String, String>(null, null);
 
-		for (File f : files) {
-			f.listFiles(new FileFilter() {
+        for (File f : files) {
+            f.listFiles(new FileFilter() {
 
-				public boolean accept(File pathname) {
-					try {
-						File ff = new File(pathname.getCanonicalPath() + "/python_isTemplate.+.property");
-						if (pathname.isDirectory() && ff.exists()) {
-							BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ff)));
-							StringBuilder read = new StringBuilder();
-							while (reader.ready()) {
-								read.append(reader.readLine()).append('\n');
-							}
-							reader.close();
-							String name = (String) VersioningSystem.objectRepresentationFor(read.toString());
+                public
+                boolean accept(File pathname) {
+                    try {
+                        File ff = new File(pathname.getCanonicalPath() + "/python_isTemplate.+.property");
+                        if (pathname.isDirectory() && ff.exists()) {
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ff)));
+                            StringBuilder read = new StringBuilder();
+                            while (reader.ready()) {
+                                read.append(reader.readLine()).append('\n');
+                            }
+                            reader.close();
+                            String name = (String) VersioningSystem.objectRepresentationFor(read.toString());
 
-							if (name.trim().equals(templateName)) {
+                            if (name.trim().equals(templateName)) {
 
-								String cp = pathname.getCanonicalPath();
-								String[] split = cp.split("/");
+                                String cp = pathname.getCanonicalPath();
+                                String[] split = cp.split("/");
 
-								String uid = split[split.length - 1];
-								String sheetname = split[split.length - 2];
+                                String uid = split[split.length - 1];
+                                String sheetname = split[split.length - 2];
 
-								ret.left = uid;
-								ret.right = pathname.getParentFile() + "/sheet.xml";
-							}
-						}
-					} catch (IOException e) {
-					}
-					return false;
-				}
-			});
-			if (ret.left != null)
-				return ret;
-		}
-		return null;
-	}
+                                ret.left = uid;
+                                ret.right = pathname.getParentFile() + "/sheet.xml";
+                            }
+                        }
+                    } catch (IOException e) {
+                    }
+                    return false;
+                }
+            });
+            if (ret.left != null) return ret;
+        }
+        return null;
+    }
 
-	public static
-    void merge(VisualElement source, iVisualElement copy, boolean preferTemplate, boolean becomeVisual) throws IOException {
+    public static
+    void merge(VisualElement source, iVisualElement copy, boolean preferTemplate, boolean becomeVisual)
+            throws IOException {
 
-		LoadInternalWorkspaceFile liwf = new LoadInternalWorkspaceFile();
+        LoadInternalWorkspaceFile liwf = new LoadInternalWorkspaceFile();
 
-		Map<Object, Object> sourceP = source.payload();
-		Map<Object, Object> m = copy.payload();
-		Set<Entry<Object, Object>> es = m.entrySet();
-		for (Entry<Object, Object> e : es) {
-			VisualElementProperty key = (VisualElementProperty) e.getKey();
-			if (key.containsSuffix("v")) {
+        Map<Object, Object> sourceP = source.payload();
+        Map<Object, Object> m = copy.payload();
+        Set<Entry<Object, Object>> es = m.entrySet();
+        for (Entry<Object, Object> e : es) {
+            VisualElementProperty key = (VisualElementProperty) e.getKey();
+            if (key.containsSuffix("v")) {
                 Object originalText = LoadInternalWorkspaceFile.getOriginalText(copy, key);
                 if (originalText instanceof String) {
-                    boolean c = LoadInternalWorkspaceFile.diff3DoesConflict((String) e.getValue(), (String) originalText, (String) source.getProperty(key));
+                    boolean c = LoadInternalWorkspaceFile.diff3DoesConflict((String) e.getValue(),
+                                                                            (String) originalText,
+                                                                            (String) source.getProperty(key));
                     if (c) {
-						if (becomeVisual) {
+                        if (becomeVisual) {
                             String o = LoadInternalWorkspaceFile.performThreeWayMerge((String) e.getValue(),
                                                                                       (String) source.getProperty(key),
                                                                                       (String) originalText);
                             key.set(copy, copy, o);
-						} else {
-							performCopy(source, (VisualElement) copy, key, source.getProperty(key));
-						}
-					} else {
-                        String o = LoadInternalWorkspaceFile.performThreeWayMergeNonVisually((String) e.getValue(), (String) source.getProperty(key), (String) originalText);
+                        }
+                        else {
+                            performCopy(source, (VisualElement) copy, key, source.getProperty(key));
+                        }
+                    }
+                    else {
+                        String o = LoadInternalWorkspaceFile.performThreeWayMergeNonVisually((String) e.getValue(),
+                                                                                             (String) source.getProperty(key),
+                                                                                             (String) originalText);
                         key.set(copy, copy, o);
-					}
-				} else {
-                    String o = LoadInternalWorkspaceFile.performThreeWayMergeNonVisually((String) e.getValue(), (String) source.getProperty(key), (String) originalText);
+                    }
+                }
+                else {
+                    String o = LoadInternalWorkspaceFile.performThreeWayMergeNonVisually((String) e.getValue(),
+                                                                                         (String) source.getProperty(key),
+                                                                                         (String) originalText);
                     key.set(copy, copy, o);
-				}
-			} else if (preferTemplate && sourceP.containsKey(key)) {
-				key.set(copy, copy, sourceP.get(key));
-			}
-		}
+                }
+            }
+            else if (preferTemplate && sourceP.containsKey(key)) {
+                key.set(copy, copy, sourceP.get(key));
+            }
+        }
 
-	}
+    }
 
-	public static
+    public static
     void newEditableProperty(String propertyName, iVisualElement inside) {
-		VisualElementProperty p = new VisualElementProperty(propertyName);
-		PythonPluginEditor.knownPythonProperties.put("Template \u2014 " + propertyName, p);
-	}
+        VisualElementProperty p = new VisualElementProperty(propertyName);
+        PythonPluginEditor.knownPythonProperties.put("Template \u2014 " + propertyName, p);
+    }
 
-	public static
+    public static
     iVisualElement simpleCopy(VisualElement source, iVisualElement dispatchTo) {
-		iVisualElementOverrides o = source.getProperty(iVisualElement.overrides);
-		iComponent c = source.getProperty(iVisualElement.localView);
+        iVisualElementOverrides o = source.getProperty(iVisualElement.overrides);
+        iComponent c = source.getProperty(iVisualElement.localView);
 
-		Rect f = source.getFrame(null);
-		f.x += 10;
-		f.y += 10;
+        Rect f = source.getFrame(null);
+        f.x += 10;
+        f.y += 10;
 
-		Class oclass = o.getClass();
-		List<iVisualElementOverrides> callList = null;
+        Class oclass = o.getClass();
+        List<iVisualElementOverrides> callList = null;
 
-		if (o instanceof iMixinProxy) {
+        if (o instanceof iMixinProxy) {
             //System.out.println(" o is <" + o + ">");
 
-			callList = ((iMixinProxy) o).getCallList();
-			oclass = DefaultOverride.class;
-		}
+            callList = ((iMixinProxy) o).getCallList();
+            oclass = DefaultOverride.class;
+        }
 
-		Triple<VisualElement, iComponent, DefaultOverride> created = VisualElement.createWithName(f, dispatchTo, (Class<VisualElement>) source.getClass(), (Class<iComponent>) c.getClass(), (Class<iVisualElementOverrides.DefaultOverride>) oclass, iVisualElement.name.get(source) + " (copy)");
+        Triple<VisualElement, iComponent, DefaultOverride> created = VisualElement.createWithName(f,
+                                                                                                  dispatchTo,
+                                                                                                  (Class<VisualElement>) source.getClass(),
+                                                                                                  (Class<iComponent>) c.getClass(),
+                                                                                                  (Class<iVisualElementOverrides.DefaultOverride>) oclass,
+                                                                                                  iVisualElement.name.get(source)
+                                                                                                  + " (copy)");
 
-		if (callList != null) {
-			iVisualElementOverrides[] over = new iVisualElementOverrides[callList.size()];
-			for (int i = 0; i < over.length; i++) {
-				try {
-					over[i] = callList.get(i).getClass().newInstance();
-				} catch (InstantiationException e1) {
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					e1.printStackTrace();
-				}
-			}
+        if (callList != null) {
+            iVisualElementOverrides[] over = new iVisualElementOverrides[callList.size()];
+            for (int i = 0; i < over.length; i++) {
+                try {
+                    over[i] = callList.get(i).getClass().newInstance();
+                } catch (InstantiationException e1) {
+                    e1.printStackTrace();
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                }
+            }
             iVisualElementOverrides newOver =
                     Mixins.make(iVisualElementOverrides.class, Mixins.visitCodeCombiner, over);
 
-			((iDefaultOverride) newOver).setVisualElement(created.left);
-			created.left.setElementOverride(newOver);
-		}
+            ((iDefaultOverride) newOver).setVisualElement(created.left);
+            created.left.setElementOverride(newOver);
+        }
 
-		Map<Object, Object> properties = source.payload();
-		Set<Entry<Object, Object>> es = properties.entrySet();
-		VisualElement newElement = created.left;
-		for (Entry<Object, Object> e : es) {
-			VisualElementProperty p = (VisualElementProperty) e.getKey();
+        Map<Object, Object> properties = source.payload();
+        Set<Entry<Object, Object>> es = properties.entrySet();
+        VisualElement newElement = created.left;
+        for (Entry<Object, Object> e : es) {
+            VisualElementProperty p = (VisualElementProperty) e.getKey();
 
-			Object v = e.getValue();
-			if (created.left.getProperty(p) == null && shouldCopy(p))
-				performCopy(source, newElement, p, v);
-		}
+            Object v = e.getValue();
+            if (created.left.getProperty(p) == null && shouldCopy(p)) performCopy(source, newElement, p, v);
+        }
 
-		return newElement;
-	}
+        return newElement;
+    }
 
-	/**
-	 * TODO: this needs rearchitecting
-	 */
-	public static boolean shouldCopy(VisualElementProperty p) {
+    /**
+     * TODO: this needs rearchitecting
+     */
+    public static
+    boolean shouldCopy(VisualElementProperty p) {
         //System.out.println(" should copy ? "+p);
         if (p.equals(OutputInsertsOnSheet.outputInsertsOnSheet_knownComponents)) return false;
-		if (p.equals(OutputInsertsOnSheet.outputInsertsOnSheet)) return false;
+        if (p.equals(OutputInsertsOnSheet.outputInsertsOnSheet)) return false;
 
-		return true;
-	}
+        return true;
+    }
 
-	public static void performCopy(VisualElement source, VisualElement newElement, VisualElementProperty p, Object v) {
-		Ref<Object> r = new Ref<Object>(v);
-		r.set(v, source);
-		new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newElement).setProperty(newElement, p, r);
-		new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newElement).setProperty(newElement, p, r);
-	}
+    public static
+    void performCopy(VisualElement source, VisualElement newElement, VisualElementProperty p, Object v) {
+        Ref<Object> r = new Ref<Object>(v);
+        r.set(v, source);
+        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newElement)
+                                                       .setProperty(newElement, p, r);
+        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newElement).setProperty(newElement, p, r);
+    }
 
 }

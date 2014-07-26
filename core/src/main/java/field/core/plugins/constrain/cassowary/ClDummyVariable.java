@@ -12,41 +12,49 @@
 package field.core.plugins.constrain.cassowary;
 
 class ClDummyVariable extends ClAbstractVariable {
-	// friend ClTableau;
-	// friend ClSimplexSolver;
-	public ClDummyVariable(String name) {
-		super(name);
-	}
+    // friend ClTableau;
+    // friend ClSimplexSolver;
+    public
+    ClDummyVariable(String name) {
+        super(name);
+    }
 
-	public ClDummyVariable() {
-	}
+    public
+    ClDummyVariable() {
+    }
 
-	public ClDummyVariable(long number, String prefix) {
-		super(number, prefix);
-	}
+    public
+    ClDummyVariable(long number, String prefix) {
+        super(number, prefix);
+    }
 
-	@Override
-	public String toString() {
-		return '[' + name() + ":dummy]";
-	}
+    @Override
+    public
+    String toString() {
+        return '[' + name() + ":dummy]";
+    }
 
-	@Override
-	public boolean isDummy() {
-		return true;
-	}
+    @Override
+    public
+    boolean isDummy() {
+        return true;
+    }
 
-	@Override
-	public boolean isExternal() {
-		return false;
-	}
+    @Override
+    public
+    boolean isExternal() {
+        return false;
+    }
 
-	@Override
-	public boolean isPivotable() {
-		return false;
-	}
+    @Override
+    public
+    boolean isPivotable() {
+        return false;
+    }
 
-	@Override
-	public boolean isRestricted() {
-		return true;
-	}
+    @Override
+    public
+    boolean isRestricted() {
+        return true;
+    }
 }

@@ -33,284 +33,315 @@ import org.eclipse.swt.widgets.Text;
 import java.util.*;
 
 @Woven
-public class NewInspectorPlugin implements iPlugin {
+public
+class NewInspectorPlugin implements iPlugin {
 
-	public class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    public
+    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
 
-		public <T> void deleteProperty(VisualElementProperty<T> p) {
-		}
+        public
+        <T> void deleteProperty(VisualElementProperty<T> p) {
+        }
 
-		public void dispose() {
-		}
+        public
+        void dispose() {
+        }
 
-		public Rect getFrame(Rect out) {
-			return null;
-		}
+        public
+        Rect getFrame(Rect out) {
+            return null;
+        }
 
-		public <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
-			if (p == overrides)
-				return (T) elementOverride;
-			Object o = properties.get(p);
-			return (T) o;
-		}
+        public
+        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+            if (p == overrides) return (T) elementOverride;
+            Object o = properties.get(p);
+            return (T) o;
+        }
 
-		public String getUniqueID() {
-			return pluginId;
-		}
+        public
+        String getUniqueID() {
+            return pluginId;
+        }
 
-		public Map<Object, Object> payload() {
-			return properties;
-		}
+        public
+        Map<Object, Object> payload() {
+            return properties;
+        }
 
-		public void setFrame(Rect out) {
-		}
+        public
+        void setFrame(Rect out) {
+        }
 
-		public iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
-			properties = t;
-			return this;
-		}
+        public
+        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+            properties = t;
+            return this;
+        }
 
-		public <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
-			properties.put(p, to);
-			return this;
-		}
+        public
+        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+            properties.put(p, to);
+            return this;
+        }
 
-		public void setUniqueID(String uid) {
-		}
-	}
+        public
+        void setUniqueID(String uid) {
+        }
+    }
 
-	public class Overrides extends iVisualElementOverrides.Adaptor {
+    public
+    class Overrides extends iVisualElementOverrides.Adaptor {
 
-		@Override
-		public <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
-			if (prop.equals(inspectorPlugin)) {
-				ref.set((T) NewInspectorPlugin.this);
-			}
-			return super.getProperty(source, prop, ref);
-		}
+        @Override
+        public
+        <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+            if (prop.equals(inspectorPlugin)) {
+                ref.set((T) NewInspectorPlugin.this);
+            }
+            return super.getProperty(source, prop, ref);
+        }
 
-		@Override
-		public <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
-			if ((source == currentInspection)
+        @Override
+        public
+        <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+            if ((source == currentInspection)
                 && !prop.equals(PythonPlugin.python_areas)
                 && !prop.equals(PythonPlugin.python_source)
                 && !prop.equals(PythonPluginEditor.python_customInsertPersistanceInfo)) {
-				needsInspection = 30;
-				// live update is commented out right now for
-				// performance reasons
-				// needsInspection = 0;
-			}
+                needsInspection = 30;
+                // live update is commented out right now for
+                // performance reasons
+                // needsInspection = 0;
+            }
 
-			if (prop.equals(iVisualElement.name)) {
-				source.setProperty(iVisualElement.dirty, true);
-			}
-			return super.setProperty(source, prop, to);
-		}
+            if (prop.equals(iVisualElement.name)) {
+                source.setProperty(iVisualElement.dirty, true);
+            }
+            return super.setProperty(source, prop, to);
+        }
 
-	}
+    }
 
-	public static HashMap<String, String> inspectableProperties = new HashMap<String, String>();
+    public static HashMap<String, String> inspectableProperties = new HashMap<String, String>();
 
-	public static final VisualElementProperty<NewInspectorPlugin> inspectorPlugin = new VisualElementProperty<NewInspectorPlugin>("inspectorPlugin_");
+    public static final VisualElementProperty<NewInspectorPlugin> inspectorPlugin =
+            new VisualElementProperty<NewInspectorPlugin>("inspectorPlugin_");
 
-	public static
+    public static
     void addInspectableProperty(String propertyName, String displayName) {
-		inspectableProperties.put(propertyName, displayName);
-	}
+        inspectableProperties.put(propertyName, displayName);
+    }
 
-	private NewInspector2 inspector;
-	private NewInspectorFromProperties helper;
+    private NewInspector2 inspector;
+    private NewInspectorFromProperties helper;
 
-	private SelectionGroup<iComponent> group;
+    private SelectionGroup<iComponent> group;
 
-	private iVisualElement currentInspection;
+    private iVisualElement currentInspection;
 
     protected static final String pluginId = "//inspector_python";
 
-	protected LocalVisualElement lve;
+    protected LocalVisualElement lve;
 
-	protected iVisualElement root;
+    protected iVisualElement root;
 
-	protected Overrides elementOverride;
+    protected Overrides elementOverride;
 
-	boolean[] ex = new boolean[0];
+    boolean[] ex = new boolean[0];
 
-	int needsInspection = 0;
+    int needsInspection = 0;
 
-	Map<Object, Object> properties = new HashMap<Object, Object>();
+    Map<Object, Object> properties = new HashMap<Object, Object>();
 
-	public NewInspectorPlugin() {
-		lve = new LocalVisualElement();
+    public
+    NewInspectorPlugin() {
+        lve = new LocalVisualElement();
 
-		// TODO swt color well
-		{
-			LinkedHashMap<String, Class<? extends BaseControl>> decorationSet = new LinkedHashMap<String, Class<? extends BaseControl>>();
-			decorationSet.put("color1", ColorControl.class);
-			decorationSet.put("color2", ColorControl.class);
-			decorationSet.put("isWindowSpace", BooleanControl.class);
+        // TODO swt color well
+        {
+            LinkedHashMap<String, Class<? extends BaseControl>> decorationSet =
+                    new LinkedHashMap<String, Class<? extends BaseControl>>();
+            decorationSet.put("color1", ColorControl.class);
+            decorationSet.put("color2", ColorControl.class);
+            decorationSet.put("isWindowSpace", BooleanControl.class);
 
-            NewInspectorFromProperties.activeSets.add(new Triple<String, LinkedHashMap<String, Class<? extends BaseControl>>, Boolean>("Decoration", decorationSet, false));
+            NewInspectorFromProperties.activeSets.add(new Triple<String, LinkedHashMap<String, Class<? extends BaseControl>>, Boolean>("Decoration",
+                                                                                                                                       decorationSet,
+                                                                                                                                       false));
         }
-		{
-			LinkedHashMap<String, Class<? extends BaseControl>> decorationSet = new LinkedHashMap<String, Class<? extends BaseControl>>();
-			decorationSet.put("autoExecuteDelay", SpinnerControl.class);
+        {
+            LinkedHashMap<String, Class<? extends BaseControl>> decorationSet =
+                    new LinkedHashMap<String, Class<? extends BaseControl>>();
+            decorationSet.put("autoExecuteDelay", SpinnerControl.class);
 
-            NewInspectorFromProperties.activeSets.add(new Triple<String, LinkedHashMap<String, Class<? extends BaseControl>>, Boolean>("Execution (advanced)", decorationSet, false));
+            NewInspectorFromProperties.activeSets.add(new Triple<String, LinkedHashMap<String, Class<? extends BaseControl>>, Boolean>("Execution (advanced)",
+                                                                                                                                       decorationSet,
+                                                                                                                                       false));
         }
-	}
+    }
 
-	public void close() {
-	}
+    public
+    void close() {
+    }
 
-	public static
+    public static
     String formatName(String name) {
 
-		if (inspectableProperties.containsKey(name))
-			return inspectableProperties.get(name);
+        if (inspectableProperties.containsKey(name)) return inspectableProperties.get(name);
 
-		int li = name.lastIndexOf("_");
-		if (li == -1)
-			return name;
-		if (li < name.length() - 3)
-			return name;
-		return "<b>" + name.substring(0, li + 1) + "</b><font size=-3><i>" + name.substring(li + 1) + "</i>";
-	}
+        int li = name.lastIndexOf("_");
+        if (li == -1) return name;
+        if (li < name.length() - 3) return name;
+        return "<b>" + name.substring(0, li + 1) + "</b><font size=-3><i>" + name.substring(li + 1) + "</i>";
+    }
 
-	public Object getPersistanceInformation() {
-		return null;
-	}
+    public
+    Object getPersistanceInformation() {
+        return null;
+    }
 
-	public iVisualElement getWellKnownVisualElement(String id) {
-		if (id.equals(pluginId))
-			return lve;
-		return null;
-	}
+    public
+    iVisualElement getWellKnownVisualElement(String id) {
+        if (id.equals(pluginId)) return lve;
+        return null;
+    }
 
-	public void registeredWith(final iVisualElement root) {
-		this.root = root;
+    public
+    void registeredWith(final iVisualElement root) {
+        this.root = root;
 
-		inspector = new NewInspector2() {
-			protected java.util.LinkedHashMap<String, iUpdateable> getMenuItems() {
-				return helper.getMenuItems(new iUpdateable() {
+        inspector = new NewInspector2() {
+            protected
+            java.util.LinkedHashMap<String, iUpdateable> getMenuItems() {
+                return helper.getMenuItems(new iUpdateable() {
 
-					@Override
-					public void update() {
-						changeSelection(root.getProperty(iVisualElement.selectionGroup).getSelection());
-					}
-				});
+                    @Override
+                    public
+                    void update() {
+                        changeSelection(root.getProperty(iVisualElement.selectionGroup).getSelection());
+                    }
+                });
             }
         };
 
-		helper = new NewInspectorFromProperties(inspector);
+        helper = new NewInspectorFromProperties(inspector);
 
-		// UbiquitousLinks.links.install(inspector.tree);
+        // UbiquitousLinks.links.install(inspector.tree);
 
-		elementOverride = createElementOverrides();
-		root.addChild(lve);
-		group = root.getProperty(iVisualElement.selectionGroup);
+        elementOverride = createElementOverrides();
+        root.addChild(lve);
+        group = root.getProperty(iVisualElement.selectionGroup);
 
-		group.registerNotification(new iSelectionChanged<iComponent>() {
-			public void selectionChanged(Set<iComponent> selected) {
-				changeSelection(selected);
-			}
-		});
+        group.registerNotification(new iSelectionChanged<iComponent>() {
+            public
+            void selectionChanged(Set<iComponent> selected) {
+                changeSelection(selected);
+            }
+        });
 
-		final GLComponentWindow window = root.getProperty(iVisualElement.enclosingFrame);
+        final GLComponentWindow window = root.getProperty(iVisualElement.enclosingFrame);
 
-		installHelpBrowser(root);
-	}
+        installHelpBrowser(root);
+    }
 
-@NextUpdate(delay=3)
-	private void installHelpBrowser(final iVisualElement root) {
-		HelpBrowser h = HelpBrowser.helpBrowser.get(root);
-		ContextualHelp ch = h.getContextualHelp();
-    ch.addContextualHelpForWidget("inspector",
-                                  inspector.getContents(),
-                                  ContextualHelp.providerForStaticMarkdownResource("contextual/inspector.md"),
-                                  50);
-}
-	public void setPersistanceInformation(Object o) {
-	}
+    @NextUpdate(delay = 3)
+    private
+    void installHelpBrowser(final iVisualElement root) {
+        HelpBrowser h = HelpBrowser.helpBrowser.get(root);
+        ContextualHelp ch = h.getContextualHelp();
+        ch.addContextualHelpForWidget("inspector",
+                                      inspector.getContents(),
+                                      ContextualHelp.providerForStaticMarkdownResource("contextual/inspector.md"),
+                                      50);
+    }
 
-	int consecutiveUpdates = 0;
+    public
+    void setPersistanceInformation(Object o) {
+    }
 
-	int suppressChangeSelection = 0;
+    int consecutiveUpdates = 0;
 
-	boolean updatedLast = false;
+    int suppressChangeSelection = 0;
 
-	private ArrayList<iVisualElement> sel = new ArrayList<iVisualElement>();
+    boolean updatedLast = false;
 
-	public void update() {
-		needsInspection--;
-		if (needsInspection == 0)
-			changeSelection(root.getProperty(iVisualElement.selectionGroup).getSelection());
+    private ArrayList<iVisualElement> sel = new ArrayList<iVisualElement>();
 
-		if (needsInspection < 0)
-			needsInspection = 0;
-	}
+    public
+    void update() {
+        needsInspection--;
+        if (needsInspection == 0) changeSelection(root.getProperty(iVisualElement.selectionGroup).getSelection());
 
-	@NextUpdate(delay = 15)
-	protected void changeSelection(Set<iComponent> selected) {
+        if (needsInspection < 0) needsInspection = 0;
+    }
 
-		// if (FocusManager.getCurrentManager().getFocusOwner()
-		// instanceof JTextField) {
-		// needsInspection = 15;
-		// return;
-		// }
+    @NextUpdate(delay = 15)
+    protected
+    void changeSelection(Set<iComponent> selected) {
 
-		Control focusControl = Launcher.display.getFocusControl();
+        // if (FocusManager.getCurrentManager().getFocusOwner()
+        // instanceof JTextField) {
+        // needsInspection = 15;
+        // return;
+        // }
 
-		try {
-			if (Launcher.display.getFocusControl().getShell() == inspector.getShell()) {
-				if (focusControl instanceof Text || focusControl instanceof Spinner) {
-					needsInspection = 15;
-					return;
-				}
-			}
-		} catch (NullPointerException e) {
-		}
-        if (selected.isEmpty())
-            inspector.clear();
+        Control focusControl = Launcher.display.getFocusControl();
 
-		sel = new ArrayList<iVisualElement>();
-		for (iComponent c : selected) {
-			iVisualElement m = c.getVisualElement();
-			if (m != null)
-				sel.add(m);
-		}
-		inspector.clear();
-		helper.rebuild(sel);
+        try {
+            if (Launcher.display.getFocusControl().getShell() == inspector.getShell()) {
+                if (focusControl instanceof Text || focusControl instanceof Spinner) {
+                    needsInspection = 15;
+                    return;
+                }
+            }
+        } catch (NullPointerException e) {
+        }
+        if (selected.isEmpty()) inspector.clear();
 
-		// inspector.setMenu(helper.getMenu(new iUpdateable() {
-		//
-		// @Override
-		// public void update() {
-		// changeSelection(root.getProperty(iVisualElement.selectionGroup).getSelection());
-		// }
-		// }));
-	}
+        sel = new ArrayList<iVisualElement>();
+        for (iComponent c : selected) {
+            iVisualElement m = c.getVisualElement();
+            if (m != null) sel.add(m);
+        }
+        inspector.clear();
+        helper.rebuild(sel);
 
-	protected Overrides createElementOverrides() {
-		return new Overrides() {
-			@Override
-			public <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
-				if (sel.contains(source) && !prop.equals(PythonPlugin.python_areas) && !prop.equals(PythonPlugin.python_source) && !prop.equals(PythonPluginEditor.python_customInsertPersistanceInfo)) {
-					needsInspection = 30;
-				}
+        // inspector.setMenu(helper.getMenu(new iUpdateable() {
+        //
+        // @Override
+        // public void update() {
+        // changeSelection(root.getProperty(iVisualElement.selectionGroup).getSelection());
+        // }
+        // }));
+    }
 
-				if (prop.equals(iVisualElement.name)) {
-					source.setProperty(iVisualElement.dirty, true);
-				}
-				return super.setProperty(source, prop, to);
-			}
+    protected
+    Overrides createElementOverrides() {
+        return new Overrides() {
+            @Override
+            public
+            <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+                if (sel.contains(source)
+                    && !prop.equals(PythonPlugin.python_areas)
+                    && !prop.equals(PythonPlugin.python_source)
+                    && !prop.equals(PythonPluginEditor.python_customInsertPersistanceInfo)) {
+                    needsInspection = 30;
+                }
 
-			@Override
-			public VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-				if (sel.contains(source))
-					needsInspection = 30;
-				return super.shouldChangeFrame(source, newFrame, oldFrame, now);
-			}
-		};
-	}
+                if (prop.equals(iVisualElement.name)) {
+                    source.setProperty(iVisualElement.dirty, true);
+                }
+                return super.setProperty(source, prop, to);
+            }
+
+            @Override
+            public
+            VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+                if (sel.contains(source)) needsInspection = 30;
+                return super.shouldChangeFrame(source, newFrame, oldFrame, now);
+            }
+        };
+    }
 
 }

@@ -6,8 +6,10 @@ import field.namespace.generic.tuple.Pair;
 import java.util.List;
 
 
-public interface iWholeCoordTransform extends iCoordTransformation {
+public
+interface iWholeCoordTransform extends iCoordTransformation {
 
-	public void setNodes(List<Pair<SelectedVertex, Float>> all);
-	
+    public
+    void setNodes(List<Pair<SelectedVertex, Float>> all);
+
 }

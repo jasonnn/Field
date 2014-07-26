@@ -8,58 +8,65 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class SimpleUDPListener implements iUpdateable {
+public
+class SimpleUDPListener implements iUpdateable {
 
-	private final DatagramSocket socket;
-	private final Thread t;
+    private final DatagramSocket socket;
+    private final Thread t;
 
-	int maxSize = 1536;
+    int maxSize = 1536;
 
-	TaskQueue queue = new TaskQueue();
+    TaskQueue queue = new TaskQueue();
 
-	public SimpleUDPListener(int maxSize, int port) throws SocketException {
-		this.maxSize = maxSize;
-		socket = new DatagramSocket(port);
+    public
+    SimpleUDPListener(int maxSize, int port) throws SocketException {
+        this.maxSize = maxSize;
+        socket = new DatagramSocket(port);
 
-		t = new Thread(new Runnable() {
+        t = new Thread(new Runnable() {
 
-			@Override
-			public void run() {
+            @Override
+            public
+            void run() {
 
-				byte[] buffer = new byte[SimpleUDPListener.this.maxSize];
-				final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                byte[] buffer = new byte[SimpleUDPListener.this.maxSize];
+                final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
-				try {
-					while (true) {
+                try {
+                    while (true) {
                         //System.out.println(" listening for data ");
                         socket.receive(packet);
-						byte[] data = packet.getData();
-						final byte[] b2 = new byte[data.length];
-						System.arraycopy(data, 0, b2, 0, b2.length);
+                        byte[] data = packet.getData();
+                        final byte[] b2 = new byte[data.length];
+                        System.arraycopy(data, 0, b2, 0, b2.length);
                         //System.out.println(" got data");
                         queue.new Task() {
-							protected void run() {
-								handle(b2);
+                            protected
+                            void run() {
+                                handle(b2);
                             }
                         };
                     }
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		t.start();
-	}
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
 
-	protected void handle(byte[] data) {
-	}
+    protected
+    void handle(byte[] data) {
+    }
 
-	public void close() {
-		socket.close();
-	}
+    public
+    void close() {
+        socket.close();
+    }
 
-	@Override
-	public void update() {
-		queue.update();
-	}
+    @Override
+    public
+    void update() {
+        queue.update();
+    }
 }

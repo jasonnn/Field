@@ -9,11 +9,14 @@ import java.io.IOException;
 /**
  * Created by jason on 7/16/14.
  */
-public class BytecodeTestCase {
+public
+class BytecodeTestCase {
 
-    static class TestClassLoader extends ClassLoader {
+    static
+    class TestClassLoader extends ClassLoader {
 
-        public Class<?> defineClass(String name, byte[] b) {
+        public
+        Class<?> defineClass(String name, byte[] b) {
             return defineClass(name, b, 0, b.length);
         }
     }
@@ -21,25 +24,30 @@ public class BytecodeTestCase {
     public TestClassLoader LOADER;// = new TestClassLoader();
 
     @Before
-    public void setUp() throws Exception {
+    public
+    void setUp() throws Exception {
         LOADER = new TestClassLoader();
 
     }
 
-    public Class<?> loadClass(String name, byte[] b) {
+    public
+    Class<?> loadClass(String name, byte[] b) {
         return LOADER.defineClass(name, b);
     }
 
 
-    public static String pathToClassFile(Class cls) {
+    public static
+    String pathToClassFile(Class cls) {
         return '/' + cls.getName().replace('.', '/') + ".class";
     }
 
-    public static String binaryName(Class cls) {
+    public static
+    String binaryName(Class cls) {
         return cls.getName().replace('.', '/');
     }
 
-    public static byte[] readClass(Class cls) {
+    public static
+    byte[] readClass(Class cls) {
         try {
             return IOUtils.readFully(new BufferedInputStream(cls.getResourceAsStream(pathToClassFile(cls))), -1, true);
         } catch (IOException e) {

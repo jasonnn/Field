@@ -11,9 +11,11 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-public class ExCLRequiredFailure extends ExCLError {
-	@Override
-	public String description() {
-		return "(ExCLRequiredFailure) A required constraint cannot be satisfied";
-	}
+public
+class ExCLRequiredFailure extends ExCLError {
+    @Override
+    public
+    String description() {
+        return "(ExCLRequiredFailure) A required constraint cannot be satisfied";
+    }
 }

@@ -18,45 +18,52 @@ package field.core.plugins.constrain.cassowary;
 // the parallel vectors of error variables and previous edit
 // constants from the smalltalk version of the code.
 class ClEditInfo {
-	public ClEditInfo(ClConstraint cn_, ClSlackVariable eplus_, ClSlackVariable eminus_, double prevEditConstant_, int i_) {
-		cn = cn_;
-		clvEditPlus = eplus_;
-		clvEditMinus = eminus_;
-		prevEditConstant = prevEditConstant_;
-		i = i_;
-	}
+    public
+    ClEditInfo(ClConstraint cn_, ClSlackVariable eplus_, ClSlackVariable eminus_, double prevEditConstant_, int i_) {
+        cn = cn_;
+        clvEditPlus = eplus_;
+        clvEditMinus = eminus_;
+        prevEditConstant = prevEditConstant_;
+        i = i_;
+    }
 
-	public int Index() {
-		return i;
-	}
+    public
+    int Index() {
+        return i;
+    }
 
-	public ClConstraint Constraint() {
-		return cn;
-	}
+    public
+    ClConstraint Constraint() {
+        return cn;
+    }
 
-	public ClSlackVariable ClvEditPlus() {
-		return clvEditPlus;
-	}
+    public
+    ClSlackVariable ClvEditPlus() {
+        return clvEditPlus;
+    }
 
-	public ClSlackVariable ClvEditMinus() {
-		return clvEditMinus;
-	}
+    public
+    ClSlackVariable ClvEditMinus() {
+        return clvEditMinus;
+    }
 
-	public double PrevEditConstant() {
-		return prevEditConstant;
-	}
+    public
+    double PrevEditConstant() {
+        return prevEditConstant;
+    }
 
-	public void SetPrevEditConstant(double prevEditConstant_) {
-		prevEditConstant = prevEditConstant_;
-	}
+    public
+    void SetPrevEditConstant(double prevEditConstant_) {
+        prevEditConstant = prevEditConstant_;
+    }
 
-	private final ClConstraint cn;
+    private final ClConstraint cn;
 
-	private final ClSlackVariable clvEditPlus;
+    private final ClSlackVariable clvEditPlus;
 
-	private final ClSlackVariable clvEditMinus;
+    private final ClSlackVariable clvEditMinus;
 
-	private double prevEditConstant;
+    private double prevEditConstant;
 
-	private final int i;
+    private final int i;
 }

@@ -15,124 +15,133 @@ import org.python.core.PyObject;
 import java.io.*;
 import java.util.*;
 
-public class CachedLineCompression {
+public
+class CachedLineCompression {
 
-	static class CompressedCachedLine implements Serializable {
-		List<Dict> allProperties = new ArrayList<Dict>();
+    static
+    class CompressedCachedLine implements Serializable {
+        List<Dict> allProperties = new ArrayList<Dict>();
 
-		List<Object[]> allArgs = new ArrayList<Object[]>();
+        List<Object[]> allArgs = new ArrayList<Object[]>();
 
-		List<String> allMethods = new ArrayList<String>();
+        List<String> allMethods = new ArrayList<String>();
 
-		Map<Prop, Object> properties = new LinkedHashMap<Prop, Object>();
-	}
+        Map<Prop, Object> properties = new LinkedHashMap<Prop, Object>();
+    }
 
-	static ByteArrayOutputStream bos = new ByteArrayOutputStream(1024 * 1024);
+    static ByteArrayOutputStream bos = new ByteArrayOutputStream(1024 * 1024);
 
-	static ByteArrayInputStream bis;
+    static ByteArrayInputStream bis;
 
-	public static Converter converter = new Converter() {
+    public static Converter converter = new Converter() {
 
-		boolean inside = false;
+        boolean inside = false;
 
-		public boolean canConvert(Class type) {
-			return !inside && CachedLine.class.isAssignableFrom(type);
-		}
+        public
+        boolean canConvert(Class type) {
+            return !inside && CachedLine.class.isAssignableFrom(type);
+        }
 
-		public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-			writer.startNode("compressedCachedLine");
-			writer.setValue(CachedLineCompression.compress((CachedLine) source));
-			writer.endNode();
-		}
+        public
+        void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+            writer.startNode("compressedCachedLine");
+            writer.setValue(CachedLineCompression.compress((CachedLine) source));
+            writer.endNode();
+        }
 
-		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-			try {
-				reader.moveDown();
-				String value = reader.getValue();
-				reader.moveUp();
-				Object dc = CachedLineCompression.decompress(value);
-				return dc;
-			} catch (Throwable t) {
-				t.printStackTrace();
-				return null;
-			}
-		}
+        public
+        Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+            try {
+                reader.moveDown();
+                String value = reader.getValue();
+                reader.moveUp();
+                Object dc = CachedLineCompression.decompress(value);
+                return dc;
+            } catch (Throwable t) {
+                t.printStackTrace();
+                return null;
+            }
+        }
 
-	};
+    };
 
-	public static String compress(CachedLine source) {
-		bos.reset();
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(bos);
-			oos.writeObject(cachedLineToCCL(source));
-			oos.close();
-			return  Base64.encode(bos.toByteArray());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		assert false;
-		return null;
-	}
+    public static
+    String compress(CachedLine source) {
+        bos.reset();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(cachedLineToCCL(source));
+            oos.close();
+            return Base64.encode(bos.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assert false;
+        return null;
+    }
 
-	public static Object decompress(String value) {
-		byte[] r = new Base64().decode(value);
-		bis = new ByteArrayInputStream(r);
-		try {
-			CompressedCachedLine ccl = (CompressedCachedLine) new ObjectInputStream(bis).readObject();
-			return CCLToCachedLine(ccl);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+    public static
+    Object decompress(String value) {
+        byte[] r = new Base64().decode(value);
+        bis = new ByteArrayInputStream(r);
+        try {
+            CompressedCachedLine ccl = (CompressedCachedLine) new ObjectInputStream(bis).readObject();
+            return CCLToCachedLine(ccl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         //System.out.println(" -- got error, returning no line -- ");
 
-		return new CachedLine();
-	}
+        return new CachedLine();
+    }
 
-	private static Object cachedLineToCCL(CachedLine source) {
-		CompressedCachedLine ccl = new CompressedCachedLine();
+    private static
+    Object cachedLineToCCL(CachedLine source) {
+        CompressedCachedLine ccl = new CompressedCachedLine();
 
-		for (Event e : source.events) {
-			Dict s = scrub(e.attributes);
-			ccl.allProperties.add(s);
-			ccl.allArgs.add(e.args);
-			ccl.allMethods.add(CachedLine.methodMap.get(e.method));
-		}
+        for (Event e : source.events) {
+            Dict s = scrub(e.attributes);
+            ccl.allProperties.add(s);
+            ccl.allArgs.add(e.args);
+            ccl.allMethods.add(CachedLine.methodMap.get(e.method));
+        }
 
-		Map<Prop, Object> m = scrub(source.getProperties()).getMap();
-		ccl.properties.putAll(m);
+        Map<Prop, Object> m = scrub(source.getProperties()).getMap();
+        ccl.properties.putAll(m);
 
-		return ccl;
-	}
+        return ccl;
+    }
 
-	private static Object CCLToCachedLine(CompressedCachedLine ccl) {
-		CachedLine ret = new CachedLine();
+    private static
+    Object CCLToCachedLine(CompressedCachedLine ccl) {
+        CachedLine ret = new CachedLine();
 
-		for (int i = 0; i < ccl.allProperties.size(); i++) {
-			Event e = ret.new Event();
-			e.args = ccl.allArgs.get(i);
-			e.method = CachedLine.methodMap.inverse().get(ccl.allMethods.get(i));
-			e.attributes = ccl.allProperties.get(i);
-			ret.events.add(e);
-		}
+        for (int i = 0; i < ccl.allProperties.size(); i++) {
+            Event e = ret.new Event();
+            e.args = ccl.allArgs.get(i);
+            e.method = CachedLine.methodMap.inverse().get(ccl.allMethods.get(i));
+            e.attributes = ccl.allProperties.get(i);
+            ret.events.add(e);
+        }
 
-		ret.getProperties().getMap().putAll(ccl.properties);
+        ret.getProperties().getMap().putAll(ccl.properties);
 
-		return ret;
-	}
+        return ret;
+    }
 
-	private static Dict scrub(Dict attributes) {
-		if (attributes == null)
-			return null;
-		Dict r = new Dict();
-		Map<Prop, Object> m = attributes.getMap();
+    private static
+    Dict scrub(Dict attributes) {
+        if (attributes == null) return null;
+        Dict r = new Dict();
+        Map<Prop, Object> m = attributes.getMap();
 
-		outer: for (Map.Entry<Prop, Object> q : m.entrySet()) {
+outer:
+        for (Map.Entry<Prop, Object> q : m.entrySet()) {
 
-			if (q.getValue() instanceof iVisualElement)
-				continue;
+            if (q.getValue() instanceof iVisualElement) continue;
 
             if ((q.getValue() instanceof Serializable) && !(q.getValue() instanceof PyObject)) {
                 if (q.getValue() instanceof Collection) {
@@ -145,7 +154,7 @@ public class CachedLineCompression {
                 r.put(q.getKey(), q.getValue());
             }
         }
-		return r;
-	}
+        return r;
+    }
 
 }

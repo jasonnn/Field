@@ -20,7 +20,8 @@ import java.util.logging.Logger;
 @RefactorCarefully(callerClases = "field.launch.Launcher",
                    note = "the system property main.class defaults to this class")
 @Woven
-public class Blank2 implements iLaunchable {
+public
+class Blank2 implements iLaunchable {
     private static final Logger log = Logger.getLogger(Blank2.class.getName());
     File openFileProvocation;
     boolean finished = false;
@@ -29,13 +30,14 @@ public class Blank2 implements iLaunchable {
     // ImportPythonFile pythonFileImporter = new ImportPythonFile();
     // PackageTools fieldPackageImporter = new PackageTools();
 
-    public PhantomFluidSheet getSheet() {
+    public
+    PhantomFluidSheet getSheet() {
         return loaded;
     }
 
-    public void launch() {
-        if (Platform.getOS() == OS.mac)
-            new MiscNative().allViewsAcceptFirstMouse();
+    public
+    void launch() {
+        if (Platform.getOS() == OS.mac) new MiscNative().allViewsAcceptFirstMouse();
 
         // TODO - swt
         new WorkspaceDirectory();
@@ -50,10 +52,10 @@ public class Blank2 implements iLaunchable {
     }
 
     @NextUpdate(delay = 2)
-    public void part2() {
+    public
+    void part2() {
         log.info(" sheets are :" + FieldMenus2.fieldMenus.openSheets);
-        if (!FieldMenus2.fieldMenus.openSheets.isEmpty())
-            return;
+        if (!FieldMenus2.fieldMenus.openSheets.isEmpty()) return;
 
         finished = true;
 
@@ -76,8 +78,7 @@ public class Blank2 implements iLaunchable {
             // System.out.println(" main class <" + mcName + "> <"
             // + Platform.getCanonicalName(this.getClass())
             // + ">");
-            if (mcName.equals(Platform.getCanonicalName(this.getClass())))
-                mcName = "Default";
+            if (mcName.equals(Platform.getCanonicalName(this.getClass()))) mcName = "Default";
             // loaded = new
             // PhantomFluidSheet(System.getProperty("user.home") +
             // "/Documents/FieldWorkspace/"+SystemProperties.getProperty("field.scratch",

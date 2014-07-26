@@ -10,269 +10,307 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 
-public interface iProvider<T> {
-	public static
+public
+interface iProvider<T> {
+    public static
     class BufferedOne<T> implements iProvider<T> {
-		private final iProvider<T> in;
+        private final iProvider<T> in;
 
-		T last = null;
+        T last = null;
 
-		boolean first = true;
+        boolean first = true;
 
-		public BufferedOne(iProvider<T> in) {
-			this.in = in;
-		}
+        public
+        BufferedOne(iProvider<T> in) {
+            this.in = in;
+        }
 
-		public T get() {
-			if (first) {
-				last = in.get();
-				first = false;
-				return last;
-			}
-			T old = last;
-			last = in.get();
-			return old;
-		}
-	}
+        public
+        T get() {
+            if (first) {
+                last = in.get();
+                first = false;
+                return last;
+            }
+            T old = last;
+            last = in.get();
+            return old;
+        }
+    }
 
-	public static
+    public static
     class BufferedOneUpdate<T> implements iProvider<T>, iUpdateable {
-		private final iProvider<T> in;
+        private final iProvider<T> in;
 
-		T last = null;
+        T last = null;
 
-		boolean first = true;
+        boolean first = true;
 
-		int tick = 0;
+        int tick = 0;
 
-		boolean needsSwap = false;
+        boolean needsSwap = false;
 
-		public BufferedOneUpdate(iProvider<T> in) {
-			this.in = in;
-		}
+        public
+        BufferedOneUpdate(iProvider<T> in) {
+            this.in = in;
+        }
 
-		public T get() {
-			if (first) {
-				last = in.get();
-				first = false;
-				return last;
-			}
-			if (needsSwap) {
-				T old = last;
-				last = in.get();
-				return old;
-			} else
-				return last;
-		}
+        public
+        T get() {
+            if (first) {
+                last = in.get();
+                first = false;
+                return last;
+            }
+            if (needsSwap) {
+                T old = last;
+                last = in.get();
+                return old;
+            }
+            else return last;
+        }
 
-		public void update() {
-			tick++;
-			needsSwap = true;
-		}
-	}
+        public
+        void update() {
+            tick++;
+            needsSwap = true;
+        }
+    }
 
-	public class BufferedTwo<T> implements iProvider<T>{
-		private final iProvider<T> in;
+    public
+    class BufferedTwo<T> implements iProvider<T> {
+        private final iProvider<T> in;
 
-		T last = null;
-		T last2 = null;
+        T last = null;
+        T last2 = null;
 
-		int first = 0;
+        int first = 0;
 
 
-		boolean skip = false;
+        boolean skip = false;
 
-		public BufferedTwo(iProvider<T> in) {
-			this.in = in;
-		}
+        public
+        BufferedTwo(iProvider<T> in) {
+            this.in = in;
+        }
 
-		public T get() {
-			if (first==0) {
-				last2 = last = in.get();
-				first = 1;
-				return last;
-			}
+        public
+        T get() {
+            if (first == 0) {
+                last2 = last = in.get();
+                first = 1;
+                return last;
+            }
 
-			T old = last2;
-			last2 = last;
-			last = in.get();
-			if (skip)
-			{
-				old = last2 = last;
-				skip = false;
-			}
-			return old;
-		}
+            T old = last2;
+            last2 = last;
+            last = in.get();
+            if (skip) {
+                old = last2 = last;
+                skip = false;
+            }
+            return old;
+        }
 
-		public void skip()
-		{
-			skip = true;
-		}
+        public
+        void skip() {
+            skip = true;
+        }
 
-	}
+    }
 
-	public class BufferedN<T> implements iProvider<T>{
-		private final iProvider<T> in;
+    public
+    class BufferedN<T> implements iProvider<T> {
+        private final iProvider<T> in;
 
-		Deque<T> dec = new ArrayDeque<T>();
-		int first = 0;
+        Deque<T> dec = new ArrayDeque<T>();
+        int first = 0;
 
-		private final int n;
+        private final int n;
 
-		public BufferedN(iProvider<T> in, int n) {
-			this.in = in;
-			this.n = n;
-		}
+        public
+        BufferedN(iProvider<T> in, int n) {
+            this.in = in;
+            this.n = n;
+        }
 
-		public T get() {
-			dec.add(in.get());
-			if (dec.size()>n)
-			{
-				return dec.removeFirst();
-			}
-			else
-			{
-				return dec.peekFirst();
-			}
-		}
+        public
+        T get() {
+            dec.add(in.get());
+            if (dec.size() > n) {
+                return dec.removeFirst();
+            }
+            else {
+                return dec.peekFirst();
+            }
+        }
 
-	}
+    }
 
-	static public class Constant<T> implements iProvider<T>, iAcceptor<T> {
-		T t;
+    static public
+    class Constant<T> implements iProvider<T>, iAcceptor<T> {
+        T t;
 
-		public Constant() {
-		}
+        public
+        Constant() {
+        }
 
-		public Constant(T t) {
-			this.t = t;
-		}
+        public
+        Constant(T t) {
+            this.t = t;
+        }
 
-		public T get() {
-			return t;
-		}
+        public
+        T get() {
+            return t;
+        }
 
-		public Constant<T> set(T t) {
-			this.t = t;
-			return this;
-		}
-		
-		@Override
-		public String toString() {
-			return "iProvider.Constant("+t+ ')';
-		}
-	}
+        public
+        Constant<T> set(T t) {
+            this.t = t;
+            return this;
+        }
 
-	static public class FieldProvider<T> implements iProvider<T> {
-		private final java.lang.reflect.Field field;
+        @Override
+        public
+        String toString() {
+            return "iProvider.Constant(" + t + ')';
+        }
+    }
 
-		private final Object from;
+    static public
+    class FieldProvider<T> implements iProvider<T> {
+        private final java.lang.reflect.Field field;
 
-		public FieldProvider(Object from, String field) {
-			java.lang.reflect.Field[] allFields = ReflectionTools.getAllFields(from.getClass());
-			for (java.lang.reflect.Field f : allFields) {
-				if (f.getName().equals(field)) {
-					this.field = f;
-					this.from = from;
-					return;
-				}
-			}
-			throw new IllegalStateException(" no field called <" + field + "> in <" + from + "> <" + from.getClass() + '>');
-		}
+        private final Object from;
 
-		public T get() {
-			try {
-				return (T) field.get(from);
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
+        public
+        FieldProvider(Object from, String field) {
+            java.lang.reflect.Field[] allFields = ReflectionTools.getAllFields(from.getClass());
+            for (java.lang.reflect.Field f : allFields) {
+                if (f.getName().equals(field)) {
+                    this.field = f;
+                    this.from = from;
+                    return;
+                }
+            }
+            throw new IllegalStateException(" no field called <"
+                                            + field
+                                            + "> in <"
+                                            + from
+                                            + "> <"
+                                            + from.getClass()
+                                            + '>');
+        }
 
-	static public class HasChanged<T> implements iProvider<T> {
-		private final iProvider<T> to;
+        public
+        T get() {
+            try {
+                return (T) field.get(from);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
-		boolean needsLoad = true;
+    static public
+    class HasChanged<T> implements iProvider<T> {
+        private final iProvider<T> to;
 
-		T last = null;
+        boolean needsLoad = true;
 
-		T now = null;
+        T last = null;
 
-		public HasChanged(iProvider<T> to) {
-			this.to = to;
-		}
+        T now = null;
 
-		public T get() {
-			if (needsLoad) {
-				last = now;
-				now = to.get();
-			} else {
-				needsLoad = true;
-			}
-			return now;
-		}
+        public
+        HasChanged(iProvider<T> to) {
+            this.to = to;
+        }
 
-		public boolean hasChanged() {
-			if (needsLoad) {
-				last = now;
-				now = to.get();
-				needsLoad = false;
-			}
+        public
+        T get() {
+            if (needsLoad) {
+                last = now;
+                now = to.get();
+            }
+            else {
+                needsLoad = true;
+            }
+            return now;
+        }
 
-			return now == null ? (last != null) : (last == null ? (now != null) : (!last.equals(now)));
-		}
+        public
+        boolean hasChanged() {
+            if (needsLoad) {
+                last = now;
+                now = to.get();
+                needsLoad = false;
+            }
 
-		public boolean hasChanged(boolean b) {
-			if (needsLoad || b) {
-				last = now;
-				now = to.get();
-				needsLoad = false;
-			}
+            return now == null ? (last != null) : (last == null ? (now != null) : (!last.equals(now)));
+        }
 
-			return now == null ? (last != null) : (last == null ? (now != null) : (!last.equals(now)));
-		}
-	}
+        public
+        boolean hasChanged(boolean b) {
+            if (needsLoad || b) {
+                last = now;
+                now = to.get();
+                needsLoad = false;
+            }
 
-	static public class ProxyProvider<T> {
+            return now == null ? (last != null) : (last == null ? (now != null) : (!last.equals(now)));
+        }
+    }
+
+    static public
+    class ProxyProvider<T> {
         public static
         <T> T makeProxyFor(Class<T> clazz, final iProvider<? extends T> p) {
-            return (T) Proxy.newProxyInstance(p.getClass().getClassLoader(), new Class[] { clazz}, new InvocationHandler(){
+            return (T) Proxy.newProxyInstance(p.getClass().getClassLoader(),
+                                              new Class[]{clazz},
+                                              new InvocationHandler() {
 
-				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-					return method.invoke(p.get(), args);
-				}
-			});
-		}
-	}
+                                                  public
+                                                  Object invoke(Object proxy, Method method, Object[] args)
+                                                          throws Throwable {
+                                                      return method.invoke(p.get(), args);
+                                                  }
+                                              });
+        }
+    }
 
-	// this can be used to make a provider look like what it provides (see also the caching "Up"
+    // this can be used to make a provider look like what it provides (see also the caching "Up"
 
-	public static
+    public static
     class SerializationBarrier<T> implements iProvider<T> {
-		public T last;
+        public T last;
 
-		transient private final iProvider<T> through;
+        transient private final iProvider<T> through;
 
-		public SerializationBarrier(iProvider<T> through) {
-			this.through = through;
-		}
+        public
+        SerializationBarrier(iProvider<T> through) {
+            this.through = through;
+        }
 
-		protected SerializationBarrier() {
-			this.through = null;
-		}
+        protected
+        SerializationBarrier() {
+            this.through = null;
+        }
 
-		public T get() {
-			if (through == null) return last;
-			return last = through.get();
-		}
+        public
+        T get() {
+            if (through == null) return last;
+            return last = through.get();
+        }
 
-	}
+    }
 
-	
 
-	public T get();
+    public
+    T get();
 
 }

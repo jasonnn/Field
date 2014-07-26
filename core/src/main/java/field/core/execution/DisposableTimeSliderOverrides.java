@@ -24,501 +24,535 @@ import org.eclipse.swt.widgets.Event;
 
 import java.util.*;
 
-public class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverride {
+public
+class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverride {
 
-	public static final VisualElementProperty<Number> playDuration = new VisualElementProperty<Number>("playDuration");
-	public static final VisualElementProperty<Number> skipbackDuration = new VisualElementProperty<Number>("skipbackDuration");
+    public static final VisualElementProperty<Number> playDuration = new VisualElementProperty<Number>("playDuration");
+    public static final VisualElementProperty<Number> skipbackDuration =
+            new VisualElementProperty<Number>("skipbackDuration");
 
-	List<iVisualElement> on = new ArrayList<iVisualElement>();
+    List<iVisualElement> on = new ArrayList<iVisualElement>();
 
-	private List<BasicRunner> dependantRunners = null;
+    private List<BasicRunner> dependantRunners = null;
 
-	@Override
-	public VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
-		if (source == forElement) {
+    @Override
+    public
+    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+        if (source == forElement) {
 
-			List<CachedLine> cl = getCachedLine();
+            List<CachedLine> cl = getCachedLine();
 
-			GLComponentWindow window = GLComponentWindow.getCurrentWindow(null);
+            GLComponentWindow window = GLComponentWindow.getCurrentWindow(null);
 
-			boolean selected = false;
+            boolean selected = false;
 
-			Set<iComponent> selection = iVisualElement.selectionGroup.get(source).getSelection();
-			for (iComponent s : selection) {
-				iVisualElement e = s.getVisualElement();
-				if ((e != null) && e.equals(source))
-					selected = true;
-			}
-			if (selected) {
-				cl.get(0).getProperties().put(iLinearGraphicsContext.thickness, 4f);
-			}
+            Set<iComponent> selection = iVisualElement.selectionGroup.get(source).getSelection();
+            for (iComponent s : selection) {
+                iVisualElement e = s.getVisualElement();
+                if ((e != null) && e.equals(source)) selected = true;
+            }
+            if (selected) {
+                cl.get(0).getProperties().put(iLinearGraphicsContext.thickness, 4f);
+            }
 
-			for (CachedLine c : cl) {
+            for (CachedLine c : cl) {
                 GLComponentWindow.currentContext.submitLine(c, c.getProperties());
             }
 
-		}
-		return super.paintNow(source, bounds, visible);
-	}
+        }
+        return super.paintNow(source, bounds, visible);
+    }
 
-	@Override
-	public VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
-		if (source == forElement) {
-			Rect frame = forElement.getFrame(null);
-			if (((frame.x - 5) <= event.x) && ((frame.x + frame.w + 5) >= event.x))
-				is.set(true);
-		}
-		return VisitCode.cont;
-	}
+    @Override
+    public
+    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+        if (source == forElement) {
+            Rect frame = forElement.getFrame(null);
+            if (((frame.x - 5) <= event.x) && ((frame.x + frame.w + 5) >= event.x)) is.set(true);
+        }
+        return VisitCode.cont;
+    }
 
-	private List<CachedLine> getCachedLine() {
+    private
+    List<CachedLine> getCachedLine() {
 
-		List<CachedLine> r = new ArrayList<CachedLine>();
+        List<CachedLine> r = new ArrayList<CachedLine>();
 
-		{
-			CachedLine cl;
-			cl = new CachedLine();
-			r.add(cl);
+        {
+            CachedLine cl;
+            cl = new CachedLine();
+            r.add(cl);
 
-			GLComponentWindow window = GLComponentWindow.getCurrentWindow(null);
+            GLComponentWindow window = GLComponentWindow.getCurrentWindow(null);
 
-			float min = Float.POSITIVE_INFINITY;
-			float max = Float.NEGATIVE_INFINITY;
+            float min = Float.POSITIVE_INFINITY;
+            float max = Float.NEGATIVE_INFINITY;
 
-			for (iVisualElement e : on) {
-				Rect f = e.getFrame(null);
-				min = (float) Math.min(min, f.y);
-				max = (float) Math.max(max, f.y + f.h);
-			}
+            for (iVisualElement e : on) {
+                Rect f = e.getFrame(null);
+                min = (float) Math.min(min, f.y);
+                max = (float) Math.max(max, f.y + f.h);
+            }
 
-			min -= 10;
-			max += 10;
+            min -= 10;
+            max += 10;
 
-			Rect bounds = forElement.getFrame(null);
-			cl.getInput().moveTo((float) bounds.x, max);
-			cl.getInput().lineTo((float) bounds.x, min);
-			cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0f, 0, 0.5f, 0.5f));
-			cl.getProperties().put(iLinearGraphicsContext.notForExport, true);
-		}
+            Rect bounds = forElement.getFrame(null);
+            cl.getInput().moveTo((float) bounds.x, max);
+            cl.getInput().lineTo((float) bounds.x, min);
+            cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0f, 0, 0.5f, 0.5f));
+            cl.getProperties().put(iLinearGraphicsContext.notForExport, true);
+        }
 
-		{
-			CachedLine cl;
-			cl = new CachedLine();
-			r.add(cl);
+        {
+            CachedLine cl;
+            cl = new CachedLine();
+            r.add(cl);
 
-			GLComponentWindow window = GLComponentWindow.getCurrentWindow(null);
-			Vector2 lower = window.transformWindowToCanvas(new Vector2(0, 0));
-			Vector2 upper = window.transformWindowToCanvas(new Vector2(0, 1600));
+            GLComponentWindow window = GLComponentWindow.getCurrentWindow(null);
+            Vector2 lower = window.transformWindowToCanvas(new Vector2(0, 0));
+            Vector2 upper = window.transformWindowToCanvas(new Vector2(0, 1600));
 
-			Rect bounds = forElement.getFrame(null);
-			cl.getInput().moveTo((float) bounds.x, lower.y);
-			cl.getInput().lineTo((float) bounds.x, upper.y);
-			cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0f, 0, 0.5f, 0.05f));
-			cl.getProperties().put(iLinearGraphicsContext.notForExport, true);
-		}
+            Rect bounds = forElement.getFrame(null);
+            cl.getInput().moveTo((float) bounds.x, lower.y);
+            cl.getInput().lineTo((float) bounds.x, upper.y);
+            cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0f, 0, 0.5f, 0.05f));
+            cl.getProperties().put(iLinearGraphicsContext.notForExport, true);
+        }
 
-		return r;
-	}
+        return r;
+    }
 
-	@Override
-	public VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    @Override
+    public
+    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
 
-		if (source == forElement) {
-			newFrame.w = 0;
-			newFrame.h = 0;
-			forElement.setProperty(iVisualElement.dirty, true);
-			if (dependantRunners != null) {
-				
-				for (BasicRunner r : dependantRunners) {
-					r.update((float) newFrame.x);
-				}
-			}
+        if (source == forElement) {
+            newFrame.w = 0;
+            newFrame.h = 0;
+            forElement.setProperty(iVisualElement.dirty, true);
+            if (dependantRunners != null) {
+
+                for (BasicRunner r : dependantRunners) {
+                    r.update((float) newFrame.x);
+                }
+            }
 
             //System.out.println(" CSF :"+newFrame);
 
-		}
+        }
 
-		return super.shouldChangeFrame(source, newFrame, oldFrame, now);
-	}
+        return super.shouldChangeFrame(source, newFrame, oldFrame, now);
+    }
 
-	static int uniq = 0;
+    static int uniq = 0;
 
-	public static
+    public static
     iVisualElement createDTSO(List<iVisualElement> on, iVisualElement root, float initialx) {
-		final Triple<VisualElement, PlainDraggableComponent, DisposableTimeSliderOverrides> created = VisualElement.createWithToken("dtso+" + (uniq++), root, new Rect(10, 0, 0, 0), VisualElement.class, PlainDraggableComponent.class, DisposableTimeSliderOverrides.class);
+        final Triple<VisualElement, PlainDraggableComponent, DisposableTimeSliderOverrides> created =
+                VisualElement.createWithToken("dtso+" + (uniq++),
+                                              root,
+                                              new Rect(10, 0, 0, 0),
+                                              VisualElement.class,
+                                              PlainDraggableComponent.class,
+                                              DisposableTimeSliderOverrides.class);
 
-		iVisualElement.name.set(created.left, created.left, "transient time slider");
-		iVisualElement.doNotSave.set(created.left, created.left, true);
+        iVisualElement.name.set(created.left, created.left, "transient time slider");
+        iVisualElement.doNotSave.set(created.left, created.left, true);
 
-		created.left.setFrame(new Rect(initialx, 0, 0, 0));
+        created.left.setFrame(new Rect(initialx, 0, 0, 0));
 
-		float min = Float.POSITIVE_INFINITY;
-		float max = Float.NEGATIVE_INFINITY;
+        float min = Float.POSITIVE_INFINITY;
+        float max = Float.NEGATIVE_INFINITY;
 
-		for (iVisualElement e : on) {
-			Rect f = e.getFrame(null);
-			min = (float) Math.min(min, f.x);
-			max = (float) Math.max(max, f.x + f.w);
-		}
+        for (iVisualElement e : on) {
+            Rect f = e.getFrame(null);
+            min = (float) Math.min(min, f.x);
+            max = (float) Math.max(max, f.x + f.w);
+        }
 
 
         //System.out.println(" create DTSO on <"+on+"> range is <"+min+" -> "+max+">");
 
-		
-		created.right.playStart = min;
-		created.right.playEnd = max;
 
-		created.right.playDurationInSeconds = computePlayDurationForSelection(on);
+        created.right.playStart = min;
+        created.right.playEnd = max;
 
-		created.right.on = on;
-		// 1. wire these things up to run @ this float provider
+        created.right.playDurationInSeconds = computePlayDurationForSelection(on);
 
-		for (final iVisualElement v : on) {
-			PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
-			iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
+        created.right.on = on;
+        // 1. wire these things up to run @ this float provider
 
-			Promise promise = pss.promiseForKey(v);
+        for (final iVisualElement v : on) {
+            PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
+            iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
 
-			runner.addActive(new iFloatProvider() {
+            Promise promise = pss.promiseForKey(v);
 
-				public float evaluate() {
+            runner.addActive(new iFloatProvider() {
 
-					double vv = created.left.getFrame(null).x;
+                public
+                float evaluate() {
 
-					Rect o = new Rect(0, 0, 0, 0);
-					v.getFrame(o);
+                    double vv = created.left.getFrame(null).x;
 
-					return (float) vv;
-				}
+                    Rect o = new Rect(0, 0, 0, 0);
+                    v.getFrame(o);
 
-			}, promise);
+                    return (float) vv;
+                }
 
-		}
+            }, promise);
 
-		// 2. if any of these things STOP running, delete this slider
-		// and STOP the other ones
+        }
 
-		// todo
+        // 2. if any of these things STOP running, delete this slider
+        // and STOP the other ones
 
-		return created.left;
+        // todo
 
-	}
+        return created.left;
 
-	public static
+    }
+
+    public static
     iVisualElement createDTSO2(List<iVisualElement> on, iVisualElement root, float initialx) {
-		final Triple<VisualElement, PlainDraggableComponent, DisposableTimeSliderOverrides> created = VisualElement.createWithToken("dtso+" + (uniq++), root, new Rect(10, 0, 0, 0), VisualElement.class, PlainDraggableComponent.class, DisposableTimeSliderOverrides.class);
+        final Triple<VisualElement, PlainDraggableComponent, DisposableTimeSliderOverrides> created =
+                VisualElement.createWithToken("dtso+" + (uniq++),
+                                              root,
+                                              new Rect(10, 0, 0, 0),
+                                              VisualElement.class,
+                                              PlainDraggableComponent.class,
+                                              DisposableTimeSliderOverrides.class);
 
-		iVisualElement.name.set(created.left, created.left, "transient time slider");
-		iVisualElement.doNotSave.set(created.left, created.left, true);
+        iVisualElement.name.set(created.left, created.left, "transient time slider");
+        iVisualElement.doNotSave.set(created.left, created.left, true);
 
-		created.left.setFrame(new Rect(initialx, 0, 0, 100));
+        created.left.setFrame(new Rect(initialx, 0, 0, 100));
 
-		float min = Float.POSITIVE_INFINITY;
-		float max = Float.NEGATIVE_INFINITY;
+        float min = Float.POSITIVE_INFINITY;
+        float max = Float.NEGATIVE_INFINITY;
 
-		for (iVisualElement e : on) {
-			Rect f = e.getFrame(null);
-			min = (float) Math.min(min, f.x);
-			max = (float) Math.max(max, f.x + f.w);
-		}
+        for (iVisualElement e : on) {
+            Rect f = e.getFrame(null);
+            min = (float) Math.min(min, f.x);
+            max = (float) Math.max(max, f.x + f.w);
+        }
 
-		created.right.playStart = (float) on.get(0).getFrame(null).x;
-		created.right.playEnd = (float) (on.get(0).getFrame(null).w+created.right.playStart);
+        created.right.playStart = (float) on.get(0).getFrame(null).x;
+        created.right.playEnd = (float) (on.get(0).getFrame(null).w + created.right.playStart);
 
-		created.right.playDurationInSeconds = computePlayDurationForSelection(on);
+        created.right.playDurationInSeconds = computePlayDurationForSelection(on);
 
-		created.right.on = on;
+        created.right.on = on;
 
-		List<BasicRunner> dep = new ArrayList<BasicRunner>();
+        List<BasicRunner> dep = new ArrayList<BasicRunner>();
 
-		// 1. wire these things up to run @ this float provider
-		for (final iVisualElement v : on) {
-			final PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
+        // 1. wire these things up to run @ this float provider
+        for (final iVisualElement v : on) {
+            final PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
 
-			PythonScriptingSystem sub = new PythonScriptingSystem() {
-				@Override
-				public Collection allPythonScriptingElements() {
-					return Collections.singletonList(pss.promises.get(v));
-				}
+            PythonScriptingSystem sub = new PythonScriptingSystem() {
+                @Override
+                public
+                Collection allPythonScriptingElements() {
+                    return Collections.singletonList(pss.promises.get(v));
+                }
 
-				public Promise promiseForKey(Object key) {
-					return pss.promiseForKey(key);
+                public
+                Promise promiseForKey(Object key) {
+                    return pss.promiseForKey(key);
                 }
             };
 
-			BasicRunner rr = new BasicRunner(sub, created.right.playStart-1);
-			dep.add(rr);
-			rr.update(initialx);
-		}
+            BasicRunner rr = new BasicRunner(sub, created.right.playStart - 1);
+            dep.add(rr);
+            rr.update(initialx);
+        }
 
-		created.right.dependantRunners = dep;
+        created.right.dependantRunners = dep;
 
-		// 2. if any of these things STOP running, delete this slider
-		// and STOP the other ones
+        // 2. if any of these things STOP running, delete this slider
+        // and STOP the other ones
 
-		// todo
+        // todo
 
-		return created.left;
+        return created.left;
 
-	}
+    }
 
-	private static float computePlayDurationForSelection(List<iVisualElement> on) {
+    private static
+    float computePlayDurationForSelection(List<iVisualElement> on) {
 
-		float playDuration = defaultPlayDuration;
+        float playDuration = defaultPlayDuration;
 
-		for (iVisualElement e : on) {
-			Number n = DisposableTimeSliderOverrides.playDuration.get(e);
-			if (n != null)
-				return n.floatValue();
-		}
-		return playDuration;
-	}
+        for (iVisualElement e : on) {
+            Number n = DisposableTimeSliderOverrides.playDuration.get(e);
+            if (n != null) return n.floatValue();
+        }
+        return playDuration;
+    }
 
-	public static float defaultPlayDuration = 60f;
+    public static float defaultPlayDuration = 60f;
 
-	boolean playing = false;
+    boolean playing = false;
 
-	float playStart = 0;
-	float playEnd = 0;
-	float playDurationInSeconds = 0;
-	boolean loop = false;
+    float playStart = 0;
+    float playEnd = 0;
+    float playDurationInSeconds = 0;
+    boolean loop = false;
 
-	@Override
-	public VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
-		if (source == forElement) {
+    @Override
+    public
+    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+        if (source == forElement) {
 
             //System.out.println(" items is <" + items + "> <" + items.getClass() + ">");
 
-			if (items instanceof ExtendedMenuMap) {
-				ExtendedMenuMap map = (ExtendedMenuMap) items;
-				if (playing) {
-					MarkingMenuBuilder b = map.getBuilder();
+            if (items instanceof ExtendedMenuMap) {
+                ExtendedMenuMap map = (ExtendedMenuMap) items;
+                if (playing) {
+                    MarkingMenuBuilder b = map.getBuilder();
 
-					b.newMenu("Pause", "SW");
-					b.call(new iUpdateable() {
-						public void update() {
-							playing = false;
-						}
-					});
-				} else {
+                    b.newMenu("Pause", "SW");
+                    b.call(new iUpdateable() {
+                        public
+                        void update() {
+                            playing = false;
+                        }
+                    });
+                }
+                else {
 
                     //System.out.println(" building a marking menu builder ");
 
-					MarkingMenuBuilder b = map.getBuilder();
+                    MarkingMenuBuilder b = map.getBuilder();
 
-					b.newMenu("Play", "E");
-					b.call(new iUpdateable() {
-						public void update() {
-							playing = true;
-							loop = false;
-							startPlayer();
-						}
-					});
+                    b.newMenu("Play", "E");
+                    b.call(new iUpdateable() {
+                        public
+                        void update() {
+                            playing = true;
+                            loop = false;
+                            startPlayer();
+                        }
+                    });
 
-					b.newMenu("Play from beginning", "W");
-					b.call(new iUpdateable() {
-						public void update() {
-							playing = true;
-							Rect f = forElement.getFrame(null);
-							f.x = playStart;
-							forElement.setFrame(f);
-							loop = false;
-							startPlayer();
-						}
-					});
-					b.newMenu("Loop from beginning", "NE2");
-					b.call(new iUpdateable() {
-						public void update() {
+                    b.newMenu("Play from beginning", "W");
+                    b.call(new iUpdateable() {
+                        public
+                        void update() {
+                            playing = true;
+                            Rect f = forElement.getFrame(null);
+                            f.x = playStart;
+                            forElement.setFrame(f);
+                            loop = false;
+                            startPlayer();
+                        }
+                    });
+                    b.newMenu("Loop from beginning", "NE2");
+                    b.call(new iUpdateable() {
+                        public
+                        void update() {
                             //System.out.println(" will loop from the beginning ");
                             playing = true;
-							Rect f = forElement.getFrame(null);
-							f.x = playStart;
-							forElement.setFrame(f);
-							loop = true;
-							startPlayer();
-						}
-					});
-				}
+                            Rect f = forElement.getFrame(null);
+                            f.x = playStart;
+                            forElement.setFrame(f);
+                            loop = true;
+                            startPlayer();
+                        }
+                    });
+                }
 
-				MarkingMenuBuilder b = map.getBuilder();
-				b.newMenu("Delete", "S");
-				b.call(new iUpdateable() {
-					public void update() {
-						stopAndDelete();
+                MarkingMenuBuilder b = map.getBuilder();
+                b.newMenu("Delete", "S");
+                b.call(new iUpdateable() {
+                    public
+                    void update() {
+                        stopAndDelete();
 
-					}
-				});
+                    }
+                });
 
-			}
-		}
-		return super.menuItemsFor(source, items);
-	}
+            }
+        }
+        return super.menuItemsFor(source, items);
+    }
 
-	iUpdateable player;
+    iUpdateable player;
 
-	protected void startPlayer() {
-		startPlayer(null);
-	}
+    protected
+    void startPlayer() {
+        startPlayer(null);
+    }
 
-	float skipBy = 0;
-	
-	protected void startPlayer(final iUpdateable continuation) {
-		if (player != null)
-			return;
+    float skipBy = 0;
+
+    protected
+    void startPlayer(final iUpdateable continuation) {
+        if (player != null) return;
 
         //System.out.println(" starting player ");
         player = new iUpdateable() {
 
-			long startedAt = System.currentTimeMillis();
+            long startedAt = System.currentTimeMillis();
 
-			float ox = (float) forElement.getFrame(null).x;
-			float d = playDurationInSeconds * (playEnd - ox) / (playEnd - playStart);
+            float ox = (float) forElement.getFrame(null).x;
+            float d = playDurationInSeconds * (playEnd - ox) / (playEnd - playStart);
 
-			public void update() {
+            public
+            void update() {
 
-				long now = System.currentTimeMillis();
+                long now = System.currentTimeMillis();
 
-				double in = (now - startedAt) / 1000f;
+                double in = (now - startedAt) / 1000f;
 
 
                 //System.out.println(" in at <"+in+"> <"+ startedAt+"> <"+skipBy+">");
 
-				startedAt += ((double)skipBy)*1000L;
-				skipBy = 0;
-				
-				double alpha = in / d;
+                startedAt += ((double) skipBy) * 1000L;
+                skipBy = 0;
+
+                double alpha = in / d;
 
                 //System.out.println("         alpha <"+alpha+">");
 
-				if (alpha > 1 && !loop) {
-					alpha = 1;
-					Launcher.getLauncher().deregisterUpdateable(player);
-					if (continuation != null)
-						continuation.update();
-					player = null;
-					playing = false;
-				} else if (alpha > 1 && loop) {
+                if (alpha > 1 && !loop) {
+                    alpha = 1;
+                    Launcher.getLauncher().deregisterUpdateable(player);
+                    if (continuation != null) continuation.update();
+                    player = null;
+                    playing = false;
+                }
+                else if (alpha > 1 && loop) {
                     //System.out.println(" loop point is now");
                     alpha = 1;
-					startedAt = System.currentTimeMillis();
-					ox = playStart;
-				}
+                    startedAt = System.currentTimeMillis();
+                    ox = playStart;
+                }
 
-				Rect f = forElement.getFrame(null);
-				f.x = ox * (1 - alpha) + playEnd * alpha;
-			
-				//forElement.setFrame(f);
+                Rect f = forElement.getFrame(null);
+                f.x = ox * (1 - alpha) + playEnd * alpha;
 
-				iVisualElementOverrides.topology.begin(forElement);
-				iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(forElement, f, forElement.getFrame(null), true);
-				iVisualElementOverrides.topology.end(forElement);
+                //forElement.setFrame(f);
 
-			}
-		};
+                iVisualElementOverrides.topology.begin(forElement);
+                iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(forElement,
+                                                                                    f,
+                                                                                    forElement.getFrame(null),
+                                                                                    true);
+                iVisualElementOverrides.topology.end(forElement);
 
-		Launcher.getLauncher().registerUpdateable(player);
-	}
+            }
+        };
 
-	public static
+        Launcher.getLauncher().registerUpdateable(player);
+    }
+
+    public static
     void playFromBeginning(iVisualElement e, iVisualElement root) {
-		final iVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
+        final iVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
 
-		final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
+        final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
 
-		o.playing = true;
-		o.loop = false;
-		o.startPlayer(new iUpdateable() {
+        o.playing = true;
+        o.loop = false;
+        o.startPlayer(new iUpdateable() {
 
-			public void update() {
-				o.stopAndDelete();
-			}
-		});
-	}
+            public
+            void update() {
+                o.stopAndDelete();
+            }
+        });
+    }
 
-	public static
+    public static
     DisposableTimeSliderOverrides playFromBeginning(List<iVisualElement> e, iVisualElement root) {
-		if (e.size() == 0)
-			return null;
+        if (e.size() == 0) return null;
 
-		final iVisualElement dtso = createDTSO2(e, root, (float) e.get(0).getFrame(null).x-1);
+        final iVisualElement dtso = createDTSO2(e, root, (float) e.get(0).getFrame(null).x - 1);
 
-		final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
+        final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
 
-		o.playing = true;
-		o.loop = false;
-		o.startPlayer(new iUpdateable() {
+        o.playing = true;
+        o.loop = false;
+        o.startPlayer(new iUpdateable() {
 
-			public void update() {
-				o.stopAndDelete();
-			}
-		});
-		
-		return o;
-	}
+            public
+            void update() {
+                o.stopAndDelete();
+            }
+        });
 
-	public static
+        return o;
+    }
+
+    public static
     DisposableTimeSliderOverrides loopFromBeginning(iVisualElement e, iVisualElement root) {
-		final iVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
+        final iVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
 
-		final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
+        final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
 
-		o.playing = true;
-		o.loop = true;
-		o.startPlayer(new iUpdateable() {
+        o.playing = true;
+        o.loop = true;
+        o.startPlayer(new iUpdateable() {
 
-			public void update() {
-				o.stopAndDelete();
-			}
-		});
+            public
+            void update() {
+                o.stopAndDelete();
+            }
+        });
 
-		return o;
-	}
+        return o;
+    }
 
-	public void stopAndDelete() {
-		for (final iVisualElement v : on) {
-			PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
-			iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
+    public
+    void stopAndDelete() {
+        for (final iVisualElement v : on) {
+            PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
+            iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
 
-			Promise promise = pss.promiseForKey(v);
-			runner.removeActive(promise);
-		}
-		
-		if (dependantRunners!=null)
-		{
-			for(BasicRunner r : dependantRunners)
-			{
-				r.stopAll((float) forElement.getFrame(null).x);
-			}
-		}
+            Promise promise = pss.promiseForKey(v);
+            runner.removeActive(promise);
+        }
 
-		VisualElement.delete(forElement);
-		if (player!=null)
-			Launcher.getLauncher().deregisterUpdateable(player);
-		player = null;
-	}
+        if (dependantRunners != null) {
+            for (BasicRunner r : dependantRunners) {
+                r.stopAll((float) forElement.getFrame(null).x);
+            }
+        }
 
-	public void stop() {
-		if (player == null)
-			return;
+        VisualElement.delete(forElement);
+        if (player != null) Launcher.getLauncher().deregisterUpdateable(player);
+        player = null;
+    }
 
-		for (final iVisualElement v : on) {
-			PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
-			iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
+    public
+    void stop() {
+        if (player == null) return;
 
-			Promise promise = pss.promiseForKey(v);
-			runner.removeActive(promise);
-		}
+        for (final iVisualElement v : on) {
+            PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
+            iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
 
-		Launcher.getLauncher().deregisterUpdateable(player);
-	}
+            Promise promise = pss.promiseForKey(v);
+            runner.removeActive(promise);
+        }
 
-	public void skipBack() {
-		if (player == null) return;
-		skipBy+=5;
-	}
-	public void skipForward() {
-		if (player == null) return;
-		skipBy-=5;
-	}
+        Launcher.getLauncher().deregisterUpdateable(player);
+    }
+
+    public
+    void skipBack() {
+        if (player == null) return;
+        skipBy += 5;
+    }
+
+    public
+    void skipForward() {
+        if (player == null) return;
+        skipBy -= 5;
+    }
 
 }

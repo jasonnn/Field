@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FieldMenus2 {
+public
+class FieldMenus2 {
 
     public static FieldMenus2 fieldMenus = new FieldMenus2();
 
@@ -38,7 +39,8 @@ public class FieldMenus2 {
     public List<Sheet> openSheets = new ArrayList<FieldMenus2.Sheet>();
     public Shell hiddenWindow;
 
-    public FieldMenus2() {
+    public
+    FieldMenus2() {
         Logging.registerCycleUpdateable();
         hiddenWindow = new Shell(Launcher.display);
 
@@ -47,7 +49,8 @@ public class FieldMenus2 {
             enhancer.hookApplicationMenu(Launcher.display, new iUpdateable() {
 
                 @Override
-                public void update() {
+                public
+                void update() {
 
                     MessageBox mb = new MessageBox(hiddenWindow, SWT.OK | SWT.ICON_INFORMATION);
                     mb.setText("About Field");
@@ -58,7 +61,8 @@ public class FieldMenus2 {
             }, new iUpdateable() {
 
                 @Override
-                public void update() {
+                public
+                void update() {
                     // System.out.println(" preferences ");
                 }
             });
@@ -68,7 +72,8 @@ public class FieldMenus2 {
         Launcher.display.addListener(SWT.OpenDocument, new Listener() {
 
             @Override
-            public void handleEvent(Event arg0) {
+            public
+            void handleEvent(Event arg0) {
                 System.out.println(" -- open document handler --  <" + arg0.text + '>');
                 openAnyFile(arg0.text, hiddenWindow);
             }
@@ -88,24 +93,33 @@ public class FieldMenus2 {
             boolean is17 = Platform.is17();
             if (is17) {
                 mi.setSelection(true);
-            } else {
+            }
+            else {
                 mi.setSelection(false);
             }
 
             mi.addSelectionListener(new SelectionListener() {
 
                 @Override
-                public void widgetSelected(SelectionEvent arg0) {
+                public
+                void widgetSelected(SelectionEvent arg0) {
                     Platform.willBe17 = !Platform.willBe17;
                     mi.setText("Use OpenJDK 1.7 (restart required)");
                     mi.setSelection(Platform.willBe17);
 
-                    new ExecuteCommand(".", new String[]{"/usr/bin/defaults", "write", "com.openendedgroup.Field", "use16", Platform.willBe17 ? "NO" : "YES"}, true);
+                    new ExecuteCommand(".",
+                                       new String[]{"/usr/bin/defaults",
+                                                    "write",
+                                                    "com.openendedgroup.Field",
+                                                    "use16",
+                                                    Platform.willBe17 ? "NO" : "YES"},
+                                       true);
 
                 }
 
                 @Override
-                public void widgetDefaultSelected(SelectionEvent arg0) {
+                public
+                void widgetDefaultSelected(SelectionEvent arg0) {
                     widgetDefaultSelected(arg0);
                 }
             });
@@ -124,12 +138,14 @@ public class FieldMenus2 {
             newFile.addSelectionListener(new SelectionListener() {
 
                 @Override
-                public void widgetSelected(SelectionEvent e) {
+                public
+                void widgetSelected(SelectionEvent e) {
                     doNewFile();
                 }
 
                 @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
+                public
+                void widgetDefaultSelected(SelectionEvent e) {
                     widgetSelected(e);
                 }
             });
@@ -139,7 +155,8 @@ public class FieldMenus2 {
             openFile.addSelectionListener(new SelectionListener() {
 
                 @Override
-                public void widgetSelected(SelectionEvent e) {
+                public
+                void widgetSelected(SelectionEvent e) {
 
                     // System.out.println(" OPEN ");
 
@@ -147,7 +164,8 @@ public class FieldMenus2 {
                 }
 
                 @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
+                public
+                void widgetDefaultSelected(SelectionEvent e) {
                     widgetSelected(e);
                 }
             });
@@ -155,10 +173,10 @@ public class FieldMenus2 {
         }
     }
 
-    public PhantomFluidSheet open(String filename) {
+    public
+    PhantomFluidSheet open(String filename) {
         for (Sheet s : openSheets)
-            if (s.filename.equals(filename))
-                return s.sheet;
+            if (s.filename.equals(filename)) return s.sheet;
 
         PhantomFluidSheet loaded = new PhantomFluidSheet(filename, true, true);
 
@@ -171,7 +189,8 @@ public class FieldMenus2 {
         s.sheet.getUI().getWindow().getFrame().addDisposeListener(new DisposeListener() {
 
             @Override
-            public void widgetDisposed(DisposeEvent e) {
+            public
+            void widgetDisposed(DisposeEvent e) {
                 if (!Launcher.shuttingDown) {
                     doClose(s);
                 }
@@ -185,10 +204,10 @@ public class FieldMenus2 {
         return s.sheet;
     }
 
-    private void makeMenuForSheet(final Sheet s) {
+    private
+    void makeMenuForSheet(final Sheet s) {
 
-        if (Platform.isLinux())
-            return;
+        if (Platform.isLinux()) return;
 
         Menu bar = s.setup.getMenuBar();
         if (bar == null) {
@@ -206,12 +225,14 @@ public class FieldMenus2 {
         newFile.addSelectionListener(new SelectionListener() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public
+            void widgetSelected(SelectionEvent e) {
                 doNewFile();
             }
 
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public
+            void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
         });
@@ -221,7 +242,8 @@ public class FieldMenus2 {
         openFile.addSelectionListener(new SelectionListener() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public
+            void widgetSelected(SelectionEvent e) {
 
                 // System.out.println(" OPEN ");
 
@@ -229,7 +251,8 @@ public class FieldMenus2 {
             }
 
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public
+            void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
         });
@@ -239,12 +262,14 @@ public class FieldMenus2 {
         closeFile.addSelectionListener(new SelectionListener() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public
+            void widgetSelected(SelectionEvent e) {
                 doClose(s);
             }
 
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public
+            void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
         });
@@ -254,32 +279,34 @@ public class FieldMenus2 {
         saveAsFile.addSelectionListener(new SelectionListener() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public
+            void widgetSelected(SelectionEvent e) {
                 doSaveAs(s, s.setup);
             }
 
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public
+            void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
         });
 
     }
 
-    public Sheet sheetForSheet(StandardFluidSheet s) {
+    public
+    Sheet sheetForSheet(StandardFluidSheet s) {
         for (Sheet ss : openSheets) {
-            if (ss.sheet.getUI() == s)
-                return ss;
+            if (ss.sheet.getUI() == s) return ss;
         }
         return null;
     }
 
     boolean insideSaveAs = false;
 
-    protected void doClose(Sheet s) {
+    protected
+    void doClose(Sheet s) {
 
-        if (insideSaveAs)
-            return;
+        if (insideSaveAs) return;
 
         if (openSheets.size() == 1) {
             try {
@@ -288,7 +315,8 @@ public class FieldMenus2 {
                 e.printStackTrace();
             }
             System.exit(0);
-        } else {
+        }
+        else {
             s.sheet.getUI().saveNow();
             s.sheet.close();
             openSheets.remove(s);
@@ -298,7 +326,8 @@ public class FieldMenus2 {
         // }
     }
 
-    protected void doOpenFile(Shell setup) {
+    protected
+    void doOpenFile(Shell setup) {
 
         if (Platform.isMac()) {
             FileDialog d = new FileDialog(setup, SWT.OPEN);
@@ -308,7 +337,8 @@ public class FieldMenus2 {
             d.setText("Load");
             String name = d.open();
             openAnyFile(name, d.getParent());
-        } else {
+        }
+        else {
             DirectoryDialog d = new DirectoryDialog(setup, SWT.OPEN);
             d.setFilterPath(WorkspaceDirectory.dir[0]);
             d.setText("Load (select a .field directory)");
@@ -318,19 +348,23 @@ public class FieldMenus2 {
         }
     }
 
-    public void openAnyFile(String path, Shell parent) {
+    public
+    void openAnyFile(String path, Shell parent) {
 
         if (path.endsWith(".fieldpackage")) {
             PackageTools.importFieldPackage(openSheets.get(0).sheet.getRoot(), path);
-        } else if (path.startsWith(getCanonicalVersioningDir())) {
+        }
+        else if (path.startsWith(getCanonicalVersioningDir())) {
             open(path.substring(getCanonicalVersioningDir().length()));
-        } else {
+        }
+        else {
             new PathNotInWorkspaceHelperMenu2(this).open(parent, path);
         }
 
     }
 
-    public void doSaveAs(Sheet s, Shell setup) {
+    public
+    void doSaveAs(Sheet s, Shell setup) {
         FileDialog d = new FileDialog(setup, SWT.SAVE | SWT.SHEET);
         d.setOverwrite(true);
         d.setFilterPath(WorkspaceDirectory.dir[0]);
@@ -342,8 +376,7 @@ public class FieldMenus2 {
 
         if (fn != null) {
 
-            if (!fn.endsWith(".field"))
-                fn = fn + ".field";
+            if (!fn.endsWith(".field")) fn = fn + ".field";
             fn = fn.replace("..field", ".field");
             fn = fn.replace("src/test", ".");
 
@@ -366,10 +399,12 @@ public class FieldMenus2 {
                         insideSaveAs = false;
                     }
 
-                } else {
+                }
+                else {
                     // System.out.println(" no mkdir ");
                 }
-            } else {
+            }
+            else {
                 // System.out.println(" no prefix <" + fn +
                 // "> <" + getCanonicalVersioningDir() +
                 // ">");
@@ -377,7 +412,8 @@ public class FieldMenus2 {
         }
     }
 
-    public void doNewFile() {
+    public
+    void doNewFile() {
 
         FileDialog d = new FileDialog(hiddenWindow, SWT.SAVE);
         d.setOverwrite(false);
@@ -402,12 +438,12 @@ public class FieldMenus2 {
 
     public static
     String getFieldDir() {
-        if (!new File(fieldDir).exists())
-            new File(fieldDir).mkdirs();
+        if (!new File(fieldDir).exists()) new File(fieldDir).mkdirs();
         return fieldDir;
     }
 
-    public static String getCanonicalVersioningDir() {
+    public static
+    String getCanonicalVersioningDir() {
         try {
             return new File(SystemProperties.getDirProperty("versioning.dir")).getCanonicalPath() + '/';
         } catch (IOException e) {

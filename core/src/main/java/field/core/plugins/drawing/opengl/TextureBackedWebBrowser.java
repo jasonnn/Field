@@ -26,148 +26,157 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 @Woven
-public class TextureBackedWebBrowser {
+public
+class TextureBackedWebBrowser {
 
-	private final int w;
-	private final int h;
-	private final Shell window;
-	private final Browser browser;
-	private final Image image;
-	private final GC gc;
-	private final ByteBuffer buffer;
-	private final int[] row;
-	private final IntBuffer bufferInt;
-	private final BaseSlowRawTexture texture;
-	private final int[] all;
+    private final int w;
+    private final int h;
+    private final Shell window;
+    private final Browser browser;
+    private final Image image;
+    private final GC gc;
+    private final ByteBuffer buffer;
+    private final int[] row;
+    private final IntBuffer bufferInt;
+    private final BaseSlowRawTexture texture;
+    private final int[] all;
 
-	volatile int needsUpdate = 0;
-	private String url;
+    volatile int needsUpdate = 0;
+    private String url;
 
-	public TextureBackedWebBrowser(int w, int h) {
-		this.w = w;
-		this.h = h;
-		window = new Shell(Launcher.display, SWT.NO_TRIM);
-		window.setSize(w, h);
-		window.setLocation(0, 0);
-		// window.setLocation(50, 50);
+    public
+    TextureBackedWebBrowser(int w, int h) {
+        this.w = w;
+        this.h = h;
+        window = new Shell(Launcher.display, SWT.NO_TRIM);
+        window.setSize(w, h);
+        window.setLocation(0, 0);
+        // window.setLocation(50, 50);
 
-		window.setLayout(new FillLayout());
-		browser = new Browser(window, SWT.NONE);
+        window.setLayout(new FillLayout());
+        browser = new Browser(window, SWT.NONE);
 
-		window.setVisible(true);
+        window.setVisible(true);
 
-		image = new Image(Launcher.display, w, h);
-		gc = new GC(browser);
+        image = new Image(Launcher.display, w, h);
+        gc = new GC(browser);
 
-		buffer = ByteBuffer.allocateDirect(4 * w * h).order(ByteOrder.BIG_ENDIAN);
-		bufferInt = buffer.asIntBuffer();
-		row = new int[w];
-		all = new int[w * h];
-		texture = new AdvancedTextures.BaseSlowRawTexture("", bufferInt, w, h, null);
-		texture.setGenMip(true);
+        buffer = ByteBuffer.allocateDirect(4 * w * h).order(ByteOrder.BIG_ENDIAN);
+        bufferInt = buffer.asIntBuffer();
+        row = new int[w];
+        all = new int[w * h];
+        texture = new AdvancedTextures.BaseSlowRawTexture("", bufferInt, w, h, null);
+        texture.setGenMip(true);
 
-		browser.addProgressListener(new ProgressListener() {
+        browser.addProgressListener(new ProgressListener() {
 
-			@Override
-			public void completed(ProgressEvent event) {
+            @Override
+            public
+            void completed(ProgressEvent event) {
                 //System.out.println(" completed ");
                 browser.execute("document.body.style.overflow='hidden'");
-				needsUpdate++;
-				updateTexture();
-				// window.setVisible(false);
-			}
+                needsUpdate++;
+                updateTexture();
+                // window.setVisible(false);
+            }
 
-			@Override
-			public void changed(ProgressEvent event) {
+            @Override
+            public
+            void changed(ProgressEvent event) {
                 //System.out.println(" changed ");
                 needsUpdate++;
-				updateTexture();
-			}
-		});
+                updateTexture();
+            }
+        });
 
-		browser.addPaintListener(new PaintListener() {
+        browser.addPaintListener(new PaintListener() {
 
-			@Override
-			public void paintControl(PaintEvent e) {
+            @Override
+            public
+            void paintControl(PaintEvent e) {
 
                 //System.out.println(" got paint event ");
 
-				needsUpdate++;
-				updateTexture();
-			}
-		});
+                needsUpdate++;
+                updateTexture();
+            }
+        });
 
-		browser.addListener(SWT.MouseDown, new Listener() {
+        browser.addListener(SWT.MouseDown, new Listener() {
 
-			@Override
-			public void handleEvent(Event event) {
+            @Override
+            public
+            void handleEvent(Event event) {
                 //System.out.println(" browser get mouse down :" + event);
             }
-		});
+        });
 
-	}
+    }
 
-	public void setURL(String r) {
-		url = r;
-		browser.setUrl(r);
-		window.setVisible(true);
-	}
+    public
+    void setURL(String r) {
+        url = r;
+        browser.setUrl(r);
+        window.setVisible(true);
+    }
 
-	volatile int lastUpdate = 0;
+    volatile int lastUpdate = 0;
 
-	@HiddenInAutocomplete
-	@NextUpdate(delay = 5)
-	public void updateTexture() {
-
-        //System.out.println(" -- updating texture for texturebackedwebbroswer -- ");
-
-		if (lastUpdate == needsUpdate)
-			return;
-		updateTextureNow();
-	}
-
-	@HiddenInAutocomplete
-	public void updateTextureNow() {
+    @HiddenInAutocomplete
+    @NextUpdate(delay = 5)
+    public
+    void updateTexture() {
 
         //System.out.println(" -- updating texture for texturebackedwebbroswer -- ");
 
-		if (lastUpdate == needsUpdate)
-			return;
-		lastUpdate = needsUpdate;
-		long in = System.currentTimeMillis();
-		gc.copyArea(image, 0, 0);
-		long copy = System.currentTimeMillis();
+        if (lastUpdate == needsUpdate) return;
+        updateTextureNow();
+    }
 
-		// bufferInt.rewind();
-		// for (int y = 0; y < h; y++) {
-		// image.getImageData().getPixels(0, y, w, row, 0);
-		// bufferInt.put(row);
-		// }
-		// bufferInt.rewind();
-		long out = System.currentTimeMillis();
+    @HiddenInAutocomplete
+    public
+    void updateTextureNow() {
+
+        //System.out.println(" -- updating texture for texturebackedwebbroswer -- ");
+
+        if (lastUpdate == needsUpdate) return;
+        lastUpdate = needsUpdate;
+        long in = System.currentTimeMillis();
+        gc.copyArea(image, 0, 0);
+        long copy = System.currentTimeMillis();
+
+        // bufferInt.rewind();
+        // for (int y = 0; y < h; y++) {
+        // image.getImageData().getPixels(0, y, w, row, 0);
+        // bufferInt.put(row);
+        // }
+        // bufferInt.rewind();
+        long out = System.currentTimeMillis();
 
         //System.out.println(" timing " + (out - in) + " / " + (copy - in));
 
-		long data = (new NSBitmapImageRep(image.handle.representations().objectAtIndex(0))).bitmapData();
-		C.memmove(all, data, w * h * 4);
+        long data = (new NSBitmapImageRep(image.handle.representations().objectAtIndex(0))).bitmapData();
+        C.memmove(all, data, w * h * 4);
 
-		bufferInt.rewind();
-		bufferInt.put(all);
-		bufferInt.rewind();
+        bufferInt.rewind();
+        bufferInt.put(all);
+        bufferInt.rewind();
 
-		texture.dirty();
+        texture.dirty();
 
-		notifyUpdate();
+        notifyUpdate();
 
-	}
+    }
 
-	protected void notifyUpdate() {
+    protected
+    void notifyUpdate() {
 
-	}
+    }
 
-	@HiddenInAutocomplete
-	public void doClick(Event e) {
-		// window.setVisible(false);
+    @HiddenInAutocomplete
+    public
+    void doClick(Event e) {
+        // window.setVisible(false);
 
         browser.execute(" var evt = document.createEvent(\"MouseEvents\");\n"
                         + "  evt.initMouseEvent(\"click\", true, true, window,\n"
@@ -178,46 +187,51 @@ public class TextureBackedWebBrowser {
                         + e.y
                         + ").dispatchEvent(evt)");
         needsUpdate++;
-		updateTextureNow();
-		// e.x += window.getLocation().x;
-		// e.y += window.getLocation().y;
-		//
-		// ;//System.out.println(" posting synthetic event :" + e);
-		// e.widget = browser;
-		// Launcher.display.post(e);
-	}
+        updateTextureNow();
+        // e.x += window.getLocation().x;
+        // e.y += window.getLocation().y;
+        //
+        // ;//System.out.println(" posting synthetic event :" + e);
+        // e.widget = browser;
+        // Launcher.display.post(e);
+    }
 
-	/**
-	 * scrolls the webpage inside it's container by ,x,y
-	 */
-	public void scroll(float x, float y) {
-		browser.execute("window.scrollBy(" + x + ", " + y + ')');
-		needsUpdate++;
-		updateTexture();
-	}
+    /**
+     * scrolls the webpage inside it's container by ,x,y
+     */
+    public
+    void scroll(float x, float y) {
+        browser.execute("window.scrollBy(" + x + ", " + y + ')');
+        needsUpdate++;
+        updateTexture();
+    }
 
-	@HiddenInAutocomplete
-	public BaseSlowRawTexture getTexture() {
-		return texture;
-	}
+    @HiddenInAutocomplete
+    public
+    BaseSlowRawTexture getTexture() {
+        return texture;
+    }
 
-	@HiddenInAutocomplete
-	public void dispose() {
-		gc.dispose();
-		window.dispose();
-		// texture.deallocate(atRenderTime);
-	}
+    @HiddenInAutocomplete
+    public
+    void dispose() {
+        gc.dispose();
+        window.dispose();
+        // texture.deallocate(atRenderTime);
+    }
 
-	/**
-	 * executes javascript "on" the loaded page. You have full DOM access
-	 * and can return from this function a variety of objects
-	 */
-	public Object executeJavaScript(String script) {
-		return browser.evaluate(script);
-	}
+    /**
+     * executes javascript "on" the loaded page. You have full DOM access
+     * and can return from this function a variety of objects
+     */
+    public
+    Object executeJavaScript(String script) {
+        return browser.evaluate(script);
+    }
 
-	public String getURL() {
-		return url;
-	}
+    public
+    String getURL() {
+        return url;
+    }
 
 }

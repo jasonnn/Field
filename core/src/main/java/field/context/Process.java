@@ -10,120 +10,126 @@ import org.python.core.PyGenerator;
 
 import java.util.Collection;
 
-public abstract class Process<X> implements iUpdateable {
+public abstract
+class Process<X> implements iUpdateable {
 
-	protected final iDoubleProvider time;
-	protected final double lookahead;
-	protected Channel<X> output;
+    protected final iDoubleProvider time;
+    protected final double lookahead;
+    protected Channel<X> output;
 
-	public Process(iDoubleProvider time, double lookahead, Channel<X> output) {
-		this.time = time;
-		this.lookahead = lookahead;
-		this.output = output;
-	}
+    public
+    Process(iDoubleProvider time, double lookahead, Channel<X> output) {
+        this.time = time;
+        this.lookahead = lookahead;
+        this.output = output;
+    }
 
-	@Override
-	public void update() {
+    @Override
+    public
+    void update() {
 
-		double now = time.evaluate();
+        double now = time.evaluate();
 
-		Channel<X> window = output.range(now, Double.POSITIVE_INFINITY);
+        Channel<X> window = output.range(now, Double.POSITIVE_INFINITY);
 
         //System.out.println(" process :" + window + " " + now);
 
-		try {
-			while (window.isEmpty()) {
-				if (!pull(now))
-					return;
-			}
+        try {
+            while (window.isEmpty()) {
+                if (!pull(now)) return;
+            }
 
-			if (!window.isEmpty()) {
-				double next = window.timeFor(window.tail());
+            if (!window.isEmpty()) {
+                double next = window.timeFor(window.tail());
 
                 //System.out.println(" first event is <" + next + ">");
 
-				while (next < (now + lookahead)) {
-					if (!pull(next))
-						return;
-					next = window.timeFor(window.tail());
+                while (next < (now + lookahead)) {
+                    if (!pull(next)) return;
+                    next = window.timeFor(window.tail());
                     //System.out.println(" first event is now <" + next + ">");
                 }
-			}
-		} finally {
-			window.dispose();
-		}
+            }
+        } finally {
+            window.dispose();
+        }
 
-	}
+    }
 
-	protected abstract
+    protected abstract
     boolean pull(double now);
 
-	public static
+    public static
     class ProviderProcess<X> extends Process<X> {
 
-		private iProvider p;
-		public double now;
+        private iProvider p;
+        public double now;
 
-		public ProviderProcess(iDoubleProvider time, double lookahead, Channel<X> output) {
-			super(time, lookahead, output);
-		}
+        public
+        ProviderProcess(iDoubleProvider time, double lookahead, Channel<X> output) {
+            super(time, lookahead, output);
+        }
 
-		public ProviderProcess<X> set(iProvider p) {
-			this.p = p;
-			return this;
-		}
+        public
+        ProviderProcess<X> set(iProvider p) {
+            this.p = p;
+            return this;
+        }
 
-		public ProviderProcess<X> set(final PyGenerator p) {
-			this.p = new iProvider() {
+        public
+        ProviderProcess<X> set(final PyGenerator p) {
+            this.p = new iProvider() {
 
-				boolean first = true;
+                boolean first = true;
 
-				@Override
-				public Object get() {
-					try {
-						if (first) {
-							first = false;
-							return Py.tojava(p.next(), Object.class);
-						}
-						return Py.tojava(p.send(Py.java2py(new Object[] { now, output })), Object.class);
-					} catch (PyException e) {
-						if (e.type == Py.StopIteration) {
-						} else
-							e.printStackTrace();
-						ProviderProcess.this.p = null;
-						return null;
-					}
-				}
-			};
-			return this;
-		}
+                @Override
+                public
+                Object get() {
+                    try {
+                        if (first) {
+                            first = false;
+                            return Py.tojava(p.next(), Object.class);
+                        }
+                        return Py.tojava(p.send(Py.java2py(new Object[]{now, output})), Object.class);
+                    } catch (PyException e) {
+                        if (e.type == Py.StopIteration) {
+                        }
+                        else e.printStackTrace();
+                        ProviderProcess.this.p = null;
+                        return null;
+                    }
+                }
+            };
+            return this;
+        }
 
-		@Override
-		protected boolean pull(double now) {
+        @Override
+        protected
+        boolean pull(double now) {
 
-			this.now = now;
+            this.now = now;
 
-			if (p != null) {
-				Object x = p.get();
+            if (p != null) {
+                Object x = p.get();
 
-				if (x == null)
-					return false;
+                if (x == null) return false;
 
-				if (x instanceof Collection) {
-					for (Object xx : ((Collection) x)) {
-						output.add((X) xx);
-					}
-					return ((Collection) x).size() > 0;
-				} else {
-					output.add((X) x);
-					return true;
-				}
+                if (x instanceof Collection) {
+                    for (Object xx : ((Collection) x)) {
+                        output.add((X) xx);
+                    }
+                    return ((Collection) x).size() > 0;
+                }
+                else {
+                    output.add((X) x);
+                    return true;
+                }
 
-			}
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-	}
+    }
 
 }

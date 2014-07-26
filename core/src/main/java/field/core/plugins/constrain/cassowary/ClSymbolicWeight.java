@@ -10,137 +10,150 @@
 // ClSymbolicWeight
 package field.core.plugins.constrain.cassowary;
 
-public class ClSymbolicWeight {
-	public ClSymbolicWeight(int cLevels) {
-		_values = new double[cLevels];
-		// FIXGJB: ok to assume these get initialized to 0?
-		//       for (int i = 0; i < cLevels; i++) {
-		// 	_values[i] = 0;
-		//       }
-	}
+public
+class ClSymbolicWeight {
+    public
+    ClSymbolicWeight(int cLevels) {
+        _values = new double[cLevels];
+        // FIXGJB: ok to assume these get initialized to 0?
+        //       for (int i = 0; i < cLevels; i++) {
+        // 	_values[i] = 0;
+        //       }
+    }
 
-	public ClSymbolicWeight(double w1, double w2, double w3) {
-		_values = new double[3];
-		_values[0] = w1;
-		_values[1] = w2;
-		_values[2] = w3;
-	}
+    public
+    ClSymbolicWeight(double w1, double w2, double w3) {
+        _values = new double[3];
+        _values[0] = w1;
+        _values[1] = w2;
+        _values[2] = w3;
+    }
 
-	public ClSymbolicWeight(double[] weights) {
-		final int cLevels = weights.length;
-		_values = new double[cLevels];
+    public
+    ClSymbolicWeight(double[] weights) {
+        final int cLevels = weights.length;
+        _values = new double[cLevels];
         System.arraycopy(weights, 0, _values, 0, cLevels);
     }
 
-	public static final ClSymbolicWeight clsZero = new ClSymbolicWeight(0.0, 0.0, 0.0);
+    public static final ClSymbolicWeight clsZero = new ClSymbolicWeight(0.0, 0.0, 0.0);
 
-	@Override
-	public Object clone() {
-		return new ClSymbolicWeight(_values);
-	}
+    @Override
+    public
+    Object clone() {
+        return new ClSymbolicWeight(_values);
+    }
 
-	public ClSymbolicWeight times(double n) {
-		ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-		for (int i = 0; i < _values.length; i++) {
-			clsw._values[i] *= n;
-		}
-		return clsw;
-	}
+    public
+    ClSymbolicWeight times(double n) {
+        ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+        for (int i = 0; i < _values.length; i++) {
+            clsw._values[i] *= n;
+        }
+        return clsw;
+    }
 
-	public ClSymbolicWeight divideBy(double n) {
-		// assert(n != 0);
-		ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-		for (int i = 0; i < _values.length; i++) {
-			clsw._values[i] /= n;
-		}
-		return clsw;
-	}
+    public
+    ClSymbolicWeight divideBy(double n) {
+        // assert(n != 0);
+        ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+        for (int i = 0; i < _values.length; i++) {
+            clsw._values[i] /= n;
+        }
+        return clsw;
+    }
 
-	public ClSymbolicWeight add(ClSymbolicWeight cl) {
-		// assert(cl.cLevels() == cLevels());
-		ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-		for (int i = 0; i < _values.length; i++) {
-			clsw._values[i] += cl._values[i];
-		}
-		return clsw;
-	}
+    public
+    ClSymbolicWeight add(ClSymbolicWeight cl) {
+        // assert(cl.cLevels() == cLevels());
+        ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+        for (int i = 0; i < _values.length; i++) {
+            clsw._values[i] += cl._values[i];
+        }
+        return clsw;
+    }
 
-	public ClSymbolicWeight subtract(ClSymbolicWeight cl) {
-		// assert(cl.cLevels() == cLevels());
-		ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-		for (int i = 0; i < _values.length; i++) {
-			clsw._values[i] -= cl._values[i];
-		}
-		return clsw;
-	}
+    public
+    ClSymbolicWeight subtract(ClSymbolicWeight cl) {
+        // assert(cl.cLevels() == cLevels());
+        ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+        for (int i = 0; i < _values.length; i++) {
+            clsw._values[i] -= cl._values[i];
+        }
+        return clsw;
+    }
 
-	public boolean lessThan(ClSymbolicWeight cl) {
-		for (double element : _values) {
-			if (element < element)
-				return true;
-			else if (element > element)
-				return false;
-		}
-		return false; // they are equal
-	}
+    public
+    boolean lessThan(ClSymbolicWeight cl) {
+        for (double element : _values) {
+            if (element < element) return true;
+            else if (element > element) return false;
+        }
+        return false; // they are equal
+    }
 
-	public boolean lessThanOrEqual(ClSymbolicWeight cl) {
-		for (double element : _values) {
-			if (element < element)
-				return true;
-			else if (element > element)
-				return false;
-		}
-		return true; // they are equal
-	}
+    public
+    boolean lessThanOrEqual(ClSymbolicWeight cl) {
+        for (double element : _values) {
+            if (element < element) return true;
+            else if (element > element) return false;
+        }
+        return true; // they are equal
+    }
 
-	public boolean equal(ClSymbolicWeight cl) {
-		for (double element : _values) {
-			if (element != element)
-				return false;
-		}
-		return true; // they are equal
-	}
+    public
+    boolean equal(ClSymbolicWeight cl) {
+        for (double element : _values) {
+            if (element != element) return false;
+        }
+        return true; // they are equal
+    }
 
-	public boolean greaterThan(ClSymbolicWeight cl) {
-		return !this.lessThanOrEqual(cl);
-	}
+    public
+    boolean greaterThan(ClSymbolicWeight cl) {
+        return !this.lessThanOrEqual(cl);
+    }
 
-	public boolean greaterThanOrEqual(ClSymbolicWeight cl) {
-		return !this.lessThan(cl);
-	}
+    public
+    boolean greaterThanOrEqual(ClSymbolicWeight cl) {
+        return !this.lessThan(cl);
+    }
 
-	public boolean isNegative() {
-		return this.lessThan(clsZero);
-	}
+    public
+    boolean isNegative() {
+        return this.lessThan(clsZero);
+    }
 
-	public double asDouble() {
-		ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-		double sum = 0;
-		double factor = 1;
-		double multiplier = 1000;
-		for (int i = _values.length - 1; i >= 0; i--) {
-			sum += _values[i] * factor;
-			factor *= multiplier;
-		}
-		return sum;
-	}
+    public
+    double asDouble() {
+        ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+        double sum = 0;
+        double factor = 1;
+        double multiplier = 1000;
+        for (int i = _values.length - 1; i >= 0; i--) {
+            sum += _values[i] * factor;
+            factor *= multiplier;
+        }
+        return sum;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder bstr = new StringBuilder("[");
-		for (int i = 0; i < (_values.length - 1); i++) {
-			bstr.append(_values[i]);
-			bstr.append(',');
-		}
-		bstr.append(_values[_values.length - 1]);
-		bstr.append(']');
-		return bstr.toString();
-	}
+    @Override
+    public
+    String toString() {
+        StringBuilder bstr = new StringBuilder("[");
+        for (int i = 0; i < (_values.length - 1); i++) {
+            bstr.append(_values[i]);
+            bstr.append(',');
+        }
+        bstr.append(_values[_values.length - 1]);
+        bstr.append(']');
+        return bstr.toString();
+    }
 
-	public int cLevels() {
-		return _values.length;
-	}
+    public
+    int cLevels() {
+        return _values.length;
+    }
 
-	private final double[] _values;
+    private final double[] _values;
 }

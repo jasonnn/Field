@@ -17,354 +17,419 @@ import field.util.RectangleAllocator;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class SimpleConstraints implements iPlugin {
+public
+class SimpleConstraints implements iPlugin {
 
-	public static
+    public static
     class AtPoint extends Constraint {
-		private final float x;
+        private final float x;
 
-		private final float y;
+        private final float y;
 
-		private final float width;
+        private final float width;
 
-		private final float height;
+        private final float height;
 
-		private final float ox;
+        private final float ox;
 
-		private final float oy;
+        private final float oy;
 
-		public AtPoint(iVisualElement fireOn, iVisualElement inside, iVisualElement control, float ox, float oy) {
-			super(fireOn, inside, control);
-			// this.oy = oy;
-			// this.ox = ox;
-			Rect oldParentFrame = inside.getFrame(null);
-			Rect oldFrame = control.getFrame(null);
-			this.width = (float) oldFrame.w;
-			this.height = (float) oldFrame.h;
+        public
+        AtPoint(iVisualElement fireOn, iVisualElement inside, iVisualElement control, float ox, float oy) {
+            super(fireOn, inside, control);
+            // this.oy = oy;
+            // this.ox = ox;
+            Rect oldParentFrame = inside.getFrame(null);
+            Rect oldFrame = control.getFrame(null);
+            this.width = (float) oldFrame.w;
+            this.height = (float) oldFrame.h;
 
-			// this.x = (float)
-			// ((oldFrame.x-oldParentFrame.x)/oldParentFrame.w);
-			// this.y = (float)
-			// ((oldFrame.y-oldParentFrame.y)/oldParentFrame.h);
+            // this.x = (float)
+            // ((oldFrame.x-oldParentFrame.x)/oldParentFrame.w);
+            // this.y = (float)
+            // ((oldFrame.y-oldParentFrame.y)/oldParentFrame.h);
 
-			this.x = 1;
-			this.y = 0;
-			this.ox = -(float) (-ox + oldFrame.x - oldParentFrame.x - oldParentFrame.w);
-			this.oy = -(float) (-oy + oldFrame.y - oldParentFrame.y);
+            this.x = 1;
+            this.y = 0;
+            this.ox = -(float) (-ox + oldFrame.x - oldParentFrame.x - oldParentFrame.w);
+            this.oy = -(float) (-oy + oldFrame.y - oldParentFrame.y);
 
-			Rect newFrame = new Rect(5 + oldParentFrame.x + x * oldParentFrame.w - ox, oldParentFrame.y + y * oldParentFrame.h - oy, width, height);
-			new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control).shouldChangeFrame(control, newFrame, oldFrame, true);
-		}
+            Rect newFrame = new Rect(5 + oldParentFrame.x + x * oldParentFrame.w - ox,
+                                     oldParentFrame.y + y * oldParentFrame.h - oy,
+                                     width,
+                                     height);
+            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control)
+                                                           .shouldChangeFrame(control, newFrame, oldFrame, true);
+        }
 
-		public AtPoint(iVisualElement fireOn, iVisualElement inside, iVisualElement control, float x, float y, float width, float height, float ox, float oy) {
-			super(fireOn, inside, control);
-			this.oy = oy;
-			this.ox = ox;
-			this.x = x;
-			this.y = y;
-			this.width = width;
-			this.height = height;
-			Rect oldFrame = control.getFrame(null);
-			Rect oldParentFrame = inside.getFrame(null);
-			Rect newFrame = new Rect(oldParentFrame.x + x * oldParentFrame.w - ox, oldParentFrame.y + y * oldParentFrame.h - oy, width, height);
-			new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control).shouldChangeFrame(control, newFrame, oldFrame, true);
-		}
+        public
+        AtPoint(iVisualElement fireOn,
+                iVisualElement inside,
+                iVisualElement control,
+                float x,
+                float y,
+                float width,
+                float height,
+                float ox,
+                float oy) {
+            super(fireOn, inside, control);
+            this.oy = oy;
+            this.ox = ox;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            Rect oldFrame = control.getFrame(null);
+            Rect oldParentFrame = inside.getFrame(null);
+            Rect newFrame = new Rect(oldParentFrame.x + x * oldParentFrame.w - ox,
+                                     oldParentFrame.y + y * oldParentFrame.h - oy,
+                                     width,
+                                     height);
+            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control)
+                                                           .shouldChangeFrame(control, newFrame, oldFrame, true);
+        }
 
-		@Override
-		protected boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
-			Rect oldParentFrame = from.get(root).getFrame(null);
-			Rect newFrame = new Rect(oldParentFrame.x + x * oldParentFrame.w - ox, oldParentFrame.y + y * oldParentFrame.h - oy, currentRect.w, currentRect.h);
+        @Override
+        protected
+        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
+            Rect oldParentFrame = from.get(root).getFrame(null);
+            Rect newFrame = new Rect(oldParentFrame.x + x * oldParentFrame.w - ox,
+                                     oldParentFrame.y + y * oldParentFrame.h - oy,
+                                     currentRect.w,
+                                     currentRect.h);
 
-			if (newFrame.distanceFrom(currentRect) > 0) {
-				currentRect.setValue(newFrame);
-				return true;
-			}
-			return false;
-		}
-	}
+            if (newFrame.distanceFrom(currentRect) > 0) {
+                currentRect.setValue(newFrame);
+                return true;
+            }
+            return false;
+        }
+    }
 
-	public static
+    public static
     class AtPointBelow extends Constraint {
 
-		float oy;
+        float oy;
 
-		public AtPointBelow(iVisualElement fireOn, iVisualElement inside, iVisualElement control, float x, float y) {
-			super(fireOn, inside, control);
-			// this.oy = oy;
-			// this.ox = ox;
-			Rect oldParentFrame = inside.getFrame(null);
-			Rect oldFrame = control.getFrame(null);
+        public
+        AtPointBelow(iVisualElement fireOn, iVisualElement inside, iVisualElement control, float x, float y) {
+            super(fireOn, inside, control);
+            // this.oy = oy;
+            // this.ox = ox;
+            Rect oldParentFrame = inside.getFrame(null);
+            Rect oldFrame = control.getFrame(null);
 
-			oy = (float) (y - (oldParentFrame.y + oldParentFrame.h));
-		}
+            oy = (float) (y - (oldParentFrame.y + oldParentFrame.h));
+        }
 
-		@Override
-		protected boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
-			Rect oldParentFrame = from.get(root).getFrame(null);
-			float delta = (float) ((newRect.y+newRect.h)-(oldRect.y+oldRect.h));
+        @Override
+        protected
+        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
+            Rect oldParentFrame = from.get(root).getFrame(null);
+            float delta = (float) ((newRect.y + newRect.h) - (oldRect.y + oldRect.h));
 
 //			Rect newFrame = new Rect(oldParentFrame.x, oldParentFrame.y + oldParentFrame.h + oy, oldParentFrame.w, currentRect.h);
-			Rect newFrame = new Rect(oldParentFrame.x, currentRect.y+delta, oldParentFrame.w, currentRect.h);
+            Rect newFrame = new Rect(oldParentFrame.x, currentRect.y + delta, oldParentFrame.w, currentRect.h);
 
-			if (newFrame.distanceFrom(currentRect) > 0) {
-				currentRect.setValue(newFrame);
-				return true;
-			}
-			return false;
-		}
-	}
+            if (newFrame.distanceFrom(currentRect) > 0) {
+                currentRect.setValue(newFrame);
+                return true;
+            }
+            return false;
+        }
+    }
 
-	public static
+    public static
     class AtPointBelowMinWidth extends Constraint {
 
-		float oy;
-		private final float minWidth;
+        float oy;
+        private final float minWidth;
 
-		public AtPointBelowMinWidth(iVisualElement fireOn, iVisualElement inside, iVisualElement control, float x, float y, float minWidth) {
-			super(fireOn, inside, control);
-			this.minWidth = minWidth;
-			// this.oy = oy;
-			// this.ox = ox;
-			Rect oldParentFrame = inside.getFrame(null);
-			Rect oldFrame = control.getFrame(null);
+        public
+        AtPointBelowMinWidth(iVisualElement fireOn,
+                             iVisualElement inside,
+                             iVisualElement control,
+                             float x,
+                             float y,
+                             float minWidth) {
+            super(fireOn, inside, control);
+            this.minWidth = minWidth;
+            // this.oy = oy;
+            // this.ox = ox;
+            Rect oldParentFrame = inside.getFrame(null);
+            Rect oldFrame = control.getFrame(null);
 
-			oy = (float) (y - (oldParentFrame.y + oldParentFrame.h));
-		}
+            oy = (float) (y - (oldParentFrame.y + oldParentFrame.h));
+        }
 
-		@Override
-		protected boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
-			Rect oldParentFrame = from.get(root).getFrame(null);
+        @Override
+        protected
+        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
+            Rect oldParentFrame = from.get(root).getFrame(null);
 
-			Rect newFrame = new Rect(oldParentFrame.x, oldParentFrame.y + oldParentFrame.h + oy, Math.max(minWidth, oldParentFrame.w), currentRect.h);
+            Rect newFrame = new Rect(oldParentFrame.x,
+                                     oldParentFrame.y + oldParentFrame.h + oy,
+                                     Math.max(minWidth, oldParentFrame.w),
+                                     currentRect.h);
 
-			if (newFrame.distanceFrom(currentRect) > 0) {
-				currentRect.setValue(newFrame);
-				return true;
-			}
-			return false;
-		}
-	}
+            if (newFrame.distanceFrom(currentRect) > 0) {
+                currentRect.setValue(newFrame);
+                return true;
+            }
+            return false;
+        }
+    }
 
-	public static
+    public static
     class RectangleAllocatorConstraint extends Constraint {
 
-		private final VisualElementProperty<RectangleAllocator> allocator;
+        private final VisualElementProperty<RectangleAllocator> allocator;
 
-		public RectangleAllocatorConstraint(iVisualElement fireOn, iVisualElement from, iVisualElement to, VisualElementProperty<RectangleAllocator> allocator) {
-			super(fireOn, from, to);
-			this.allocator = allocator;
-		}
+        public
+        RectangleAllocatorConstraint(iVisualElement fireOn,
+                                     iVisualElement from,
+                                     iVisualElement to,
+                                     VisualElementProperty<RectangleAllocator> allocator) {
+            super(fireOn, from, to);
+            this.allocator = allocator;
+        }
 
-		@Override
-		protected boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
-			Rect oldParentFrame = from.get(root).getFrame(null);
+        @Override
+        protected
+        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
+            Rect oldParentFrame = from.get(root).getFrame(null);
 
-			RectangleAllocator a = allocator.get(from.get(root));
-			if (a == null)
-				return false;
+            RectangleAllocator a = allocator.get(from.get(root));
+            if (a == null) return false;
 
-			Rect r = new Rect(oldParentFrame.x + oldParentFrame.w + 10, currentRect.y, currentRect.w, currentRect.h);
-			r = a.allocate(to.get(root).getUniqueID(), r, RectangleAllocator.Move.down, 5);
-			if (currentRect.equals(r))
-				return false;
+            Rect r = new Rect(oldParentFrame.x + oldParentFrame.w + 10, currentRect.y, currentRect.w, currentRect.h);
+            r = a.allocate(to.get(root).getUniqueID(), r, RectangleAllocator.Move.down, 5);
+            if (currentRect.equals(r)) return false;
 
-			currentRect.setValue(r);
-			return true;
-		}
+            currentRect.setValue(r);
+            return true;
+        }
 
-	}
+    }
 
-	public abstract static
+    public abstract static
     class Constraint {
-		VisualElementReference fireOn;
+        VisualElementReference fireOn;
 
-		VisualElementReference from;
+        VisualElementReference from;
 
-		VisualElementReference to;
+        VisualElementReference to;
 
-		boolean inside = false;
+        boolean inside = false;
 
-		public Constraint(iVisualElement fireOn, iVisualElement from, iVisualElement to) {
-			this.fireOn = new VisualElementReference(fireOn);
-			this.from = new VisualElementReference(from);
-			this.to = new VisualElementReference(to);
-		}
+        public
+        Constraint(iVisualElement fireOn, iVisualElement from, iVisualElement to) {
+            this.fireOn = new VisualElementReference(fireOn);
+            this.from = new VisualElementReference(from);
+            this.to = new VisualElementReference(to);
+        }
 
-		public boolean fire(iVisualElement root, Rect newRect, Rect oldRect) {
-			if (inside)
-				return false;
-			inside = true;
+        public
+        boolean fire(iVisualElement root, Rect newRect, Rect oldRect) {
+            if (inside) return false;
+            inside = true;
 
-			if (to == null || to.get(root) == null)
-				return false;
-			if (from == null || from.get(root) == null)
-				return false;
+            if (to == null || to.get(root) == null) return false;
+            if (from == null || from.get(root) == null) return false;
 
-			Rect currentRect = to.get(root).getFrame(null);
-			Rect oldCurrentRect = to.get(root).getFrame(null);
-			boolean b = doFire(root, newRect, oldRect, currentRect);
-			if (b) {
-				new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(to.get(root)).shouldChangeFrame(to.get(root), currentRect, oldCurrentRect, true);
-			}
-			inside = false;
-			return b;
-		}
+            Rect currentRect = to.get(root).getFrame(null);
+            Rect oldCurrentRect = to.get(root).getFrame(null);
+            boolean b = doFire(root, newRect, oldRect, currentRect);
+            if (b) {
+                new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(to.get(root))
+                                                               .shouldChangeFrame(to.get(root),
+                                                                                  currentRect,
+                                                                                  oldCurrentRect,
+                                                                                  true);
+            }
+            inside = false;
+            return b;
+        }
 
-		protected abstract boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect);
-	}
+        protected abstract
+        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect);
+    }
 
-	public class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    public
+    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
 
-		public <T> void deleteProperty(VisualElementProperty<T> p) {
-		}
+        public
+        <T> void deleteProperty(VisualElementProperty<T> p) {
+        }
 
-		public void dispose() {
-		}
+        public
+        void dispose() {
+        }
 
-		public Rect getFrame(Rect out) {
-			return null;
-		}
+        public
+        Rect getFrame(Rect out) {
+            return null;
+        }
 
-		public <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
-			if (p == overrides)
-				return (T) elementOverride;
-			Object o = properties.get(p);
-			return (T) o;
-		}
+        public
+        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+            if (p == overrides) return (T) elementOverride;
+            Object o = properties.get(p);
+            return (T) o;
+        }
 
-		public String getUniqueID() {
-			return pluginId;
-		}
+        public
+        String getUniqueID() {
+            return pluginId;
+        }
 
-		public Map<Object, Object> payload() {
-			return properties;
-		}
+        public
+        Map<Object, Object> payload() {
+            return properties;
+        }
 
-		public void setFrame(Rect out) {
-		}
+        public
+        void setFrame(Rect out) {
+        }
 
-		public iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
-			properties = t;
-			return this;
-		}
+        public
+        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+            properties = t;
+            return this;
+        }
 
-		public <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
-			properties.put(p, to);
-			return this;
-		}
+        public
+        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+            properties.put(p, to);
+            return this;
+        }
 
-		public void setUniqueID(String uid) {
-		}
-	}
+        public
+        void setUniqueID(String uid) {
+        }
+    }
 
-	public class Overrides extends iVisualElementOverrides.DefaultOverride {
-		@Override
-		public VisitCode deleted(iVisualElement source) {
+    public
+    class Overrides extends iVisualElementOverrides.DefaultOverride {
+        @Override
+        public
+        VisitCode deleted(iVisualElement source) {
 
-			constraints.remove(source);
-			Iterator<Entry<iVisualElement, Collection<Constraint>>> i = constraints.entrySet().iterator();
-			while (i.hasNext()) {
-				Entry<iVisualElement, Collection<Constraint>> e = i.next();
-				Iterator<Constraint> q = e.getValue().iterator();
-				while (q.hasNext()) {
-					Constraint c = q.next();
-					if (c.fireOn == source || c.from == source || c.to == source) {
-						q.remove();
-					}
-				}
-			}
+            constraints.remove(source);
+            Iterator<Entry<iVisualElement, Collection<Constraint>>> i = constraints.entrySet().iterator();
+            while (i.hasNext()) {
+                Entry<iVisualElement, Collection<Constraint>> e = i.next();
+                Iterator<Constraint> q = e.getValue().iterator();
+                while (q.hasNext()) {
+                    Constraint c = q.next();
+                    if (c.fireOn == source || c.from == source || c.to == source) {
+                        q.remove();
+                    }
+                }
+            }
 
-			return VisitCode.cont;
-		}
+            return VisitCode.cont;
+        }
 
-		@Override
-		public VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-			List<Constraint> list = constraints.getList(source);
-			if (list != null) {
-				for (Constraint c : list) {
-					c.fire(root, newFrame, oldFrame);
-				}
-			}
-			return VisitCode.cont;
-		}
-	}
+        @Override
+        public
+        VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+            List<Constraint> list = constraints.getList(source);
+            if (list != null) {
+                for (Constraint c : list) {
+                    c.fire(root, newFrame, oldFrame);
+                }
+            }
+            return VisitCode.cont;
+        }
+    }
 
-	public static final String pluginId = "//plugin_simpleConstraints";
+    public static final String pluginId = "//plugin_simpleConstraints";
 
-	public static final VisualElementProperty<SimpleConstraints> simpleConstraints_plugin = new VisualElementProperty<SimpleConstraints>("simpleConstraints_plugin");
+    public static final VisualElementProperty<SimpleConstraints> simpleConstraints_plugin =
+            new VisualElementProperty<SimpleConstraints>("simpleConstraints_plugin");
 
-	private final field.core.plugins.SimpleConstraints.LocalVisualElement lve;
+    private final field.core.plugins.SimpleConstraints.LocalVisualElement lve;
 
-	private iVisualElement root;
+    private iVisualElement root;
 
-	private SelectionGroup<iComponent> group;
+    private SelectionGroup<iComponent> group;
 
-	HashMapOfLists<iVisualElement, Constraint> constraints = new HashMapOfLists<iVisualElement, Constraint>();
+    HashMapOfLists<iVisualElement, Constraint> constraints = new HashMapOfLists<iVisualElement, Constraint>();
 
-	iVisualElementOverrides elementOverride;
+    iVisualElementOverrides elementOverride;
 
-	Map<Object, Object> properties = new HashMap<Object, Object>();
+    Map<Object, Object> properties = new HashMap<Object, Object>();
 
-	public SimpleConstraints() {
-		lve = new LocalVisualElement();
+    public
+    SimpleConstraints() {
+        lve = new LocalVisualElement();
 
-	}
+    }
 
-	public void addConstraint(Constraint c) {
-		constraints.addToList(c.fireOn.get(root), c);
-	}
+    public
+    void addConstraint(Constraint c) {
+        constraints.addToList(c.fireOn.get(root), c);
+    }
 
-	public void close() {
-	}
+    public
+    void close() {
+    }
 
-	public Object getPersistanceInformation() {
-		return new Pair<String, Collection<Collection<Constraint>>>(pluginId + "version_1", new ArrayList(constraints.values()));
-	}
+    public
+    Object getPersistanceInformation() {
+        return new Pair<String, Collection<Collection<Constraint>>>(pluginId + "version_1",
+                                                                    new ArrayList(constraints.values()));
+    }
 
-	public iVisualElement getWellKnownVisualElement(String id) {
-		if (id.equals(pluginId))
-			return lve;
-		return null;
-	}
+    public
+    iVisualElement getWellKnownVisualElement(String id) {
+        if (id.equals(pluginId)) return lve;
+        return null;
+    }
 
-	public void registeredWith(iVisualElement root) {
+    public
+    void registeredWith(iVisualElement root) {
 
-		this.root = root;
+        this.root = root;
 
-		// add a next
-		// to root that
-		// adds some
-		// overrides
-		root.addChild(lve);
+        // add a next
+        // to root that
+        // adds some
+        // overrides
+        root.addChild(lve);
 
-		lve.setProperty(simpleConstraints_plugin, this);
-		// register for
-		// selection
-		// updates? (no,
-		// do it in
-		// subclass)
-		group = root.getProperty(iVisualElement.selectionGroup);
+        lve.setProperty(simpleConstraints_plugin, this);
+        // register for
+        // selection
+        // updates? (no,
+        // do it in
+        // subclass)
+        group = root.getProperty(iVisualElement.selectionGroup);
 
-		elementOverride = createElementOverrides();
-	}
+        elementOverride = createElementOverrides();
+    }
 
-	public void setPersistanceInformation(Object o) {
-		if (o instanceof Pair) {
-			Pair<String, Collection<Collection<Constraint>>> p = (Pair<String, Collection<Collection<Constraint>>>) o;
-			if (p.left.equals(pluginId + "version_1")) {
-				for (Collection<Constraint> cc : p.right) {
-					for (Constraint c : cc)
-						constraints.addToList(c.fireOn.get(root), c);
-				}
-			}
-		}
-	}
+    public
+    void setPersistanceInformation(Object o) {
+        if (o instanceof Pair) {
+            Pair<String, Collection<Collection<Constraint>>> p = (Pair<String, Collection<Collection<Constraint>>>) o;
+            if (p.left.equals(pluginId + "version_1")) {
+                for (Collection<Constraint> cc : p.right) {
+                    for (Constraint c : cc)
+                        constraints.addToList(c.fireOn.get(root), c);
+                }
+            }
+        }
+    }
 
-	public void update() {
-	}
+    public
+    void update() {
+    }
 
-	protected iVisualElementOverrides createElementOverrides() {
-		return new Overrides().setVisualElement(lve);
-	}
+    protected
+    iVisualElementOverrides createElementOverrides() {
+        return new Overrides().setVisualElement(lve);
+    }
 
 }

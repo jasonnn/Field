@@ -4,76 +4,85 @@ import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
-public class TextOnlyProgressBar {
+public
+class TextOnlyProgressBar {
 
-	private final int width;
-	private final String prefix;
-	private final long start;
-	private long lastnow;
+    private final int width;
+    private final String prefix;
+    private final long start;
+    private long lastnow;
 
-	float lastf = 0;
+    float lastf = 0;
 
-	public TextOnlyProgressBar(String prefix, int width) {
-		this.prefix = prefix;
-		this.width = width;
-		System.out.print(prefix + " |" + num(width, " ") + "| --\r");
-		start = System.currentTimeMillis();
-	}
+    public
+    TextOnlyProgressBar(String prefix, int width) {
+        this.prefix = prefix;
+        this.width = width;
+        System.out.print(prefix + " |" + num(width, " ") + "| --\r");
+        start = System.currentTimeMillis();
+    }
 
     private static
     String num(int w, String string) {
-        if (w<0) return "";
-		
-		StringBuilder f = new StringBuilder(w);
-		for (int i = 0; i < w; i++) {
-			f.append(string);
-		}
-		return f.toString();
-	}
+        if (w < 0) return "";
 
-	public void amount(float f) {
-		int n = (int) (width * f);
-		NumberFormat i = NumberFormat.getNumberInstance();
-		i.setMaximumFractionDigits(2);
-		NumberFormatter format = new NumberFormatter(i);
+        StringBuilder f = new StringBuilder(w);
+        for (int i = 0; i < w; i++) {
+            f.append(string);
+        }
+        return f.toString();
+    }
 
-		long now = System.currentTimeMillis();
+    public
+    void amount(float f) {
+        int n = (int) (width * f);
+        NumberFormat i = NumberFormat.getNumberInstance();
+        i.setMaximumFractionDigits(2);
+        NumberFormatter format = new NumberFormatter(i);
 
-		if (now - lastnow > 300 || (f == 1 && lastf != 1)) {
-			lastnow = now;
-			lastf = f;
+        long now = System.currentTimeMillis();
 
-			long secondsLeft = f == 1 ? (now-start)/1000 : (long) ((1-f)*(now - start)/f / 1000);
+        if (now - lastnow > 300 || (f == 1 && lastf != 1)) {
+            lastnow = now;
+            lastf = f;
 
-			long seconds = secondsLeft % 60;
-			long mins = (secondsLeft / 60) % 60;
-			long hours = ((secondsLeft / 60) / 60) % 24;
-			long days = ((secondsLeft / 60) / 60) / 24;
+            long secondsLeft = f == 1 ? (now - start) / 1000 : (long) ((1 - f) * (now - start) / f / 1000);
 
-			String left = seconds + "s";
-			if (mins > 0) {
-				left = mins + "m" + left;
-			}
-			if (hours > 0) {
-				left = hours + "h" + left;
-			}
-			if (days > 0) {
-				left = days + "d" + left;
-			}
+            long seconds = secondsLeft % 60;
+            long mins = (secondsLeft / 60) % 60;
+            long hours = ((secondsLeft / 60) / 60) % 24;
+            long days = ((secondsLeft / 60) / 60) / 24;
 
-			if (f==0)
-				left += " ";
-			else
-			if (f!=1)
-				left += " remaining";
-			else left = '(' +left+ ')';
-			
-			try {
-				System.out.print(ANSIColorUtils.eraseLine() + prefix + " |" + num(n, "*") + num(width - n, " ") + "| " + format.valueToString(f * 100) + "% " + left + '\r');
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+            String left = seconds + "s";
+            if (mins > 0) {
+                left = mins + "m" + left;
+            }
+            if (hours > 0) {
+                left = hours + "h" + left;
+            }
+            if (days > 0) {
+                left = days + "d" + left;
+            }
+
+            if (f == 0) left += " ";
+            else if (f != 1) left += " remaining";
+            else left = '(' + left + ')';
+
+            try {
+                System.out.print(ANSIColorUtils.eraseLine()
+                                 + prefix
+                                 + " |"
+                                 + num(n, "*")
+                                 + num(width - n, " ")
+                                 + "| "
+                                 + format.valueToString(f * 100)
+                                 + "% "
+                                 + left
+                                 + '\r');
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

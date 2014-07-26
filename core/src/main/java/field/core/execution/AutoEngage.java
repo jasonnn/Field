@@ -12,38 +12,42 @@ import java.util.List;
 /**
  * used to parse a command line for executing loaded sheets automatically
  */
-public class AutoEngage {
+public
+class AutoEngage {
 
-	private final iVisualElement root;
+    private final iVisualElement root;
 
-	int delay = SystemProperties.getIntProperty("autoDelay", 0);
+    int delay = SystemProperties.getIntProperty("autoDelay", 0);
 
-	public AutoEngage(iVisualElement root) {
-		this.root = root;
-	}
+    public
+    AutoEngage(iVisualElement root) {
+        this.root = root;
+    }
 
-	public void start(final String spec) {
-		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+    public
+    void start(final String spec) {
+        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
 
-			int t = 0;
+            int t = 0;
 
-			public void update() {
+            public
+            void update() {
 
-				if (t == delay) {
+                if (t == delay) {
 
-					String[] parts = spec.split(";");
+                    String[] parts = spec.split(";");
 
-					for (String s : parts) {
+                    for (String s : parts) {
                         //System.out.println(" looking up <" + s + ">");
                         startElement(s);
-					}
-					Launcher.getLauncher().deregisterUpdateable(this);
-				}
+                    }
+                    Launcher.getLauncher().deregisterUpdateable(this);
+                }
 
-				t++;
+                t++;
 
-			}
-		});
+            }
+        });
 
 //		new Thread() {
 //			long m = System.currentTimeMillis();
@@ -64,33 +68,34 @@ public class AutoEngage {
 //			};
 //		}.start();
 
-	}
+    }
 
     protected static
     void startElement(iVisualElement v) {
 
         //System.out.println(" :::::::::::::: starting <" + v + ">");
-        PseudoPropertiesPlugin.begin.get(v).call(new Object[] {});
+        PseudoPropertiesPlugin.begin.get(v).call(new Object[]{});
 
-		// PythonScriptingSystem pss =
-		// PythonScriptingSystem.pythonScriptingSystem.get(v);
-		// iExecutesPromise executesPromise =
-		// iExecutesPromise.promiseExecution.get(v);
-		//
-		// Promise promise = pss.promiseForKey(v);
-		//
-		// executesPromise.addActive(new iFloatProvider() {
-		// public float evaluate() {
-		// return 0;
-		// }
-		// }, promise);
-	}
+        // PythonScriptingSystem pss =
+        // PythonScriptingSystem.pythonScriptingSystem.get(v);
+        // iExecutesPromise executesPromise =
+        // iExecutesPromise.promiseExecution.get(v);
+        //
+        // Promise promise = pss.promiseForKey(v);
+        //
+        // executesPromise.addActive(new iFloatProvider() {
+        // public float evaluate() {
+        // return 0;
+        // }
+        // }, promise);
+    }
 
-	protected void startElement(String s) {
-		List<iVisualElement> found = StandardFluidSheet.findVisualElementWithNameExpression(root, s);
-		for (iVisualElement v : found) {
-			startElement(v);
-		}
-	}
+    protected
+    void startElement(String s) {
+        List<iVisualElement> found = StandardFluidSheet.findVisualElementWithNameExpression(root, s);
+        for (iVisualElement v : found) {
+            startElement(v);
+        }
+    }
 
 }

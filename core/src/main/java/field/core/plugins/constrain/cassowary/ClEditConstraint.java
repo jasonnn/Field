@@ -11,26 +11,32 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-public class ClEditConstraint extends ClEditOrStayConstraint {
-	public ClEditConstraint(ClVariable clv, ClStrength strength, double weight) {
-		super(clv, strength, weight);
-	}
+public
+class ClEditConstraint extends ClEditOrStayConstraint {
+    public
+    ClEditConstraint(ClVariable clv, ClStrength strength, double weight) {
+        super(clv, strength, weight);
+    }
 
-	public ClEditConstraint(ClVariable clv, ClStrength strength) {
-		super(clv, strength);
-	}
+    public
+    ClEditConstraint(ClVariable clv, ClStrength strength) {
+        super(clv, strength);
+    }
 
-	public ClEditConstraint(ClVariable clv) {
-		super(clv);
-	}
+    public
+    ClEditConstraint(ClVariable clv) {
+        super(clv);
+    }
 
-	@Override
-	public boolean isEditConstraint() {
-		return true;
-	}
+    @Override
+    public
+    boolean isEditConstraint() {
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return "edit" + super.toString();
-	}
+    @Override
+    public
+    String toString() {
+        return "edit" + super.toString();
+    }
 }

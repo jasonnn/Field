@@ -14,9 +14,10 @@ import java.util.*;
 import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.*;
 
 /**
-* Created by jason on 7/14/14.
-*/
-public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHandler {
+ * Created by jason on 7/14/14.
+ */
+public abstract
+class Yield extends FieldASMGeneratorAdapter implements YieldHandler {
     private final int access;
 
     private final String className;
@@ -47,7 +48,14 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
 
     int yieldNumber = 0;
 
-    public Yield(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters, byte[] originalByteCode, String className) {
+    public
+    Yield(String name,
+          int access,
+          ASMMethod onMethod,
+          MethodVisitor delegateTo,
+          HashMap<String, Object> parameters,
+          byte[] originalByteCode,
+          String className) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.access = access;
@@ -65,7 +73,8 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
         ClassReader reader = new ClassReader(originalByteCode);
         typeAnalysis = new TypesClassVisitor(className, onMethod.getName() + onMethod.getDescriptor()) {
             @Override
-            protected boolean isYieldCall(String owner_classname, String name, String desc) {
+            protected
+            boolean isYieldCall(String owner_classname, String name, String desc) {
                 if ("field.bytecode.protect.yield.YieldUtilities".equalsIgnoreCase(owner_classname)
                     && "yield".equals(name)) {
                     return true;
@@ -80,7 +89,8 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
     }
 
     @Override
-    public void visitCode() {
+    public
+    void visitCode() {
         //if (StandardTrampoline.debug)
         //System.out.println(ANSIColorUtils.red(" yield begins "));
         super.visitCode();
@@ -94,7 +104,8 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
     }
 
     @Override
-    public void visitEnd() {
+    public
+    void visitEnd() {
         // insert jump table
         this.visitLabel(initialJumpLabel);
 
@@ -107,7 +118,10 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
 
         //if (StandardTrampoline.debug)
         //System.out.println(" we have <" + jumpLabels.size() + "> <" + startLabel + ">");
-        this.visitTableSwitchInsn(0, jumpLabels.size() - 1, startLabel, jumpLabels.toArray(new Label[jumpLabels.size()]));
+        this.visitTableSwitchInsn(0,
+                                  jumpLabels.size() - 1,
+                                  startLabel,
+                                  jumpLabels.toArray(new Label[jumpLabels.size()]));
 
         super.visitMaxs(0, 0);
         super.visitEnd();
@@ -116,18 +130,21 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
     }
 
     @Override
-    public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+    public
+    void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
         //if (StandardTrampoline.debug)
         //System.out.println(" local variable <" + name + "> <" + desc + "> <" + signature + "> <" + start + "> <" + end + "> index = <" + index + ">");
         super.visitLocalVariable(name, desc, signature, start, end, index);
     }
 
     @Override
-    public void visitMaxs(int maxStack, int maxLocals) {
+    public
+    void visitMaxs(int maxStack, int maxLocals) {
     }
 
     @Override
-    public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+    public
+    void visitMethodInsn(int opcode, String owner, String name, String desc) {
         // call it
         super.visitMethodInsn(opcode, owner, name, desc);
 
@@ -153,8 +170,7 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
                 // : localsToSave.getKey() + " " + m;
                 if (m.containsKey(localsToSave.getKey())) {
                     int mq = (Integer) m.get(localsToSave.getKey());
-                    if (mq > max)
-                        max = mq;
+                    if (mq > max) max = mq;
                     mm.put(mq, localsToSave.getValue());
                 }
             }
@@ -172,8 +188,7 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
                 //if (StandardTrampoline.debug)
                 //System.out.println(" loading <" + localsToSave.getKey() + ">");
                 this.loadLocal(localsToSave.getKey(), t);
-                if (!typeName.contains("/"))
-                    box(t);
+                if (!typeName.contains("/")) box(t);
 
                 //if (StandardTrampoline.debug)
                 //System.out.println(" type = <" + typeName + ">");
@@ -194,15 +209,19 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
             // here it comes
             if (onMethod.getReturnType().getSort() == Type.OBJECT) {
                 visitInsn(Opcodes.ARETURN);
-            } else if (onMethod.getReturnType() == Type.INT_TYPE) {
+            }
+            else if (onMethod.getReturnType() == Type.INT_TYPE) {
                 unbox(ASMType.INT_TYPE);
                 super.visitInsn(Opcodes.IRETURN);
-            } else if (onMethod.getReturnType() == Type.FLOAT_TYPE) {
+            }
+            else if (onMethod.getReturnType() == Type.FLOAT_TYPE) {
                 unbox(ASMType.FLOAT_TYPE);
                 super.visitInsn(Opcodes.FRETURN);
-            } else if (onMethod.getReturnType() == Type.VOID_TYPE) {
+            }
+            else if (onMethod.getReturnType() == Type.VOID_TYPE) {
                 super.visitInsn(Opcodes.RETURN);
-            } else {
+            }
+            else {
                 assert false : onMethod.getReturnType();
             }
 
@@ -236,8 +255,7 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
                 if (typeName.contains("/")) {
                     this.checkCast(t);
                 }
-                if (!typeName.contains("/"))
-                    unbox(t);
+                if (!typeName.contains("/")) unbox(t);
                 this.storeLocal(localsToSave.getKey(), t);
             }
 
@@ -249,7 +267,8 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
     }
 
     @Override
-    public void visitVarInsn(int opcode, int var) {
+    public
+    void visitVarInsn(int opcode, int var) {
         super.visitVarInsn(opcode, var);
 
         Map m = (Map) ReflectionTools.illegalGetObject(this, "locals");
@@ -262,13 +281,16 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
                 if ((opcode == Opcodes.ASTORE) || (opcode == Opcodes.ALOAD)) {
                     validLocals.add(var);
                     validLocalTypes.add(null);
-                } else if ((opcode == Opcodes.ISTORE) || (opcode == Opcodes.ILOAD)) {
+                }
+                else if ((opcode == Opcodes.ISTORE) || (opcode == Opcodes.ILOAD)) {
                     validLocals.add(var);
                     validLocalTypes.add(Type.INT_TYPE);
-                } else if ((opcode == Opcodes.FSTORE) || (opcode == Opcodes.FLOAD)) {
+                }
+                else if ((opcode == Opcodes.FSTORE) || (opcode == Opcodes.FLOAD)) {
                     validLocals.add(var);
                     validLocalTypes.add(Type.FLOAT_TYPE);
-                } else {
+                }
+                else {
                     if (StandardTrampoline.debug)
                         ;//System.out.println(" opcode is <" + opcode + "> for <" + var + ">");
                 }
@@ -287,5 +309,10 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
     Object[] yieldLoad(String fromName, Object fromThis, String methodName);
 
     public abstract
-    Object yieldStore(Object wasReturn, Object[] localStorage, String fromName, Object fromThis, String methodName, int resumeLabel);
+    Object yieldStore(Object wasReturn,
+                      Object[] localStorage,
+                      String fromName,
+                      Object fromThis,
+                      String methodName,
+                      int resumeLabel);
 }

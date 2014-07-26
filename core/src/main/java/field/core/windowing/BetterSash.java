@@ -14,88 +14,93 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Sash;
 
 @Woven
-public class BetterSash {
+public
+class BetterSash {
 
-	public static final boolean lockSashes = SystemProperties.getIntProperty("lockSashes", 0)==1;
-	
-	private Sash sash;
+    public static final boolean lockSashes = SystemProperties.getIntProperty("lockSashes", 0) == 1;
 
-	boolean hidden = false;
+    private Sash sash;
 
-	private final SashForm f;
+    boolean hidden = false;
 
-	private int[] were;
+    private final SashForm f;
 
-	private final boolean closesRight;
+    private int[] were;
 
-	public BetterSash(final SashForm f, boolean closesRight) {
-		this.f = f;
-		this.closesRight = closesRight;
+    private final boolean closesRight;
 
-		for (int i = 0; i < f.getChildren().length; i++) {
+    public
+    BetterSash(final SashForm f, boolean closesRight) {
+        this.f = f;
+        this.closesRight = closesRight;
 
-			if (!(f.getChildren()[i] instanceof Sash))
-				continue;
+        for (int i = 0; i < f.getChildren().length; i++) {
 
-			sash = (Sash) f.getChildren()[i];
-			if (lockSashes) sash.setVisible(false);
-			sash.addControlListener(new ControlListener() {
+            if (!(f.getChildren()[i] instanceof Sash)) continue;
 
-				@Override
-				public void controlMoved(ControlEvent e) {
+            sash = (Sash) f.getChildren()[i];
+            if (lockSashes) sash.setVisible(false);
+            sash.addControlListener(new ControlListener() {
+
+                @Override
+                public
+                void controlMoved(ControlEvent e) {
                     //System.out.println(" sash moved :" + e);
                 }
 
-				@Override
-				public void controlResized(ControlEvent e) {
+                @Override
+                public
+                void controlResized(ControlEvent e) {
                     //System.out.println(" sash resized:" + e);
 
-				}
-			});
+                }
+            });
 
-			sash.setToolTipText("Double-click to hide, drag to move");
+            sash.setToolTipText("Double-click to hide, drag to move");
 
-			sash.addMouseListener(new MouseListener() {
+            sash.addMouseListener(new MouseListener() {
 
-				@Override
-				public void mouseUp(MouseEvent e) {
-				}
+                @Override
+                public
+                void mouseUp(MouseEvent e) {
+                }
 
-				@Override
-				public void mouseDown(MouseEvent e) {
-					if (hidden) {
-						unhide();
-					}
-				}
+                @Override
+                public
+                void mouseDown(MouseEvent e) {
+                    if (hidden) {
+                        unhide();
+                    }
+                }
 
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					if (!hidden) {
-						hide();
-					}
-				}
-			});
+                @Override
+                public
+                void mouseDoubleClick(MouseEvent e) {
+                    if (!hidden) {
+                        hide();
+                    }
+                }
+            });
 
-			sash.addPaintListener(new PaintListener() {
+            sash.addPaintListener(new PaintListener() {
 
-				@Override
-				public void paintControl(PaintEvent e) {
+                @Override
+                public
+                void paintControl(PaintEvent e) {
 
-					e.gc.setClipping((Rectangle) null);
-					e.gc.setAdvanced(true);
-					
-					
+                    e.gc.setClipping((Rectangle) null);
+                    e.gc.setAdvanced(true);
 
-					Control[] c = f.getChildren();
+
+                    Control[] c = f.getChildren();
 
 //					e.gc.setBackground(new Color(Launcher.display, 0,0,0));
 //					e.gc.setForeground(new Color(Launcher.display, 0,0,0));
 //					e.gc.setAlpha(128);
-					
-					 e.gc.fillRectangle(0, 0, e.width,
-					 e.height);
-					
-					if (f.getOrientation() == SWT.HORIZONTAL) {
+
+                    e.gc.fillRectangle(0, 0, e.width, e.height);
+
+                    if (f.getOrientation() == SWT.HORIZONTAL) {
 //						Path p = new Path(Launcher.display);
 //						p.moveTo(0,0);
 //						p.lineTo((e.width-1)/2, (e.width-1)/2);
@@ -108,15 +113,14 @@ public class BetterSash {
 //						p.lineTo((e.width-1), e.height-1);
 //						p.lineTo(0, e.height-1);
 //						e.gc.drawPath(p);
-						
+
 //						e.gc.setAlpha(30);
 //						e.gc.setLineDash(new int[]{4,8});
 //						e.gc.drawLine( (e.width-1)/2, (e.width-1)/2, (e.width-1)/2, e.height-1-(e.width-1)/2);
 //						e.gc.setAlpha(128);
 
-					}
-					else
-					{
+                    }
+                    else {
 //						Path p = new Path(Launcher.display);
 //						p.moveTo(0,0);
 //						p.lineTo((e.height-1)/2, (e.height-1)/2);
@@ -134,54 +138,86 @@ public class BetterSash {
 //						e.gc.setLineDash(new int[]{4,8});
 //						e.gc.drawLine ( (e.height-1)/2, (e.height-1)/2, e.width-1-(e.height-1)/2, (e.height-1)/2);
 //						e.gc.setAlpha(128);
-					}
-					int r = 2;
-					if (f.getOrientation() == SWT.HORIZONTAL) {
-						e.gc.setAlpha(5);
-						e.gc.setBackgroundPattern(new Pattern(Launcher.display, 0, 0, e.width/2, 0, new Color(Launcher.display, 255, 255, 255), 0, new Color(Launcher.display, 255, 255, 255), 20));
-						e.gc.fillRoundRectangle(-e.width/2,0, e.width, e.height-1, r, r);
-						e.gc.setBackgroundPattern(new Pattern(Launcher.display, e.width, 0, e.width/2, 0, new Color(Launcher.display, 255, 255, 255), 0, new Color(Launcher.display, 255, 255, 255), 20));
-						e.gc.fillRoundRectangle(e.width/2,0, e.width, e.height-1, r, r);
+                    }
+                    int r = 2;
+                    if (f.getOrientation() == SWT.HORIZONTAL) {
+                        e.gc.setAlpha(5);
+                        e.gc.setBackgroundPattern(new Pattern(Launcher.display,
+                                                              0,
+                                                              0,
+                                                              e.width / 2,
+                                                              0,
+                                                              new Color(Launcher.display, 255, 255, 255),
+                                                              0,
+                                                              new Color(Launcher.display, 255, 255, 255),
+                                                              20));
+                        e.gc.fillRoundRectangle(-e.width / 2, 0, e.width, e.height - 1, r, r);
+                        e.gc.setBackgroundPattern(new Pattern(Launcher.display,
+                                                              e.width,
+                                                              0,
+                                                              e.width / 2,
+                                                              0,
+                                                              new Color(Launcher.display, 255, 255, 255),
+                                                              0,
+                                                              new Color(Launcher.display, 255, 255, 255),
+                                                              20));
+                        e.gc.fillRoundRectangle(e.width / 2, 0, e.width, e.height - 1, r, r);
 //						e.gc.drawRoundRectangle(e.width/2,0, e.width, e.height-1, e.width, e.width);
 //						e.gc.drawRoundRectangle(-e.width/2,0, e.width, e.height-1, e.width, e.width);
-					} else {
-						e.gc.setAlpha(5);
-						e.gc.setBackgroundPattern(new Pattern(Launcher.display, 0, 0, 0, e.height/2, new Color(Launcher.display, 255, 255, 255), 0, new Color(Launcher.display, 255, 255, 255), 20));
-						e.gc.fillRoundRectangle(0, -e.height/2, e.width-1, e.height, r,r);
-						e.gc.setBackgroundPattern(new Pattern(Launcher.display, 0, e.height, 0, e.height/2, new Color(Launcher.display, 255, 255, 255), 0, new Color(Launcher.display, 255, 255, 255), 20));
-						e.gc.fillRoundRectangle(0, e.height/2, e.width-1, e.height, r,r);
+                    }
+                    else {
+                        e.gc.setAlpha(5);
+                        e.gc.setBackgroundPattern(new Pattern(Launcher.display,
+                                                              0,
+                                                              0,
+                                                              0,
+                                                              e.height / 2,
+                                                              new Color(Launcher.display, 255, 255, 255),
+                                                              0,
+                                                              new Color(Launcher.display, 255, 255, 255),
+                                                              20));
+                        e.gc.fillRoundRectangle(0, -e.height / 2, e.width - 1, e.height, r, r);
+                        e.gc.setBackgroundPattern(new Pattern(Launcher.display,
+                                                              0,
+                                                              e.height,
+                                                              0,
+                                                              e.height / 2,
+                                                              new Color(Launcher.display, 255, 255, 255),
+                                                              0,
+                                                              new Color(Launcher.display, 255, 255, 255),
+                                                              20));
+                        e.gc.fillRoundRectangle(0, e.height / 2, e.width - 1, e.height, r, r);
 //						e.gc.drawRoundRectangle(0, e.height/2, e.width-1, e.height, e.height, e.height);
 //						e.gc.drawRoundRectangle(0, -e.height/2, e.width-1, e.height, e.height, e.height);
-					}
-				}
-			});
-		}
+                    }
+                }
+            });
+        }
 
-	}
+    }
 
-	@NextUpdate
-	protected void hide() {
+    @NextUpdate
+    protected
+    void hide() {
 
-		were = f.getWeights();
+        were = f.getWeights();
 
-		if (closesRight)
-			f.setWeights(new int[] { 1, 0 });
-		else
-			f.setWeights(new int[] { 0, 1 });
+        if (closesRight) f.setWeights(new int[]{1, 0});
+        else f.setWeights(new int[]{0, 1});
 
-		hidden = true;
-	}
+        hidden = true;
+    }
 
-	@NextUpdate
-	protected void unhide() {
-		f.setWeights(were);
-		hidden = false;
-	}
+    @NextUpdate
+    protected
+    void unhide() {
+        f.setWeights(were);
+        hidden = false;
+    }
 
-	public void toggle() {
-		if (hidden)
-			unhide();
-		else
-			hide();
-	}
+    public
+    void toggle() {
+        if (hidden) unhide();
+        else hide();
+    }
 }

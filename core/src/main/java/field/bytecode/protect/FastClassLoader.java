@@ -8,18 +8,22 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class FastClassLoader extends URLClassLoader {
+public
+class FastClassLoader extends URLClassLoader {
     private static final Logger log = Logger.getLogger(FastClassLoader.class.getName());
 
-    public FastClassLoader(URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
+    public
+    FastClassLoader(URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
         super(urls, parent, factory);
     }
 
-    public FastClassLoader(URL[] urls, ClassLoader parent) {
+    public
+    FastClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
     }
 
-    public FastClassLoader(URL[] urls) {
+    public
+    FastClassLoader(URL[] urls) {
         super(urls);
     }
 
@@ -28,10 +32,12 @@ public class FastClassLoader extends URLClassLoader {
     long loadedmaphash = -1;
 
     {
-        final String filename = System.getProperty("user.home") + "/Library/Application Support/Field" + "/classmap.xml";
+        final String filename =
+                System.getProperty("user.home") + "/Library/Application Support/Field" + "/classmap.xml";
         try {
 
-            ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File(filename))));
+            ObjectInputStream ois =
+                    new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File(filename))));
             //noinspection unchecked
             a = (Map<String, String>) ois.readObject();
             ois.close();
@@ -46,7 +52,8 @@ public class FastClassLoader extends URLClassLoader {
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
-            public void run() {
+            public
+            void run() {
 
                 try {
 
@@ -55,7 +62,8 @@ public class FastClassLoader extends URLClassLoader {
 
                     a.put("__maphash__", String.valueOf(maphash));
 
-                    ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(new File(filename))));
+                    ObjectOutputStream oos =
+                            new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(new File(filename))));
                     oos.writeObject(a);
                     oos.close();
 
@@ -71,7 +79,8 @@ public class FastClassLoader extends URLClassLoader {
     }
 
     @Override
-    protected void addURL(URL url) {
+    protected
+    void addURL(URL url) {
         try {
             URI uri = url.toURI();
             super.addURL(url);
@@ -85,7 +94,8 @@ public class FastClassLoader extends URLClassLoader {
     boolean skipped = false;
 
     @Override
-    public URL findResource(String name) {
+    public
+    URL findResource(String name) {
         if (maphash == loadedmaphash) {
             String q = a.get(name);
             if (q != null) {
@@ -95,11 +105,15 @@ public class FastClassLoader extends URLClassLoader {
                 }
             }
 
-            if (a.containsKey(name))
-                return null;
-        } else {
+            if (a.containsKey(name)) return null;
+        }
+        else {
             if (!skipped) {
-                log.warning("WARNING: skipping cache, classpath is not final or correct <" + maphash + " " + loadedmaphash + ">. This is completely benign, but starting Field might take longer than usual.");
+                log.warning("WARNING: skipping cache, classpath is not final or correct <"
+                            + maphash
+                            + " "
+                            + loadedmaphash
+                            + ">. This is completely benign, but starting Field might take longer than usual.");
                 skipped = true;
             }
         }
@@ -114,19 +128,22 @@ public class FastClassLoader extends URLClassLoader {
     }
 
     @Override
-    protected Class<?> findClass(String name) throws ClassNotFoundException {
+    protected
+    Class<?> findClass(String name) throws ClassNotFoundException {
         log.info(" find class <" + name + ">");
         return super.findClass(name);
     }
 
     @Override
-    protected String findLibrary(String libname) {
+    protected
+    String findLibrary(String libname) {
         log.info(" find library <" + libname + ">");
         return super.findLibrary(libname);
     }
 
     @Override
-    public Enumeration<URL> findResources(String name) throws IOException {
+    public
+    Enumeration<URL> findResources(String name) throws IOException {
         log.info(" find resources <" + name + ">");
         return super.findResources(name);
     }

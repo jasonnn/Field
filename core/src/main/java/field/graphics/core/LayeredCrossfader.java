@@ -9,104 +9,111 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LayeredCrossfader {
+public
+class LayeredCrossfader {
 
-	private final int width;
-	private final int height;
-	private final int layers;
-	private final LayeredFrameBuffer a;
-	private final LayeredFrameBuffer b;
+    private final int width;
+    private final int height;
+    private final int layers;
+    private final LayeredFrameBuffer a;
+    private final LayeredFrameBuffer b;
 
-	List<iDisplayable> withA = new ArrayList<iDisplayable>();
-	List<iDisplayable> withB = new ArrayList<iDisplayable>();
+    List<iDisplayable> withA = new ArrayList<iDisplayable>();
+    List<iDisplayable> withB = new ArrayList<iDisplayable>();
 
-	int cadence = 4;
-	int tick = 0;
+    int cadence = 4;
+    int tick = 0;
 
-	float alpha;
+    float alpha;
 
-	boolean updateA = false;
-	boolean updateB = false;
-	boolean clear = false;
+    boolean updateA = false;
+    boolean updateB = false;
+    boolean clear = false;
 
-	public boolean doClear = true;
+    public boolean doClear = true;
 
-	public LayeredCrossfader(FullScreenCanvasSWT canvas, final LayeredFrameBuffer buffer, int width, int height, int layers) {
-		this.width = width;
-		this.height = height;
-		this.layers = layers;
+    public
+    LayeredCrossfader(FullScreenCanvasSWT canvas, final LayeredFrameBuffer buffer, int width, int height, int layers) {
+        this.width = width;
+        this.height = height;
+        this.layers = layers;
 
-		buffer.setClearColor(null);
+        buffer.setClearColor(null);
 
-		a = new LayeredFrameBuffer(width, height, layers, true);
-		b = new LayeredFrameBuffer(width, height, layers, true);
+        a = new LayeredFrameBuffer(width, height, layers, true);
+        b = new LayeredFrameBuffer(width, height, layers, true);
 
-		canvas.getPostQueue().addUpdateable(new iUpdateable() {
+        canvas.getPostQueue().addUpdateable(new iUpdateable() {
 
-			@Override
-			public void update() {
-				if (updateA) {
+            @Override
+            public
+            void update() {
+                if (updateA) {
 //					System.out.println(" update A");
-					for (iDisplayable d : withA)
-						d.display();
-					a.display();
-					updateA = false;
-					clear = true;
-				}
-				if (updateB) {
+                    for (iDisplayable d : withA)
+                        d.display();
+                    a.display();
+                    updateA = false;
+                    clear = true;
+                }
+                if (updateB) {
 //					System.out.println(" update B");
-					for (iDisplayable d : withB)
-						d.display();
-					b.display();
-					updateB = false;
-					clear = true;
-				}
-			}
-		});
+                    for (iDisplayable d : withB)
+                        d.display();
+                    b.display();
+                    updateB = false;
+                    clear = true;
+                }
+            }
+        });
 
-		// attach a program and quad that copies buffer to a and b
+        // attach a program and quad that copies buffer to a and b
 
-		buffer.getSceneList().add(StandardPass.preTransform).register("__layered_cf__" + this, new iUpdateable() {
+        buffer.getSceneList().add(StandardPass.preTransform).register("__layered_cf__" + this, new iUpdateable() {
 
-			@Override
-			public void update() {
-				int d = GL11.glGetError();
+            @Override
+            public
+            void update() {
+                int d = GL11.glGetError();
 
-				tick++;
-				if (tick % cadence == 0) {
-					if (tick % (cadence * 2) == 0) {
-						updateA = true;
-					} else {
-						updateB = true;
-					}
-				}
+                tick++;
+                if (tick % cadence == 0) {
+                    if (tick % (cadence * 2) == 0) {
+                        updateA = true;
+                    }
+                    else {
+                        updateB = true;
+                    }
+                }
 
-				if (clear && doClear) {
+                if (clear && doClear) {
 //					System.out.println(" clear ");
-					GL11.glClearColor(0, 0, 0, 0);
-					GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-					clear = false;
-				}
+                    GL11.glClearColor(0, 0, 0, 0);
+                    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+                    clear = false;
+                }
 
-				int t = tick % (cadence * 2);
-				if (t > cadence)
-					t = 2 * cadence - t;
+                int t = tick % (cadence * 2);
+                if (t > cadence) t = 2 * cadence - t;
 
-				alpha = t / (float) cadence;
+                alpha = t / (float) cadence;
 
-			}
-		});
-	}
+            }
+        });
+    }
 
-	public LayeredFrameBuffer getA() {
-		return a;
-	}
+    public
+    LayeredFrameBuffer getA() {
+        return a;
+    }
 
-	public LayeredFrameBuffer getB() {
-		return b;
-	}
+    public
+    LayeredFrameBuffer getB() {
+        return b;
+    }
 
-	public float getAlpha() {
-		return alpha;
-	}
+    public
+    float getAlpha() {
+        return alpha;
+    }
 }

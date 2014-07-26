@@ -18,12 +18,14 @@ import static org.junit.Assert.*;
 /**
  * Created by jason on 7/21/14.
  */
-public class WovenTest extends AnnotatedMethodHandlersTest {
+public
+class WovenTest extends AnnotatedMethodHandlersTest {
 
     static final Class<MyWoven> toTest = MyWoven.class;
 
 
-    static void checkClass(Class<?> c) throws NoSuchMethodException {
+    static
+    void checkClass(Class<?> c) throws NoSuchMethodException {
         assertTrue(c.isAnnotationPresent(Woven.class));
         Method wovenMethod = c.getDeclaredMethod("wovenMethod", Integer.TYPE);
         assertNotNull(wovenMethod);
@@ -32,13 +34,15 @@ public class WovenTest extends AnnotatedMethodHandlersTest {
     }
 
     @Test
-    public void testSanity() throws Exception {
+    public
+    void testSanity() throws Exception {
         checkClass(toTest);
     }
 
 
     @Test
-    public void testInstrumentation() throws Exception {
+    public
+    void testInstrumentation() throws Exception {
 
         byte[] data = readClass(toTest);
 
@@ -46,9 +50,7 @@ public class WovenTest extends AnnotatedMethodHandlersTest {
         StringWriter post = new StringWriter();
 
         MainVisitorThing mainVisitorThing =
-                new MainVisitorThing(
-                        new CheckClassAdapter(
-                                new TraceClassVisitor(new PrintWriter(post))));
+                new MainVisitorThing(new CheckClassAdapter(new TraceClassVisitor(new PrintWriter(post))));
 
         new ClassReader(data).accept(new TraceClassVisitor(mainVisitorThing, new PrintWriter(pre)), 0);
 
@@ -57,7 +59,8 @@ public class WovenTest extends AnnotatedMethodHandlersTest {
     }
 
     @Test
-    public void testCreateInstance() throws Exception {
+    public
+    void testCreateInstance() throws Exception {
         //need ClassWriter.COMPUTE_FRAMES for java7
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 

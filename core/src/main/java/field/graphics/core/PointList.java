@@ -25,152 +25,160 @@ import static org.lwjgl.opengl.GL20.*;
  * for some applications, not so useful for others if you want: a variable
  * number of point sprites and / or a custom texturemap and / or hand control
  * over their size (via vertex program). you will need the classes above
- * 
+ * <p/>
  * attaching a program that has VERTEX_PROGRAM_POINT_SIZE_ARB set will let you
  * programmatically change point sizes (still, no change of textures)
  */
-public class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
+public
+class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
 
-	public static final boolean useATIPointSpriteWorkaround = SystemProperties.getIntProperty("useATIPointSpriteWorkaround", 0) == 1;
+    public static final boolean useATIPointSpriteWorkaround =
+            SystemProperties.getIntProperty("useATIPointSpriteWorkaround", 0) == 1;
 
-	boolean doDynamicFrameRateCulling = false;
+    boolean doDynamicFrameRateCulling = false;
 
-	float size = 5;
+    float size = 5;
 
-	public PointList(iInplaceProvider<iMutable> coordinateFrame) {
-		super(coordinateFrame);
-		rebuildVertex(0);
-		rebuildTriangle(0);
-	}
+    public
+    PointList(iInplaceProvider<iMutable> coordinateFrame) {
+        super(coordinateFrame);
+        rebuildVertex(0);
+        rebuildTriangle(0);
+    }
 
-	public PointList() {
-		super(new BasicUtilities.Position());
-		rebuildTriangle(0);
-		rebuildVertex(0);
-	}
+    public
+    PointList() {
+        super(new BasicUtilities.Position());
+        rebuildTriangle(0);
+        rebuildVertex(0);
+    }
 
-	public PointList setSize(float t) {
-		size = t;
-		return this;
-	}
+    public
+    PointList setSize(float t) {
+        size = t;
+        return this;
+    }
 
-	PythonCallableMap drawArraysOverrides = new PythonCallableMap();
+    PythonCallableMap drawArraysOverrides = new PythonCallableMap();
 
-	public PythonCallableMap getDrawArraysOverrides() {
-		return drawArraysOverrides;
-	}
+    public
+    PythonCallableMap getDrawArraysOverrides() {
+        return drawArraysOverrides;
+    }
 
-	@Override
-	protected void doPerformPass() {
-		glPointSize(size);
+    @Override
+    protected
+    void doPerformPass() {
+        glPointSize(size);
 
-		CoreHelpers.glBindVertexArrayAPPLE(0);
+        CoreHelpers.glBindVertexArrayAPPLE(0);
 
-		int vertexObjectID = BasicContextManager.getId(this);
-		assert (glGetError() == 0);
-		assert (glGetError() == 0);
+        int vertexObjectID = BasicContextManager.getId(this);
+        assert (glGetError() == 0);
+        assert (glGetError() == 0);
 
-		if ((triangleLimit * 3) > triangleBuffer.sBuffer.capacity()) {
-			triangleLimit = triangleBuffer.sBuffer.capacity() / 3;
-		} else if (triangleLimit < 0) {
-			triangleLimit = 0;
-		}
-		assert (glGetError() == 0);
+        if ((triangleLimit * 3) > triangleBuffer.sBuffer.capacity()) {
+            triangleLimit = triangleBuffer.sBuffer.capacity() / 3;
+        }
+        else if (triangleLimit < 0) {
+            triangleLimit = 0;
+        }
+        assert (glGetError() == 0);
 
-		clean();
-		CoreHelpers.doCameraState();
+        clean();
+        CoreHelpers.doCameraState();
 
-		if ((GLComponentWindow.rendererInfo != null) && GLComponentWindow.rendererInfo.startsWith("intel")) {
+        if ((GLComponentWindow.rendererInfo != null) && GLComponentWindow.rendererInfo.startsWith("intel")) {
 
-			int p = BasicGLSLangProgram.currentProgram.getShader();
-			glUseProgramObjectARB(0);
-			FloatBuffer v = vertex();
-			FloatBuffer a = aux(Base.color0_id, 0);
-			FloatBuffer ps = aux(13, 0);
+            int p = BasicGLSLangProgram.currentProgram.getShader();
+            glUseProgramObjectARB(0);
+            FloatBuffer v = vertex();
+            FloatBuffer a = aux(Base.color0_id, 0);
+            FloatBuffer ps = aux(13, 0);
 
             // System.out.println(" dawing <" + numVertex() +
             // "> points the slow way");
 
-			glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
-			glPointSize((ps == null) ? size : ps.get());
-			glBegin(GL_POINTS);
-			while (v.position() < (numVertex() * 3)) {
-				float x = v.get();
+            glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
+            glPointSize((ps == null) ? size : ps.get());
+            glBegin(GL_POINTS);
+            while (v.position() < (numVertex() * 3)) {
+                float x = v.get();
                 float y = v.get();
                 float z = v.get();
                 glVertex3f(x, y, z);
-				if (a != null) {
-					float r = a.get();
+                if (a != null) {
+                    float r = a.get();
                     float g = a.get();
                     float b = a.get();
                     float alpha = a.get();
                     // ;//System.out.println(x+" "+y+" "+z+"   "+r+" "+g+" "+b+" "+alpha);
-					glColor4f(r, g, b, alpha);
-				}
-			}
-			v.rewind();
-			if (a != null)
-				a.rewind();
-			while (v.position() < numVertex() * 3) {
-				float x = v.get();
+                    glColor4f(r, g, b, alpha);
+                }
+            }
+            v.rewind();
+            if (a != null) a.rewind();
+            while (v.position() < numVertex() * 3) {
+                float x = v.get();
                 float y = v.get();
                 float z = v.get();
                 glVertex3f(x, y, z);
-				if (a != null) {
-					float r = a.get();
+                if (a != null) {
+                    float r = a.get();
                     float g = a.get();
                     float b = a.get();
                     float alpha = a.get();
                     // ;//System.out.println(x+" "+y+" "+z+"   "+r+" "+g+" "+b+" "+alpha);
-					glColor4f(r, g, b, alpha);
-				}
-			}
-			glEnd();
-			glUseProgramObjectARB(p);
-		} else {
-			CoreHelpers.glBindVertexArrayAPPLE(vertexObjectID);
+                    glColor4f(r, g, b, alpha);
+                }
+            }
+            glEnd();
+            glUseProgramObjectARB(p);
+        }
+        else {
+            CoreHelpers.glBindVertexArrayAPPLE(vertexObjectID);
 
-			if (!CoreHelpers.isCore && useATIPointSpriteWorkaround && field.core.Platform.getOS() == OS.mac) {
+            if (!CoreHelpers.isCore && useATIPointSpriteWorkaround && field.core.Platform.getOS() == OS.mac) {
 
                 // System.out.println(" using ati point sprite workaround ");
 
-				glBindVertexArrayAPPLE(0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+                glBindVertexArrayAPPLE(0);
+                glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-				// for(int i=0;i<16;i++)
-				// glDisableVertexAttribArray(i);
+                // for(int i=0;i<16;i++)
+                // glDisableVertexAttribArray(i);
 
-				// workaround for ATI driver issues
-				glVertexPointer(3, 12, vertex());
-				glEnableClientState(GL_VERTEX_ARRAY);
-				Set<Entry<Integer, VertexBuffer>> es = auxBuffers.entrySet();
-				for (Entry<Integer, VertexBuffer> e : es) {
-					glVertexAttribPointer(e.getKey(), e.getValue().elementSize, false, 0, e.getValue().buffer);
-					glEnableVertexAttribArray(e.getKey());
-				}
-			}
+                // workaround for ATI driver issues
+                glVertexPointer(3, 12, vertex());
+                glEnableClientState(GL_VERTEX_ARRAY);
+                Set<Entry<Integer, VertexBuffer>> es = auxBuffers.entrySet();
+                for (Entry<Integer, VertexBuffer> e : es) {
+                    glVertexAttribPointer(e.getKey(), e.getValue().elementSize, false, 0, e.getValue().buffer);
+                    glEnableVertexAttribArray(e.getKey());
+                }
+            }
 
-			// glDisable(GL_BLEND);
+            // glDisable(GL_BLEND);
 
-			if (doDynamicFrameRateCulling) {
-				glDrawArrays(GL_POINTS, 0, DynamicFrameRateCuller.advise(this.vertexLimit, this));
-			} else {
+            if (doDynamicFrameRateCulling) {
+                glDrawArrays(GL_POINTS, 0, DynamicFrameRateCuller.advise(this.vertexLimit, this));
+            }
+            else {
 
-				if (drawArraysOverrides.isEmpty())
-					glDrawArrays(GL_POINTS, 0, this.vertexLimit);
-				else
-					drawArraysOverrides.invoke(GL_POINTS, 0, this.vertexLimit);
+                if (drawArraysOverrides.isEmpty()) glDrawArrays(GL_POINTS, 0, this.vertexLimit);
+                else drawArraysOverrides.invoke(GL_POINTS, 0, this.vertexLimit);
 
-			}
-		}
+            }
+        }
 
-		CoreHelpers.glBindVertexArrayAPPLE(0);
+        CoreHelpers.glBindVertexArrayAPPLE(0);
 
-	}
+    }
 
-	@Override
-	protected void doSetup() {
-		super.doSetup();
-	}
+    @Override
+    protected
+    void doSetup() {
+        super.doSetup();
+    }
 
 }

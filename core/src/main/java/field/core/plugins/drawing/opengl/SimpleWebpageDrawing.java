@@ -26,82 +26,84 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
 
-public class SimpleWebpageDrawing {
+public
+class SimpleWebpageDrawing {
 
-	public static final Prop<String> browser_url = new Prop<String>("browser_url");
-	public static final Prop<TextureBackedWebBrowser> browser = new Prop<TextureBackedWebBrowser>("browser");
-	public static final Prop<iFunction<Vector3, Vector2>> browser_pageToSpace = new Prop<iFunction<Vector3, Vector2>>("browser_pageToSpace");
-	public static final Prop<Vector2> browser_dimensions = new Prop<Vector2>("browser_dimensions");
+    public static final Prop<String> browser_url = new Prop<String>("browser_url");
+    public static final Prop<TextureBackedWebBrowser> browser = new Prop<TextureBackedWebBrowser>("browser");
+    public static final Prop<iFunction<Vector3, Vector2>> browser_pageToSpace =
+            new Prop<iFunction<Vector3, Vector2>>("browser_pageToSpace");
+    public static final Prop<Vector2> browser_dimensions = new Prop<Vector2>("browser_dimensions");
 
-	final DynamicMesh mesh = DynamicMesh.unshadedMesh();
-	private BaseGLGraphicsContext installedContext;
-	private iUpdateable refreshHandle;
-	private final boolean useRect;
+    final DynamicMesh mesh = DynamicMesh.unshadedMesh();
+    private BaseGLGraphicsContext installedContext;
+    private iUpdateable refreshHandle;
+    private final boolean useRect;
 
-	public class DrawsBrowser implements iDrawingAcceptor<CachedLine> {
-		private final BaseGLGraphicsContext context;
+    public
+    class DrawsBrowser implements iDrawingAcceptor<CachedLine> {
+        private final BaseGLGraphicsContext context;
 
-		public DrawsBrowser(BaseGLGraphicsContext context) {
-			this.context = context;
-		}
+        public
+        DrawsBrowser(BaseGLGraphicsContext context) {
+            this.context = context;
+        }
 
-		public DrawingResult accept(List<iDynamicMesh> soFar, final CachedLine line, final Dict properties) {
-			String b = properties.get(browser_url);
-			if (b == null)
-				return null;
+        public
+        DrawingResult accept(List<iDynamicMesh> soFar, final CachedLine line, final Dict properties) {
+            String b = properties.get(browser_url);
+            if (b == null) return null;
 
-			if (line.events.size() < 3)
-				return null;
+            if (line.events.size() < 3) return null;
 
-			final TextureBackedWebBrowser[] browser = { null };
+            final TextureBackedWebBrowser[] browser = {null};
 
-			DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
 
-				String lastURL = null;
-				boolean first = true;
+                String lastURL = null;
+                boolean first = true;
 
-				@Override
-				public void update() {
-					Vector4 color = line.getProperties().get(iLinearGraphicsContext.fillColor);
-					if (color==null)
-						color =  line.getProperties().get(iLinearGraphicsContext.color);
-					if (color==null)
-						color =  new Vector4(1,1,1,1);
-					
-					float opacityMul = 1f;
-					Number o = line.getProperties().get(iLinearGraphicsContext.totalOpacity);
-					opacityMul *= o == null ? 1 : o.floatValue();
+                @Override
+                public
+                void update() {
+                    Vector4 color = line.getProperties().get(iLinearGraphicsContext.fillColor);
+                    if (color == null) color = line.getProperties().get(iLinearGraphicsContext.color);
+                    if (color == null) color = new Vector4(1, 1, 1, 1);
 
-					color.w *=opacityMul;
-					
-					String url = properties.get(browser_url);
-					Vector2 dim = properties.get(browser_dimensions);
-					if (dim == null)
-						dim = new Vector2(500, 1000);
+                    float opacityMul = 1f;
+                    Number o = line.getProperties().get(iLinearGraphicsContext.totalOpacity);
+                    opacityMul *= o == null ? 1 : o.floatValue();
 
-					final Vector3 v = line.events.get(0).getDestination3();
-					final Vector3 right = new Vector3(line.events.get(1).getDestination3()).sub(v);
-					final Vector3 down = new Vector3(line.events.get(2).getDestination3()).sub(line.events.get(1).getDestination3());
+                    color.w *= opacityMul;
 
-					TextureBackedWebBrowser alreadyMade = line.getProperties().get(SimpleWebpageDrawing.browser);
-					if (alreadyMade!=null && alreadyMade.getURL()!=null)
-					{
-						browser[0] = alreadyMade;
-						lastURL = browser[0].getURL();
-					}
-					
-					if (browser[0] == null) {
-						browser[0] = new TextureBackedWebBrowser((int) dim.x, (int) dim.y) {
-							@Override
-							protected void notifyUpdate() {
-								SimpleWebpageDrawing.this.notifyUpdate();
-							}
-						};
-						browser[0].getTexture().use_gl_texture_rectangle_ext(false & useRect);
-						if (false & useRect) {
-							browser[0].getTexture().genMip = false;
-						}
-					}
+                    String url = properties.get(browser_url);
+                    Vector2 dim = properties.get(browser_dimensions);
+                    if (dim == null) dim = new Vector2(500, 1000);
+
+                    final Vector3 v = line.events.get(0).getDestination3();
+                    final Vector3 right = new Vector3(line.events.get(1).getDestination3()).sub(v);
+                    final Vector3 down =
+                            new Vector3(line.events.get(2).getDestination3()).sub(line.events.get(1).getDestination3());
+
+                    TextureBackedWebBrowser alreadyMade = line.getProperties().get(SimpleWebpageDrawing.browser);
+                    if (alreadyMade != null && alreadyMade.getURL() != null) {
+                        browser[0] = alreadyMade;
+                        lastURL = browser[0].getURL();
+                    }
+
+                    if (browser[0] == null) {
+                        browser[0] = new TextureBackedWebBrowser((int) dim.x, (int) dim.y) {
+                            @Override
+                            protected
+                            void notifyUpdate() {
+                                SimpleWebpageDrawing.this.notifyUpdate();
+                            }
+                        };
+                        browser[0].getTexture().use_gl_texture_rectangle_ext(false & useRect);
+                        if (false & useRect) {
+                            browser[0].getTexture().genMip = false;
+                        }
+                    }
 
                     //System.out.println(" // last url :"+lastURL+" "+url);
 
@@ -110,247 +112,269 @@ public class SimpleWebpageDrawing {
                         //System.out.println(" _-- browser set url to be <"+url+">");
 
                         browser[0].setURL(url);
-						lastURL = url;
+                        lastURL = url;
 
-						CachedLine oc = new CachedLine();
-						oc.getInput().moveTo(v.x, v.y);
-						oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z);
-						oc.getInput().lineTo(v.x + right.x, v.y + right.y);
-						oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z + right.z);
-						oc.getInput().lineTo(v.x + right.x + down.x, v.y + right.y + down.y);
-						oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z + right.z + down.z);
-						oc.getInput().lineTo(v.x + down.x, v.y + down.y);
-						oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z + down.z);
-						oc.getInput().lineTo(v.x, v.y);
-						oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z);
+                        CachedLine oc = new CachedLine();
+                        oc.getInput().moveTo(v.x, v.y);
+                        oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z);
+                        oc.getInput().lineTo(v.x + right.x, v.y + right.y);
+                        oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z + right.z);
+                        oc.getInput().lineTo(v.x + right.x + down.x, v.y + right.y + down.y);
+                        oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z + right.z + down.z);
+                        oc.getInput().lineTo(v.x + down.x, v.y + down.y);
+                        oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z + down.z);
+                        oc.getInput().lineTo(v.x, v.y);
+                        oc.getInput().setPointAttribute(iLinearGraphicsContext.z_v, v.z);
 
-						line.getProperties().put(LineInteraction3d.areaForEventHandler, oc);
+                        line.getProperties().put(LineInteraction3d.areaForEventHandler, oc);
 
-						final BasicCamera camera = BasicCamera.currentCamera;
+                        final BasicCamera camera = BasicCamera.currentCamera;
 
-						if (camera != null) {
-							EventHandler handler = new EventHandler() {
-								@Override
-								public boolean up(Event e) {
+                        if (camera != null) {
+                            EventHandler handler = new EventHandler() {
+                                @Override
+                                public
+                                boolean up(Event e) {
 
-									rewriteEvent(properties, v, right, down, camera, e);
+                                    rewriteEvent(properties, v, right, down, camera, e);
 
-									return super.up(e);
-								}
+                                    return super.up(e);
+                                }
 
-								@Override
-								public boolean down(Event e) {
+                                @Override
+                                public
+                                boolean down(Event e) {
 
-									rewriteEvent(properties, v, right, down, camera, e);
+                                    rewriteEvent(properties, v, right, down, camera, e);
 
-									browser[0].doClick(e);
+                                    browser[0].doClick(e);
 
-									return super.up(e);
-								}
+                                    return super.up(e);
+                                }
 
-								@Override
-								public boolean scroll(Event e) {
+                                @Override
+                                public
+                                boolean scroll(Event e) {
 
                                     //System.out.println(" scroll != " + e.count);
 
-									browser[0].scroll(0, -e.count * 4.0f);
+                                    browser[0].scroll(0, -e.count * 4.0f);
 
-									return super.scroll(e);
-								}
-							};
+                                    return super.scroll(e);
+                                }
+                            };
 
-							if (line.getProperties().get(LineInteraction3d.eventHandler) == null) {
-								line.getProperties().put(LineInteraction3d.eventHandler, handler);
-							}
-						}
-						else
-						{
-							EventHandler handler = new EventHandler() {
-								@Override
-								public boolean up(Event e) {
+                            if (line.getProperties().get(LineInteraction3d.eventHandler) == null) {
+                                line.getProperties().put(LineInteraction3d.eventHandler, handler);
+                            }
+                        }
+                        else {
+                            EventHandler handler = new EventHandler() {
+                                @Override
+                                public
+                                boolean up(Event e) {
 
 //									rewriteEvent(properties, v, right, down, camera, e);
                                     //System.out.println(" up :"+e.x+" "+e.y);
 
-									return super.up(e);
-								}
+                                    return super.up(e);
+                                }
 
-								@Override
-								public boolean down(Event e) {
+                                @Override
+                                public
+                                boolean down(Event e) {
 
 //									rewriteEvent(properties, v, right, down, camera, e);
 
-									Vector2 dim = properties.get(browser_dimensions);
-									if (dim == null)
-										dim = new Vector2(500, 1000);
+                                    Vector2 dim = properties.get(browser_dimensions);
+                                    if (dim == null) dim = new Vector2(500, 1000);
 
-									float dx = new Vector2(e.x-v.x, e.y-v.y).dot(right.toVector2().normalize()) * (dim.x/right.mag());
-									float dy = new Vector2(e.x-v.x, e.y-v.y).dot(down.toVector2().normalize()) * (dim.y/down.mag());
-									
-									e.x = (int) dx;
-									e.y = (int)dy;
+                                    float dx = new Vector2(e.x - v.x, e.y - v.y).dot(right.toVector2().normalize())
+                                               * (dim.x / right.mag());
+                                    float dy =
+                                            new Vector2(e.x - v.x, e.y - v.y).dot(down.toVector2().normalize()) * (dim.y
+                                                                                                                   / down.mag());
+
+                                    e.x = (int) dx;
+                                    e.y = (int) dy;
                                     //System.out.println(" down :"+e.x+" "+e.y);
                                     browser[0].doClick(e);
 
-									return super.down(e);
-								}
+                                    return super.down(e);
+                                }
 
-								@Override
-								public boolean scroll(Event e) {
+                                @Override
+                                public
+                                boolean scroll(Event e) {
 
                                     //System.out.println(" scroll != " + e.count);
 
-									browser[0].scroll(0, -e.count * 4.0f);
+                                    browser[0].scroll(0, -e.count * 4.0f);
 
-									return super.scroll(e);
-								}
-							};
+                                    return super.scroll(e);
+                                }
+                            };
 
-							if (line.getProperties().get(LineInteraction.eventHandler) == null) {
-								line.getProperties().put(LineInteraction.eventHandler, handler);
-							}
-							
-						}
-					}
+                            if (line.getProperties().get(LineInteraction.eventHandler) == null) {
+                                line.getProperties().put(LineInteraction.eventHandler, handler);
+                            }
 
-					line.getProperties().put(SimpleWebpageDrawing.browser, browser[0]);
-					line.getProperties().put(browser_pageToSpace, newPageToSpace(v, right, down, dim));
+                        }
+                    }
 
-					iAcceptsSceneListElement p = context.getVertexProgram();
-					BasicGLSLangProgram was = null;
+                    line.getProperties().put(SimpleWebpageDrawing.browser, browser[0]);
+                    line.getProperties().put(browser_pageToSpace, newPageToSpace(v, right, down, dim));
+
+                    iAcceptsSceneListElement p = context.getVertexProgram();
+                    BasicGLSLangProgram was = null;
                     //System.out.println(" -- drawing mesh for texture backed webpage -- ");
 
-					if (!useRect && p instanceof BasicGLSLangProgram && p != BasicGLSLangProgram.currentProgram) {
-						was = BasicGLSLangProgram.currentProgram;
+                    if (!useRect && p instanceof BasicGLSLangProgram && p != BasicGLSLangProgram.currentProgram) {
+                        was = BasicGLSLangProgram.currentProgram;
 
                         //System.out.println(" forcing shade on");
                         //System.out.println("    current program is <" + BasicGLSLangProgram.currentProgram.getAllCode());
                         //System.out.println("    bound program is <" + ((BasicGLSLangProgram) p).getAllCode());
 
-						((BasicGLSLangProgram) p).bindNow();
-					}
+                        ((BasicGLSLangProgram) p).bindNow();
+                    }
 
 
-					mesh.open();
-					int a = mesh.nextVertex(v);
-					int b = mesh.nextVertex(new Vector3(v.x + right.x, v.y + right.y, v.z + right.z));
-					int c = mesh.nextVertex(new Vector3(v.x + right.x + down.x, v.y + right.y + down.y, v.z + right.z + down.z));
-					int d = mesh.nextVertex(new Vector3(v.x + down.x, v.y + down.y, v.z + down.z));
+                    mesh.open();
+                    int a = mesh.nextVertex(v);
+                    int b = mesh.nextVertex(new Vector3(v.x + right.x, v.y + right.y, v.z + right.z));
+                    int c = mesh.nextVertex(new Vector3(v.x + right.x + down.x,
+                                                        v.y + right.y + down.y,
+                                                        v.z + right.z + down.z));
+                    int d = mesh.nextVertex(new Vector3(v.x + down.x, v.y + down.y, v.z + down.z));
 
-					mesh.nextFace(a, b, c);
-					mesh.nextFace(a, c, d);
+                    mesh.nextFace(a, b, c);
+                    mesh.nextFace(a, c, d);
 
-					mesh.setAux(a, Base.color0_id, color.x, color.y, color.z, color.w);
-					mesh.setAux(b, Base.color0_id, color.x, color.y, color.z, color.w);
-					mesh.setAux(c, Base.color0_id, color.x, color.y, color.z, color.w);
-					mesh.setAux(d, Base.color0_id, color.x, color.y, color.z, color.w);
+                    mesh.setAux(a, Base.color0_id, color.x, color.y, color.z, color.w);
+                    mesh.setAux(b, Base.color0_id, color.x, color.y, color.z, color.w);
+                    mesh.setAux(c, Base.color0_id, color.x, color.y, color.z, color.w);
+                    mesh.setAux(d, Base.color0_id, color.x, color.y, color.z, color.w);
 
-					mesh.setAux(a, 4, 0);
-					mesh.setAux(b, 4, 0);
-					mesh.setAux(c, 4, 0);
-					mesh.setAux(d, 4, 0);
+                    mesh.setAux(a, 4, 0);
+                    mesh.setAux(b, 4, 0);
+                    mesh.setAux(c, 4, 0);
+                    mesh.setAux(d, 4, 0);
 
-					if (useRect) {
+                    if (useRect) {
 //						mesh.setAux(a, Base.texture0_id, 0, 0);
 //						mesh.setAux(b, Base.texture0_id, dim.x, 0);
 //						mesh.setAux(c, Base.texture0_id, dim.x, dim.y);
 //						mesh.setAux(d, Base.texture0_id, 0, dim.y);
 
-						
-						mesh.setAux(a, Base.texture0_id, 0, 0);
-						mesh.setAux(b, Base.texture0_id, 1, 0);
-						mesh.setAux(c, Base.texture0_id, 1, 1);
-						mesh.setAux(d, Base.texture0_id, 0, 1);
 
-					} else {
-						mesh.setAux(a, Base.texture0_id, 0, 0);
-						mesh.setAux(b, Base.texture0_id, 1, 0);
-						mesh.setAux(c, Base.texture0_id, 1, 1);
-						mesh.setAux(d, Base.texture0_id, 0, 1);
-					}
-					mesh.close();
+                        mesh.setAux(a, Base.texture0_id, 0, 0);
+                        mesh.setAux(b, Base.texture0_id, 1, 0);
+                        mesh.setAux(c, Base.texture0_id, 1, 1);
+                        mesh.setAux(d, Base.texture0_id, 0, 1);
 
-					glActiveTexture(GL_TEXTURE1);
-					BaseSlowRawTexture t = browser[0].getTexture();
-					if (first)
-					{
+                    }
+                    else {
+                        mesh.setAux(a, Base.texture0_id, 0, 0);
+                        mesh.setAux(b, Base.texture0_id, 1, 0);
+                        mesh.setAux(c, Base.texture0_id, 1, 1);
+                        mesh.setAux(d, Base.texture0_id, 0, 1);
+                    }
+                    mesh.close();
+
+                    glActiveTexture(GL_TEXTURE1);
+                    BaseSlowRawTexture t = browser[0].getTexture();
+                    if (first) {
                         //System.out.println(" texture first, doing setup");
                         t.setup();
-						t.dirty();
-					}
-					first = false;
-					t.pre();
+                        t.dirty();
+                    }
+                    first = false;
+                    t.pre();
 
-					// glBlendFunc(GL_SRC_ALPHA,
-					// GL_ONE_MINUS_SRC_ALPHA);
-					glTexParameteri(false & useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-					glTexParameteri(false & useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-					
-					mesh.getUnderlyingGeometry().performPass(null);
-					
-					t.post();
-					glActiveTexture(GL_TEXTURE0);
+                    // glBlendFunc(GL_SRC_ALPHA,
+                    // GL_ONE_MINUS_SRC_ALPHA);
+                    glTexParameteri(false & useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                    GL_TEXTURE_WRAP_S,
+                                    GL_CLAMP);
+                    glTexParameteri(false & useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                    GL_TEXTURE_WRAP_T,
+                                    GL_CLAMP);
 
-					if (was != null) {
-						was.bindNow();
-					}
-				}
+                    mesh.getUnderlyingGeometry().performPass(null);
 
-				private iFunction<Vector3, Vector2> newPageToSpace(final Vector3 v, final Vector3 right, final Vector3 down, final Vector2 dim) {
-					return new iFunction<Vector3, Vector2>() {
+                    t.post();
+                    glActiveTexture(GL_TEXTURE0);
 
-						@Override
-						public Vector3 f(Vector2 in) {
-							float x = in.x / dim.x;
-							float y = in.y / dim.y;
+                    if (was != null) {
+                        was.bindNow();
+                    }
+                }
 
-							return new Vector3(v).add(right, x).add(down, y);
+                private
+                iFunction<Vector3, Vector2> newPageToSpace(final Vector3 v,
+                                                           final Vector3 right,
+                                                           final Vector3 down,
+                                                           final Vector2 dim) {
+                    return new iFunction<Vector3, Vector2>() {
 
-						}
-					};
-				}
+                        @Override
+                        public
+                        Vector3 f(Vector2 in) {
+                            float x = in.x / dim.x;
+                            float y = in.y / dim.y;
+
+                            return new Vector3(v).add(right, x).add(down, y);
+
+                        }
+                    };
+                }
             });
 
-			result.finalize = new iUpdateable() {
+            result.finalize = new iUpdateable() {
 
-				@Override
-				public void update() {
+                @Override
+                public
+                void update() {
 
                     //System.out.println(" -- deallocating browser <" + browser[0] + ">");
 
-					if (browser[0] != null)
-						browser[0].dispose();
-				}
-			};
+                    if (browser[0] != null) browser[0].dispose();
+                }
+            };
 
-			return result;
+            return result;
 
-		}
-	}
+        }
+    }
 
-	public SimpleWebpageDrawing() {
-		this(false);
-	}
+    public
+    SimpleWebpageDrawing() {
+        this(false);
+    }
 
-	public SimpleWebpageDrawing(boolean useRect) {
-		this.useRect = useRect;
-	}
+    public
+    SimpleWebpageDrawing(boolean useRect) {
+        this.useRect = useRect;
+    }
 
-	public SimpleWebpageDrawing installInto(BaseGLGraphicsContext installedContext) {
-		installedContext.addAcceptor(new DrawsBrowser(installedContext));
-		this.installedContext = installedContext;
-		return this;
-	}
+    public
+    SimpleWebpageDrawing installInto(BaseGLGraphicsContext installedContext) {
+        installedContext.addAcceptor(new DrawsBrowser(installedContext));
+        this.installedContext = installedContext;
+        return this;
+    }
 
-	public SimpleWebpageDrawing setRefreshHandle(iUpdateable u) {
-		refreshHandle = u;
-		return this;
-	}
+    public
+    SimpleWebpageDrawing setRefreshHandle(iUpdateable u) {
+        refreshHandle = u;
+        return this;
+    }
 
-	protected void notifyUpdate() {
-		if (refreshHandle != null)
-			refreshHandle.update();
-	}
+    protected
+    void notifyUpdate() {
+        if (refreshHandle != null) refreshHandle.update();
+    }
 
     protected static
     void rewriteEvent(final Dict properties,
@@ -361,42 +385,43 @@ public class SimpleWebpageDrawing {
                       Vector2 e) {
         //System.out.println(" up event at :" + e);
 
-		Vector3 r1 = new Vector3();
-		Vector3 r2 = new Vector3();
-		camera.getState().getProjector().createIntersectionRay(e.x, camera.height - e.y, r1, r2, camera.width, camera.height);
+        Vector3 r1 = new Vector3();
+        Vector3 r2 = new Vector3();
+        camera.getState()
+              .getProjector()
+              .createIntersectionRay(e.x, camera.height - e.y, r1, r2, camera.width, camera.height);
 
-		Vector2 dim = properties.get(browser_dimensions);
-		if (dim == null)
-			dim = new Vector2(500, 1000);
+        Vector2 dim = properties.get(browser_dimensions);
+        if (dim == null) dim = new Vector2(500, 1000);
 
         //System.out.println(" view ray is <" + r1 + " -> " + r2);
 
-		Vector3 normal = new Vector3().cross(right, down);
+        Vector3 normal = new Vector3().cross(right, down);
 
-		r2 = new Vector3().sub(r2, r1).normalize();
+        r2 = new Vector3().sub(r2, r1).normalize();
 
-		float d1 = (v.dot(normal) - r1.dot(normal)) / r2.dot(normal);
+        float d1 = (v.dot(normal) - r1.dot(normal)) / r2.dot(normal);
 
-		Vector3 a = new Vector3().add(r1).add(r2, d1);
+        Vector3 a = new Vector3().add(r1).add(r2, d1);
 
         //System.out.println(" intersection at <" + a + ">");
 
-		float xx = new Vector3(a).sub(v).dot(new Vector3(right).normalize());
-		float yy = new Vector3(a).sub(v).dot(new Vector3(down).normalize());
+        float xx = new Vector3(a).sub(v).dot(new Vector3(right).normalize());
+        float yy = new Vector3(a).sub(v).dot(new Vector3(down).normalize());
 
         //System.out.println("        " + xx + " " + yy);
 
-		xx /= right.mag();
-		yy /= down.mag();
+        xx /= right.mag();
+        yy /= down.mag();
 
-		xx *= dim.x;
-		yy *= dim.y;
+        xx *= dim.x;
+        yy *= dim.y;
 
         //System.out.println(" click on <" + xx + " " + yy + ">");
 
-		e.x = (int) xx;
-		e.y = (int) yy;
-	}
+        e.x = (int) xx;
+        e.y = (int) yy;
+    }
 
     protected static
     void rewriteEvent(final Dict properties,
@@ -407,41 +432,42 @@ public class SimpleWebpageDrawing {
                       Event e) {
         //System.out.println(" up event at :" + e);
 
-		Vector3 r1 = new Vector3();
-		Vector3 r2 = new Vector3();
-		camera.getState().getProjector().createIntersectionRay(e.x, camera.height - e.y, r1, r2, camera.width, camera.height);
+        Vector3 r1 = new Vector3();
+        Vector3 r2 = new Vector3();
+        camera.getState()
+              .getProjector()
+              .createIntersectionRay(e.x, camera.height - e.y, r1, r2, camera.width, camera.height);
 
-		Vector2 dim = properties.get(browser_dimensions);
-		if (dim == null)
-			dim = new Vector2(500, 1000);
+        Vector2 dim = properties.get(browser_dimensions);
+        if (dim == null) dim = new Vector2(500, 1000);
 
         //System.out.println(" view ray is <" + r1 + " -> " + r2);
 
-		Vector3 normal = new Vector3().cross(right, down);
+        Vector3 normal = new Vector3().cross(right, down);
 
-		r2 = new Vector3().sub(r2, r1).normalize();
+        r2 = new Vector3().sub(r2, r1).normalize();
 
-		float d1 = (v.dot(normal) - r1.dot(normal)) / r2.dot(normal);
+        float d1 = (v.dot(normal) - r1.dot(normal)) / r2.dot(normal);
 
-		Vector3 a = new Vector3().add(r1).add(r2, d1);
+        Vector3 a = new Vector3().add(r1).add(r2, d1);
 
         //System.out.println(" intersection at <" + a + ">");
 
-		float xx = new Vector3(a).sub(v).dot(new Vector3(right).normalize());
-		float yy = new Vector3(a).sub(v).dot(new Vector3(down).normalize());
+        float xx = new Vector3(a).sub(v).dot(new Vector3(right).normalize());
+        float yy = new Vector3(a).sub(v).dot(new Vector3(down).normalize());
 
         //System.out.println("        " + xx + " " + yy);
 
-		xx /= right.mag();
-		yy /= down.mag();
+        xx /= right.mag();
+        yy /= down.mag();
 
-		xx *= dim.x;
-		yy *= dim.y;
+        xx *= dim.x;
+        yy *= dim.y;
 
         //System.out.println(" click on <" + xx + " " + yy + ">");
 
-		e.x = (int) xx;
-		e.y = (int) yy;
-	}
+        e.x = (int) xx;
+        e.y = (int) yy;
+    }
 
 }

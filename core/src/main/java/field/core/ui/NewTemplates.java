@@ -23,203 +23,215 @@ import java.util.List;
 
 /**
  * a better templating mechanism
- * 
+ *
  * @author marc
- * 
  */
-public class NewTemplates {
+public
+class NewTemplates {
 
-	private final iVisualElement root;
-	public String templateFolder;
+    private final iVisualElement root;
+    public String templateFolder;
 
-	public NewTemplates(iVisualElement root) {
-		this.root = root;
-		templateFolder = PseudoPropertiesPlugin.workspaceFolder.get(root) + "/templates/";
-		if (!new File(templateFolder).exists())
-			new File(templateFolder).mkdir();
+    public
+    NewTemplates(iVisualElement root) {
+        this.root = root;
+        templateFolder = PseudoPropertiesPlugin.workspaceFolder.get(root) + "/templates/";
+        if (!new File(templateFolder).exists()) new File(templateFolder).mkdir();
 
-	}
+    }
 
-	public String suffix = ".template";
+    public String suffix = ".template";
 
-	public List<Pair<String, String>> getAllTemplates() {
+    public
+    List<Pair<String, String>> getAllTemplates() {
         // System.out.println(" all templates in <" + templateFolder +
         // ">");
-		File[] all = new File(templateFolder).listFiles(new FilenameFilter() {
-			public boolean accept(File dir, String name) {
+        File[] all = new File(templateFolder).listFiles(new FilenameFilter() {
+            public
+            boolean accept(File dir, String name) {
                 // System.out.println(" checking <" + name +
                 // ">");
-				return name.endsWith(suffix);
-			}
-		});
+                return name.endsWith(suffix);
+            }
+        });
 
-		if (all == null)
-			return Collections.EMPTY_LIST;
+        if (all == null) return Collections.EMPTY_LIST;
 
-		List<Pair<String, String>> aa = new ArrayList<Pair<String, String>>();
-		for (File ff : all)
-			aa.add(new Pair<String, String>(ff.getName().substring(0, ff.getName().length() - suffix.length()), infoForFile(ff)));
+        List<Pair<String, String>> aa = new ArrayList<Pair<String, String>>();
+        for (File ff : all)
+            aa.add(new Pair<String, String>(ff.getName().substring(0, ff.getName().length() - suffix.length()),
+                                            infoForFile(ff)));
 
-		return aa;
-	}
+        return aa;
+    }
 
     private static
     String infoForFile(File ff) {
         XStream stream = XStreamUtil.newDefaultXStream();
 
-		try {
-			ObjectInputStream input = stream.createObjectInputStream(new BufferedReader(new FileReader(ff)));
-			Object o = input.readObject();
-			input.close();
-			return (String) o;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return "(can't load)";
-	}
+        try {
+            ObjectInputStream input = stream.createObjectInputStream(new BufferedReader(new FileReader(ff)));
+            Object o = input.readObject();
+            input.close();
+            return (String) o;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "(can't load)";
+    }
 
-	public BetterPopup completionsFor(String left, iKeystrokeUpdate u, final iAcceptor<String> inserter) {
-		LinkedHashMap<String, iUpdateable> up = new LinkedHashMap<String, iUpdateable>();
-		up.put("<b>" + left + "</b>", null);
-		up.put("Templates", null);
-		List<Pair<String, String>> all = getAllTemplates();
+    public
+    BetterPopup completionsFor(String left, iKeystrokeUpdate u, final iAcceptor<String> inserter) {
+        LinkedHashMap<String, iUpdateable> up = new LinkedHashMap<String, iUpdateable>();
+        up.put("<b>" + left + "</b>", null);
+        up.put("Templates", null);
+        List<Pair<String, String>> all = getAllTemplates();
 
         // System.out.println(" all templates are <" + all + ">");
 
-		int num = 0;
-		for (final Pair<String, String> a : all) {
-			if (a.left.startsWith(left)) {
-				num++;
-			}
-		}
+        int num = 0;
+        for (final Pair<String, String> a : all) {
+            if (a.left.startsWith(left)) {
+                num++;
+            }
+        }
 
-		for (final Pair<String, String> a : all) {
+        for (final Pair<String, String> a : all) {
             // System.out.println(" checking <" + a.left +
             // "> against <" + left + ">");
-			if (a.left.startsWith(left)) {
+            if (a.left.startsWith(left)) {
 
-				final String text = "\u1d40 <b>" + a.left + "</b> \u2014 <i>" + trim(a.right) + "</i>";
-				up.put(text, new iUpdateable() {
-					public void update() {
-						inserter.set(a.left);
-					}
-				});
-			}
-		}
+                final String text = "\u1d40 <b>" + a.left + "</b> \u2014 <i>" + trim(a.right) + "</i>";
+                up.put(text, new iUpdateable() {
+                    public
+                    void update() {
+                        inserter.set(a.left);
+                    }
+                });
+            }
+        }
 
-		if (all.isEmpty()) {
-			up.put("<i>(no templates are installed, right click on a selected box to make one)</i>", new iUpdateable() {
-				public void update() {
-				}
-			});
-		} else if (up.size() == 2) {
-			up.put("(no templates start with <b>'" + left + "'</b>)", new iUpdateable() {
-				public void update() {
-				}
-			});
-		}
+        if (all.isEmpty()) {
+            up.put("<i>(no templates are installed, right click on a selected box to make one)</i>", new iUpdateable() {
+                public
+                void update() {
+                }
+            });
+        }
+        else if (up.size() == 2) {
+            up.put("(no templates start with <b>'" + left + "'</b>)", new iUpdateable() {
+                public
+                void update() {
+                }
+            });
+        }
 
-		GLComponentWindow r = iVisualElement.enclosingFrame.get(root);
+        GLComponentWindow r = iVisualElement.enclosingFrame.get(root);
 
-		return new SmallMenu().createMenu(up, r.getFrame(), u);
-	}
+        return new SmallMenu().createMenu(up, r.getFrame(), u);
+    }
 
     private static
     String trim(String right) {
-        if (right.length() > 40)
-			return right.substring(0, 40) + '\u2014';
-		return right;
-	}
+        if (right.length() > 40) return right.substring(0, 40) + '\u2014';
+        return right;
+    }
 
-	public void getTemplateName(final Point at, final iAcceptor<String> result) {
-		final String[] left = { "" };
-		final BetterPopup[] completions = { null };
-		completions[0] = completionsFor(left[0], new iKeystrokeUpdate() {
+    public
+    void getTemplateName(final Point at, final iAcceptor<String> result) {
+        final String[] left = {""};
+        final BetterPopup[] completions = {null};
+        completions[0] = completionsFor(left[0], new iKeystrokeUpdate() {
 
-			public void update(KeyEvent ke) {
-			}
+            public
+            void update(KeyEvent ke) {
+            }
 
-			@Override
-			public boolean update(Event ke) {
+            @Override
+            public
+            boolean update(Event ke) {
 
                 // System.out.println(" key code is <" +
                 // ke.keyCode + ">" +
-					// Character.isISOControl(ke.character));
+                // Character.isISOControl(ke.character));
 
-				if (ke.keyCode == 13) {
-					// result.set(left[0]);
-					return true;
-				} else if (ke.keyCode == SWT.ESC) {
-					return true;
-				} else if (ke.character == SWT.BS) {
-					left[0] = left[0].substring(0, left[0].length() - 1);
-				} else if (Character.isISOControl(ke.character)) {
-					return false;
-				}
+                if (ke.keyCode == 13) {
+                    // result.set(left[0]);
+                    return true;
+                }
+                else if (ke.keyCode == SWT.ESC) {
+                    return true;
+                }
+                else if (ke.character == SWT.BS) {
+                    left[0] = left[0].substring(0, left[0].length() - 1);
+                }
+                else if (Character.isISOControl(ke.character)) {
+                    return false;
+                }
 
-				else {
-					left[0] += ke.character;
-				}
-				completions[0].shell.setVisible(false);
-				completions[0] = completionsFor(left[0], this, result);
-				completions[0].show(new Point(at.x, at.y));
-				// completions[0].requestFocusInWindow();
-				// ((BetterPopup)
-				// completions[0]).getKey().down();
+                else {
+                    left[0] += ke.character;
+                }
+                completions[0].shell.setVisible(false);
+                completions[0] = completionsFor(left[0], this, result);
+                completions[0].show(new Point(at.x, at.y));
+                // completions[0].requestFocusInWindow();
+                // ((BetterPopup)
+                // completions[0]).getKey().down();
 
-				return true;
-			}
-		}, result);
+                return true;
+            }
+        }, result);
 
         // System.out.println(" popping open completions menu");
 
-		completions[0].show(new Point(at.x, at.y));
-		// completions[0].requestFocusInWindow();
-		// ((BetterPopup) completions[0]).getKey().down();
-	}
+        completions[0].show(new Point(at.x, at.y));
+        // completions[0].requestFocusInWindow();
+        // ((BetterPopup) completions[0]).getKey().down();
+    }
 
-	// public void getTemplateName(Point at, String label, String def, final
-	// iAcceptor<String> result) {
-	// new PopupTextBox(def, at, label) {
-	// @Override
-	// protected void changed(String text) {
-	// result.set(text);
-	// }
-	//
-	//
-	//
-	// BetterPopup m = null;
-	//
-	// @Override
-	// protected void completion(final JTextField inside, final
-	// iKeystrokeUpdate iKeystrokeUpdate) {
-	// m = completionsFor(inside.getText(), new iKeystrokeUpdate() {
-	//
-	// public void update(KeyEvent ke) {
-	// ;//System.out.println(" hiding menu ... ");
-	// m.setVisible(false);
-	// iKeystrokeUpdate.update(ke);
-	// }
-	// }, new iAcceptor<String>() {
-	// public field.math.abstraction.iAcceptor<String> set(String to) {
-	// inside.setText(to);
-	// return this;
-	// };
-	// });
-	//
-	// try {
-	// Rectangle pp;
-	// pp = inside.modelToView(inside.getText().length());
-	// m.show(inside, pp.x, pp.y);
-	// m.requestFocusInWindow();
-	// ((BetterPopup) m).getKey().down();
-	//
-	// } catch (BadLocationException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// }.doCompletions();
-	// }
+    // public void getTemplateName(Point at, String label, String def, final
+    // iAcceptor<String> result) {
+    // new PopupTextBox(def, at, label) {
+    // @Override
+    // protected void changed(String text) {
+    // result.set(text);
+    // }
+    //
+    //
+    //
+    // BetterPopup m = null;
+    //
+    // @Override
+    // protected void completion(final JTextField inside, final
+    // iKeystrokeUpdate iKeystrokeUpdate) {
+    // m = completionsFor(inside.getText(), new iKeystrokeUpdate() {
+    //
+    // public void update(KeyEvent ke) {
+    // ;//System.out.println(" hiding menu ... ");
+    // m.setVisible(false);
+    // iKeystrokeUpdate.update(ke);
+    // }
+    // }, new iAcceptor<String>() {
+    // public field.math.abstraction.iAcceptor<String> set(String to) {
+    // inside.setText(to);
+    // return this;
+    // };
+    // });
+    //
+    // try {
+    // Rectangle pp;
+    // pp = inside.modelToView(inside.getText().length());
+    // m.show(inside, pp.x, pp.y);
+    // m.requestFocusInWindow();
+    // ((BetterPopup) m).getKey().down();
+    //
+    // } catch (BadLocationException e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // }.doCompletions();
+    // }
 }

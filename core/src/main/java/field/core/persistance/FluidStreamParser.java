@@ -27,7 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class FluidStreamParser {
+public
+class FluidStreamParser {
 
     private DocumentBuilder builder;
 
@@ -40,11 +41,13 @@ public class FluidStreamParser {
 
     public boolean loadProperties = false;
 
-    public FluidStreamParser(File file) {
+    public
+    FluidStreamParser(File file) {
         this(file, false);
     }
 
-    public FluidStreamParser(File file, boolean loadProperties) {
+    public
+    FluidStreamParser(File file, boolean loadProperties) {
         this.file = file;
         this.loadProperties = loadProperties;
 
@@ -55,7 +58,8 @@ public class FluidStreamParser {
             builder = factory.newDocumentBuilder();
 
             builder.setEntityResolver(new EntityResolver() {
-                public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+                public
+                InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
                     return new InputSource(new ByteArrayInputStream(new byte[]{}));
                 }
             });
@@ -96,7 +100,8 @@ public class FluidStreamParser {
 
     HashMap<String, Node> nodeMap = new HashMap<String, Node>();
 
-    private void findIds(Node document) {
+    private
+    void findIds(Node document) {
         NamedNodeMap a = document.getAttributes();
         if (a != null) {
             Node id = document.getAttributes().getNamedItem("id");
@@ -112,14 +117,15 @@ public class FluidStreamParser {
         }
     }
 
-    public HashMap<String, HashMap<String, Object>> getProperties() {
+    public
+    HashMap<String, HashMap<String, Object>> getProperties() {
         return properties;
     }
 
-    private void parseElements(Node node) {
+    private
+    void parseElements(Node node) {
 
-        if (debug)
-            System.out.println(" inside parse elements for <" + file + '>');
+        if (debug) System.out.println(" inside parse elements for <" + file + '>');
 
 //		System.out.println(node.getNodeName());
         if ("field.core.dispatch.VisualElement".equals(node.getNodeName())) {
@@ -161,24 +167,23 @@ public class FluidStreamParser {
 
     }
 
-    private Node resolve(Node ii) {
+    private
+    Node resolve(Node ii) {
         NamedNodeMap a = ii.getAttributes();
-        if (a == null)
-            return ii;
+        if (a == null) return ii;
         Node reference = a.getNamedItem("reference");
-        if (reference == null)
-            return ii;
+        if (reference == null) return ii;
         String t = reference.getTextContent();
 
 
         Node n = nodeMap.get(ii.getNodeName() + "::" + t);
         System.out.println(" looking up reference <" + t + "> to find <" + n + '>');
-        if (n == null)
-            return ii;
+        if (n == null) return ii;
         return n;
     }
 
-    private Pair<String, Object> parseEntry(Node node) {
+    private
+    Pair<String, Object> parseEntry(Node node) {
         NodeList nl = node.getChildNodes();
         String name = null;
         Object value = null;
@@ -203,25 +208,26 @@ public class FluidStreamParser {
                         System.out.println(" name is <" + name + '>');
                     }
                 }
-            } else if ("string".equals(ii.getNodeName())) {
+            }
+            else if ("string".equals(ii.getNodeName())) {
                 value = ii.getTextContent().trim();
-            } else if ("float".equals(ii.getNodeName())) {
+            }
+            else if ("float".equals(ii.getNodeName())) {
                 value = Float.parseFloat(ii.getTextContent().trim());
-            } else if ("double".equals(ii.getNodeName())) {
+            }
+            else if ("double".equals(ii.getNodeName())) {
                 value = Double.parseDouble(ii.getTextContent().trim());
-            } else {
+            }
+            else {
 
                 //System.out.println(" node is xml <" + loadProperties + ">");
 
                 if (loadProperties) {
                     try {
                         String xml = nodeToString(ii);
-                        if (xml.trim().isEmpty())
-                            continue;
-                        if (xml.contains("reference="))
-                            continue;
-                        if (xml.contains("id="))
-                            continue;
+                        if (xml.trim().isEmpty()) continue;
+                        if (xml.contains("reference=")) continue;
+                        if (xml.contains("id=")) continue;
 
                         //System.out.println(" xml is <" + xml + ">");
                         xml = "<object-stream>" + xml + "</object-stream>";
@@ -240,13 +246,10 @@ public class FluidStreamParser {
 
 //		System.out.println(" got <" + name + " = " + value + ">");
 
-        if (name == null)
-            return null;
-        if (value == null)
-            return null;
+        if (name == null) return null;
+        if (value == null) return null;
 
-        else
-            return new Pair<String, Object>(name, value);
+        else return new Pair<String, Object>(name, value);
     }
 
     static Transformer t;
@@ -261,7 +264,8 @@ public class FluidStreamParser {
         }
     }
 
-    private static String nodeToString(Node node) {
+    private static
+    String nodeToString(Node node) {
         StringWriter sw = new StringWriter();
         try {
             t.transform(new DOMSource(node), new StreamResult(sw));
@@ -271,7 +275,8 @@ public class FluidStreamParser {
         return sw.toString();
     }
 
-    private HashMap<String, Object> parseProperties(Node node) {
+    private
+    HashMap<String, Object> parseProperties(Node node) {
         HashMap<String, Object> ret = new LinkedHashMap<String, Object>();
 
         NodeList nl = node.getChildNodes();
@@ -279,8 +284,7 @@ public class FluidStreamParser {
             Node ii = nl.item(i);
             if ("entry".equals(ii.getNodeName())) {
                 Pair<String, Object> a = parseEntry(ii);
-                if (a != null)
-                    ret.put(a.left, a.right);
+                if (a != null) ret.put(a.left, a.right);
             }
         }
 

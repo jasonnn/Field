@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package field.bytecode.protect;
 
@@ -16,66 +16,77 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-public final class DeferedModCountCached extends DeferCallingFast implements iFunction<Object, ModCountArrayWrapper> {
+public final
+class DeferedModCountCached extends DeferCallingFast implements iFunction<Object, ModCountArrayWrapper> {
 
-	ModCountCache<ModCountArrayWrapper, Object> cache = new ModCountCache<ModCountArrayWrapper, Object>(new ModCountArrayWrapper(null));
+    ModCountCache<ModCountArrayWrapper, Object> cache =
+            new ModCountCache<ModCountArrayWrapper, Object>(new ModCountArrayWrapper(null));
 
-	Method original = null;
+    Method original = null;
 
-	private final HashMap<String, Object> parameters;
+    private final HashMap<String, Object> parameters;
 
-	private Method ongoingMethod;
+    private Method ongoingMethod;
 
-	private Object[] ongoingArgs;
+    private Object[] ongoingArgs;
 
-	private ModCountArrayWrapper ongoingIAW;
+    private ModCountArrayWrapper ongoingIAW;
 
-	private Object originalTarget;
+    private Object originalTarget;
 
-	public DeferedModCountCached(String name, int access, ASMMethod method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
-		super(name, access, method, delegate, to, signature, parameters);
-		this.parameters = parameters;
-	}
+    public
+    DeferedModCountCached(String name,
+                          int access,
+                          ASMMethod method,
+                          ClassVisitor delegate,
+                          MethodVisitor to,
+                          String signature,
+                          HashMap<String, Object> parameters) {
+        super(name, access, method, delegate, to, signature, parameters);
+        this.parameters = parameters;
+    }
 
-	public Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
-		if (original == null) {
-			Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
-			for (Method m : all) {
-				if (m.getName().equals(originalMethod)) {
-					original = m;
-					break;
-				}
-			}
-			original.setAccessible(true);
-			assert original != null : originalMethod;
-		}
+    public
+    Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
+        if (original == null) {
+            Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
+            for (Method m : all) {
+                if (m.getName().equals(originalMethod)) {
+                    original = m;
+                    break;
+                }
+            }
+            original.setAccessible(true);
+            assert original != null : originalMethod;
+        }
 
-		Object[] na = new Object[argArray.length];
-		System.arraycopy(argArray, 0, na, 0, argArray.length);
+        Object[] na = new Object[argArray.length];
+        System.arraycopy(argArray, 0, na, 0, argArray.length);
 
-		ModCountArrayWrapper iaw = new ModCountArrayWrapper(na);
+        ModCountArrayWrapper iaw = new ModCountArrayWrapper(na);
 
-		ongoingMethod = original;
-		ongoingArgs = argArray;
-		ongoingIAW = iaw;
-		originalTarget = fromThis;
+        ongoingMethod = original;
+        ongoingArgs = argArray;
+        ongoingIAW = iaw;
+        originalTarget = fromThis;
 
-		Object object = cache.get(iaw, this);
+        Object object = cache.get(iaw, this);
 
-		return object;
+        return object;
 
-	}
+    }
 
-	public Object f(ModCountArrayWrapper in) {
-		try {
-			Object object = original.invoke(originalTarget, ongoingArgs);
-			return object;
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException(e);
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException(e);
-		}
-	}
+    public
+    Object f(ModCountArrayWrapper in) {
+        try {
+            Object object = original.invoke(originalTarget, ongoingArgs);
+            return object;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(e);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(e);
+        }
+    }
 }

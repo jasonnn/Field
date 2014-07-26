@@ -9,11 +9,13 @@ import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class JavaDocCache {
+public
+class JavaDocCache {
 
     public static JavaDocCache cache;
 
-    public JavaDocCache() {
+    public
+    JavaDocCache() {
         cache = this;
     }
 
@@ -24,31 +26,27 @@ public class JavaDocCache {
 
     LinkedHashMap<JarFile, Map<String, JarEntry>> jarCache = new LinkedHashMap<JarFile, Map<String, JarEntry>>();
 
-    public JavaClass getClass(Class c) {
+    public
+    JavaClass getClass(Class c) {
         String cname = c.getName();
-        if (debug)
-            ;//System.out.println(" looking for <" + cname + " : " + c + ">");
+        if (debug) ;//System.out.println(" looking for <" + cname + " : " + c + ">");
         for (JavaClass cc : classes) {
-            if (debug)
-                ;//System.out.println(" name :" + cc.getFullyQualifiedName());
-            if (cc.getFullyQualifiedName().equals(cname))
-                return cc;
+            if (debug) ;//System.out.println(" name :" + cc.getFullyQualifiedName());
+            if (cc.getFullyQualifiedName().equals(cname)) return cc;
         }
 
         return null;
     }
 
-    public void addJarFile(String name) throws IOException {
+    public
+    void addJarFile(String name) throws IOException {
 
-        if (debug)
-            ;//System.out.println(" add jar file <" + name + ">");
+        if (debug) ;//System.out.println(" add jar file <" + name + ">");
 
         for (JarFile j : jarCache.keySet())
-            if (j.getName().equals(name))
-                return;
+            if (j.getName().equals(name)) return;
 
-        if (debug)
-            ;//System.out.println(" new jar file <" + name + ">");
+        if (debug) ;//System.out.println(" new jar file <" + name + ">");
 
         JarFile ff = new JarFile(name);
         Enumeration<JarEntry> entries = ff.entries();
@@ -62,7 +60,8 @@ public class JavaDocCache {
         // note, we don't actually close the jar file here
     }
 
-    public JavaClass loadNameFromJar(String pathName, String className) throws IOException {
+    public
+    JavaClass loadNameFromJar(String pathName, String className) throws IOException {
         Set<Entry<JarFile, Map<String, JarEntry>>> e = jarCache.entrySet();
         for (Entry<JarFile, Map<String, JarEntry>> ee : e) {
             Map<String, JarEntry> v = ee.getValue();
@@ -78,8 +77,7 @@ public class JavaDocCache {
                 for (JarEntry je : pre) {
                     if (je.getName().endsWith(pathName)) {
                         entry = je;
-                        if (debug)
-                            ;//System.out.println(" found suffix <" + entry + ">");
+                        if (debug) ;//System.out.println(" found suffix <" + entry + ">");
                         break;
                     }
                 }
@@ -97,11 +95,11 @@ public class JavaDocCache {
 
     LinkedHashSet<String> triedAndFailed = new LinkedHashSet<String>();
 
-    public JavaClass loadFromFile(String pathName, String className) throws FileNotFoundException {
+    public
+    JavaClass loadFromFile(String pathName, String className) throws FileNotFoundException {
 //		;//System.out.println(" looking for path <" + pathName + " / " + className + ">");
 
-        if (!new File(pathName).exists())
-            return null;
+        if (!new File(pathName).exists()) return null;
         db.addSource(new FileReader(pathName));
         // JavaClass c = db.getClassByName(className);
         JavaClass r = null;
@@ -141,8 +139,7 @@ public class JavaDocCache {
                 }
             }
 
-            if (r == null)
-                triedAndFailed.add(className);
+            if (r == null) triedAndFailed.add(className);
         }
 
 //		;//System.out.println(" found <"+(r!=null)+">");

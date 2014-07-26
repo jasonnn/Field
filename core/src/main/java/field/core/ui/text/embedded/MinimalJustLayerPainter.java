@@ -16,183 +16,202 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
-public class MinimalJustLayerPainter extends MinimalExpandable implements iRegistersMinimalLayerPainter {
+public
+class MinimalJustLayerPainter extends MinimalExpandable implements iRegistersMinimalLayerPainter {
 
-	public static
+    public static
     class Component_tuple2 extends ProvidedComponent {
 
-		String name = "Component_just_provider:" + new UID().toString() + ".transient";
+        String name = "Component_just_provider:" + new UID().toString() + ".transient";
 
-		OKey<WithWidget> localKey;
+        OKey<WithWidget> localKey;
 
-		WithWidget interpolator;
+        WithWidget interpolator;
 
-		@Override
-		public void deserialize(iVisualElement inside) {
+        @Override
+        public
+        void deserialize(iVisualElement inside) {
 
-			component = new MinimalJustLayerPainter() {
-			};
+            component = new MinimalJustLayerPainter() {
+            };
 
-			interpolator = new WithWidget();
+            interpolator = new WithWidget();
 
-			((MinimalJustLayerPainter) component).setInterpolator(interpolator);
-		}
+            ((MinimalJustLayerPainter) component).setInterpolator(interpolator);
+        }
 
-		@Override
-		public String getCurrentRepresentedString() {
-			if (localKey == null)
-				localKey = new OKey<WithWidget>(name).rootSet(interpolator);
-			interpolator.widget = (MinimalJustLayerPainter) component;
-			return "OKeyByName(\"" + name + "\", u.fromXML(r\"\"\"" + new PythonUtils().toXML(interpolator, true) + "\"\"\"))";
-		}
+        @Override
+        public
+        String getCurrentRepresentedString() {
+            if (localKey == null) localKey = new OKey<WithWidget>(name).rootSet(interpolator);
+            interpolator.widget = (MinimalJustLayerPainter) component;
+            return "OKeyByName(\""
+                   + name
+                   + "\", u.fromXML(r\"\"\""
+                   + new PythonUtils().toXML(interpolator, true)
+                   + "\"\"\"))";
+        }
 
-		@Override
-		public void preserialize() {
-		}
+        @Override
+        public
+        void preserialize() {
+        }
 
-		protected void updateValue() {
-			if (localKey == null)
-				localKey = new OKey<WithWidget>(name).rootSet(interpolator);
-			interpolator.widget = (MinimalJustLayerPainter) component;
-			localKey.rootSet(interpolator);
-		}
-	}
+        protected
+        void updateValue() {
+            if (localKey == null) localKey = new OKey<WithWidget>(name).rootSet(interpolator);
+            interpolator.widget = (MinimalJustLayerPainter) component;
+            localKey.rootSet(interpolator);
+        }
+    }
 
-	public static
+    public static
     class WithWidget {
-		public transient MinimalJustLayerPainter widget;
+        public transient MinimalJustLayerPainter widget;
 
-		public WithWidget() {
-		}
-	}
+        public
+        WithWidget() {
+        }
+    }
 
-	private int initialDown;
+    private int initialDown;
 
-	private int initialDownY;
+    private int initialDownY;
 
-	private Font font;
+    private Font font;
 
-	private int initialDownOn;
+    private int initialDownOn;
 
-	WithWidget interpolator = new WithWidget();
+    WithWidget interpolator = new WithWidget();
 
-	int sliderWidth = 12;
+    int sliderWidth = 12;
 
-	int sliderHeight = 12;
+    int sliderHeight = 12;
 
-	boolean on = false;
+    boolean on = false;
 
-	float alignment = 0.9f;
+    float alignment = 0.9f;
 
-	HashMap<String, iMinimalLayerPainter> layerPainters = new LinkedHashMap<String, iMinimalLayerPainter>();
+    HashMap<String, iMinimalLayerPainter> layerPainters = new LinkedHashMap<String, iMinimalLayerPainter>();
 
-	HashSet<iMinimalLayerPainter> first = new LinkedHashSet<iMinimalLayerPainter>();
+    HashSet<iMinimalLayerPainter> first = new LinkedHashSet<iMinimalLayerPainter>();
 
-	public MinimalJustLayerPainter() {
-	}
+    public
+    MinimalJustLayerPainter() {
+    }
 
-	public MinimalJustLayerPainter(int h) {
-		height = h;
-		sliderHeight = h;
+    public
+    MinimalJustLayerPainter(int h) {
+        height = h;
+        sliderHeight = h;
 
-	}
+    }
 
-	@Override
-	public float getAlignmentY() {
-		return alignment;
-	}
+    @Override
+    public
+    float getAlignmentY() {
+        return alignment;
+    }
 
-	@Override
-	public Insets getInsets() {
-		return new Insets(-20, -20, -20, -20);
-	}
+    @Override
+    public
+    Insets getInsets() {
+        return new Insets(-20, -20, -20, -20);
+    }
 
-	@Override
-	public Dimension getMaximumSize() {
-		return new Dimension(Integer.MAX_VALUE, height);
-	}
+    @Override
+    public
+    Dimension getMaximumSize() {
+        return new Dimension(Integer.MAX_VALUE, height);
+    }
 
-	@Override
-	public Dimension getMinimumSize() {
-		return new Dimension(0, height);
-	}
-
-
-	@Override
-	public Dimension getPreferredSize() {
-		Dimension p = super.getPreferredSize();
-		return new Dimension(p.width, height);
-	}
-
-	public iMinimalLayerPainter painterForName(String name) {
-		return layerPainters.get(name);
-	}
-
-	@Override
-	public void setBounds(int x, int y, int width, int height) {
-		super.setBounds(x, y, width, height);
-	}
-
-	public void setInterpolator(WithWidget interpolator2) {
-		this.interpolator = interpolator2;
-	}
-
-	public iMinimalLayerPainter setPainterForName(String name, iMinimalLayerPainter p) {
-		first.add(p);
-		return layerPainters.put(name, p);
-	}
-
-	@Override
-	protected void paintComponent(Graphics g) {
-		Rectangle bounds = this.getBounds();
-
-		Graphics2D g2 = (Graphics2D) g;
-
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		// paint layers
-
-		Double d = new Rectangle2D.Double(0,0, this.getSize().getWidth(), this.getSize().getHeight());
+    @Override
+    public
+    Dimension getMinimumSize() {
+        return new Dimension(0, height);
+    }
 
 
-		g2.setColor(new Color(0,0,0,0.15f));
-		g2.fill(d);
-		g2.setColor(new Color(1,1,1,0.2f));
-		g2.setStroke(new BasicStroke(1.75f));
-		g2.draw(d);
+    @Override
+    public
+    Dimension getPreferredSize() {
+        Dimension p = super.getPreferredSize();
+        return new Dimension(p.width, height);
+    }
 
-		for (iMinimalLayerPainter painter : layerPainters.values()) {
-			if (first.remove(painter)) {
-				painter.associate(this);
-			}
-			painter.paintNow(g2, this.getSize());
-		}
+    public
+    iMinimalLayerPainter painterForName(String name) {
+        return layerPainters.get(name);
+    }
 
-		enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+    @Override
+    public
+    void setBounds(int x, int y, int width, int height) {
+        super.setBounds(x, y, width, height);
+    }
 
-		if (collapseness > 1)
-			g2.drawImage(Constants.plus, bounds.width - 14, 2, 12, 12, null);
-		else
-			g2.drawImage(Constants.minus, bounds.width - 14, 2, 12, 12, null);
+    public
+    void setInterpolator(WithWidget interpolator2) {
+        this.interpolator = interpolator2;
+    }
+
+    public
+    iMinimalLayerPainter setPainterForName(String name, iMinimalLayerPainter p) {
+        first.add(p);
+        return layerPainters.put(name, p);
+    }
+
+    @Override
+    protected
+    void paintComponent(Graphics g) {
+        Rectangle bounds = this.getBounds();
+
+        Graphics2D g2 = (Graphics2D) g;
+
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // paint layers
+
+        Double d = new Rectangle2D.Double(0, 0, this.getSize().getWidth(), this.getSize().getHeight());
 
 
-	}
+        g2.setColor(new Color(0, 0, 0, 0.15f));
+        g2.fill(d);
+        g2.setColor(new Color(1, 1, 1, 0.2f));
+        g2.setStroke(new BasicStroke(1.75f));
+        g2.draw(d);
 
-	@Override
-	protected void processMouseEvent(MouseEvent e) {
-		super.processMouseEvent(e);
-		int x = e.getX() - this.bounds().x;
-		int y = e.getY() - this.bounds().y;
+        for (iMinimalLayerPainter painter : layerPainters.values()) {
+            if (first.remove(painter)) {
+                painter.associate(this);
+            }
+            painter.paintNow(g2, this.getSize());
+        }
+
+        enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+
+        if (collapseness > 1) g2.drawImage(Constants.plus, bounds.width - 14, 2, 12, 12, null);
+        else g2.drawImage(Constants.minus, bounds.width - 14, 2, 12, 12, null);
+
+
+    }
+
+    @Override
+    protected
+    void processMouseEvent(MouseEvent e) {
+        super.processMouseEvent(e);
+        int x = e.getX() - this.bounds().x;
+        int y = e.getY() - this.bounds().y;
         if (e.getID() == MouseEvent.MOUSE_ENTERED) {
             expand();
-			shouldColapseOnOff = false;
-		}
+            shouldColapseOnOff = false;
+        }
         if (e.getID() == MouseEvent.MOUSE_EXITED && !on) {
             colapse();
-			shouldColapseOnOff = false;
-		}
+            shouldColapseOnOff = false;
+        }
         if (e.getID() == MouseEvent.MOUSE_EXITED && on) {
             shouldColapseOnOff = true;
-		}
+        }
 
-	}
+    }
 }

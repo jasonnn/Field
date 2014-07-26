@@ -13,7 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Launcher {
+public
+class Launcher {
     public static final Object lock = new Object();
 
     static {
@@ -49,20 +50,22 @@ public class Launcher {
     private iContinuation continuation;
     private Runnable timer;
 
-    public Launcher(String[] args) {
+    public
+    Launcher(String[] args) {
 
         assert launcher == null : launcher;
         Launcher.launcher = this;
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            public void run() {
+            public
+            void run() {
                 dying = true;
             }
         }));
-        String trampoline = System.getProperty("trampoline.class", "field.bytecode.protect.trampoline.StandardTrampoline");
+        String trampoline =
+                System.getProperty("trampoline.class", "field.bytecode.protect.trampoline.StandardTrampoline");
         boolean isTrampoline = trampoline != null;
 
-        if (trampoline == null)
-            trampoline = System.getProperty("main.class");
+        if (trampoline == null) trampoline = System.getProperty("main.class");
         boolean success = false;
         try {
             final Class<?> c = Class.forName(trampoline);
@@ -74,8 +77,7 @@ public class Launcher {
                     return;
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    if (SystemProperties.getIntProperty("exitOnException", 0) == 1)
-                        System.exit(1);
+                    if (SystemProperties.getIntProperty("exitOnException", 0) == 1) System.exit(1);
                 }
                 return;
             } catch (SecurityException e) {
@@ -98,17 +100,18 @@ public class Launcher {
 
         } catch (Throwable e) {
             e.printStackTrace();
-            if (SystemProperties.getIntProperty("exitOnException", 0) == 1)
-                System.exit(1);
+            if (SystemProperties.getIntProperty("exitOnException", 0) == 1) System.exit(1);
         }
 
     }
 
-    public static Launcher getLauncher() {
+    public static
+    Launcher getLauncher() {
         return launcher;
     }
 
-    public static void main(final String[] args) {
+    public static
+    void main(final String[] args) {
 
         log.info(" hello ");
         //TODO swt/appkit/? doesnt seem to like this (when using OSXMain)
@@ -117,11 +120,12 @@ public class Launcher {
         display.syncExec(new Runnable() {
 
             @Override
-            public void run() {
+            public
+            void run() {
                 Launcher.args = args;
 
                 if (SystemProperties.getIntProperty("headless", 0) == 1) {
-                   log.info(" we are headless ");
+                    log.info(" we are headless ");
                     System.setProperty("java.awt.headless", "true");
                 }
 
@@ -162,11 +166,13 @@ public class Launcher {
         openFileHandlers.add(h);
     }
 
-    public void deregisterUpdateable(iUpdateable up) {
+    public
+    void deregisterUpdateable(iUpdateable up) {
         getWillRemove().add(up);
     }
 
-    public boolean isRegisteredUpdateable(iUpdateable up) {
+    public
+    boolean isRegisteredUpdateable(iUpdateable up) {
         return getUpdateables().contains(up) || getPaused().contains(up);
     }
 
@@ -176,11 +182,13 @@ public class Launcher {
      *
      * @param target - the <code>iUpdateable</code> which will be updated.
      */
-    public void registerUpdateable(iUpdateable target) {
+    public
+    void registerUpdateable(iUpdateable target) {
         getWillAdd().add(target);
     }
 
-    public void addPostUpdateable(iUpdateable target) {
+    public
+    void addPostUpdateable(iUpdateable target) {
         postUpdateables.add(target);
     }
 
@@ -195,7 +203,8 @@ public class Launcher {
      * @param updateDivisor Will be updated at the main timer's frequency divided
      *                      by this parameter.
      */
-    public void registerUpdateable(final iUpdateable target, final int updateDivisor) {
+    public
+    void registerUpdateable(final iUpdateable target, final int updateDivisor) {
         // The anonymous class used here wraps the
         // update target and implements
         // the logic necessary to support updating at a
@@ -204,7 +213,8 @@ public class Launcher {
         registerUpdateable(new iUpdateable() {
             int tick = 0;
 
-            public void update() {
+            public
+            void update() {
                 tick++;
                 if (tick % updateDivisor == 0) {
                     target.update();
@@ -213,11 +223,13 @@ public class Launcher {
         });
     }
 
-    public void setContinuation(iContinuation continuation) {
+    public
+    void setContinuation(iContinuation continuation) {
         this.continuation = continuation;
     }
 
-    protected void constructMainTimer() {
+    protected
+    void constructMainTimer() {
 
         timer = new Runnable() {
 
@@ -225,7 +237,8 @@ public class Launcher {
 
             long timeIn = 0;
 
-            public void run() {
+            public
+            void run() {
 
                 // new Exception().printStackTrace();
 
@@ -249,34 +262,32 @@ public class Launcher {
 
                 mainThread = Thread.currentThread();
                 synchronized (lock) {
-                    if (dying)
-                        return;
+                    if (dying) return;
 
                     if (!isPaused) {
                         in++;
                         try {
-                            if (in == 1)
-                                for (int i = 0; i < getUpdateables().size(); i++) {
-                                    iUpdateable up = getUpdateables().get(i);
-                                    if (!getPaused().contains(up))
-                                        try {
-                                            setCurrentUpdating(up);
+                            if (in == 1) for (int i = 0; i < getUpdateables().size(); i++) {
+                                iUpdateable up = getUpdateables().get(i);
+                                if (!getPaused().contains(up)) try {
+                                    setCurrentUpdating(up);
 
-                                            up.update();
+                                    up.update();
 
-                                            if (continuation != null) {
-                                                return;
-                                            }
+                                    if (continuation != null) {
+                                        return;
+                                    }
 
-                                        } catch (Throwable tr) {
-                                            log.log(Level.WARNING,"Launcher reporting an exception while updating <" + up + '>',tr);
-                                            tr.printStackTrace();
-                                            handle(tr);
-                                            if (SystemProperties.getIntProperty("exitOnException", 0) == 1)
-                                                System.exit(1);
-                                        }
-                                    setCurrentUpdating(null);
+                                } catch (Throwable tr) {
+                                    log.log(Level.WARNING,
+                                            "Launcher reporting an exception while updating <" + up + '>',
+                                            tr);
+                                    tr.printStackTrace();
+                                    handle(tr);
+                                    if (SystemProperties.getIntProperty("exitOnException", 0) == 1) System.exit(1);
                                 }
+                                setCurrentUpdating(null);
+                            }
                         } finally {
                             in--;
                         }
@@ -299,8 +310,7 @@ public class Launcher {
 
                 int next = (int) ((long) (interval * 1000) - duration);
                 if (next < 5) next = 5;
-                if (!dying)
-                    display.timerExec(next, timer);
+                if (!dying) display.timerExec(next, timer);
 
             }
         };
@@ -308,25 +318,29 @@ public class Launcher {
         display.timerExec((int) (interval * 1000), timer);
     }
 
-    public void handle(Throwable tr) {
+    public
+    void handle(Throwable tr) {
         for (iExceptionHandler exceptionHandler : exceptionHandlers)
-            if (exceptionHandler.handle(tr))
-                return;
+            if (exceptionHandler.handle(tr)) return;
     }
 
-    public void addExceptionHandler(iExceptionHandler e) {
+    public
+    void addExceptionHandler(iExceptionHandler e) {
         exceptionHandlers.add(e);
     }
 
-    protected iUpdateable getCurrentUpdating() {
+    protected
+    iUpdateable getCurrentUpdating() {
         return currentUpdating;
     }
 
-    protected void setCurrentUpdating(iUpdateable currentUpdating) {
+    protected
+    void setCurrentUpdating(iUpdateable currentUpdating) {
         this.currentUpdating = currentUpdating;
     }
 
-    protected Set<iUpdateable> getPaused() {
+    protected
+    Set<iUpdateable> getPaused() {
         return paused;
     }
 
@@ -334,7 +348,8 @@ public class Launcher {
 //        this.paused = paused;
 //    }
 
-    protected List<iUpdateable> getUpdateables() {
+    protected
+    List<iUpdateable> getUpdateables() {
         return updateables;
     }
 
@@ -342,7 +357,8 @@ public class Launcher {
 //        this.updateables = updateables;
 //    }
 
-    protected Set<iUpdateable> getWillAdd() {
+    protected
+    Set<iUpdateable> getWillAdd() {
         return willAdd;
     }
 
@@ -350,7 +366,8 @@ public class Launcher {
 //        this.willAdd = willAdd;
 //    }
 
-    protected Set<iUpdateable> getWillPause() {
+    protected
+    Set<iUpdateable> getWillPause() {
         return willPause;
     }
 
@@ -358,7 +375,8 @@ public class Launcher {
 //        this.willPause = willPause;
 //    }
 
-    protected Set<iUpdateable> getWillRemove() {
+    protected
+    Set<iUpdateable> getWillRemove() {
         return willRemove;
     }
 
@@ -366,7 +384,8 @@ public class Launcher {
 //        this.willRemove = willRemove;
 //    }
 
-    protected Set<iUpdateable> getWillUnPause() {
+    protected
+    Set<iUpdateable> getWillUnPause() {
         return willUnPause;
     }
 
@@ -374,17 +393,20 @@ public class Launcher {
 //        this.willUnPause = willUnPause;
 //    }
 
-    public void nextCycle(final iUpdateable updateable) {
+    public
+    void nextCycle(final iUpdateable updateable) {
         registerUpdateable(new iUpdateable() {
 
-            public void update() {
+            public
+            void update() {
                 updateable.update();
                 deregisterUpdateable(this);
             }
         });
     }
 
-    public void runRegisteredShutdownHooks() {
+    public
+    void runRegisteredShutdownHooks() {
 
         shuttingDown = true;
         //System.out.println(" running down ");
@@ -401,24 +423,32 @@ public class Launcher {
         System.exit(0);
     }
 
-    public void addShutdown(iUpdateable u) {
+    public
+    void addShutdown(iUpdateable u) {
         shutdown.add(u);
     }
 
-    public void removeShutdownHook(iUpdateable shutdownhook) {
+    public
+    void removeShutdownHook(iUpdateable shutdownhook) {
         shutdown.remove(shutdownhook);
     }
 
-    public static interface iOpenFileHandler {
-        public void open(String file);
+    public static
+    interface iOpenFileHandler {
+        public
+        void open(String file);
     }
 
-    public static interface iContinuation {
-        public void next();
+    public static
+    interface iContinuation {
+        public
+        void next();
     }
 
-    public static interface iExceptionHandler {
-        public boolean handle(Throwable t);
+    public static
+    interface iExceptionHandler {
+        public
+        boolean handle(Throwable t);
     }
 
 }

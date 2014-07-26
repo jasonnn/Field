@@ -11,9 +11,11 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-public class ExCLNotEnoughStays extends ExCLError {
-	@Override
-	public String description() {
-		return "(ExCLNotEnoughStays) There are not enough stays to give specific values to every variable";
-	}
+public
+class ExCLNotEnoughStays extends ExCLError {
+    @Override
+    public
+    String description() {
+        return "(ExCLNotEnoughStays) There are not enough stays to give specific values to every variable";
+    }
 }

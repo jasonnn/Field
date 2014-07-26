@@ -1,6 +1,8 @@
 package field.math.abstraction;
 
-public interface iHasScalar {
+public
+interface iHasScalar {
 
-	public double getDoubleValue();
+    public
+    double getDoubleValue();
 }

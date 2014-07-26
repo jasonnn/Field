@@ -14,192 +14,225 @@ import java.util.Map.Entry;
 
 /**
  * the task here is to take a set of selection verticies that go from "frozen" to "abs" and make the (python) code (and invisible properties) that perform this task
- * 
+ *
  * @author marc
- * 
  */
-public class TweakSplineCodeGen {
+public
+class TweakSplineCodeGen {
 
-	// identifies a node in a spline
-	public interface iNodeDesc {
-		// mutates input "selection" to grab the ones that it recognizes fully
-		public List<iResult> describe(List<CachedLine> index, List<SelectedVertex> selection);
-	}
+    // identifies a node in a spline
+    public
+    interface iNodeDesc {
+        // mutates input "selection" to grab the ones that it recognizes fully
+        public
+        List<iResult> describe(List<CachedLine> index, List<SelectedVertex> selection);
+    }
 
-	// describes the transformation of a group of verticies to another group (from "frozen" to "abs")
-	public interface iCoordDesc {
-		// mutates input "claimed" to grab the ones that it recognizes fully
-		public iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi);
-	}
+    // describes the transformation of a group of verticies to another group (from "frozen" to "abs")
+    public
+    interface iCoordDesc {
+        // mutates input "claimed" to grab the ones that it recognizes fully
+        public
+        iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi);
+    }
 
-	public interface iResult {
-		public List<SelectedVertex> getClaimedVertex();
+    public
+    interface iResult {
+        public
+        List<SelectedVertex> getClaimedVertex();
 
-		public String toExpression();
+        public
+        String toExpression();
 
-		public void toProperties(iVisualElement e, Map<String, Object> soFar);
-	}
+        public
+        void toProperties(iVisualElement e, Map<String, Object> soFar);
+    }
 
-	public static final iResult abort = new iResult(){
+    public static final iResult abort = new iResult() {
 
-		public List<SelectedVertex> getClaimedVertex() {
-			return null;
-		}
+        public
+        List<SelectedVertex> getClaimedVertex() {
+            return null;
+        }
 
-		public String toExpression() {
-			return null;
-		}
+        public
+        String toExpression() {
+            return null;
+        }
 
-		public void toProperties(iVisualElement e, Map<String, Object> soFar) {
-		}
-	};
+        public
+        void toProperties(iVisualElement e, Map<String, Object> soFar) {
+        }
+    };
 
-	/**
-	 * each node desc gets an expression
-	 * 
-	 * @author marc
-	 * 
-	 */
+    /**
+     * each node desc gets an expression
+     *
+     * @author marc
+     */
     public static
     class BaseTool {
-		List<iNodeDesc> nodes = new ArrayList<iNodeDesc>();
+        List<iNodeDesc> nodes = new ArrayList<iNodeDesc>();
 
-		List<iCoordDesc> coords = new ArrayList<iCoordDesc>();
+        List<iCoordDesc> coords = new ArrayList<iCoordDesc>();
 
-		String toolExpressionName = "baseTool";
-		
-		Map<String, String> extraArguments = new HashMap<String, String>();
-		
-		public Map<String, String> getExtraArguments() {
-			return extraArguments;
-		}
+        String toolExpressionName = "baseTool";
 
-		public iResult obtainExpressions(iVisualElement e, List<CachedLine> index, final List<SelectedVertex> selected, MouseInfo mi) {
+        Map<String, String> extraArguments = new HashMap<String, String>();
 
-			ArrayList<SelectedVertex> toClaim = new ArrayList<SelectedVertex>(selected);
-			
-			for(SelectedVertex v : new ArrayList<SelectedVertex>(selected))
-			{
-				if (v.vertex.getDict().isTrue(iLinearGraphicsContext.noTweak_v, false))
-					toClaim.remove(v);
-			}
-			
-			ArrayList<iResult> nodeDescriptions = new ArrayList<iResult>();
-			for (int i = nodes.size() - 1; i >= 0; i--) {
-				List<iResult> res = null;
-				do {
-					res = nodes.get(i).describe(index, toClaim);
-					if (res != null) nodeDescriptions.addAll(res);
-				} while (res != null);
-			}
-			assert toClaim.size() == 0 : "unclaimed node descriptions " + toClaim + ':' + selected + ':' + nodeDescriptions;
+        public
+        Map<String, String> getExtraArguments() {
+            return extraArguments;
+        }
 
-			String expression = "";
-			final Map<String, Object> property = new HashMap<String, Object>();
+        public
+        iResult obtainExpressions(iVisualElement e,
+                                  List<CachedLine> index,
+                                  final List<SelectedVertex> selected,
+                                  MouseInfo mi) {
 
-			for (int i = 0; i < nodeDescriptions.size(); i++) {
-				iResult nd = nodeDescriptions.get(i);
-				ArrayList<SelectedVertex> ndToClaim = new ArrayList<SelectedVertex>(nd.getClaimedVertex());
-				ArrayList<iResult> coordDescriptions = new ArrayList<iResult>();
+            ArrayList<SelectedVertex> toClaim = new ArrayList<SelectedVertex>(selected);
 
-				boolean aborted = false;
+            for (SelectedVertex v : new ArrayList<SelectedVertex>(selected)) {
+                if (v.vertex.getDict().isTrue(iLinearGraphicsContext.noTweak_v, false)) toClaim.remove(v);
+            }
 
-				outer: for (int j = coords.size() - 1; j >= 0; j--) {
-					iResult res = null;
-					do {
-						res = coords.get(j).describe(index, ndToClaim, mi);
-						if (res == abort) {
-							nodeDescriptions.remove(i);
-							i--;
-							aborted = true;
-							break outer;
-						}
-						if (res != null) coordDescriptions.add(res);
-					} while (res != null);
-				}
+            ArrayList<iResult> nodeDescriptions = new ArrayList<iResult>();
+            for (int i = nodes.size() - 1; i >= 0; i--) {
+                List<iResult> res = null;
+                do {
+                    res = nodes.get(i).describe(index, toClaim);
+                    if (res != null) nodeDescriptions.addAll(res);
+                } while (res != null);
+            }
+            assert toClaim.size() == 0 : "unclaimed node descriptions "
+                                         + toClaim
+                                         + ':'
+                                         + selected
+                                         + ':'
+                                         + nodeDescriptions;
 
-				if (!aborted) {
-					assert ndToClaim.size() == 0 : "unclaimed coord transformations " + ndToClaim + ':'
-                                                   + selected + ':'
-                                                   + nodeDescriptions + "  : " + nd;
+            String expression = "";
+            final Map<String, Object> property = new HashMap<String, Object>();
 
-					expression += assembleExpression(e, nd, coordDescriptions, property, mi) + '\n';
-				}
-			}
-			final String fexpression = expression;
-			return new iResult(){
-				public List<SelectedVertex> getClaimedVertex() {
-					return new ArrayList<SelectedVertex>(selected);
-				}
+            for (int i = 0; i < nodeDescriptions.size(); i++) {
+                iResult nd = nodeDescriptions.get(i);
+                ArrayList<SelectedVertex> ndToClaim = new ArrayList<SelectedVertex>(nd.getClaimedVertex());
+                ArrayList<iResult> coordDescriptions = new ArrayList<iResult>();
 
-				public String toExpression() {
-					return fexpression;
-				}
+                boolean aborted = false;
 
-				public void toProperties(iVisualElement e, Map<String, Object> soFar) {
-					soFar.putAll(property);
-				}
-			};
-		}
+outer:
+                for (int j = coords.size() - 1; j >= 0; j--) {
+                    iResult res = null;
+                    do {
+                        res = coords.get(j).describe(index, ndToClaim, mi);
+                        if (res == abort) {
+                            nodeDescriptions.remove(i);
+                            i--;
+                            aborted = true;
+                            break outer;
+                        }
+                        if (res != null) coordDescriptions.add(res);
+                    } while (res != null);
+                }
 
-		public String getCoordinateDescription(List<CachedLine> index, final List<SelectedVertex> selected, MouseInfo mi) {
-			ArrayList<SelectedVertex> sel = new ArrayList<SelectedVertex>(selected);
-			String ex = "";
-			for (int i = 0; i < coords.size(); i++) {
-				iResult r = coords.get(i).describe(index, sel, mi);
-				if (r != null) {
-					String e = r.toExpression();
-					ex += e + ',';
-				}
-			}
+                if (!aborted) {
+                    assert ndToClaim.size() == 0 : "unclaimed coord transformations "
+                                                   + ndToClaim
+                                                   + ':'
+                                                   + selected
+                                                   + ':'
+                                                   + nodeDescriptions
+                                                   + "  : "
+                                                   + nd;
 
-			final String fex = '(' + ex + ')';
-			return fex;
-		}
+                    expression += assembleExpression(e, nd, coordDescriptions, property, mi) + '\n';
+                }
+            }
+            final String fexpression = expression;
+            return new iResult() {
+                public
+                List<SelectedVertex> getClaimedVertex() {
+                    return new ArrayList<SelectedVertex>(selected);
+                }
 
-		public String assembleExpression(iVisualElement e, iResult nd, ArrayList<iResult> coordDescriptions, Map<String, Object> property, MouseInfo mi) {
+                public
+                String toExpression() {
+                    return fexpression;
+                }
 
-			String exp = toolExpressionName + "( ";
+                public
+                void toProperties(iVisualElement e, Map<String, Object> soFar) {
+                    soFar.putAll(property);
+                }
+            };
+        }
 
-			exp += "node=" + nd.toExpression() + ", ";
+        public
+        String getCoordinateDescription(List<CachedLine> index, final List<SelectedVertex> selected, MouseInfo mi) {
+            ArrayList<SelectedVertex> sel = new ArrayList<SelectedVertex>(selected);
+            String ex = "";
+            for (int i = 0; i < coords.size(); i++) {
+                iResult r = coords.get(i).describe(index, sel, mi);
+                if (r != null) {
+                    String e = r.toExpression();
+                    ex += e + ',';
+                }
+            }
 
-			nd.toProperties(e, property);
+            final String fex = '(' + ex + ')';
+            return fex;
+        }
 
-			if (coordDescriptions.size() > 0) {
-				exp += "coords=(";
-				for (int i = 0; i < coordDescriptions.size(); i++) {
-					exp += coordDescriptions.get(i).toExpression() + ", ";
-					coordDescriptions.get(i).toProperties(e, property);
-				}
-				exp += ")";
-			}
+        public
+        String assembleExpression(iVisualElement e,
+                                  iResult nd,
+                                  ArrayList<iResult> coordDescriptions,
+                                  Map<String, Object> property,
+                                  MouseInfo mi) {
 
-			Set<Entry<String, String>> extra = extraArguments.entrySet();
-			Iterator<Entry<String, String>> ee = extra.iterator();
-			while(ee.hasNext())
-			{
-				Entry<String, String> ii = ee.next();
-				exp+= ',' +ii.getKey()+ '=' +ii.getValue();
-			}
-			
-			
-			exp += " )";
-			return exp;
-		}
+            String exp = toolExpressionName + "( ";
 
-		public void populateParameters(iVisualElement inside, iUpdateable continuation) {
-			continuation.update();
-		}
+            exp += "node=" + nd.toExpression() + ", ";
 
-	}
+            nd.toProperties(e, property);
 
-	public static
+            if (coordDescriptions.size() > 0) {
+                exp += "coords=(";
+                for (int i = 0; i < coordDescriptions.size(); i++) {
+                    exp += coordDescriptions.get(i).toExpression() + ", ";
+                    coordDescriptions.get(i).toProperties(e, property);
+                }
+                exp += ")";
+            }
+
+            Set<Entry<String, String>> extra = extraArguments.entrySet();
+            Iterator<Entry<String, String>> ee = extra.iterator();
+            while (ee.hasNext()) {
+                Entry<String, String> ii = ee.next();
+                exp += ',' + ii.getKey() + '=' + ii.getValue();
+            }
+
+
+            exp += " )";
+            return exp;
+        }
+
+        public
+        void populateParameters(iVisualElement inside, iUpdateable continuation) {
+            continuation.update();
+        }
+
+    }
+
+    public static
     String uniqProperty(iVisualElement e, Map<String, Object> p) {
-		String base = "_tweakProperty";
-		int n = 0;
-		while (e.getProperty(new VisualElementProperty(base + n)) != null || (p!=null && p.containsKey(base + n)))
-			n++;
-		return base + n;
-	}
+        String base = "_tweakProperty";
+        int n = 0;
+        while (e.getProperty(new VisualElementProperty(base + n)) != null || (p != null && p.containsKey(base + n)))
+            n++;
+        return base + n;
+    }
 
 }

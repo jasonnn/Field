@@ -10,9 +10,10 @@ import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstan
 import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.handleFast_V_IOo;
 
 /**
-* Created by jason on 7/14/14.
-*/
-public abstract class CallOnEntryFast extends FieldASMGeneratorAdapter implements FastEntryHandler {
+ * Created by jason on 7/14/14.
+ */
+public abstract
+class CallOnEntryFast extends FieldASMGeneratorAdapter implements FastEntryHandler {
 
     static int uniq = 0;
 
@@ -24,7 +25,12 @@ public abstract class CallOnEntryFast extends FieldASMGeneratorAdapter implement
 
     int returnNumber = 0;
 
-    public CallOnEntryFast(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
+    public
+    CallOnEntryFast(String name,
+                    int access,
+                    ASMMethod onMethod,
+                    MethodVisitor delegateTo,
+                    HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.onMethod = onMethod;
@@ -43,7 +49,8 @@ public abstract class CallOnEntryFast extends FieldASMGeneratorAdapter implement
     void handle(int fromName, Object fromThis, Object[] argArray);
 
     @Override
-    public void visitCode() {
+    public
+    void visitCode() {
 
         push(uniq);
         loadThis();

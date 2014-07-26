@@ -7,10 +7,15 @@ import java.lang.annotation.Annotation;
 /**
  * Created by jason on 7/20/14.
  */
-public interface InheritWovenHelper {
+public
+interface InheritWovenHelper {
     ClassLoader getLoader();
 
-    Annotation[] getAllAnotationsForSuperMethodsOf(String name, String desc, ASMType[] at, String super_name, String[] interfaces);
+    Annotation[] getAllAnotationsForSuperMethodsOf(String name,
+                                                   String desc,
+                                                   ASMType[] at,
+                                                   String super_name,
+                                                   String[] interfaces);
 
     boolean shouldLoadLocal(String name);
 }

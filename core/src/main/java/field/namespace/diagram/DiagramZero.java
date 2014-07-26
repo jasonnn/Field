@@ -10,246 +10,341 @@ import java.util.Map;
 
 /**
  * fundemental interfaces
- * 
+ * <p/>
  * for a mutable channel there needs to be a mutable notify \u2014 marker changedcalled when a marker moves position
- * 
+ *
  * @author marc Created on Sep 19, 2004 \u2014 columbia library
  */
-public class DiagramZero {
+public
+class DiagramZero {
 
 
-	public interface iChannel<T> extends iContainer {
-		public iChannel<T> getSlice(double from, double to);
+    public
+    interface iChannel<T> extends iContainer {
+        public
+        iChannel<T> getSlice(double from, double to);
 
-		public iMarkerIterator<T> getIterator();
+        public
+        iMarkerIterator<T> getIterator();
 
-		public void addNotify(iChannelNotify<T> notify);
+        public
+        void addNotify(iChannelNotify<T> notify);
 
-		public void catchUpNotify(iChannelNotify<T> notify);
+        public
+        void catchUpNotify(iChannelNotify<T> notify);
 
-		public void removeNotify(iChannelNotify<T> notify);
+        public
+        void removeNotify(iChannelNotify<T> notify);
 
-		public List<iChannel<T>> getChildrenChannels();
+        public
+        List<iChannel<T>> getChildrenChannels();
 
-		public void beginOperation();
+        public
+        void beginOperation();
 
-		public void endOperation();
-	}
+        public
+        void endOperation();
+    }
 
-	public interface iMarker<T> {
-		public double getTime();
+    public
+    interface iMarker<T> {
+        public
+        double getTime();
 
-		public double getDuration();
+        public
+        double getDuration();
 
-		public T getPayload();
+        public
+        T getPayload();
 
-		public Map<Object, iConnection> getConnections();
+        public
+        Map<Object, iConnection> getConnections();
 
-		public void addNotify(iMarkerNotify<? super T> notify);
+        public
+        void addNotify(iMarkerNotify<? super T> notify);
 
-		public void removeNotify(iMarkerNotify<? super T> notify);
+        public
+        void removeNotify(iMarkerNotify<? super T> notify);
 
-		public iChannel<T> getRootChannel();
+        public
+        iChannel<T> getRootChannel();
 
-		public iMarkerIterator<T> getIterator();
-		
-		public boolean isPresent();
-	}
+        public
+        iMarkerIterator<T> getIterator();
 
-	public interface iMutableMarker<T> extends iMarker<T> {
-		public void setTime(double to);
+        public
+        boolean isPresent();
+    }
 
-		public void setDuration(double to);
-	}
+    public
+    interface iMutableMarker<T> extends iMarker<T> {
+        public
+        void setTime(double to);
 
-	public interface iMutableChannel<T> extends iChannel<T> {
-		public iMarker<T> newMarker(double at);
+        public
+        void setDuration(double to);
+    }
 
-		public iMarker<T> removeMarker(double at);
-	}
+    public
+    interface iMutableChannel<T> extends iChannel<T> {
+        public
+        iMarker<T> newMarker(double at);
 
-	public interface iMarkerRef<T> {
-		public iMarker<T> getMarker();
+        public
+        iMarker<T> removeMarker(double at);
+    }
 
-		public void addNotify(iMarkerRefNotify<T> notify);
+    public
+    interface iMarkerRef<T> {
+        public
+        iMarker<T> getMarker();
 
-		public void removeNotify(iMarkerRefNotify<T> notify);
-	}
+        public
+        void addNotify(iMarkerRefNotify<T> notify);
 
-	public interface iConnection<A, B> {
-		public iMarker<A> getMarkerUp();
+        public
+        void removeNotify(iMarkerRefNotify<T> notify);
+    }
 
-		public iMarker<B> getMarkerDown();
+    public
+    interface iConnection<A, B> {
+        public
+        iMarker<A> getMarkerUp();
 
-		public void addNotify(iConnectionNotify<A, B> notify);
+        public
+        iMarker<B> getMarkerDown();
 
-		public void removeNotify(iConnectionNotify<A, B> notify);
+        public
+        void addNotify(iConnectionNotify<A, B> notify);
 
-		public void invalidate(iMarker end);
-		
-		public boolean isValid();
-	}
+        public
+        void removeNotify(iConnectionNotify<A, B> notify);
 
-	public interface iMarkerIterator<T> {
-		public boolean hasNext();
+        public
+        void invalidate(iMarker end);
 
-		public iMarker<T> next();
+        public
+        boolean isValid();
+    }
 
-		public boolean hasPrevious();
+    public
+    interface iMarkerIterator<T> {
+        public
+        boolean hasNext();
 
-		public iMarker<T> previous();
+        public
+        iMarker<T> next();
 
-		public List<iMarker<T>> remaining();
+        public
+        boolean hasPrevious();
 
-		public iMarkerIterator<T> clone();
+        public
+        iMarker<T> previous();
 
-		// optional
-		public void remove();
+        public
+        List<iMarker<T>> remaining();
 
-	}
+        public
+        iMarkerIterator<T> clone();
 
-	public interface iMarkerRefNotify<T> {
-		public static final Method beginMarkerRefNotify = ReflectionTools.methodOf("beginMarkerRefNotify", iMarkerRefNotify.class);
+        // optional
+        public
+        void remove();
 
-		public static final Method endMarkerRefNotify = ReflectionTools.methodOf("endMarkerRefNotify", iMarkerRefNotify.class);
+    }
 
-		public static final Method markerRefNowInvalid = ReflectionTools.methodOf("markerRefNowInvalid", iMarkerRefNotify.class, iMarkerRef.class);
-		public static final Method markerRefNowDifferent= ReflectionTools.methodOf("markerRefNowDifferent", iMarkerRefNotify.class, iMarkerRef.class, iMarker.class);
+    public
+    interface iMarkerRefNotify<T> {
+        public static final Method beginMarkerRefNotify =
+                ReflectionTools.methodOf("beginMarkerRefNotify", iMarkerRefNotify.class);
 
-		public void beginMarkerRefNotify();
+        public static final Method endMarkerRefNotify =
+                ReflectionTools.methodOf("endMarkerRefNotify", iMarkerRefNotify.class);
 
-		public void endMarkerRefNotify();
+        public static final Method markerRefNowInvalid =
+                ReflectionTools.methodOf("markerRefNowInvalid", iMarkerRefNotify.class, iMarkerRef.class);
+        public static final Method markerRefNowDifferent = ReflectionTools.methodOf("markerRefNowDifferent",
+                                                                                    iMarkerRefNotify.class,
+                                                                                    iMarkerRef.class,
+                                                                                    iMarker.class);
 
-		public void markerRefNowInvalid(iMarkerRef<T> ref);
+        public
+        void beginMarkerRefNotify();
 
-		public void markerRefNowDifferent(iMarkerRef<T> ref, iMarker<T> was);
-	}
+        public
+        void endMarkerRefNotify();
 
-	public interface iConnectionNotify<A, B> {
-		public static final Method beginConnectionNotify = ReflectionTools.methodOf("beginConnectionNotify", iConnectionNotify.class);
+        public
+        void markerRefNowInvalid(iMarkerRef<T> ref);
 
-		public static final Method endConnectionNotify = ReflectionTools.methodOf("endConnectionNotify", iConnectionNotify.class);
+        public
+        void markerRefNowDifferent(iMarkerRef<T> ref, iMarker<T> was);
+    }
 
-		public static final Method connectionNowInvalid = ReflectionTools.methodOf("connectionNowInvalid", iConnectionNotify.class, iConnection.class);
+    public
+    interface iConnectionNotify<A, B> {
+        public static final Method beginConnectionNotify =
+                ReflectionTools.methodOf("beginConnectionNotify", iConnectionNotify.class);
 
-		public void beginConnectionNotify();
+        public static final Method endConnectionNotify =
+                ReflectionTools.methodOf("endConnectionNotify", iConnectionNotify.class);
 
-		public void endConnectionNotify();
+        public static final Method connectionNowInvalid =
+                ReflectionTools.methodOf("connectionNowInvalid", iConnectionNotify.class, iConnection.class);
 
-		public void connectionNowInvalid(iConnection<A, B> n);
-	}
+        public
+        void beginConnectionNotify();
 
-	public interface iMarkerNotify<T> {
-		public static final Method beginMarkerNotify = ReflectionTools.methodOf("beginMarkerNotify", iMarkerNotify.class);
+        public
+        void endConnectionNotify();
 
-		public static final Method endMarkerNotify = ReflectionTools.methodOf("endMarkerNotify", iMarkerNotify.class);
+        public
+        void connectionNowInvalid(iConnection<A, B> n);
+    }
 
-		public static final Method markerChanged = ReflectionTools.methodOf("markerChanged", iMarkerNotify.class, iMarker.class);
+    public
+    interface iMarkerNotify<T> {
+        public static final Method beginMarkerNotify =
+                ReflectionTools.methodOf("beginMarkerNotify", iMarkerNotify.class);
 
-		public static final Method markerRemoved = ReflectionTools.methodOf("markerRemoved", iMarkerNotify.class, iMarker.class);
+        public static final Method endMarkerNotify = ReflectionTools.methodOf("endMarkerNotify", iMarkerNotify.class);
 
-		public void beginMarkerNotify();
+        public static final Method markerChanged =
+                ReflectionTools.methodOf("markerChanged", iMarkerNotify.class, iMarker.class);
 
-		public void endMarkerNotify();
+        public static final Method markerRemoved =
+                ReflectionTools.methodOf("markerRemoved", iMarkerNotify.class, iMarker.class);
 
-		public void markerChanged(iMarker<T> thisMarker);
+        public
+        void beginMarkerNotify();
 
-		public void markerRemoved(iMarker<T> thisMarke);
+        public
+        void endMarkerNotify();
 
-	}
+        public
+        void markerChanged(iMarker<T> thisMarker);
 
-	public static
+        public
+        void markerRemoved(iMarker<T> thisMarke);
+
+    }
+
+    public static
     class aMarkerNotify<T> implements iMarkerNotify<T> {
-		public void beginMarkerNotify() {
-		}
+        public
+        void beginMarkerNotify() {
+        }
 
-		public void endMarkerNotify() {
-		}
+        public
+        void endMarkerNotify() {
+        }
 
-		public void markerChanged(iMarker<T> thisMarker) {
-		}
+        public
+        void markerChanged(iMarker<T> thisMarker) {
+        }
 
-		public void markerRemoved(iMarker<T> thisMarke) {
-		}
+        public
+        void markerRemoved(iMarker<T> thisMarke) {
+        }
 
-	}
+    }
 
-	public interface iChannelNotify<T> {
-		public static final Method beginMarkerNotify = ReflectionTools.methodOf("beginMarkerNotify", iChannelNotify.class);
+    public
+    interface iChannelNotify<T> {
+        public static final Method beginMarkerNotify =
+                ReflectionTools.methodOf("beginMarkerNotify", iChannelNotify.class);
 
-		public static final Method endMarkerNotify = ReflectionTools.methodOf("endMarkerNotify", iChannelNotify.class);
+        public static final Method endMarkerNotify = ReflectionTools.methodOf("endMarkerNotify", iChannelNotify.class);
 
-		public static final Method markerAdded = ReflectionTools.methodOf("markerAdded", iChannelNotify.class, iMarker.class);
+        public static final Method markerAdded =
+                ReflectionTools.methodOf("markerAdded", iChannelNotify.class, iMarker.class);
 
-		public static final Method markerRemoved = ReflectionTools.methodOf("markerRemoved", iChannelNotify.class, iMarker.class);
+        public static final Method markerRemoved =
+                ReflectionTools.methodOf("markerRemoved", iChannelNotify.class, iMarker.class);
 
-		public static final Method markerChanged = ReflectionTools.methodOf("markerChanged", iChannelNotify.class, iMarker.class);
+        public static final Method markerChanged =
+                ReflectionTools.methodOf("markerChanged", iChannelNotify.class, iMarker.class);
 
-		public void beginMarkerNotify();
+        public
+        void beginMarkerNotify();
 
-		public void endMarkerNotify();
+        public
+        void endMarkerNotify();
 
-		public void markerAdded(iMarker<T> added);
+        public
+        void markerAdded(iMarker<T> added);
 
-		public void markerRemoved(iMarker<T> removed);
+        public
+        void markerRemoved(iMarker<T> removed);
 
-		public void markerChanged(iMarker<T> changed);
-	}
+        public
+        void markerChanged(iMarker<T> changed);
+    }
 
-	public static
+    public static
     class aChannelNotify<T> implements iChannelNotify<T> {
-		boolean hasBegun = false;
+        boolean hasBegun = false;
 
-		int openCount = 0;
+        int openCount = 0;
 
-		public void beginMarkerNotify() {
-			if (openCount == 0) {
-				hasBegun = false;
-			}
-			openCount++;
-		}
+        public
+        void beginMarkerNotify() {
+            if (openCount == 0) {
+                hasBegun = false;
+            }
+            openCount++;
+        }
 
-		public void endMarkerNotify() {
-			openCount--;
-			if (openCount == 0) {
-				if (hasBegun) {
-					internalEnd();
-					hasBegun = false;
-				}
-			}
-		}
+        public
+        void endMarkerNotify() {
+            openCount--;
+            if (openCount == 0) {
+                if (hasBegun) {
+                    internalEnd();
+                    hasBegun = false;
+                }
+            }
+        }
 
-		protected void internalEnd() {
-		}
+        protected
+        void internalEnd() {
+        }
 
-		public void markerAdded(iMarker<T> added) {
-			if (!hasBegun) {
-				hasBegun = true;
-				internalBegin();
-			}
-		}
+        public
+        void markerAdded(iMarker<T> added) {
+            if (!hasBegun) {
+                hasBegun = true;
+                internalBegin();
+            }
+        }
 
-		protected void internalBegin() {
-		}
+        protected
+        void internalBegin() {
+        }
 
-		public void markerRemoved(iMarker<T> removed) {
-			if (!hasBegun) {
-				hasBegun = true;
-				internalBegin();
-			}
-		}
+        public
+        void markerRemoved(iMarker<T> removed) {
+            if (!hasBegun) {
+                hasBegun = true;
+                internalBegin();
+            }
+        }
 
-		public void markerChanged(iMarker<T> changed) {
-			if (!hasBegun) {
-				hasBegun = true;
-				internalBegin();
-			}
-		}
-	}
+        public
+        void markerChanged(iMarker<T> changed) {
+            if (!hasBegun) {
+                hasBegun = true;
+                internalBegin();
+            }
+        }
+    }
 
-	public static
+    public static
     interface iMarkerFactory<T> {
-		public iMarker<T> makeMarker(iChannel<T> inside, double start, double duration, T payload);
-		public void removeMarker(iChannel<T> from, iMarker<T> marker);
-	}
+        public
+        iMarker<T> makeMarker(iChannel<T> inside, double start, double duration, T payload);
+
+        public
+        void removeMarker(iChannel<T> from, iMarker<T> marker);
+    }
 }

@@ -21,210 +21,239 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 @Woven
-public class AutoExecutePythonPlugin implements iPlugin {
+public
+class AutoExecutePythonPlugin implements iPlugin {
 
-	public class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    public
+    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
 
-		public <T> void deleteProperty(VisualElementProperty<T> p) {
-			properties.remove(p);
-		}
+        public
+        <T> void deleteProperty(VisualElementProperty<T> p) {
+            properties.remove(p);
+        }
 
-		public void dispose() {
-		}
+        public
+        void dispose() {
+        }
 
-		public Rect getFrame(Rect out) {
-			return null;
-		}
+        public
+        Rect getFrame(Rect out) {
+            return null;
+        }
 
-		public <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
-			if (p == overrides)
-				return (T) elementOverride;
-			Object o = properties.get(p);
-			return (T) o;
-		}
+        public
+        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+            if (p == overrides) return (T) elementOverride;
+            Object o = properties.get(p);
+            return (T) o;
+        }
 
-		public String getUniqueID() {
-			return pluginId;
-		}
+        public
+        String getUniqueID() {
+            return pluginId;
+        }
 
-		public Map<Object, Object> payload() {
-			return properties;
-		}
+        public
+        Map<Object, Object> payload() {
+            return properties;
+        }
 
-		public void setFrame(Rect out) {
-		}
+        public
+        void setFrame(Rect out) {
+        }
 
-		public iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
-			properties = t;
-			return this;
-		}
+        public
+        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+            properties = t;
+            return this;
+        }
 
-		public <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
-			properties.put(p, to);
-			return this;
-		}
+        public
+        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+            properties.put(p, to);
+            return this;
+        }
 
-		public void setUniqueID(String uid) {
-		}
-	}
+        public
+        void setUniqueID(String uid) {
+        }
+    }
 
-	public class Overrides extends iVisualElementOverrides.Adaptor {
+    public
+    class Overrides extends iVisualElementOverrides.Adaptor {
 
-		@Override
-		public VisitCode added(iVisualElement newSource) {
+        @Override
+        public
+        VisitCode added(iVisualElement newSource) {
 
             //System.out.println(" added <" + newSource + ">");
 
-			check(newSource);
-			return VisitCode.cont;
-		}
+            check(newSource);
+            return VisitCode.cont;
+        }
 
-	}
+    }
 
-	public static final VisualElementProperty<String> python_autoExec = new VisualElementProperty<String>("python_autoExec_v");
-	public static final VisualElementProperty<Integer> autoExecuteDelay = new VisualElementProperty<Integer>("autoExecuteDelay");
-	public static final VisualElementProperty<Integer> autoExecuteDelayedFor = new VisualElementProperty<Integer>("autoExecuteDelayedFor_");
+    public static final VisualElementProperty<String> python_autoExec =
+            new VisualElementProperty<String>("python_autoExec_v");
+    public static final VisualElementProperty<Integer> autoExecuteDelay =
+            new VisualElementProperty<Integer>("autoExecuteDelay");
+    public static final VisualElementProperty<Integer> autoExecuteDelayedFor =
+            new VisualElementProperty<Integer>("autoExecuteDelayedFor_");
 
-	public static final String pluginId = "//AudoExecutePython";
+    public static final String pluginId = "//AudoExecutePython";
 
-	private iVisualElement root;
+    private iVisualElement root;
 
-	private SimpleConstraints simpleConstraintsPlugin;
+    private SimpleConstraints simpleConstraintsPlugin;
 
-	private iVisualElementOverrides elementOverride;
+    private iVisualElementOverrides elementOverride;
 
-	private PythonPlugin pythonPlugin;
+    private PythonPlugin pythonPlugin;
 
-	protected LocalVisualElement lve;
+    protected LocalVisualElement lve;
 
-	Map<Object, Object> properties = new HashMap<Object, Object>();
+    Map<Object, Object> properties = new HashMap<Object, Object>();
 
-	Pattern c = Pattern.compile("#--\\{[^\\{]*?auto.*?\\}.*?$", Pattern.MULTILINE);
+    Pattern c = Pattern.compile("#--\\{[^\\{]*?auto.*?\\}.*?$", Pattern.MULTILINE);
 
-	public AutoExecutePythonPlugin() {
-		lve = new LocalVisualElement();
-	}
+    public
+    AutoExecutePythonPlugin() {
+        lve = new LocalVisualElement();
+    }
 
     public static
     void autoExecute(final iVisualElement newSource, final String string) {
         assert false;
-	}
+    }
 
-	TreeSet<iVisualElement> elements = new TreeSet<iVisualElement>(new Comparator<iVisualElement>() {
+    TreeSet<iVisualElement> elements = new TreeSet<iVisualElement>(new Comparator<iVisualElement>() {
 
-		public int compare(iVisualElement o1, iVisualElement o2) {
-			Rect r1 = o1.getFrame(new Rect());
-			Rect r2 = o2.getFrame(new Rect());
-			int c = Double.compare(r1.x, r2.x);
-			return (c == 0) ? Double.compare(System.identityHashCode(o1), System.identityHashCode(o2)) : c;
-		}
-	});
+        public
+        int compare(iVisualElement o1, iVisualElement o2) {
+            Rect r1 = o1.getFrame(new Rect());
+            Rect r2 = o2.getFrame(new Rect());
+            int c = Double.compare(r1.x, r2.x);
+            return (c == 0) ? Double.compare(System.identityHashCode(o1), System.identityHashCode(o2)) : c;
+        }
+    });
 
-	public void check(iVisualElement newSource) {
-		elements.add(newSource);
-	}
+    public
+    void check(iVisualElement newSource) {
+        elements.add(newSource);
+    }
 
-	public void perform(iVisualElement newSource) {
-		// pull auto execute information from the properties
+    public
+    void perform(iVisualElement newSource) {
+        // pull auto execute information from the properties
 
-		Ref<String> ref = new Ref<String>("");
-		new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource).getProperty(newSource, PythonPlugin.python_source_forExecution, ref);
+        Ref<String> ref = new Ref<String>("");
+        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource)
+                                                       .getProperty(newSource,
+                                                                    PythonPlugin.python_source_forExecution,
+                                                                    ref);
 
-		String[] s = c.split(ref.get());
+        String[] s = c.split(ref.get());
 
-		if (s.length > 1) {
-			autoExecute(newSource, s[1]);
-		}
+        if (s.length > 1) {
+            autoExecute(newSource, s[1]);
+        }
 
-		String q = python_autoExec.get(newSource);
-		if (q != null) {
+        String q = python_autoExec.get(newSource);
+        if (q != null) {
             //System.out.println(" about to auto exec for <" + newSource + ">");
             SplineComputingOverride.executePropertyOfElement(python_autoExec, newSource);
-		}
+        }
 
-	}
+    }
 
-	public void close() {
-	}
+    public
+    void close() {
+    }
 
-	public Object getPersistanceInformation() {
-		return new Pair<String, Object>(pluginId + "version_0", null);
-	}
+    public
+    Object getPersistanceInformation() {
+        return new Pair<String, Object>(pluginId + "version_0", null);
+    }
 
-	public iVisualElement getWellKnownVisualElement(String id) {
-		if (id.equals(pluginId))
-			return lve;
-		return null;
-	}
+    public
+    iVisualElement getWellKnownVisualElement(String id) {
+        if (id.equals(pluginId)) return lve;
+        return null;
+    }
 
-	public void registeredWith(iVisualElement root) {
+    public
+    void registeredWith(iVisualElement root) {
 
-		PythonPluginEditor.knownPythonProperties.put("Automatically Executed", python_autoExec);
+        PythonPluginEditor.knownPythonProperties.put("Automatically Executed", python_autoExec);
 
-		this.root = root;
+        this.root = root;
 
-		pythonPlugin = PythonPlugin.python_plugin.get(root);
+        pythonPlugin = PythonPlugin.python_plugin.get(root);
 
-		root.addChild(lve);
-		elementOverride = createElementOverrides();
-	}
+        root.addChild(lve);
+        elementOverride = createElementOverrides();
+    }
 
-	public void setPersistanceInformation(Object o) {
-	}
+    public
+    void setPersistanceInformation(Object o) {
+    }
 
-	boolean noAuto = SystemProperties.getIntProperty("noAuto", 0) == 1;
+    boolean noAuto = SystemProperties.getIntProperty("noAuto", 0) == 1;
 
-	public void update() {
+    public
+    void update() {
 
-		if (noAuto)
-			elements.clear();
+        if (noAuto) elements.clear();
 
-		if (!elements.isEmpty()) {
-			ArrayList<iVisualElement> a1 = new ArrayList<iVisualElement>(elements);
-			ArrayList<iVisualElement> readd = new ArrayList<iVisualElement>();
+        if (!elements.isEmpty()) {
+            ArrayList<iVisualElement> a1 = new ArrayList<iVisualElement>(elements);
+            ArrayList<iVisualElement> readd = new ArrayList<iVisualElement>();
 
-			Collections.sort(a1, new Comparator<iVisualElement>() {
+            Collections.sort(a1, new Comparator<iVisualElement>() {
 
-				public int compare(iVisualElement o1, iVisualElement o2) {
-					Rect f1 = o1.getFrame(null);
-					Rect f2 = o2.getFrame(null);
-					
-					int c = Double.compare(f1.x, f2.x);
-					return (c == 0) ? Double.compare(f1.y, f2.y) : c;
-				}
-			});
+                public
+                int compare(iVisualElement o1, iVisualElement o2) {
+                    Rect f1 = o1.getFrame(null);
+                    Rect f2 = o2.getFrame(null);
+
+                    int c = Double.compare(f1.x, f2.x);
+                    return (c == 0) ? Double.compare(f1.y, f2.y) : c;
+                }
+            });
 
             //System.out.println(" about to exec in this order :" + a1);
 
-			for (iVisualElement e : a1) {
-				Number m = e.getProperty(autoExecuteDelay);
-				if ((m != null) && (m.intValue() > 0)) {
-					Integer soFar = e.getProperty(autoExecuteDelayedFor);
-					if (soFar == null)
-						soFar = 0;
+            for (iVisualElement e : a1) {
+                Number m = e.getProperty(autoExecuteDelay);
+                if ((m != null) && (m.intValue() > 0)) {
+                    Integer soFar = e.getProperty(autoExecuteDelayedFor);
+                    if (soFar == null) soFar = 0;
 
                     //System.out.println(" needs delay of <"+m+"> has delay of <"+soFar+">");
 
                     if (soFar >= m.intValue()) {
-						perform(e);
-					} else {
-						e.setProperty(autoExecuteDelayedFor, ++soFar);
-						readd.add(e);
+                        perform(e);
+                    }
+                    else {
+                        e.setProperty(autoExecuteDelayedFor, ++soFar);
+                        readd.add(e);
                         //System.out.println(" readding <"+e+">");
                     }
-				} else
-					perform(e);
-			}
+                }
+                else perform(e);
+            }
 
-			// note that this is deliberately late \u2014 elements that
-			// are added during somebody else's perform are not
-			// autoexec'd
-			elements.clear();
-			elements.addAll(readd);
-		}
-	}
+            // note that this is deliberately late \u2014 elements that
+            // are added during somebody else's perform are not
+            // autoexec'd
+            elements.clear();
+            elements.addAll(readd);
+        }
+    }
 
-	protected iVisualElementOverrides createElementOverrides() {
-		return new Overrides();
-	}
+    protected
+    iVisualElementOverrides createElementOverrides() {
+        return new Overrides();
+    }
 }

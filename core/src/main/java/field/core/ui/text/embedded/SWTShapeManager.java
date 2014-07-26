@@ -14,7 +14,8 @@ import java.util.ArrayList;
  *
  * @author Lance Good
  */
-public class SWTShapeManager {
+public
+class SWTShapeManager {
     private static final AffineTransform IDENTITY_XFORM = new AffineTransform();
     private static final Point2D aPoint = new Point2D.Double();
     private static final ArrayList segList = new ArrayList();
@@ -25,9 +26,10 @@ public class SWTShapeManager {
      * rect.
      *
      * @param rect The rectangle to be transformed
-     * @param at The transform to use to transform the rectangle
+     * @param at   The transform to use to transform the rectangle
      */
-    public static void transform(final Rectangle2D rect, final AffineTransform at) {
+    public static
+    void transform(final Rectangle2D rect, final AffineTransform at) {
         // First, transform all 4 corners of the rectangle
         pts[0] = rect.getX(); // top left corner
         pts[1] = rect.getY();
@@ -69,7 +71,8 @@ public class SWTShapeManager {
      * @param aRect awt rectangle to extract coordinates from
      * @param sRect swt rectangle to populate
      */
-    public static void awtToSWT(final Rectangle2D aRect, final Rectangle sRect) {
+    public static
+    void awtToSWT(final Rectangle2D aRect, final Rectangle sRect) {
         sRect.x = (int) (aRect.getX() + 0.5);
         sRect.y = (int) (aRect.getY() + 0.5);
         sRect.width = (int) (aRect.getWidth() + 0.5);
@@ -82,9 +85,10 @@ public class SWTShapeManager {
      *
      * @param shape shape to convert
      * @return point coordinates given as one dimensional array with this
-     *         format: x1,y1,x2,y3,...
+     * format: x1,y1,x2,y3,...
      */
-    public static double[] shapeToPolyline(final Shape shape) {
+    public static
+    double[] shapeToPolyline(final Shape shape) {
         segList.clear();
         aPoint.setLocation(0, 0);
 
@@ -122,10 +126,11 @@ public class SWTShapeManager {
      * original points untouched.
      *
      * @param points points to transform
-     * @param at transform to apply
+     * @param at     transform to apply
      * @return transformed coordinates given in format x1,y2,x2,y2,...
      */
-    public static int[] transform(final double[] points, final AffineTransform at) {
+    public static
+    int[] transform(final double[] points, final AffineTransform at) {
         final int[] intPts = new int[points.length];
         for (int i = 0; i < points.length / 2; i++) {
             aPoint.setLocation(points[2 * i], points[2 * i + 1]);

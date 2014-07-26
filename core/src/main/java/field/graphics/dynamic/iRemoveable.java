@@ -1,6 +1,8 @@
 package field.graphics.dynamic;
 
-public interface iRemoveable {
+public
+interface iRemoveable {
 
-	public void remove();
+    public
+    void remove();
 }

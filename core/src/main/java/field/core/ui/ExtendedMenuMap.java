@@ -10,34 +10,36 @@ import java.util.LinkedHashMap;
 
 /**
  * adds marking menu support to LinkedHashMap
- * 
+ *
  * @author marc
- * 
  */
-public class ExtendedMenuMap extends LinkedHashMap<String, iUpdateable> {
+public
+class ExtendedMenuMap extends LinkedHashMap<String, iUpdateable> {
 
-	MarkingMenuBuilder builder = new MarkingMenuBuilder();
+    MarkingMenuBuilder builder = new MarkingMenuBuilder();
 
-	public MarkingMenuBuilder getBuilder() {
-		return builder;
-	}
+    public
+    MarkingMenuBuilder getBuilder() {
+        return builder;
+    }
 
-	public void doMenu(Canvas invoker, Point local) {
-		if (!builder.spec.isEmpty()) {
+    public
+    void doMenu(Canvas invoker, Point local) {
+        if (!builder.spec.isEmpty()) {
 //			builder.defaultMenu().currentlyBuilding.menu.putAll(this);
 
             local = Launcher.display.map(invoker, null, local);
 
             //TODO swt marking menu
-			builder.getMenu(invoker, local);
+            builder.getMenu(invoker, local);
 
-		} else {
-			
-			
-			
-			BetterPopup m = new SmallMenu().createMenu(this, invoker.getShell(), null);
-			m.show(Launcher.display.map(invoker, invoker.getShell(), local));
-		}
-	}
+        }
+        else {
+
+
+            BetterPopup m = new SmallMenu().createMenu(this, invoker.getShell(), null);
+            m.show(Launcher.display.map(invoker, invoker.getShell(), local));
+        }
+    }
 
 }

@@ -8,208 +8,243 @@ import field.math.linalg.Vector2;
 
 /**
  * for add and delete nodes, these operate, "illegally" by mutating cachedlines
- * 
+ *
  * @author marc
- * 
  */
-public class NodeModifiers {
+public
+class NodeModifiers {
 
-	public interface iNodeModifier {
-		public void apply(CachedLine inside, CachedLine.Event event, int index);
-	}
+    public
+    interface iNodeModifier {
+        public
+        void apply(CachedLine inside, CachedLine.Event event, int index);
+    }
 
-	public static
+    public static
     class SubdivideLeft implements iNodeModifier {
-		Vector2 c12 = new Vector2();
+        Vector2 c12 = new Vector2();
 
-		Vector2 c21 = new Vector2();
+        Vector2 c21 = new Vector2();
 
-		Vector2 m = new Vector2();
+        Vector2 m = new Vector2();
 
-		Vector2 tmp = new Vector2();
+        Vector2 tmp = new Vector2();
 
-		private final float alpha;
+        private final float alpha;
 
-		public SubdivideLeft() {
-			this(0.5f);
-		}
+        public
+        SubdivideLeft() {
+            this(0.5f);
+        }
 
-		public SubdivideLeft(float alpha) {
-			this.alpha = alpha;
-		}
+        public
+        SubdivideLeft(float alpha) {
+            this.alpha = alpha;
+        }
 
-		public SubdivideLeft(Number alpha) {
-			this.alpha = alpha.floatValue();
-		}
+        public
+        SubdivideLeft(Number alpha) {
+            this.alpha = alpha.floatValue();
+        }
 
-		public void apply(CachedLine inside, CachedLine.Event event, int index) {
+        public
+        void apply(CachedLine inside, CachedLine.Event event, int index) {
 
-			if (event.method.equals(iLine_m.lineTo_m)) {
-				Vector2 from = inside.events.get(index - 1).getDestination();
-				Vector2 to = event.getDestination();
+            if (event.method.equals(iLine_m.lineTo_m)) {
+                Vector2 from = inside.events.get(index - 1).getDestination();
+                Vector2 to = event.getDestination();
 
-				Event e = inside.new Event();
-				e.method = iLine_m.lineTo_m;
+                Event e = inside.new Event();
+                e.method = iLine_m.lineTo_m;
                 e.args = new Object[]{to.x * alpha + from.x * (1 - alpha), to.y * alpha + from.y * (1 - alpha)};
                 inside.finalized = false;
-				inside.events.add(index, e);
-			} else if (event.method.equals(iLine_m.cubicTo_m)) {
-				Vector2 from = inside.events.get(index - 1).getDestination();
-				Vector2 c1 = event.getAt(0);
-				Vector2 c2 = event.getAt(1);
-				Vector2 to = event.getDestination();
+                inside.events.add(index, e);
+            }
+            else if (event.method.equals(iLine_m.cubicTo_m)) {
+                Vector2 from = inside.events.get(index - 1).getDestination();
+                Vector2 c1 = event.getAt(0);
+                Vector2 c2 = event.getAt(1);
+                Vector2 to = event.getDestination();
 
                 LineUtils.splitCubicFrame(from, c1, c2, to, alpha, c12, m, c21, tmp);
 
-				Event e = inside.new Event();
-				e.method = iLine_m.cubicTo_m;
-				e.args = new Object[] { c1.x, c1.y, c12.x, c12.y, m.x, m.y};
-				inside.finalized = false;
-				inside.events.add(index, e);
+                Event e = inside.new Event();
+                e.method = iLine_m.cubicTo_m;
+                e.args = new Object[]{c1.x, c1.y, c12.x, c12.y, m.x, m.y};
+                inside.finalized = false;
+                inside.events.add(index, e);
 
-				event.args = new Object[] { c21.x, c21.y, c2.x, c2.y, to.x, to.y};
-			}
-		}
-	}
+                event.args = new Object[]{c21.x, c21.y, c2.x, c2.y, to.x, to.y};
+            }
+        }
+    }
 
-	static public class SubdivideRight implements iNodeModifier {
-		Vector2 c12 = new Vector2();
+    static public
+    class SubdivideRight implements iNodeModifier {
+        Vector2 c12 = new Vector2();
 
-		Vector2 c21 = new Vector2();
+        Vector2 c21 = new Vector2();
 
-		Vector2 m = new Vector2();
+        Vector2 m = new Vector2();
 
-		Vector2 tmp = new Vector2();
+        Vector2 tmp = new Vector2();
 
-		public SubdivideRight() {
-		}
+        public
+        SubdivideRight() {
+        }
 
-		public void apply(CachedLine inside, CachedLine.Event event, int index) {
+        public
+        void apply(CachedLine inside, CachedLine.Event event, int index) {
 
-			if (index > inside.events.size() - 1) return;
+            if (index > inside.events.size() - 1) return;
 
-			event = inside.events.get(index + 1);
-			index = index + 1;
-			new SubdivideLeft().apply(inside, event, index);
-		}
-	}
+            event = inside.events.get(index + 1);
+            index = index + 1;
+            new SubdivideLeft().apply(inside, event, index);
+        }
+    }
 
-	static public class EnsureCubicLeft implements iNodeModifier {
+    static public
+    class EnsureCubicLeft implements iNodeModifier {
 
-		public EnsureCubicLeft() {
-		}
+        public
+        EnsureCubicLeft() {
+        }
 
-		public void apply(CachedLine inside, CachedLine.Event event, int index) {
-			promoteToCubic(inside, event, index);
-		}
-	}
+        public
+        void apply(CachedLine inside, CachedLine.Event event, int index) {
+            promoteToCubic(inside, event, index);
+        }
+    }
 
-	static public class EnsureLinearLeft implements iNodeModifier {
+    static public
+    class EnsureLinearLeft implements iNodeModifier {
 
-		public EnsureLinearLeft() {
-		}
+        public
+        EnsureLinearLeft() {
+        }
 
-		public void apply(CachedLine inside, CachedLine.Event event, int index) {
-			demoteToLine(inside, event, index);
-		}
-	}
+        public
+        void apply(CachedLine inside, CachedLine.Event event, int index) {
+            demoteToLine(inside, event, index);
+        }
+    }
 
-	static public class EnsureCubicRight implements iNodeModifier {
+    static public
+    class EnsureCubicRight implements iNodeModifier {
 
-		public EnsureCubicRight() {
-		}
+        public
+        EnsureCubicRight() {
+        }
 
-		public void apply(CachedLine inside, CachedLine.Event event, int index) {
-			if (inside.events.size() > index + 1) promoteToCubic(inside, inside.events.get(index + 1), index + 1);
-		}
-	}
+        public
+        void apply(CachedLine inside, CachedLine.Event event, int index) {
+            if (inside.events.size() > index + 1) promoteToCubic(inside, inside.events.get(index + 1), index + 1);
+        }
+    }
 
-	static public class EnsureLinearRight implements iNodeModifier {
+    static public
+    class EnsureLinearRight implements iNodeModifier {
 
-		public EnsureLinearRight() {
-		}
+        public
+        EnsureLinearRight() {
+        }
 
-		public void apply(CachedLine inside, CachedLine.Event event, int index) {
-			if (inside.events.size() > index + 1) demoteToLine(inside, inside.events.get(index + 1), index + 1);
-		}
-	}
+        public
+        void apply(CachedLine inside, CachedLine.Event event, int index) {
+            if (inside.events.size() > index + 1) demoteToLine(inside, inside.events.get(index + 1), index + 1);
+        }
+    }
 
-	static public class Delete implements iNodeModifier {
+    static public
+    class Delete implements iNodeModifier {
 
-		public Delete() {
-		}
+        public
+        Delete() {
+        }
 
-		public void apply(CachedLine inside, CachedLine.Event event, int index) {
+        public
+        void apply(CachedLine inside, CachedLine.Event event, int index) {
 
-			if (event.method.equals(iLine_m.moveTo_m)) {
-				if (inside.events.size() > index + 1) {
-					Event next = inside.events.get(index + 1);
-					if (next.method.equals(iLine_m.moveTo_m)) {
-						inside.events.remove(index);
-					} else if (next.method.equals(iLine_m.close_m)) {
-						inside.events.remove(index);
-						inside.events.remove(index);
-					} else {
-						Vector2 to = next.getDestination();
-						next.method = iLine_m.moveTo_m;
-						next.args = new Object[] { to.x, to.y};
-						inside.events.remove(index);
-					}
-				}
-			} else if (inside.events.size() > index + 1) {
-				if (inside.events.get(index + 1).method.equals(iLine_m.cubicTo_m)) {
-					Vector2 p1 = inside.events.get(index + 1).getAt(0);
-					Vector2 p = event.getDestination();
-					Vector2 n = p1.sub(p).add(inside.events.get(index - 1).getDestination());
-					inside.events.get(index + 1).setAt(0, n);
-				}
-				inside.events.remove(index);
-			} else {
-				inside.events.remove(index);
-			}
-		}
-	}
+            if (event.method.equals(iLine_m.moveTo_m)) {
+                if (inside.events.size() > index + 1) {
+                    Event next = inside.events.get(index + 1);
+                    if (next.method.equals(iLine_m.moveTo_m)) {
+                        inside.events.remove(index);
+                    }
+                    else if (next.method.equals(iLine_m.close_m)) {
+                        inside.events.remove(index);
+                        inside.events.remove(index);
+                    }
+                    else {
+                        Vector2 to = next.getDestination();
+                        next.method = iLine_m.moveTo_m;
+                        next.args = new Object[]{to.x, to.y};
+                        inside.events.remove(index);
+                    }
+                }
+            }
+            else if (inside.events.size() > index + 1) {
+                if (inside.events.get(index + 1).method.equals(iLine_m.cubicTo_m)) {
+                    Vector2 p1 = inside.events.get(index + 1).getAt(0);
+                    Vector2 p = event.getDestination();
+                    Vector2 n = p1.sub(p).add(inside.events.get(index - 1).getDestination());
+                    inside.events.get(index + 1).setAt(0, n);
+                }
+                inside.events.remove(index);
+            }
+            else {
+                inside.events.remove(index);
+            }
+        }
+    }
 
-	static public class Break implements iNodeModifier {
-		public void apply(CachedLine inside, Event event, int index) {
+    static public
+    class Break implements iNodeModifier {
+        public
+        void apply(CachedLine inside, Event event, int index) {
 
-			Event e = inside.new Event();
-			e.method = iLine_m.moveTo_m;
-			Vector2 v = event.getDestination();
-			e.args = new Object[] { v.x, v.y};
-			inside.events.add(index + 1, e);
-		}
-	}
+            Event e = inside.new Event();
+            e.method = iLine_m.moveTo_m;
+            Vector2 v = event.getDestination();
+            e.args = new Object[]{v.x, v.y};
+            inside.events.add(index + 1, e);
+        }
+    }
 
-	static public boolean promoteToCubic(CachedLine line, CachedLine.Event in, int index) {
-		if (in.method.equals(iLine_m.lineTo_m)) {
+    static public
+    boolean promoteToCubic(CachedLine line, CachedLine.Event in, int index) {
+        if (in.method.equals(iLine_m.lineTo_m)) {
 
-			Vector2 from = line.events.get(index - 1).getDestination();
-			Vector2 to = in.getDestination();
+            Vector2 from = line.events.get(index - 1).getDestination();
+            Vector2 to = in.getDestination();
 
-			Vector2 d1 = new Vector2(to).sub(from).scale(1 / 3).add(from);
-			Vector2 d2 = new Vector2(from).sub(to).scale(1 / 3).add(to);
+            Vector2 d1 = new Vector2(to).sub(from).scale(1 / 3).add(from);
+            Vector2 d2 = new Vector2(from).sub(to).scale(1 / 3).add(to);
 
-			in.method = iLine_m.cubicTo_m;
+            in.method = iLine_m.cubicTo_m;
             in.args = new Object[]{d1.x, d1.y, d2.x, d2.y, to.x, to.y};
 
-			return true;
-		} else if (in.method.equals(iLine_m.cubicTo_m)) { return true; }
-		return false;
-	}
+            return true;
+        }
+        else if (in.method.equals(iLine_m.cubicTo_m)) { return true; }
+        return false;
+    }
 
-	static public boolean demoteToLine(CachedLine line, CachedLine.Event in, int index) {
-		if (in.method.equals(iLine_m.lineTo_m)) {
-			return true;
-		} else if (in.method.equals(iLine_m.cubicTo_m)) {
-			Vector2 to = in.getDestination();
+    static public
+    boolean demoteToLine(CachedLine line, CachedLine.Event in, int index) {
+        if (in.method.equals(iLine_m.lineTo_m)) {
+            return true;
+        }
+        else if (in.method.equals(iLine_m.cubicTo_m)) {
+            Vector2 to = in.getDestination();
 
-			in.method = iLine_m.lineTo_m;
+            in.method = iLine_m.lineTo_m;
             in.args = new Object[]{to.x, to.y};
 
-			return true;
-		}
-		return false;
-	}
+            return true;
+        }
+        return false;
+    }
 
 }

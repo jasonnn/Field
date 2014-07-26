@@ -1,5 +1,6 @@
 package field.bytecode.test;
 
-public class T_NewASM {
+public
+class T_NewASM {
 
 }

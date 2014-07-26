@@ -7,50 +7,56 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PathMapper {
+public
+class PathMapper {
 
-	public static
+    public static
     class Mapping {
-		String prefix;
-		String becomes;
+        String prefix;
+        String becomes;
 
-		public Mapping(String prefix, String becomes) {
-			super();
-			this.prefix = prefix;
-			this.becomes = becomes;
-		}
+        public
+        Mapping(String prefix, String becomes) {
+            super();
+            this.prefix = prefix;
+            this.becomes = becomes;
+        }
 
-	}
+    }
 
-	List<Mapping> mappings = new ArrayList<Mapping>();
-	List<Pair<String, String>> mapped = new ArrayList<Pair<String, String>>();
+    List<Mapping> mappings = new ArrayList<Mapping>();
+    List<Pair<String, String>> mapped = new ArrayList<Pair<String, String>>();
 
-	public PathMapper() {
+    public
+    PathMapper() {
 
-	}
+    }
 
-	public void addMapping(String from, String to) {
-		mappings.add(new Mapping(from, to));
-	}
+    public
+    void addMapping(String from, String to) {
+        mappings.add(new Mapping(from, to));
+    }
 
-	public String map(String f) {
-		for (Mapping m : mappings) {
-			if (f.startsWith(m.prefix)) {
-				f = m.becomes + f.substring(m.prefix.length());
-			}
-		}
-		return f;
+    public
+    String map(String f) {
+        for (Mapping m : mappings) {
+            if (f.startsWith(m.prefix)) {
+                f = m.becomes + f.substring(m.prefix.length());
+            }
+        }
+        return f;
 
-	}
+    }
 
-	public File map(File ff) throws IOException {
-		String f = ff.getCanonicalPath();
-		for (Mapping m : mappings) {
-			if (f.startsWith(m.prefix)) {
-				f = m.becomes + f.substring(m.prefix.length());
-			}
-		}
-		return new File(f);
-	}
+    public
+    File map(File ff) throws IOException {
+        String f = ff.getCanonicalPath();
+        for (Mapping m : mappings) {
+            if (f.startsWith(m.prefix)) {
+                f = m.becomes + f.substring(m.prefix.length());
+            }
+        }
+        return new File(f);
+    }
 
 }

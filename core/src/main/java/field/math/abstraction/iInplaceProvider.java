@@ -2,11 +2,12 @@ package field.math.abstraction;
 
 /**
  * Similar to iObjectProvider, but inplace.
- * @see iObjectProvider
- * @author synchar
  *
+ * @author synchar
+ * @see iObjectProvider
  */
-public interface iInplaceProvider<T>
-{
-	public T get(T o);
+public
+interface iInplaceProvider<T> {
+    public
+    T get(T o);
 }

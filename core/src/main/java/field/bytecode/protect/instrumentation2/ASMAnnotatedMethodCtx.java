@@ -8,11 +8,13 @@ import java.util.Map;
 /**
  * Created by jason on 7/21/14.
  */
-public class ASMAnnotatedMethodCtx extends ASMMethodCtx {
+public
+class ASMAnnotatedMethodCtx extends ASMMethodCtx {
     public final Map<String, Object> params = new LinkedHashMap<String, Object>(4);
     public MethodVisitor delegate;
 
-    public static ASMAnnotatedMethodCtx from(ASMMethodCtx copyFrom) {
+    public static
+    ASMAnnotatedMethodCtx from(ASMMethodCtx copyFrom) {
         ASMAnnotatedMethodCtx copied = new ASMAnnotatedMethodCtx();
         copyFrom.copyTo(copied);
         return copied;

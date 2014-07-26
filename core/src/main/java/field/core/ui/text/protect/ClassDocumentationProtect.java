@@ -1,39 +1,44 @@
 package field.core.ui.text.protect;
 
-public class ClassDocumentationProtect {
-	public static
+public
+class ClassDocumentationProtect {
+    public static
     class Divider {
-	}
+    }
 
-	public static
+    public static
     class Comp {
-		public String completes;
-		public String shortDocumentation;
-		public String longDocumentation;
-		public boolean isTitle = false;
+        public String completes;
+        public String shortDocumentation;
+        public String longDocumentation;
+        public boolean isTitle = false;
 
-		public Comp setTitle(boolean isTitle) {
-			this.isTitle = isTitle;
-			return this;
-		}
+        public
+        Comp setTitle(boolean isTitle) {
+            this.isTitle = isTitle;
+            return this;
+        }
 
-		public Comp(String completes, String shortDocumentation) {
-			this.completes = completes;
-			this.shortDocumentation = shortDocumentation;
-		}
+        public
+        Comp(String completes, String shortDocumentation) {
+            this.completes = completes;
+            this.shortDocumentation = shortDocumentation;
+        }
 
-		public Comp(String longDocumentation) {
-			this.longDocumentation = longDocumentation;
-		}
-	}
+        public
+        Comp(String longDocumentation) {
+            this.longDocumentation = longDocumentation;
+        }
+    }
 
-	public static
+    public static
     class CompProxy extends Comp {
-		public final Object proxyTo;
+        public final Object proxyTo;
 
-		public CompProxy(Object proxyTo) {
-			super("", "");
-			this.proxyTo = proxyTo;
-		}
-	}
+        public
+        CompProxy(Object proxyTo) {
+            super("", "");
+            this.proxyTo = proxyTo;
+        }
+    }
 }

@@ -14,55 +14,61 @@ import java.util.List;
 /**
  * helper for custom toolbar inside editor itself
  */
-public class CustomToolbar {
+public
+class CustomToolbar {
 
-	public static
+    public static
     Object add(String name, Object callableSomehow, iVisualElement to) {
-		iUpdateable c = callable(callableSomehow);
-		if (c != null)
-			PythonPluginEditor.python_customToolbar.addToList(ArrayList.class, to, new Pair<String, iUpdateable>(name, c));
-		return c;
-	}
+        iUpdateable c = callable(callableSomehow);
+        if (c != null) PythonPluginEditor.python_customToolbar.addToList(ArrayList.class,
+                                                                         to,
+                                                                         new Pair<String, iUpdateable>(name, c));
+        return c;
+    }
 
-	public static
+    public static
     void remove(Object o, iVisualElement from) {
-		List<Pair<String, iUpdateable>> ll = PythonPluginEditor.python_customToolbar.get(from);
-		if (ll != null) {
-			for (Pair<String, iUpdateable> p : ll) {
-				if (p.right == o) {
-					ll.remove(p);
-					return;
-				}
-			}
-		}
-	}
+        List<Pair<String, iUpdateable>> ll = PythonPluginEditor.python_customToolbar.get(from);
+        if (ll != null) {
+            for (Pair<String, iUpdateable> p : ll) {
+                if (p.right == o) {
+                    ll.remove(p);
+                    return;
+                }
+            }
+        }
+    }
 
-	private static iUpdateable callable(final Object callableSomehow) {
-		final CapturedEnvironment env = (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment");
-		if (callableSomehow instanceof PyFunction) {
-			return new iUpdateable() {
-				public void update() {
-					if (env != null) {
-						env.enter();
-					}
-					try {
-						((PyFunction) callableSomehow).__call__();
-					} finally {
-						if (env != null) {
-							env.exit();
-						}
-					}
-				}
-			};
-		}
-		if (callableSomehow instanceof iUpdateable) {
-			return new iUpdateable() {
+    private static
+    iUpdateable callable(final Object callableSomehow) {
+        final CapturedEnvironment env =
+                (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment");
+        if (callableSomehow instanceof PyFunction) {
+            return new iUpdateable() {
+                public
+                void update() {
+                    if (env != null) {
+                        env.enter();
+                    }
+                    try {
+                        ((PyFunction) callableSomehow).__call__();
+                    } finally {
+                        if (env != null) {
+                            env.exit();
+                        }
+                    }
+                }
+            };
+        }
+        if (callableSomehow instanceof iUpdateable) {
+            return new iUpdateable() {
 
-				public void update() {
-					((iUpdateable) callableSomehow).update();
-				}
-			};
-		}
-		return null;
-	}
+                public
+                void update() {
+                    ((iUpdateable) callableSomehow).update();
+                }
+            };
+        }
+        return null;
+    }
 }

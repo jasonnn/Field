@@ -10,23 +10,23 @@ package field.bytecode.protect.analysis;
 import org.objectweb.asm.Label;
 
 class TypesSuccessor {
-	private Label mLabel = null;
+    private Label mLabel = null;
 
-	private TypesSuccessor mNextSuccessor = null;
+    private TypesSuccessor mNextSuccessor = null;
 
-	void setNextSuccessor(TypesSuccessor nextSuccessor) {
-		mNextSuccessor = nextSuccessor;
-	}
+    void setNextSuccessor(TypesSuccessor nextSuccessor) {
+        mNextSuccessor = nextSuccessor;
+    }
 
-	TypesSuccessor getNextSuccessor() {
-		return mNextSuccessor;
-	}
+    TypesSuccessor getNextSuccessor() {
+        return mNextSuccessor;
+    }
 
-	void setLabel(Label successor) {
-		mLabel = successor;
-	}
+    void setLabel(Label successor) {
+        mLabel = successor;
+    }
 
-	Label getLabel() {
-		return mLabel;
-	}
+    Label getLabel() {
+        return mLabel;
+    }
 }

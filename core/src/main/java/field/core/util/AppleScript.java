@@ -7,59 +7,60 @@ import java.io.IOException;
 
 /**
  * replaces the NSAppleScript classes that we can't use in Java 1.6
- * 
+ *
  * @author marc
- * 
  */
-public class AppleScript {
+public
+class AppleScript {
 
-	private ExecuteCommand cc;
+    private ExecuteCommand cc;
 
-	public AppleScript(String command, boolean sync) {
-		try {
-			File tmp = File.createTempFile("field", "");
-			tmp.deleteOnExit();
+    public
+    AppleScript(String command, boolean sync) {
+        try {
+            File tmp = File.createTempFile("field", "");
+            tmp.deleteOnExit();
 
-			BufferedWriter w = new BufferedWriter(new FileWriter(tmp));
-			w.append(command).append('\n');
-			w.close();
+            BufferedWriter w = new BufferedWriter(new FileWriter(tmp));
+            w.append(command).append('\n');
+            w.close();
 
-			cc = new ExecuteCommand(".", new String[] { "/usr/bin/osascript", tmp.getAbsolutePath() }, true);
+            cc = new ExecuteCommand(".", new String[]{"/usr/bin/osascript", tmp.getAbsolutePath()}, true);
 
-			if (sync) {
-				cc.waitFor(true);
-			}
+            if (sync) {
+                cc.waitFor(true);
+            }
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public String getOutput() {
-		cc.waitFor(true);
-		String o = cc.getOutput();
-		
-		
-		return scrub(o);
-	}
+    public
+    String getOutput() {
+        cc.waitFor(true);
+        String o = cc.getOutput();
+
+
+        return scrub(o);
+    }
 
     private static
     String scrub(String o) {
         StringBuilder b = new StringBuilder(o.length());
-		for(int i=0;i<o.length();i++)
-		{
-			char c = o.charAt(i);
-			if ((int)c<128)
-			{
-				b.append(c);
-			}
-		}
-		return b.toString();
-	}
+        for (int i = 0; i < o.length(); i++) {
+            char c = o.charAt(i);
+            if ((int) c < 128) {
+                b.append(c);
+            }
+        }
+        return b.toString();
+    }
 
-	public String getError() {
-		cc.waitFor(true);
-		return scrub(cc.getOutput());
-	}
+    public
+    String getError() {
+        cc.waitFor(true);
+        return scrub(cc.getOutput());
+    }
 
 }

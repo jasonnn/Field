@@ -15,422 +15,446 @@ import java.util.*;
 
 /**
  * classes for "complex-dispatch" deferred execution
- * 
+ *
  * @author marc Created on Jan 29, 2005 \u2014 alison
  */
-public class Deferred {
+public
+class Deferred {
 
-	/**
-	 * it's expected that this will be a good base class for things that get
-	 * executed
-	 */
+    /**
+     * it's expected that this will be a good base class for things that get
+     * executed
+     */
     public abstract static
     class Executable implements iUpdateable, Serializable {
 
-		public String name;
+        public String name;
 
-		public Object source;
+        public Object source;
 
-		protected int consumed = 0;
+        protected int consumed = 0;
 
-		boolean isStarted = false;
+        boolean isStarted = false;
 
-		public Executable(String name, Object source) {
-			this.name = name;
-			this.source = source;
-		}
-
-		protected Executable() {
-		}
-
-		public void consume() {
-			consumed++;
-		}
-
-		public abstract
-        void cont();
-
-		public String getName() {
-			return name;
+        public
+        Executable(String name, Object source) {
+            this.name = name;
+            this.source = source;
         }
 
-        public Object getSource() {
+        protected
+        Executable() {
+        }
+
+        public
+        void consume() {
+            consumed++;
+        }
+
+        public abstract
+        void cont();
+
+        public
+        String getName() {
+            return name;
+        }
+
+        public
+        Object getSource() {
             return source;
         }
 
-        public boolean isConsumed() {
+        public
+        boolean isConsumed() {
             return consumed > 0;
-		}
+        }
 
-		public boolean isStarted() {
-			return isStarted;
-		}
+        public
+        boolean isStarted() {
+            return isStarted;
+        }
 
-		public void start() {
-			isStarted = true;
-		}
+        public
+        void start() {
+            isStarted = true;
+        }
 
-		public void stop() {
-			isStarted = false;
-		}
+        public
+        void stop() {
+            isStarted = false;
+        }
 
-		@Override
-		public String toString() {
-			return "exec:" + name + (isConsumed() ? "!" : "") + '(' + source + ')';
-		}
+        @Override
+        public
+        String toString() {
+            return "exec:" + name + (isConsumed() ? "!" : "") + '(' + source + ')';
+        }
 
-		public void unconsume() {
-			consumed--;
-		}
+        public
+        void unconsume() {
+            consumed--;
+        }
 
-		public void update() {
-			if (!isConsumed()) {
-				cont();
-			}
-		}
-	}
+        public
+        void update() {
+            if (!isConsumed()) {
+                cont();
+            }
+        }
+    }
 
-	public static
+    public static
     class Increment extends OneShot {
-		private final Object in;
+        private final Object in;
 
-		private final Field field;
+        private final Field field;
 
-		private final Number increment;
+        private final Number increment;
 
-		public Increment(String name, Object source, Object in, String field, Number value) {
-			super(name, source);
-			this.in = in;
-			this.increment = value;
-			this.field = ReflectionTools.getFirstFIeldCalled(in.getClass(), field);
-			this.field.setAccessible(true);
-		}
+        public
+        Increment(String name, Object source, Object in, String field, Number value) {
+            super(name, source);
+            this.in = in;
+            this.increment = value;
+            this.field = ReflectionTools.getFirstFIeldCalled(in.getClass(), field);
+            this.field.setAccessible(true);
+        }
 
-		@Override
-		protected void fire() {
-			try {
-				Number n = (Number) field.get(in);
-				double v = n.doubleValue() + increment.doubleValue();
-				if (field.getType() == Double.TYPE || field.getType() == Double.class)
-					field.set(in, v);
-				else if (field.getType() == Float.TYPE || field.getType() == Float.class)
-					field.set(in, (float) v);
-				else if (field.getType() == Integer.TYPE || field.getType() == Integer.class)
-					field.set(in, (int) v);
-				else if (field.getType() == Long.TYPE || field.getType() == Long.class)
-					field.set(in, (long) v);
-				else if (field.getType() == Short.TYPE || field.getType() == Short.class)
-					field.set(in, (short) v);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+        @Override
+        protected
+        void fire() {
+            try {
+                Number n = (Number) field.get(in);
+                double v = n.doubleValue() + increment.doubleValue();
+                if (field.getType() == Double.TYPE || field.getType() == Double.class) field.set(in, v);
+                else if (field.getType() == Float.TYPE || field.getType() == Float.class) field.set(in, (float) v);
+                else if (field.getType() == Integer.TYPE || field.getType() == Integer.class) field.set(in, (int) v);
+                else if (field.getType() == Long.TYPE || field.getType() == Long.class) field.set(in, (long) v);
+                else if (field.getType() == Short.TYPE || field.getType() == Short.class) field.set(in, (short) v);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	public abstract static
+    public abstract static
     class OneShot extends Executable implements Serializable {
 
-		private boolean first = false;
+        private boolean first = false;
 
-		public OneShot(String name, Object source) {
-			super(name, source);
-		}
+        public
+        OneShot(String name, Object source) {
+            super(name, source);
+        }
 
-		protected OneShot() {
-		}
+        protected
+        OneShot() {
+        }
 
-		@Override
-		public void cont() {
-			if (first) {
-				fire();
-			}
-			first = false;
-		}
+        @Override
+        public
+        void cont() {
+            if (first) {
+                fire();
+            }
+            first = false;
+        }
 
-		@Override
-		public void start() {
-			first = true;
-		}
+        @Override
+        public
+        void start() {
+            first = true;
+        }
 
-		protected abstract
+        protected abstract
         void fire();
-	}
+    }
 
-	/**
-	 * use this to produce something, or not, in the future, so that it can
-	 * be patterned, fused, etc.
-	 * 
-	 * a more complicated subclass of this would recognize things other than
-	 * the ones that it created as its own
-	 */
+    /**
+     * use this to produce something, or not, in the future, so that it can
+     * be patterned, fused, etc.
+     * <p/>
+     * a more complicated subclass of this would recognize things other than
+     * the ones that it created as its own
+     */
     public static
     class Production {
 
-		private final iChannel into;
+        private final iChannel into;
 
-		private final iDoubleProvider clock;
+        private final iDoubleProvider clock;
 
-		private float durationBetweenEvents;
+        private float durationBetweenEvents;
 
-		private double lastProducedAt;
+        private double lastProducedAt;
 
-		List<iMarker> created = new ArrayList<iMarker>();
+        List<iMarker> created = new ArrayList<iMarker>();
 
-		public Production(iChannel into, iDoubleProvider clock) {
-			this.into = into;
-			this.clock = clock;
-			into.addNotify(new aChannelNotify() {
+        public
+        Production(iChannel into, iDoubleProvider clock) {
+            this.into = into;
+            this.clock = clock;
+            into.addNotify(new aChannelNotify() {
 
-				@Override
-				public void markerRemoved(DiagramZero.iMarker removed) {
-					created.remove(removed);
-				}
-			});
-		}
+                @Override
+                public
+                void markerRemoved(DiagramZero.iMarker removed) {
+                    created.remove(removed);
+                }
+            });
+        }
 
-		public void can() {
-			double now = clock.evaluate();
-			if (now - lastProducedAt >= durationBetweenEvents)
-				produce(now);
-			for (int i = 0; i < created.size(); i++) {
-				iMarker m = created.get(i);
-				if (m.getTime() + m.getDuration() < now) {
-					created.remove(i);
-					i--;
-				}
-			}
-		}
+        public
+        void can() {
+            double now = clock.evaluate();
+            if (now - lastProducedAt >= durationBetweenEvents) produce(now);
+            for (int i = 0; i < created.size(); i++) {
+                iMarker m = created.get(i);
+                if (m.getTime() + m.getDuration() < now) {
+                    created.remove(i);
+                    i--;
+                }
+            }
+        }
 
-		public void can(double holdoff) {
-			double now = clock.evaluate() + holdoff;
-			if (now - lastProducedAt >= durationBetweenEvents)
-				produce(now);
-			now = clock.evaluate();
+        public
+        void can(double holdoff) {
+            double now = clock.evaluate() + holdoff;
+            if (now - lastProducedAt >= durationBetweenEvents) produce(now);
+            now = clock.evaluate();
 
-			for (int i = 0; i < created.size(); i++) {
-				iMarker m = created.get(i);
-				if (m.getTime() + m.getDuration() < now) {
-					created.remove(i);
-					i--;
-				}
-			}
-		}
+            for (int i = 0; i < created.size(); i++) {
+                iMarker m = created.get(i);
+                if (m.getTime() + m.getDuration() < now) {
+                    created.remove(i);
+                    i--;
+                }
+            }
+        }
 
-		public void cant() {
-			double now = clock.evaluate();
-			for (int i = 0; i < created.size(); i++) {
-				iMarker m = created.get(i);
-				if (m.getTime() > now) {
-					delete(m, into);
-				}
-			}
-			lastProducedAt = Math.min(now, lastProducedAt);
-		}
+        public
+        void cant() {
+            double now = clock.evaluate();
+            for (int i = 0; i < created.size(); i++) {
+                iMarker m = created.get(i);
+                if (m.getTime() > now) {
+                    delete(m, into);
+                }
+            }
+            lastProducedAt = Math.min(now, lastProducedAt);
+        }
 
-		public void setDefaultParameters(float durationBetweenEvents) {
-			lastProducedAt += this.durationBetweenEvents;
-			this.durationBetweenEvents = durationBetweenEvents;
-			lastProducedAt -= this.durationBetweenEvents;
-		}
+        public
+        void setDefaultParameters(float durationBetweenEvents) {
+            lastProducedAt += this.durationBetweenEvents;
+            this.durationBetweenEvents = durationBetweenEvents;
+            lastProducedAt -= this.durationBetweenEvents;
+        }
 
         protected static
         boolean delete(iMarker m, iChannel from) {
             return false;
-		}
+        }
 
         protected static
         iMarker makeMarker(double now, iChannel into) {
             return null;
-		}
+        }
 
-		protected void produce(double now) {
-			iMarker marker = makeMarker(now, into);
-			if (marker != null) {
-				lastProducedAt = marker.getTime() + marker.getDuration();
-				created.add(marker);
-			}
-		}
-	}
+        protected
+        void produce(double now) {
+            iMarker marker = makeMarker(now, into);
+            if (marker != null) {
+                lastProducedAt = marker.getTime() + marker.getDuration();
+                created.add(marker);
+            }
+        }
+    }
 
-	public static
+    public static
     class Set extends OneShot {
-		private final Object in;
+        private final Object in;
 
-		private final Field field;
+        private final Field field;
 
-		private final Object value;
+        private final Object value;
 
-		public Set(String name, Object source, Object in, String field, Object value) {
-			super(name, source);
-			this.in = in;
-			this.value = value;
-			this.field = ReflectionTools.getFirstFIeldCalled(in.getClass(), field);
-			this.field.setAccessible(true);
-		}
+        public
+        Set(String name, Object source, Object in, String field, Object value) {
+            super(name, source);
+            this.in = in;
+            this.value = value;
+            this.field = ReflectionTools.getFirstFIeldCalled(in.getClass(), field);
+            this.field.setAccessible(true);
+        }
 
-		@Override
-		protected void fire() {
-			try {
-				field.set(in, value);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+        @Override
+        protected
+        void fire() {
+            try {
+                field.set(in, value);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	public static
+    public static
     class SetToProgress extends Executable {
 
-		private final Object in;
+        private final Object in;
 
-		private final Field field;
+        private final Field field;
 
-		private final Object value;
+        private final Object value;
 
-		@AliasedParameter
-		double executionClock = 0;
+        @AliasedParameter
+        double executionClock = 0;
 
-		@AliasedParameter
-		iMarker executionMarker = null;
+        @AliasedParameter
+        iMarker executionMarker = null;
 
-		public SetToProgress(String name, Object source, Object in, String field, Object value) {
-			super(name, source);
-			this.in = in;
-			this.value = value;
-			this.field = ReflectionTools.getFirstFIeldCalled(in.getClass(), field);
-			this.field.setAccessible(true);
-		}
+        public
+        SetToProgress(String name, Object source, Object in, String field, Object value) {
+            super(name, source);
+            this.in = in;
+            this.value = value;
+            this.field = ReflectionTools.getFirstFIeldCalled(in.getClass(), field);
+            this.field.setAccessible(true);
+        }
 
-		@Override
-		@Aliases
-		public void cont() {
-			set((executionClock - executionMarker.getTime()) / executionMarker.getDuration());
-		}
+        @Override
+        @Aliases
+        public
+        void cont() {
+            set((executionClock - executionMarker.getTime()) / executionMarker.getDuration());
+        }
 
-		@Override
-		public void start() {
-			set(0);
-		}
+        @Override
+        public
+        void start() {
+            set(0);
+        }
 
-		@Override
-		public void stop() {
-			set(1);
-		}
+        @Override
+        public
+        void stop() {
+            set(1);
+        }
 
-		private void set(double v) {
-			try {
-				if (field.getType() == Double.TYPE || field.getType() == Double.class)
-					field.set(in, v);
-				else if (field.getType() == Float.TYPE || field.getType() == Float.class)
-					field.set(in, (float) v);
-				else if (field.getType() == Integer.TYPE || field.getType() == Integer.class)
-					field.set(in, (int) v);
-				else if (field.getType() == Long.TYPE || field.getType() == Long.class)
-					field.set(in, (long) v);
-				else if (field.getType() == Short.TYPE || field.getType() == Short.class)
-					field.set(in, (short) v);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+        private
+        void set(double v) {
+            try {
+                if (field.getType() == Double.TYPE || field.getType() == Double.class) field.set(in, v);
+                else if (field.getType() == Float.TYPE || field.getType() == Float.class) field.set(in, (float) v);
+                else if (field.getType() == Integer.TYPE || field.getType() == Integer.class) field.set(in, (int) v);
+                else if (field.getType() == Long.TYPE || field.getType() == Long.class) field.set(in, (long) v);
+                else if (field.getType() == Short.TYPE || field.getType() == Short.class) field.set(in, (short) v);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	public static
+    public static
     class SimpleExecutingHorizon extends Horizon {
 
-		WeakHashMap<iMarker<Object>, Object> alreadySeen = new WeakHashMap<iMarker<Object>, Object>();
+        WeakHashMap<iMarker<Object>, Object> alreadySeen = new WeakHashMap<iMarker<Object>, Object>();
 
-		HashSet<iMarker<Object>> active = new LinkedHashSet<iMarker<Object>>();
+        HashSet<iMarker<Object>> active = new LinkedHashSet<iMarker<Object>>();
 
-		public SimpleExecutingHorizon(iDoubleProvider nowClock, iChannel outputStream) {
-			super(nowClock, outputStream);
-			if (outputStream instanceof Channel)
-				((Channel) outputStream).setSliceIsGreedy(true);
-		}
+        public
+        SimpleExecutingHorizon(iDoubleProvider nowClock, iChannel outputStream) {
+            super(nowClock, outputStream);
+            if (outputStream instanceof Channel) ((Channel) outputStream).setSliceIsGreedy(true);
+        }
 
-		public void stopAll() {
-			for (iMarker<Object> o : active) {
-				Object p = o.getPayload();
-				if (p instanceof Executable) {
-					((Executable) p).stop();
-				}
-			}
-			active.clear();
-		}
+        public
+        void stopAll() {
+            for (iMarker<Object> o : active) {
+                Object p = o.getPayload();
+                if (p instanceof Executable) {
+                    ((Executable) p).stop();
+                }
+            }
+            active.clear();
+        }
 
         protected static
         void start(iMarker<Object> m) {
             Object p = m.getPayload();
-			if (p instanceof Executable) {
-				((Executable) p).start();
-			}
-		}
+            if (p instanceof Executable) {
+                ((Executable) p).start();
+            }
+        }
 
         protected static
         void stop(iMarker<Object> m) {
             Object p = m.getPayload();
-			if (p instanceof Executable) {
-				((Executable) p).stop();
-			}
-		}
+            if (p instanceof Executable) {
+                ((Executable) p).stop();
+            }
+        }
 
         protected static
         void update(iMarker<Object> m) {
 
-			Object p = m.getPayload();
+            Object p = m.getPayload();
 
-			if (p instanceof Executable) {
-				((Executable) p).update();
-			} else if (p instanceof iUpdateable) {
-				((iUpdateable) p).update();
-			}
-		}
+            if (p instanceof Executable) {
+                ((Executable) p).update();
+            }
+            else if (p instanceof iUpdateable) {
+                ((iUpdateable) p).update();
+            }
+        }
 
-		@Override
-		protected void updateWithList(double now, List l) {
+        @Override
+        protected
+        void updateWithList(double now, List l) {
 
-			LinkedHashSet<iMarker<Object>> newSet = new LinkedHashSet<iMarker<Object>>(l);
-			newSet.removeAll(alreadySeen.keySet());
-			Iterator<iMarker<Object>> i = newSet.iterator();
-			while (i.hasNext()) {
-				// runner.addActive((float)
-				// now,
-				// (Promise)
-				// ((DiagramZero.iMarker)
-				// i.next()).getPayload());
-				iMarker<Object> p = (i.next());
-				active.add(p);
-				start(p);
-			}
+            LinkedHashSet<iMarker<Object>> newSet = new LinkedHashSet<iMarker<Object>>(l);
+            newSet.removeAll(alreadySeen.keySet());
+            Iterator<iMarker<Object>> i = newSet.iterator();
+            while (i.hasNext()) {
+                // runner.addActive((float)
+                // now,
+                // (Promise)
+                // ((DiagramZero.iMarker)
+                // i.next()).getPayload());
+                iMarker<Object> p = (i.next());
+                active.add(p);
+                start(p);
+            }
 
-			LinkedHashSet<iMarker<Object>> goneSet = new LinkedHashSet<iMarker<Object>>(alreadySeen.keySet());
-			goneSet.removeAll(l);
-			i = goneSet.iterator();
-			while (i.hasNext()) {
-				// runner.removeActive((float)
-				// now,
-				// (Promise)
-				// ((DiagramZero.iMarker)
-				// i.next()).getPayload());
-				iMarker p = (i.next());
-				active.remove(p);
-				stop(p);
-			}
+            LinkedHashSet<iMarker<Object>> goneSet = new LinkedHashSet<iMarker<Object>>(alreadySeen.keySet());
+            goneSet.removeAll(l);
+            i = goneSet.iterator();
+            while (i.hasNext()) {
+                // runner.removeActive((float)
+                // now,
+                // (Promise)
+                // ((DiagramZero.iMarker)
+                // i.next()).getPayload());
+                iMarker p = (i.next());
+                active.remove(p);
+                stop(p);
+            }
 
-			// runner.update((float)
-			// now);
-			i = active.iterator();
-			while (i.hasNext()) {
-				iMarker<Object> p = i.next();
-				update(p);
-			}
-			alreadySeen.clear();
-			for (iMarker o : (List<iMarker>) l) {
-				alreadySeen.put(o, null);
-			}
+            // runner.update((float)
+            // now);
+            i = active.iterator();
+            while (i.hasNext()) {
+                iMarker<Object> p = i.next();
+                update(p);
+            }
+            alreadySeen.clear();
+            for (iMarker o : (List<iMarker>) l) {
+                alreadySeen.put(o, null);
+            }
 
-		}
+        }
 
-	}
+    }
 
 }

@@ -12,45 +12,45 @@ import java.util.Stack;
 
 /**
  * what's a python generator stack?
- * 
+ * <p/>
  * well, what's a python (2.3) generator?
- * 
+ * <p/>
  * consider the following code
- * 
+ * <p/>
  * class someClass: def __init__(self): self.i = 0; def oneToTen(self): if (i
  * <10): self.i = self.i+1 return i return None
- * 
+ * <p/>
  * a = someClass() print a.oneToTen() print a.oneToTen() print a.oneToTen()
  * print a.oneToTen() etc...
- * 
+ * <p/>
  * a "generator" makes it much much easier to have a single method or function
  * return results mid-way through execution. a generator is closely related to
  * an iterator, but with extra syntactical magic:
- * 
- * 
+ * <p/>
+ * <p/>
  * def oneToTen(): for i in range(10): yield i
- * 
+ * <p/>
  * a = oneToTen() print a.next() print a.next() print a.next() etc...
- * 
+ * <p/>
  * (no class is needed, although you can have one if you want) you'll get a
  * StopIteration exception when you should STOP
- * 
+ * <p/>
  * much easier, no ?
- * 
+ * <p/>
  * this also lets you write things like
- * 
+ * <p/>
  * def myScript(): ... do something yield yup .. do something else yield nope
  * yield #pause some more for i in range(3): yield
- * 
+ * <p/>
  * etc...
- * 
+ * <p/>
  * at each yield control is passed back to the person that called it (e.g. the
  * world update loop) but at each subsequent call (to .next()) execution resumes
  * from the place after the yield, and your stackframe is completely maintained
- * 
+ * <p/>
  * so, this class is a nice interface between iUpdateable or and evaluate()
  * method and python generators. It's nice in three ways:
- * 
+ * <p/>
  * firstly, it lets you have a updateable/generator that registers, and
  * magically deregisters when it's done (at the last yield or a return). You can
  * STOP reading here for basic usage. secondly, it lets you return / yield
@@ -62,265 +62,292 @@ import java.util.Stack;
  * the nested generator executing in the world update loop. thirdly, returning a
  * (python) tuple of generators will start them up and execute them in
  * parrallel. Same rules as above apply for the spawned generators.
- * 
+ * <p/>
  * a powerful idea, no?
- * 
+ *
  * @author marc Created on Dec 10, 2003
  */
 
-public class PythonGeneratorStack implements iUpdateable {
-	protected static iProvider<Object> wrapGenerator(final PyGenerator top) {
-		return new iProvider() {
-			public Object get() {
-				return top.__iternext__();
-			}
-		};
-	}
-
-	public final Object didNotEvaluate = new Object();
-
-	protected Stack stack;
-
-	protected List addTo;
-
-	protected List subUpdateables = new ArrayList();
-
-	boolean over = false;
-
-	boolean first = true;
-
-	public PythonGeneratorStack(iProvider top) {
-		stack = new Stack();
-		stack.push(top);
-		Launcher.getLauncher().registerUpdateable(this);
-	}
-
-	public PythonGeneratorStack(iProvider top, List addTo) {
-		this.addTo = addTo;
-		stack = new Stack();
-		stack.push(top);
-		if (addTo != null)
-			addTo.add(this);
-	}
-
-	public PythonGeneratorStack(PyFunction top, List addTo) {
-		this.addTo = addTo;
-		stack = new Stack();
-		stack.push(wrapFunction(top));
-		if (addTo != null)
-			addTo.add(this);
-	}
-
-	public PythonGeneratorStack(PyMethod top, List addTo) {
-		this.addTo = addTo;
-		stack = new Stack();
-		stack.push(wrapMethod(top));
-		if (addTo != null)
-			addTo.add(this);
-	}
-
-	public PythonGeneratorStack(PyGenerator top) {
-		stack = new Stack();
-		stack.push(wrapGenerator(top));
-		Launcher.getLauncher().registerUpdateable(this);
-	}
-
-	public PythonGeneratorStack(PyGenerator top, List addTo) {
-		this.addTo = addTo;
-		stack = new Stack();
-		stack.push(wrapGenerator(top));
-		if (addTo != null)
-			addTo.add(this);
-	}
-
-	protected void preamble() {
+public
+class PythonGeneratorStack implements iUpdateable {
+    protected static
+    iProvider<Object> wrapGenerator(final PyGenerator top) {
+        return new iProvider() {
+            public
+            Object get() {
+                return top.__iternext__();
+            }
+        };
     }
 
-    protected void postamble() {
+    public final Object didNotEvaluate = new Object();
+
+    protected Stack stack;
+
+    protected List addTo;
+
+    protected List subUpdateables = new ArrayList();
+
+    boolean over = false;
+
+    boolean first = true;
+
+    public
+    PythonGeneratorStack(iProvider top) {
+        stack = new Stack();
+        stack.push(top);
+        Launcher.getLauncher().registerUpdateable(this);
     }
 
-    public Object evaluate() {
+    public
+    PythonGeneratorStack(iProvider top, List addTo) {
+        this.addTo = addTo;
+        stack = new Stack();
+        stack.push(top);
+        if (addTo != null) addTo.add(this);
+    }
 
-		preamble();
-		try {
-			// ;//System.out.println(" stack is <"+stack+">");
-			Object ret = didNotEvaluate;
-			if (shouldEvaluateMain() && (!stack.isEmpty())) {
-				if (first) {
-					first();
-					first = false;
-				}
+    public
+    PythonGeneratorStack(PyFunction top, List addTo) {
+        this.addTo = addTo;
+        stack = new Stack();
+        stack.push(wrapFunction(top));
+        if (addTo != null) addTo.add(this);
+    }
 
-				// ret = ((PyGenerator)
-				// stack.peek()).__iternext__();
-				Object oret = ret = ((iProvider) stack.peek()).get();
-				ret = PythonUtils.maybeToJava(ret);
+    public
+    PythonGeneratorStack(PyMethod top, List addTo) {
+        this.addTo = addTo;
+        stack = new Stack();
+        stack.push(wrapMethod(top));
+        if (addTo != null) addTo.add(this);
+    }
 
-				// beta1
-				// if (ret instanceof PyJavaInstance)
-				// ret = ((PyJavaInstance)
-				// ret).__tojava__(Object.class);
+    public
+    PythonGeneratorStack(PyGenerator top) {
+        stack = new Stack();
+        stack.push(wrapGenerator(top));
+        Launcher.getLauncher().registerUpdateable(this);
+    }
 
-				// ;//System.out.println(" generator is
-				// <"+stack.peek()+">
-				// and returns <"+ret+" "+(ret == null ? null :
-				// ret.getClass())+">");
+    public
+    PythonGeneratorStack(PyGenerator top, List addTo) {
+        this.addTo = addTo;
+        stack = new Stack();
+        stack.push(wrapGenerator(top));
+        if (addTo != null) addTo.add(this);
+    }
 
-				if (oret == stack.peek()) {
-					// do nothing, just call it again next
-					// time
-				} else if (ret == null) {
-					stack.pop();
-					if (stack.isEmpty()) {
-						ret = didNotEvaluate;
-						finished();
-					} else {
-						return evaluate();
-					}
-				} else if (ret instanceof PyGenerator) {
-					stack.push(wrapGenerator((PyGenerator) ret));
-					return evaluate();
-				} else if (ret instanceof iProvider) {
-					stack.push(ret);
-				} else if (ret instanceof PyTuple) {
-					PyTuple t = (PyTuple) ret;
-					for (int i = 0; i < t.__len__(); i++) {
-						if (t.__getitem__(i) instanceof PyGenerator) {
-							PyGenerator g = (PyGenerator) t.__getitem__(i);
-							newPythonGeneratorStack(wrapGenerator(g), subUpdateables);
-						} else if (t.__getitem__(i) instanceof iProvider) {
-							iProvider g = (iProvider) t.__getitem__(i);
-							newPythonGeneratorStack(g, subUpdateables);
-						}
-					}
-				}
-			}
+    protected
+    void preamble() {
+    }
 
-			for (int i = 0; i < subUpdateables.size(); i++) {
-				int inSize = subUpdateables.size();
-				Object sret = didNotEvaluate;
-				PythonGeneratorStack stack2 = ((PythonGeneratorStack) subUpdateables.get(i));
-				if (shouldEvaluate(stack2))
-					sret = stack2.evaluate();
+    protected
+    void postamble() {
+    }
 
-				sret = sret == null ? null : ((sret instanceof PyObject)
-                                              ? ((PyObject) sret).__tojava__(Object.class)
-                                              : sret);
+    public
+    Object evaluate() {
 
-				handleEvaluation(i, sret);
-				int outSize = subUpdateables.size();
-				i -= inSize - outSize;
-			}
+        preamble();
+        try {
+            // ;//System.out.println(" stack is <"+stack+">");
+            Object ret = didNotEvaluate;
+            if (shouldEvaluateMain() && (!stack.isEmpty())) {
+                if (first) {
+                    first();
+                    first = false;
+                }
 
-			if ((stack.isEmpty()) && (subUpdateables.isEmpty()))
-				outOfThingsTodo();
-			ret = ret == null ? null : ((ret instanceof PyObject) ? ((PyObject) ret).__tojava__(Object.class) : ret);
+                // ret = ((PyGenerator)
+                // stack.peek()).__iternext__();
+                Object oret = ret = ((iProvider) stack.peek()).get();
+                ret = PythonUtils.maybeToJava(ret);
 
-			handleEvaluation(-1, ret);
+                // beta1
+                // if (ret instanceof PyJavaInstance)
+                // ret = ((PyJavaInstance)
+                // ret).__tojava__(Object.class);
 
-			return ret;
-		} finally {
-			postamble();
-		}
+                // ;//System.out.println(" generator is
+                // <"+stack.peek()+">
+                // and returns <"+ret+" "+(ret == null ? null :
+                // ret.getClass())+">");
 
-	}
+                if (oret == stack.peek()) {
+                    // do nothing, just call it again next
+                    // time
+                }
+                else if (ret == null) {
+                    stack.pop();
+                    if (stack.isEmpty()) {
+                        ret = didNotEvaluate;
+                        finished();
+                    }
+                    else {
+                        return evaluate();
+                    }
+                }
+                else if (ret instanceof PyGenerator) {
+                    stack.push(wrapGenerator((PyGenerator) ret));
+                    return evaluate();
+                }
+                else if (ret instanceof iProvider) {
+                    stack.push(ret);
+                }
+                else if (ret instanceof PyTuple) {
+                    PyTuple t = (PyTuple) ret;
+                    for (int i = 0; i < t.__len__(); i++) {
+                        if (t.__getitem__(i) instanceof PyGenerator) {
+                            PyGenerator g = (PyGenerator) t.__getitem__(i);
+                            newPythonGeneratorStack(wrapGenerator(g), subUpdateables);
+                        }
+                        else if (t.__getitem__(i) instanceof iProvider) {
+                            iProvider g = (iProvider) t.__getitem__(i);
+                            newPythonGeneratorStack(g, subUpdateables);
+                        }
+                    }
+                }
+            }
 
-	public boolean isOver() {
-		return over;
-	}
+            for (int i = 0; i < subUpdateables.size(); i++) {
+                int inSize = subUpdateables.size();
+                Object sret = didNotEvaluate;
+                PythonGeneratorStack stack2 = ((PythonGeneratorStack) subUpdateables.get(i));
+                if (shouldEvaluate(stack2)) sret = stack2.evaluate();
 
-	/**
-	 * subclasses can override this to change the STOP logic, for when STOP
-	 * is called from outside class.
-	 */
-	public void stop() {
-		internalStop();
-	}
+                sret = sret == null
+                       ? null
+                       : ((sret instanceof PyObject) ? ((PyObject) sret).__tojava__(Object.class) : sret);
 
-	/** @see innards.iUpdateable#update() */
-	public void update() {
-		try {
-			Object to = evaluate();
-			evaluatedTo((to == didNotEvaluate) ? null : to);
-		} catch (Exception e) {
-			e.printStackTrace();
-			IllegalArgumentException iae = new IllegalArgumentException();
-			iae.initCause(e);
-			throw iae;
-		}
-	}
+                handleEvaluation(i, sret);
+                int outSize = subUpdateables.size();
+                i -= inSize - outSize;
+            }
 
-	protected void evaluatedTo(Object to) {
-	}
+            if ((stack.isEmpty()) && (subUpdateables.isEmpty())) outOfThingsTodo();
+            ret = ret == null ? null : ((ret instanceof PyObject) ? ((PyObject) ret).__tojava__(Object.class) : ret);
 
-	private iProvider<Object> wrapFunction(final PyFunction top) {
-		return new iProvider() {
-			public Object get() {
-				PyObject c = top.__call__();
-				if (c == null)
-					return this;
-				if (c == Py.None)
-					return this;
-				Object z = c.__tojava__(Object.class);
-				return z;
-			}
-		};
-	}
+            handleEvaluation(-1, ret);
 
-	private iProvider<Object> wrapMethod(final PyMethod top) {
-		return new iProvider() {
-			public Object get() {
-				PyObject c = top.__call__();
-				if (c == null)
-					return this;
-				if (c == Py.None)
-					return this;
-				Object z = c.__tojava__(Object.class);
-				return z;
-			}
-		};
-	}
+            return ret;
+        } finally {
+            postamble();
+        }
 
-	protected void finished() {
+    }
 
-	}
+    public
+    boolean isOver() {
+        return over;
+    }
 
-	protected void first() {
+    /**
+     * subclasses can override this to change the STOP logic, for when STOP
+     * is called from outside class.
+     */
+    public
+    void stop() {
+        internalStop();
+    }
 
-	}
+    /**
+     * @see innards.iUpdateable#update()
+     */
+    public
+    void update() {
+        try {
+            Object to = evaluate();
+            evaluatedTo((to == didNotEvaluate) ? null : to);
+        } catch (Exception e) {
+            e.printStackTrace();
+            IllegalArgumentException iae = new IllegalArgumentException();
+            iae.initCause(e);
+            throw iae;
+        }
+    }
 
-	protected void handleEvaluation(int childIndex, Object a) {
-		return;
-	}
+    protected
+    void evaluatedTo(Object to) {
+    }
 
-	protected void internalStop() {
-		if (addTo == null) {
-			Launcher.getLauncher().isRegisteredUpdateable(this);
-			Launcher.getLauncher().deregisterUpdateable(this);
-		} else {
-			addTo.remove(this);
-		}
-		over = true;
-	}
+    private
+    iProvider<Object> wrapFunction(final PyFunction top) {
+        return new iProvider() {
+            public
+            Object get() {
+                PyObject c = top.__call__();
+                if (c == null) return this;
+                if (c == Py.None) return this;
+                Object z = c.__tojava__(Object.class);
+                return z;
+            }
+        };
+    }
 
-	protected void newPythonGeneratorStack(iProvider g, List subUpdateables2) {
-		new PythonGeneratorStack(g, subUpdateables2);
-	}
+    private
+    iProvider<Object> wrapMethod(final PyMethod top) {
+        return new iProvider() {
+            public
+            Object get() {
+                PyObject c = top.__call__();
+                if (c == null) return this;
+                if (c == Py.None) return this;
+                Object z = c.__tojava__(Object.class);
+                return z;
+            }
+        };
+    }
 
-	/**
-	 * subclasses can override this to change the STOP logic, for when STOP
-	 * is called becuase we're out of things to do
-	 */
-	protected void outOfThingsTodo() {
-		internalStop();
-	}
+    protected
+    void finished() {
 
-	protected boolean shouldEvaluate(PythonGeneratorStack stack2) {
-		return true;
-	}
+    }
 
-	protected boolean shouldEvaluateMain() {
-		return true;
-	}
+    protected
+    void first() {
+
+    }
+
+    protected
+    void handleEvaluation(int childIndex, Object a) {
+        return;
+    }
+
+    protected
+    void internalStop() {
+        if (addTo == null) {
+            Launcher.getLauncher().isRegisteredUpdateable(this);
+            Launcher.getLauncher().deregisterUpdateable(this);
+        }
+        else {
+            addTo.remove(this);
+        }
+        over = true;
+    }
+
+    protected
+    void newPythonGeneratorStack(iProvider g, List subUpdateables2) {
+        new PythonGeneratorStack(g, subUpdateables2);
+    }
+
+    /**
+     * subclasses can override this to change the STOP logic, for when STOP
+     * is called becuase we're out of things to do
+     */
+    protected
+    void outOfThingsTodo() {
+        internalStop();
+    }
+
+    protected
+    boolean shouldEvaluate(PythonGeneratorStack stack2) {
+        return true;
+    }
+
+    protected
+    boolean shouldEvaluateMain() {
+        return true;
+    }
 
 }

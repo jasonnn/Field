@@ -6,28 +6,31 @@ import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Layers implements iHandlesAttributes {
+public
+class Layers implements iHandlesAttributes {
 
-	private final SplineComputingOverride o;
+    private final SplineComputingOverride o;
 
-	Map<String, OnCanvasLines> known = new HashMap<String, OnCanvasLines>();
+    Map<String, OnCanvasLines> known = new HashMap<String, OnCanvasLines>();
 
-	public Layers(SplineComputingOverride o) {
-		this.o = o;
-	}
+    public
+    Layers(SplineComputingOverride o) {
+        this.o = o;
+    }
 
-	@Override
-	public Object getAttribute(String name) {
-		OnCanvasLines n = known.get(name);
-		if (n == null)
-			known.put(name, n = new OnCanvasLines(o.forElement));
+    @Override
+    public
+    Object getAttribute(String name) {
+        OnCanvasLines n = known.get(name);
+        if (n == null) known.put(name, n = new OnCanvasLines(o.forElement));
 
-		return n.getLayer(name);
-	}
+        return n.getLayer(name);
+    }
 
-	@Override
-	public void setAttribute(String name, Object value) {
-		throw new IllegalArgumentException();
-	}
+    @Override
+    public
+    void setAttribute(String name, Object value) {
+        throw new IllegalArgumentException();
+    }
 
 }

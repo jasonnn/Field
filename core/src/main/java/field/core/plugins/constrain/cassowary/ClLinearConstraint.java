@@ -12,29 +12,34 @@
 package field.core.plugins.constrain.cassowary;
 
 class ClLinearConstraint extends ClConstraint {
-	public ClLinearConstraint(ClLinearExpression cle, ClStrength strength, double weight) {
-		super(strength, weight);
-		_expression = cle;
-	}
+    public
+    ClLinearConstraint(ClLinearExpression cle, ClStrength strength, double weight) {
+        super(strength, weight);
+        _expression = cle;
+    }
 
-	public ClLinearConstraint(ClLinearExpression cle, ClStrength strength) {
-		super(strength, 1.0);
-		_expression = cle;
-	}
+    public
+    ClLinearConstraint(ClLinearExpression cle, ClStrength strength) {
+        super(strength, 1.0);
+        _expression = cle;
+    }
 
-	public ClLinearConstraint(ClLinearExpression cle) {
-		super(ClStrength.required, 1.0);
-		_expression = cle;
-	}
+    public
+    ClLinearConstraint(ClLinearExpression cle) {
+        super(ClStrength.required, 1.0);
+        _expression = cle;
+    }
 
-	@Override
-	public ClLinearExpression expression() {
-		return _expression;
-	}
+    @Override
+    public
+    ClLinearExpression expression() {
+        return _expression;
+    }
 
-	protected void setExpression(ClLinearExpression expr) {
-		_expression = expr;
-	}
+    protected
+    void setExpression(ClLinearExpression expr) {
+        _expression = expr;
+    }
 
-	protected ClLinearExpression _expression;
+    protected ClLinearExpression _expression;
 }

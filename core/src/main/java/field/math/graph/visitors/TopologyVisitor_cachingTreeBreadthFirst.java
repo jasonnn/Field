@@ -7,9 +7,10 @@ import field.util.HashMapOfLists;
 import java.util.*;
 
 /**
-* Created by jason on 7/15/14.
-*/
-public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
+ * Created by jason on 7/15/14.
+ */
+public abstract
+class TopologyVisitor_cachingTreeBreadthFirst<T> {
 
     public HashMapOfLists<T, Pair<T, List<T>>> knownPaths = new HashMapOfLists<T, Pair<T, List<T>>>();
 
@@ -23,11 +24,13 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
 
     HashSet<T> nextFringe = new LinkedHashSet<T>();
 
-    public TopologyVisitor_cachingTreeBreadthFirst(iTopology<T> t) {
+    public
+    TopologyVisitor_cachingTreeBreadthFirst(iTopology<T> t) {
         this.t = t;
     }
 
-    public void apply(Collection<T> root) {
+    public
+    void apply(Collection<T> root) {
         currentFringe.clear();
         nextFringe.clear();
         parented.clear();
@@ -47,7 +50,8 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
         _apply(null);
     }
 
-    public void apply(T root) {
+    public
+    void apply(T root) {
         currentFringe.clear();
         nextFringe.clear();
         parented.clear();
@@ -64,19 +68,20 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
 
     }
 
-    public void copyCache(TopologyVisitor_cachingTreeBreadthFirst<T> ls2) {
+    public
+    void copyCache(TopologyVisitor_cachingTreeBreadthFirst<T> ls2) {
         ls2.knownPaths.putAll(knownPaths);
     }
 
-    public List<T> getPath(T to) {
+    public
+    List<T> getPath(T to) {
         List<T> r = new ArrayList<T>();
         r.add(to);
         T p = parented.get(to);
         while ((p != null) && (r.size() < 20)) {
             r.add(p);
             T op = parented.get(p);
-            if (p == op)
-                break;
+            if (p == op) break;
             p = op;
         }
         if (r.size() == 20) {
@@ -85,12 +90,14 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
         return r;
     }
 
-    public TopologyVisitor_cachingTreeBreadthFirst<T> setMaxDepth(int maxDepth) {
+    public
+    TopologyVisitor_cachingTreeBreadthFirst<T> setMaxDepth(int maxDepth) {
         this.maxDepth = maxDepth;
         return this;
     }
 
-    private void _apply(T root) {
+    private
+    void _apply(T root) {
 
         int m = 0;
         do {
@@ -105,7 +112,8 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
                         return;
                     }
                     if (code == GraphNodeSearching.VisitCode.skip) {
-                    } else {
+                    }
+                    else {
                         List<T> l = t.getChildrenOf(c);
                         for (T cc : l) {
                             if (!parented.containsKey(cc)) {
@@ -126,10 +134,10 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
         } while (!currentFringe.isEmpty() && ((maxDepth == -1) || (m < maxDepth)));
     }
 
-    protected List<T> getCachedPath(T from, T to) {
+    protected
+    List<T> getCachedPath(T from, T to) {
         Collection<Pair<T, List<T>>> q = knownPaths.get(from);
-        if (q == null)
-            return null;
+        if (q == null) return null;
         for (Pair<T, List<T>> p : q) {
             if (p.left.equals(to)) {
                 return p.right;
@@ -138,16 +146,19 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
         return null;
     }
 
-    protected void markPathAsCached(List<T> path) {
+    protected
+    void markPathAsCached(List<T> path) {
         for (int i = 0; i < (path.size() - 1); i++) {
-            knownPaths.addToList(path.get(i), new Pair<T, List<T>>(path.get(path.size() - 1), path.subList(i + 1, path.size())));
+            knownPaths.addToList(path.get(i),
+                                 new Pair<T, List<T>>(path.get(path.size() - 1), path.subList(i + 1, path.size())));
         }
     }
 
     protected abstract
     GraphNodeSearching.VisitCode visit(T c);
 
-    protected void visitFringe(HashSet<T> nextFringe) {
+    protected
+    void visitFringe(HashSet<T> nextFringe) {
     }
 
 }

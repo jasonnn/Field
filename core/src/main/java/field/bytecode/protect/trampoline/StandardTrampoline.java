@@ -29,7 +29,8 @@ import java.util.logging.Logger;
 
 /**
  */
-public class StandardTrampoline extends Trampoline2 implements InheritWovenHelper {
+public
+class StandardTrampoline extends Trampoline2 implements InheritWovenHelper {
     private static final Logger log = Logger.getLogger(StandardTrampoline.class.getName());
 
     public static boolean debug = true;
@@ -42,29 +43,38 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
     int inside = 0;
 
 
-    public StandardTrampoline() {
+    public
+    StandardTrampoline() {
 
         FieldBytecodeAdapter.knownAliasingParameters.add("Lfield/bytecode/protect/annotations/AliasingParameter;");
         FieldBytecodeAdapter.knownAliasingParameters.add("Lfield/bytecode/protect/annotations/Value;");
 
     }
 
-    private Annotation[] doGetAllAnnotations(String name, ASMType[] types, String superName, String[] interfaces) throws IOException, ClassNotFoundException {
+    private
+    Annotation[] doGetAllAnnotations(String name, ASMType[] types, String superName, String[] interfaces)
+            throws IOException, ClassNotFoundException {
         Class[] parameterClasses = new Class[types.length];
 
         for (int i = 0; i < parameterClasses.length; i++) {
             parameterClasses[i] = getClassFor(types[i].getClassName());
         }
 
-        Method javamethod = ReflectionTools.findMethodWithParametersUpwards(name, parameterClasses, checkedLoadClass(superName));
+        Method javamethod =
+                ReflectionTools.findMethodWithParametersUpwards(name, parameterClasses, checkedLoadClass(superName));
 
         if (javamethod == null) {
             for (String anInterface : interfaces) {
-                javamethod = ReflectionTools.findMethodWithParametersUpwards(name, parameterClasses, checkedLoadClass(anInterface));
-                if (javamethod != null)
-                    break;
+                javamethod = ReflectionTools.findMethodWithParametersUpwards(name,
+                                                                             parameterClasses,
+                                                                             checkedLoadClass(anInterface));
+                if (javamethod != null) break;
             }
-            assert javamethod != null : " couldn't find method to inherit from in <" + name + "> with parameters <" + Arrays.asList(parameterClasses) + '>';
+            assert javamethod != null : " couldn't find method to inherit from in <"
+                                        + name
+                                        + "> with parameters <"
+                                        + Arrays.asList(parameterClasses)
+                                        + '>';
         }
 
 
@@ -73,11 +83,12 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
     }
 
     @Override
-    public Annotation[] getAllAnotationsForSuperMethodsOf(String name,
-                                                          String desc,
-                                                          ASMType[] at,
-                                                          String super_name,
-                                                          String[] interfaces) {
+    public
+    Annotation[] getAllAnotationsForSuperMethodsOf(String name,
+                                                   String desc,
+                                                   ASMType[] at,
+                                                   String super_name,
+                                                   String[] interfaces) {
 
         Annotation[] result = null;
         try {
@@ -92,7 +103,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
 
     }
 
-    public Class getClassFor(String className) throws ClassNotFoundException, IOException {
+    public
+    Class getClassFor(String className) throws ClassNotFoundException, IOException {
         if ("int".equals(className)) {
             return Integer.TYPE;
         }
@@ -101,7 +113,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
         }
         if ("double".equals(className)) {
             return Double.TYPE;
-        } else {
+        }
+        else {
 
             return checkedLoadClass(className);
         }
@@ -112,7 +125,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
      *
      * @throws ClassNotFoundException
      */
-    private Class checkedLoadClass(String className) throws ClassNotFoundException, IOException {
+    private
+    Class checkedLoadClass(String className) throws ClassNotFoundException, IOException {
 
         className = className.replace('/', '.');
 
@@ -200,24 +214,24 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
     }
 
     @Override
-    protected byte[] instrumentBytecodes(byte[] a, final String class_name, ClassLoader deferTo) {
+    protected
+    byte[] instrumentBytecodes(byte[] a, final String class_name, ClassLoader deferTo) {
         assert !alreadyLoaded.contains(class_name) : " class name is <" + class_name + "> aready";
         alreadyLoaded.add(class_name);
         check();
 
         long modAt = ModificationCache.modificationForURL(deferTo.getResource(resourceNameForClassName(class_name)));
-        if (!cache.is(class_name, true, modAt))
-            return a;
+        if (!cache.is(class_name, true, modAt)) return a;
 
         // ;//System.out.println(class_name);
         if (class_name.startsWith("java")
-                || class_name.startsWith("com/sun")
-                || class_name.startsWith("sun")
-                || class_name.startsWith("apple")
-                || class_name.contains("protect")
-                || class_name.startsWith("org.python")
-                || class_name.startsWith("ch.")
-                || class_name.startsWith("com.")) return a;
+            || class_name.startsWith("com/sun")
+            || class_name.startsWith("sun")
+            || class_name.startsWith("apple")
+            || class_name.contains("protect")
+            || class_name.startsWith("org.python")
+            || class_name.startsWith("ch.")
+            || class_name.startsWith("com.")) return a;
         try {
             log.log(Level.INFO, "begin instrumentation of: {0}", class_name);
 
@@ -228,7 +242,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
             if (!classModel.isWoven()) {
                 cache.state(class_name, false, modAt);
                 return a;
-            } else {
+            }
+            else {
                 cache.state(class_name, true, modAt);
             }
 
@@ -260,7 +275,12 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
         return cw.toByteArray();
     }
 
-    protected byte[] weave_(byte[] oa, final String class_name, ClassLoader deferTo, final String superName, final String[] interfaces) {
+    protected
+    byte[] weave_(byte[] oa,
+                  final String class_name,
+                  ClassLoader deferTo,
+                  final String superName,
+                  final String[] interfaces) {
         inside++;
         check();
 
@@ -284,15 +304,30 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
                 // final byte[] fa = oa;
                 ClassVisitor adaptor = new ClassVisitor(Opcodes.ASM5, writer) {
                     @Override
-                    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+                    public
+                    void visit(int version,
+                               int access,
+                               String name,
+                               String signature,
+                               String superName,
+                               String[] interfaces) {
                         super.visit(version, access, name, signature, superName, interfaces);
                         isInterface[0] = (access & Opcodes.ACC_INTERFACE) != 0;
                     }
 
                     @Override
-                    public MethodVisitor visitMethod(final int access, final String name, final String desc, String signature, String[] exceptions) {
+                    public
+                    MethodVisitor visitMethod(final int access,
+                                              final String name,
+                                              final String desc,
+                                              String signature,
+                                              String[] exceptions) {
                         //  final MethodVisitor m = cv.visitMethod(access, name, desc, signature, exceptions);
-                        return new InheritWovenMethodAdaptor(StandardTrampoline.this, name, desc, superName, interfaces);//.setDelegate(m);
+                        return new InheritWovenMethodAdaptor(StandardTrampoline.this,
+                                                             name,
+                                                             desc,
+                                                             superName,
+                                                             interfaces);//.setDelegate(m);
                     }
 
                 };
@@ -318,11 +353,10 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
                 ClassReader reader = new ClassReader(oa);
 
 
-                if (debug)
-                    log.log(Level.INFO, " ------- before instrumentation -----------------------------------------------------------------------------------");
+                if (debug) log.log(Level.INFO,
+                                   " ------- before instrumentation -----------------------------------------------------------------------------------");
                 try {
-                    if (debug)
-                        checkClass(oa);
+                    if (debug) checkClass(oa);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -334,9 +368,23 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
                 ClassVisitor adaptor = new ClassVisitor(Opcodes.ASM5, debug ? check : writer) {
 
                     @Override
-                    public MethodVisitor visitMethod(final int access, final String name, final String desc, String signature, String[] exceptions) {
+                    public
+                    MethodVisitor visitMethod(final int access,
+                                              final String name,
+                                              final String desc,
+                                              String signature,
+                                              String[] exceptions) {
                         final MethodVisitor m = super.visitMethod(access, name, desc, signature, exceptions);
-                        return new AnnotationMethodAdaptor(annotatedMethodHandlers, access, name, desc, signature, cv, m, superName, fa, class_name);
+                        return new AnnotationMethodAdaptor(annotatedMethodHandlers,
+                                                           access,
+                                                           name,
+                                                           desc,
+                                                           signature,
+                                                           cv,
+                                                           m,
+                                                           superName,
+                                                           fa,
+                                                           class_name);
                     }
                 };
                 // check();
@@ -346,8 +394,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
                 // check();
 
 
-                if (debug)
-                    log.log(Level.INFO, " ------- after instrumentation -----------------------------------------------------------------------------------");
+                if (debug) log.log(Level.INFO,
+                                   " ------- after instrumentation -----------------------------------------------------------------------------------");
                 try {
                     checkClass(oa);
                 } catch (Exception e) {
@@ -370,7 +418,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
         return oa;
     }
 
-    public static void checkClass(byte[] aa) throws Exception {
+    public static
+    void checkClass(byte[] aa) throws Exception {
         StringWriter sw = new StringWriter();
         CheckClassAdapter.verify(new ClassReader(aa), false, new PrintWriter(sw));
         if (!sw.toString().isEmpty()) {
@@ -433,17 +482,21 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
     }
 
     @Override
-    public ClassLoader getLoader() {
+    public
+    ClassLoader getLoader() {
         return loader;
     }
 
 
-    private class MyClassWriter extends ClassWriter {
-        public MyClassWriter() {
+    private
+    class MyClassWriter extends ClassWriter {
+        public
+        MyClassWriter() {
             super(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         }
 
-        protected String getCommonSuperClass(final String type1, final String type2) {
+        protected
+        String getCommonSuperClass(final String type1, final String type2) {
             ClassInfo c, d;
             try {
                 c = new ClassInfo(type1, Trampoline2.trampoline.getClassLoader());
@@ -459,7 +512,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
             }
             if (c.isInterface() || d.isInterface()) {
                 return "java/lang/Object";
-            } else {
+            }
+            else {
                 do {
                     c = c.getSuperclass();
                 } while (!c.isAssignableFrom(d));
@@ -479,7 +533,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
 
             String[] interfaces;
 
-            public ClassInfo(final String type, final ClassLoader loader) {
+            public
+            ClassInfo(final String type, final ClassLoader loader) {
                 this.loader = loader;
                 this.type = Type.getObjectType(type);
                 String s = type.replace('.', '/') + ".class";
@@ -557,7 +612,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
                 return (getModifiers() & Opcodes.ACC_INTERFACE) > 0;
             }
 
-            private boolean implementsInterface(final ClassInfo that) {
+            private
+            boolean implementsInterface(final ClassInfo that) {
                 for (ClassInfo c = this; c != null; c = c.getSuperclass()) {
                     ClassInfo[] tis = c.getInterfaces();
                     for (ClassInfo ti : tis) {
@@ -567,7 +623,8 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
                 return false;
             }
 
-            private boolean isSubclassOf(final ClassInfo that) {
+            private
+            boolean isSubclassOf(final ClassInfo that) {
                 for (ClassInfo c = this; c != null; c = c.getSuperclass()) {
                     if (c.getSuperclass() != null && c.getSuperclass().type.equals(that.type)) {
                         return true;
@@ -576,11 +633,11 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
                 return false;
             }
 
-            public boolean isAssignableFrom(final ClassInfo that) {
-                return this == that
-                        || that.isSubclassOf(this)
-                        || that.implementsInterface(this)
-                        || (that.isInterface() && getType().getDescriptor().equals("Ljava/lang/Object;"));
+            public
+            boolean isAssignableFrom(final ClassInfo that) {
+                return this == that || that.isSubclassOf(this) || that.implementsInterface(this) || (that.isInterface()
+                                                                                                     && getType().getDescriptor()
+                                                                                                                 .equals("Ljava/lang/Object;"));
 
             }
         }

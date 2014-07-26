@@ -12,36 +12,43 @@
 package field.core.plugins.constrain.cassowary;
 
 class ClSlackVariable extends ClAbstractVariable {
-	// friend ClTableau;
-	// friend ClSimplexSolver;
-	public ClSlackVariable(String name) {
-		super(name);
-	}
+    // friend ClTableau;
+    // friend ClSimplexSolver;
+    public
+    ClSlackVariable(String name) {
+        super(name);
+    }
 
-	public ClSlackVariable() {
-	}
+    public
+    ClSlackVariable() {
+    }
 
-	public ClSlackVariable(long number, String prefix) {
-		super(number, prefix);
-	}
+    public
+    ClSlackVariable(long number, String prefix) {
+        super(number, prefix);
+    }
 
-	@Override
-	public String toString() {
-		return '[' + name() + ":slack]";
-	}
+    @Override
+    public
+    String toString() {
+        return '[' + name() + ":slack]";
+    }
 
-	@Override
-	public boolean isExternal() {
-		return false;
-	}
+    @Override
+    public
+    boolean isExternal() {
+        return false;
+    }
 
-	@Override
-	public boolean isPivotable() {
-		return true;
-	}
+    @Override
+    public
+    boolean isPivotable() {
+        return true;
+    }
 
-	@Override
-	public boolean isRestricted() {
-		return true;
-	}
+    @Override
+    public
+    boolean isRestricted() {
+        return true;
+    }
 }

@@ -20,110 +20,117 @@ import java.util.HashMap;
  * on...) has a name associated with it the - whole thing is easily reset (a
  * begin(), end() pattern) - this thing can be persisted, but comes back empty
  * when it does. This slightly simplifies it's use.
- * 
  */
-public class DynamicExtensionPoint<T> implements iHandlesAttributes, iCallable {
+public
+class DynamicExtensionPoint<T> implements iHandlesAttributes, iCallable {
 
-	// static
-	// {
-	// FieldPyObjectAdaptor2.isHandlesAttributes(DynamicExtensionPoint.class);
-	// FieldPyObjectAdaptor2.isCallable(DynamicExtensionPoint.class);
-	// }
+    // static
+    // {
+    // FieldPyObjectAdaptor2.isHandlesAttributes(DynamicExtensionPoint.class);
+    // FieldPyObjectAdaptor2.isCallable(DynamicExtensionPoint.class);
+    // }
 
-	protected Class<T> forClass;
+    protected Class<T> forClass;
 
-	transient boolean isInited = false;
+    transient boolean isInited = false;
 
-	private transient T proxyInstance;
-	private transient PythonCallableMap defaultExtension;
+    private transient T proxyInstance;
+    private transient PythonCallableMap defaultExtension;
 
-	transient HashMap<String, Method> aliases = new HashMap<String, Method>();
+    transient HashMap<String, Method> aliases = new HashMap<String, Method>();
 
-	transient HashMap<Method, PythonCallableMap> extensions = new HashMap<Method, PythonCallableMap>();
+    transient HashMap<Method, PythonCallableMap> extensions = new HashMap<Method, PythonCallableMap>();
 
-	transient PythonCallableMap unhandled = new PythonCallableMap();
+    transient PythonCallableMap unhandled = new PythonCallableMap();
 
-	public DynamicExtensionPoint(Class<T> forClass) {
-		this.forClass = forClass;
-		init(forClass);
-	}
+    public
+    DynamicExtensionPoint(Class<T> forClass) {
+        this.forClass = forClass;
+        init(forClass);
+    }
 
-	private void init(Class<T> forClass) {
-		if (isInited)
-			return;
+    private
+    void init(Class<T> forClass) {
+        if (isInited) return;
 
-		if (aliases == null) {
-			aliases = new HashMap<String, Method>();
-			extensions = new HashMap<Method, PythonCallableMap>();
-			unhandled = new PythonCallableMap();
-		}
-		proxyInstance = (T) Proxy.newProxyInstance(forClass.getClassLoader(), new Class[] { forClass }, new InvocationHandler() {
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				return handleInvocation(method, args);
-			}
-		});
+        if (aliases == null) {
+            aliases = new HashMap<String, Method>();
+            extensions = new HashMap<Method, PythonCallableMap>();
+            unhandled = new PythonCallableMap();
+        }
+        proxyInstance =
+                (T) Proxy.newProxyInstance(forClass.getClassLoader(), new Class[]{forClass}, new InvocationHandler() {
+                    public
+                    Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        return handleInvocation(method, args);
+                    }
+                });
 
-		Method[] m = forClass.getMethods();
-		for (Method mm : m) {
-			aliases.put(mm.getName(), mm);
-			extensions.put(mm, new PythonCallableMap());
-		}
-		if (m.length == 1) {
-			defaultExtension = extensions.get(m[0]);
-		}
-		isInited = true;
-	}
+        Method[] m = forClass.getMethods();
+        for (Method mm : m) {
+            aliases.put(mm.getName(), mm);
+            extensions.put(mm, new PythonCallableMap());
+        }
+        if (m.length == 1) {
+            defaultExtension = extensions.get(m[0]);
+        }
+        isInited = true;
+    }
 
-	protected Object handleInvocation(Method method, Object[] args) {
+    protected
+    Object handleInvocation(Method method, Object[] args) {
 
         //System.out.println(" handle2 invocation <" + method + "> <" + args + ">");
 
-		init(forClass);
-		PythonCallableMap ep = extensions.get(method);
-		if (ep == null)
-			ep = unhandled;
-		ep.invoke(args);
-		return null;
-	}
+        init(forClass);
+        PythonCallableMap ep = extensions.get(method);
+        if (ep == null) ep = unhandled;
+        ep.invoke(args);
+        return null;
+    }
 
-	public T getProxy() {
-		init(forClass);
-		return proxyInstance;
-	}
+    public
+    T getProxy() {
+        init(forClass);
+        return proxyInstance;
+    }
 
-	public PythonCallableMap getExtensionPoint(String name) {
+    public
+    PythonCallableMap getExtensionPoint(String name) {
 
-		init(forClass);
-		if ("unhandled".equals(name))
-			return unhandled;
+        init(forClass);
+        if ("unhandled".equals(name)) return unhandled;
 
-		Method m = aliases.get(name);
-		PythonCallableMap table = extensions.get(m);
-		return table;
-	}
+        Method m = aliases.get(name);
+        PythonCallableMap table = extensions.get(m);
+        return table;
+    }
 
-	public Object getAttribute(String name) {
-		init(forClass);
-		PyObject o = Py.java2py(getExtensionPoint(name));
-		return o;
-	}
+    public
+    Object getAttribute(String name) {
+        init(forClass);
+        PyObject o = Py.java2py(getExtensionPoint(name));
+        return o;
+    }
 
-	public void setAttribute(String name, Object value) {
-		init(forClass);
-		getExtensionPoint(name).register((PyFunction) value);
-	}
+    public
+    void setAttribute(String name, Object value) {
+        init(forClass);
+        getExtensionPoint(name).register((PyFunction) value);
+    }
 
-	public void reset() {
-		init(forClass);
-		for (PythonCallableMap m : extensions.values())
-			m.reset();
-		unhandled.reset();
-	}
+    public
+    void reset() {
+        init(forClass);
+        for (PythonCallableMap m : extensions.values())
+            m.reset();
+        unhandled.reset();
+    }
 
-	public Object call(Object[] args) {
-		init(forClass);
-		if (defaultExtension == null)
-			;//System.out.println(" known methods are <" + aliases + ">");
-		return defaultExtension.call(args);
-	}
+    public
+    Object call(Object[] args) {
+        init(forClass);
+        if (defaultExtension == null) ;//System.out.println(" known methods are <" + aliases + ">");
+        return defaultExtension.call(args);
+    }
 }

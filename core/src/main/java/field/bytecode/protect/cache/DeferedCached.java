@@ -16,16 +16,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public final class DeferedCached extends DeferCallingFast {
+public final
+class DeferedCached extends DeferCallingFast {
 
-    public static DeferedCached fromCtx(ASMAnnotatedMethodCtx ctx, String name) {
+    public static
+    DeferedCached fromCtx(ASMAnnotatedMethodCtx ctx, String name) {
         return new DeferedCached(name,
-                ctx.access,
-                new ASMMethod(ctx.name, ctx.desc),
-                ctx.classCtx.cv,
-                ctx.delegate,
-                ctx.signature,
-                ctx.params);
+                                 ctx.access,
+                                 new ASMMethod(ctx.name, ctx.desc),
+                                 ctx.classCtx.cv,
+                                 ctx.delegate,
+                                 ctx.signature,
+                                 ctx.params);
     }
 
     //private final HashMap<String, Object> parameters;
@@ -36,16 +38,25 @@ public final class DeferedCached extends DeferCallingFast {
 
     Method original = null;
 
-    public DeferedCached(String name, int access, ASMMethod method, ClassVisitor delegate, MethodVisitor to, String signature, Map<String, Object> parameters) {
+    public
+    DeferedCached(String name,
+                  int access,
+                  ASMMethod method,
+                  ClassVisitor delegate,
+                  MethodVisitor to,
+                  String signature,
+                  Map<String, Object> parameters) {
         super(name, access, method, delegate, to, signature, parameters);
 
         final Integer max = (Integer) parameters.get("max");
         if ((max == null) || (max == -1)) {
             cache = new WeakHashMap<ImmutableArrayWrapper, Object>();
-        } else {
+        }
+        else {
             cache = new LinkedHashMap<ImmutableArrayWrapper, Object>() {
                 @Override
-                protected boolean removeEldestEntry(Map.Entry<ImmutableArrayWrapper, Object> eldest) {
+                protected
+                boolean removeEldestEntry(Map.Entry<ImmutableArrayWrapper, Object> eldest) {
                     return size() > max;
                 }
             };
@@ -53,7 +64,8 @@ public final class DeferedCached extends DeferCallingFast {
     }
 
     @Override
-    public Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
+    public
+    Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
 
         if (original == null) {
             Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
@@ -73,7 +85,8 @@ public final class DeferedCached extends DeferCallingFast {
 
                 CacheParameter ann = f.getAnnotation(CacheParameter.class);
                 if (ann != null) {
-                    if (((ann.name() == null) && (parameters.get("name") == null)) || ann.name().equals(parameters.get("name"))) {
+                    if (((ann.name() == null) && (parameters.get("name") == null)) || ann.name()
+                                                                                         .equals(parameters.get("name"))) {
                         f.setAccessible(true);
                         implicatedFields.add(f);
                     }
@@ -95,7 +108,8 @@ public final class DeferedCached extends DeferCallingFast {
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
-            } else {
+            }
+            else {
 //				;//System.out.println(" cache hit");
             }
             return object;

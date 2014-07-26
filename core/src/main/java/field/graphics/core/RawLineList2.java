@@ -10,53 +10,57 @@ import static org.lwjgl.opengl.APPLEVertexArrayObject.glBindVertexArrayAPPLE;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.glDrawRangeElements;
 
-public class RawLineList2 extends RawMesh2 {
-	public RawLineList2(String filename) throws IOException {
-		super(filename);
-	}
-	
-	
+public
+class RawLineList2 extends RawMesh2 {
+    public
+    RawLineList2(String filename) throws IOException {
+        super(filename);
+    }
 
-	public RawLineList2(String filename, MappedByteBuffer source) throws IOException {
-		super(filename, source);
-	}
 
-	FloatBuffer matrixm = ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+    public
+    RawLineList2(String filename, MappedByteBuffer source) throws IOException {
+        super(filename, source);
+    }
 
-	float width = 1;
+    FloatBuffer matrixm = ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-	public void setWidth(float width) {
-		this.width = width;
-	}
-	
-	@Override
-	public void doPerformPass() {
-		glBindVertexArrayAPPLE(0);
-		int vertexObjectID = BasicContextManager.getId(this);
-		clean();
+    float width = 1;
 
-		glLineWidth(width);
-		
-		if (inFrame != null) {
-			glPushMatrix();
-			
-			matrix = inFrame.get().getMatrix(tmpStorage).getColumnMajor(matrix);
-			matrixm.rewind();
-			matrixm.put(matrix);
-			matrixm.rewind();
-			glMultMatrix(matrixm);
+    public
+    void setWidth(float width) {
+        this.width = width;
+    }
 
-		}
+    @Override
+    public
+    void doPerformPass() {
+        glBindVertexArrayAPPLE(0);
+        int vertexObjectID = BasicContextManager.getId(this);
+        clean();
 
-		glBindVertexArrayAPPLE(vertexObjectID);
+        glLineWidth(width);
 
-		//;//System.out.println(" drawing <" + frame.get(0).length / 3 + " / <" + frame.get(-1).length + "> lines <"+matrix+"> <"+System.identityHashCode(this)+">");
+        if (inFrame != null) {
+            glPushMatrix();
 
-		glDrawRangeElements(GL_LINES, 0, (int) frame.get(0).length / 3, (int) frame.get(-1).length, GL_UNSIGNED_INT, 0);
-		glBindVertexArrayAPPLE(0);
+            matrix = inFrame.get().getMatrix(tmpStorage).getColumnMajor(matrix);
+            matrixm.rewind();
+            matrixm.put(matrix);
+            matrixm.rewind();
+            glMultMatrix(matrixm);
 
-		if (inFrame != null) {
-			glPopMatrix();
-		}
-	}
+        }
+
+        glBindVertexArrayAPPLE(vertexObjectID);
+
+        //;//System.out.println(" drawing <" + frame.get(0).length / 3 + " / <" + frame.get(-1).length + "> lines <"+matrix+"> <"+System.identityHashCode(this)+">");
+
+        glDrawRangeElements(GL_LINES, 0, (int) frame.get(0).length / 3, (int) frame.get(-1).length, GL_UNSIGNED_INT, 0);
+        glBindVertexArrayAPPLE(0);
+
+        if (inFrame != null) {
+            glPopMatrix();
+        }
+    }
 }

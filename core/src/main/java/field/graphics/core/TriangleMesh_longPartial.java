@@ -10,101 +10,103 @@ import static org.lwjgl.opengl.GL15.*;
 /**
  * a static long triangle mesh supporting trickle uploading
  */
-public class TriangleMesh_longPartial extends BasicGeometry.TriangleMesh_long {
+public
+class TriangleMesh_longPartial extends BasicGeometry.TriangleMesh_long {
 
-	public static int vertexPerFrame = 5000;
+    public static int vertexPerFrame = 5000;
 
-	int uploadedVertex = 0;
-	int uploadedTriangle = 0;
+    int uploadedVertex = 0;
+    int uploadedTriangle = 0;
 
-	boolean uploadComplete = false;
-	boolean uploadStarted = false;
+    boolean uploadComplete = false;
+    boolean uploadStarted = false;
 
-	/**
-	 * call this when you've finished putting data into the buffers
-	 */
+    /**
+     * call this when you've finished putting data into the buffers
+     */
 
-	public void beginUpload() {
-		uploadStarted = true;
-	}
+    public
+    void beginUpload() {
+        uploadStarted = true;
+    }
 
-	@Override
-	protected void doPerformPass() {
-		if (uploadComplete)
-			super.doPerformPass();
-		else if (uploadStarted)
-			clean();
-	}
+    @Override
+    protected
+    void doPerformPass() {
+        if (uploadComplete) super.doPerformPass();
+        else if (uploadStarted) clean();
+    }
 
-	@Override
-	protected void clean() {
+    @Override
+    protected
+    void clean() {
 
-		if (!uploadStarted)
-			return;
-		if (uploadComplete)
-			return;
+        if (!uploadStarted) return;
+        if (uploadComplete) return;
 
-		Object context = BasicContextManager.getCurrentContext();
+        Object context = BasicContextManager.getCurrentContext();
 
-		if (uploadedVertex < vertexLimit) {
-			glBindBuffer(GL_ARRAY_BUFFER, attributeBuffers[0]);
-
-            //System.out.println(glGetError() == 0);
-
-			int start = uploadedVertex * 4 * vertexStride;
-			int end = Math.min(4 * vertexStride * vertexLimit, 4 * vertexStride * (uploadedVertex + vertexPerFrame));
-
-			// int size = 4 * vertexStride * vertexLimit;
-
-			vertexBuffer.bBuffer.position(4 * uploadedVertex * vertexStride);
-			vertexBuffer.bBuffer.limit(end);
-
-			glBufferSubData(GL_ARRAY_BUFFER, 0, vertexBuffer.bBuffer);
+        if (uploadedVertex < vertexLimit) {
+            glBindBuffer(GL_ARRAY_BUFFER, attributeBuffers[0]);
 
             //System.out.println(glGetError() == 0);
 
-			Iterator<Entry<Integer, VertexBuffer>> aux = auxBuffers.entrySet().iterator();
-			while (aux.hasNext()) {
-				Entry<Integer, VertexBuffer> e = aux.next();
+            int start = uploadedVertex * 4 * vertexStride;
+            int end = Math.min(4 * vertexStride * vertexLimit, 4 * vertexStride * (uploadedVertex + vertexPerFrame));
 
-				VertexBuffer vbuffer = e.getValue();
-				int aid = e.getKey();
-				{
+            // int size = 4 * vertexStride * vertexLimit;
 
-					start = uploadedVertex * 4 * vbuffer.elementSize;
-					end = Math.min(4 * vbuffer.elementSize * vertexLimit, 4 * vbuffer.elementSize * (uploadedVertex + vertexPerFrame));
+            vertexBuffer.bBuffer.position(4 * uploadedVertex * vertexStride);
+            vertexBuffer.bBuffer.limit(end);
 
-					glBindBuffer(GL_ARRAY_BUFFER, attributeBuffers[aid]);
-					vbuffer.bBuffer.position(4 * uploadedVertex * vbuffer.elementSize);
-					vbuffer.bBuffer.limit(vertexLimit * 4 * vbuffer.elementSize);
-					glBufferSubData(GL_ARRAY_BUFFER, 0, vbuffer.bBuffer);
-					vbuffer.clean(context);
-				}
-			}
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertexBuffer.bBuffer);
 
-		} else {
-		}
+            //System.out.println(glGetError() == 0);
 
-		if (uploadedTriangle < triangleLimit) {
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer[0]);
+            Iterator<Entry<Integer, VertexBuffer>> aux = auxBuffers.entrySet().iterator();
+            while (aux.hasNext()) {
+                Entry<Integer, VertexBuffer> e = aux.next();
 
-			int start = uploadedTriangle * triangleBuffer.elementSize;
-			int end = Math.min(triangleBuffer.elementSize * triangleLimit, triangleBuffer.elementSize * (uploadedTriangle + vertexPerFrame));
+                VertexBuffer vbuffer = e.getValue();
+                int aid = e.getKey();
+                {
 
-			triangleBuffer.bBuffer.position(triangleBuffer.elementSize * uploadedTriangle);
-			triangleBuffer.bBuffer.limit(triangleBuffer.elementSize * triangleLimit);
+                    start = uploadedVertex * 4 * vbuffer.elementSize;
+                    end = Math.min(4 * vbuffer.elementSize * vertexLimit,
+                                   4 * vbuffer.elementSize * (uploadedVertex + vertexPerFrame));
 
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, triangleBuffer.bBuffer);
-			triangleBuffer.clean(context);
+                    glBindBuffer(GL_ARRAY_BUFFER, attributeBuffers[aid]);
+                    vbuffer.bBuffer.position(4 * uploadedVertex * vbuffer.elementSize);
+                    vbuffer.bBuffer.limit(vertexLimit * 4 * vbuffer.elementSize);
+                    glBufferSubData(GL_ARRAY_BUFFER, 0, vbuffer.bBuffer);
+                    vbuffer.clean(context);
+                }
+            }
 
-		}
+        }
+        else {
+        }
 
-		uploadedVertex = Math.min(vertexLimit, uploadedVertex + vertexPerFrame);
-		uploadedTriangle = Math.min(triangleLimit, uploadedTriangle + vertexPerFrame);
+        if (uploadedTriangle < triangleLimit) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer[0]);
 
-		if ((uploadedVertex == vertexLimit) && (uploadedTriangle == triangleLimit))
-			uploadComplete = true;
+            int start = uploadedTriangle * triangleBuffer.elementSize;
+            int end = Math.min(triangleBuffer.elementSize * triangleLimit,
+                               triangleBuffer.elementSize * (uploadedTriangle + vertexPerFrame));
 
-	}
+            triangleBuffer.bBuffer.position(triangleBuffer.elementSize * uploadedTriangle);
+            triangleBuffer.bBuffer.limit(triangleBuffer.elementSize * triangleLimit);
+
+            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, triangleBuffer.bBuffer);
+            triangleBuffer.clean(context);
+
+        }
+
+        uploadedVertex = Math.min(vertexLimit, uploadedVertex + vertexPerFrame);
+        uploadedTriangle = Math.min(triangleLimit, uploadedTriangle + vertexPerFrame);
+
+        if ((uploadedVertex == vertexLimit) && (uploadedTriangle == triangleLimit)) uploadComplete = true;
+
+    }
 
 }

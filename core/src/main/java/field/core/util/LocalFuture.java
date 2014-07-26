@@ -9,39 +9,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Woven
-public class LocalFuture<T> {
-	boolean set = false;
+public
+class LocalFuture<T> {
+    boolean set = false;
 
-	T t;
-	List<iAcceptor<T>> continuation = new ArrayList<iAcceptor<T>>();
+    T t;
+    List<iAcceptor<T>> continuation = new ArrayList<iAcceptor<T>>();
 
-	public void addContinuation(final iUpdateable u) {
-		continuation.add(new iAcceptor<T>() {
+    public
+    void addContinuation(final iUpdateable u) {
+        continuation.add(new iAcceptor<T>() {
 
-			public iAcceptor<T> set(T to) {
-				u.update();
-				return this;
-			}
-		});
-	}
-	
-	public void addContinuation(final iAcceptor<T> a)
-	{
-		continuation.add(a);
-	}
+            public
+            iAcceptor<T> set(T to) {
+                u.update();
+                return this;
+            }
+        });
+    }
 
-	public T get() {
-		return t;
-	}
+    public
+    void addContinuation(final iAcceptor<T> a) {
+        continuation.add(a);
+    }
 
-	public boolean has() {
-		return set;
-	}
+    public
+    T get() {
+        return t;
+    }
 
-	@NextUpdate
-	public void set(T t) {
-		this.t = t;
-		for(iAcceptor<T> u : continuation)
-			u.set(t);
-	}
+    public
+    boolean has() {
+        return set;
+    }
+
+    @NextUpdate
+    public
+    void set(T t) {
+        this.t = t;
+        for (iAcceptor<T> u : continuation)
+            u.set(t);
+    }
 }

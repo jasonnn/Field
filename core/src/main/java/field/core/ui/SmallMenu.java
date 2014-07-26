@@ -21,741 +21,799 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SmallMenu {
+public
+class SmallMenu {
 
-	@Woven
+    @Woven
     public static
     class BetterPopup {
         public Shell shell;
-		public Table menu;
-		private final iKeystrokeUpdate u;
-		private final Decorations parent;
+        public Table menu;
+        private final iKeystrokeUpdate u;
+        private final Decorations parent;
 
-		public BetterPopup(Decorations parent, final iKeystrokeUpdate u) {
-			this.parent = parent;
-			this.u = u;
-			shell = new Shell(Launcher.display, SWT.ON_TOP);
-			shell.setSize(0, 0);
-			menu = new Table(shell, SWT.SINGLE);
-			shell.setLayout(new FillLayout());
-			new Pretty(menu, 200);
-		}
+        public
+        BetterPopup(Decorations parent, final iKeystrokeUpdate u) {
+            this.parent = parent;
+            this.u = u;
+            shell = new Shell(Launcher.display, SWT.ON_TOP);
+            shell.setSize(0, 0);
+            menu = new Table(shell, SWT.SINGLE);
+            shell.setLayout(new FillLayout());
+            new Pretty(menu, 200);
+        }
 
-		boolean rightJustified = false;
+        boolean rightJustified = false;
 
-		public BetterPopup setRightJustified(boolean rightJustified) {
-			this.rightJustified = rightJustified;
-			return this;
-		}
+        public
+        BetterPopup setRightJustified(boolean rightJustified) {
+            this.rightJustified = rightJustified;
+            return this;
+        }
 
-		boolean fired = false;
+        boolean fired = false;
 
-		public void show(Point position) {
+        public
+        void show(Point position) {
 
-			position = Launcher.display.map(parent, null, position);
-			Point s = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+            position = Launcher.display.map(parent, null, position);
+            Point s = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 
-			s.x += 5;
-			s.x += 20;
-			s.y += 15;
+            s.x += 5;
+            s.x += 20;
+            s.y += 15;
 
-			if (s.x > (Launcher.display.getBounds().width * 0.8f)) {
-				s.x = (int) (Launcher.display.getBounds().width * 0.8f);
-			}
+            if (s.x > (Launcher.display.getBounds().width * 0.8f)) {
+                s.x = (int) (Launcher.display.getBounds().width * 0.8f);
+            }
 
-			if ((position.y + s.y) > Launcher.display.getBounds().height) {
-				position.y = Math.max(30, Launcher.display.getBounds().height - s.y - 10);
-			}
+            if ((position.y + s.y) > Launcher.display.getBounds().height) {
+                position.y = Math.max(30, Launcher.display.getBounds().height - s.y - 10);
+            }
 
-			if ((position.x + s.x) > (Launcher.display.getBounds().width + Launcher.display.getBounds().x)) {
-				position.x = Launcher.display.getBounds().width + Launcher.display.getBounds().x - s.x - 10;
-			}
+            if ((position.x + s.x) > (Launcher.display.getBounds().width + Launcher.display.getBounds().x)) {
+                position.x = Launcher.display.getBounds().width + Launcher.display.getBounds().x - s.x - 10;
+            }
 
-			// shell.setLocation(position);
+            // shell.setLocation(position);
 
-			s.y = Math.min(s.y, Launcher.display.getBounds().height - position.y);
+            s.y = Math.min(s.y, Launcher.display.getBounds().height - position.y);
 
-			// shell.setSize(s);
+            // shell.setSize(s);
 
-			// ;//System.out.println("active shell is <" +
-			// Launcher.display.getActiveShell() + ">");
-			// shell.setVisible(Launcher.display.getActiveShell() !=
-			// null);
+            // ;//System.out.println("active shell is <" +
+            // Launcher.display.getActiveShell() + ">");
+            // shell.setVisible(Launcher.display.getActiveShell() !=
+            // null);
 
-			// shell.setBounds(position.x, position.y, s.x, s.y);
-			shell.setBounds(position.x, position.y, 1, 1);
-			// shell.setBounds(10000000, position.y, s.x, s.y);
+            // shell.setBounds(position.x, position.y, s.x, s.y);
+            shell.setBounds(position.x, position.y, 1, 1);
+            // shell.setBounds(10000000, position.y, s.x, s.y);
 
-			shell.addListener(SWT.MouseMove, new Listener() {
+            shell.addListener(SWT.MouseMove, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
+                @Override
+                public
+                void handleEvent(Event event) {
 
-					// ;//System.out.println("SHELL  mouse move <"
-					// + event + ">");
+                    // ;//System.out.println("SHELL  mouse move <"
+                    // + event + ">");
 
-				}
-			});
+                }
+            });
 
-			menu.addListener(SWT.MouseExit, new Listener() {
+            menu.addListener(SWT.MouseExit, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
-					// ;//System.out.println("SHELL mouse exit ");
-					menu.deselectAll();
-				}
-			});
+                @Override
+                public
+                void handleEvent(Event event) {
+                    // ;//System.out.println("SHELL mouse exit ");
+                    menu.deselectAll();
+                }
+            });
 
-			shell.addMouseMoveListener(new MouseMoveListener() {
+            shell.addMouseMoveListener(new MouseMoveListener() {
 
-				@Override
-				public void mouseMove(MouseEvent e) {
-					// ;//System.out.println("SHELL C ");
-				}
-			});
+                @Override
+                public
+                void mouseMove(MouseEvent e) {
+                    // ;//System.out.println("SHELL C ");
+                }
+            });
 
-			menu.addMouseMoveListener(new MouseMoveListener() {
+            menu.addMouseMoveListener(new MouseMoveListener() {
 
-				@Override
-				public void mouseMove(MouseEvent e) {
-					// ;//System.out.println("SHELL C ");
-				}
-			});
+                @Override
+                public
+                void mouseMove(MouseEvent e) {
+                    // ;//System.out.println("SHELL C ");
+                }
+            });
 
-			shell.addMouseListener(new MouseListener() {
+            shell.addMouseListener(new MouseListener() {
 
-				@Override
-				public void mouseUp(MouseEvent e) {
-					// ;//System.out.println("SHELL A ");
-				}
+                @Override
+                public
+                void mouseUp(MouseEvent e) {
+                    // ;//System.out.println("SHELL A ");
+                }
 
-				@Override
-				public void mouseDown(MouseEvent e) {
-					// ;//System.out.println("SHELL A ");
-				}
+                @Override
+                public
+                void mouseDown(MouseEvent e) {
+                    // ;//System.out.println("SHELL A ");
+                }
 
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					// ;//System.out.println("SHELL A ");
-				}
-			});
-			menu.addMouseListener(new MouseListener() {
+                @Override
+                public
+                void mouseDoubleClick(MouseEvent e) {
+                    // ;//System.out.println("SHELL A ");
+                }
+            });
+            menu.addMouseListener(new MouseListener() {
 
-				@Override
-				public void mouseUp(MouseEvent e) {
-					// ;//System.out.println("menu B ");
-				}
+                @Override
+                public
+                void mouseUp(MouseEvent e) {
+                    // ;//System.out.println("menu B ");
+                }
 
-				@Override
-				public void mouseDown(MouseEvent e) {
-					// ;//System.out.println("menu b ");
-				}
+                @Override
+                public
+                void mouseDown(MouseEvent e) {
+                    // ;//System.out.println("menu b ");
+                }
 
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					// ;//System.out.println("menu b ");
-				}
-			});
+                @Override
+                public
+                void mouseDoubleClick(MouseEvent e) {
+                    // ;//System.out.println("menu b ");
+                }
+            });
 
-			menu.addSelectionListener(new SelectionListener() {
+            menu.addSelectionListener(new SelectionListener() {
 
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (e.widget.getData() == null)
-						menu.deselectAll();
-					e.doit = false;
+                @Override
+                public
+                void widgetSelected(SelectionEvent e) {
+                    if (e.widget.getData() == null) menu.deselectAll();
+                    e.doit = false;
 
                     // System.out.println(" SELECTION :" +
                     // e);
 
-					if (hu != null) {
-						hu.update(menu.getSelectionIndex());
-					}
+                    if (hu != null) {
+                        hu.update(menu.getSelectionIndex());
+                    }
 
-				}
+                }
 
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
-			});
+                @Override
+                public
+                void widgetDefaultSelected(SelectionEvent e) {
+                }
+            });
 
-			menu.addListener(SWT.Verify, new Listener() {
+            menu.addListener(SWT.Verify, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
-					// ;//System.out.println(" verify <" +
-					// event + ">");
-				}
-			});
-			menu.addListener(SWT.DefaultSelection, new Listener() {
-				public void handleEvent(Event event) {
-					// do something
-					TableItem[] ss = menu.getSelection();
+                @Override
+                public
+                void handleEvent(Event event) {
+                    // ;//System.out.println(" verify <" +
+                    // event + ">");
+                }
+            });
+            menu.addListener(SWT.DefaultSelection, new Listener() {
+                public
+                void handleEvent(Event event) {
+                    // do something
+                    TableItem[] ss = menu.getSelection();
                     TableItem m = ((ss == null) || (ss.length == 0)) ? null : ss[0];
 
-					if (event.item != null)
-						m = (TableItem) event.item;
+                    if (event.item != null) m = (TableItem) event.item;
 
-					System.out.println(" closing it (default selection)");
-					shell.setVisible(false);
-					Object d = (m == null) ? null : m.getData();
-					// ;//System.out.println(" d = <" + d +
-					// "> <" + m + "> <" + ss.length + "> <"
-					// + event.item + ">");
-					done();
-					if (d instanceof iUpdateable) {
-						fired = true;
-						((iUpdateable) d).update();
-					}
-					event.doit = false;
-				}
-			});
-			menu.addListener(SWT.MouseMove, new Listener() {
+                    System.out.println(" closing it (default selection)");
+                    shell.setVisible(false);
+                    Object d = (m == null) ? null : m.getData();
+                    // ;//System.out.println(" d = <" + d +
+                    // "> <" + m + "> <" + ss.length + "> <"
+                    // + event.item + ">");
+                    done();
+                    if (d instanceof iUpdateable) {
+                        fired = true;
+                        ((iUpdateable) d).update();
+                    }
+                    event.doit = false;
+                }
+            });
+            menu.addListener(SWT.MouseMove, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
+                @Override
+                public
+                void handleEvent(Event event) {
 
-					// ;//System.out.println("SHELL mouse move event ");
+                    // ;//System.out.println("SHELL mouse move event ");
 
-					TableItem m = menu.getItem(new Point(event.x, event.y));
+                    TableItem m = menu.getItem(new Point(event.x, event.y));
 
-					menu.deselectAll();
-					TableItem[] ii = menu.getItems();
-					for (int i = 0; i < ii.length; i++) {
-						if (ii[i] == m) {
-							menu.setSelection(i);
-							if (hu != null)
-								hu.update(i);
-						}
-					}
-				}
-			});
-			menu.addListener(SWT.MouseDown, new Listener() {
+                    menu.deselectAll();
+                    TableItem[] ii = menu.getItems();
+                    for (int i = 0; i < ii.length; i++) {
+                        if (ii[i] == m) {
+                            menu.setSelection(i);
+                            if (hu != null) hu.update(i);
+                        }
+                    }
+                }
+            });
+            menu.addListener(SWT.MouseDown, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
-					// do something
-					TableItem m = menu.getItem(new Point(event.x, event.y));
-					System.out.println(" closing it (mouse down)");
-					shell.setVisible(false);
-					Object d = (m == null) ? null : m.getData();
-					done();
-					if (d instanceof iUpdateable) {
-						fired = true;
-						((iUpdateable) d).update();
-					}
-				}
-			});
+                @Override
+                public
+                void handleEvent(Event event) {
+                    // do something
+                    TableItem m = menu.getItem(new Point(event.x, event.y));
+                    System.out.println(" closing it (mouse down)");
+                    shell.setVisible(false);
+                    Object d = (m == null) ? null : m.getData();
+                    done();
+                    if (d instanceof iUpdateable) {
+                        fired = true;
+                        ((iUpdateable) d).update();
+                    }
+                }
+            });
 
-			menu.addListener(SWT.KeyDown, new Listener() {
-				public void handleEvent(Event event) {
+            menu.addListener(SWT.KeyDown, new Listener() {
+                public
+                void handleEvent(Event event) {
 
-					System.out.println(" arrow down ?" + event);
+                    System.out.println(" arrow down ?" + event);
 
-					if (event.keyCode == SWT.ESC) {
-						System.out.println(" closing it (escape)");
-						shell.setVisible(false);
-						if (hu != null)
-							hu.cancel();
-						done();
-					}
-					if (event.keyCode == '\n') {
-						// ;//System.out.println(" return, taking it");
+                    if (event.keyCode == SWT.ESC) {
+                        System.out.println(" closing it (escape)");
+                        shell.setVisible(false);
+                        if (hu != null) hu.cancel();
+                        done();
+                    }
+                    if (event.keyCode == '\n') {
+                        // ;//System.out.println(" return, taking it");
 
-						TableItem[] ss = menu.getSelection();
+                        TableItem[] ss = menu.getSelection();
                         TableItem m = ((ss == null) || (ss.length == 0)) ? null : ss[0];
                         System.out.println(" closing it (newline)");
-						shell.setVisible(false);
-						Object d = (m == null) ? null : m.getData();
-						// ;//System.out.println(" d = <"
-						// +
-						// d + ">");
-						done();
-						if (d instanceof iUpdateable) {
-							fired = true;
-							((iUpdateable) d).update();
-						}
-						event.doit = false;
-					} else if (event.keyCode == SWT.ARROW_DOWN) {
-						event.doit = false;
-						int s = menu.getSelectionIndex();
-						System.out.println(" down <" + s + '>');
-						if (s == -1) {
-							System.out.println(" scaning for first selection ");
-							for (int i = 0; i < menu.getItemCount(); i++) {
-								System.out.println(i + " " + menu.getItemCount() + ' ' + menu.getItem(i).getData());
-								if (menu.getItem(i).getData() != null) {
-									menu.setSelection(i);
-									System.out.println(" set selection to be <" + i + '>');
-									if (hu != null)
-										hu.update(i);
+                        shell.setVisible(false);
+                        Object d = (m == null) ? null : m.getData();
+                        // ;//System.out.println(" d = <"
+                        // +
+                        // d + ">");
+                        done();
+                        if (d instanceof iUpdateable) {
+                            fired = true;
+                            ((iUpdateable) d).update();
+                        }
+                        event.doit = false;
+                    }
+                    else if (event.keyCode == SWT.ARROW_DOWN) {
+                        event.doit = false;
+                        int s = menu.getSelectionIndex();
+                        System.out.println(" down <" + s + '>');
+                        if (s == -1) {
+                            System.out.println(" scaning for first selection ");
+                            for (int i = 0; i < menu.getItemCount(); i++) {
+                                System.out.println(i + " " + menu.getItemCount() + ' ' + menu.getItem(i).getData());
+                                if (menu.getItem(i).getData() != null) {
+                                    menu.setSelection(i);
+                                    System.out.println(" set selection to be <" + i + '>');
+                                    if (hu != null) hu.update(i);
 
-									menu.redraw();
-									break;
-								}
-							}
-							System.out.println(" -- fell through --");
-						} else {
-							for (int i = 0; i < menu.getItemCount(); i++) {
-								s = (s + 1) % menu.getItemCount();
-								if (menu.getItem(s).getData() != null) {
-									// ;//System.out.println(" now<"
-									// + s +
-									// ">");
-									menu.setSelection(s);
-									if (hu != null)
-										hu.update(s);
+                                    menu.redraw();
+                                    break;
+                                }
+                            }
+                            System.out.println(" -- fell through --");
+                        }
+                        else {
+                            for (int i = 0; i < menu.getItemCount(); i++) {
+                                s = (s + 1) % menu.getItemCount();
+                                if (menu.getItem(s).getData() != null) {
+                                    // ;//System.out.println(" now<"
+                                    // + s +
+                                    // ">");
+                                    menu.setSelection(s);
+                                    if (hu != null) hu.update(s);
 
-									menu.redraw();
-									break;
-								}
-							}
-						}
-					} else if (event.keyCode == SWT.ARROW_UP) {
-						event.doit = false;
-						int s = menu.getSelectionIndex();
-						// ;//System.out.println(" down <"
-						// + s + ">");
-						if (s == -1) {
-							for (int i = menu.getItemCount() - 1; i >= 0; i--) {
-								if (menu.getItem(i).getData() != null) {
-									// ;//System.out.println(" now<"
-									// + i +
-									// ">");
-									menu.setSelection(i);
-									menu.redraw();
-									if (hu != null)
-										hu.update(i);
-									break;
-								}
-							}
-						} else {
-							for (int i = 0; i < menu.getItemCount(); i++) {
-								s = ((s - 1) + menu.getItemCount()) % menu.getItemCount();
-								if (menu.getItem(s).getData() != null) {
-									// ;//System.out.println(" now<"
-									// + s +
-									// ">");
-									menu.setSelection(s);
-									menu.redraw();
-									if (hu != null)
-										hu.update(s);
-									break;
-								}
-							}
-						}
-					}
-				}
-			});
+                                    menu.redraw();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if (event.keyCode == SWT.ARROW_UP) {
+                        event.doit = false;
+                        int s = menu.getSelectionIndex();
+                        // ;//System.out.println(" down <"
+                        // + s + ">");
+                        if (s == -1) {
+                            for (int i = menu.getItemCount() - 1; i >= 0; i--) {
+                                if (menu.getItem(i).getData() != null) {
+                                    // ;//System.out.println(" now<"
+                                    // + i +
+                                    // ">");
+                                    menu.setSelection(i);
+                                    menu.redraw();
+                                    if (hu != null) hu.update(i);
+                                    break;
+                                }
+                            }
+                        }
+                        else {
+                            for (int i = 0; i < menu.getItemCount(); i++) {
+                                s = ((s - 1) + menu.getItemCount()) % menu.getItemCount();
+                                if (menu.getItem(s).getData() != null) {
+                                    // ;//System.out.println(" now<"
+                                    // + s +
+                                    // ">");
+                                    menu.setSelection(s);
+                                    menu.redraw();
+                                    if (hu != null) hu.update(s);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
 
-			menu.addListener(SWT.KeyDown, new Listener() {
+            menu.addListener(SWT.KeyDown, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
+                @Override
+                public
+                void handleEvent(Event event) {
 
-					// ;//System.out.println(" actually got a key event in a menu <"
-					// + event + ">");
+                    // ;//System.out.println(" actually got a key event in a menu <"
+                    // + event + ">");
 
-					// TODO swt there was lots of logic in
-					// here about when to
-					// close
-					if (u != null)
-						if (u.update(event)) {
-							System.out.println(" closing it ");
-							shell.setVisible(false);
-						}
+                    // TODO swt there was lots of logic in
+                    // here about when to
+                    // close
+                    if (u != null) if (u.update(event)) {
+                        System.out.println(" closing it ");
+                        shell.setVisible(false);
+                    }
 
-				}
-			});
+                }
+            });
 
-			menu.addListener(SWT.MouseHover, new Listener() {
+            menu.addListener(SWT.MouseHover, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
-					// ;//System.out.println("SHELL hover event ");
-				}
-			});
+                @Override
+                public
+                void handleEvent(Event event) {
+                    // ;//System.out.println("SHELL hover event ");
+                }
+            });
 
-			shell.addListener(SWT.Deactivate, new Listener() {
+            shell.addListener(SWT.Deactivate, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
-					System.out.println(" closing it (deactivate)");
-					new Exception().printStackTrace();
-					shell.setVisible(false);
+                @Override
+                public
+                void handleEvent(Event event) {
+                    System.out.println(" closing it (deactivate)");
+                    new Exception().printStackTrace();
+                    shell.setVisible(false);
 
-					if ((hu != null) && !fired) {
-						hu.cancel();
-					}
+                    if ((hu != null) && !fired) {
+                        hu.cancel();
+                    }
 
-				}
-			});
+                }
+            });
 
-			if (Platform.isLinux()) {
-				shell.setSize(s.x, s.y);
-				shell.open();
+            if (Platform.isLinux()) {
+                shell.setSize(s.x, s.y);
+                shell.open();
 
-			}
-			openNext(s);
+            }
+            openNext(s);
 
-			System.out.println(" ---------- OPEN ----------");
-			new Exception().printStackTrace();
+            System.out.println(" ---------- OPEN ----------");
+            new Exception().printStackTrace();
 
-		}
+        }
 
-		long down = 0;
+        long down = 0;
 
-		@NextUpdate
-		protected void openNext(Point s) {
-			shell.open();
+        @NextUpdate
+        protected
+        void openNext(Point s) {
+            shell.open();
 
-			// ;//System.out.println(" opennext is setting size to be <"
-			// + s + ">");
+            // ;//System.out.println(" opennext is setting size to be <"
+            // + s + ">");
 
-			if (rightJustified) {
-				int nx = shell.getBounds().x - s.x;
-				shell.setLocation(nx, shell.getBounds().y);
-			}
+            if (rightJustified) {
+                int nx = shell.getBounds().x - s.x;
+                shell.setLocation(nx, shell.getBounds().y);
+            }
 
-			shell.setSize(s.x, s.y);
-			shell.forceActive();
-			boolean forced = menu.forceFocus();
-			// selectFirst();
+            shell.setSize(s.x, s.y);
+            shell.forceActive();
+            boolean forced = menu.forceFocus();
+            // selectFirst();
 
-			// ;//System.out.println(" forced ? <" + forced + ">");
+            // ;//System.out.println(" forced ? <" + forced + ">");
 
-			down = System.currentTimeMillis();
+            down = System.currentTimeMillis();
 
-			Listener f = new Listener() {
+            Listener f = new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
+                @Override
+                public
+                void handleEvent(Event event) {
 
-					// ;//System.out.println(" we are in a left over filter with a mouse up <"+menu.isDisposed()+"> <"+menu.isVisible()+">");
-					if (menu.isDisposed() || !menu.isVisible()) {
-						Launcher.display.removeFilter(SWT.MouseMove, this);
-						Launcher.display.removeFilter(SWT.MouseUp, this);
-						return;
-					}
+                    // ;//System.out.println(" we are in a left over filter with a mouse up <"+menu.isDisposed()+"> <"+menu.isVisible()+">");
+                    if (menu.isDisposed() || !menu.isVisible()) {
+                        Launcher.display.removeFilter(SWT.MouseMove, this);
+                        Launcher.display.removeFilter(SWT.MouseUp, this);
+                        return;
+                    }
 
-					if (event.type == SWT.MouseUp) {
-						// ;//System.out.println(" deinstalling filter ");
-						Launcher.display.removeFilter(SWT.MouseMove, this);
-						Launcher.display.removeFilter(SWT.MouseUp, this);
+                    if (event.type == SWT.MouseUp) {
+                        // ;//System.out.println(" deinstalling filter ");
+                        Launcher.display.removeFilter(SWT.MouseMove, this);
+                        Launcher.display.removeFilter(SWT.MouseUp, this);
 
-						if (((down > 0) && ((System.currentTimeMillis() - down) > 1000)) || (menu.getSelectionCount()
+                        if (((down > 0) && ((System.currentTimeMillis() - down) > 1000)) || (menu.getSelectionCount()
                                                                                              > 0)) {
 
-							if (event.widget != menu) {
+                            if (event.widget != menu) {
 
-								Listener[] shakers = menu.getListeners(SWT.KeyDown);
-								// ;//System.out.println(" shakers are :"
-								// +
-								// Arrays.asList(shakers));
+                                Listener[] shakers = menu.getListeners(SWT.KeyDown);
+                                // ;//System.out.println(" shakers are :"
+                                // +
+                                // Arrays.asList(shakers));
 
-								event.keyCode = '\n';
-								for (Listener m : shakers) {
-									m.handleEvent(event);
-								}
+                                event.keyCode = '\n';
+                                for (Listener m : shakers) {
+                                    m.handleEvent(event);
+                                }
 
-							} else {
-								// ;//System.out.println(" event fine");
-							}
-						}
-					}
-					if (event.type == SWT.MouseMove) {
-						if (event.widget != menu) {
-							// ;//System.out.println(" event not going to widget, would redispatch");
+                            }
+                            else {
+                                // ;//System.out.println(" event fine");
+                            }
+                        }
+                    }
+                    if (event.type == SWT.MouseMove) {
+                        if (event.widget != menu) {
+                            // ;//System.out.println(" event not going to widget, would redispatch");
 
-							Listener[] movers = menu.getListeners(SWT.MouseMove);
+                            Listener[] movers = menu.getListeners(SWT.MouseMove);
                             // System.out.println(" movers :"
                             // +
-								// Arrays.asList(movers));
+                            // Arrays.asList(movers));
 
-							Point c = Launcher.display.map((Control) event.widget, menu, new Point(event.x, event.y));
-							int ox = event.x;
-							int oy = event.y;
-							event.x = c.x;
-							event.y = c.y;
-							for (Listener m : movers) {
-								m.handleEvent(event);
-							}
+                            Point c = Launcher.display.map((Control) event.widget, menu, new Point(event.x, event.y));
+                            int ox = event.x;
+                            int oy = event.y;
+                            event.x = c.x;
+                            event.y = c.y;
+                            for (Listener m : movers) {
+                                m.handleEvent(event);
+                            }
 
-							event.x = ox;
-							event.y = oy;
+                            event.x = ox;
+                            event.y = oy;
 
-						} else {
-							// ;//System.out.println(" event fine");
-						}
-					}
-				}
-			};
-			Launcher.display.addFilter(SWT.MouseMove, f);
-			Launcher.display.addFilter(SWT.MouseUp, f);
+                        }
+                        else {
+                            // ;//System.out.println(" event fine");
+                        }
+                    }
+                }
+            };
+            Launcher.display.addFilter(SWT.MouseMove, f);
+            Launcher.display.addFilter(SWT.MouseUp, f);
 
-			menu.setCapture(true);
-			shell.setCapture(true);
-		}
+            menu.setCapture(true);
+            shell.setCapture(true);
+        }
 
-		public iUpdateable doneHook = null;
-		private iHoverUpdate hu;
+        public iUpdateable doneHook = null;
+        private iHoverUpdate hu;
 
-		protected void done() {
-			new Exception().printStackTrace();
-			if (doneHook != null)
-				doneHook.update();
-		}
+        protected
+        void done() {
+            new Exception().printStackTrace();
+            if (doneHook != null) doneHook.update();
+        }
 
-		public void selectFirst() {
-			for (int i = 0; i < menu.getItemCount(); i++) {
-				if (menu.getItem(i).getData() != null) {
-					// ;//System.out.println(" now<" + i +
-					// ">");
-					menu.setSelection(i);
-					menu.redraw();
-					break;
-				}
-			}
-		}
+        public
+        void selectFirst() {
+            for (int i = 0; i < menu.getItemCount(); i++) {
+                if (menu.getItem(i).getData() != null) {
+                    // ;//System.out.println(" now<" + i +
+                    // ">");
+                    menu.setSelection(i);
+                    menu.redraw();
+                    break;
+                }
+            }
+        }
 
-		public BetterPopup setHoverUpdate(iHoverUpdate hoverUpdate) {
-			hu = hoverUpdate;
-			return this;
-		}
-	}
+        public
+        BetterPopup setHoverUpdate(iHoverUpdate hoverUpdate) {
+            hu = hoverUpdate;
+            return this;
+        }
+    }
 
-	public interface iKeystrokeUpdate {
-		// returns should close
-		public boolean update(Event ke);
-	}
+    public
+    interface iKeystrokeUpdate {
+        // returns should close
+        public
+        boolean update(Event ke);
+    }
 
-	public interface iHoverUpdate {
-		public void update(int index);
+    public
+    interface iHoverUpdate {
+        public
+        void update(int index);
 
-		public void cancel();
-	}
+        public
+        void cancel();
+    }
 
-	public static
+    public static
     class Submenu implements iUpdateable {
-		public LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
+        public LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
 
-		public Submenu(LinkedHashMap<String, iUpdateable> menu) {
-			super();
-			this.menu = menu;
-		}
+        public
+        Submenu(LinkedHashMap<String, iUpdateable> menu) {
+            super();
+            this.menu = menu;
+        }
 
-		public void update() {
-		}
-	}
+        public
+        void update() {
+        }
+    }
 
-	public static
+    public static
     class Documentation implements iUpdateable {
 
-		private final String documentation;
+        private final String documentation;
 
-		public Documentation(String documentation) {
-			this.documentation = documentation;
-		}
+        public
+        Documentation(String documentation) {
+            this.documentation = documentation;
+        }
 
-		public void update() {
+        public
+        void update() {
 
         }
 
         @Override
-        public String toString() {
-			return documentation;
+        public
+        String toString() {
+            return documentation;
         }
     }
 
-	public BetterPopup createMenu(LinkedHashMap<String, iUpdateable> items, Decorations parent, final iKeystrokeUpdate keystrokeUpdate) {
-		return createMenu(items, parent, keystrokeUpdate, null);
-	}
+    public
+    BetterPopup createMenu(LinkedHashMap<String, iUpdateable> items,
+                           Decorations parent,
+                           final iKeystrokeUpdate keystrokeUpdate) {
+        return createMenu(items, parent, keystrokeUpdate, null);
+    }
 
-	public static
+    public static
     BetterPopup createMenu(LinkedHashMap<String, iUpdateable> items,
                            Decorations parent,
                            final iKeystrokeUpdate keystrokeUpdate,
                            iHoverUpdate hoverUpdate) {
 
-		Iterator<Entry<String, iUpdateable>> i = items.entrySet().iterator();
+        Iterator<Entry<String, iUpdateable>> i = items.entrySet().iterator();
 
-		final BetterPopup menu = new BetterPopup(parent, keystrokeUpdate).setHoverUpdate(hoverUpdate);
+        final BetterPopup menu = new BetterPopup(parent, keystrokeUpdate).setHoverUpdate(hoverUpdate);
 
-		int num = 0;
+        int num = 0;
 
-		while (i.hasNext()) {
-			Entry<String, iUpdateable> e = i.next();
-			String name = e.getKey();
-			final iUpdateable act = e.getValue();
+        while (i.hasNext()) {
+            Entry<String, iUpdateable> e = i.next();
+            String name = e.getKey();
+            final iUpdateable act = e.getValue();
 
-			if (num++ > 250)
-				break;
+            if (num++ > 250) break;
 
-			if (act != null && !(act instanceof Documentation)) {
+            if (act != null && !(act instanceof Documentation)) {
 
-				String accelerator = null;
-				Pattern accPattern = Pattern.compile("///(.*)///");
-				Matcher m = accPattern.matcher(name);
-				if (m.find()) {
-					accelerator = m.group(1);
-					name = m.replaceAll("");
-				}
+                String accelerator = null;
+                Pattern accPattern = Pattern.compile("///(.*)///");
+                Matcher m = accPattern.matcher(name);
+                if (m.find()) {
+                    accelerator = m.group(1);
+                    name = m.replaceAll("");
+                }
 
-				TableItem item = new TableItem(menu.menu, SWT.PUSH);
-				if (name.startsWith("!")) {
-					item.setData("check", true);
-					name = name.substring(1);
-				}
+                TableItem item = new TableItem(menu.menu, SWT.PUSH);
+                if (name.startsWith("!")) {
+                    item.setData("check", true);
+                    name = name.substring(1);
+                }
 
-				if (name.startsWith("\t"))
-					name = " " + name.substring(1);
+                if (name.startsWith("\t")) name = " " + name.substring(1);
 
-				if (name.indexOf("\t") == -1) {
-					char lead = 0;
-					for (int in = 0; in < name.length(); in++) {
-						if (!Character.isWhitespace(name.charAt(in)) && lead == 0) {
-							lead = name.charAt(in);
-						} else if (Character.isWhitespace(name.charAt(in)) && lead != 0) {
-							name = " " + lead + "\t" + name.substring(in).trim();
-							break;
-						} else if (!Character.isWhitespace(name.charAt(in)) && lead != 0) {
-							name = "\t" + name.trim();
-							break;
-						}
-					}
-				}
+                if (name.indexOf("\t") == -1) {
+                    char lead = 0;
+                    for (int in = 0; in < name.length(); in++) {
+                        if (!Character.isWhitespace(name.charAt(in)) && lead == 0) {
+                            lead = name.charAt(in);
+                        }
+                        else if (Character.isWhitespace(name.charAt(in)) && lead != 0) {
+                            name = " " + lead + "\t" + name.substring(in).trim();
+                            break;
+                        }
+                        else if (!Character.isWhitespace(name.charAt(in)) && lead != 0) {
+                            name = "\t" + name.trim();
+                            break;
+                        }
+                    }
+                }
 
-				item.setText(name);
-				item.setData(act);
-				item.addListener(SWT.Selection, new Listener() {
+                item.setText(name);
+                item.setData(act);
+                item.addListener(SWT.Selection, new Listener() {
 
-					@Override
-					public void handleEvent(Event event) {
-						act.update();
+                    @Override
+                    public
+                    void handleEvent(Event event) {
+                        act.update();
 
-						// is this needed ?
-						// menu.menu.setVisible(false);
-					}
-				});
-				if (accelerator != null)
-					item.setData("acc", accelerator);
+                        // is this needed ?
+                        // menu.menu.setVisible(false);
+                    }
+                });
+                if (accelerator != null) item.setData("acc", accelerator);
 
-			} else if (act instanceof Documentation) {
+            }
+            else if (act instanceof Documentation) {
 
-				String doc = ((Documentation) act).documentation;
+                String doc = ((Documentation) act).documentation;
 
-				String[] pieces = doc.split("\n");
-				for (String p : pieces) {
-					if (p.trim().length() == 0)
-						continue;
-					TableItem item = new TableItem(menu.menu, SWT.PUSH);
+                String[] pieces = doc.split("\n");
+                for (String p : pieces) {
+                    if (p.trim().length() == 0) continue;
+                    TableItem item = new TableItem(menu.menu, SWT.PUSH);
 
-					item.setText(p);
-					item.setData(null);
-					item.setData("documentation", p);
-				}
-			} else {
-				TableItem item = new TableItem(menu.menu, SWT.PUSH);
-				item.setText(name);
-				item.setData(null);
-				item.addListener(SWT.Selection, new Listener() {
+                    item.setText(p);
+                    item.setData(null);
+                    item.setData("documentation", p);
+                }
+            }
+            else {
+                TableItem item = new TableItem(menu.menu, SWT.PUSH);
+                item.setText(name);
+                item.setData(null);
+                item.addListener(SWT.Selection, new Listener() {
 
-					@Override
-					public void handleEvent(Event event) {
-					}
-				});
-			}
-		}
+                    @Override
+                    public
+                    void handleEvent(Event event) {
+                    }
+                });
+            }
+        }
 
-		return menu;
-	}
+        return menu;
+    }
 
-	public static
+    public static
     class Pretty {
 
-		Pattern SMALLER_PATTERN = Pattern.compile("(<font size=-3 color='#" + Constants.defaultTreeColorDim + "'>)(.*?)(</font>)");
-		Pattern SMALLER2_PATTERN = Pattern.compile("(<font size=-2>)(.*?)(</font>)");
+        Pattern SMALLER_PATTERN =
+                Pattern.compile("(<font size=-3 color='#" + Constants.defaultTreeColorDim + "'>)(.*?)(</font>)");
+        Pattern SMALLER2_PATTERN = Pattern.compile("(<font size=-2>)(.*?)(</font>)");
 
-		Pattern GREY_PATTERN = Pattern.compile("(<g>)(.*?)(</g>)");
+        Pattern GREY_PATTERN = Pattern.compile("(<g>)(.*?)(</g>)");
 
-		Pattern BOLDITALIC_PATTERN = Pattern.compile("(<bi>)(?=\\S)(.+?[*_]*)(?<=\\S)(</bi>)");
-		Pattern BOLD_PATTERN = Pattern.compile("(<b>)(.*?)(</b>)");
-		Pattern ITALIC_PATTERN = Pattern.compile("(<i>)(?=\\S)(.*?)(?<=\\S)(</i>)");
-		Pattern SEP_PATTERN = Pattern.compile("_____________________________");
+        Pattern BOLDITALIC_PATTERN = Pattern.compile("(<bi>)(?=\\S)(.+?[*_]*)(?<=\\S)(</bi>)");
+        Pattern BOLD_PATTERN = Pattern.compile("(<b>)(.*?)(</b>)");
+        Pattern ITALIC_PATTERN = Pattern.compile("(<i>)(?=\\S)(.*?)(?<=\\S)(</i>)");
+        Pattern SEP_PATTERN = Pattern.compile("_____________________________");
 
-		Pattern CLEAN_PATTERN = Pattern.compile("(<.*?>)");
+        Pattern CLEAN_PATTERN = Pattern.compile("(<.*?>)");
 
-		private final Font boldFont;
-		private final Font boldItalicFont;
-		private final Font smallerFont;
-		private final Font italicFont;
-		private final Font normalFont;
-		private final Font fixedFont;
-		private final Font greyFont;
+        private final Font boldFont;
+        private final Font boldItalicFont;
+        private final Font smallerFont;
+        private final Font italicFont;
+        private final Font normalFont;
+        private final Font fixedFont;
+        private final Font greyFont;
 
-		int indent = 5;
-		int vertSpace = 3;
-		private final Font bigFont;
+        int indent = 5;
+        int vertSpace = 3;
+        private final Font bigFont;
 
-		public Pretty(final Table install, final int fixedWidth) {
-			String name = install.getFont().getFontData()[0].getName();
+        public
+        Pretty(final Table install, final int fixedWidth) {
+            String name = install.getFont().getFontData()[0].getName();
 
-			// name = Constants.defaultFont;
+            // name = Constants.defaultFont;
 
-			smallerFont = new Font(Launcher.display, name, (int) (GraphNodeToTreeFancy.baseFontHeight(install) * 0.75f), SWT.NORMAL);
-			bigFont = new Font(Launcher.display, name, (int) (GraphNodeToTreeFancy.baseFontHeight(install) * 1.15f), SWT.NORMAL);
-			boldItalicFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.BOLD | SWT.ITALIC);
-			boldFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.BOLD);
-			italicFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.ITALIC);
-			normalFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.NORMAL);
-			fixedFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.NORMAL);
-			greyFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.NORMAL);
+            smallerFont = new Font(Launcher.display,
+                                   name,
+                                   (int) (GraphNodeToTreeFancy.baseFontHeight(install) * 0.75f),
+                                   SWT.NORMAL);
+            bigFont = new Font(Launcher.display,
+                               name,
+                               (int) (GraphNodeToTreeFancy.baseFontHeight(install) * 1.15f),
+                               SWT.NORMAL);
+            boldItalicFont = new Font(Launcher.display,
+                                      name,
+                                      GraphNodeToTreeFancy.baseFontHeight(install),
+                                      SWT.BOLD | SWT.ITALIC);
+            boldFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.BOLD);
+            italicFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.ITALIC);
+            normalFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.NORMAL);
+            fixedFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.NORMAL);
+            greyFont = new Font(Launcher.display, name, GraphNodeToTreeFancy.baseFontHeight(install), SWT.NORMAL);
 
-			install.setBackground(install.getShell().getBackground());
+            install.setBackground(install.getShell().getBackground());
 
-			install.addListener(SWT.MeasureItem, new Listener() {
+            install.addListener(SWT.MeasureItem, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
-					String textToDraw = ((TableItem) event.item).getText();
-					Point dim = measure(textToDraw, event.gc);
-					event.width = Math.max(fixedWidth, dim.x + indent);
-					event.height = dim.y + vertSpace * 2;
+                @Override
+                public
+                void handleEvent(Event event) {
+                    String textToDraw = ((TableItem) event.item).getText();
+                    Point dim = measure(textToDraw, event.gc);
+                    event.width = Math.max(fixedWidth, dim.x + indent);
+                    event.height = dim.y + vertSpace * 2;
 
                     Object acc = event.item.getData("acc");
-                    if (acc != null)
-						event.width += 20;
-				}
-			});
-			install.addListener(SWT.PaintItem, new Listener() {
+                    if (acc != null) event.width += 20;
+                }
+            });
+            install.addListener(SWT.PaintItem, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
-					String textToDraw = ((TableItem) event.item).getText();
+                @Override
+                public
+                void handleEvent(Event event) {
+                    String textToDraw = ((TableItem) event.item).getText();
 
                     Object d = event.item.getData();
                     if (d == null) {
 
                         Object doc = event.item.getData("documentation");
 
-						if (doc == null) {
+                        if (doc == null) {
 
-							event.gc.setBackground(new Color(Launcher.display, 200, 200, 200));
-							event.gc.fillRectangle(event.x - 2, event.y - 2, install.getSize().x + 4, event.height + 4);
-							event.gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_BLACK));
+                            event.gc.setBackground(new Color(Launcher.display, 200, 200, 200));
+                            event.gc.fillRectangle(event.x - 2, event.y - 2, install.getSize().x + 4, event.height + 4);
+                            event.gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_BLACK));
 
-							draw(textToDraw, event.gc, event.x + indent, event.y + 2 + vertSpace, null);
-						} else {
-							event.gc.setBackground(new Color(Launcher.display, 220, 220, 220));
-							event.gc.fillRectangle(event.x, event.y, install.getSize().x, event.height);
+                            draw(textToDraw, event.gc, event.x + indent, event.y + 2 + vertSpace, null);
+                        }
+                        else {
+                            event.gc.setBackground(new Color(Launcher.display, 220, 220, 220));
+                            event.gc.fillRectangle(event.x, event.y, install.getSize().x, event.height);
 
-							event.gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_BLACK));
+                            event.gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_BLACK));
 
-							draw("<b>" + textToDraw + "</b>", event.gc, event.x + indent, event.y + 2 + vertSpace, null);
-						}
-					} else {
-						draw(textToDraw, event.gc, event.x + indent, event.y + 2 + vertSpace);
-					}
+                            draw("<b>" + textToDraw + "</b>",
+                                 event.gc,
+                                 event.x + indent,
+                                 event.y + 2 + vertSpace,
+                                 null);
+                        }
+                    }
+                    else {
+                        draw(textToDraw, event.gc, event.x + indent, event.y + 2 + vertSpace);
+                    }
 
                     Object acc = event.item.getData("acc");
                     if (acc != null) drawAccelerator(event.gc,
@@ -767,262 +825,277 @@ public class SmallMenu {
 
                     Object c = event.item.getData("check");
                     if (c != null) {
-						event.gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_DARK_RED));
-						event.gc.setBackground(Launcher.display.getSystemColor(SWT.COLOR_DARK_RED));
-						event.gc.setAlpha(128);
-						int dd = 6;
-						// event.gc.fillOval(event.x +
-						// event.height - 3, event.y
-						// + event.height / 2 - dd / 2,
-						// dd, dd);
+                        event.gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_DARK_RED));
+                        event.gc.setBackground(Launcher.display.getSystemColor(SWT.COLOR_DARK_RED));
+                        event.gc.setAlpha(128);
+                        int dd = 6;
+                        // event.gc.fillOval(event.x +
+                        // event.height - 3, event.y
+                        // + event.height / 2 - dd / 2,
+                        // dd, dd);
 
-						event.gc.fillRectangle(event.x, event.y, install.getSize().x, event.height);
-					}
-				}
-			});
-			install.addListener(SWT.EraseItem, new Listener() {
+                        event.gc.fillRectangle(event.x, event.y, install.getSize().x, event.height);
+                    }
+                }
+            });
+            install.addListener(SWT.EraseItem, new Listener() {
 
-				@Override
-				public void handleEvent(Event event) {
+                @Override
+                public
+                void handleEvent(Event event) {
 
-					event.detail &= ~SWT.FOREGROUND;
-					if (event.item.getData() == null)
-						event.detail &= ~SWT.SELECTED;
-				}
-			});
-		}
+                    event.detail &= ~SWT.FOREGROUND;
+                    if (event.item.getData() == null) event.detail &= ~SWT.SELECTED;
+                }
+            });
+        }
 
-		protected void drawAccelerator(GC gc, String string, int x, int y, int width, int height) {
+        protected
+        void drawAccelerator(GC gc, String string, int x, int y, int width, int height) {
 
-			gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_BLACK));
-			gc.setFont(smallerFont);
-			Point m = gc.textExtent(string);
-			gc.drawText(string, x + width - m.x - 10, y + height - m.y - 5, true);
-		}
+            gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_BLACK));
+            gc.setFont(smallerFont);
+            Point m = gc.textExtent(string);
+            gc.drawText(string, x + width - m.x - 10, y + height - m.y - 5, true);
+        }
 
-		protected Point measure(String textToDraw, GC gc) {
-			return measure(textToDraw, gc, null);
-		}
+        protected
+        Point measure(String textToDraw, GC gc) {
+            return measure(textToDraw, gc, null);
+        }
 
-		protected Point measure(String textToDraw, GC gc, Font fixedFont) {
+        protected
+        Point measure(String textToDraw, GC gc, Font fixedFont) {
 
-			if (SEP_PATTERN.matcher(textToDraw).matches())
-				return new Point(200, 10);
+            if (SEP_PATTERN.matcher(textToDraw).matches()) return new Point(200, 10);
 
-			textToDraw = textToDraw.replace("<b><i>", "<bi>");
-			textToDraw = textToDraw.replace("</i></b>", "</bi>");
+            textToDraw = textToDraw.replace("<b><i>", "<bi>");
+            textToDraw = textToDraw.replace("</i></b>", "</bi>");
 
-			List<Area> area = new ArrayList<Area>();
+            List<Area> area = new ArrayList<Area>();
 
-			if (fixedFont == null) {
-				Matcher m = SMALLER_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
-				}
-				m = SMALLER2_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
-				}
-				m = BOLDITALIC_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), boldItalicFont));
-				}
+            if (fixedFont == null) {
+                Matcher m = SMALLER_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
+                }
+                m = SMALLER2_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
+                }
+                m = BOLDITALIC_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), boldItalicFont));
+                }
 
-				m = BOLD_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), boldFont));
-				}
+                m = BOLD_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), boldFont));
+                }
 
-				m = ITALIC_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), italicFont));
-				}
+                m = ITALIC_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), italicFont));
+                }
 
-				m = GREY_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), greyFont));
-				}
+                m = GREY_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), greyFont));
+                }
 
-				Collections.sort(area, new Comparator<Area>() {
-					@Override
-					public int compare(Area o1, Area o2) {
-						return Float.compare(o1.start, o2.start);
-					}
-				});
-				gc.setFont(normalFont);
-			} else {
-				gc.setFont(fixedFont);
-			}
-			int cx = 0;
+                Collections.sort(area, new Comparator<Area>() {
+                    @Override
+                    public
+                    int compare(Area o1, Area o2) {
+                        return Float.compare(o1.start, o2.start);
+                    }
+                });
+                gc.setFont(normalFont);
+            }
+            else {
+                gc.setFont(fixedFont);
+            }
+            int cx = 0;
 
-			int index = 0;
-			int areaIndex = 0;
-			while (index < textToDraw.length()) {
-				if (areaIndex < area.size() && index >= area.get(areaIndex).start) {
-					Area a = area.get(areaIndex);
+            int index = 0;
+            int areaIndex = 0;
+            while (index < textToDraw.length()) {
+                if (areaIndex < area.size() && index >= area.get(areaIndex).start) {
+                    Area a = area.get(areaIndex);
 
-					gc.setFont(a.font);
-					a.text = a.text.replaceAll(CLEAN_PATTERN.pattern(), "");
+                    gc.setFont(a.font);
+                    a.text = a.text.replaceAll(CLEAN_PATTERN.pattern(), "");
 
-					cx += gc.textExtent(a.text).x;
+                    cx += gc.textExtent(a.text).x;
 
-					areaIndex++;
-					index = a.end;
-				} else {
-					int start = index;
-					int end = areaIndex < area.size() ? area.get(areaIndex).start : textToDraw.length();
+                    areaIndex++;
+                    index = a.end;
+                }
+                else {
+                    int start = index;
+                    int end = areaIndex < area.size() ? area.get(areaIndex).start : textToDraw.length();
 
-					gc.setFont(normalFont);
+                    gc.setFont(normalFont);
 
-					cx += gc.textExtent(textToDraw.substring(start, end)).x;
+                    cx += gc.textExtent(textToDraw.substring(start, end)).x;
 
-					index = end;
-				}
-			}
+                    index = end;
+                }
+            }
 
-			gc.setFont(normalFont);
+            gc.setFont(normalFont);
 
-			return new Point(cx, gc.textExtent(textToDraw).y);
-		}
+            return new Point(cx, gc.textExtent(textToDraw).y);
+        }
 
         public static
         class Area {
             int start;
-			int end;
-			String text;
-			Font font;
-			boolean dim = false;
+            int end;
+            String text;
+            Font font;
+            boolean dim = false;
 
-			boolean blank = false;
+            boolean blank = false;
 
-			public Area(int start, int end, String text, Font font) {
-				super();
-				this.start = start;
-				this.end = end;
-				this.text = text;
-				this.font = font;
-			}
+            public
+            Area(int start, int end, String text, Font font) {
+                super();
+                this.start = start;
+                this.end = end;
+                this.text = text;
+                this.font = font;
+            }
 
-			public Area setDim(boolean dim) {
-				this.dim = dim;
-				return this;
-			}
+            public
+            Area setDim(boolean dim) {
+                this.dim = dim;
+                return this;
+            }
 
-			public Area setBlank(boolean blank) {
-				this.blank = blank;
-				return this;
-			}
+            public
+            Area setBlank(boolean blank) {
+                this.blank = blank;
+                return this;
+            }
 
-		}
+        }
 
-		protected void draw(String textToDraw, GC gc, int x, int y) {
-			draw(textToDraw, gc, x, y, null);
-		}
+        protected
+        void draw(String textToDraw, GC gc, int x, int y) {
+            draw(textToDraw, gc, x, y, null);
+        }
 
-		protected void draw(String textToDraw, GC gc, int x, int y, Font fixedFont) {
+        protected
+        void draw(String textToDraw, GC gc, int x, int y, Font fixedFont) {
 
-			if (SEP_PATTERN.matcher(textToDraw).matches()) {
-				int height = 10;
+            if (SEP_PATTERN.matcher(textToDraw).matches()) {
+                int height = 10;
 
-				gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_GRAY));
-				gc.setBackground(Launcher.display.getSystemColor(SWT.COLOR_GRAY));
-				gc.drawLine(x, y + height / 2, x + 200, y + height / 2);
-				return;
-			}
+                gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_GRAY));
+                gc.setBackground(Launcher.display.getSystemColor(SWT.COLOR_GRAY));
+                gc.drawLine(x, y + height / 2, x + 200, y + height / 2);
+                return;
+            }
 
-			if (textToDraw.contains("<grey>")) {
-				textToDraw = textToDraw.replace("<grey>", "");
-				gc.setAlpha(128);
-			}
+            if (textToDraw.contains("<grey>")) {
+                textToDraw = textToDraw.replace("<grey>", "");
+                gc.setAlpha(128);
+            }
 
-			List<Area> area = new ArrayList<Area>();
+            List<Area> area = new ArrayList<Area>();
 
-			textToDraw = textToDraw.replace("<b><i>", "<bi>");
-			textToDraw = textToDraw.replace("</i></b>", "</bi>");
+            textToDraw = textToDraw.replace("<b><i>", "<bi>");
+            textToDraw = textToDraw.replace("</i></b>", "</bi>");
 
-			// ;//System.out.println(" looking at <" + textToDraw +
-			// ">");
-			if (fixedFont == null) {
-				Matcher m = SMALLER_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
-				}
-				m = SMALLER2_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
-				}
+            // ;//System.out.println(" looking at <" + textToDraw +
+            // ">");
+            if (fixedFont == null) {
+                Matcher m = SMALLER_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
+                }
+                m = SMALLER2_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
+                }
 
-				m = BOLDITALIC_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), boldItalicFont));
-				}
+                m = BOLDITALIC_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), boldItalicFont));
+                }
 
-				m = BOLD_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), boldFont));
-				}
+                m = BOLD_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), boldFont));
+                }
 
-				m = ITALIC_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), italicFont));
-				}
+                m = ITALIC_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), italicFont));
+                }
 
-				m = GREY_PATTERN.matcher(textToDraw);
-				while (m.find()) {
-					area.add(new Area(m.start(), m.end(), m.group(2), greyFont).setDim(true));
-				}
+                m = GREY_PATTERN.matcher(textToDraw);
+                while (m.find()) {
+                    area.add(new Area(m.start(), m.end(), m.group(2), greyFont).setDim(true));
+                }
 
-				Collections.sort(area, new Comparator<Area>() {
-					@Override
-					public int compare(Area o1, Area o2) {
-						return Float.compare(o1.start, o2.start);
-					}
-				});
-				gc.setFont(normalFont);
-			} else {
-				gc.setFont(fixedFont);
-			}
-			int cx = 0;
+                Collections.sort(area, new Comparator<Area>() {
+                    @Override
+                    public
+                    int compare(Area o1, Area o2) {
+                        return Float.compare(o1.start, o2.start);
+                    }
+                });
+                gc.setFont(normalFont);
+            }
+            else {
+                gc.setFont(fixedFont);
+            }
+            int cx = 0;
 
-			int dasc = gc.getFontMetrics().getAscent();
+            int dasc = gc.getFontMetrics().getAscent();
 
-			int index = 0;
-			int areaIndex = 0;
-			while (index < textToDraw.length()) {
-				if (areaIndex < area.size() && index >= area.get(areaIndex).start) {
-					Area a = area.get(areaIndex);
+            int index = 0;
+            int areaIndex = 0;
+            while (index < textToDraw.length()) {
+                if (areaIndex < area.size() && index >= area.get(areaIndex).start) {
+                    Area a = area.get(areaIndex);
 
-					gc.setFont(a.font);
-					int asc = gc.getFontMetrics().getAscent();
+                    gc.setFont(a.font);
+                    int asc = gc.getFontMetrics().getAscent();
 
-					a.text = a.text.replaceAll(CLEAN_PATTERN.pattern(), "");
+                    a.text = a.text.replaceAll(CLEAN_PATTERN.pattern(), "");
 
-                    gc.setForeground(a.dim ? new Color(Launcher.display, 90, 90, 90) : Launcher.display.getSystemColor(SWT.COLOR_BLACK));
+                    gc.setForeground(a.dim
+                                     ? new Color(Launcher.display, 90, 90, 90)
+                                     : Launcher.display.getSystemColor(SWT.COLOR_BLACK));
 
-					gc.drawText(a.text, cx + x, y + dasc - asc, true);
+                    gc.drawText(a.text, cx + x, y + dasc - asc, true);
 
-					cx += gc.textExtent(a.text).x;
+                    cx += gc.textExtent(a.text).x;
 
-					areaIndex++;
-					index = a.end;
-				} else {
-					int start = index;
-					int end = areaIndex < area.size() ? area.get(areaIndex).start : textToDraw.length();
+                    areaIndex++;
+                    index = a.end;
+                }
+                else {
+                    int start = index;
+                    int end = areaIndex < area.size() ? area.get(areaIndex).start : textToDraw.length();
                     gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_BLACK));
 
-					gc.setFont(fixedFont != null ? fixedFont : normalFont);
-					String ttd = textToDraw.substring(start, end).replaceAll(CLEAN_PATTERN.pattern(), "");
-					if (areaIndex >= area.size() || !area.get(areaIndex).blank) {
-						gc.drawText(ttd, cx + x, y, true);
-					}
+                    gc.setFont(fixedFont != null ? fixedFont : normalFont);
+                    String ttd = textToDraw.substring(start, end).replaceAll(CLEAN_PATTERN.pattern(), "");
+                    if (areaIndex >= area.size() || !area.get(areaIndex).blank) {
+                        gc.drawText(ttd, cx + x, y, true);
+                    }
 
-					cx += gc.textExtent(ttd).x;
+                    cx += gc.textExtent(ttd).x;
 
-					index = end;
-				}
-			}
-			gc.setAlpha(255);
-		}
+                    index = end;
+                }
+            }
+            gc.setAlpha(255);
+        }
 
-	}
+    }
 }

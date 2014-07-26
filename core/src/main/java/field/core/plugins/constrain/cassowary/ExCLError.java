@@ -11,8 +11,10 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-public class ExCLError extends Exception {
-	public String description() {
-		return "(ExCLError) An error has occured in CL";
-	}
+public
+class ExCLError extends Exception {
+    public
+    String description() {
+        return "(ExCLError) An error has occured in CL";
+    }
 }

@@ -12,7 +12,8 @@ import java.util.Map;
 /**
  * Created by jason on 7/14/14.
  */
-public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implements FastCancelHandler {
+public abstract
+class DeferCallingFast extends FieldASMGeneratorAdapter implements FastCancelHandler {
     static int uniq = 0;
 
     private final int access;
@@ -29,13 +30,14 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
 
     protected final Map<String, Object> parameters;
 
-    public DeferCallingFast(String name,
-                            int access,
-                            ASMMethod onMethod,
-                            ClassVisitor classDelegate,
-                            MethodVisitor delegateTo,
-                            String signature,
-                            Map<String, Object> parameters) {
+    public
+    DeferCallingFast(String name,
+                     int access,
+                     ASMMethod onMethod,
+                     ClassVisitor classDelegate,
+                     MethodVisitor delegateTo,
+                     String signature,
+                     Map<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         // this.name = name;
         this.access = access;
@@ -64,7 +66,8 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
     Object handle(int fromName, Object fromThis, String originalMethodName, Object[] argArray);
 
     @Override
-    public void visitCode() {
+    public
+    void visitCode() {
         super.visitCode();
         push(uniq);
         loadThis();
@@ -80,22 +83,30 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
         if (onMethod.getASMReturnType().getSort() == ASMType.OBJECT) {
             checkCast(onMethod.getASMReturnType());
             visitInsn(Opcodes.ARETURN);
-        } else if (onMethod.getASMReturnType() == ASMType.INT_TYPE) {
+        }
+        else if (onMethod.getASMReturnType() == ASMType.INT_TYPE) {
             unbox(ASMType.INT_TYPE);
             super.visitInsn(Opcodes.IRETURN);
-        } else if (onMethod.getASMReturnType() == ASMType.FLOAT_TYPE) {
+        }
+        else if (onMethod.getASMReturnType() == ASMType.FLOAT_TYPE) {
             unbox(ASMType.FLOAT_TYPE);
             super.visitInsn(Opcodes.FRETURN);
-        } else if (onMethod.getASMReturnType() == ASMType.VOID_TYPE) {
+        }
+        else if (onMethod.getASMReturnType() == ASMType.VOID_TYPE) {
             super.visitInsn(Opcodes.RETURN);
-        } else {
+        }
+        else {
             assert false : onMethod.getReturnType();
         }
 
         super.visitMaxs(0, 0);
         super.visitEnd();
         //
-        this.mv = classDelegate.visitMethod(access, onMethod.getName() + "_original", onMethod.getDescriptor(), signature, new String[]{});
+        this.mv = classDelegate.visitMethod(access,
+                                            onMethod.getName() + "_original",
+                                            onMethod.getDescriptor(),
+                                            signature,
+                                            new String[]{});
         this.mv.visitCode();
     }
 }

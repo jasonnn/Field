@@ -7,8 +7,10 @@ import field.namespace.generic.tuple.Pair;
 import java.util.List;
 
 
-public interface iNodeSelection {
+public
+interface iNodeSelection {
 
-	public List<Pair<SelectedVertex, Float>> selectFrom(List<CachedLine> here);
-	
+    public
+    List<Pair<SelectedVertex, Float>> selectFrom(List<CachedLine> here);
+
 }

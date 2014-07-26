@@ -6,65 +6,70 @@ import field.util.MiscNative;
 import javax.swing.*;
 import java.awt.*;
 
-public class ExecutionMonitor implements Runnable {
+public
+class ExecutionMonitor implements Runnable {
 
-	public static JEditorPane pane;
+    public static JEditorPane pane;
 
-	private Thread tt;
+    private Thread tt;
 
-	boolean stillborn = !(SystemProperties.getIntProperty("executionMonitor", 0)==1);
-	
-	public ExecutionMonitor() {
-		if (stillborn) return;
-		
-		tt = new Thread(this);
+    boolean stillborn = !(SystemProperties.getIntProperty("executionMonitor", 0) == 1);
 
-		tt.start();
-	}
+    public
+    ExecutionMonitor() {
+        if (stillborn) return;
 
-	Object lock;
+        tt = new Thread(this);
 
-	boolean inside;
-	boolean outside;
+        tt.start();
+    }
 
-	long at = System.currentTimeMillis();
+    Object lock;
 
-	long lastSpeculativeDown = 0;
-	
-	public void run() {
+    boolean inside;
+    boolean outside;
 
-		while (true) {
+    long at = System.currentTimeMillis();
 
-			while ((System.currentTimeMillis() - at) < 500) {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-				}
-			}
+    long lastSpeculativeDown = 0;
 
-			at = System.currentTimeMillis();
+    public
+    void run() {
 
-			if (inside && !outside) {
+        while (true) {
+
+            while ((System.currentTimeMillis() - at) < 500) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                }
+            }
+
+            at = System.currentTimeMillis();
+
+            if (inside && !outside) {
                 //System.out.println(" down");
                 new MiscNative().noteDown_safe();
-				lastSpeculativeDown = System.currentTimeMillis();
-				inside = false;
-			} else if (!inside && outside) {
+                lastSpeculativeDown = System.currentTimeMillis();
+                inside = false;
+            }
+            else if (!inside && outside) {
 
-				if (pane != null) {
-					Point c = new Point(pane.getWidth() / 2, pane.getHeight() / 2);
-					SwingUtilities.convertPointToScreen(c, pane);
+                if (pane != null) {
+                    Point c = new Point(pane.getWidth() / 2, pane.getHeight() / 2);
+                    SwingUtilities.convertPointToScreen(c, pane);
 
-					c.x -= 150;
-					c.y -= 25;
-					new MiscNative().noteUp_safe("!\u2014", c.x, c.y, SwingUtilities.getWindowAncestor(pane));
-				}
-				inside = true;
-			} else {
-				if (inside) {
-				}
-			}
-			
+                    c.x -= 150;
+                    c.y -= 25;
+                    new MiscNative().noteUp_safe("!\u2014", c.x, c.y, SwingUtilities.getWindowAncestor(pane));
+                }
+                inside = true;
+            }
+            else {
+                if (inside) {
+                }
+            }
+
 //			if (!outside)
 //			{
 //				if (System.currentTimeMillis()-lastSpeculativeDown>2000)
@@ -73,19 +78,20 @@ public class ExecutionMonitor implements Runnable {
 //					lastSpeculativeDown = System.currentTimeMillis(); 
 //				}
 //			}
-		}
-	}
+        }
+    }
 
-	public void enter() {
-		outside = true;
-		at = System.currentTimeMillis();
-	}
+    public
+    void enter() {
+        outside = true;
+        at = System.currentTimeMillis();
+    }
 
-	public void exit() {
-		outside = false;
-		at = System.currentTimeMillis() - 1000;
-		if (tt!=null)
-			tt.interrupt();
-	}
+    public
+    void exit() {
+        outside = false;
+        at = System.currentTimeMillis() - 1000;
+        if (tt != null) tt.interrupt();
+    }
 
 }

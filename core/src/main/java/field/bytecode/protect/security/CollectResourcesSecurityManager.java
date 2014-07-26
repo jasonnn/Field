@@ -5,233 +5,244 @@ import java.net.InetAddress;
 import java.security.Permission;
 
 @SuppressWarnings("deprecation")
-public class CollectResourcesSecurityManager extends
-		SecurityManager {
-	
-	private PrintWriter o;
+public
+class CollectResourcesSecurityManager extends SecurityManager {
 
-	public CollectResourcesSecurityManager()
-	{
-		try {
-			o = new PrintWriter(new FileWriter(new File("/var/tmp/field_resourcesTouched")));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	@Override
-	public void checkWrite(
-			FileDescriptor fd) {
-	}
+    private PrintWriter o;
 
-	@Override
-	public void checkWrite(
-			String fd) {
-		o.println("w "+fd);
-	}
+    public
+    CollectResourcesSecurityManager() {
+        try {
+            o = new PrintWriter(new FileWriter(new File("/var/tmp/field_resourcesTouched")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void checkAccept(
-			String host,
-			int port) {
-	}
 
-	@Override
-	public void checkAccess(Thread t) {
-	}
+    @Override
+    public
+    void checkWrite(FileDescriptor fd) {
+    }
 
-	@Override
-	public void checkAccess(
-			ThreadGroup g) {
-	}
+    @Override
+    public
+    void checkWrite(String fd) {
+        o.println("w " + fd);
+    }
 
-	@Override
-	public void checkAwtEventQueueAccess() {
-	}
+    @Override
+    public
+    void checkAccept(String host, int port) {
+    }
 
-	@Override
-	public void checkConnect(
-			String host,
-			int port,
-			Object context) {
-	}
+    @Override
+    public
+    void checkAccess(Thread t) {
+    }
 
-	@Override
-	public void checkConnect(
-			String host,
-			int port) {
-	}
+    @Override
+    public
+    void checkAccess(ThreadGroup g) {
+    }
 
-	@Override
-	public void checkCreateClassLoader() {
-	}
+    @Override
+    public
+    void checkAwtEventQueueAccess() {
+    }
 
-	@Override
-	public void checkDelete(
-			String file) {
-		o.println("d "+file);
-		o.flush();
-	}
+    @Override
+    public
+    void checkConnect(String host, int port, Object context) {
+    }
 
-	@Override
-	public void checkExec(String cmd) {
-		o.println("e "+cmd);
+    @Override
+    public
+    void checkConnect(String host, int port) {
+    }
 
-	}
+    @Override
+    public
+    void checkCreateClassLoader() {
+    }
 
-	@Override
-	public void checkExit(int status) {
-	}
+    @Override
+    public
+    void checkDelete(String file) {
+        o.println("d " + file);
+        o.flush();
+    }
 
-	@Override
-	public void checkLink(String lib) {
-		o.println("l "+lib);
-	}
+    @Override
+    public
+    void checkExec(String cmd) {
+        o.println("e " + cmd);
 
-	@Override
-	public void checkListen(int port) {
-	}
+    }
 
-	@Override
-	public void checkMemberAccess(
-			Class<?> clazz,
-			int which) {
-	}
+    @Override
+    public
+    void checkExit(int status) {
+    }
 
-	@Override
-	public void checkMulticast(
-			InetAddress maddr,
-			byte ttl) {
-	}
+    @Override
+    public
+    void checkLink(String lib) {
+        o.println("l " + lib);
+    }
 
-	@Override
-	public void checkMulticast(
-			InetAddress maddr) {
-	}
+    @Override
+    public
+    void checkListen(int port) {
+    }
 
-	@Override
-	public void checkPackageAccess(
-			String pkg) {
-	}
+    @Override
+    public
+    void checkMemberAccess(Class<?> clazz, int which) {
+    }
 
-	@Override
-	public void checkPackageDefinition(
-			String pkg) {
-	}
+    @Override
+    public
+    void checkMulticast(InetAddress maddr, byte ttl) {
+    }
 
-	@Override
-	public void checkPermission(
-			Permission perm,
-			Object context) {
-	}
+    @Override
+    public
+    void checkMulticast(InetAddress maddr) {
+    }
 
-	@Override
-	public void checkPermission(
-			Permission perm) {
-	}
+    @Override
+    public
+    void checkPackageAccess(String pkg) {
+    }
 
-	@Override
-	public void checkPrintJobAccess() {
-	}
+    @Override
+    public
+    void checkPackageDefinition(String pkg) {
+    }
 
-	@Override
-	public void checkPropertiesAccess() {
-	}
+    @Override
+    public
+    void checkPermission(Permission perm, Object context) {
+    }
 
-	@Override
-	public void checkPropertyAccess(
-			String key) {
-	}
+    @Override
+    public
+    void checkPermission(Permission perm) {
+    }
 
-	@Override
-	public void checkRead(
-			FileDescriptor fd) {
-	}
+    @Override
+    public
+    void checkPrintJobAccess() {
+    }
 
-	@Override
-	public void checkRead(
-			String file,
-			Object context) {
-		o.println("r "+file);
-	}
+    @Override
+    public
+    void checkPropertiesAccess() {
+    }
 
-	@Override
-	public void checkRead(
-			String file) {
-		o.println("r "+file);
-	}
+    @Override
+    public
+    void checkPropertyAccess(String key) {
+    }
 
-	@Override
-	public void checkSecurityAccess(
-			String target) {
-	}
+    @Override
+    public
+    void checkRead(FileDescriptor fd) {
+    }
 
-	@Override
-	public void checkSetFactory() {
-	}
+    @Override
+    public
+    void checkRead(String file, Object context) {
+        o.println("r " + file);
+    }
 
-	@Override
-	public void checkSystemClipboardAccess() {
-	}
+    @Override
+    public
+    void checkRead(String file) {
+        o.println("r " + file);
+    }
 
-	@Override
-	public boolean checkTopLevelWindow(
-			Object window) {
-		return super.checkTopLevelWindow(window);
-	}
+    @Override
+    public
+    void checkSecurityAccess(String target) {
+    }
 
-	@Override
-	protected int classDepth(
-			String name) {
-		return super.classDepth(name);
-	}
+    @Override
+    public
+    void checkSetFactory() {
+    }
 
-	@Override
-	protected int classLoaderDepth() {
-		return super.classLoaderDepth();
-	}
+    @Override
+    public
+    void checkSystemClipboardAccess() {
+    }
 
-	@Override
-	protected ClassLoader currentClassLoader() {
-		return super.currentClassLoader();
-	}
+    @Override
+    public
+    boolean checkTopLevelWindow(Object window) {
+        return super.checkTopLevelWindow(window);
+    }
 
-	@Override
-	protected Class<?> currentLoadedClass() {
-		return super.currentLoadedClass();
-	}
+    @Override
+    protected
+    int classDepth(String name) {
+        return super.classDepth(name);
+    }
 
-	@Override
-	protected Class[] getClassContext() {
-		return super.getClassContext();
-	}
+    @Override
+    protected
+    int classLoaderDepth() {
+        return super.classLoaderDepth();
+    }
 
-	@Override
-	public boolean getInCheck() {
-		return super.getInCheck();
-	}
+    @Override
+    protected
+    ClassLoader currentClassLoader() {
+        return super.currentClassLoader();
+    }
 
-	@Override
-	public Object getSecurityContext() {
-		return super.getSecurityContext();
-	}
+    @Override
+    protected
+    Class<?> currentLoadedClass() {
+        return super.currentLoadedClass();
+    }
 
-	@Override
-	public ThreadGroup getThreadGroup() {
-		return super.getThreadGroup();
-	}
+    @Override
+    protected
+    Class[] getClassContext() {
+        return super.getClassContext();
+    }
 
-	@Override
-	protected boolean inClass(
-			String name) {
-		return super.inClass(name);
-	}
+    @Override
+    public
+    boolean getInCheck() {
+        return super.getInCheck();
+    }
 
-	@Override
-	protected boolean inClassLoader() {
-		return super.inClassLoader();
-	}
+    @Override
+    public
+    Object getSecurityContext() {
+        return super.getSecurityContext();
+    }
+
+    @Override
+    public
+    ThreadGroup getThreadGroup() {
+        return super.getThreadGroup();
+    }
+
+    @Override
+    protected
+    boolean inClass(String name) {
+        return super.inClass(name);
+    }
+
+    @Override
+    protected
+    boolean inClassLoader() {
+        return super.inClassLoader();
+    }
 }

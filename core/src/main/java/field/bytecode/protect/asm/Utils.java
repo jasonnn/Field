@@ -8,9 +8,11 @@ import java.io.InputStream;
 /**
  * Created by jason on 7/20/14.
  */
-public class Utils {
+public
+class Utils {
 
-    public static byte[] readFully(InputStream stream) throws IOException {
+    public static
+    byte[] readFully(InputStream stream) throws IOException {
         return IOUtils.readFully(stream, -1, true);
     }
 }

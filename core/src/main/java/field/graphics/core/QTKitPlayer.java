@@ -2,38 +2,43 @@ package field.graphics.core;
 
 import field.graphics.qt.QTKitVideo;
 
-public class QTKitPlayer extends BasicUtilities.TwoPassElement {
+public
+class QTKitPlayer extends BasicUtilities.TwoPassElement {
 
-	private final QTKitVideo video;
+    private final QTKitVideo video;
 
-	public QTKitPlayer(String file, int w, int height) {
-		super("qtkit", Base.StandardPass.preRender, Base.StandardPass.postRender);
-		video = new QTKitVideo();
+    public
+    QTKitPlayer(String file, int w, int height) {
+        super("qtkit", Base.StandardPass.preRender, Base.StandardPass.postRender);
+        video = new QTKitVideo();
 
-		video.openMovie(video.handle, file);
-		try {
-			Thread.sleep(1);
+        video.openMovie(video.handle, file);
+        try {
+            Thread.sleep(1);
 
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //System.out.println(" opening movie complete");
         video.setRate(0.0f);
-	}
+    }
 
-	@Override
-	protected void post() {
-		video.unbind(video.handle);
-	}
+    @Override
+    protected
+    void post() {
+        video.unbind(video.handle);
+    }
 
-	@Override
-	protected void pre() {
-		video.bind(video.handle);
-	}
+    @Override
+    protected
+    void pre() {
+        video.bind(video.handle);
+    }
 
-	@Override
-	protected void setup() {
-		BasicContextManager.putId(this, 0);
-	}
+    @Override
+    protected
+    void setup() {
+        BasicContextManager.putId(this, 0);
+    }
 
 }

@@ -23,232 +23,259 @@ import org.eclipse.swt.widgets.Text;
 import java.awt.*;
 
 @Woven
-public class PopupTextBox {
+public
+class PopupTextBox {
 
-	Shell shell;
+    Shell shell;
 
-	private final Label label;
+    private final Label label;
 
-	protected Text textBox;
+    protected Text textBox;
 
-	int surround = 20;
+    int surround = 20;
 
-	public void doCompletions() {
-		completion(textBox, new iKeystrokeUpdate() {
-			public boolean update(Event arg0) {
-				if (Character.isISOControl(arg0.character))
-					return false;
+    public
+    void doCompletions() {
+        completion(textBox, new iKeystrokeUpdate() {
+            public
+            boolean update(Event arg0) {
+                if (Character.isISOControl(arg0.character)) return false;
 
                 textBox.append(String.valueOf(arg0.character));
                 completion(textBox, this);
-				return false;
-			}
-		});
-	}
+                return false;
+            }
+        });
+    }
 
-	boolean exitAllowed = false;
+    boolean exitAllowed = false;
 
-	public PopupTextBox setExitAllowed(boolean exitAllowed) {
-		this.exitAllowed = exitAllowed;
-		return this;
-	}
+    public
+    PopupTextBox setExitAllowed(boolean exitAllowed) {
+        this.exitAllowed = exitAllowed;
+        return this;
+    }
 
-	public PopupTextBox(String defaultText, Point screenPoint, String label) {
+    public
+    PopupTextBox(String defaultText, Point screenPoint, String label) {
 
-		shell = new Shell(Launcher.display, SWT.ON_TOP);
+        shell = new Shell(Launcher.display, SWT.ON_TOP);
 
-		RowLayout rl = new RowLayout();
-		rl.center = true;
-		rl.spacing = 3;
-		shell.setLayout(rl);
-		this.label = new Label(shell, SWT.RIGHT);
-		this.label.setText(label);
-		this.textBox = new Text(shell, SWT.SINGLE);
-		this.textBox.setText(defaultText);
-		this.textBox.setSelection(0, defaultText.length());
-		this.textBox.setLayoutData(new RowData(300, SWT.DEFAULT));
-		shell.setBounds(screenPoint.x, screenPoint.y, 400, 40);
-		shell.open();
-		shell.pack();
+        RowLayout rl = new RowLayout();
+        rl.center = true;
+        rl.spacing = 3;
+        shell.setLayout(rl);
+        this.label = new Label(shell, SWT.RIGHT);
+        this.label.setText(label);
+        this.textBox = new Text(shell, SWT.SINGLE);
+        this.textBox.setText(defaultText);
+        this.textBox.setSelection(0, defaultText.length());
+        this.textBox.setLayoutData(new RowData(300, SWT.DEFAULT));
+        shell.setBounds(screenPoint.x, screenPoint.y, 400, 40);
+        shell.open();
+        shell.pack();
 
-		// this.textBox.addVerifyListener(new VerifyListener() {
-		//
-		// @Override
-		// public void verifyText(VerifyEvent e) {
-		//
-		// ;//System.out.println(" keycode is <"+e.keyCode+">");
-		//
-		// if (e.character == SWT.ESC) {
-		// if (exitAllowed) {
-		// shell.dispose();
-		// exit();
-		// }
-		// } else if (e.text == "\n") {
-		// shell.dispose();
-		// }
-		// // else
-		// // changed(textBox.getText()+e.text);
-		// }
-		//
-		// });
+        // this.textBox.addVerifyListener(new VerifyListener() {
+        //
+        // @Override
+        // public void verifyText(VerifyEvent e) {
+        //
+        // ;//System.out.println(" keycode is <"+e.keyCode+">");
+        //
+        // if (e.character == SWT.ESC) {
+        // if (exitAllowed) {
+        // shell.dispose();
+        // exit();
+        // }
+        // } else if (e.text == "\n") {
+        // shell.dispose();
+        // }
+        // // else
+        // // changed(textBox.getText()+e.text);
+        // }
+        //
+        // });
 
-		this.textBox.addKeyListener(new KeyListener() {
+        this.textBox.addKeyListener(new KeyListener() {
 
-			@Override
-			public void keyReleased(org.eclipse.swt.events.KeyEvent e) {
-				// TODO Auto-generated method stub
+            @Override
+            public
+            void keyReleased(org.eclipse.swt.events.KeyEvent e) {
+                // TODO Auto-generated method stub
 
-			}
+            }
 
-			@Override
-			public void keyPressed(org.eclipse.swt.events.KeyEvent e) {
+            @Override
+            public
+            void keyPressed(org.eclipse.swt.events.KeyEvent e) {
 
-				if (e.character == SWT.ESC)
-					if (exitAllowed) {
-						shell.dispose();
-						exit();
-					}
-			}
-		});
+                if (e.character == SWT.ESC) if (exitAllowed) {
+                    shell.dispose();
+                    exit();
+                }
+            }
+        });
 
-		this.textBox.addSelectionListener(new SelectionListener() {
+        this.textBox.addSelectionListener(new SelectionListener() {
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-			}
+            @Override
+            public
+            void widgetSelected(SelectionEvent e) {
+            }
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				try{
-					changed(textBox.getText());
-				}
-				catch(SWTException ee)
-				{
-					ee.printStackTrace();
-				}
-				shell.dispose();
-			}
-		});
-	}
+            @Override
+            public
+            void widgetDefaultSelected(SelectionEvent e) {
+                try {
+                    changed(textBox.getText());
+                } catch (SWTException ee) {
+                    ee.printStackTrace();
+                }
+                shell.dispose();
+            }
+        });
+    }
 
-	protected void completion(Text inside, iKeystrokeUpdate iKeystrokeUpdate) {
-	}
+    protected
+    void completion(Text inside, iKeystrokeUpdate iKeystrokeUpdate) {
+    }
 
-	protected boolean validateText() {
-		return true;
-	}
+    protected
+    boolean validateText() {
+        return true;
+    }
 
-	protected void changed(String text) {
-	}
+    protected
+    void changed(String text) {
+    }
 
-	protected void exit() {
-		// TODO Auto-generated method stub
+    protected
+    void exit() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	boolean gone = false;
+    boolean gone = false;
 
-	public static
+    public static
     class Modal {
-		static public void getString(Point at, String label, String def, final iAcceptor<String> result) {
-			new PopupTextBox(def, at, label) {
-				@Override
-				protected void changed(String text) {
-					result.set(text);
-				}
-			};
-		}
+        static public
+        void getString(Point at, String label, String def, final iAcceptor<String> result) {
+            new PopupTextBox(def, at, label) {
+                @Override
+                protected
+                void changed(String text) {
+                    result.set(text);
+                }
+            };
+        }
 
-		static public void getStringOrCancel(Point at, String label, String def, final iAcceptor<String> result) {
-			new PopupTextBox(def, at, label) {
-				@Override
-				protected void changed(String text) {
-					result.set(text);
-				}
-			}.setExitAllowed(true);
-		}
-
-		static public void getStringOrCancel(Point at, String label, String def, final iAcceptor<String> result, final iUpdateable onCancel) {
-			new PopupTextBox(def, at, label) {
-				@Override
-				protected void changed(String text) {
-					result.set(text);
-				}
-
-				protected void exit() {
-					onCancel.update();
+        static public
+        void getStringOrCancel(Point at, String label, String def, final iAcceptor<String> result) {
+            new PopupTextBox(def, at, label) {
+                @Override
+                protected
+                void changed(String text) {
+                    result.set(text);
                 }
             }.setExitAllowed(true);
         }
 
-		static public void getFloat(Point at, String label, float def, final iAcceptor<Float> result) {
+        static public
+        void getStringOrCancel(Point at,
+                               String label,
+                               String def,
+                               final iAcceptor<String> result,
+                               final iUpdateable onCancel) {
+            new PopupTextBox(def, at, label) {
+                @Override
+                protected
+                void changed(String text) {
+                    result.set(text);
+                }
+
+                protected
+                void exit() {
+                    onCancel.update();
+                }
+            }.setExitAllowed(true);
+        }
+
+        static public
+        void getFloat(Point at, String label, float def, final iAcceptor<Float> result) {
             new PopupTextBox(String.valueOf(def), at, label) {
                 @Override
-				protected boolean validateText() {
-					try {
-						Float.parseFloat(textBox.getText());
-						return true;
-					} catch (NumberFormatException q) {
-						return false;
-					}
-				}
+                protected
+                boolean validateText() {
+                    try {
+                        Float.parseFloat(textBox.getText());
+                        return true;
+                    } catch (NumberFormatException q) {
+                        return false;
+                    }
+                }
 
-				@Override
-				protected void changed(String text) {
-					result.set(Float.parseFloat(text));
-				}
-			};
-		}
+                @Override
+                protected
+                void changed(String text) {
+                    result.set(Float.parseFloat(text));
+                }
+            };
+        }
 
-		static public void getInteger(Point at, String label, float def, final iAcceptor<Integer> result) {
+        static public
+        void getInteger(Point at, String label, float def, final iAcceptor<Integer> result) {
             new PopupTextBox(String.valueOf(def), at, label) {
                 @Override
-				protected boolean validateText() {
-					try {
-						Integer.parseInt(textBox.getText());
-						return true;
-					} catch (NumberFormatException q) {
-						return false;
-					}
-				}
+                protected
+                boolean validateText() {
+                    try {
+                        Integer.parseInt(textBox.getText());
+                        return true;
+                    } catch (NumberFormatException q) {
+                        return false;
+                    }
+                }
 
-				@Override
-				protected void changed(String text) {
-					result.set(Integer.parseInt(text));
-				}
-			};
-		}
+                @Override
+                protected
+                void changed(String text) {
+                    result.set(Integer.parseInt(text));
+                }
+            };
+        }
 
-		static public Point elementAt(iVisualElement e) {
-			Rect frame = e.getFrame(null);
-			GLComponentWindow window = iVisualElement.enclosingFrame.get(e);
-			if (window == null)
-				return new Point((int) frame.x, (int) frame.y);
+        static public
+        Point elementAt(iVisualElement e) {
+            Rect frame = e.getFrame(null);
+            GLComponentWindow window = iVisualElement.enclosingFrame.get(e);
+            if (window == null) return new Point((int) frame.x, (int) frame.y);
 
-			float sx = window.getXScale();
-			float sy = window.getYScale();
-			float tx = window.getXTranslation();
-			float ty = window.getYTranslation();
+            float sx = window.getXScale();
+            float sy = window.getYScale();
+            float tx = window.getXTranslation();
+            float ty = window.getYTranslation();
 
-			float fx = (float) (frame.x + frame.w / 2);
-			float fy = (float) (frame.y + frame.h / 2);
+            float fx = (float) (frame.x + frame.w / 2);
+            float fy = (float) (frame.y + frame.h / 2);
 
-			fx = (fx - tx) / sx;
-			fy = (fy - ty) / sy;
+            fx = (fx - tx) / sx;
+            fy = (fy - ty) / sy;
 
-			fx += window.getFrame().getLocation().x;
-			fy += window.getFrame().getLocation().y;
+            fx += window.getFrame().getLocation().x;
+            fy += window.getFrame().getLocation().y;
 
-			fx += window.getCanvas().getParent().getBounds().x;
+            fx += window.getCanvas().getParent().getBounds().x;
 
-			return new Point((int) fx, (int) fy);
+            return new Point((int) fx, (int) fy);
 
-		}
+        }
 
-	}
+    }
 
-	public void closeNow() {
-		this.shell.setVisible(false);
-	}
+    public
+    void closeNow() {
+        this.shell.setVisible(false);
+    }
 
 }

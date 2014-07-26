@@ -13,9 +13,10 @@ import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstan
 import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.handleExit_O_OSOSSS;
 
 /**
-* Created by jason on 7/14/14.
-*/
-public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements ExitHandler {
+ * Created by jason on 7/14/14.
+ */
+public abstract
+class CallOnReturn extends FieldASMGeneratorAdapter implements ExitHandler {
 
     private final String name;
 
@@ -27,7 +28,12 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
 
     int returnNumber = 0;
 
-    public CallOnReturn(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
+    public
+    CallOnReturn(String name,
+                 int access,
+                 ASMMethod onMethod,
+                 MethodVisitor delegateTo,
+                 HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.onMethod = onMethod;
@@ -42,14 +48,15 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
 
     public abstract
     Object handleExit(Object returningThis,
-                                      String fromName,
-                                      Object fromThis,
-                                      String methodName,
-                                      Map<String, Object> parameterName,
-                                      String methodReturnName);
+                      String fromName,
+                      Object fromThis,
+                      String methodName,
+                      Map<String, Object> parameterName,
+                      String methodReturnName);
 
     @Override
-    public void visitInsn(int op) {
+    public
+    void visitInsn(int op) {
         //if (StandardTrampoline.debug)
         //System.out.println(" -- visit insn <" + op + "> <" + Opcodes.RETURN + ">");
         if (op == Opcodes.RETURN) {
@@ -62,7 +69,8 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             //  invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
             pop();
-        } else if (op == Opcodes.IRETURN) {
+        }
+        else if (op == Opcodes.IRETURN) {
             // dup();
             box(ASMType.INT_TYPE);
 
@@ -74,7 +82,8 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             // invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
             unbox(ASMType.INT_TYPE);
-        } else if (op == Opcodes.FRETURN) {
+        }
+        else if (op == Opcodes.FRETURN) {
             // dup();
             box(ASMType.FLOAT_TYPE);
 
@@ -86,7 +95,8 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleExit_O_OSOSSS);
             // invokeStatic(ASMType.getType(BasicInstrumentation2.class), new ASMMethod("handle2", ASMType.getType(Object.class), new Type[]{ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(Object.class), ASMType.getType(String.class), ASMType.getType(String.class), ASMType.getType(String.class)}));
             unbox(ASMType.FLOAT_TYPE);
-        } else if (op == Opcodes.ARETURN) {
+        }
+        else if (op == Opcodes.ARETURN) {
             // dup();
 
             push(name);

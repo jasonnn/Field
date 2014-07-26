@@ -12,33 +12,39 @@
 package field.core.plugins.constrain.cassowary;
 
 class ClObjectiveVariable extends ClAbstractVariable {
-	public ClObjectiveVariable(String name) {
-		super(name);
-	}
+    public
+    ClObjectiveVariable(String name) {
+        super(name);
+    }
 
-	public ClObjectiveVariable(long number, String prefix) {
-		super(number, prefix);
-	}
+    public
+    ClObjectiveVariable(long number, String prefix) {
+        super(number, prefix);
+    }
 
-	@Override
-	public String toString()
-	//    { return "[" + name() + ":obj:" + hashCode() + "]"; }
-	{
-		return '[' + name() + ":obj]";
-	}
+    @Override
+    public
+    String toString()
+    //    { return "[" + name() + ":obj:" + hashCode() + "]"; }
+    {
+        return '[' + name() + ":obj]";
+    }
 
-	@Override
-	public boolean isExternal() {
-		return false;
-	}
+    @Override
+    public
+    boolean isExternal() {
+        return false;
+    }
 
-	@Override
-	public boolean isPivotable() {
-		return false;
-	}
+    @Override
+    public
+    boolean isPivotable() {
+        return false;
+    }
 
-	@Override
-	public boolean isRestricted() {
-		return false;
-	}
+    @Override
+    public
+    boolean isRestricted() {
+        return false;
+    }
 }

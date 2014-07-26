@@ -10,39 +10,42 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL42;
 
-public class BasicGLSLangImage extends OnePassElement {
+public
+class BasicGLSLangImage extends OnePassElement {
 
-	private final int unit;
-	private final iHasTexture from;
-	private final int format;
-	private TextureUnit unitWrapper;
+    private final int unit;
+    private final iHasTexture from;
+    private final int format;
+    private TextureUnit unitWrapper;
 
-	public BasicGLSLangImage(int unit, iHasTexture from, int format) {
-		super(StandardPass.preRender);
-		this.unit = unit;
-		this.from = from;
-		this.format = format;
-	}
+    public
+    BasicGLSLangImage(int unit, iHasTexture from, int format) {
+        super(StandardPass.preRender);
+        this.unit = unit;
+        this.from = from;
+        this.format = format;
+    }
 
-	public BasicGLSLangImage(int unit, int width, int height) {
-		super(StandardPass.preRender);
-		this.unit = unit;
+    public
+    BasicGLSLangImage(int unit, int width, int height) {
+        super(StandardPass.preRender);
+        this.unit = unit;
 
-		BasicFrameBuffers.useRG = true;
-		BasicFrameBuffers.use32 = false;
-		
-		from = new NullTexture(width, height);
+        BasicFrameBuffers.useRG = true;
+        BasicFrameBuffers.use32 = false;
+
+        from = new NullTexture(width, height);
 //		((NullTexture)from).useStorage();
-		unitWrapper = new TextureUnit(unit, (TwoPassElement) from);
+        unitWrapper = new TextureUnit(unit, (TwoPassElement) from);
 
 //		this.format = GL30.GL_RGBA32F;
-		this.format = GL30.GL_RG16F;
-	}
+        this.format = GL30.GL_RG16F;
+    }
 
-	@Override
-	public void performPass() {
-		if (unitWrapper != null)
-			unitWrapper.performPass(null);
-		GL42.glBindImageTexture(unit, from.getOutput().get(), 0, false, 0, GL15.GL_READ_WRITE, format);
-	}
+    @Override
+    public
+    void performPass() {
+        if (unitWrapper != null) unitWrapper.performPass(null);
+        GL42.glBindImageTexture(unit, from.getOutput().get(), 0, false, 0, GL15.GL_READ_WRITE, format);
+    }
 }

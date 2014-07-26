@@ -7,24 +7,25 @@ import org.eclipse.swt.widgets.Widget;
 
 import java.util.List;
 
-public class GraphNodeToTree {
+public
+class GraphNodeToTree {
 
-	
-	private final Tree target;
 
-	public GraphNodeToTree(Tree target)
-	{
-		this.target = target;
-	}
-	
-	public void reset(iMutableContainer m)
-	{
-		target.removeAll();
-		
-		for (Object o : m.getChildren())
-			populate((iMutableContainer) o, target);
+    private final Tree target;
 
-	}
+    public
+    GraphNodeToTree(Tree target) {
+        this.target = target;
+    }
+
+    public
+    void reset(iMutableContainer m) {
+        target.removeAll();
+
+        for (Object o : m.getChildren())
+            populate((iMutableContainer) o, target);
+
+    }
 
     private static
     void populate(iMutableContainer m, Widget i) {
@@ -33,12 +34,11 @@ public class GraphNodeToTree {
         item.setText(String.valueOf(m));
         item.setData(m.payload());
 
-		List<iMutableContainer> c = m.getChildren();
-		for(iMutableContainer cc : c)
-		{
-			populate(cc, item);
-		}
-		
-	}
-	
+        List<iMutableContainer> c = m.getChildren();
+        for (iMutableContainer cc : c) {
+            populate(cc, item);
+        }
+
+    }
+
 }

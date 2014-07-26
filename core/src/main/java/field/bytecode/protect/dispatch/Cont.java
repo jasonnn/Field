@@ -94,7 +94,7 @@ class Cont implements DispatchProvider {
                 }
             }
             else {
-                log.log(Level.INFO, "unlink failed: o=[{0}] m=[{1}] r=[{2}]",new Object[]{o,m,r});
+                log.log(Level.INFO, "unlink failed: o=[{0}] m=[{1}] r=[{2}]", new Object[]{o, m, r});
             }
         }
         else {
@@ -114,7 +114,7 @@ class Cont implements DispatchProvider {
         List<Run> name = class_links.get(m);
         if (name != null) name.remove(r);
         else {
-            log.log(Level.INFO, "unlink failed: o=[{0}] m=[{1}] r=[{2}]", new Object[]{ m, r});
+            log.log(Level.INFO, "unlink failed: o=[{0}] m=[{1}] r=[{2}]", new Object[]{m, r});
         }
     }
 
@@ -124,7 +124,7 @@ class Cont implements DispatchProvider {
         List<Run> name = class_links.get(m);
         if (name != null) name.remove(r);
         else {
-            log.log(Level.INFO, "unlink failed: m=[{1}] r=[{2}]",new Object[]{m,r});
+            log.log(Level.INFO, "unlink failed: m=[{1}] r=[{2}]", new Object[]{m, r});
         }
     }
 

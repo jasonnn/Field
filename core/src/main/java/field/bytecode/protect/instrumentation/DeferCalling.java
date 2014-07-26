@@ -11,9 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
-* Created by jason on 7/14/14.
-*/
-public abstract class DeferCalling extends FieldASMGeneratorAdapter implements DeferedHandler {
+ * Created by jason on 7/14/14.
+ */
+public abstract
+class DeferCalling extends FieldASMGeneratorAdapter implements DeferedHandler {
     private final int access;
 
     private final ClassVisitor classDelegate;
@@ -30,7 +31,14 @@ public abstract class DeferCalling extends FieldASMGeneratorAdapter implements D
 
     private final String signature;
 
-    public DeferCalling(String name, int access, ASMMethod onMethod, ClassVisitor classDelegate, MethodVisitor delegateTo, String signature, HashMap<String, Object> parameters) {
+    public
+    DeferCalling(String name,
+                 int access,
+                 ASMMethod onMethod,
+                 ClassVisitor classDelegate,
+                 MethodVisitor delegateTo,
+                 String signature,
+                 HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.access = access;
@@ -51,14 +59,15 @@ public abstract class DeferCalling extends FieldASMGeneratorAdapter implements D
 
     public abstract
     void handleDefered(String fromName,
-                                       Object fromThis,
-                                       String methodName,
-                                       Map<String, Object> parameters,
-                                       Object[] argArray,
-                                       Class[] argTypeArray);
+                       Object fromThis,
+                       String methodName,
+                       Map<String, Object> parameters,
+                       Object[] argArray,
+                       Class[] argTypeArray);
 
     @Override
-    public void visitCode() {
+    public
+    void visitCode() {
         super.visitCode();
         push(name);
         loadThis();
@@ -75,7 +84,11 @@ public abstract class DeferCalling extends FieldASMGeneratorAdapter implements D
         super.visitMaxs(0, 0);
         super.visitEnd();
         //
-        this.mv = classDelegate.visitMethod(access, onMethod.getName() + "_original", onMethod.getDescriptor(), signature, new String[]{});
+        this.mv = classDelegate.visitMethod(access,
+                                            onMethod.getName() + "_original",
+                                            onMethod.getDescriptor(),
+                                            signature,
+                                            new String[]{});
         this.mv.visitCode();
     }
 }

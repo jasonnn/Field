@@ -45,566 +45,667 @@ import java.util.*;
 import java.util.Map.Entry;
 
 @Woven
-public class ElementFileSystemTree {
+public
+class ElementFileSystemTree {
 
-	Tree tree;
-	private final File root;
-	private final Composite toolbar;
-	ToolBarFolder open;
+    Tree tree;
+    private final File root;
+    private final Composite toolbar;
+    ToolBarFolder open;
 
-	static public class ObjectTransfer extends ByteArrayTransfer {
-		static public String name = "field_object";
-		static public int id = Transfer.registerType(name);
+    static public
+    class ObjectTransfer extends ByteArrayTransfer {
+        static public String name = "field_object";
+        static public int id = Transfer.registerType(name);
 
-		@Override
-		protected int[] getTypeIds() {
-			return new int[] { id };
-		}
+        @Override
+        protected
+        int[] getTypeIds() {
+            return new int[]{id};
+        }
 
-		@Override
-		protected String[] getTypeNames() {
-			return new String[] { name };
-		}
+        @Override
+        protected
+        String[] getTypeNames() {
+            return new String[]{name};
+        }
 
-		@Override
-		protected void javaToNative(Object object, TransferData transferData) {
+        @Override
+        protected
+        void javaToNative(Object object, TransferData transferData) {
 
             //System.out.println(" java to native <" + object + " -> " + transferData + ">");
 
-			if (object == null)
-				return;
-			if (isSupportedType(transferData)) {
-				String o = new PythonUtils().toXML(object, false);
-				super.javaToNative(o.getBytes(), transferData);
-			}
-		}
+            if (object == null) return;
+            if (isSupportedType(transferData)) {
+                String o = new PythonUtils().toXML(object, false);
+                super.javaToNative(o.getBytes(), transferData);
+            }
+        }
 
-		@Override
-		protected Object nativeToJava(TransferData transferData) {
+        @Override
+        protected
+        Object nativeToJava(TransferData transferData) {
             //System.out.println(" native to java " + transferData);
             if (isSupportedType(transferData)) {
-				return PythonUtils.fromXML(new String((byte[]) super.nativeToJava(transferData)));
-			}
-			return super.nativeToJava(transferData);
-		}
-	}
+                return PythonUtils.fromXML(new String((byte[]) super.nativeToJava(transferData)));
+            }
+            return super.nativeToJava(transferData);
+        }
+    }
 
-	static public final ObjectTransfer transfer = new ObjectTransfer();
-	static public TreeItem[] lastInternalDragSelection;
+    static public final ObjectTransfer transfer = new ObjectTransfer();
+    static public TreeItem[] lastInternalDragSelection;
 
-	public interface TemplateRootMarker {
-	}
+    public
+    interface TemplateRootMarker {
+    }
 
-	static public class TemplateMarker {
-		File f;
+    static public
+    class TemplateMarker {
+        File f;
 
-		public TemplateMarker(File f) {
-			this.f = f;
-		}
-	}
+        public
+        TemplateMarker(File f) {
+            this.f = f;
+        }
+    }
 
-	public ElementFileSystemTree() {
+    public
+    ElementFileSystemTree() {
 
-		Composite target = GLComponentWindow.lastCreatedWindow.leftComp1;
+        Composite target = GLComponentWindow.lastCreatedWindow.leftComp1;
 
-		open = ToolBarFolder.currentFolder;
+        open = ToolBarFolder.currentFolder;
 
-		// open = new ToolBarFolder(new Rectangle(50, 50, 300, 600),
-		// false);
-		// ToolBarFolder.helpFolder = open;
+        // open = new ToolBarFolder(new Rectangle(50, 50, 300, 600),
+        // false);
+        // ToolBarFolder.helpFolder = open;
 
-		Composite container = new Composite(open.getContainer(), SWT.NO_BACKGROUND);
-		open.add("icons/folder_stroke_16x16.png", container);
+        Composite container = new Composite(open.getContainer(), SWT.NO_BACKGROUND);
+        open.add("icons/folder_stroke_16x16.png", container);
 
-		toolbar = new Composite(container, SWT.BACKGROUND);
+        toolbar = new Composite(container, SWT.BACKGROUND);
         Color backgroundColor = ToolBarFolder.firstLineBackground;
         toolbar.setBackground(backgroundColor);
 
-		tree = new Tree(container, 0);
-		tree.setBackground(ToolBarFolder.firstLineBackground);
-		new GraphNodeToTreeFancy.Pretty(tree, 200);
+        tree = new Tree(container, 0);
+        tree.setBackground(ToolBarFolder.firstLineBackground);
+        new GraphNodeToTreeFancy.Pretty(tree, 200);
 
-		GridLayout gl = new GridLayout(1, false);
-		gl.marginHeight = 0;
-		gl.marginWidth = 0;
-		if (Platform.isLinux()) {
-			gl.marginLeft = 0;
-			gl.marginRight = 0;
-			gl.marginTop = 0;
-			gl.marginBottom = 0;
-			gl.verticalSpacing = 0;
-		}
+        GridLayout gl = new GridLayout(1, false);
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        if (Platform.isLinux()) {
+            gl.marginLeft = 0;
+            gl.marginRight = 0;
+            gl.marginTop = 0;
+            gl.marginBottom = 0;
+            gl.verticalSpacing = 0;
+        }
 
-		// if (Platform.getOS() == OS.linux) {
-		// gl.marginHeight = 5;
-		// gl.marginWidth = 5;
-		// }
-		container.setLayout(gl);
-		{
-			GridData data = new GridData();
-			data.heightHint = 28;
-			if (Platform.getOS() == OS.linux) {
-				data.heightHint = 38;
-			}
-			data.widthHint = 1000;
-			data.horizontalAlignment = SWT.FILL;
-			data.grabExcessHorizontalSpace = true;
-			toolbar.setLayoutData(data);
-		}
-		{
-			GridData data = new GridData();
-			data.grabExcessVerticalSpace = true;
-			data.grabExcessHorizontalSpace = true;
-			data.verticalAlignment = SWT.FILL;
-			data.horizontalAlignment = SWT.FILL;
-			data.verticalIndent = 0;
-			data.horizontalIndent = 0;
-			tree.setLayoutData(data);
-		}
-		Link label = new Link(toolbar, SWT.MULTI | SWT.NO_BACKGROUND | SWT.CENTER);
-		label.setText("Filesystem");
-		label.setFont(new Font(Launcher.display, label.getFont().getFontData()[0].getName(), label.getFont().getFontData()[0].getHeight() + 2, SWT.NORMAL));
-		label.setBackground(ToolBarFolder.firstLineBackground);
+        // if (Platform.getOS() == OS.linux) {
+        // gl.marginHeight = 5;
+        // gl.marginWidth = 5;
+        // }
+        container.setLayout(gl);
+        {
+            GridData data = new GridData();
+            data.heightHint = 28;
+            if (Platform.getOS() == OS.linux) {
+                data.heightHint = 38;
+            }
+            data.widthHint = 1000;
+            data.horizontalAlignment = SWT.FILL;
+            data.grabExcessHorizontalSpace = true;
+            toolbar.setLayoutData(data);
+        }
+        {
+            GridData data = new GridData();
+            data.grabExcessVerticalSpace = true;
+            data.grabExcessHorizontalSpace = true;
+            data.verticalAlignment = SWT.FILL;
+            data.horizontalAlignment = SWT.FILL;
+            data.verticalIndent = 0;
+            data.horizontalIndent = 0;
+            tree.setLayoutData(data);
+        }
+        Link label = new Link(toolbar, SWT.MULTI | SWT.NO_BACKGROUND | SWT.CENTER);
+        label.setText("Filesystem");
+        label.setFont(new Font(Launcher.display,
+                               label.getFont().getFontData()[0].getName(),
+                               label.getFont().getFontData()[0].getHeight() + 2,
+                               SWT.NORMAL));
+        label.setBackground(ToolBarFolder.firstLineBackground);
 
-		toolbar.setLayout(new GridLayout(1, true));
-		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, true, true);
-		// gd.verticalIndent = 1;
-		label.setLayoutData(gd);
+        toolbar.setLayout(new GridLayout(1, true));
+        GridData gd = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+        // gd.verticalIndent = 1;
+        label.setLayoutData(gd);
 
-		root = new File(SystemProperties.getDirProperty("versioning.dir", System.getProperty("user.home") + "/Documents/FieldWorkspace/"));
+        root = new File(SystemProperties.getDirProperty("versioning.dir",
+                                                        System.getProperty("user.home")
+                                                        + "/Documents/FieldWorkspace/"));
 
-		File[] f = root.listFiles(new FileFilter() {
+        File[] f = root.listFiles(new FileFilter() {
 
-			@Override
-			public boolean accept(File arg0) {
+            @Override
+            public
+            boolean accept(File arg0) {
 
                 //System.out.println(" check <" + arg0 + "> <" + new File(arg0, "sheet.xml") + ">");
 
-				return (arg0.isDirectory() && new File(arg0, "sheet.xml").exists());
-			}
-		});
+                return (arg0.isDirectory() && new File(arg0, "sheet.xml").exists());
+            }
+        });
 
-		if (f != null) {
+        if (f != null) {
 
-			TreeItem templateRoot = new TreeItem(tree, 0);
-			templateRoot.setText("<i>Templates</i>");
-			templateRoot.setData(new TemplateRootMarker() {
-			});
-			File[] tt = new File(root, "templates").listFiles(new FileFilter() {
+            TreeItem templateRoot = new TreeItem(tree, 0);
+            templateRoot.setText("<i>Templates</i>");
+            templateRoot.setData(new TemplateRootMarker() {
+            });
+            File[] tt = new File(root, "templates").listFiles(new FileFilter() {
 
-				@Override
-				public boolean accept(File arg0) {
-					return arg0.getName().endsWith(".template");
+                @Override
+                public
+                boolean accept(File arg0) {
+                    return arg0.getName().endsWith(".template");
 
-				}
-			});
+                }
+            });
 
-			if (tt != null)
-				for (File ff : tt) {
-					TreeItem i = new TreeItem(templateRoot, 0);
-					i.setText("<b>" + ff.getName().replace(".template", "") + "</b>");
-					i.setData(new TemplateMarker(ff));
-				}
+            if (tt != null) for (File ff : tt) {
+                TreeItem i = new TreeItem(templateRoot, 0);
+                i.setText("<b>" + ff.getName().replace(".template", "") + "</b>");
+                i.setData(new TemplateMarker(ff));
+            }
 
-			TreeItem recentRoot = new TreeItem(tree, 0);
-			recentRoot.setText("<i>Recent</i>");
-			recentRoot.setData(new TemplateRootMarker() {
-			});
+            TreeItem recentRoot = new TreeItem(tree, 0);
+            recentRoot.setText("<i>Recent</i>");
+            recentRoot.setData(new TemplateRootMarker() {
+            });
 
-			File[] fs = new File[f.length];
-			System.arraycopy(f, 0, fs, 0, fs.length);
-			Arrays.sort(fs, new Comparator<File>() {
+            File[] fs = new File[f.length];
+            System.arraycopy(f, 0, fs, 0, fs.length);
+            Arrays.sort(fs, new Comparator<File>() {
 
-				@Override
-				public int compare(File arg0, File arg1) {
-					return -Double.compare(new File(arg0, "sheet.xml").lastModified(), new File(arg1, "sheet.xml").lastModified());
-				}
-			});
+                @Override
+                public
+                int compare(File arg0, File arg1) {
+                    return -Double.compare(new File(arg0, "sheet.xml").lastModified(),
+                                           new File(arg1, "sheet.xml").lastModified());
+                }
+            });
 
-			for (int j = 0; j < Math.min(10, fs.length); j++) {
-				TreeItem i = new TreeItem(recentRoot, 0);
-				i.setText("<b>" + fs[j].getName().replace(".field", "") + "</b>");
-				i.setData(fs[j]);
-				TreeItem dummy = new TreeItem(i, 0);
-				dummy.setText("(loading...)");
-			}
+            for (int j = 0; j < Math.min(10, fs.length); j++) {
+                TreeItem i = new TreeItem(recentRoot, 0);
+                i.setText("<b>" + fs[j].getName().replace(".field", "") + "</b>");
+                i.setData(fs[j]);
+                TreeItem dummy = new TreeItem(i, 0);
+                dummy.setText("(loading...)");
+            }
 
-			for (File ff : f) {
-				TreeItem i = new TreeItem(tree, 0);
-				i.setText("<b>" + ff.getName().replace(".field", "") + "</b>");
+            for (File ff : f) {
+                TreeItem i = new TreeItem(tree, 0);
+                i.setText("<b>" + ff.getName().replace(".field", "") + "</b>");
                 //System.out.println(" adding " + ff);
                 i.setData(ff);
-				TreeItem dummy = new TreeItem(i, 0);
-				dummy.setText("(loading...)");
-			}
-		}
+                TreeItem dummy = new TreeItem(i, 0);
+                dummy.setText("(loading...)");
+            }
+        }
 
-		tree.setBackground(ToolBarFolder.background);
+        tree.setBackground(ToolBarFolder.background);
 
-		tree.addListener(SWT.Expand, new Listener() {
+        tree.addListener(SWT.Expand, new Listener() {
 
-			@Override
-			public void handleEvent(Event event) {
+            @Override
+            public
+            void handleEvent(Event event) {
 
-				TreeItem item = (TreeItem) event.item;
+                TreeItem item = (TreeItem) event.item;
 
-				Object x = item.getData();
+                Object x = item.getData();
 
-				if (x instanceof File) {
-					expandFile((File) x, item);
-				} else if (x instanceof Pair) {
-					Pair<File, Pair<String, HashMap<String, Object>>> p = (Pair<File, Pair<String, HashMap<String, Object>>>) x;
-					disposeChildren(item);
-					expandElement(p, item);
-				}
+                if (x instanceof File) {
+                    expandFile((File) x, item);
+                }
+                else if (x instanceof Pair) {
+                    Pair<File, Pair<String, HashMap<String, Object>>> p =
+                            (Pair<File, Pair<String, HashMap<String, Object>>>) x;
+                    disposeChildren(item);
+                    expandElement(p, item);
+                }
 
-			}
-		});
+            }
+        });
 
-		tree.addListener(SWT.MouseDoubleClick, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
+        tree.addListener(SWT.MouseDoubleClick, new Listener() {
+            @Override
+            public
+            void handleEvent(Event event) {
                 //System.out.println(" mouse double click <" + event + "> <" + event.item + ">");
 
-				TreeItem[] s = tree.getSelection();
+                TreeItem[] s = tree.getSelection();
                 //System.out.println("        selection is :" + Arrays.asList(s));
 
-				if (s.length == 1) {
-					if (s[0].getData() instanceof File) {
-						FieldMenus2.fieldMenus.openAnyFile(((File) s[0].getData()).getAbsolutePath(), tree.getShell());
-					}
-				}
+                if (s.length == 1) {
+                    if (s[0].getData() instanceof File) {
+                        FieldMenus2.fieldMenus.openAnyFile(((File) s[0].getData()).getAbsolutePath(), tree.getShell());
+                    }
+                }
 
-			}
-		});
+            }
+        });
 
-		DragSource source = new DragSource(tree, DND.DROP_COPY);
-		source.setTransfer(new Transfer[] { transfer });
-		source.addDragListener(new DragSourceListener() {
+        DragSource source = new DragSource(tree, DND.DROP_COPY);
+        source.setTransfer(new Transfer[]{transfer});
+        source.addDragListener(new DragSourceListener() {
 
-			@Override
-			public void dragStart(DragSourceEvent event) {
-				TreeItem[] item = tree.getSelection();
-				if (item.length > 0) {
-					event.doit = true;
-					lastInternalDragSelection = item;
-				} else
-					event.doit = false;
-			}
+            @Override
+            public
+            void dragStart(DragSourceEvent event) {
+                TreeItem[] item = tree.getSelection();
+                if (item.length > 0) {
+                    event.doit = true;
+                    lastInternalDragSelection = item;
+                }
+                else event.doit = false;
+            }
 
-			@Override
-			public void dragSetData(DragSourceEvent event) {
+            @Override
+            public
+            void dragSetData(DragSourceEvent event) {
 
-				event.data = lastInternalDragSelection[0].getData();
-			}
+                event.data = lastInternalDragSelection[0].getData();
+            }
 
-			@Override
-			public void dragFinished(DragSourceEvent event) {
-			}
-		});
+            @Override
+            public
+            void dragFinished(DragSourceEvent event) {
+            }
+        });
 
-		new MacScrollbarHack(tree);
-	}
+        new MacScrollbarHack(tree);
+    }
 
     protected static
     void disposeChildren(TreeItem item) {
         TreeItem[] items = item.getItems();
-		for (int i = 0; i < items.length; i++) {
-			items[i].dispose();
-		}
-	}
+        for (int i = 0; i < items.length; i++) {
+            items[i].dispose();
+        }
+    }
 
-	static public class SheetDropSupport {
-		private final DropTarget target;
+    static public
+    class SheetDropSupport {
+        private final DropTarget target;
 
-		public SheetDropSupport(final Canvas canvas, final iVisualElement root) {
-			target = new DropTarget(canvas, DND.DROP_COPY | DND.DROP_DEFAULT);
-			target.setTransfer(new Transfer[] { transfer, FileTransfer.getInstance() });
-			target.addDropListener(new DropTargetListener() {
+        public
+        SheetDropSupport(final Canvas canvas, final iVisualElement root) {
+            target = new DropTarget(canvas, DND.DROP_COPY | DND.DROP_DEFAULT);
+            target.setTransfer(new Transfer[]{transfer, FileTransfer.getInstance()});
+            target.addDropListener(new DropTargetListener() {
 
-				@Override
-				public void dropAccept(DropTargetEvent event) {
+                @Override
+                public
+                void dropAccept(DropTargetEvent event) {
                     //System.out.println(" -- accept--");
                 }
 
-				@Override
-				public void drop(DropTargetEvent event) {
+                @Override
+                public
+                void drop(DropTargetEvent event) {
                     //System.out.println(" -- drop-- :" + event.data);
 
-					if (event.data instanceof String[]) {
-						GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
-						Vector2 a = new Vector2(event.x * gk.getXScale() + gk.getXTranslation(), event.y * gk.getXScale() + gk.getYTranslation());
+                    if (event.data instanceof String[]) {
+                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        Vector2 a = new Vector2(event.x * gk.getXScale() + gk.getXTranslation(),
+                                                event.y * gk.getXScale() + gk.getYTranslation());
 
-						a.x -= gk.getFrame().getBounds().x;
-						a.y -= gk.getFrame().getBounds().y;
-						a.x -= gk.getCanvas().getParent().getBounds().x;
-						a.x -= 40;
-						a.y -= 40;
+                        a.x -= gk.getFrame().getBounds().x;
+                        a.y -= gk.getFrame().getBounds().y;
+                        a.x -= gk.getCanvas().getParent().getBounds().x;
+                        a.x -= 40;
+                        a.y -= 40;
 
-						for (String s : ((String[]) event.data)) {
-							importFile(s, root, a);
-							a.y += 55;
-						}
-					}
+                        for (String s : ((String[]) event.data)) {
+                            importFile(s, root, a);
+                            a.y += 55;
+                        }
+                    }
 
-					if (event.data instanceof Pair) {
-						Pair<File, Pair<String, HashMap<String, Object>>> p = (Pair<File, Pair<String, HashMap<String, Object>>>) event.data;
+                    if (event.data instanceof Pair) {
+                        Pair<File, Pair<String, HashMap<String, Object>>> p =
+                                (Pair<File, Pair<String, HashMap<String, Object>>>) event.data;
 
-						HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(Collections.singleton(p.right.left), p.left.getAbsolutePath(), root, iVisualElement.copyPaste.get(root));
-						Vector2 center = new Vector2();
-						for (iVisualElement ee : loaded) {
-							Rect f = ee.getFrame(null);
-							center.add(f.midpoint2());
-						}
-						center.scale(1f / loaded.size());
+                        HashSet<iVisualElement> loaded =
+                                FluidCopyPastePersistence.copyFromNonloaded(Collections.singleton(p.right.left),
+                                                                            p.left.getAbsolutePath(),
+                                                                            root,
+                                                                            iVisualElement.copyPaste.get(root));
+                        Vector2 center = new Vector2();
+                        for (iVisualElement ee : loaded) {
+                            Rect f = ee.getFrame(null);
+                            center.add(f.midpoint2());
+                        }
+                        center.scale(1f / loaded.size());
 
                         //System.out.println(" event is <" + event.x + " " + event.y + "> center is " + center + " of " + loaded);
 
-						GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
-						Vector2 a = new Vector2(event.x * gk.getXScale() + gk.getXTranslation(), event.y * gk.getXScale() + gk.getYTranslation());
+                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        Vector2 a = new Vector2(event.x * gk.getXScale() + gk.getXTranslation(),
+                                                event.y * gk.getXScale() + gk.getYTranslation());
 
-						a.x -= gk.getCanvas().getParent().getBounds().x;
-						a.x -= gk.getFrame().getBounds().x;
-						a.y -= gk.getFrame().getBounds().y;
+                        a.x -= gk.getCanvas().getParent().getBounds().x;
+                        a.x -= gk.getFrame().getBounds().x;
+                        a.y -= gk.getFrame().getBounds().y;
 //						a.x -= 40;
 //						a.y -= 40;
 
-						for (iVisualElement ee : loaded) {
-							Rect f = ee.getFrame(null);
-							f.x += -center.x + a.x;
-							f.y += -center.y + a.y;
-							ee.setFrame(f);
-						}
+                        for (iVisualElement ee : loaded) {
+                            Rect f = ee.getFrame(null);
+                            f.x += -center.x + a.x;
+                            f.y += -center.y + a.y;
+                            ee.setFrame(f);
+                        }
 
-						OverlayAnimationManager.notifyAsText(root, "Inserted '" + p.right.right.get("name") + "' into this sheet", null);
+                        OverlayAnimationManager.notifyAsText(root,
+                                                             "Inserted '"
+                                                             + p.right.right.get("name")
+                                                             + "' into this sheet",
+                                                             null);
 
-					} else if (event.data instanceof File) {
-						HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(null, ((File) event.data).getAbsolutePath() + "/sheet.xml", root, iVisualElement.copyPaste.get(root));
-						Vector2 center = new Vector2();
-						for (iVisualElement ee : loaded) {
-							Rect f = ee.getFrame(null);
-							center.add(f.midpoint2());
-						}
-						center.scale(1f / loaded.size());
+                    }
+                    else if (event.data instanceof File) {
+                        HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(null,
+                                                                                                     ((File) event.data)
+                                                                                                             .getAbsolutePath()
+                                                                                                     + "/sheet.xml",
+                                                                                                     root,
+                                                                                                     iVisualElement.copyPaste
+                                                                                                             .get(root));
+                        Vector2 center = new Vector2();
+                        for (iVisualElement ee : loaded) {
+                            Rect f = ee.getFrame(null);
+                            center.add(f.midpoint2());
+                        }
+                        center.scale(1f / loaded.size());
 
                         //System.out.println(" event is <" + event.x + " " + event.y + "> center is " + center + " of " + loaded);
 
-						GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
-						Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas().getParent().getBounds().x) * gk.getXScale() + gk.getXTranslation(), (event.y - gk.getFrame().getBounds().y) * gk.getXScale() + gk.getYTranslation());
+                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas()
+                                                                                           .getParent()
+                                                                                           .getBounds().x)
+                                                * gk.getXScale() + gk.getXTranslation(),
+                                                (event.y - gk.getFrame().getBounds().y) * gk.getXScale()
+                                                + gk.getYTranslation());
 
-						for (iVisualElement ee : loaded) {
-							Rect f = ee.getFrame(null);
-							f.x += -center.x + a.x;
-							f.y += -center.y + a.y;
-							ee.setFrame(f);
-						}
+                        for (iVisualElement ee : loaded) {
+                            Rect f = ee.getFrame(null);
+                            f.x += -center.x + a.x;
+                            f.y += -center.y + a.y;
+                            ee.setFrame(f);
+                        }
 
-						OverlayAnimationManager.notifyAsText(root, "Inserted '" + ((File) event.data).getName() + "' into this sheet", null);
+                        OverlayAnimationManager.notifyAsText(root,
+                                                             "Inserted '"
+                                                             + ((File) event.data).getName()
+                                                             + "' into this sheet",
+                                                             null);
 
-					} else if (event.data instanceof Triple) {
-						GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
-						Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas().getParent().getBounds().x) * gk.getXScale() + gk.getXTranslation(), (event.y - gk.getFrame().getBounds().y) * gk.getXScale() + gk.getYTranslation());
-						// a.x -= 40;
-						// a.y -= 40;
-						iComponent hut = gk.getRoot().hit(gk, new Vector2(a));
+                    }
+                    else if (event.data instanceof Triple) {
+                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas()
+                                                                                           .getParent()
+                                                                                           .getBounds().x)
+                                                * gk.getXScale() + gk.getXTranslation(),
+                                                (event.y - gk.getFrame().getBounds().y) * gk.getXScale()
+                                                + gk.getYTranslation());
+                        // a.x -= 40;
+                        // a.y -= 40;
+                        iComponent hut = gk.getRoot().hit(gk, new Vector2(a));
 
                         //System.out.println(" hit test again <" + a + " -> " + hut);
 
-						if (hut != null && hut.getVisualElement() != null) {
-							VisualElementProperty prop = new VisualElementProperty(((Triple<File, String, Object>) event.data).middle);
-							prop.set(hut.getVisualElement(), hut.getVisualElement(), ((Triple<File, String, Object>) event.data).right);
+                        if (hut != null && hut.getVisualElement() != null) {
+                            VisualElementProperty prop =
+                                    new VisualElementProperty(((Triple<File, String, Object>) event.data).middle);
+                            prop.set(hut.getVisualElement(),
+                                     hut.getVisualElement(),
+                                     ((Triple<File, String, Object>) event.data).right);
 
-							OverlayAnimationManager.notifyAsText(root, "Set property '" + ((Triple<File, String, Object>) event.data).middle + "' in '" + iVisualElement.name.get(hut.getVisualElement()) + "'", null);
+                            OverlayAnimationManager.notifyAsText(root,
+                                                                 "Set property '"
+                                                                 + ((Triple<File, String, Object>) event.data).middle
+                                                                 + "' in '"
+                                                                 + iVisualElement.name.get(hut.getVisualElement())
+                                                                 + "'",
+                                                                 null);
 
-							iVisualElement.dirty.set(hut.getVisualElement(), hut.getVisualElement(), true);
-						}
-					} else if (event.data instanceof TemplateMarker) {
-						GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
-						Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas().getParent().getBounds().x) * gk.getXScale() + gk.getXTranslation(), (event.y - gk.getFrame().getBounds().y) * gk.getXScale() + gk.getYTranslation());
+                            iVisualElement.dirty.set(hut.getVisualElement(), hut.getVisualElement(), true);
+                        }
+                    }
+                    else if (event.data instanceof TemplateMarker) {
+                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas()
+                                                                                           .getParent()
+                                                                                           .getBounds().x)
+                                                * gk.getXScale() + gk.getXTranslation(),
+                                                (event.y - gk.getFrame().getBounds().y) * gk.getXScale()
+                                                + gk.getYTranslation());
 
                         PackageTools.importFieldPackage(root, ((TemplateMarker) event.data).f.getAbsolutePath(), a);
                     }
 
-				}
+                }
 
-				@Override
-				public void dragOver(DropTargetEvent event) {
+                @Override
+                public
+                void dragOver(DropTargetEvent event) {
                     //System.out.println(" -- over--");
                     //System.out.println(" event is <" + event.x + " " + event.y + "> <" + lastInternalDragSelection + ">");
 
-					if (lastInternalDragSelection != null) {
+                    if (lastInternalDragSelection != null) {
                         //System.out.println(" data : " + lastInternalDragSelection[0].getData());
                         if (lastInternalDragSelection[0].getData() instanceof Triple) {
-							GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
-							Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas().getParent().getBounds().x) * gk.getXScale() + gk.getXTranslation(), (event.y - gk.getFrame().getBounds().y) * gk.getXScale() + gk.getYTranslation());
-							// Vector2 a = new
-							// Vector2((event.x -
-							// gk.getCanvas().getParent().getBounds().x)
-							// *
-							// gk.getXScale() +
-							// gk.getXTranslation(),
-							// event.y *
-							// gk.getXScale() +
-							// gk.getYTranslation());
+                            GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                            Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas()
+                                                                                               .getParent()
+                                                                                               .getBounds().x)
+                                                    * gk.getXScale() + gk.getXTranslation(),
+                                                    (event.y - gk.getFrame().getBounds().y) * gk.getXScale()
+                                                    + gk.getYTranslation());
+                            // Vector2 a = new
+                            // Vector2((event.x -
+                            // gk.getCanvas().getParent().getBounds().x)
+                            // *
+                            // gk.getXScale() +
+                            // gk.getXTranslation(),
+                            // event.y *
+                            // gk.getXScale() +
+                            // gk.getYTranslation());
 
-							// a.x -= 40;
-							// a.y -= 40;
+                            // a.x -= 40;
+                            // a.y -= 40;
 
-							iComponent hut = gk.getRoot().hit(gk, new Vector2(a));
+                            iComponent hut = gk.getRoot().hit(gk, new Vector2(a));
 
                             //System.out.println(" hit test again <" + a + " -> " + hut);
 
-							if (hut != null && hut.getVisualElement() != null) {
-								event.detail = DND.DROP_COPY;
+                            if (hut != null && hut.getVisualElement() != null) {
+                                event.detail = DND.DROP_COPY;
                                 //System.out.println(" element is <" + hut.getVisualElement() + ">");
-                            } else {
-								event.detail = DND.DROP_NONE;
-							}
-						}
-					}
-				}
+                            }
+                            else {
+                                event.detail = DND.DROP_NONE;
+                            }
+                        }
+                    }
+                }
 
-				@Override
-				public void dragOperationChanged(DropTargetEvent event) {
+                @Override
+                public
+                void dragOperationChanged(DropTargetEvent event) {
                     //System.out.println(" -- opchaged--");
                     if (event.detail == DND.DROP_DEFAULT) {
-						event.detail = DND.DROP_COPY;
-					}
+                        event.detail = DND.DROP_COPY;
+                    }
 
-				}
+                }
 
-				@Override
-				public void dragLeave(DropTargetEvent event) {
+                @Override
+                public
+                void dragLeave(DropTargetEvent event) {
                     //System.out.println(" -- leave--");
                 }
 
-				@Override
-				public void dragEnter(DropTargetEvent event) {
+                @Override
+                public
+                void dragEnter(DropTargetEvent event) {
                     //System.out.println(" -- enter --");
                     if (event.detail == DND.DROP_DEFAULT) {
-						event.detail = DND.DROP_COPY;
-					}
-				}
-			});
-		}
+                        event.detail = DND.DROP_COPY;
+                    }
+                }
+            });
+        }
 
         protected static
         void importFile(String s, iVisualElement root, Vector2 a) {
 
-			try {
+            try {
 
                 //System.out.println(" importing file <"+s+">");
 
-				BufferedReader r = new BufferedReader(new FileReader(new File(s)));
-				StringBuffer contents = new StringBuffer();
-				while (r.ready()) {
-					contents.append(r.readLine() + "\n");
-				}
+                BufferedReader r = new BufferedReader(new FileReader(new File(s)));
+                StringBuffer contents = new StringBuffer();
+                while (r.ready()) {
+                    contents.append(r.readLine() + "\n");
+                }
 
-				Triple<VisualElement, DraggableComponent, DefaultOverride> n = VisualElement.createWithName(new Rect(a.x, a.y, 50, 50), root, VisualElement.class, DraggableComponent.class, DefaultOverride.class, new File(s).getName());
+                Triple<VisualElement, DraggableComponent, DefaultOverride> n =
+                        VisualElement.createWithName(new Rect(a.x, a.y, 50, 50),
+                                                     root,
+                                                     VisualElement.class,
+                                                     DraggableComponent.class,
+                                                     DefaultOverride.class,
+                                                     new File(s).getName());
 
-				PythonPlugin.python_source.set(n.left, n.left, contents.toString());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+                PythonPlugin.python_source.set(n.left, n.left, contents.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	protected static
+    protected static
     void expandElement(Pair<File, Pair<String, HashMap<String, Object>>> p, TreeItem item) {
-		TreeMap<String, Object> m = new TreeMap<String, Object>(p.right.right);
-		for (Entry<String, Object> ee : m.entrySet()) {
-			if ("name".equals(ee.getKey()))
-				continue;
-			if (ee.getValue() != null) {
-				String f = safePrint(ee.getValue());
-				if ((ee.getValue().toString()).length() > 0 && !ignoredProperties.contains(ee.getKey().toString())) {
-					TreeItem x = new TreeItem(item, 0);
-					x.setText("<i>" + ee.getKey() + "</i> = " + f);
-					x.setData(new Triple<File, String, Object>(p.left, ee.getKey(), ee.getValue()));
-				}
-			}
-		}
-	}
+        TreeMap<String, Object> m = new TreeMap<String, Object>(p.right.right);
+        for (Entry<String, Object> ee : m.entrySet()) {
+            if ("name".equals(ee.getKey())) continue;
+            if (ee.getValue() != null) {
+                String f = safePrint(ee.getValue());
+                if ((ee.getValue().toString()).length() > 0 && !ignoredProperties.contains(ee.getKey().toString())) {
+                    TreeItem x = new TreeItem(item, 0);
+                    x.setText("<i>" + ee.getKey() + "</i> = " + f);
+                    x.setData(new Triple<File, String, Object>(p.left, ee.getKey(), ee.getValue()));
+                }
+            }
+        }
+    }
 
     private static
     String safePrint(Object value) {
         String x = value.toString();
-		if (x.length() > 30)
-			if (x instanceof String) {
-				String[] x0 = x.split("\n");
-				if (x0[0].trim().length() == 0)
-					return "((long text))";
-				else
-					return x0[0].substring(0, Math.min(30, x0[0].length())) + ((x0.length > 1) ? " ... (+" + (x0.length - 1) + " line" + (x0.length - 1 == 1 ? "" : "s") + ")" : "");
-			} else {
-				x = x.replace("\n", " ").replace("\r", " ");
-				return x.substring(0, 30) + " ... ";
-			}
-		x = x.replace("\n", " ").replace("\r", " ");
-		String nn = x.getClass().getName();
-		if (nn.lastIndexOf('.') != -1)
-			nn.substring(nn.lastIndexOf('.') + 1);
-		return x + " <font size=-3 color='#" + Constants.defaultTreeColorDim + "'>" + nn + "</font>";
-	}
+        if (x.length() > 30) if (x instanceof String) {
+            String[] x0 = x.split("\n");
+            if (x0[0].trim().length() == 0) return "((long text))";
+            else return x0[0].substring(0, Math.min(30, x0[0].length())) + ((x0.length > 1) ? " ... (+"
+                                                                                              + (x0.length - 1)
+                                                                                              + " line"
+                                                                                              + (x0.length - 1 == 1
+                                                                                                 ? ""
+                                                                                                 : "s")
+                                                                                              + ")" : "");
+        }
+        else {
+            x = x.replace("\n", " ").replace("\r", " ");
+            return x.substring(0, 30) + " ... ";
+        }
+        x = x.replace("\n", " ").replace("\r", " ");
+        String nn = x.getClass().getName();
+        if (nn.lastIndexOf('.') != -1) nn.substring(nn.lastIndexOf('.') + 1);
+        return x + " <font size=-3 color='#" + Constants.defaultTreeColorDim + "'>" + nn + "</font>";
+    }
 
-	static HashSet<String> ignoredProperties = new HashSet<String>();
-	static {
-		ignoredProperties.add("dirty");
-		ignoredProperties.add("python_customInsertPersistanceInfo");
-		ignoredProperties.add("python_areas");
-		ignoredProperties.add("hasMouseFocus");
-	}
+    static HashSet<String> ignoredProperties = new HashSet<String>();
 
-	@NewThread
-	protected void expandFile(File x, final TreeItem item) {
-		x = new File(x, "sheet.xml");
+    static {
+        ignoredProperties.add("dirty");
+        ignoredProperties.add("python_customInsertPersistanceInfo");
+        ignoredProperties.add("python_areas");
+        ignoredProperties.add("hasMouseFocus");
+    }
 
-		final File fx = x;
+    @NewThread
+    protected
+    void expandFile(File x, final TreeItem item) {
+        x = new File(x, "sheet.xml");
 
-		FluidStreamParser p = new FluidStreamParser(x, true);
-		final HashMap<String, HashMap<String, Object>> pmap = p.getProperties();
-		final Map<String, HashMap<String, Object>> properties = new TreeMap<String, HashMap<String, Object>>(new Comparator<String>() {
+        final File fx = x;
 
-			@Override
-			public int compare(String arg0, String arg1) {
-				Object n0 = pmap.get(arg0).get("name");
-				Object n1 = pmap.get(arg1).get("name");
+        FluidStreamParser p = new FluidStreamParser(x, true);
+        final HashMap<String, HashMap<String, Object>> pmap = p.getProperties();
+        final Map<String, HashMap<String, Object>> properties =
+                new TreeMap<String, HashMap<String, Object>>(new Comparator<String>() {
 
-				if (n0 == null)
-					return 0;
-				if (n1 == null)
-					return 0;
+                    @Override
+                    public
+                    int compare(String arg0, String arg1) {
+                        Object n0 = pmap.get(arg0).get("name");
+                        Object n1 = pmap.get(arg1).get("name");
 
-                return (n0 + arg0).compareTo((n1 + arg1));
+                        if (n0 == null) return 0;
+                        if (n1 == null) return 0;
+
+                        return (n0 + arg0).compareTo((n1 + arg1));
+                    }
+                });
+        properties.putAll(pmap);
+
+        System.out.println(" final map " + properties.keySet());
+
+        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+
+            @Override
+            public
+            void update() {
+
+                TreeItem[] items = item.getItems();
+
+                for (Entry<String, HashMap<String, Object>> ee : properties.entrySet()) {
+                    if (ee.getValue().get("name") != null
+                        && !"timeSlider".equals(ee.getValue().get("name"))
+                        && !ee.getValue().containsKey("lineDrawing_from")) {
+                        TreeItem i = new TreeItem(item, 0);
+                        i.setText("<i> " + ee.getValue().get("name") + " </i>");
+                        i.setData(new Pair<File, Pair<String, HashMap<String, Object>>>(fx,
+                                                                                        new Pair(ee.getKey(),
+                                                                                                 ee.getValue())));
+                        new TreeItem(i, 0);
+                    }
+                }
+
+                for (int i = 0; i < items.length; i++) {
+                    items[i].dispose();
+                }
+                Launcher.getLauncher().deregisterUpdateable(this);
+
             }
-		});
-		properties.putAll(pmap);
-
-		System.out.println(" final map "+properties.keySet());
-		
-		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
-
-			@Override
-			public void update() {
-
-				TreeItem[] items = item.getItems();
-
-				for (Entry<String, HashMap<String, Object>> ee : properties.entrySet()) {
-					if (ee.getValue().get("name") != null && !"timeSlider".equals(ee.getValue().get("name")) && !ee.getValue().containsKey("lineDrawing_from")) {
-						TreeItem i = new TreeItem(item, 0);
-						i.setText("<i> " + ee.getValue().get("name") + " </i>");
-						i.setData(new Pair<File, Pair<String, HashMap<String, Object>>>(fx, new Pair(ee.getKey(), ee.getValue())));
-						new TreeItem(i, 0);
-					}
-				}
-
-				for (int i = 0; i < items.length; i++) {
-					items[i].dispose();
-				}
-				Launcher.getLauncher().deregisterUpdateable(this);
-
-			}
-		});
-	}
+        });
+    }
 }

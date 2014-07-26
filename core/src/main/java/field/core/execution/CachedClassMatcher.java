@@ -5,24 +5,29 @@ import field.util.HashMapOfLists;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CachedClassMatcher<t_return, t_upper> {
+public
+class CachedClassMatcher<t_return, t_upper> {
 
-	public interface iMatcher<t_return, t_upper> {
-		public boolean canMatch(t_upper o);
+    public
+    interface iMatcher<t_return, t_upper> {
+        public
+        boolean canMatch(t_upper o);
 
-		public t_return match(t_upper o);
-	}
+        public
+        t_return match(t_upper o);
+    }
 
-	HashMapOfLists<Class<? extends t_upper>, iMatcher<t_return, t_upper>> cache = new HashMapOfLists<Class<? extends t_upper>, iMatcher<t_return, t_upper>>();
-	
-	List<iMatcher<t_return, t_upper>> matcher = new ArrayList<iMatcher<t_return, t_upper>>();
+    HashMapOfLists<Class<? extends t_upper>, iMatcher<t_return, t_upper>> cache =
+            new HashMapOfLists<Class<? extends t_upper>, iMatcher<t_return, t_upper>>();
 
-	private iMatcher<t_return, t_upper> m;
-	
-	public void addMatcher(iMatcher<t_return, t_upper> m)
-	{
-		this.m = m;
-	}
+    List<iMatcher<t_return, t_upper>> matcher = new ArrayList<iMatcher<t_return, t_upper>>();
 
-	
+    private iMatcher<t_return, t_upper> m;
+
+    public
+    void addMatcher(iMatcher<t_return, t_upper> m) {
+        this.m = m;
+    }
+
+
 }

@@ -10,49 +10,53 @@ import field.namespace.diagram.DiagramZero.iMarker;
 
 import java.util.List;
 
-public class ChannelSerializer implements Converter {
+public
+class ChannelSerializer implements Converter {
 
-	public boolean canConvert(Class type) {
-		return Channel.class.isAssignableFrom(type);
-	}
+    public
+    boolean canConvert(Class type) {
+        return Channel.class.isAssignableFrom(type);
+    }
 
-	public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-		writer.startNode("class");
-		context.convertAnother(source.getClass());
-		writer.endNode();
-		writer.startNode("markers");
+    public
+    void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        writer.startNode("class");
+        context.convertAnother(source.getClass());
+        writer.endNode();
+        writer.startNode("markers");
 
-		Channel c = (Channel) source;
-		List<iMarker> i = c.getIterator().remaining();
-		context.convertAnother(i);
-		writer.endNode();
-	}
+        Channel c = (Channel) source;
+        List<iMarker> i = c.getIterator().remaining();
+        context.convertAnother(i);
+        writer.endNode();
+    }
 
-	public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-		reader.moveDown();
-		Class c = (Class) context.convertAnother(null, Class.class);
-		reader.moveUp();
+    public
+    Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        reader.moveDown();
+        Class c = (Class) context.convertAnother(null, Class.class);
+        reader.moveUp();
 
-		try {
-			Channel channel = (Channel) c.newInstance();
+        try {
+            Channel channel = (Channel) c.newInstance();
 
-			reader.moveDown();
+            reader.moveDown();
 
-			List<iMarker> i = (List<iMarker>) context.convertAnother(channel, List.class);
-			
-			reader.moveUp();
+            List<iMarker> i = (List<iMarker>) context.convertAnother(channel, List.class);
 
-			return channel;
-			
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+            reader.moveUp();
+
+            return channel;
+
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -45,7 +45,8 @@ import java.util.regex.Pattern;
 /**
  * @author marc Created on Nov 30, 2003
  */
-public class PythonUtils {
+public
+class PythonUtils {
 
     public static
     class FKeyByName implements iFloatProvider {
@@ -53,15 +54,16 @@ public class PythonUtils {
 
         private final float def;
 
-        public FKeyByName(String name, float def) {
+        public
+        FKeyByName(String name, float def) {
             this.name = name;
             this.def = def;
         }
 
-        public float evaluate() {
+        public
+        float evaluate() {
             Reference<FKey> k = (Reference<FKey>) Key.internedKeys.get(name);
-            if (k == null || k.get() == null)
-                return def;
+            if (k == null || k.get() == null) return def;
             return k.get().evaluate();
         }
     }
@@ -72,18 +74,19 @@ public class PythonUtils {
 
         private final T def;
 
-        public OKeyByName(String name, T def) {
+        public
+        OKeyByName(String name, T def) {
             this.name = name;
             this.def = def;
         }
 
-        public T get() {
+        public
+        T get() {
             Reference<OKey> k = (Reference<OKey>) Key.internedKeys.get(name);
 
             //System.out.println(" looking up key <" + name + "> got <" + k + " / " + (k != null ? k.get() : null) + "> of class <"+k+">");
 
-            if (k == null || k.get() == null)
-                return def;
+            if (k == null || k.get() == null) return def;
 
             Object oo = k.get().evaluate();
             //System.out.println(" evaluating to <" + oo + ">");
@@ -91,19 +94,22 @@ public class PythonUtils {
             return (T) oo;
         }
 
-        public PyObject __call__(PyObject[] args, String[] keywords) {
+        public
+        PyObject __call__(PyObject[] args, String[] keywords) {
             System.err.println(" inside call for okeyby name <" + get() + "> <" + def + '>');
             return Py.java2py(get());
         }
 
     }
 
-    public static iDoubleProvider doubleFor(final Object in, String name) {
+    public static
+    iDoubleProvider doubleFor(final Object in, String name) {
         try {
             final Field declaredField = in.getClass().getDeclaredField(name);
             declaredField.setAccessible(true);
             return new iDoubleProvider() {
-                public double evaluate() {
+                public
+                double evaluate() {
                     try {
                         return declaredField.getDouble(in);
                     } catch (IllegalAccessException e) {
@@ -130,7 +136,8 @@ public class PythonUtils {
             // (name);
             declaredField.setAccessible(true);
             return new iFloatProvider() {
-                public float evaluate() {
+                public
+                float evaluate() {
                     try {
                         return declaredField.getFloat(in);
                     } catch (IllegalAccessException e) {
@@ -150,7 +157,8 @@ public class PythonUtils {
 
     static HashMap<String, Triple<aRun, Method, Class>> contMap = new HashMap<String, Triple<aRun, Method, Class>>();
 
-    public void also(String name, PyReflectedFunction o, Class c, final PyFunction function) {
+    public
+    void also(String name, PyReflectedFunction o, Class c, final PyFunction function) {
         if (contMap.containsKey(name)) {
             unalso(name);
         }
@@ -159,10 +167,10 @@ public class PythonUtils {
             PyObject[] a = null;
 
             @Override
-            public ReturnCode head(Object calledOn, Object[] args) {
+            public
+            ReturnCode head(Object calledOn, Object[] args) {
 
-                if (a == null || a.length != args.length)
-                    a = new PyObject[args.length];
+                if (a == null || a.length != args.length) a = new PyObject[args.length];
                 for (int i = 0; i < a.length; i++) {
                     a[i] = Py.java2py(args[i]);
                 }
@@ -180,7 +188,8 @@ public class PythonUtils {
     public static
     iFilter<Float, Float> asFilter(final float mul, final CubicInterpolatorDynamic<ComplexCubicFloat> blender) {
         return new iFilter<Float, Float>() {
-            public Float filter(Float value) {
+            public
+            Float filter(Float value) {
                 return blender.get(value).value * mul;
             }
         };
@@ -190,18 +199,22 @@ public class PythonUtils {
     iFunction<?, ?> asFunction(final PyObject o) {
         return new iFunction<Object, Object>() {
 
-            public Object f(Object in) {
+            public
+            Object f(Object in) {
                 return o.__call__(Py.java2py(in)).__tojava__(Object.class);
             }
         };
 
     }
 
-    public iUpdateable asUpdateable(final PyObject o) {
-        final CapturedEnvironment env = (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment");
+    public
+    iUpdateable asUpdateable(final PyObject o) {
+        final CapturedEnvironment env =
+                (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment");
         return new iUpdateable() {
 
-            public void update() {
+            public
+            void update() {
                 env.enter();
                 try {
                     o.__call__();
@@ -213,11 +226,10 @@ public class PythonUtils {
 
     }
 
-    public iUpdateable toUpdateable(Object o) {
-        if (o instanceof iUpdateable)
-            return ((iUpdateable) o);
-        if (o instanceof PyObject)
-            return asUpdateable((PyObject) o);
+    public
+    iUpdateable toUpdateable(Object o) {
+        if (o instanceof iUpdateable) return ((iUpdateable) o);
+        if (o instanceof PyObject) return asUpdateable((PyObject) o);
         return null;
     }
 
@@ -228,8 +240,7 @@ public class PythonUtils {
         Promise p = pss.promiseForKey(forElement);
         p.beginExecute();
         try {
-            if (function instanceof iFilter)
-                return ((iFilter) function).filter(arg);
+            if (function instanceof iFilter) return ((iFilter) function).filter(arg);
             if (function instanceof PyObject) {
                 Object m = ((PyObject) function).__call__(Py.java2py(arg));
                 if (m instanceof PyObject) {
@@ -250,7 +261,8 @@ public class PythonUtils {
         return (byte) a;
     }
 
-    public void cont(String name, PyReflectedFunction o, Class c, final PyFunction function) {
+    public
+    void cont(String name, PyReflectedFunction o, Class c, final PyFunction function) {
         if (contMap.containsKey(name)) {
             uncont(name);
         }
@@ -259,10 +271,10 @@ public class PythonUtils {
             PyObject[] a = null;
 
             @Override
-            public ReturnCode head(Object calledOn, Object[] args) {
+            public
+            ReturnCode head(Object calledOn, Object[] args) {
 
-                if (a == null || a.length != args.length)
-                    a = new PyObject[args.length];
+                if (a == null || a.length != args.length) a = new PyObject[args.length];
                 for (int i = 0; i < a.length; i++) {
                     a[i] = Py.java2py(args[i]);
                 }
@@ -279,8 +291,7 @@ public class PythonUtils {
 
     public static
     Map executeMaybeGenerator(PyFunction function, Map map) {
-        if (map == null)
-            map = new HashMap();
+        if (map == null) map = new HashMap();
 
         if (map.containsKey(function)) {
             if (map.get(function) != null) {
@@ -289,7 +300,8 @@ public class PythonUtils {
                     map.put(function, null);
                 }
             }
-        } else {
+        }
+        else {
             PyObject r = function.__call__();
             if (r instanceof PyGenerator) {
                 map.put(function, r);
@@ -312,7 +324,8 @@ public class PythonUtils {
     public static
     iFunction function(final PyFunction f) {
         return new iFunction() {
-            public Object f(Object in) {
+            public
+            Object f(Object in) {
                 PyObject ins = Py.java2py(in);
                 PyObject g = f.__call__(new PyObject[]{ins}, new String[0]);
                 return g.__tojava__(Object.class);
@@ -331,9 +344,9 @@ public class PythonUtils {
 
     public static PythonUtils installed = null;
 
-    public void install() {
-        if (installed != null)
-            return;
+    public
+    void install() {
+        if (installed != null) return;
 
         PythonInterface.getPythonInterface().setVariable("u", this);
         PythonInterface.getPythonInterface().importJava("java.lang.System", "*");
@@ -345,7 +358,8 @@ public class PythonUtils {
         Launcher.getLauncher().registerUpdateable(new iUpdateable() {
 
             /** @see innards.iUpdateable#update() */
-            public void update() {
+            public
+            void update() {
                 t++;
             }
         });
@@ -357,21 +371,23 @@ public class PythonUtils {
     Object loadAsSerialization(String filename) {
         //System.out.println(" reading from <" + filename + ">");
         try {
-            ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File(filename)))) {
-                @Override
-                protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
-                    String name = desc.getName();
-                    //System.out.println(" resolving <" + name + ">");
-                    try {
-                        Class<?> c = Class.forName(name, false, Trampoline2.trampoline.getClassLoader());
-                        //System.out.println(" found <" + c + ">");
-                        return c;
-                    } catch (ClassNotFoundException ex) {
-                        //System.out.println(" didn't find <" + name + ">");
-                        return super.resolveClass(desc);
-                    }
-                }
-            };
+            ObjectInputStream input =
+                    new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File(filename)))) {
+                        @Override
+                        protected
+                        Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+                            String name = desc.getName();
+                            //System.out.println(" resolving <" + name + ">");
+                            try {
+                                Class<?> c = Class.forName(name, false, Trampoline2.trampoline.getClassLoader());
+                                //System.out.println(" found <" + c + ">");
+                                return c;
+                            } catch (ClassNotFoundException ex) {
+                                //System.out.println(" didn't find <" + name + ">");
+                                return super.resolveClass(desc);
+                            }
+                        }
+                    };
             Object o = input.readObject();
             input.close();
             //System.out.println(" read ");
@@ -389,7 +405,8 @@ public class PythonUtils {
         XStream stream = XStreamUtil.newDefaultXStream();
 
         try {
-            ObjectInputStream input = stream.createObjectInputStream(new BufferedReader(new FileReader(new File(filename))));
+            ObjectInputStream input =
+                    stream.createObjectInputStream(new BufferedReader(new FileReader(new File(filename))));
             Object o = input.readObject();
             input.close();
             return o;
@@ -404,15 +421,16 @@ public class PythonUtils {
     public static
     String pad(int n, int with) {
         String s = String.valueOf(n);
-        while (s.length() < with)
-            s = "0" + s;
+        while (s.length() < with) s = "0" + s;
         return s;
     }
 
-    public void persistAsSerialization(Object o, String filename) {
+    public
+    void persistAsSerialization(Object o, String filename) {
         //System.out.println(" writing to <" + filename + ">");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(new File(filename))));
+            ObjectOutputStream oos =
+                    new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(new File(filename))));
             oos.writeObject(o);
             oos.close();
         } catch (FileNotFoundException e) {
@@ -423,11 +441,13 @@ public class PythonUtils {
         //System.out.println(" written ");
     }
 
-    public void persistAsXML(Object o, String filename) {
+    public
+    void persistAsXML(Object o, String filename) {
         XStream stream = XStreamUtil.newDefaultXStream();
 
         try {
-            ObjectOutputStream out = stream.createObjectOutputStream(new BufferedWriter(new FileWriter(new File(filename))));
+            ObjectOutputStream out =
+                    stream.createObjectOutputStream(new BufferedWriter(new FileWriter(new File(filename))));
             out.writeObject(o);
             out.close();
         } catch (IOException e) {
@@ -435,10 +455,12 @@ public class PythonUtils {
         }
     }
 
-    public iFloatProvider provider(final PyFunction f, final float def) {
+    public
+    iFloatProvider provider(final PyFunction f, final float def) {
         return new iFloatProvider() {
             /** @see innards.provider.iFloatProvider#evaluate() */
-            public float evaluate() {
+            public
+            float evaluate() {
                 PyObject o = f.__call__();
                 Object r = o.__tojava__(Number.class);
                 if (r == null) {
@@ -449,50 +471,59 @@ public class PythonUtils {
         };
     }
 
-    public iFloatProvider provider(final PyGenerator f, final float def) {
+    public
+    iFloatProvider provider(final PyGenerator f, final float def) {
         return new iFloatProvider() {
             /** @see innards.provider.iFloatProvider#evaluate() */
-            public float evaluate() {
+            public
+            float evaluate() {
                 PyObject o = f.__iternext__();
                 if (o == null) {
                     return def;
                 }
                 Object r = o.__tojava__(Number.class);
-                if (r == null)
-                    return def;
+                if (r == null) return def;
                 return ((Number) r).floatValue();
             }
         };
     }
 
-    public iFloatProvider provider(final PyObject varname) {
+    public
+    iFloatProvider provider(final PyObject varname) {
         return new iFloatProvider() {
-            public float evaluate() {
+            public
+            float evaluate() {
                 return ((Number) varname.__tojava__(Number.class)).floatValue();
             }
         };
     }
 
-    public iFloatProvider provider(final PyTuple varname) {
+    public
+    iFloatProvider provider(final PyTuple varname) {
         return new iFloatProvider() {
-            public float evaluate() {
+            public
+            float evaluate() {
                 return ((Number) varname.__getitem__(0).__tojava__(Number.class)).floatValue();
             }
         };
     }
 
-    public iFloatProvider provider(final String varname) {
+    public
+    iFloatProvider provider(final String varname) {
         return new iFloatProvider() {
-            public float evaluate() {
+            public
+            float evaluate() {
                 return ((Number) PythonInterface.getPythonInterface().getVariable(varname)).floatValue();
             }
         };
     }
 
-    public iDoubleProvider providerDouble(final PyFunction f, final float def) {
+    public
+    iDoubleProvider providerDouble(final PyFunction f, final float def) {
         return new iDoubleProvider() {
             /** @see innards.provider.iFloatProvider#evaluate() */
-            public double evaluate() {
+            public
+            double evaluate() {
                 PyObject o = f.__call__();
                 Object r = o.__tojava__(Number.class);
                 if (r == null) {
@@ -503,13 +534,15 @@ public class PythonUtils {
         };
     }
 
-    public iProvider<Object> providerObject(final PyFunction f, final CapturedEnvironment inside) {
+    public
+    iProvider<Object> providerObject(final PyFunction f, final CapturedEnvironment inside) {
 
         //System.out.println(" creating provider object with environment <"+inside+">");
 
         return new iProvider<Object>() {
             /** @see innards.provider.iFloatProvider#evaluate() */
-            public Object get() {
+            public
+            Object get() {
                 inside.enter();
                 try {
                     PyObject o = f.__call__();
@@ -522,20 +555,22 @@ public class PythonUtils {
         };
     }
 
-    public iProvider<Object> providerObject(final PyFunction f, final Object def) {
+    public
+    iProvider<Object> providerObject(final PyFunction f, final Object def) {
         return new iProvider<Object>() {
             /** @see innards.provider.iFloatProvider#evaluate() */
-            public Object get() {
+            public
+            Object get() {
                 PyObject o = f.__call__();
                 Object r = o.__tojava__(Object.class);
-                if (r == null)
-                    return def;
+                if (r == null) return def;
                 return r;
             }
         };
     }
 
-    public String regexp(String pattern, CharSequence match) {
+    public
+    String regexp(String pattern, CharSequence match) {
 
         Matcher m = Pattern.compile(pattern).matcher(match);
         if (m.matches()) {
@@ -556,7 +591,8 @@ public class PythonUtils {
         return "no match";
     }
 
-    public String regexpAll(String pattern, CharSequence match) {
+    public
+    String regexpAll(String pattern, CharSequence match) {
 
         Matcher f = Pattern.compile(pattern).matcher(match);
         String r = "";
@@ -570,9 +606,11 @@ public class PythonUtils {
         return r;
     }
 
-    public void registerAdaptations(Adaptation adapt) {
+    public
+    void registerAdaptations(Adaptation adapt) {
         adapt.declare(PyDictionary.class, Map.class, new Adaptation.iAdaptor<PyDictionary, Map>() {
-            public Map adapt(Class<PyDictionary> from, Class<Map> to, PyDictionary object) {
+            public
+            Map adapt(Class<PyDictionary> from, Class<Map> to, PyDictionary object) {
                 PyObject p = object.iteritems();
                 PyObject c = p.__iternext__();
                 Map r = new HashMap();
@@ -586,7 +624,8 @@ public class PythonUtils {
         }, new iFloatProvider.Constant(0.5f));
     }
 
-    public void salso(final String name, PyReflectedFunction o, Class c, final PyFunction function) {
+    public
+    void salso(final String name, PyReflectedFunction o, Class c, final PyFunction function) {
         if (contMap.containsKey(name)) {
             unalso(name);
         }
@@ -595,11 +634,11 @@ public class PythonUtils {
             PyObject[] a = null;
 
             @Override
-            public ReturnCode head(Object calledOn, Object[] args) {
+            public
+            ReturnCode head(Object calledOn, Object[] args) {
 
                 try {
-                    if (a == null || a.length != args.length)
-                        a = new PyObject[args.length];
+                    if (a == null || a.length != args.length) a = new PyObject[args.length];
                     for (int i = 0; i < a.length; i++) {
                         a[i] = Py.java2py(args[i]);
                     }
@@ -621,7 +660,8 @@ public class PythonUtils {
         contMap.put(name, new Triple<aRun, Method, Class>(r, m, c));
     }
 
-    public void setLocalInGenerator(PyGenerator g, String local, Object o) {
+    public
+    void setLocalInGenerator(PyGenerator g, String local, Object o) {
         PyFrame f = (PyFrame) ReflectionTools.illegalGetObject(g, "gi_frame");
         String[] v = f.f_code.co_varnames;
         int i = 0;
@@ -633,21 +673,25 @@ public class PythonUtils {
         }
     }
 
-    public String split(String pattern, String match) {
+    public
+    String split(String pattern, String match) {
         String[] s = match.split(pattern);
         return String.valueOf(Arrays.asList(s));
     }
 
-    public void stack(final PyGenerator f, final CapturedEnvironment env) {
+    public
+    void stack(final PyGenerator f, final CapturedEnvironment env) {
         PythonGeneratorStack x = new PythonGeneratorStack(f) {
             @Override
-            protected void preamble() {
+            protected
+            void preamble() {
                 super.preamble();
                 env.enter();
             }
 
             @Override
-            protected void postamble() {
+            protected
+            void postamble() {
                 env.exit();
                 super.postamble();
             }
@@ -655,16 +699,19 @@ public class PythonUtils {
         registeredFunctions.put(f, x);
     }
 
-    public void stack(final PyGenerator f, final CapturedEnvironment env, TaskQueue queue) {
+    public
+    void stack(final PyGenerator f, final CapturedEnvironment env, TaskQueue queue) {
         final PythonGeneratorStack x = new PythonGeneratorStack(f, null) {
             @Override
-            protected void preamble() {
+            protected
+            void preamble() {
                 super.preamble();
                 env.enter();
             }
 
             @Override
-            protected void postamble() {
+            protected
+            void postamble() {
                 env.exit();
                 super.postamble();
             }
@@ -673,54 +720,58 @@ public class PythonUtils {
         queue.new Task() {
 
             @Override
-            protected void run() {
+            protected
+            void run() {
                 x.update();
-                if (!x.isOver())
-                    recur();
+                if (!x.isOver()) recur();
             }
         };
     }
 
-    public void stack(final PyGenerator f, TaskQueue queue) {
+    public
+    void stack(final PyGenerator f, TaskQueue queue) {
         stack(f, (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment"), queue);
     }
 
     public PythonGeneratorStack mostRecentStack;
 
-    public PythonGeneratorStack stackPrePost(final PyFunction pre, final PyGenerator g, final iAcceptor<Object> progress, final PyFunction post) {
-        if (g == null)
-            return null;
+    public
+    PythonGeneratorStack stackPrePost(final PyFunction pre,
+                                      final PyGenerator g,
+                                      final iAcceptor<Object> progress,
+                                      final PyFunction post) {
+        if (g == null) return null;
 
         PythonGeneratorStack x = new PythonGeneratorStack(g) {
 
             @Override
-            protected void evaluatedTo(Object to) {
-                if (progress != null)
-                    progress.set(to);
+            protected
+            void evaluatedTo(Object to) {
+                if (progress != null) progress.set(to);
             }
 
             @Override
-            protected void preamble() {
-                if (pre != null)
-                    pre.__call__();
+            protected
+            void preamble() {
+                if (pre != null) pre.__call__();
             }
 
             @Override
-            protected void postamble() {
-                if (post != null)
-                    post.__call__();
+            protected
+            void postamble() {
+                if (post != null) post.__call__();
             }
 
             @Override
-            protected void finished() {
-                if (progress instanceof iPhasicAcceptor)
-                    ((iPhasicAcceptor) progress).end();
+            protected
+            void finished() {
+                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).end();
             }
 
             @Override
-            protected void first() {
-                if (progress instanceof iPhasicAcceptor)
-                    ((iPhasicAcceptor) progress).begin();
+            protected
+            void first() {
+                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).begin();
             }
         };
         registeredFunctions.put(g, x);
@@ -730,44 +781,47 @@ public class PythonUtils {
         return x;
     }
 
-    public void stackPrePost(final PyFunction pre, final PySequence g, final iAcceptor<PyObject> progress, final PyFunction post) {
-        if (g == null)
-            return;
+    public
+    void stackPrePost(final PyFunction pre,
+                      final PySequence g,
+                      final iAcceptor<PyObject> progress,
+                      final PyFunction post) {
+        if (g == null) return;
 
         final PyIterator gi = (PyIterator) g.__iter__();
 
         PythonGeneratorStack x = new PythonGeneratorStack(new iProvider<Object>() {
-            public Object get() {
+            public
+            Object get() {
                 PyObject a = gi.__iternext__();
-                if (progress != null)
-                    progress.set(a);
+                if (progress != null) progress.set(a);
 
                 return a;
             }
         }) {
 
             @Override
-            protected void preamble() {
-                if (pre != null)
-                    pre.__call__();
+            protected
+            void preamble() {
+                if (pre != null) pre.__call__();
             }
 
             @Override
-            protected void postamble() {
-                if (post != null)
-                    post.__call__();
+            protected
+            void postamble() {
+                if (post != null) post.__call__();
             }
 
             @Override
-            protected void finished() {
-                if (progress instanceof iPhasicAcceptor)
-                    ((iPhasicAcceptor) progress).end();
+            protected
+            void finished() {
+                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).end();
             }
 
             @Override
-            protected void first() {
-                if (progress instanceof iPhasicAcceptor)
-                    ((iPhasicAcceptor) progress).begin();
+            protected
+            void first() {
+                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).begin();
             }
         };
 
@@ -776,41 +830,42 @@ public class PythonUtils {
         registeredFunctions.put(g, x);
     }
 
-    public void stackPrePost(final PyGenerator g, final iAcceptor<Object> progress, final CapturedEnvironment env) {
-        if (g == null)
-            return;
+    public
+    void stackPrePost(final PyGenerator g, final iAcceptor<Object> progress, final CapturedEnvironment env) {
+        if (g == null) return;
 
         final PyIterator gi = (PyIterator) g.__iter__();
 
         PythonGeneratorStack x = new PythonGeneratorStack(g) {
 
             @Override
-            protected void evaluatedTo(Object to) {
+            protected
+            void evaluatedTo(Object to) {
                 iAcceptor<Object> set = progress.set(to);
             }
 
             @Override
-            protected void preamble() {
-                if (env != null)
-                    env.enter();
+            protected
+            void preamble() {
+                if (env != null) env.enter();
             }
 
             @Override
-            protected void postamble() {
-                if (env != null)
-                    env.exit();
+            protected
+            void postamble() {
+                if (env != null) env.exit();
             }
 
             @Override
-            protected void finished() {
-                if (progress instanceof iPhasicAcceptor)
-                    ((iPhasicAcceptor) progress).end();
+            protected
+            void finished() {
+                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).end();
             }
 
             @Override
-            protected void first() {
-                if (progress instanceof iPhasicAcceptor)
-                    ((iPhasicAcceptor) progress).begin();
+            protected
+            void first() {
+                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).begin();
             }
         };
 
@@ -819,26 +874,27 @@ public class PythonUtils {
         registeredFunctions.put(g, x);
     }
 
-    public void stackPrePost(final PyFunction pre, final PyGenerator g, final PyFunction post) {
-        if (g == null)
-            return;
+    public
+    void stackPrePost(final PyFunction pre, final PyGenerator g, final PyFunction post) {
+        if (g == null) return;
         PythonGeneratorStack x = new PythonGeneratorStack(new iProvider<Object>() {
-            public Object get() {
+            public
+            Object get() {
                 PyObject a = g.__iternext__();
 
                 return a;
             }
         }) {
             @Override
-            protected void preamble() {
-                if (pre != null)
-                    pre.__call__();
+            protected
+            void preamble() {
+                if (pre != null) pre.__call__();
             }
 
             @Override
-            protected void postamble() {
-                if (post != null)
-                    post.__call__();
+            protected
+            void postamble() {
+                if (post != null) post.__call__();
             }
         };
 
@@ -847,15 +903,18 @@ public class PythonUtils {
         registeredFunctions.put(g, x);
     }
 
-    public iUpdateable start(iUpdateable u) {
+    public
+    iUpdateable start(iUpdateable u) {
         Launcher.getLauncher().registerUpdateable(u);
         return u;
     }
 
-    public void start(final PyFunction f) {
+    public
+    void start(final PyFunction f) {
         iUpdateable up = new iUpdateable() {
             /** @see innards.iUpdateable#update() */
-            public void update() {
+            public
+            void update() {
                 f.__call__();
             }
         };
@@ -863,10 +922,12 @@ public class PythonUtils {
         Launcher.getLauncher().registerUpdateable(up);
     }
 
-    public void start(final PyFunction f, iRegistersUpdateable r) {
+    public
+    void start(final PyFunction f, iRegistersUpdateable r) {
         iUpdateable up = new iUpdateable() {
             /** @see innards.iUpdateable#update() */
-            public void update() {
+            public
+            void update() {
                 f.__call__();
             }
         };
@@ -874,20 +935,22 @@ public class PythonUtils {
         r.registerUpdateable(up);
     }
 
-    public void start(final PyGenerator f) {
+    public
+    void start(final PyGenerator f) {
 
         start(f, (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment"));
     }
 
-    public void start(final PyGenerator f, final CapturedEnvironment e) {
+    public
+    void start(final PyGenerator f, final CapturedEnvironment e) {
 
         iUpdateable up = new iUpdateable() {
-            public void update() {
+            public
+            void update() {
                 if (e != null) e.enter();
                 try {
                     PyObject aa = f.__iternext__();
-                    if (aa == null)
-                        stop(f);
+                    if (aa == null) stop(f);
                 } catch (Throwable t) {
                     t.printStackTrace();
                     stop(f);
@@ -900,12 +963,14 @@ public class PythonUtils {
         Launcher.getLauncher().registerUpdateable(up);
     }
 
-    public iUpdateable stop(iUpdateable u) {
+    public
+    iUpdateable stop(iUpdateable u) {
         Launcher.getLauncher().deregisterUpdateable(u);
         return u;
     }
 
-    public void stop(final PyFunction f) {
+    public
+    void stop(final PyFunction f) {
         iUpdateable up = (iUpdateable) registeredFunctions.remove(f);
         if (up != null) {
             try {
@@ -916,7 +981,8 @@ public class PythonUtils {
         }
     }
 
-    public void stop(final PyFunction f, iRegistersUpdateable r) {
+    public
+    void stop(final PyFunction f, iRegistersUpdateable r) {
         iUpdateable up = (iUpdateable) registeredFunctions.remove(f);
         if (up != null) {
             try {
@@ -927,7 +993,8 @@ public class PythonUtils {
         }
     }
 
-    public void stop(final PyGenerator f) {
+    public
+    void stop(final PyGenerator f) {
         iUpdateable up = (iUpdateable) registeredFunctions.remove(f);
         if (up != null) {
             try {
@@ -938,24 +1005,21 @@ public class PythonUtils {
         }
     }
 
-    public Object stringToKeyOrString(String s) {
+    public
+    Object stringToKeyOrString(String s) {
         Object ic = Key.internedKeys.get(s);
-        if (ic instanceof Reference)
-            ic = ((Reference) ic).get();
+        if (ic instanceof Reference) ic = ((Reference) ic).get();
 
         return ic == null ? s : ic;
     }
 
-    public Number toNumber(Object o) {
-        if (o instanceof iFloatProvider)
-            return ((iFloatProvider) o).evaluate();
-        if (o instanceof iDoubleProvider)
-            return ((iDoubleProvider) o).evaluate();
-        if (o instanceof iProvider)
-            return toNumber(((iProvider) o).get());
+    public
+    Number toNumber(Object o) {
+        if (o instanceof iFloatProvider) return ((iFloatProvider) o).evaluate();
+        if (o instanceof iDoubleProvider) return ((iDoubleProvider) o).evaluate();
+        if (o instanceof iProvider) return toNumber(((iProvider) o).get());
 
-        if (o instanceof Number)
-            return (Number) o;
+        if (o instanceof Number) return (Number) o;
         if (o instanceof PyIterator) {
             PyObject m = ((PyIterator) o).__iternext__();
             return toNumber(m);
@@ -977,31 +1041,34 @@ public class PythonUtils {
         return null;
     }
 
-    public String toXML(Object o, boolean noreturns) {
+    public
+    String toXML(Object o, boolean noreturns) {
         XStream stream = XStreamUtil.newDefaultXStream();
         stream.setMarshallingStrategy(new ReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.RELATIVE));
 
         String s = stream.toXML(o);
-        if (noreturns)
-            s = s.replace("\n", "");
+        if (noreturns) s = s.replace("\n", "");
         return s;
     }
 
-    public void unalso(String name) {
+    public
+    void unalso(String name) {
         Triple<aRun, Method, Class> n = contMap.get(name);
         if (n != null) {
             FastEntry.unlinkWith(n.middle, n.right, n.left);
         }
     }
 
-    public void uncont(String name) {
+    public
+    void uncont(String name) {
         Triple<aRun, Method, Class> n = contMap.get(name);
         if (n != null) {
             Cont.unlinkWith_static(n.middle, n.right, n.left);
         }
     }
 
-    public String whatIs(Object o) {
+    public
+    String whatIs(Object o) {
         String r = o + " " + o.getClass();
         if (o instanceof PyInstance) {
             if ("ct".equals(((PyInstance) o).instclass.__name__)) {
@@ -1015,28 +1082,23 @@ public class PythonUtils {
     // beta1
     public static
     Object maybeToJava(Object instance) {
-        if (instance instanceof PyObject)
-            try {
-                Object o = ((PyObject) instance).__tojava__(Object.class);
-                if (o == Py.NoConversion)
-                    return instance;
-                if (o == null)
-                    return instance;
-                return o;
-            } catch (Exception e) {
-                // beta1
-                e.printStackTrace();
-                return instance;
-            }
+        if (instance instanceof PyObject) try {
+            Object o = ((PyObject) instance).__tojava__(Object.class);
+            if (o == Py.NoConversion) return instance;
+            if (o == null) return instance;
+            return o;
+        } catch (Exception e) {
+            // beta1
+            e.printStackTrace();
+            return instance;
+        }
         return instance;
     }
 
     public static
     String info(Object o) {
-        if (o == null)
-            return "null reference";
-        if (o instanceof Class)
-            return "class <" + o + "> <" + ((Class) o).getClassLoader() + ">";
+        if (o == null) return "null reference";
+        if (o instanceof Class) return "class <" + o + "> <" + ((Class) o).getClassLoader() + ">";
         String x = o.toString() + " class " + o.getClass() + " " + o.getClass().getSuperclass();
         x += "\n" + Arrays.asList(o.getClass().getDeclaredMethods());
 
@@ -1071,22 +1133,30 @@ public class PythonUtils {
         new Exception().printStackTrace();
     }
 
-    public void callLater(PyFunction f) {
-        final Callable c = PythonOverridden.callableForFunction(f, (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment"));
+    public
+    void callLater(PyFunction f) {
+        final Callable c = PythonOverridden.callableForFunction(f,
+                                                                (CapturedEnvironment) PythonInterface.getPythonInterface()
+                                                                                                     .getVariable("_environment"));
         Launcher.getLauncher().registerUpdateable(new iUpdateable() {
-            public void update() {
+            public
+            void update() {
                 c.call(null, new Object[]{});
                 Launcher.getLauncher().deregisterUpdateable(this);
             }
         });
     }
 
-    public void callLater(PyFunction f, final int n) {
-        final Callable c = PythonOverridden.callableForFunction(f, (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment"));
+    public
+    void callLater(PyFunction f, final int n) {
+        final Callable c = PythonOverridden.callableForFunction(f,
+                                                                (CapturedEnvironment) PythonInterface.getPythonInterface()
+                                                                                                     .getVariable("_environment"));
         Launcher.getLauncher().registerUpdateable(new iUpdateable() {
             int y = 0;
 
-            public void update() {
+            public
+            void update() {
                 if (y++ == n) {
                     c.call(null, new Object[]{});
                     Launcher.getLauncher().deregisterUpdateable(this);
@@ -1095,11 +1165,15 @@ public class PythonUtils {
         });
     }
 
-    public void callLater(PyFunction f, TaskQueue q) {
-        final Callable c = PythonOverridden.callableForFunction(f, (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment"));
+    public
+    void callLater(PyFunction f, TaskQueue q) {
+        final Callable c = PythonOverridden.callableForFunction(f,
+                                                                (CapturedEnvironment) PythonInterface.getPythonInterface()
+                                                                                                     .getVariable("_environment"));
         q.new Task() {
             @Override
-            protected void run() {
+            protected
+            void run() {
                 c.call(null, new Object[]{});
             }
         };

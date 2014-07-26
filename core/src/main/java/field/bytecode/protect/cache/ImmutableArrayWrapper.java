@@ -2,51 +2,59 @@ package field.bytecode.protect.cache;
 
 import java.util.Arrays;
 
-public class ImmutableArrayWrapper implements iImmutableContainer {
+public
+class ImmutableArrayWrapper implements iImmutableContainer {
 
-	public Object[] a;
+    public Object[] a;
 
-	private final int hash;
+    private final int hash;
 
-	private String bigBase;
+    private String bigBase;
 
-	private final boolean doBigBase;
+    private final boolean doBigBase;
 
-	public ImmutableArrayWrapper(Object[] a) {
-		this.a = a;
-		this.hash = Arrays.hashCode(a);
-		this.doBigBase = true;
-	}
-	public ImmutableArrayWrapper(Object[] a, boolean doBig) {
-		this.a = a;
-		this.hash = Arrays.hashCode(a);
-		this.doBigBase = doBig;
-	}
+    public
+    ImmutableArrayWrapper(Object[] a) {
+        this.a = a;
+        this.hash = Arrays.hashCode(a);
+        this.doBigBase = true;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if ((obj instanceof ImmutableArrayWrapper)) {
-			if (((ImmutableArrayWrapper) obj).hash != hash) return false;
-			if (doBigBase)
-				if (((ImmutableArrayWrapper) obj).getBigBaseHashCode().equals(getBigBaseHashCode())) return true;
-			return Arrays.equals(a, ((ImmutableArrayWrapper) obj).a);
-		}
-		return false;
-	}
+    public
+    ImmutableArrayWrapper(Object[] a, boolean doBig) {
+        this.a = a;
+        this.hash = Arrays.hashCode(a);
+        this.doBigBase = doBig;
+    }
 
-	@Override
-	public int hashCode() {
-		return hash;
-	}
+    @Override
+    public
+    boolean equals(Object obj) {
+        if ((obj instanceof ImmutableArrayWrapper)) {
+            if (((ImmutableArrayWrapper) obj).hash != hash) return false;
+            if (doBigBase)
+                if (((ImmutableArrayWrapper) obj).getBigBaseHashCode().equals(getBigBaseHashCode())) return true;
+            return Arrays.equals(a, ((ImmutableArrayWrapper) obj).a);
+        }
+        return false;
+    }
 
-	public String getBigBaseHashCode() {
-		if (bigBase != null) return bigBase;
+    @Override
+    public
+    int hashCode() {
+        return hash;
+    }
 
-		return bigBase = ImmutableArrayList.getBigBaseHashCodeForIterable(this.a);
-	}
-	
-	@Override
-	public String toString() {
-		return "iaw:"+Arrays.asList(a)+" (hash+"+hashCode()+ ')';
-	}
+    public
+    String getBigBaseHashCode() {
+        if (bigBase != null) return bigBase;
+
+        return bigBase = ImmutableArrayList.getBigBaseHashCodeForIterable(this.a);
+    }
+
+    @Override
+    public
+    String toString() {
+        return "iaw:" + Arrays.asList(a) + " (hash+" + hashCode() + ')';
+    }
 }

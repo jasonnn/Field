@@ -22,106 +22,125 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class SimplePDFImageDrawing {
-	public class DrawsImage implements iDrawingAcceptor {
-		private final BasePDFGraphicsContext context;
-		private final SimplePDFLineDrawing drawing;
+public
+class SimplePDFImageDrawing {
+    public
+    class DrawsImage implements iDrawingAcceptor {
+        private final BasePDFGraphicsContext context;
+        private final SimplePDFLineDrawing drawing;
 
-		public DrawsImage(BasePDFGraphicsContext context, SimplePDFLineDrawing drawing) {
-			this.context = context;
-			this.drawing = drawing;
-		}
+        public
+        DrawsImage(BasePDFGraphicsContext context, SimplePDFLineDrawing drawing) {
+            this.context = context;
+            this.drawing = drawing;
+        }
 
-		public DrawingResult accept(List<iUpdateable> soFar, final CachedLine line, final Dict properties) {
-			if (!properties.isTrue(iLinearGraphicsContext.containsImages, false))
-				return null;
+        public
+        DrawingResult accept(List<iUpdateable> soFar, final CachedLine line, final Dict properties) {
+            if (!properties.isTrue(iLinearGraphicsContext.containsImages, false)) return null;
 
-			DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
-				private final Vector4 black = new Vector4(1, 1, 1, 1f);
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+                private final Vector4 black = new Vector4(1, 1, 1, 1f);
 
-				public void update() {
+                public
+                void update() {
 
-					for (Event e : line.events) {
-						if (e.attributes != null && e.attributes.get(iLinearGraphicsContext.image_v) != null) {
-							float opacityMul = 1;
-							Number o = line.getProperties().get(iLinearGraphicsContext.totalOpacity);
-							opacityMul *= o == null ? 1 : o.floatValue();
+                    for (Event e : line.events) {
+                        if (e.attributes != null && e.attributes.get(iLinearGraphicsContext.image_v) != null) {
+                            float opacityMul = 1;
+                            Number o = line.getProperties().get(iLinearGraphicsContext.totalOpacity);
+                            opacityMul *= o == null ? 1 : o.floatValue();
 
-							render(e.getDestination(new Vector2()), e.attributes.get(iLinearGraphicsContext.image_v), colorFor(e), opacityMul, e.attributes.get(iLinearGraphicsContext.imageDrawScale_v));
-						}
-					}
-				}
+                            render(e.getDestination(new Vector2()),
+                                   e.attributes.get(iLinearGraphicsContext.image_v),
+                                   colorFor(e),
+                                   opacityMul,
+                                   e.attributes.get(iLinearGraphicsContext.imageDrawScale_v));
+                        }
+                    }
+                }
 
-				private void render(Vector2 destination, Object image, Vector4 colorFor, float opacityMul, Number s) {
-					//todo, color / opacity
-					if (image instanceof Image) {
-						try {
-							File tmp = File.createTempFile("fieldImagePDFExport", ".png");
-							tmp.deleteOnExit();
-							((Image) image).saveAsPNG("file://"+tmp.getAbsolutePath());
-							
-							Rect extents = ((Image)image).getExtents();
-							float scale = s == null ? 1 : s.floatValue();
-							
-							Rect placement = new Rect(destination.x, destination.y, extents.w*scale, extents.h*scale);
+                private
+                void render(Vector2 destination, Object image, Vector4 colorFor, float opacityMul, Number s) {
+                    //todo, color / opacity
+                    if (image instanceof Image) {
+                        try {
+                            File tmp = File.createTempFile("fieldImagePDFExport", ".png");
+                            tmp.deleteOnExit();
+                            ((Image) image).saveAsPNG("file://" + tmp.getAbsolutePath());
+
+                            Rect extents = ((Image) image).getExtents();
+                            float scale = s == null ? 1 : s.floatValue();
+
+                            Rect placement =
+                                    new Rect(destination.x, destination.y, extents.w * scale, extents.h * scale);
                             Vector4 ot = SimplePDFLineDrawing.outputTransform;
                             Vector2 topLeft = transform(ot, placement.topLeft());
-							Vector2 bottomLeft = transform(ot, placement.bottomLeft());
-							Vector2 bottomRight= transform(ot, placement.bottomRight());
-							Vector2 topRight= transform(ot, placement.topRight());
+                            Vector2 bottomLeft = transform(ot, placement.bottomLeft());
+                            Vector2 bottomRight = transform(ot, placement.bottomRight());
+                            Vector2 topRight = transform(ot, placement.topRight());
 
-							placement.x = Math.min(topLeft.x, topRight.x);
-							placement.y = Math.min(topLeft.y, bottomLeft.y);
-							placement.w = Math.max(topLeft.x, topRight.x)-placement.x;
-							placement.h = Math.max(topLeft.y, bottomLeft.y)-placement.y;
-							
-							com.lowagie.text.Image pdfimage = com.lowagie.text.Image.getInstance(tmp.getAbsolutePath());
-							context.getOutput().saveState();
-							PdfGState gs1 = new PdfGState();
-							float opacity = 1;
-							gs1.setFillOpacity(opacity);
-							gs1.setStrokeOpacity(opacity);
-							gs1.setBlendMode(new PdfName("Multiply"));
-							context.getOutput().setGState(gs1);
+                            placement.x = Math.min(topLeft.x, topRight.x);
+                            placement.y = Math.min(topLeft.y, bottomLeft.y);
+                            placement.w = Math.max(topLeft.x, topRight.x) - placement.x;
+                            placement.h = Math.max(topLeft.y, bottomLeft.y) - placement.y;
+
+                            com.lowagie.text.Image pdfimage = com.lowagie.text.Image.getInstance(tmp.getAbsolutePath());
+                            context.getOutput().saveState();
+                            PdfGState gs1 = new PdfGState();
+                            float opacity = 1;
+                            gs1.setFillOpacity(opacity);
+                            gs1.setStrokeOpacity(opacity);
+                            gs1.setBlendMode(new PdfName("Multiply"));
+                            context.getOutput().setGState(gs1);
 
                             //System.out.println(" rev eng :"+destination+" "+extents+" "+scale+" "+placement);
 
-							context.getOutput().addImage(pdfimage, (float) (placement.w), 0, 0, (float) (placement.h), (float) placement.x, (float) (-destination.y+ot.w-(placement.h)));
-							context.getOutput().restoreState();
-							
-						} catch (IOException e) {
-							e.printStackTrace();
-						} catch (BadElementException e) {
-							e.printStackTrace();
-						} catch (DocumentException e) {
-							e.printStackTrace();
-						}
-					}
-				}
+                            context.getOutput()
+                                   .addImage(pdfimage,
+                                             (float) (placement.w),
+                                             0,
+                                             0,
+                                             (float) (placement.h),
+                                             (float) placement.x,
+                                             (float) (-destination.y + ot.w - (placement.h)));
+                            context.getOutput().restoreState();
 
-				private Vector4 colorFor(Event current) {
-					Vector4 color = null;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (BadElementException e) {
+                            e.printStackTrace();
+                        } catch (DocumentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
 
-					if (color == null)
-						color = current.attributes != null ? current.attributes.get(iLinearGraphicsContext.fillColor_v) : null;
-					if (color == null)
-						color = properties.get(iLinearGraphicsContext.color);
-					if (color == null)
-						color = properties.get(iLinearGraphicsContext.fillColor);
-					if (color == null)
-						color = black;
-					return color;
-				}
-			});
-			return result;
-		}
+                private
+                Vector4 colorFor(Event current) {
+                    Vector4 color = null;
 
-		protected Vector2 transform(Vector4 outputTransform, Vector3 point) {
-			return new Vector2(point.x * outputTransform.x + outputTransform.z, point.y * outputTransform.y + outputTransform.w);
-		}
-	}
-	
-	public void installInto(BasePDFGraphicsContext context, SimplePDFLineDrawing drawing) {
-		context.addDrawingAcceptor(new DrawsImage(context, drawing));
-	}
+                    if (color == null) color = current.attributes != null
+                                               ? current.attributes.get(iLinearGraphicsContext.fillColor_v)
+                                               : null;
+                    if (color == null) color = properties.get(iLinearGraphicsContext.color);
+                    if (color == null) color = properties.get(iLinearGraphicsContext.fillColor);
+                    if (color == null) color = black;
+                    return color;
+                }
+            });
+            return result;
+        }
+
+        protected
+        Vector2 transform(Vector4 outputTransform, Vector3 point) {
+            return new Vector2(point.x * outputTransform.x + outputTransform.z,
+                               point.y * outputTransform.y + outputTransform.w);
+        }
+    }
+
+    public
+    void installInto(BasePDFGraphicsContext context, SimplePDFLineDrawing drawing) {
+        context.addDrawingAcceptor(new DrawsImage(context, drawing));
+    }
 }

@@ -12,80 +12,84 @@ import field.namespace.diagram.DiagramZero.iMarker;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class MarkerSerializer implements Converter {
+public
+class MarkerSerializer implements Converter {
 
-	private final Mapper mapper;
+    private final Mapper mapper;
 
-	public MarkerSerializer(Mapper mapper)
-	{
-		this.mapper = mapper;
-	}
-	
-	public boolean canConvert(Class type) {
-		return iMarker.class.isAssignableFrom(type);
-	}
+    public
+    MarkerSerializer(Mapper mapper) {
+        this.mapper = mapper;
+    }
 
-	public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-		iMarker marker = (iMarker) source;
+    public
+    boolean canConvert(Class type) {
+        return iMarker.class.isAssignableFrom(type);
+    }
 
-		writer.startNode("marker");
-		writer.startNode("class");
-		context.convertAnother(marker.getClass());
-		writer.endNode();
-		writer.startNode("time");
-		context.convertAnother(marker.getTime());
-		writer.endNode();
-		writer.startNode("duration");
-		context.convertAnother(marker.getDuration());
-		writer.endNode();
-		writer.startNode(mapper.serializedClass(marker.getPayload().getClass()));
-		context.convertAnother(marker.getPayload());
-		writer.endNode();
-		writer.startNode(mapper.serializedClass(marker.getRootChannel().getClass()));
-		context.convertAnother(marker.getRootChannel());
-		writer.endNode();
-		writer.endNode();
-	}
+    public
+    void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+        iMarker marker = (iMarker) source;
 
-	public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-		try {
-			reader.moveDown();
-			reader.moveDown();
-			Class markerClass = (Class) context.convertAnother(null, Class.class);
-			reader.moveUp();
-			reader.moveDown();
-			double time = (Double) context.convertAnother(null, Double.TYPE);
-			reader.moveUp();
-			reader.moveDown();
-			double duration = (Double) context.convertAnother(null, Double.TYPE);
-			reader.moveUp();
-			reader.moveDown();
+        writer.startNode("marker");
+        writer.startNode("class");
+        context.convertAnother(marker.getClass());
+        writer.endNode();
+        writer.startNode("time");
+        context.convertAnother(marker.getTime());
+        writer.endNode();
+        writer.startNode("duration");
+        context.convertAnother(marker.getDuration());
+        writer.endNode();
+        writer.startNode(mapper.serializedClass(marker.getPayload().getClass()));
+        context.convertAnother(marker.getPayload());
+        writer.endNode();
+        writer.startNode(mapper.serializedClass(marker.getRootChannel().getClass()));
+        context.convertAnother(marker.getRootChannel());
+        writer.endNode();
+        writer.endNode();
+    }
+
+    public
+    Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        try {
+            reader.moveDown();
+            reader.moveDown();
+            Class markerClass = (Class) context.convertAnother(null, Class.class);
+            reader.moveUp();
+            reader.moveDown();
+            double time = (Double) context.convertAnother(null, Double.TYPE);
+            reader.moveUp();
+            reader.moveDown();
+            double duration = (Double) context.convertAnother(null, Double.TYPE);
+            reader.moveUp();
+            reader.moveDown();
             Object payload = context.convertAnother(null, mapper.realClass(reader.getNodeName()));
             reader.moveUp();
-			reader.moveDown();
-			Object channel;
+            reader.moveDown();
+            Object channel;
             channel = context.convertAnother(null, mapper.realClass(reader.getNodeName()));
             reader.moveUp();
-			reader.moveUp();
+            reader.moveUp();
 
-			Constructor constructor;
+            Constructor constructor;
             constructor = markerClass.getConstructor(Double.TYPE, Double.TYPE, Object.class, Channel.class);
             Object marker = constructor.newInstance(time, duration, payload, channel);
             return marker;
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} 
-		return null;
-	}
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

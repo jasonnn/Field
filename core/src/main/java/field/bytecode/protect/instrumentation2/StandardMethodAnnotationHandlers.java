@@ -20,11 +20,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by jason on 7/21/14.
  */
-public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 {
+public
+enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 {
     ALIASES(Aliases.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -32,7 +34,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     ALIASING(Aliasing.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -40,14 +43,16 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     CACHED(Cached.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             return DeferedCached.fromCtx(ctx, "cancel");
         }
     },
     CACHED_PER_UPDATE(CachedPerUpdate.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -55,31 +60,38 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     CONSTANT_CONTEXT(ConstantContext.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             String name = "dispatchOverTopology" +
                           '+' + ctx.name +
                           '+' + ctx.desc +
                           '+' + ctx.signature +
                           '+' + counter.getAndIncrement();
-            return new CallOnEntryAndExit_exceptionAware(name, ctx.access, new ASMMethod(ctx.name, ctx.desc), ctx.delegate, ctx.params) {
+            return new CallOnEntryAndExit_exceptionAware(name,
+                                                         ctx.access,
+                                                         new ASMMethod(ctx.name, ctx.desc),
+                                                         ctx.delegate,
+                                                         ctx.params) {
 
                 @Override
-                public Object handleExit(Object returningThis,
-                                         String fromName,
-                                         Object fromThis,
-                                         String methodName,
-                                         Map<String, Object> parameterName,
-                                         String methodReturnName) {
+                public
+                Object handleExit(Object returningThis,
+                                  String fromName,
+                                  Object fromThis,
+                                  String methodName,
+                                  Map<String, Object> parameterName,
+                                  String methodReturnName) {
                     Cc.handle_exit(fromThis, name, parameterName);
                     return returningThis;
                 }
 
                 @Override
-                public void handleEntry(String fromName,
-                                        Object fromThis,
-                                        String methodName,
-                                        Map<String, Object> parameterName,
-                                        Object[] argArray) {
+                public
+                void handleEntry(String fromName,
+                                 Object fromThis,
+                                 String methodName,
+                                 Map<String, Object> parameterName,
+                                 Object[] argArray) {
                     Cc.handle_entry(fromThis, name, parameterName, aliasedParameterSet, argArray);
                 }
             };
@@ -88,7 +100,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     CONTEXT_BEGIN(Context_begin.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -96,7 +109,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     CONTEXT_SET(Context_set.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -104,7 +118,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     DISK_CACHED(DiskCached.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -112,7 +127,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     DISPATCH_OVER_TOPOLOGY(DispatchOverTopology.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -120,7 +136,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     FAST_DISPATCH(FastDispatch.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -128,7 +145,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     IN_QUEUE(InQueue.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -136,7 +154,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     IN_QUEUE_THROUGH(InQueueThrough.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -144,7 +163,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     INSIDE(Inside.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -152,7 +172,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     MIRROR(Mirror.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -160,7 +181,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     NEW_THREAD(NewThread.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -168,7 +190,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     NEXT_UPDATE(NextUpdate.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -176,7 +199,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     NON_SWING(NonSwing.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -184,7 +208,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     SIMPLY_WRAPPED(SimplyWrapped.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -192,7 +217,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     TIMING_STATISTICS(TimingStatistics.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -200,7 +226,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     TRACED(Traced.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -208,7 +235,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     YIELD(Yield.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             System.err.println("TODO: " + name());
             return NOOP(ctx);
         }
@@ -217,7 +245,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
     WOVEN(Woven.class) {
         @NotNull
         @Override
-        public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
+        public
+        MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             return NOOP(ctx);
         }
     };
@@ -238,7 +267,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
         desc = ASMType.getDescriptor(annotationClass);
     }
 
-    public static Map<String, AnnotatedMethodHandler2> getHandlers() {
+    public static
+    Map<String, AnnotatedMethodHandler2> getHandlers() {
         Map<String, AnnotatedMethodHandler2> handlers = new HashMap<String, AnnotatedMethodHandler2>(values().length);
         for (StandardMethodAnnotationHandlers handler : values()) {
             handlers.put(handler.desc, handler);
@@ -246,7 +276,8 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
         return handlers;
     }
 
-    private static MethodVisitor NOOP(ASMAnnotatedMethodCtx ctx) {
+    private static
+    MethodVisitor NOOP(ASMAnnotatedMethodCtx ctx) {
         return ctx.delegate;
     }
 }

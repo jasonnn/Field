@@ -14,48 +14,64 @@ import java.util.List;
 import java.util.Map;
 
 
-public class RelativeCoordinateChange implements iCoordDesc {
+public
+class RelativeCoordinateChange implements iCoordDesc {
 
-	public iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
-		if (claimed.isEmpty()) return null;
+    public
+    iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
+        if (claimed.isEmpty()) return null;
 
-		final SelectedVertex c = claimed.remove(0);
-		final Vector2[] changes = { null, null, null};
-		if (c.frozenPosition.containsKey(SubSelection.postion) && c.absPosition.containsKey(SubSelection.postion)) {
-			if (c.frozenPosition.get(SubSelection.postion).distanceFrom(c.absPosition.get(SubSelection.postion)) > 1e-4) {
-				changes[1] = new Vector2(c.absPosition.get(SubSelection.postion)).sub(c.frozenPosition.get(SubSelection.postion));
-			}
-		}
-		if (changes[1] == null) changes[1] = new Vector2(0, 0);
+        final SelectedVertex c = claimed.remove(0);
+        final Vector2[] changes = {null, null, null};
+        if (c.frozenPosition.containsKey(SubSelection.postion) && c.absPosition.containsKey(SubSelection.postion)) {
+            if (c.frozenPosition.get(SubSelection.postion).distanceFrom(c.absPosition.get(SubSelection.postion))
+                > 1e-4) {
+                changes[1] =
+                        new Vector2(c.absPosition.get(SubSelection.postion)).sub(c.frozenPosition.get(SubSelection.postion));
+            }
+        }
+        if (changes[1] == null) changes[1] = new Vector2(0, 0);
 
-		if (c.frozenPosition.containsKey(SubSelection.previousControl) && c.absPosition.containsKey(SubSelection.previousControl)) {
-			if (c.frozenPosition.get(SubSelection.previousControl).distanceFrom(c.absPosition.get(SubSelection.previousControl)) > 1e-4) {
-				changes[0] = new Vector2(c.absPosition.get(SubSelection.previousControl)).sub(c.frozenPosition.get(SubSelection.previousControl)).sub(changes[1]);
-			}
-		}
-		if (c.frozenPosition.containsKey(SubSelection.nextControl) && c.absPosition.containsKey(SubSelection.nextControl)) {
-			if (c.frozenPosition.get(SubSelection.nextControl).distanceFrom(c.absPosition.get(SubSelection.nextControl)) > 1e-4) {
-				changes[2] = new Vector2(c.absPosition.get(SubSelection.nextControl)).sub(c.frozenPosition.get(SubSelection.nextControl)).sub(changes[1]);
-			}
-		}
+        if (c.frozenPosition.containsKey(SubSelection.previousControl)
+            && c.absPosition.containsKey(SubSelection.previousControl)) {
+            if (c.frozenPosition.get(SubSelection.previousControl)
+                                .distanceFrom(c.absPosition.get(SubSelection.previousControl)) > 1e-4) {
+                changes[0] =
+                        new Vector2(c.absPosition.get(SubSelection.previousControl)).sub(c.frozenPosition.get(SubSelection.previousControl))
+                                                                                    .sub(changes[1]);
+            }
+        }
+        if (c.frozenPosition.containsKey(SubSelection.nextControl)
+            && c.absPosition.containsKey(SubSelection.nextControl)) {
+            if (c.frozenPosition.get(SubSelection.nextControl).distanceFrom(c.absPosition.get(SubSelection.nextControl))
+                > 1e-4) {
+                changes[2] =
+                        new Vector2(c.absPosition.get(SubSelection.nextControl)).sub(c.frozenPosition.get(SubSelection.nextControl))
+                                                                                .sub(changes[1]);
+            }
+        }
 
-		if ((changes[0] == null) && (changes[1] == null) && (changes[2] == null)) return TweakSplineCodeGen.abort;
+        if ((changes[0] == null) && (changes[1] == null) && (changes[2] == null)) return TweakSplineCodeGen.abort;
 
-		return new iResult(){
-			public List<SelectedVertex> getClaimedVertex() {
-				return Collections.singletonList(c);
-			}
+        return new iResult() {
+            public
+            List<SelectedVertex> getClaimedVertex() {
+                return Collections.singletonList(c);
+            }
 
-			public String toExpression() {
-				return "Rel(" + v(changes[0]) + ", " + v(changes[1]) + ", " + v(changes[2]) + ')';
-			}
+            public
+            String toExpression() {
+                return "Rel(" + v(changes[0]) + ", " + v(changes[1]) + ", " + v(changes[2]) + ')';
+            }
 
-			protected String v(Vector2 vv) {
-				return ((vv == null) ? "None" : ("Vector2(" + vv.x + ", " + vv.y + ')'));
-			}
+            protected
+            String v(Vector2 vv) {
+                return ((vv == null) ? "None" : ("Vector2(" + vv.x + ", " + vv.y + ')'));
+            }
 
-			public void toProperties(iVisualElement e, Map<String, Object> soFar) {
-			}
-		};
-	}
+            public
+            void toProperties(iVisualElement e, Map<String, Object> soFar) {
+            }
+        };
+    }
 }

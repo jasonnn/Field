@@ -7,48 +7,52 @@ import field.util.Dict.Prop;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FLineInterpolator {
+public
+class FLineInterpolator {
 
-	public FLineInterpolator() {
-	}
+    public
+    FLineInterpolator() {
+    }
 
-	List<CachedLine> previousOutput = new ArrayList<CachedLine>();
+    List<CachedLine> previousOutput = new ArrayList<CachedLine>();
 
-	CachedLineInterpolator ongoingInterpolator;
-	int duration;
-	int tick;
+    CachedLineInterpolator ongoingInterpolator;
+    int duration;
+    int tick;
 
-	public List<CachedLine> update() {
-		if (ongoingInterpolator == null)
-			return previousOutput;
+    public
+    List<CachedLine> update() {
+        if (ongoingInterpolator == null) return previousOutput;
 
-		tick++;
+        tick++;
 
-		if (tick <= duration) {
-			previousOutput = ongoingInterpolator.blend(shape(tick / (float) duration));
-		}
+        if (tick <= duration) {
+            previousOutput = ongoingInterpolator.blend(shape(tick / (float) duration));
+        }
 
-		if (tick == duration) {
-			ongoingInterpolator = null;
-		}
+        if (tick == duration) {
+            ongoingInterpolator = null;
+        }
 
-		return previousOutput;
-	}
+        return previousOutput;
+    }
 
-	public boolean isDoingWork() {
-		return ongoingInterpolator != null;
-	}
+    public
+    boolean isDoingWork() {
+        return ongoingInterpolator != null;
+    }
 
     private static
     float shape(float f) {
         return CubicTools.smoothStep(f);
-	}
+    }
 
-	public void setTarget(List<CachedLine> next, String hash, int duration) {
-		ongoingInterpolator = new CachedLineInterpolator(previousOutput, next, new Prop<String>(hash));
-		previousOutput = ongoingInterpolator.blend(shape(0));
-		this.duration = duration;
-		tick = 0;
-	}
+    public
+    void setTarget(List<CachedLine> next, String hash, int duration) {
+        ongoingInterpolator = new CachedLineInterpolator(previousOutput, next, new Prop<String>(hash));
+        previousOutput = ongoingInterpolator.blend(shape(0));
+        this.duration = duration;
+        tick = 0;
+    }
 
 }

@@ -8,70 +8,84 @@ import field.math.linalg.Vector3;
 import java.util.Set;
 
 
-public class VerticalLeftToRightAlign extends VerticalLeftToLeftAlign {
+public
+class VerticalLeftToRightAlign extends VerticalLeftToLeftAlign {
 
-	public static
-    class Resize extends VerticalLeftToRightAlign
-	{
-		public Resize(float baseScore) {
-			super(baseScore);
-		}
+    public static
+    class Resize extends VerticalLeftToRightAlign {
+        public
+        Resize(float baseScore) {
+            super(baseScore);
+        }
 
-		@Override
-		protected Class<? extends DefaultOverride> getConstraintClass() {
-			return null;
-		}
-		@Override
-		protected void processRects(final Set<Vector2> best, Rect newRect) {
-			float or = (float) (newRect.x+newRect.w);
-			super.processRects(best, newRect);
-			newRect.w = or-newRect.x;
-		}
-	}
+        @Override
+        protected
+        Class<? extends DefaultOverride> getConstraintClass() {
+            return null;
+        }
 
-	public VerticalLeftToRightAlign(float baseScore) {
-		super(baseScore);
-	}
+        @Override
+        protected
+        void processRects(final Set<Vector2> best, Rect newRect) {
+            float or = (float) (newRect.x + newRect.w);
+            super.processRects(best, newRect);
+            newRect.w = or - newRect.x;
+        }
+    }
 
-	@Override
-	public ArrowDirection getArrowDirectionForLocalPoint() {
-		return ArrowDirection.right;
-	}
+    public
+    VerticalLeftToRightAlign(float baseScore) {
+        super(baseScore);
+    }
 
-	@Override
-	public ArrowDirection getArrowDirectionForNonLocalPoint() {
-		return ArrowDirection.left;
-	}
+    @Override
+    public
+    ArrowDirection getArrowDirectionForLocalPoint() {
+        return ArrowDirection.right;
+    }
 
-	@Override
-	protected double distance(Vector2 sourcePoint, Rect targetRect) {
-		return Math.abs(targetRect.x+targetRect.w-sourcePoint.x);
-	}
+    @Override
+    public
+    ArrowDirection getArrowDirectionForNonLocalPoint() {
+        return ArrowDirection.left;
+    }
 
-	@Override
-	protected Class<? extends DefaultOverride> getConstraintClass() {
-		return null;
-	}
+    @Override
+    protected
+    double distance(Vector2 sourcePoint, Rect targetRect) {
+        return Math.abs(targetRect.x + targetRect.w - sourcePoint.x);
+    }
 
-	@Override
-	protected Vector3 localPoint(Rect currentNewRect) {
-		return currentNewRect.midPointLeftEdge();
-	}
+    @Override
+    protected
+    Class<? extends DefaultOverride> getConstraintClass() {
+        return null;
+    }
 
-	@Override
-	protected Vector2 originalPoint(Rect currentRect) {
-		if (forbidSmallSources() && currentRect.w<15) return null;
-				return new Vector2(currentRect.x, currentRect.y+currentRect.h/2);
-	}
-	@Override
-	protected void processRects(final Set<Vector2> best, Rect newRect) {
-		newRect.x = best.iterator().next().x;
-	}
+    @Override
+    protected
+    Vector3 localPoint(Rect currentNewRect) {
+        return currentNewRect.midPointLeftEdge();
+    }
+
+    @Override
+    protected
+    Vector2 originalPoint(Rect currentRect) {
+        if (forbidSmallSources() && currentRect.w < 15) return null;
+        return new Vector2(currentRect.x, currentRect.y + currentRect.h / 2);
+    }
+
+    @Override
+    protected
+    void processRects(final Set<Vector2> best, Rect newRect) {
+        newRect.x = best.iterator().next().x;
+    }
 
 
-	@Override
-	protected Vector2 targetPoint(Rect targetRect) {
-		return new Vector2(targetRect.x+targetRect.w, targetRect.y+targetRect.h/2);
-	}
+    @Override
+    protected
+    Vector2 targetPoint(Rect targetRect) {
+        return new Vector2(targetRect.x + targetRect.w, targetRect.y + targetRect.h / 2);
+    }
 
 }

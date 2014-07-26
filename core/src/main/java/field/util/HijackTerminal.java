@@ -4,63 +4,58 @@ import field.core.util.ExecuteCommand;
 
 import java.io.*;
 
-public class HijackTerminal {
+public
+class HijackTerminal {
 
-	public static final String ttypname = "/var/tmp/field_tty";
+    public static final String ttypname = "/var/tmp/field_tty";
 
-	public static
+    public static
     void hijackTerminal(boolean forceNew) {
-		hijackTerminal(forceNew, 0);
-	}
+        hijackTerminal(forceNew, 0);
+    }
 
-	protected static
+    protected static
     void hijackTerminal(boolean forceNew, int c) {
 
-		if (c>4)
-			return;
+        if (c > 4) return;
 
-		if (!forceNew)
-			if (!new File(ttypname).exists())
-				forceNew = true;
-		if (!forceNew)
-		{
-			try {
-				forceNew = true;
+        if (!forceNew) if (!new File(ttypname).exists()) forceNew = true;
+        if (!forceNew) {
+            try {
+                forceNew = true;
 
-				BufferedReader b;
-				b = new BufferedReader(new FileReader(new File(ttypname)));
-				String line = b.readLine();
-				b.close();
+                BufferedReader b;
+                b = new BufferedReader(new FileReader(new File(ttypname)));
+                String line = b.readLine();
+                b.close();
 
 
-				File nf = new File(line.trim());
-				if (nf.canWrite())
-				{
-					System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(nf))));
-					System.setErr(new PrintStream((new FileOutputStream(nf))));
-					return;
-				}
-				else
-				{
+                File nf = new File(line.trim());
+                if (nf.canWrite()) {
+                    System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream(nf))));
+                    System.setErr(new PrintStream((new FileOutputStream(nf))));
+                    return;
+                }
+                else {
                     //System.out.println(" can't write file ?");
                 }
 
-			} catch (FileNotFoundException e) {
-			} catch (IOException e) {
-			}
-		}
+            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
+            }
+        }
 
-		String cmd = "/usr/bin/open " + (new File(".").getAbsolutePath()) + "/whichtty_command.terminal";
-		ExecuteCommand ec = new ExecuteCommand(".", cmd);
-		int done = ec.waitFor();
+        String cmd = "/usr/bin/open " + (new File(".").getAbsolutePath()) + "/whichtty_command.terminal";
+        ExecuteCommand ec = new ExecuteCommand(".", cmd);
+        int done = ec.waitFor();
 
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		hijackTerminal(false, c+1);
-	}
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        hijackTerminal(false, c + 1);
+    }
 
 
 }

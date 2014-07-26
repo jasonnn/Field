@@ -12,38 +12,42 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 
-public class Called extends BaseReferenceAlgorithm implements Comparator<iVisualElement> {
+public
+class Called extends BaseReferenceAlgorithm implements Comparator<iVisualElement> {
 
-	private final Pattern pattern;
+    private final Pattern pattern;
 
-	private Vector2 center;
+    private Vector2 center;
 
-	public Called(String reg) {
-		pattern = Pattern.compile(reg);
-	}
+    public
+    Called(String reg) {
+        pattern = Pattern.compile(reg);
+    }
 
-	@Override
-	protected List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement) {
-		ArrayList<iVisualElement> r = new ArrayList<iVisualElement>();
+    @Override
+    protected
+    List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement) {
+        ArrayList<iVisualElement> r = new ArrayList<iVisualElement>();
 
-		List<iVisualElement> all = allVisualElements(root);
+        List<iVisualElement> all = allVisualElements(root);
 
-		center = forElement.getFrame(null).midpoint2();
+        center = forElement.getFrame(null).midpoint2();
 
-		for (iVisualElement v : all) {
-			if (pattern.matcher(v.getProperty(iVisualElement.name)).matches()) r.add(v);
-		}
+        for (iVisualElement v : all) {
+            if (pattern.matcher(v.getProperty(iVisualElement.name)).matches()) r.add(v);
+        }
 
-		Collections.sort(r, this);
+        Collections.sort(r, this);
 
-		return r;
-	}
+        return r;
+    }
 
-	Rect tFrame = new Rect(0, 0, 0, 0);
+    Rect tFrame = new Rect(0, 0, 0, 0);
 
-	public int compare(iVisualElement o1, iVisualElement o2) {
-		float d1 = o1.getFrame(tFrame).midpoint2().distanceFrom(center);
-		float d2 = o2.getFrame(tFrame).midpoint2().distanceFrom(center);
-		return d2 < d1 ? 1 : -1;
-	}
+    public
+    int compare(iVisualElement o1, iVisualElement o2) {
+        float d1 = o1.getFrame(tFrame).midpoint2().distanceFrom(center);
+        float d2 = o2.getFrame(tFrame).midpoint2().distanceFrom(center);
+        return d2 < d1 ? 1 : -1;
+    }
 }

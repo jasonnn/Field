@@ -7,11 +7,17 @@ import java.security.ProtectionDomain;
 /**
  * Created by jason on 7/14/14.
  */
-public class TrampolineWeaver implements ClassFileTransformer {
+public
+class TrampolineWeaver implements ClassFileTransformer {
     public static final TrampolineWeaver INSTANCE = new TrampolineWeaver();
 
     @Override
-    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+    public
+    byte[] transform(ClassLoader loader,
+                     String className,
+                     Class<?> classBeingRedefined,
+                     ProtectionDomain protectionDomain,
+                     byte[] classfileBuffer) throws IllegalClassFormatException {
         return classfileBuffer;
     }
 }

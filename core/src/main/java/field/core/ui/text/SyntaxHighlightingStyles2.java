@@ -15,7 +15,8 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class SyntaxHighlightingStyles2 {
+public
+class SyntaxHighlightingStyles2 {
 
     public static final Color4 tab = AutoPersist.persist("Color4_tab", new Color4(0, 0, 0, 0.1f));
     public static final Color4 self = AutoPersist.persist("Color4_self", new Color4(0.5f, 0.5f, 0.4f, 1f));
@@ -33,126 +34,138 @@ public class SyntaxHighlightingStyles2 {
             AutoPersist.persist("Color4_background", new Color4(85 / 255f, 85 / 255f, 85 / 255f, 1f));
     public static final float[] fontSizeMod = AutoPersist.persist("FontSizeMod", new float[]{0});
 
-	public static
+    public static
     void initStyles(Color[] colors, StyledText target) {
 
-		colors[PythonScanner.TokenTypes.comment.ordinal()] = comment.toSWTColor();
-		colors[PythonScanner.TokenTypes.self.ordinal()] = self.toSWTColor();
-		colors[PythonScanner.TokenTypes.localTemp.ordinal()] = localTemp.toSWTColor();
-		colors[PythonScanner.TokenTypes.localPersistant.ordinal()] = localPersistant.toSWTColor();
-		colors[PythonScanner.TokenTypes.number.ordinal()] = number.toSWTColor();
-		colors[PythonScanner.TokenTypes.operator.ordinal()] = operator.toSWTColor();
-		colors[PythonScanner.TokenTypes.identifier.ordinal()] = identifier.toSWTColor();
-		colors[PythonScanner.TokenTypes.string.ordinal()] = string.toSWTColor();
-		colors[PythonScanner.TokenTypes.keyword.ordinal()] = keyword.toSWTColor();
-		colors[PythonScanner.TokenTypes.decorator.ordinal()] = decorator.toSWTColor();
+        colors[PythonScanner.TokenTypes.comment.ordinal()] = comment.toSWTColor();
+        colors[PythonScanner.TokenTypes.self.ordinal()] = self.toSWTColor();
+        colors[PythonScanner.TokenTypes.localTemp.ordinal()] = localTemp.toSWTColor();
+        colors[PythonScanner.TokenTypes.localPersistant.ordinal()] = localPersistant.toSWTColor();
+        colors[PythonScanner.TokenTypes.number.ordinal()] = number.toSWTColor();
+        colors[PythonScanner.TokenTypes.operator.ordinal()] = operator.toSWTColor();
+        colors[PythonScanner.TokenTypes.identifier.ordinal()] = identifier.toSWTColor();
+        colors[PythonScanner.TokenTypes.string.ordinal()] = string.toSWTColor();
+        colors[PythonScanner.TokenTypes.keyword.ordinal()] = keyword.toSWTColor();
+        colors[PythonScanner.TokenTypes.decorator.ordinal()] = decorator.toSWTColor();
 
-		target.setBackground(background.toSWTColor());
+        target.setBackground(background.toSWTColor());
 
-		// Color background = ed.getBackground();
+        // Color background = ed.getBackground();
 
         //System.out.println(" background color is <" + background + "> <"+colors[PythonScanner.TokenTypes.keyword.ordinal()]+">");
 
-	}
-	
-	static ToolBarFolder open;
-	
-	public static
+    }
+
+    static ToolBarFolder open;
+
+    public static
     void openCustomizer(final Color[] colors, final StyledText target, final iUpdateable post) {
-		if (open!=null && !open.getShell().isDisposed()) return;
-		
-		ToolBarFolder f = new ToolBarFolder(new Rectangle(50, 50, 300, 600), true);
-		open = f;
-		ToolBarFolder was = ToolBarFolder.currentFolder;
-		ToolBarFolder.currentFolder = f;
-		final NewInspector2 inspector = new NewInspector2();
-		inspector.getShell().setText("Customize Syntax Highlighting");
+        if (open != null && !open.getShell().isDisposed()) return;
 
-		ToolBarFolder.currentFolder = was;
+        ToolBarFolder f = new ToolBarFolder(new Rectangle(50, 50, 300, 600), true);
+        open = f;
+        ToolBarFolder was = ToolBarFolder.currentFolder;
+        ToolBarFolder.currentFolder = f;
+        final NewInspector2 inspector = new NewInspector2();
+        inspector.getShell().setText("Customize Syntax Highlighting");
 
-		String[] names = { "keyword", "comment", "decorator", "self", "string", "localTemp", "localPersistant", "number", "operator", "identifier", "background" };
+        ToolBarFolder.currentFolder = was;
 
-		for (final String name : names) {
+        String[] names = {"keyword",
+                          "comment",
+                          "decorator",
+                          "self",
+                          "string",
+                          "localTemp",
+                          "localPersistant",
+                          "number",
+                          "operator",
+                          "identifier",
+                          "background"};
 
-			iIO<Vector4> iio = new iIO<Vector4>(name)
-			{
+        for (final String name : names) {
 
-				@Override
-				public Vector4 getValue() {
-					try {
-						return (Vector4) SyntaxHighlightingStyles2.class.getField(name).get(null);
-					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (SecurityException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchFieldException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					return null;
-				}
+            iIO<Vector4> iio = new iIO<Vector4>(name) {
 
-				@Override
-				public field.core.ui.NewInspector2.Status getStatus() {
-					return field.core.ui.NewInspector2.Status.valid;
-				}
+                @Override
+                public
+                Vector4 getValue() {
+                    try {
+                        return (Vector4) SyntaxHighlightingStyles2.class.getField(name).get(null);
+                    } catch (IllegalArgumentException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (SecurityException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (NoSuchFieldException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
 
-				@Override
-				public void setValue(Vector4 s) {
+                @Override
+                public
+                field.core.ui.NewInspector2.Status getStatus() {
+                    return field.core.ui.NewInspector2.Status.valid;
+                }
+
+                @Override
+                public
+                void setValue(Vector4 s) {
 
                     //System.out.println(" setting color <"+name+"> now to be <"+s+">");
 
-					try {
-						((Vector4) SyntaxHighlightingStyles2.class.getField(name).get(null)).set(s);
-					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (SecurityException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchFieldException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					initStyles(colors, target);
-					post.update();
-					target.redraw();
-				}
-				
-			};
-			
-			iio.editor= ColorControl.class;
-			try {
-				iio.editor.getDeclaredConstructors()[0].newInstance(inspector, iio);
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+                    try {
+                        ((Vector4) SyntaxHighlightingStyles2.class.getField(name).get(null)).set(s);
+                    } catch (IllegalArgumentException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (SecurityException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (NoSuchFieldException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    initStyles(colors, target);
+                    post.update();
+                    target.redraw();
+                }
+
+            };
+
+            iio.editor = ColorControl.class;
+            try {
+                iio.editor.getDeclaredConstructors()[0].newInstance(inspector, iio);
+            } catch (IllegalArgumentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
 
 //		inspector.(all);
 //		inspector.setWaterText("Editor Options");
 
-		f.select(0);
-	}
+        f.select(0);
+    }
 }

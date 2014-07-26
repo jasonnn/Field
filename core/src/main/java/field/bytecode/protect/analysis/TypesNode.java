@@ -92,7 +92,8 @@ class TypesNode {
 
         if (mIsSuccessor) {
             mLevel = mPreceeder.getLevel() + 1;
-        } else {
+        }
+        else {
             mLevel = mPreceeder.getLevel();
         }
     }

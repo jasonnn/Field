@@ -27,106 +27,120 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class LineInteraction implements iMousePeer {
+public
+class LineInteraction implements iMousePeer {
 
-	public abstract static
+    public abstract static
     class EventHandler {
-		public void begin() {
-		}
+        public
+        void begin() {
+        }
 
         public static
         boolean enter(Event e) {
             return false;
-		}
+        }
 
         public static
         boolean exit(Event e) {
             return false;
-		}
+        }
 
         public static
         boolean moved(Event e) {
             return false;
-		}
+        }
 
-		public boolean down(Event e) {
-			return false;
-		}
+        public
+        boolean down(Event e) {
+            return false;
+        }
 
-		public boolean up(Event e) {
-			return false;
-		}
+        public
+        boolean up(Event e) {
+            return false;
+        }
 
         public static
         boolean drag(Event e) {
             return false;
-		}
-		
-		public boolean scroll(Event e)
-		{
-			return false;
-		}
+        }
 
-		public void popupMenu(Event event, Map<String, iUpdateable> source) {
+        public
+        boolean scroll(Event e) {
+            return false;
+        }
 
-			// this might not actually be a map<string,
-			// iUpdateable>, we might have something from Python
-			LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
+        public
+        void popupMenu(Event event, Map<String, iUpdateable> source) {
 
-			Set<Entry<String, iUpdateable>> es = source.entrySet();
-			for (Entry<String, iUpdateable> e : es) {
+            // this might not actually be a map<string,
+            // iUpdateable>, we might have something from Python
+            LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
 
-				Object u = e.getValue();
+            Set<Entry<String, iUpdateable>> es = source.entrySet();
+            for (Entry<String, iUpdateable> e : es) {
 
-				if (u != null) {
-					final iUpdateable c = PythonUtils.installed.toUpdateable(u);
+                Object u = e.getValue();
 
-					iUpdateable c2 = new iUpdateable() {
+                if (u != null) {
+                    final iUpdateable c = PythonUtils.installed.toUpdateable(u);
 
-						public void update() {
-							resyncMouse();
-							c.update();
-						}
-					};
+                    iUpdateable c2 = new iUpdateable() {
 
-					menu.put(e.getKey(), c2);
-				} else
-					menu.put(e.getKey(), null);
-			}
+                        public
+                        void update() {
+                            resyncMouse();
+                            c.update();
+                        }
+                    };
 
-			BetterPopup m = new SmallMenu().createMenu(menu, GLComponentWindow.getCurrentWindow(null).getCanvas().getShell(), null);
+                    menu.put(e.getKey(), c2);
+                }
+                else menu.put(e.getKey(), null);
+            }
 
-			GLComponentWindow.getCurrentWindow(null).untransformMouseEvent(event);
-			m.show(new Point(event.x, event.y));
-		}
+            BetterPopup m = new SmallMenu().createMenu(menu,
+                                                       GLComponentWindow.getCurrentWindow(null).getCanvas().getShell(),
+                                                       null);
 
-		protected void resyncMouse() {
-		}
+            GLComponentWindow.getCurrentWindow(null).untransformMouseEvent(event);
+            m.show(new Point(event.x, event.y));
+        }
+
+        protected
+        void resyncMouse() {
+        }
 
 
         protected static
         boolean key(Event k) {
             return false;
-		}
-}
-
-	public static final Prop<EventHandler> eventHandler = new Prop<EventHandler>("eventHandler");
-
-	public void keyPressed(ComponentContainer inside, Event arg0) {
-	}
-
-	public void keyReleased(ComponentContainer inside, Event arg0) {
-	}
-
-	public void keyTyped(ComponentContainer inside, Event arg0) {
-		if (last!=null) EventHandler.key(arg0);
+        }
     }
 
-	public void mouseClicked(ComponentContainer inside, Event arg0) {
-	}
+    public static final Prop<EventHandler> eventHandler = new Prop<EventHandler>("eventHandler");
 
-	public void mouseDragged(ComponentContainer inside, Event arg0) {
-	
+    public
+    void keyPressed(ComponentContainer inside, Event arg0) {
+    }
+
+    public
+    void keyReleased(ComponentContainer inside, Event arg0) {
+    }
+
+    public
+    void keyTyped(ComponentContainer inside, Event arg0) {
+        if (last != null) EventHandler.key(arg0);
+    }
+
+    public
+    void mouseClicked(ComponentContainer inside, Event arg0) {
+    }
+
+    public
+    void mouseDragged(ComponentContainer inside, Event arg0) {
+
 		/*Pair<CachedLine, EventHandler> h = locate(arg0);
 		if (h != null) {
 			Promise p = enter(h.left);
@@ -142,20 +156,18 @@ public class LineInteraction implements iMousePeer {
 			}
 		}
 */
-		boolean b1 = false;
-		
-		if (last!=null)
-		{
-			Promise p = enter(last.left);
-			try {
+        boolean b1 = false;
+
+        if (last != null) {
+            Promise p = enter(last.left);
+            try {
                 b1 |= EventHandler.drag(arg0);
             } catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (p != null)
-					p.endExecute();
-			}
-		}
+                e.printStackTrace();
+            } finally {
+                if (p != null) p.endExecute();
+            }
+        }
 //		
 //		Pair<CachedLine, EventHandler> h = locate(arg0);
 //		
@@ -203,242 +215,235 @@ public class LineInteraction implements iMousePeer {
 //		}
 //
 //		last = h;
-		if (b1 && inside!=null)
-			inside.requestRedisplay();
+        if (b1 && inside != null) inside.requestRedisplay();
 
-	}
+    }
 
-	public void mouseEntered(ComponentContainer inside, Event arg0) {
-	}
+    public
+    void mouseEntered(ComponentContainer inside, Event arg0) {
+    }
 
-	public void mouseExited(ComponentContainer inside, Event arg0) {
-	}
+    public
+    void mouseExited(ComponentContainer inside, Event arg0) {
+    }
 
-	Pair<CachedLine, EventHandler> last = null;
-	Pair<CachedLine, EventHandler> lastDown = null;
-	protected Collection<CachedLine> all;
+    Pair<CachedLine, EventHandler> last = null;
+    Pair<CachedLine, EventHandler> lastDown = null;
+    protected Collection<CachedLine> all;
 
-	public void mouseMoved(ComponentContainer inside, Event arg0) {
-		Pair<CachedLine, EventHandler> h = locate(arg0);
-		
-		boolean b1 = false;
+    public
+    void mouseMoved(ComponentContainer inside, Event arg0) {
+        Pair<CachedLine, EventHandler> h = locate(arg0);
+
+        boolean b1 = false;
 
 //		if (last != null)
 //			;//System.out.println("     " + eq(h, last) + " " + stillHere(last));
-		if (last != null && !eq(h, last) && stillHere(last)) {
+        if (last != null && !eq(h, last) && stillHere(last)) {
 
-			Promise p = enter(last.left);
-			try {
+            Promise p = enter(last.left);
+            try {
                 b1 = EventHandler.exit(arg0);
             } catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (p != null)
-					p.endExecute();
-			}
-		}
-		if (h != null && !eq(h, last)) {
-			Promise p = enter(h.left);
-			try {
+                e.printStackTrace();
+            } finally {
+                if (p != null) p.endExecute();
+            }
+        }
+        if (h != null && !eq(h, last)) {
+            Promise p = enter(h.left);
+            try {
                 b1 = b1 | EventHandler.enter(arg0);
             } catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (p != null)
-					p.endExecute();
-			}
-		}
-		last = h;
-		if (b1 && inside!=null)
-			inside.requestRedisplay();
-	}
-	
-	public void mouseScrolled(ComponentContainer inside, Event ee) {
-		boolean  b1 = false;
-		if (last!=null)
-		{
-			Promise p = enter(last.left);
-			try {
-				b1 = last.right.scroll(ee);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (p != null)
-					p.endExecute();
-			}
-			
-		}
-		if (b1 && inside!=null)
-			inside.requestRedisplay();
-	}
+                e.printStackTrace();
+            } finally {
+                if (p != null) p.endExecute();
+            }
+        }
+        last = h;
+        if (b1 && inside != null) inside.requestRedisplay();
+    }
+
+    public
+    void mouseScrolled(ComponentContainer inside, Event ee) {
+        boolean b1 = false;
+        if (last != null) {
+            Promise p = enter(last.left);
+            try {
+                b1 = last.right.scroll(ee);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (p != null) p.endExecute();
+            }
+
+        }
+        if (b1 && inside != null) inside.requestRedisplay();
+    }
 
 
-	private boolean stillHere(Pair<CachedLine, EventHandler> last) {
-		if (!all.contains(last.left))
-			return false;
+    private
+    boolean stillHere(Pair<CachedLine, EventHandler> last) {
+        if (!all.contains(last.left)) return false;
 
-		Dict p = last.left.getProperties();
-		if (p != null) {
-			EventHandler e = p.get(eventHandler);
-			return eq(e, last.right);
-		}
-		return false;
-	}
+        Dict p = last.left.getProperties();
+        if (p != null) {
+            EventHandler e = p.get(eventHandler);
+            return eq(e, last.right);
+        }
+        return false;
+    }
 
     private static
     boolean eq(Object a, Object b) {
-        if (a == null)
-			return b == null;
-		if (b == null)
-			return false;
-		return a.equals(b);
-	}
+        if (a == null) return b == null;
+        if (b == null) return false;
+        return a.equals(b);
+    }
 
-	public void mousePressed(ComponentContainer inside, Event arg0) {
-		
-		if (arg0.button==2) return;
-		
-		Pair<CachedLine, EventHandler> h = locate(arg0);
-		if (h != null) {
-			Promise p = enter(h.left);
-			try {
-				if (h.right.down(arg0) && inside!=null)
-					inside.requestRedisplay();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (p != null)
-					p.endExecute();
-			}
-			lastDown = h;
-		}
-	}
+    public
+    void mousePressed(ComponentContainer inside, Event arg0) {
 
-	public void mouseReleased(ComponentContainer inside, Event arg0) {
-		Pair<CachedLine, EventHandler> h = locate(arg0);
-		if (h != null) {
-			Promise p = enter(h.left);
-			try {
-				if (h.right.up(arg0) && inside!=null)
-					inside.requestRedisplay();
-				if (eq(h, lastDown))
-					lastDown = null;
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (p != null)
-					p.endExecute();
-			}
-		}
-		if (lastDown != null && stillHere(lastDown)) {
-			
-			Promise p = enter(lastDown.left);
-			try {
-				lastDown.right.up(arg0);
+        if (arg0.button == 2) return;
+
+        Pair<CachedLine, EventHandler> h = locate(arg0);
+        if (h != null) {
+            Promise p = enter(h.left);
+            try {
+                if (h.right.down(arg0) && inside != null) inside.requestRedisplay();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (p != null) p.endExecute();
+            }
+            lastDown = h;
+        }
+    }
+
+    public
+    void mouseReleased(ComponentContainer inside, Event arg0) {
+        Pair<CachedLine, EventHandler> h = locate(arg0);
+        if (h != null) {
+            Promise p = enter(h.left);
+            try {
+                if (h.right.up(arg0) && inside != null) inside.requestRedisplay();
+                if (eq(h, lastDown)) lastDown = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (p != null) p.endExecute();
+            }
+        }
+        if (lastDown != null && stillHere(lastDown)) {
+
+            Promise p = enter(lastDown.left);
+            try {
+                lastDown.right.up(arg0);
                 EventHandler.exit(arg0);
-                if (inside!=null)
-					inside.requestRedisplay();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (p != null)
-					p.endExecute();
-			}
-		}
-		
-		mouseMoved(inside, arg0);
-		
-		lastDown = null;
-	}
+                if (inside != null) inside.requestRedisplay();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (p != null) p.endExecute();
+            }
+        }
 
-	public void setAllCachedLines(Collection<CachedLine> c) {
-		this.all = c;
-		for (CachedLine cc : all) {
-			if (cc.properties != null) {
-				EventHandler ev = cc.getProperties().get(eventHandler);
-				if (ev != null) {
-					Promise p = enter(cc);
-					try {
-						ev.begin();
-					} catch (Exception e) {
-						e.printStackTrace();
-					} finally {
-						if (p != null)
-							p.endExecute();
-					}
-				}
-			}
-		}
-	}
+        mouseMoved(inside, arg0);
+
+        lastDown = null;
+    }
+
+    public
+    void setAllCachedLines(Collection<CachedLine> c) {
+        this.all = c;
+        for (CachedLine cc : all) {
+            if (cc.properties != null) {
+                EventHandler ev = cc.getProperties().get(eventHandler);
+                if (ev != null) {
+                    Promise p = enter(cc);
+                    try {
+                        ev.begin();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (p != null) p.endExecute();
+                    }
+                }
+            }
+        }
+    }
 
     protected static
     Promise enter(CachedLine cc) {
         if (cc.properties != null) {
-			Object o = cc.properties.get(iLinearGraphicsContext.source);
-			if (!(o instanceof iVisualElement)) return null;
-			iVisualElement source = (iVisualElement)o;
-			if (source==null) return null;
-			PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(source);
-			Promise p = pss.promiseForKey(source);
-			p.beginExecute();
-			return p;
-		}
-		return null;
-	}
+            Object o = cc.properties.get(iLinearGraphicsContext.source);
+            if (!(o instanceof iVisualElement)) return null;
+            iVisualElement source = (iVisualElement) o;
+            if (source == null) return null;
+            PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(source);
+            Promise p = pss.promiseForKey(source);
+            p.beginExecute();
+            return p;
+        }
+        return null;
+    }
 
-	int cacheSize = 100;
+    int cacheSize = 100;
 
-	LinkedHashMap<Integer, Area> intersectionCache = new LinkedHashMap<Integer, Area>() {
-		@Override
-		protected boolean removeEldestEntry(Map.Entry<Integer, Area> eldest) {
-			return (size() > cacheSize);
+    LinkedHashMap<Integer, Area> intersectionCache = new LinkedHashMap<Integer, Area>() {
+        @Override
+        protected
+        boolean removeEldestEntry(Map.Entry<Integer, Area> eldest) {
+            return (size() > cacheSize);
         }
     };
 
-	protected Pair<CachedLine, EventHandler> locate(Event arg0) {
-		float x = 0;
-		Pair<CachedLine, EventHandler> xIs = null;
-		if (all == null)
-			return null;
+    protected
+    Pair<CachedLine, EventHandler> locate(Event arg0) {
+        float x = 0;
+        Pair<CachedLine, EventHandler> xIs = null;
+        if (all == null) return null;
 
-		float r = 5;
-		Rect hit = new Rect(arg0.x - r, arg0.y - r, 2 * r, 2 * r);
-		Rectangle2D.Double d = new Rectangle2D.Double(hit.x, hit.y, hit.w, hit.h);
-		Area a2 = new Area(d);
+        float r = 5;
+        Rect hit = new Rect(arg0.x - r, arg0.y - r, 2 * r, 2 * r);
+        Rectangle2D.Double d = new Rectangle2D.Double(hit.x, hit.y, hit.w, hit.h);
+        Area a2 = new Area(d);
 
-		for (CachedLine cc : all) {
-			// should be scaled by viewport scaling.
-			if (cc.properties != null) {
-				EventHandler ev = cc.getProperties().get(eventHandler);
-				if (ev != null) {
+        for (CachedLine cc : all) {
+            // should be scaled by viewport scaling.
+            if (cc.properties != null) {
+                EventHandler ev = cc.getProperties().get(eventHandler);
+                if (ev != null) {
 
-					Area cachedArea = getCachedArea(cc);
-					Area dd = new Area(cachedArea);
-					dd.intersect(a2);
+                    Area cachedArea = getCachedArea(cc);
+                    Area dd = new Area(cachedArea);
+                    dd.intersect(a2);
 
-					Rectangle res = dd.getBounds();
-					float amount = (float) ((res.width * res.height));
-					if (amount > x) {
-						x = amount;
-						xIs = new Pair<CachedLine, EventHandler>(cc, ev);
-					}
-				}
-			}
-		}
-		return xIs;
-	}
+                    Rectangle res = dd.getBounds();
+                    float amount = (float) ((res.width * res.height));
+                    if (amount > x) {
+                        x = amount;
+                        xIs = new Pair<CachedLine, EventHandler>(cc, ev);
+                    }
+                }
+            }
+        }
+        return xIs;
+    }
 
-	protected Area getCachedArea(CachedLine cc) {
-		Area a = intersectionCache.get(System.identityHashCode(cc));
-		if (a == null) {
-			GeneralPath gp = new LineUtils().lineToGeneralPath(cc);
-			intersectionCache.put(System.identityHashCode(cc), a = new Area(gp));
-		}
-		return a;
-	}
+    protected
+    Area getCachedArea(CachedLine cc) {
+        Area a = intersectionCache.get(System.identityHashCode(cc));
+        if (a == null) {
+            GeneralPath gp = new LineUtils().lineToGeneralPath(cc);
+            intersectionCache.put(System.identityHashCode(cc), a = new Area(gp));
+        }
+        return a;
+    }
 
-	public void uncache(CachedLine line) {
-		intersectionCache.remove(System.identityHashCode(line));
-	}
+    public
+    void uncache(CachedLine line) {
+        intersectionCache.remove(System.identityHashCode(line));
+    }
 
 }

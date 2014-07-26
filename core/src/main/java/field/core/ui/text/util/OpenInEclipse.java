@@ -2,16 +2,16 @@ package field.core.ui.text.util;
 
 import field.core.util.AppleScript;
 
-public class OpenInEclipse {
+public
+class OpenInEclipse {
 
-	public OpenInEclipse(String name)
-	{
-		String keys = "";
-		for(int i=0;i<name.length();i++)
-		{
-			char c = name.charAt(i);
-			keys += "keystroke \""+c+"\"\n";
-		}
+    public
+    OpenInEclipse(String name) {
+        String keys = "";
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            keys += "keystroke \"" + c + "\"\n";
+        }
         String command = "tell application \"System Events\"\n"
                          + "	tell application \"Eclipse\" to activate\n"
                          + "	tell application \"Eclipse\" to tell window 2 to activate\n"
@@ -22,24 +22,22 @@ public class OpenInEclipse {
                          + "end tell\n";
         //System.out.println(" command is <"+command+">");
         AppleScript script = new AppleScript(command, false);
-	}
+    }
 
-	public OpenInEclipse(String name, int line)
-	{
-		String keys = "";
-		for(int i=0;i<name.length();i++)
-		{
-			char c = name.charAt(i);
-			keys += "keystroke \""+c+"\"\n";
-		}
+    public
+    OpenInEclipse(String name, int line) {
+        String keys = "";
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            keys += "keystroke \"" + c + "\"\n";
+        }
 
-		String lines= "";
+        String lines = "";
         String ll = String.valueOf(line);
-        for(int i=0;i<ll.length();i++)
-		{
-			char c = ll.charAt(i);
-			lines+= "keystroke \""+c+"\"\n";
-		}
+        for (int i = 0; i < ll.length(); i++) {
+            char c = ll.charAt(i);
+            lines += "keystroke \"" + c + "\"\n";
+        }
 
         String command = "tell application \"System Events\"\n"
                          + "	tell application \"Eclipse\" to activate\n"
@@ -58,7 +56,7 @@ public class OpenInEclipse {
         //System.out.println(" command is <"+command+">");
         AppleScript script = new AppleScript(command, false);
 
-		//script.execute(null);
-	}
+        //script.execute(null);
+    }
 
 }

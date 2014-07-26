@@ -18,158 +18,166 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
+public
+class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
 
-	public static VisualElementProperty<Vector4> groupFillColor = new VisualElementProperty<Vector4>("groupFillColor");
-	public static VisualElementProperty<Vector4> groupStrokeColor = new VisualElementProperty<Vector4>("groupStrokeColor");
+    public static VisualElementProperty<Vector4> groupFillColor = new VisualElementProperty<Vector4>("groupFillColor");
+    public static VisualElementProperty<Vector4> groupStrokeColor =
+            new VisualElementProperty<Vector4>("groupStrokeColor");
 
-	public static
+    public static
     void mixin(iVisualElement e) {
-		new Mixins().mixInOverride(DrawGroupMixin.class, e);
-	}
+        new Mixins().mixInOverride(DrawGroupMixin.class, e);
+    }
 
-	transient CachedLine frameLine;
+    transient CachedLine frameLine;
 
-	@Override
-	public VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+    @Override
+    public
+    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
 
-		if (source == forElement) {
+        if (source == forElement) {
 
-			final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-			new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source).getProperty(source, iVisualElement.selectionGroup, group);
+            final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
+            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+                                                           .getProperty(source, iVisualElement.selectionGroup, group);
 
-			items.put("Groups (" + forElement.getProperty(iVisualElement.name) + ')', null);
+            items.put("Groups (" + forElement.getProperty(iVisualElement.name) + ')', null);
 
-			items.put("   \u21e3  unpack selection from this group", new iUpdateable() {
+            items.put("   \u21e3  unpack selection from this group", new iUpdateable() {
 
-				public void update() {
-					List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
+                public
+                void update() {
+                    List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
 
-					Set<iComponent> selection = group.get().getSelection();
+                    Set<iComponent> selection = group.get().getSelection();
 
-					for (iComponent c : selection) {
-						iVisualElement ve = c.getVisualElement();
-						if (ve != null) {
-							if (parents.contains(ve) && parents.size() > 1) {
-								ve.removeChild(forElement);
-							}
-						}
-					}
+                    for (iComponent c : selection) {
+                        iVisualElement ve = c.getVisualElement();
+                        if (ve != null) {
+                            if (parents.contains(ve) && parents.size() > 1) {
+                                ve.removeChild(forElement);
+                            }
+                        }
+                    }
 
-					frameLine = null;
-					forElement.setProperty(iVisualElement.dirty, true);
-				}
-			});
+                    frameLine = null;
+                    forElement.setProperty(iVisualElement.dirty, true);
+                }
+            });
 
-			items.put("   \u21e3  put selection into this group", new iUpdateable() {
+            items.put("   \u21e3  put selection into this group", new iUpdateable() {
 
-				public void update() {
-					List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
+                public
+                void update() {
+                    List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
 
-					Set<iComponent> selection = group.get().getSelection();
+                    Set<iComponent> selection = group.get().getSelection();
 
-					for (iComponent c : selection) {
-						iVisualElement ve = c.getVisualElement();
-						if (ve != null) {
-							if (!parents.contains(ve) && ve != forElement) {
-								ve.addChild(forElement);
-							}
-						}
-					}
-					frameLine = null;
-					forElement.setProperty(iVisualElement.dirty, true);
-				}
-			});
+                    for (iComponent c : selection) {
+                        iVisualElement ve = c.getVisualElement();
+                        if (ve != null) {
+                            if (!parents.contains(ve) && ve != forElement) {
+                                ve.addChild(forElement);
+                            }
+                        }
+                    }
+                    frameLine = null;
+                    forElement.setProperty(iVisualElement.dirty, true);
+                }
+            });
 
-			items.put("   \u21e3  put selection into this group exclusively", new iUpdateable() {
+            items.put("   \u21e3  put selection into this group exclusively", new iUpdateable() {
 
-				public void update() {
-					List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
+                public
+                void update() {
+                    List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
 
-					Set<iComponent> selection = group.get().getSelection();
+                    Set<iComponent> selection = group.get().getSelection();
 
-					for (iComponent c : selection) {
-						iVisualElement ve = c.getVisualElement();
-						if (ve != null) {
-							if (!parents.contains(ve) && ve != forElement) {
-								List<iVisualElement> cp = new ArrayList<iVisualElement>(ve.getChildren());
-								for(iVisualElement cc : cp)
-								{
-									ve.removeChild(cc);
-								}
-								ve.addChild(forElement);
-							}
-						}
-					}
-					frameLine = null;
-					forElement.setProperty(iVisualElement.dirty, true);
-				}
-			});
+                    for (iComponent c : selection) {
+                        iVisualElement ve = c.getVisualElement();
+                        if (ve != null) {
+                            if (!parents.contains(ve) && ve != forElement) {
+                                List<iVisualElement> cp = new ArrayList<iVisualElement>(ve.getChildren());
+                                for (iVisualElement cc : cp) {
+                                    ve.removeChild(cc);
+                                }
+                                ve.addChild(forElement);
+                            }
+                        }
+                    }
+                    frameLine = null;
+                    forElement.setProperty(iVisualElement.dirty, true);
+                }
+            });
 
-		} else {
-			List<iVisualElement> c = (List<iVisualElement>) this.forElement.getParents();
-			if (c.contains(source)) {
+        }
+        else {
+            List<iVisualElement> c = (List<iVisualElement>) this.forElement.getParents();
+            if (c.contains(source)) {
 
-			}
-		}
+            }
+        }
 
-		return VisitCode.cont;
-	}
+        return VisitCode.cont;
+    }
 
-	@Override
-	public VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
-		if (source == forElement) {
+    @Override
+    public
+    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+        if (source == forElement) {
 
-			if (frameLine == null) {
-				frameLine = computeFrameLine();
-			}
+            if (frameLine == null) {
+                frameLine = computeFrameLine();
+            }
 
-			if (frameLine != null)
-				GLComponentWindow.currentContext.submitLine(frameLine, frameLine.getProperties());
-		}
-		return super.paintNow(source, bounds, visible);
-	}
+            if (frameLine != null) GLComponentWindow.currentContext.submitLine(frameLine, frameLine.getProperties());
+        }
+        return super.paintNow(source, bounds, visible);
+    }
 
-	@Override
-	public VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-		if (isChild(source)) {
-			frameLine = null;
-		}
-		return super.shouldChangeFrame(source, newFrame, oldFrame, now);
-	}
+    @Override
+    public
+    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+        if (isChild(source)) {
+            frameLine = null;
+        }
+        return super.shouldChangeFrame(source, newFrame, oldFrame, now);
+    }
 
-	private boolean isChild(iVisualElement source) {
-		return forElement.getParents().contains(source);
-	}
+    private
+    boolean isChild(iVisualElement source) {
+        return forElement.getParents().contains(source);
+    }
 
-	protected CachedLine computeFrameLine() {
-		List<iVisualElement> q = (List<iVisualElement>) forElement.getParents();
+    protected
+    CachedLine computeFrameLine() {
+        List<iVisualElement> q = (List<iVisualElement>) forElement.getParents();
 
-		Rect u = null;
-		for (iVisualElement e : q) {
-			u = Rect.union(u, e.getFrame(null));
-		}
+        Rect u = null;
+        for (iVisualElement e : q) {
+            u = Rect.union(u, e.getFrame(null));
+        }
 
-		CachedLine c = new CachedLine();
-		iLine in = c.getInput();
-		in.moveTo((float) u.x, (float) u.y);
-		in.lineTo((float) (u.x + u.w), (float) (u.y));
-		in.lineTo((float) (u.x + u.w), (float) (u.y + u.h));
-		in.lineTo((float) u.x, (float) (u.y + u.h));
-		in.lineTo((float) u.x, (float) u.y);
+        CachedLine c = new CachedLine();
+        iLine in = c.getInput();
+        in.moveTo((float) u.x, (float) u.y);
+        in.lineTo((float) (u.x + u.w), (float) (u.y));
+        in.lineTo((float) (u.x + u.w), (float) (u.y + u.h));
+        in.lineTo((float) u.x, (float) (u.y + u.h));
+        in.lineTo((float) u.x, (float) u.y);
 
-		Vector4 f = groupFillColor.get(forElement);
-		if (f == null)
-			f = new Vector4(0, 0, 0, 0.1);
-		Vector4 s = groupStrokeColor.get(forElement);
-		if (s == null)
-			s = new Vector4(0, 0, 0, 0.1);
+        Vector4 f = groupFillColor.get(forElement);
+        if (f == null) f = new Vector4(0, 0, 0, 0.1);
+        Vector4 s = groupStrokeColor.get(forElement);
+        if (s == null) s = new Vector4(0, 0, 0, 0.1);
 
-		c.getProperties().put(iLinearGraphicsContext.color, s);
-		c.getProperties().put(iLinearGraphicsContext.fillColor, f);
-		c.getProperties().put(iLinearGraphicsContext.filled, true);
+        c.getProperties().put(iLinearGraphicsContext.color, s);
+        c.getProperties().put(iLinearGraphicsContext.fillColor, f);
+        c.getProperties().put(iLinearGraphicsContext.filled, true);
 
-		return c;
-	}
+        return c;
+    }
 
 }

@@ -6,25 +6,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class SimpleHashQueue extends TaskQueue {
+public
+class SimpleHashQueue extends TaskQueue {
 
-	Map<Object, Task> tokens = new HashMap<Object, Task>();
+    Map<Object, Task> tokens = new HashMap<Object, Task>();
 
-	@Override
-	public void update() {
-		super.update();
-		synchronized (lock) {
-			tokens.clear();
-		}
-	}
+    @Override
+    public
+    void update() {
+        super.update();
+        synchronized (lock) {
+            tokens.clear();
+        }
+    }
 
-	public Task queueSingleUpdate(Object token, iUpdateable u) {
-		synchronized (lock) {
+    public
+    Task queueSingleUpdate(Object token, iUpdateable u) {
+        synchronized (lock) {
 
-			if (tokens.containsKey(token)) return tokens.get(token);
-			Task t = super.queueSingleUpdate(u);
-			tokens.put(token, t);
-			return t;
-		}
-	}
+            if (tokens.containsKey(token)) return tokens.get(token);
+            Task t = super.queueSingleUpdate(u);
+            tokens.put(token, t);
+            return t;
+        }
+    }
 }

@@ -2,71 +2,77 @@ package field.core.dispatch;
 
 import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.dispatch.iVisualElementOverrides.Ref;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.iMutable;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 
 import java.util.*;
 
-public class FastVisualElementOverridesPropertyCombiner<U, T> {
+public
+class FastVisualElementOverridesPropertyCombiner<U, T> {
 
-	/**
-	 * oh look, it's a monad
-	 */
-	public interface iCombiner<U, T>
-	{
-		public T unit();
-		public T bind(T t, U u);
-	}
-	
-	private final boolean backwards;
+    /**
+     * oh look, it's a monad
+     */
+    public
+    interface iCombiner<U, T> {
+        public
+        T unit();
 
-	public FastVisualElementOverridesPropertyCombiner(boolean backwards)
-	{
-		this.backwards = backwards;
-	}
-	
-	public T getProperty(iVisualElement source, VisualElementProperty<U> prop, iCombiner<U, T> combiner) {
+        public
+        T bind(T t, U u);
+    }
 
-		List<iVisualElement> fringe = new LinkedList<iVisualElement>();
-		fringe.add(source);
+    private final boolean backwards;
 
-		T at = combiner.unit();
-		
-		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
+    public
+    FastVisualElementOverridesPropertyCombiner(boolean backwards) {
+        this.backwards = backwards;
+    }
 
-		
-		Ref<U> ref = new Ref<U>(null);
-		
-		while (!fringe.isEmpty()) {
-			iVisualElement next = fringe.remove(0);
-			if (!seen.contains(next)) {
-				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
-				if (over != null) {
-					
-					
-					ref.set(null);
-					VisitCode o = over.getProperty(source, prop, ref);
-					U u = ref.get();
-					at = combiner.bind(at, u);
-					
-					if (o.equals(VisitCode.skip)) {
-					} else if (o.equals(VisitCode.stop)) {
-						return at;
-					} else {
-						if (backwards)
-                            fringe.addAll(sort(next.getParents()));
-                        else
-							fringe.addAll(sort(next.getChildren()));
-					}
-				}
-				seen.add(next);
-			}
-		}
-		return at;
-	}
+    public
+    T getProperty(iVisualElement source, VisualElementProperty<U> prop, iCombiner<U, T> combiner) {
 
-	protected Collection<? extends iVisualElement> sort(List<? extends iMutable<iVisualElement>> parents) {
-		return (Collection<? extends iVisualElement>) parents;
-	}
+        List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        fringe.add(source);
+
+        T at = combiner.unit();
+
+        HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
+
+
+        Ref<U> ref = new Ref<U>(null);
+
+        while (!fringe.isEmpty()) {
+            iVisualElement next = fringe.remove(0);
+            if (!seen.contains(next)) {
+                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                if (over != null) {
+
+
+                    ref.set(null);
+                    VisitCode o = over.getProperty(source, prop, ref);
+                    U u = ref.get();
+                    at = combiner.bind(at, u);
+
+                    if (o.equals(VisitCode.skip)) {
+                    }
+                    else if (o.equals(VisitCode.stop)) {
+                        return at;
+                    }
+                    else {
+                        if (backwards) fringe.addAll(sort(next.getParents()));
+                        else fringe.addAll(sort(next.getChildren()));
+                    }
+                }
+                seen.add(next);
+            }
+        }
+        return at;
+    }
+
+    protected
+    Collection<? extends iVisualElement> sort(List<? extends iMutable<iVisualElement>> parents) {
+        return (Collection<? extends iVisualElement>) parents;
+    }
 
 }

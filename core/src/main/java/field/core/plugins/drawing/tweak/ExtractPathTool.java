@@ -18,63 +18,75 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ExtractPathTool extends BaseTool {
+public
+class ExtractPathTool extends BaseTool {
 
-	String name;
+    String name;
 
-	
-	// todo, need to "preclean" obtainExpressions( ... selected ...) so that we only get one path extraction regardless of selection
-	
-	public class ExtractPathCoordinateChange implements iCoordDesc {
-		private final List<SelectedVertex> totalClaimed = new ArrayList<SelectedVertex>();
 
-		public iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
-			if (claimed.size() == 0) return null;
+    // todo, need to "preclean" obtainExpressions( ... selected ...) so that we only get one path extraction regardless of selection
 
-			final SelectedVertex c = claimed.remove(0);
-			totalClaimed.add(c);
-			Iterator<SelectedVertex> i = claimed.iterator();
-			while (i.hasNext()) {
-				SelectedVertex n = i.next();
-				if (n.onLine == c.onLine) {
-					claimed.add(n);
-					i.remove();
-				}
-			}
+    public
+    class ExtractPathCoordinateChange implements iCoordDesc {
+        private final List<SelectedVertex> totalClaimed = new ArrayList<SelectedVertex>();
 
-			return new iResult(){
-				public List<SelectedVertex> getClaimedVertex() {
-					return totalClaimed;
-				}
+        public
+        iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
+            if (claimed.size() == 0) return null;
 
-				public String toExpression() {
-					return "ExtractPath(\"" + name + "\")";
-				}
+            final SelectedVertex c = claimed.remove(0);
+            totalClaimed.add(c);
+            Iterator<SelectedVertex> i = claimed.iterator();
+            while (i.hasNext()) {
+                SelectedVertex n = i.next();
+                if (n.onLine == c.onLine) {
+                    claimed.add(n);
+                    i.remove();
+                }
+            }
 
-				public void toProperties(iVisualElement e, Map<String, Object> soFar) {
-				}
-			};
-		}
-	}
+            return new iResult() {
+                public
+                List<SelectedVertex> getClaimedVertex() {
+                    return totalClaimed;
+                }
 
-	public ExtractPathTool() {
+                public
+                String toExpression() {
+                    return "ExtractPath(\"" + name + "\")";
+                }
 
-		nodes.add(new AbsoluteNodeDescription());
-		coords.add(new ExtractPathCoordinateChange());
-	}
+                public
+                void toProperties(iVisualElement e, Map<String, Object> soFar) {
+                }
+            };
+        }
+    }
 
-	static public int uniq = 0;
+    public
+    ExtractPathTool() {
 
-	@Override
-	public void populateParameters(iVisualElement inside, final iUpdateable continuation) {
-		// fixme, not that uniq
-		PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(inside), "name for extraction :", "extracted path " + (uniq++), new iAcceptor<String>(){
+        nodes.add(new AbsoluteNodeDescription());
+        coords.add(new ExtractPathCoordinateChange());
+    }
 
-			public iAcceptor<String> set(String to) {
-				name = to;
-				continuation.update();
-				return this;
-			}
-		});
-	}
+    static public int uniq = 0;
+
+    @Override
+    public
+    void populateParameters(iVisualElement inside, final iUpdateable continuation) {
+        // fixme, not that uniq
+        PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(inside),
+                                     "name for extraction :",
+                                     "extracted path " + (uniq++),
+                                     new iAcceptor<String>() {
+
+                                         public
+                                         iAcceptor<String> set(String to) {
+                                             name = to;
+                                             continuation.update();
+                                             return this;
+                                         }
+                                     });
+    }
 }

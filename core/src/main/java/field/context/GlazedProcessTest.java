@@ -1,5 +1,6 @@
 package field.context;
 
-public class GlazedProcessTest {
+public
+class GlazedProcessTest {
 
 }

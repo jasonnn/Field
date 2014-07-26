@@ -12,74 +12,76 @@ import field.math.abstraction.iFloatProvider;
 import field.math.abstraction.iProvider;
 
 @Woven
-public class ImageProcessorCrossfader implements iUpdateable{
+public
+class ImageProcessorCrossfader implements iUpdateable {
 
-	private final iProvider<Integer> delayProvider;
-	private final iUpdateable left;
-	private final iUpdateable right;
+    private final iProvider<Integer> delayProvider;
+    private final iUpdateable left;
+    private final iUpdateable right;
 
-	public ImageProcessorCrossfader(iProvider<Integer> delayProvider, iUpdateable left, iUpdateable right)
-	{
-		this.delayProvider = delayProvider;
-		this.left = left;
-		this.right = right;
-	}
+    public
+    ImageProcessorCrossfader(iProvider<Integer> delayProvider, iUpdateable left, iUpdateable right) {
+        this.delayProvider = delayProvider;
+        this.left = left;
+        this.right = right;
+    }
 
-	// o means at right;
-	float at= 0;
-	int t = 0;
-	int delay = 0;
-	
-	@Yield
-	public void update() {
-		at = 0;
-		left.update();
-		right.update();
-		while(true)
-		{
-			left.update();
-			delay = delayProvider.get();
-			for(int i=0;i<delay;i++)
-			{
-				at = i/(delay-1f);
-				YieldUtilities.yield(null);
-				beat();
-			}
-			right.update();
-			delay = delayProvider.get();
-			for(int i=0;i<delay;i++)
-			{
-				at = 1- i/(delay-1f);
-				YieldUtilities.yield(null);
-				beat();
-			}
-		}
-	}
-	
-	protected void beat()
-	{
-		
-	}
-	
-	public iFloatProvider getCrossfade()
-	{
-		return new iFloatProvider(){
-			public float evaluate() {
-				return at;
-			}
-		};
-	}
+    // o means at right;
+    float at = 0;
+    int t = 0;
+    int delay = 0;
 
-	public void join(FullScreenCanvasSWT canvas) {
-		aRun arun = new aRun(){
-			@Override
-			public ReturnCode head(Object calledOn, Object[] args) {
-				update();
-				return super.head(calledOn, args);
-			}
-		};
+    @Yield
+    public
+    void update() {
+        at = 0;
+        left.update();
+        right.update();
+        while (true) {
+            left.update();
+            delay = delayProvider.get();
+            for (int i = 0; i < delay; i++) {
+                at = i / (delay - 1f);
+                YieldUtilities.yield(null);
+                beat();
+            }
+            right.update();
+            delay = delayProvider.get();
+            for (int i = 0; i < delay; i++) {
+                at = 1 - i / (delay - 1f);
+                YieldUtilities.yield(null);
+                beat();
+            }
+        }
+    }
+
+    protected
+    void beat() {
+
+    }
+
+    public
+    iFloatProvider getCrossfade() {
+        return new iFloatProvider() {
+            public
+            float evaluate() {
+                return at;
+            }
+        };
+    }
+
+    public
+    void join(FullScreenCanvasSWT canvas) {
+        aRun arun = new aRun() {
+            @Override
+            public
+            ReturnCode head(Object calledOn, Object[] args) {
+                update();
+                return super.head(calledOn, args);
+            }
+        };
         Cont.linkWith(canvas, FullScreenCanvasSWT.method_beforeFlush, arun);
 
-	}
-	
+    }
+
 }

@@ -15,241 +15,250 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HTMLLabelTools {
-	Pattern SMALLER_PATTERN = Pattern.compile("(<font size=-3 color='#" + Constants.defaultTreeColorDim + "'>)(.*?)(</font>)");
-	Pattern SMALLER2_PATTERN = Pattern.compile("(<font size=-2>)(.*?)(</font>)");
+public
+class HTMLLabelTools {
+    Pattern SMALLER_PATTERN =
+            Pattern.compile("(<font size=-3 color='#" + Constants.defaultTreeColorDim + "'>)(.*?)(</font>)");
+    Pattern SMALLER2_PATTERN = Pattern.compile("(<font size=-2>)(.*?)(</font>)");
 
-	Pattern BOLDITALIC_PATTERN = Pattern.compile("(<bi>)(?=\\S)(.+?[*_]*)(?<=\\S)(</bi>)");
-	Pattern BOLD_PATTERN = Pattern.compile("(<b>)(.*?)(</b>)");
-	Pattern ITALIC_PATTERN = Pattern.compile("(<i>)(?=\\S)(.*?)(?<=\\S)(</i>)");
-	Pattern SEP_PATTERN = Pattern.compile("_____________________________");
+    Pattern BOLDITALIC_PATTERN = Pattern.compile("(<bi>)(?=\\S)(.+?[*_]*)(?<=\\S)(</bi>)");
+    Pattern BOLD_PATTERN = Pattern.compile("(<b>)(.*?)(</b>)");
+    Pattern ITALIC_PATTERN = Pattern.compile("(<i>)(?=\\S)(.*?)(?<=\\S)(</i>)");
+    Pattern SEP_PATTERN = Pattern.compile("_____________________________");
 
-	Pattern CLEAN_PATTERN = Pattern.compile("(<.*?>)");
-	private final Font boldFont;
-	private final Font boldItalicFont;
-	private final Font smallerFont;
-	private final Font italicFont;
-	private final Font normalFont;
+    Pattern CLEAN_PATTERN = Pattern.compile("(<.*?>)");
+    private final Font boldFont;
+    private final Font boldItalicFont;
+    private final Font smallerFont;
+    private final Font italicFont;
+    private final Font normalFont;
 
-	int indent = 0;
-	int vertSpace = 10;
+    int indent = 0;
+    int vertSpace = 10;
 
-	public static int baseFontHeight() {
-		if (Platform.isMac())
-			return 12;
-		else
-			return 8;
-	}
-	
-	public HTMLLabelTools() {
+    public static
+    int baseFontHeight() {
+        if (Platform.isMac()) return 12;
+        else return 8;
+    }
 
-		String name = Constants.defaultFont;
-		
-		smallerFont = new Font(Launcher.display, name, (int) (baseFontHeight() * 0.75f), SWT.NORMAL);
-		boldItalicFont = new Font(Launcher.display, name, baseFontHeight(), SWT.BOLD | SWT.ITALIC);
-		boldFont = new Font(Launcher.display, name, baseFontHeight(), SWT.BOLD);
-		italicFont = new Font(Launcher.display, name, baseFontHeight(), SWT.ITALIC);
-		normalFont = new Font(Launcher.display, name, baseFontHeight(), SWT.NORMAL);
+    public
+    HTMLLabelTools() {
 
-	}
+        String name = Constants.defaultFont;
 
-	public Point measure(String textToDraw, GC gc) {
+        smallerFont = new Font(Launcher.display, name, (int) (baseFontHeight() * 0.75f), SWT.NORMAL);
+        boldItalicFont = new Font(Launcher.display, name, baseFontHeight(), SWT.BOLD | SWT.ITALIC);
+        boldFont = new Font(Launcher.display, name, baseFontHeight(), SWT.BOLD);
+        italicFont = new Font(Launcher.display, name, baseFontHeight(), SWT.ITALIC);
+        normalFont = new Font(Launcher.display, name, baseFontHeight(), SWT.NORMAL);
 
-		if (SEP_PATTERN.matcher(textToDraw).matches())
-			return new Point(200, 10);
+    }
 
-		textToDraw = textToDraw.replace("<b><i>", "<bi>");
-		textToDraw = textToDraw.replace("</i></b>", "</bi>");
+    public
+    Point measure(String textToDraw, GC gc) {
 
-		List<Area> area = new ArrayList<Area>();
+        if (SEP_PATTERN.matcher(textToDraw).matches()) return new Point(200, 10);
 
-		Matcher m = SMALLER_PATTERN.matcher(textToDraw);
-		while (m.find()) {
-			area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
-		}
-		m = SMALLER2_PATTERN.matcher(textToDraw);
-		while (m.find()) {
-			area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
-		}
-		m = BOLDITALIC_PATTERN.matcher(textToDraw);
-		while (m.find()) {
-			area.add(new Area(m.start(), m.end(), m.group(2), boldItalicFont));
-		}
+        textToDraw = textToDraw.replace("<b><i>", "<bi>");
+        textToDraw = textToDraw.replace("</i></b>", "</bi>");
 
-		m = BOLD_PATTERN.matcher(textToDraw);
-		while (m.find()) {
-			area.add(new Area(m.start(), m.end(), m.group(2), boldFont));
-		}
+        List<Area> area = new ArrayList<Area>();
 
-		m = ITALIC_PATTERN.matcher(textToDraw);
-		while (m.find()) {
-			area.add(new Area(m.start(), m.end(), m.group(2), italicFont));
-		}
+        Matcher m = SMALLER_PATTERN.matcher(textToDraw);
+        while (m.find()) {
+            area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
+        }
+        m = SMALLER2_PATTERN.matcher(textToDraw);
+        while (m.find()) {
+            area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
+        }
+        m = BOLDITALIC_PATTERN.matcher(textToDraw);
+        while (m.find()) {
+            area.add(new Area(m.start(), m.end(), m.group(2), boldItalicFont));
+        }
 
-		Collections.sort(area, new Comparator<Area>() {
-			@Override
-			public int compare(Area o1, Area o2) {
-				return Float.compare(o1.start, o2.start);
-			}
-		});
-		gc.setFont(normalFont);
-		int cx = 0;
+        m = BOLD_PATTERN.matcher(textToDraw);
+        while (m.find()) {
+            area.add(new Area(m.start(), m.end(), m.group(2), boldFont));
+        }
 
-		int index = 0;
-		int areaIndex = 0;
-		while (index < textToDraw.length()) {
-			if (areaIndex < area.size() && index >= area.get(areaIndex).start) {
-				Area a = area.get(areaIndex);
+        m = ITALIC_PATTERN.matcher(textToDraw);
+        while (m.find()) {
+            area.add(new Area(m.start(), m.end(), m.group(2), italicFont));
+        }
 
-				gc.setFont(a.font);
-				a.text = a.text.replaceAll(CLEAN_PATTERN.pattern(), "");
+        Collections.sort(area, new Comparator<Area>() {
+            @Override
+            public
+            int compare(Area o1, Area o2) {
+                return Float.compare(o1.start, o2.start);
+            }
+        });
+        gc.setFont(normalFont);
+        int cx = 0;
 
-				cx += gc.textExtent(a.text).x;
+        int index = 0;
+        int areaIndex = 0;
+        while (index < textToDraw.length()) {
+            if (areaIndex < area.size() && index >= area.get(areaIndex).start) {
+                Area a = area.get(areaIndex);
 
-				areaIndex++;
-				index = a.end;
-			} else {
-				int start = index;
-				int end = areaIndex < area.size() ? area.get(areaIndex).start : textToDraw.length();
+                gc.setFont(a.font);
+                a.text = a.text.replaceAll(CLEAN_PATTERN.pattern(), "");
 
-				gc.setFont(normalFont);
-				
-				String t = textToDraw.substring(start, end);
-				t =t.replaceAll(CLEAN_PATTERN.pattern(), "");
-				cx += gc.textExtent(t).x;
+                cx += gc.textExtent(a.text).x;
 
-				index = end;
-			}
-		}
+                areaIndex++;
+                index = a.end;
+            }
+            else {
+                int start = index;
+                int end = areaIndex < area.size() ? area.get(areaIndex).start : textToDraw.length();
 
-		gc.setFont(normalFont);
+                gc.setFont(normalFont);
 
-		return new Point(cx, gc.textExtent(textToDraw).y);
-	}
+                String t = textToDraw.substring(start, end);
+                t = t.replaceAll(CLEAN_PATTERN.pattern(), "");
+                cx += gc.textExtent(t).x;
+
+                index = end;
+            }
+        }
+
+        gc.setFont(normalFont);
+
+        return new Point(cx, gc.textExtent(textToDraw).y);
+    }
 
     public static
     class Area {
         int start;
-		int end;
-		String text;
-		Font font;
+        int end;
+        String text;
+        Font font;
 
-		boolean blank = false;
+        boolean blank = false;
 
-		public Area(int start, int end, String text, Font font) {
-			super();
-			this.start = start;
-			this.end = end;
-			this.text = text;
-			this.font = font;
-		}
+        public
+        Area(int start, int end, String text, Font font) {
+            super();
+            this.start = start;
+            this.end = end;
+            this.text = text;
+            this.font = font;
+        }
 
-		public Area setBlank(boolean blank) {
-			this.blank = blank;
-			return this;
-		}
+        public
+        Area setBlank(boolean blank) {
+            this.blank = blank;
+            return this;
+        }
 
-	}
+    }
 
-	public void draw(String textToDraw, GC gc, int x, int y) {
+    public
+    void draw(String textToDraw, GC gc, int x, int y) {
 
-		if (SEP_PATTERN.matcher(textToDraw).matches()) {
-			int height = 10;
+        if (SEP_PATTERN.matcher(textToDraw).matches()) {
+            int height = 10;
 
-			gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_GRAY));
-			gc.setBackground(Launcher.display.getSystemColor(SWT.COLOR_GRAY));
-			gc.drawLine(x, y + height / 2, x + 200, y + height / 2);
-			return;
-		}
+            gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_GRAY));
+            gc.setBackground(Launcher.display.getSystemColor(SWT.COLOR_GRAY));
+            gc.drawLine(x, y + height / 2, x + 200, y + height / 2);
+            return;
+        }
 
-		if (textToDraw.contains("<grey>")) {
-			textToDraw = textToDraw.replace("<grey>", "");
-			gc.setAlpha(128);
-		}
+        if (textToDraw.contains("<grey>")) {
+            textToDraw = textToDraw.replace("<grey>", "");
+            gc.setAlpha(128);
+        }
 
-		List<Area> area = new ArrayList<Area>();
+        List<Area> area = new ArrayList<Area>();
 
-		textToDraw = textToDraw.replace("<b><i>", "<bi>");
-		textToDraw = textToDraw.replace("</i></b>", "</bi>");
+        textToDraw = textToDraw.replace("<b><i>", "<bi>");
+        textToDraw = textToDraw.replace("</i></b>", "</bi>");
 
         //System.out.println(" looking at <" + textToDraw + ">");
         Matcher m = SMALLER_PATTERN.matcher(textToDraw);
-		while (m.find()) {
+        while (m.find()) {
             //System.out.println(" found smaller <" + m.start() + " ->" + m.end() + ">");
             area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
-		}
-		m = SMALLER2_PATTERN.matcher(textToDraw);
-		while (m.find()) {
-			area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
-		}
+        }
+        m = SMALLER2_PATTERN.matcher(textToDraw);
+        while (m.find()) {
+            area.add(new Area(m.start(), m.end(), m.group(2), smallerFont));
+        }
 
-		m = BOLDITALIC_PATTERN.matcher(textToDraw);
-		while (m.find()) {
-			area.add(new Area(m.start(), m.end(), m.group(2), boldItalicFont));
-		}
+        m = BOLDITALIC_PATTERN.matcher(textToDraw);
+        while (m.find()) {
+            area.add(new Area(m.start(), m.end(), m.group(2), boldItalicFont));
+        }
 
         //System.out.println(" looking for bold <" + BOLD_PATTERN + "> inside <" + textToDraw + ">");
 
-		m = BOLD_PATTERN.matcher(textToDraw);
-		while (m.find()) {
+        m = BOLD_PATTERN.matcher(textToDraw);
+        while (m.find()) {
             //System.out.println(" found bold <" + m.start() + " ->" + m.end() + ">");
             area.add(new Area(m.start(), m.end(), m.group(2), boldFont));
-		}
+        }
 
-		m = ITALIC_PATTERN.matcher(textToDraw);
-		while (m.find()) {
-			area.add(new Area(m.start(), m.end(), m.group(2), italicFont));
-		}
+        m = ITALIC_PATTERN.matcher(textToDraw);
+        while (m.find()) {
+            area.add(new Area(m.start(), m.end(), m.group(2), italicFont));
+        }
 
-		Collections.sort(area, new Comparator<Area>() {
-			@Override
-			public int compare(Area o1, Area o2) {
-				return Float.compare(o1.start, o2.start);
-			}
-		});
-		gc.setFont(normalFont);
+        Collections.sort(area, new Comparator<Area>() {
+            @Override
+            public
+            int compare(Area o1, Area o2) {
+                return Float.compare(o1.start, o2.start);
+            }
+        });
+        gc.setFont(normalFont);
 
-		int cx = 0;
+        int cx = 0;
 
-		int dasc = gc.getFontMetrics().getAscent();
+        int dasc = gc.getFontMetrics().getAscent();
 
-		int index = 0;
-		int areaIndex = 0;
-		while (index < textToDraw.length()) {
-			if (areaIndex < area.size() && index >= area.get(areaIndex).start) {
-				Area a = area.get(areaIndex);
+        int index = 0;
+        int areaIndex = 0;
+        while (index < textToDraw.length()) {
+            if (areaIndex < area.size() && index >= area.get(areaIndex).start) {
+                Area a = area.get(areaIndex);
 
-				gc.setFont(a.font);
-				int asc = gc.getFontMetrics().getAscent();
+                gc.setFont(a.font);
+                int asc = gc.getFontMetrics().getAscent();
 
-				a.text = a.text.replaceAll(CLEAN_PATTERN.pattern(), "");
+                a.text = a.text.replaceAll(CLEAN_PATTERN.pattern(), "");
 
-				gc.drawText(a.text, cx + x, y + dasc - asc, true);
+                gc.drawText(a.text, cx + x, y + dasc - asc, true);
 
                 //System.out.println(" text <" + a.text + ">");
 
-				cx += gc.textExtent(a.text).x;
+                cx += gc.textExtent(a.text).x;
 
-				areaIndex++;
-				index = a.end;
-			} else {
-				int start = index;
-				int end = areaIndex < area.size() ? area.get(areaIndex).start : textToDraw.length();
+                areaIndex++;
+                index = a.end;
+            }
+            else {
+                int start = index;
+                int end = areaIndex < area.size() ? area.get(areaIndex).start : textToDraw.length();
 
-				gc.setFont(normalFont);
-				String ttd = textToDraw.substring(start, end).replaceAll(CLEAN_PATTERN.pattern(), "");
-				if (areaIndex >= area.size() || !area.get(areaIndex).blank) {
-					gc.drawText(ttd, cx + x, y, true);
-				}
+                gc.setFont(normalFont);
+                String ttd = textToDraw.substring(start, end).replaceAll(CLEAN_PATTERN.pattern(), "");
+                if (areaIndex >= area.size() || !area.get(areaIndex).blank) {
+                    gc.drawText(ttd, cx + x, y, true);
+                }
 
                 //System.out.println(" normal text <" + textToDraw.substring(start, end) + ">");
 
-				cx += gc.textExtent(ttd).x;
+                cx += gc.textExtent(ttd).x;
 
-				index = end;
-			}
-		}
-		gc.setAlpha(255);
-	}
+                index = end;
+            }
+        }
+        gc.setAlpha(255);
+    }
 
 }

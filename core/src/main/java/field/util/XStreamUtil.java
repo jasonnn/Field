@@ -8,15 +8,17 @@ import field.core.plugins.drawing.opengl.CachedLineCompression;
 /**
  * Created by jason on 7/14/14.
  */
-public class XStreamUtil {
+public
+class XStreamUtil {
     //TODO cache?
-       public static XStream newDefaultXStream() {
-            return new XStream(new SunUnsafeReflectionProvider()) {{
-                registerConverter(new ChannelSerializer());
-                registerConverter(new MarkerSerializer(getMapper()));
-                registerConverter(new FloatBufferSerializer());
-                registerConverter(CachedLineCompression.converter);
-                setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
-            }};
-        }
+    public static
+    XStream newDefaultXStream() {
+        return new XStream(new SunUnsafeReflectionProvider()) {{
+            registerConverter(new ChannelSerializer());
+            registerConverter(new MarkerSerializer(getMapper()));
+            registerConverter(new FloatBufferSerializer());
+            registerConverter(CachedLineCompression.converter);
+            setMarshallingStrategy(new ReferenceByIdMarshallingStrategy());
+        }};
+    }
 }

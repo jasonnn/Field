@@ -5,87 +5,101 @@ import field.namespace.generic.ReflectionTools;
 import java.util.*;
 
 
-public class TopologyViewOfGraphNodes<T extends iMutable<T>> implements iSynchronizedTopology<T> {
+public
+class TopologyViewOfGraphNodes<T extends iMutable<T>> implements iSynchronizedTopology<T> {
 
-	private final boolean backwards;
-	private boolean everything;
+    private final boolean backwards;
+    private boolean everything;
 
-	public TopologyViewOfGraphNodes(boolean backwards) {
-		this.backwards = backwards;
-		this.everything = false;
-	}
-	
-	public TopologyViewOfGraphNodes<T> setEverything(boolean everything) {
-		this.everything = everything;
-		return this;
-	}
+    public
+    TopologyViewOfGraphNodes(boolean backwards) {
+        this.backwards = backwards;
+        this.everything = false;
+    }
 
-	public TopologyViewOfGraphNodes() {
-		this(false);
-	}
+    public
+    TopologyViewOfGraphNodes<T> setEverything(boolean everything) {
+        this.everything = everything;
+        return this;
+    }
 
-	public void begin() {
-		ReflectionTools.apply(notes, iMutableTopology.method_begin);
-	}
+    public
+    TopologyViewOfGraphNodes() {
+        this(false);
+    }
 
-	public void end() {
-		ReflectionTools.apply(notes, iMutableTopology.method_end);
-	}
+    public
+    void begin() {
+        ReflectionTools.apply(notes, iMutableTopology.method_begin);
+    }
 
-	public void addChild(T from, T to) {
-		from.addChild(to);
-		ReflectionTools.apply(notes, iMutableTopology.method_addChild, from, to);
-	}
+    public
+    void end() {
+        ReflectionTools.apply(notes, iMutableTopology.method_end);
+    }
 
-	public void removeChild(T from, T to) {
-		from.removeChild(to);
-		ReflectionTools.apply(notes, iMutableTopology.method_removeChild, from, to);
-	}
+    public
+    void addChild(T from, T to) {
+        from.addChild(to);
+        ReflectionTools.apply(notes, iMutableTopology.method_addChild, from, to);
+    }
 
-	Set<iMutableTopology< ? super T>> notes = new LinkedHashSet<iMutableTopology< ? super T>>();
+    public
+    void removeChild(T from, T to) {
+        from.removeChild(to);
+        ReflectionTools.apply(notes, iMutableTopology.method_removeChild, from, to);
+    }
 
-	public void registerNotify(iMutableTopology< ? super T> here) {
-		notes.add(here);
-	}
+    Set<iMutableTopology<? super T>> notes = new LinkedHashSet<iMutableTopology<? super T>>();
 
-	public void deregisterNotify(iMutableTopology< ? super T> here) {
-		notes.remove(here);
-	}
+    public
+    void registerNotify(iMutableTopology<? super T> here) {
+        notes.add(here);
+    }
 
-	public void added(T t) {
-	}
+    public
+    void deregisterNotify(iMutableTopology<? super T> here) {
+        notes.remove(here);
+    }
 
-	public void removed(T t) {
-	}
+    public
+    void added(T t) {
+    }
 
-	public void update(T t) {
-	}
+    public
+    void removed(T t) {
+    }
 
-	public List<T> getParentsOf(T of) {
-		if (everything)
-		{
-			ArrayList<T> r = new ArrayList<T>();
-			r.addAll((Collection< ? extends T>) of.getParents());
+    public
+    void update(T t) {
+    }
+
+    public
+    List<T> getParentsOf(T of) {
+        if (everything) {
+            ArrayList<T> r = new ArrayList<T>();
+            r.addAll((Collection<? extends T>) of.getParents());
             r.addAll(of.getChildren());
             return r;
-		}
-		if (!backwards) return (List<T>) of.getParents();
+        }
+        if (!backwards) return (List<T>) of.getParents();
         return of.getChildren();
     }
 
-	public List<T> getChildrenOf(T of) {
-		if (everything)
-		{
-			ArrayList<T> r = new ArrayList<T>();
-			r.addAll((Collection< ? extends T>) of.getParents());
+    public
+    List<T> getChildrenOf(T of) {
+        if (everything) {
+            ArrayList<T> r = new ArrayList<T>();
+            r.addAll((Collection<? extends T>) of.getParents());
             r.addAll(of.getChildren());
             return r;
-		}
-		if (!backwards) return of.getChildren();
-		return (List<T>) of.getParents();
-	}
+        }
+        if (!backwards) return of.getChildren();
+        return (List<T>) of.getParents();
+    }
 
-	public List<T> getAll() {
-		return null;
-	}
+    public
+    List<T> getAll() {
+        return null;
+    }
 }

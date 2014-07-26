@@ -11,141 +11,159 @@ import java.util.Map;
 /**
  * thread safe task queue
  */
-public class HashQueue implements iUpdateable {
+public
+class HashQueue implements iUpdateable {
 
-	protected Map<Object, Task> live = new LinkedHashMap<Object, Task>();
+    protected Map<Object, Task> live = new LinkedHashMap<Object, Task>();
 
-	protected Object lock = new Object();
+    protected Object lock = new Object();
 
-	public void update() {
-		
-		if (live.isEmpty()) return;
-		Map<Object, Task> todo;
-		synchronized (lock) {
-			todo = live;
-			live = new LinkedHashMap<Object, Task>();
-		}
-		for (Task t : todo.values())
-		{
-			t.run();
-		}
-		todo.clear();
-	}
+    public
+    void update() {
 
-	protected void addTask(Object key, Task task) {
-		synchronized (lock) {
-			live.put(key, task);
-		}
-	}
+        if (live.isEmpty()) return;
+        Map<Object, Task> todo;
+        synchronized (lock) {
+            todo = live;
+            live = new LinkedHashMap<Object, Task>();
+        }
+        for (Task t : todo.values()) {
+            t.run();
+        }
+        todo.clear();
+    }
 
-	public void removeTask(Object key) {
-		synchronized (lock) {
-			Task task = live.remove(key);
-			if (task!=null) task.remove();
-		}
-	}
+    protected
+    void addTask(Object key, Task task) {
+        synchronized (lock) {
+            live.put(key, task);
+        }
+    }
 
-	public abstract
+    public
+    void removeTask(Object key) {
+        synchronized (lock) {
+            Task task = live.remove(key);
+            if (task != null) task.remove();
+        }
+    }
+
+    public abstract
     class Task {
 
-		StackTraceElement[] alloc;
-		private final Object key;
+        StackTraceElement[] alloc;
+        private final Object key;
 
-		public Task(Object key) {
-			this.key = key;
-			assert (alloc = new Exception().getStackTrace())!=null;
-			HashQueue.this.addTask(key, this);
-		}
+        public
+        Task(Object key) {
+            this.key = key;
+            assert (alloc = new Exception().getStackTrace()) != null;
+            HashQueue.this.addTask(key, this);
+        }
 
-		public abstract
+        public abstract
         void run();
 
-		/**
-		 * run methods can call this if they want to have another crack at it
-		 * 
-		 * @param q
-		 */
-		protected void recur() {
-			addTask(key, this);
-		}
+        /**
+         * run methods can call this if they want to have another crack at it
+         *
+         * @param q
+         */
+        protected
+        void recur() {
+            addTask(key, this);
+        }
 
-		protected void remove() {
-		}
+        protected
+        void remove() {
+        }
 
-		public String toString() {
-			return "alloc at :" + Arrays.asList(alloc);
-		}
-	}
-	
+        public
+        String toString() {
+            return "alloc at :" + Arrays.asList(alloc);
+        }
+    }
 
-	public static
+
+    public static
     class Gate extends Task {
-		boolean con = true;
+        boolean con = true;
 
-		private final iUpdateable up;
+        private final iUpdateable up;
 
-		private final boolean touch;
+        private final boolean touch;
 
-		public Gate(Object key, HashQueue in, iUpdateable up, boolean touch) {
-			in.super(key);
-			this.up = up;
-			this.touch = touch;
-			if (touch) con = false;
-		}
+        public
+        Gate(Object key, HashQueue in, iUpdateable up, boolean touch) {
+            in.super(key);
+            this.up = up;
+            this.touch = touch;
+            if (touch) con = false;
+        }
 
-		@Override
-		public void run() {
-			up.update();
-			if (con) recur();
-			if (touch) con = false;
-		}
+        @Override
+        public
+        void run() {
+            up.update();
+            if (con) recur();
+            if (touch) con = false;
+        }
 
-		public void goOn() {
-			con = true;
-		}
+        public
+        void goOn() {
+            con = true;
+        }
 
-		public void dontGoOn() {
-			con = false;
-		}
+        public
+        void dontGoOn() {
+            con = false;
+        }
 
-	}
+    }
 
-	public class Updateable extends Task {
+    public
+    class Updateable extends Task {
 
-		iUpdateable u;
+        iUpdateable u;
 
-		public Updateable(Object key, iUpdateable u) {
-			super(key);
-			this.u = u;
-		}
+        public
+        Updateable(Object key, iUpdateable u) {
+            super(key);
+            this.u = u;
+        }
 
-		public void run() {
-			u.update();
-			recur();
-		}
-	}
+        public
+        void run() {
+            u.update();
+            recur();
+        }
+    }
 
-	HashMap upMap = new HashMap();
+    HashMap upMap = new HashMap();
 
-	public void addUpdateable(Object key, iUpdateable updateable) {
-		Updateable up = new Updateable(key, updateable);
-		upMap.put(updateable, up);
-	}
+    public
+    void addUpdateable(Object key, iUpdateable updateable) {
+        Updateable up = new Updateable(key, updateable);
+        upMap.put(updateable, up);
+    }
 
-	public void removeUpdateable(iUpdateable view) {
-		Updateable up = (Updateable) upMap.remove(view);
-		up.remove();
-	}
+    public
+    void removeUpdateable(iUpdateable view) {
+        Updateable up = (Updateable) upMap.remove(view);
+        up.remove();
+    }
 
-	public int getNumTasks() {
-		synchronized (lock) {
-			return live.size();
-		}
-	}
+    public
+    int getNumTasks() {
+        synchronized (lock) {
+            return live.size();
+        }
+    }
 
-	public void clear() {
-		synchronized (lock) {
-			live.clear();
-		}
-	}
+    public
+    void clear() {
+        synchronized (lock) {
+            live.clear();
+        }
+    }
 }

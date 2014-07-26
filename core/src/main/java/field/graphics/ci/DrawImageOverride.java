@@ -6,39 +6,42 @@ import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.util.PythonCallableMap;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 
-public class DrawImageOverride extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
+public
+class DrawImageOverride extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
 
-	VisualElementProperty<PythonCallableMap> images = new VisualElementProperty<PythonCallableMap>("images_");
+    VisualElementProperty<PythonCallableMap> images = new VisualElementProperty<PythonCallableMap>("images_");
 
-	public DrawImageOverride() {
-	}
+    public
+    DrawImageOverride() {
+    }
 
-	@Override
-	public DefaultOverride setVisualElement(iVisualElement ve) {
-		ve.setProperty(images, new PythonCallableMap());
-		super.setVisualElement(ve);
-		return this;
-	}
-	
-	@Override
-	public <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
-		if (source == forElement)
-		{
-			if (forElement.getProperty(images)==null)				
-				forElement.setProperty(images, new PythonCallableMap());
-		}
-		return super.getProperty(source, prop, ref);
-	}
+    @Override
+    public
+    DefaultOverride setVisualElement(iVisualElement ve) {
+        ve.setProperty(images, new PythonCallableMap());
+        super.setVisualElement(ve);
+        return this;
+    }
 
-	@Override
-	public VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    @Override
+    public
+    <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+        if (source == forElement) {
+            if (forElement.getProperty(images) == null) forElement.setProperty(images, new PythonCallableMap());
+        }
+        return super.getProperty(source, prop, ref);
+    }
+
+    @Override
+    public
+    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
         //System.out.println(" ? ");
         if (source == forElement) {
-			PythonCallableMap m = images.get(source);
-			if (m != null) {
-				m.invoke();
-			}
-		}
-		return super.paintNow(source, bounds, visible);
-	}
+            PythonCallableMap m = images.get(source);
+            if (m != null) {
+                m.invoke();
+            }
+        }
+        return super.paintNow(source, bounds, visible);
+    }
 }

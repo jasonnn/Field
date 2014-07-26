@@ -13,150 +13,155 @@ import java.util.HashMap;
  * translates asm method's to refllectionmethods and, more importantly, caches the result
  *
  * @author marc
- *
  */
-public class MethodUtilities {
+public
+class MethodUtilities {
 
-	final HashMap<Pair<ASMMethod, String>, Method> cache = new HashMap<Pair<ASMMethod, String>,  Method>();
+    final HashMap<Pair<ASMMethod, String>, Method> cache = new HashMap<Pair<ASMMethod, String>, Method>();
 
-	Pair<ASMMethod, String> ch = new Pair<ASMMethod, String>(null, null);
+    Pair<ASMMethod, String> ch = new Pair<ASMMethod, String>(null, null);
 
-	Method first = null;
+    Method first = null;
 
 
-	public Method getMethodFor(ClassLoader loader, org.objectweb.asm.commons.Method method, Class onClass, String className) {
+    public
+    Method getMethodFor(ClassLoader loader, org.objectweb.asm.commons.Method method, Class onClass, String className) {
 
-		Method m = getPossibleMethodFor(loader, method, onClass, className);
-		if (m == null) {
-			String name = method.getName();
-			Type[] argumentTypes = method.getArgumentTypes();
-			Class[] classTypes = new Class[argumentTypes.length];
+        Method m = getPossibleMethodFor(loader, method, onClass, className);
+        if (m == null) {
+            String name = method.getName();
+            Type[] argumentTypes = method.getArgumentTypes();
+            Class[] classTypes = new Class[argumentTypes.length];
 
             //System.out.println(" -- trouble ");
             //System.out.println("  onClass <"+onClass+">");
             //System.out.println("   onClassLoader <" + onClass.getClassLoader() + ">");
-           // for (int i = 0; i < classTypes.length; i++)
-				//System.out.println("          " + classTypes[i].getClassLoader());
+            // for (int i = 0; i < classTypes.length; i++)
+            //System.out.println("          " + classTypes[i].getClassLoader());
 
-			throw new IllegalArgumentException(onClass + " " + name + ' ' + Arrays.asList(classTypes));
-		}
-		return m;
-	}
-    public Method getPossibleMethodFor(ClassLoader loader, org.objectweb.asm.commons.Method method, Class onClass, String className) {
-        return getPossibleMethodFor(loader, ASMMethod.from(method),onClass,className);
+            throw new IllegalArgumentException(onClass + " " + name + ' ' + Arrays.asList(classTypes));
+        }
+        return m;
     }
 
-	@SuppressWarnings("unchecked")
-    public Method  getPossibleMethodFor(ClassLoader loader, ASMMethod method,Class onClass,String className){
+    public
+    Method getPossibleMethodFor(ClassLoader loader,
+                                org.objectweb.asm.commons.Method method,
+                                Class onClass,
+                                String className) {
+        return getPossibleMethodFor(loader, ASMMethod.from(method), onClass, className);
+    }
 
-		ch.left = method;
-		ch.right = className;
+    @SuppressWarnings("unchecked")
+    public
+    Method getPossibleMethodFor(ClassLoader loader, ASMMethod method, Class onClass, String className) {
 
-		Method m = cache.get(ch);
-		if ((m != null) || cache.containsKey(ch))
-		{
-			return m;
-		}
+        ch.left = method;
+        ch.right = className;
 
-		if (onClass == null)
-			try {
-				onClass = loader.loadClass(className.replace('/', '.'));
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
+        Method m = cache.get(ch);
+        if ((m != null) || cache.containsKey(ch)) {
+            return m;
+        }
 
-		String name = method.getName();
-		Type[] argumentTypes = method.getArgumentTypes();
-		Class[] classTypes = new Class[argumentTypes.length];
-		for (int i = 0; i < argumentTypes.length; i++) {
-			if (argumentTypes[i].getSort() == Type.OBJECT) {
-				try {
-					classTypes[i] = loader.loadClass(argumentTypes[i].getClassName());
-				} catch (ClassNotFoundException e) {
-					assert false : argumentTypes[i].getClassName();
-					e.printStackTrace();
-				}
-			} else {
-				switch (argumentTypes[i].getSort()) {
-				case (Type.INT):
-					classTypes[i] = Integer.TYPE;
-					break;
-				case (Type.FLOAT):
-					classTypes[i] = Float.TYPE;
-					break;
-				case (Type.DOUBLE):
-					classTypes[i] = Double.TYPE;
-					break;
-				case (Type.LONG):
-					classTypes[i] = Long.TYPE;
-					break;
-				case (Type.SHORT):
-					classTypes[i] = Short.TYPE;
-					break;
-				case (Type.ARRAY):
-					Type elementType = argumentTypes[i].getElementType();
-					if (elementType.getSort() == Type.OBJECT)
-						try {
-							// ugh!
-							classTypes[i] = Array.newInstance(loader.loadClass(elementType.getClassName()), 0).getClass();
-						} catch (ClassNotFoundException e) {
-							assert false : elementType.getClassName() + ' ' + argumentTypes[i].getClassName();
-							e.printStackTrace();
-						}
-					else
-						switch (elementType.getSort()) {
-						case (Type.INT):
-							classTypes[i] = int[].class;
-							break;
-						case (Type.FLOAT):
-							classTypes[i] = float[].class;
-							break;
-						case (Type.DOUBLE):
-							classTypes[i] = double[].class;
-							break;
-						case (Type.LONG):
-							classTypes[i] = long[].class;
-							break;
-						case (Type.SHORT):
-							classTypes[i] = short[].class;
-							break;
-						default:
-							assert false : "unknown array sort, " + argumentTypes[i].getSort();
-						}
-					break;
-				default:
-					assert false : "unknown sort, " + argumentTypes[i].getSort();
-				}
-			}
-		}
+        if (onClass == null) try {
+            onClass = loader.loadClass(className.replace('/', '.'));
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        }
 
-		try {
+        String name = method.getName();
+        Type[] argumentTypes = method.getArgumentTypes();
+        Class[] classTypes = new Class[argumentTypes.length];
+        for (int i = 0; i < argumentTypes.length; i++) {
+            if (argumentTypes[i].getSort() == Type.OBJECT) {
+                try {
+                    classTypes[i] = loader.loadClass(argumentTypes[i].getClassName());
+                } catch (ClassNotFoundException e) {
+                    assert false : argumentTypes[i].getClassName();
+                    e.printStackTrace();
+                }
+            }
+            else {
+                switch (argumentTypes[i].getSort()) {
+                    case (Type.INT):
+                        classTypes[i] = Integer.TYPE;
+                        break;
+                    case (Type.FLOAT):
+                        classTypes[i] = Float.TYPE;
+                        break;
+                    case (Type.DOUBLE):
+                        classTypes[i] = Double.TYPE;
+                        break;
+                    case (Type.LONG):
+                        classTypes[i] = Long.TYPE;
+                        break;
+                    case (Type.SHORT):
+                        classTypes[i] = Short.TYPE;
+                        break;
+                    case (Type.ARRAY):
+                        Type elementType = argumentTypes[i].getElementType();
+                        if (elementType.getSort() == Type.OBJECT) try {
+                            // ugh!
+                            classTypes[i] =
+                                    Array.newInstance(loader.loadClass(elementType.getClassName()), 0).getClass();
+                        } catch (ClassNotFoundException e) {
+                            assert false : elementType.getClassName() + ' ' + argumentTypes[i].getClassName();
+                            e.printStackTrace();
+                        }
+                        else switch (elementType.getSort()) {
+                            case (Type.INT):
+                                classTypes[i] = int[].class;
+                                break;
+                            case (Type.FLOAT):
+                                classTypes[i] = float[].class;
+                                break;
+                            case (Type.DOUBLE):
+                                classTypes[i] = double[].class;
+                                break;
+                            case (Type.LONG):
+                                classTypes[i] = long[].class;
+                                break;
+                            case (Type.SHORT):
+                                classTypes[i] = short[].class;
+                                break;
+                            default:
+                                assert false : "unknown array sort, " + argumentTypes[i].getSort();
+                        }
+                        break;
+                    default:
+                        assert false : "unknown sort, " + argumentTypes[i].getSort();
+                }
+            }
+        }
+
+        try {
             assert onClass != null;
             java.lang.reflect.Method found = m = onClass.getDeclaredMethod(name, classTypes);
-			m.setAccessible(true);
-			cache.put(ch, found);
-			ch = new Pair<ASMMethod, String>(null, null);
+            m.setAccessible(true);
+            cache.put(ch, found);
+            ch = new Pair<ASMMethod, String>(null, null);
 
 
-			first = m;
-			return m;
-		} catch (SecurityException ignored) {
-		} catch (NoSuchMethodException ignored) {
-		}
-		try {
+            first = m;
+            return m;
+        } catch (SecurityException ignored) {
+        } catch (NoSuchMethodException ignored) {
+        }
+        try {
             java.lang.reflect.Method found = m = onClass.getMethod(name, classTypes);
-			m.setAccessible(true);
-			cache.put(ch, found);
-			ch = new Pair<ASMMethod, String>(null, null);
+            m.setAccessible(true);
+            cache.put(ch, found);
+            ch = new Pair<ASMMethod, String>(null, null);
 
-			first = m;
-			return m;
-		} catch (SecurityException ignored) {
-		} catch (NoSuchMethodException ignored) {
-		}
+            first = m;
+            return m;
+        } catch (SecurityException ignored) {
+        } catch (NoSuchMethodException ignored) {
+        }
 
-		cache.put(ch, null);
-		ch = new Pair<ASMMethod, String>(null, null);
-		return null;
-	}
+        cache.put(ch, null);
+        ch = new Pair<ASMMethod, String>(null, null);
+        return null;
+    }
 }

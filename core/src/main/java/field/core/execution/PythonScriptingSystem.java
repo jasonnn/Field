@@ -9,247 +9,281 @@ import java.util.*;
 /**
  * @author marc created on Jan 31, 2004
  */
-public class PythonScriptingSystem {
+public
+class PythonScriptingSystem {
 
-	public interface DerivativePromise
-	{
-		public Promise getDerivativeWithText(VisualElementProperty<String> s);
-	}
+    public
+    interface DerivativePromise {
+        public
+        Promise getDerivativeWithText(VisualElementProperty<String> s);
+    }
 
-	public interface Promise {
+    public
+    interface Promise {
 
-		public void beginExecute();
+        public
+        void beginExecute();
 
-		public void endExecute();
+        public
+        void endExecute();
 
-		public PyObject getAttributes();
+        public
+        PyObject getAttributes();
 
-		public float getEnd();
+        public
+        float getEnd();
 
-		public Stack<CapturedEnvironment> getOngoingEnvironments();
+        public
+        Stack<CapturedEnvironment> getOngoingEnvironments();
 
-		public float getPriority();
+        public
+        float getPriority();
 
-		public float getStart();
+        public
+        float getStart();
 
-		public String getText();
+        public
+        String getText();
 
-		public void willExecute();
+        public
+        void willExecute();
 
-		public void willExecuteSubstring(String actualSubstring, int start, int end);
+        public
+        void willExecuteSubstring(String actualSubstring, int start, int end);
 
-		public void wontExecute();
-		
-		public boolean isPaused();
-	}
+        public
+        void wontExecute();
 
-	public abstract class Runner {
+        public
+        boolean isPaused();
+    }
 
-		protected ArrayList active = new ArrayList();
+    public abstract
+    class Runner {
 
-		float currentTime;
+        protected ArrayList active = new ArrayList();
 
-		float lastTime;
+        float currentTime;
 
-		boolean firstRun = false;
+        float lastTime;
 
-		Comparator activeComparator = new Comparator(){
+        boolean firstRun = false;
 
-			public int compare(Object o1, Object o2) {
-				Promise p1 = (Promise) o1;
-				Promise p2 = (Promise) o2;
-				float y1 = p1.getPriority();
-				float y2 = p2.getPriority();
-				return (y1 < y2) ? -1 : ((y1 == y2) ? 0 : 1);
-			}
-		};
+        Comparator activeComparator = new Comparator() {
 
-		public Runner(float timeStart) {
-			lastTime = timeStart;
-			
-			// changed this \u2014 we no longer 'auto execute' things that are <=0 on startup
-			firstRun = false;
-		}
+            public
+            int compare(Object o1, Object o2) {
+                Promise p1 = (Promise) o1;
+                Promise p2 = (Promise) o2;
+                float y1 = p1.getPriority();
+                float y2 = p2.getPriority();
+                return (y1 < y2) ? -1 : ((y1 == y2) ? 0 : 1);
+            }
+        };
 
-		public void moveTo(float t) {
-			lastTime = t;
-			update(t);
-		}
+        public
+        Runner(float timeStart) {
+            lastTime = timeStart;
 
-		public void restart(float at) {
-			firstRun = true;
-			lastTime = at;
-		}
+            // changed this \u2014 we no longer 'auto execute' things that are <=0 on startup
+            firstRun = false;
+        }
 
-		public void update(float t) {
-			LinkedHashSet deactive = new LinkedHashSet();
-			LinkedHashSet nowactive = new LinkedHashSet();
-			Set allowedToBeActive;
+        public
+        void moveTo(float t) {
+            lastTime = t;
+            update(t);
+        }
 
-			boolean forwards = true;
+        public
+        void restart(float at) {
+            firstRun = true;
+            lastTime = at;
+        }
 
-			//System.err.println(" runner from slice <"+t+"> <"+lastTime+">");
+        public
+        void update(float t) {
+            LinkedHashSet deactive = new LinkedHashSet();
+            LinkedHashSet nowactive = new LinkedHashSet();
+            Set allowedToBeActive;
 
-			if (t >= lastTime) {
-				Set intersection = intersect(lastTime, t);
-				allowedToBeActive = intersection;
+            boolean forwards = true;
 
-				Iterator i = intersection.iterator();
-				while (i.hasNext()) {
-					Promise p = (Promise) i.next();
-					if ((p.getStart() > lastTime) || firstRun) {
-						nowactive.add(p);
-					}
-					if (p.getEnd() < t) {
-						deactive.add(p);
-					}
-				}
-				lastTime = t;
-			} else {
-				Set intersection = intersect(t, lastTime);
-				allowedToBeActive = intersection;
+            //System.err.println(" runner from slice <"+t+"> <"+lastTime+">");
 
-				Iterator i = intersection.iterator();
-				while (i.hasNext()) {
-					Promise p = (Promise) i.next();
-					if (p.getStart() > t) {
-						deactive.add(p);
-					}
-					if ((p.getEnd() < lastTime) || firstRun) {
-						nowactive.add(p);
-					}
-				}
-				lastTime = t;
-				forwards = false;
-			}
+            if (t >= lastTime) {
+                Set intersection = intersect(lastTime, t);
+                allowedToBeActive = intersection;
 
-			Iterator i = nowactive.iterator();
-			while (i.hasNext()) {
-				Promise p = (Promise) i.next();
-				if (deactive.contains(p)) {
-					startAndStop(t, p, forwards);
-				} else {
-					if (!active.contains(p)) {
-						start(t, p, forwards);
-						active.add(p);
-					}
-				}
-			}
-			i = deactive.iterator();
-			while (i.hasNext()) {
-				Promise p = (Promise) i.next();
-				if (nowactive.contains(p)) {
-				} else {
-					if (active.contains(p)) {
-						stop(t, p, forwards);
-						active.remove(p);
-					}
-				}
-			}
-			sortActive();
-			i = active.iterator();
-			while (i.hasNext()) {
-				Promise p = (Promise) i.next();
-				if (!allowedToBeActive.contains(p)) {
-					jumpStop(t, p, forwards);
-					i.remove();
-				} else {
-					continueToBeActive(t, p, forwards);
-				}
-			}
-			firstRun = false;
+                Iterator i = intersection.iterator();
+                while (i.hasNext()) {
+                    Promise p = (Promise) i.next();
+                    if ((p.getStart() > lastTime) || firstRun) {
+                        nowactive.add(p);
+                    }
+                    if (p.getEnd() < t) {
+                        deactive.add(p);
+                    }
+                }
+                lastTime = t;
+            }
+            else {
+                Set intersection = intersect(t, lastTime);
+                allowedToBeActive = intersection;
 
-		}
+                Iterator i = intersection.iterator();
+                while (i.hasNext()) {
+                    Promise p = (Promise) i.next();
+                    if (p.getStart() > t) {
+                        deactive.add(p);
+                    }
+                    if ((p.getEnd() < lastTime) || firstRun) {
+                        nowactive.add(p);
+                    }
+                }
+                lastTime = t;
+                forwards = false;
+            }
 
-		private void sort(LinkedHashSet ret) {
-			if (ret.size()>1)
-			{
-				ArrayList al = new ArrayList(ret);
-				Collections.sort(al, activeComparator);
-				ret.clear();
-				ret.addAll(al);
-			}
-		}
+            Iterator i = nowactive.iterator();
+            while (i.hasNext()) {
+                Promise p = (Promise) i.next();
+                if (deactive.contains(p)) {
+                    startAndStop(t, p, forwards);
+                }
+                else {
+                    if (!active.contains(p)) {
+                        start(t, p, forwards);
+                        active.add(p);
+                    }
+                }
+            }
+            i = deactive.iterator();
+            while (i.hasNext()) {
+                Promise p = (Promise) i.next();
+                if (nowactive.contains(p)) {
+                }
+                else {
+                    if (active.contains(p)) {
+                        stop(t, p, forwards);
+                        active.remove(p);
+                    }
+                }
+            }
+            sortActive();
+            i = active.iterator();
+            while (i.hasNext()) {
+                Promise p = (Promise) i.next();
+                if (!allowedToBeActive.contains(p)) {
+                    jumpStop(t, p, forwards);
+                    i.remove();
+                }
+                else {
+                    continueToBeActive(t, p, forwards);
+                }
+            }
+            firstRun = false;
 
-		protected Collection allPythonScriptingElements() {
-			return PythonScriptingSystem.this.allPythonScriptingElements();
-		}
+        }
 
-		protected abstract
+        private
+        void sort(LinkedHashSet ret) {
+            if (ret.size() > 1) {
+                ArrayList al = new ArrayList(ret);
+                Collections.sort(al, activeComparator);
+                ret.clear();
+                ret.addAll(al);
+            }
+        }
+
+        protected
+        Collection allPythonScriptingElements() {
+            return PythonScriptingSystem.this.allPythonScriptingElements();
+        }
+
+        protected abstract
         boolean continueToBeActive(float t, Promise p, boolean forwards);
 
-		protected Set intersect(float from, float to) {
-			LinkedHashSet ret = new LinkedHashSet();
-			Iterator all = allPythonScriptingElements().iterator();
+        protected
+        Set intersect(float from, float to) {
+            LinkedHashSet ret = new LinkedHashSet();
+            Iterator all = allPythonScriptingElements().iterator();
 
-			while (all.hasNext()) {
-				Promise p = (Promise) all.next();
-				if ((p.getStart() <= to) && (p.getEnd() >= from)) {
-					ret.add(p);
-				}
-			}
+            while (all.hasNext()) {
+                Promise p = (Promise) all.next();
+                if ((p.getStart() <= to) && (p.getEnd() >= from)) {
+                    ret.add(p);
+                }
+            }
 
-			sort(ret);
-			filterIntersections(ret);
-			
-			return ret;
-		}
+            sort(ret);
+            filterIntersections(ret);
 
-		protected abstract
+            return ret;
+        }
+
+        protected abstract
         void jumpStop(float t, Promise p, boolean forwards);
 
-		protected void sortActive() {
+        protected
+        void sortActive() {
 
-		}
+        }
 
-		protected abstract
+        protected abstract
         void start(float t, Promise p, boolean forwards);
 
-		protected abstract
+        protected abstract
         void startAndStop(float t, Promise p, boolean forwards);
 
-		protected abstract
+        protected abstract
         void stop(float t, Promise p, boolean forwards);
-	}
+    }
 
-	public static final VisualElementProperty<PythonScriptingSystem> pythonScriptingSystem = new VisualElementProperty<PythonScriptingSystem>("pythonScriptingSystem_");
+    public static final VisualElementProperty<PythonScriptingSystem> pythonScriptingSystem =
+            new VisualElementProperty<PythonScriptingSystem>("pythonScriptingSystem_");
 
 
-	HashMap promises = new HashMap();
+    HashMap promises = new HashMap();
 
-	HashMap reversePromises = new HashMap();
+    HashMap reversePromises = new HashMap();
 
-	public Collection allPythonScriptingElements() {
-		return promises.values();
-	}
+    public
+    Collection allPythonScriptingElements() {
+        return promises.values();
+    }
 
-	protected void filterIntersections(LinkedHashSet ret) {
-	}
+    protected
+    void filterIntersections(LinkedHashSet ret) {
+    }
 
-	public Promise promiseForKey(Object key) {
-		Promise ret = (Promise) promises.get(key);
-		return ret;
-	}
-	
-	public Object keyForPromise(Promise p)
-	{
-		return reversePromises.get(p);
-	}
+    public
+    Promise promiseForKey(Object key) {
+        Promise ret = (Promise) promises.get(key);
+        return ret;
+    }
 
-	public void promisePythonScriptingElement(Object key, Promise p) {
-		promises.put(key, p);
-		reversePromises.put(p, key);
-	}
+    public
+    Object keyForPromise(Promise p) {
+        return reversePromises.get(p);
+    }
 
-	public Promise revokePromise(Object key) {
-		Promise pr = (Promise) promises.remove(key);
-		reversePromises.remove(pr);
-		return pr;
-	}
+    public
+    void promisePythonScriptingElement(Object key, Promise p) {
+        promises.put(key, p);
+        reversePromises.put(p, key);
+    }
+
+    public
+    Promise revokePromise(Object key) {
+        Promise pr = (Promise) promises.remove(key);
+        reversePromises.remove(pr);
+        return pr;
+    }
 
     protected static
     float rewriteTime(float t, Promise p) {
-		return t;
-	}
+        return t;
+    }
 
 }

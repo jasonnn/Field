@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package field.core.plugins.drawing;
 
@@ -12,9 +12,10 @@ import java.util.List;
 
 @Notable
 @SynthesizeFactory
-public class AnAlignment {
-	public Rect newRect;
-	public String name;
-	public List<CachedLine> toDraw;
-	public float score = 1;
+public
+class AnAlignment {
+    public Rect newRect;
+    public String name;
+    public List<CachedLine> toDraw;
+    public float score = 1;
 }

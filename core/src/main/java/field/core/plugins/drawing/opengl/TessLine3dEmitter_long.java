@@ -12,139 +12,155 @@ import org.lwjgl.util.glu.tessellation.GLUtessellatorImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TessLine3dEmitter_long extends Small3dLineEmitter_long {
+public
+class TessLine3dEmitter_long extends Small3dLineEmitter_long {
 
     public static
     class VInfo {
         int vertex = -1;
 
-		Vector3 position = new Vector3();
+        Vector3 position = new Vector3();
 
-		List<Object> properties;
+        List<Object> properties;
 
-		public VInfo(int vertex, Vector3 position, List<Object> properties) {
-			super();
-			this.vertex = vertex;
-			this.position = position;
-			this.properties = properties;
-		}
+        public
+        VInfo(int vertex, Vector3 position, List<Object> properties) {
+            super();
+            this.vertex = vertex;
+            this.position = position;
+            this.properties = properties;
+        }
 
-		@Override
-		public String toString() {
-			return vertex + "@ " + position;
-		}
-	}
+        @Override
+        public
+        String toString() {
+            return vertex + "@ " + position;
+        }
+    }
 
-	public SubMesh_long mesh;
+    public SubMesh_long mesh;
 
-	private final GLU glu;
+    private final GLU glu;
 
-	GLUtessellatorImpl tess = new GLUtessellatorImpl();
-	
-	private boolean contourFirst;
+    GLUtessellatorImpl tess = new GLUtessellatorImpl();
 
-	TriangleMesh m;
+    private boolean contourFirst;
 
-	List<VInfo> ongoingTriangle = new ArrayList<VInfo>();
+    TriangleMesh m;
 
-	public TessLine3dEmitter_long() {
-		glu = new GLU();
-		mesh = new SubMesh_long();
+    List<VInfo> ongoingTriangle = new ArrayList<VInfo>();
 
-		
-		
-		
-		tess.gluTessCallback(GLU.GLU_TESS_VERTEX_DATA, new GLUtessellatorCallbackAdapter() {
-			@Override
-			public void vertexData(Object arg0, Object arg1) {
-				VInfo i = (VInfo) arg0;
+    public
+    TessLine3dEmitter_long() {
+        glu = new GLU();
+        mesh = new SubMesh_long();
 
-				nextTriangle(i);
-			}
-		});
 
-		tess.gluTessCallback(GLU.GLU_TESS_COMBINE_DATA, new GLUtessellatorCallbackAdapter() {
+        tess.gluTessCallback(GLU.GLU_TESS_VERTEX_DATA, new GLUtessellatorCallbackAdapter() {
+            @Override
+            public
+            void vertexData(Object arg0, Object arg1) {
+                VInfo i = (VInfo) arg0;
 
-			@Override
-			public void combineData(double[] coords, Object[] data, float[] weight, Object[] outdata, Object arg4) {
+                nextTriangle(i);
+            }
+        });
 
-				// todo, interpolate properties correctly
+        tess.gluTessCallback(GLU.GLU_TESS_COMBINE_DATA, new GLUtessellatorCallbackAdapter() {
+
+            @Override
+            public
+            void combineData(double[] coords, Object[] data, float[] weight, Object[] outdata, Object arg4) {
+
+                // todo, interpolate properties correctly
                 outdata[0] = new VInfo(-1,
                                        new Vector3(coords[0], coords[1], coords[2]),
                                        interpolateProperites(data, weight));
             }
-		});
-		tess.gluTessCallback(GLU.GLU_EDGE_FLAG, new GLUtessellatorCallbackAdapter() {
-		});
+        });
+        tess.gluTessCallback(GLU.GLU_EDGE_FLAG, new GLUtessellatorCallbackAdapter() {
+        });
 
-		// GLU.gluTessProperty(tess, GLU.GLU_TESS_WINDING_RULE,
-		// GLU.GLU_TESS_WINDING_NONZERO);
-		tess.gluTessProperty(GLU.GLU_TESS_WINDING_RULE, GLU.GLU_TESS_WINDING_ODD);
+        // GLU.gluTessProperty(tess, GLU.GLU_TESS_WINDING_RULE,
+        // GLU.GLU_TESS_WINDING_NONZERO);
+        tess.gluTessProperty(GLU.GLU_TESS_WINDING_RULE, GLU.GLU_TESS_WINDING_ODD);
 
-	}
+    }
 
-	@Override
-	public void begin() {
-		super.begin();
-		mesh.open();
+    @Override
+    public
+    void begin() {
+        super.begin();
+        mesh.open();
 
-		tess.gluTessBeginPolygon(null);
-	}
+        tess.gluTessBeginPolygon(null);
+    }
 
-	@Override
-	public void beginContour() {
-		super.beginContour();
-		contourFirst = true;
-		tess.gluTessBeginContour();
-	}
+    @Override
+    public
+    void beginContour() {
+        super.beginContour();
+        contourFirst = true;
+        tess.gluTessBeginContour();
+    }
 
-	@Override
-	public void emitLinearFrame(Vector3 a, Vector3 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context) {
+    @Override
+    public
+    void emitLinearFrame(Vector3 a,
+                         Vector3 b,
+                         List<Object> name,
+                         List<Object> name2,
+                         Dict properties,
+                         iLinearGraphicsContext context) {
 
-		if (contourFirst) {
-			VInfo info = new VInfo(-1, a, name);
-			nextVertex(info);
-			tess.gluTessVertex(new double[] { a.x, a.y, a.z }, 0, info);
-		}
+        if (contourFirst) {
+            VInfo info = new VInfo(-1, a, name);
+            nextVertex(info);
+            tess.gluTessVertex(new double[]{a.x, a.y, a.z}, 0, info);
+        }
 
-		VInfo info = new VInfo(-1, b, name2);
-		nextVertex(info);
+        VInfo info = new VInfo(-1, b, name2);
+        nextVertex(info);
 
-		tess.gluTessVertex(new double[] { b.x, b.y, b.z }, 0, info);
+        tess.gluTessVertex(new double[]{b.x, b.y, b.z}, 0, info);
 
-		contourFirst = false;
+        contourFirst = false;
 
-	}
+    }
 
-	@Override
-	public void end() {
-		super.end();
+    @Override
+    public
+    void end() {
+        super.end();
 
-		tess.gluTessEndPolygon();
-		mesh.close();
+        tess.gluTessEndPolygon();
+        mesh.close();
 
-	}
+    }
 
-	@Override
-	public void endContour() {
-		super.endContour();
-		tess.gluTessEndContour();
-	}
+    @Override
+    public
+    void endContour() {
+        super.endContour();
+        tess.gluTessEndContour();
+    }
 
-	public SubMesh_long getMesh() {
-		return mesh;
-	}
+    public
+    SubMesh_long getMesh() {
+        return mesh;
+    }
 
-	protected void decorateVertex(int v, List<Object> properties) {
-	}
+    protected
+    void decorateVertex(int v, List<Object> properties) {
+    }
 
-	protected static
+    protected static
     List<Object> interpolateProperites(Object[] data, float[] weight) {
-		List<Object> o = new ArrayList<Object>();
+        List<Object> o = new ArrayList<Object>();
 
-		int l = (((VInfo) data[0]).properties).size();
-		for (int i = 0; i < l; i++) {
-			Object ty = (((VInfo) data[0]).properties).get(i);
+        int l = (((VInfo) data[0]).properties).size();
+        for (int i = 0; i < l; i++) {
+            Object ty = (((VInfo) data[0]).properties).get(i);
             if (ty instanceof Vector4) {
                 Vector4 z = new Vector4();
                 float m = 0;
@@ -168,31 +184,33 @@ public class TessLine3dEmitter_long extends Small3dLineEmitter_long {
             else {
                 o.add(null);
             }
-		}
+        }
 
-		return o;
-	}
+        return o;
+    }
 
-	protected void nextTriangle(VInfo i) {
-		if (i.vertex == -1)
-			nextVertex(i);
+    protected
+    void nextTriangle(VInfo i) {
+        if (i.vertex == -1) nextVertex(i);
 
-		if (ongoingTriangle.size() == 2) {
-			nextTriangle(ongoingTriangle.get(0), ongoingTriangle.get(1), i);
-			ongoingTriangle.clear();
-		} else
-			ongoingTriangle.add(i);
-	}
+        if (ongoingTriangle.size() == 2) {
+            nextTriangle(ongoingTriangle.get(0), ongoingTriangle.get(1), i);
+            ongoingTriangle.clear();
+        }
+        else ongoingTriangle.add(i);
+    }
 
-	protected void nextTriangle(VInfo a, VInfo b, VInfo c) {
-		mesh.nextFace(a.vertex, b.vertex, c.vertex);
-	}
+    protected
+    void nextTriangle(VInfo a, VInfo b, VInfo c) {
+        mesh.nextFace(a.vertex, b.vertex, c.vertex);
+    }
 
-	protected void nextVertex(VInfo info) {
-		if (info.vertex == -1) {
-			info.vertex = mesh.nextVertex(info.position);
-			decorateVertex(info.vertex, info.properties);
-		}
-	}
+    protected
+    void nextVertex(VInfo info) {
+        if (info.vertex == -1) {
+            info.vertex = mesh.nextVertex(info.position);
+            decorateVertex(info.vertex, info.properties);
+        }
+    }
 
 }

@@ -11,9 +11,11 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-public class ExCLTooDifficult extends ExCLError {
-	@Override
-	public String description() {
-		return "(ExCLTooDifficult) The constraints are too difficult to solve";
-	}
+public
+class ExCLTooDifficult extends ExCLError {
+    @Override
+    public
+    String description() {
+        return "(ExCLTooDifficult) The constraints are too difficult to solve";
+    }
 }

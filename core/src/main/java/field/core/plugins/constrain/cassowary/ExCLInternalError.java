@@ -11,15 +11,18 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-public class ExCLInternalError extends ExCLError {
-	public ExCLInternalError(String s) {
-		description_ = s;
-	}
+public
+class ExCLInternalError extends ExCLError {
+    public
+    ExCLInternalError(String s) {
+        description_ = s;
+    }
 
-	@Override
-	public String description() {
-		return "(ExCLInternalError) " + description_;
-	}
+    @Override
+    public
+    String description() {
+        return "(ExCLInternalError) " + description_;
+    }
 
-	private final String description_;
+    private final String description_;
 }

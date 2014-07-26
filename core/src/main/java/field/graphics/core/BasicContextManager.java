@@ -31,148 +31,161 @@ import java.util.Map.Entry;
  * instance. If this occurs, the instance will need to generate one, typically
  * via its setup() method and do a putId() when complete.
  */
-public class BasicContextManager {
-	private static HashMap<Object, Integer> currentContextIdMap = new HashMap<Object, Integer>();
+public
+class BasicContextManager {
+    private static HashMap<Object, Integer> currentContextIdMap = new HashMap<Object, Integer>();
 
-	private static final HashMap<Object, HashMap<Object, Integer>> contextOwnerMap = new HashMap<Object, HashMap<Object, Integer>>();
+    private static final HashMap<Object, HashMap<Object, Integer>> contextOwnerMap =
+            new HashMap<Object, HashMap<Object, Integer>>();
 
-	private static final HashMap<Object, Long> coreImageContextMap = new HashMap<Object, Long>();
+    private static final HashMap<Object, Long> coreImageContextMap = new HashMap<Object, Long>();
 
-	private static final HashMap<Object, HashMap<Object, Boolean>> contextValidMap = new HashMap<Object, HashMap<Object, Boolean>>();
+    private static final HashMap<Object, HashMap<Object, Boolean>> contextValidMap =
+            new HashMap<Object, HashMap<Object, Boolean>>();
 
-	private static HashMap<Object, Boolean> currentValidMap = new HashMap<Object, Boolean>();
+    private static HashMap<Object, Boolean> currentValidMap = new HashMap<Object, Boolean>();
 
-	public static int ID_NOT_FOUND = -1;
+    public static int ID_NOT_FOUND = -1;
 
-	private static Object currentContext;
+    private static Object currentContext;
 
-	private static final ThreadLocal<Object> gl = new ThreadLocal<Object>();
-	private static final ThreadLocal<Object> glu = new ThreadLocal<Object>();
+    private static final ThreadLocal<Object> gl = new ThreadLocal<Object>();
+    private static final ThreadLocal<Object> glu = new ThreadLocal<Object>();
 
-	public static long coreImageContext;
+    public static long coreImageContext;
 
-	public static Object gluLock = new Object();
+    public static Object gluLock = new Object();
 
-	/**
-	 * Call this to set the currentContextIdMap to be the one associated
-	 * with x. Note, the maps are stored internally to
-	 * BasicContextIDManager, so a client will never deal with the maps
-	 * directly. I f one does not exist already, it is created and installed
-	 * as the currentContextIdMap.
-	 */
-	public static void setCurrentContextFor(Object x, Object gl, Object glu) {
-		HashMap<Object, Integer> idMap = contextOwnerMap.get(x);
-		if (idMap == null) {
-			idMap = new HashMap<Object, Integer>();
-			contextOwnerMap.put(x, idMap);
-		}
-		currentContextIdMap = idMap;
+    /**
+     * Call this to set the currentContextIdMap to be the one associated
+     * with x. Note, the maps are stored internally to
+     * BasicContextIDManager, so a client will never deal with the maps
+     * directly. I f one does not exist already, it is created and installed
+     * as the currentContextIdMap.
+     */
+    public static
+    void setCurrentContextFor(Object x, Object gl, Object glu) {
+        HashMap<Object, Integer> idMap = contextOwnerMap.get(x);
+        if (idMap == null) {
+            idMap = new HashMap<Object, Integer>();
+            contextOwnerMap.put(x, idMap);
+        }
+        currentContextIdMap = idMap;
 
-		HashMap<Object, Boolean> validMap = contextValidMap.get(x);
-		if (validMap == null) {
-			validMap = new HashMap<Object, Boolean>();
-			contextValidMap.put(x, validMap);
-		}
-		currentValidMap = validMap;
+        HashMap<Object, Boolean> validMap = contextValidMap.get(x);
+        if (validMap == null) {
+            validMap = new HashMap<Object, Boolean>();
+            contextValidMap.put(x, validMap);
+        }
+        currentValidMap = validMap;
 
-		currentContext = x;
-		BasicContextManager.setGl(gl);
-		BasicContextManager.setGlu(glu);
+        currentContext = x;
+        BasicContextManager.setGl(gl);
+        BasicContextManager.setGlu(glu);
 
-		Long ll = coreImageContextMap.get(x);
-		if (ll == null && Platform.getOS()==OS.mac) {
+        Long ll = coreImageContextMap.get(x);
+        if (ll == null && Platform.getOS() == OS.mac) {
 //			coreImageContextMap.put(x, ll = new CoreImage().context_createOpenGLCIContextNow());
-		}
-		
-		if (Platform.getOS()==OS.mac)
-			coreImageContext = ll == null ? 0 : ll;
-	}
+        }
 
-	/**
-	 * Use this to store an id into the currentContextIdMap.
-	 */
-	public static void putId(Object owner, int id) {
-		currentContextIdMap.put(owner, id);
-	}
+        if (Platform.getOS() == OS.mac) coreImageContext = ll == null ? 0 : ll;
+    }
 
-	/**
-	 * Use this to retrieve an id from the currentContextIdMap. Note, be
-	 * sure to check for ID_NOT_FOUND as a return. If this occurs, you will
-	 * need to allocate one (typically done in setup() ), and then call
-	 * putId() when you are done.
-	 */
-	public static int getId(Object owner) {
-		Integer id = currentContextIdMap.get(owner);
-		if (id == null)
-			return ID_NOT_FOUND;
-		else
-			return id.intValue();
-	}
+    /**
+     * Use this to store an id into the currentContextIdMap.
+     */
+    public static
+    void putId(Object owner, int id) {
+        currentContextIdMap.put(owner, id);
+    }
 
-	public static void markAsNoIDInAllContexts(Object owner) {
-		Iterator<?> it = contextOwnerMap.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<?, ?> e = (Entry<?, ?>) it.next();
-			Map<?, ?> m = (Map<?, ?>) e.getValue();
-			m.remove(owner);
-		}
-		currentValidMap.remove(owner);
-	}
+    /**
+     * Use this to retrieve an id from the currentContextIdMap. Note, be
+     * sure to check for ID_NOT_FOUND as a return. If this occurs, you will
+     * need to allocate one (typically done in setup() ), and then call
+     * putId() when you are done.
+     */
+    public static
+    int getId(Object owner) {
+        Integer id = currentContextIdMap.get(owner);
+        if (id == null) return ID_NOT_FOUND;
+        else return id.intValue();
+    }
 
-	/**
-	 * says that this object has become 'invalid' in all contexts, for
-	 * example, a vertex buffer has moved
-	 * 
-	 * @param owner
-	 */
+    public static
+    void markAsNoIDInAllContexts(Object owner) {
+        Iterator<?> it = contextOwnerMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<?, ?> e = (Entry<?, ?>) it.next();
+            Map<?, ?> m = (Map<?, ?>) e.getValue();
+            m.remove(owner);
+        }
+        currentValidMap.remove(owner);
+    }
 
-	public static void markAsInvalidInAllContexts(Object owner) {
-		Iterator<?> it = contextValidMap.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<?, ?> e = (Entry<?, ?>) it.next();
-			Map<?, ?> m = (Map<?, ?>) e.getValue();
-			m.remove(owner);
-		}
-		currentValidMap.remove(owner);
-	}
+    /**
+     * says that this object has become 'invalid' in all contexts, for
+     * example, a vertex buffer has moved
+     *
+     * @param owner
+     */
 
-	public static void markAsValidInThisContext(Object owner) {
+    public static
+    void markAsInvalidInAllContexts(Object owner) {
+        Iterator<?> it = contextValidMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<?, ?> e = (Entry<?, ?>) it.next();
+            Map<?, ?> m = (Map<?, ?>) e.getValue();
+            m.remove(owner);
+        }
+        currentValidMap.remove(owner);
+    }
+
+    public static
+    void markAsValidInThisContext(Object owner) {
         currentValidMap.put(owner, Boolean.TRUE);
     }
 
-	public static boolean isValid(Object owner) {
-		Boolean b = currentValidMap.get(owner);
+    public static
+    boolean isValid(Object owner) {
+        Boolean b = currentValidMap.get(owner);
         return b != null && b;
     }
 
-	public static void delete(Object owner) {
-		currentContextIdMap.remove(owner);
-		contextOwnerMap.remove(owner);
-		currentValidMap.remove(owner);
-		contextValidMap.remove(owner);
-	}
+    public static
+    void delete(Object owner) {
+        currentContextIdMap.remove(owner);
+        contextOwnerMap.remove(owner);
+        currentValidMap.remove(owner);
+        contextValidMap.remove(owner);
+    }
 
-	/**
-	 * @return
-	 */
-	public static Object getCurrentContext() {
-		return currentContext;
-	}
+    /**
+     * @return
+     */
+    public static
+    Object getCurrentContext() {
+        return currentContext;
+    }
 
-	public static void setGl(Object gl) {
-		BasicContextManager.gl.set(gl);
-	}
+    public static
+    void setGl(Object gl) {
+        BasicContextManager.gl.set(gl);
+    }
 
-	public static Object getGl() {
+    public static
+    Object getGl() {
         return gl.get();
     }
 
-	public static void setGlu(Object glu) {
-		BasicContextManager.glu.set(glu);
-	}
+    public static
+    void setGlu(Object glu) {
+        BasicContextManager.glu.set(glu);
+    }
 
-	public static Object getGlu() {
-		return glu.get();
-	}
+    public static
+    Object getGlu() {
+        return glu.get();
+    }
 
 }

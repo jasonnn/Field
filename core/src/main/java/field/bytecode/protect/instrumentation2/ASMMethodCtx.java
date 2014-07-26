@@ -14,11 +14,13 @@ class ASMMethodCtx {
     public String[] exceptions;
 
 
-    public ASMMethodCtx copy() {
+    public
+    ASMMethodCtx copy() {
         return copyTo(new ASMMethodCtx());
     }
 
-    public ASMMethodCtx copyTo(ASMMethodCtx copy) {
+    public
+    ASMMethodCtx copyTo(ASMMethodCtx copy) {
 
         copy.classCtx.copyFrom(this.classCtx);
         copy.access = access;

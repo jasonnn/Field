@@ -13,354 +13,375 @@ import java.util.*;
 /**
  * a runner than knows how to deal with many kinds of things that python can
  * throw at it
- * 
+ *
  * @author marc created on Jan 31, 2004
  */
-public class BasicRunner extends Runner implements iExecutesPromise {
+public
+class BasicRunner extends Runner implements iExecutesPromise {
 
-	public interface Delegate {
+    public
+    interface Delegate {
 
-		public void continueToBeActive(float t, Promise p, boolean forwards);
+        public
+        void continueToBeActive(float t, Promise p, boolean forwards);
 
-		public void jumpStop(float t, Promise p, boolean forwards);
+        public
+        void jumpStop(float t, Promise p, boolean forwards);
 
-		public void start(float t, Promise p, boolean forwards);
+        public
+        void start(float t, Promise p, boolean forwards);
 
-		public void startAndStop(float t, Promise p, boolean forwards);
+        public
+        void startAndStop(float t, Promise p, boolean forwards);
 
-		public void stop(float t, Promise p, boolean forwards);
-	}
+        public
+        void stop(float t, Promise p, boolean forwards);
+    }
 
-	public static final iVisualElement.VisualElementProperty<BasicRunner> basicRunner = new iVisualElement.VisualElementProperty<BasicRunner>("basicRunner_");
+    public static final iVisualElement.VisualElementProperty<BasicRunner> basicRunner =
+            new iVisualElement.VisualElementProperty<BasicRunner>("basicRunner_");
 
-	protected static
+    protected static
     Delegate createDelegateForPromise_static(float t, Promise p, boolean forwards, boolean noDefaultBackwards) {
-		String text = p.getText();
+        String text = p.getText();
 
-		PythonInterface.getPythonInterface().setVariable("_x", new Float(t));
-		t = (t - p.getStart()) / (p.getEnd() - p.getStart());
-		t = InterpretPythonAsDelegate.clamp(t);
-		p.beginExecute();
-		PythonInterface.getPythonInterface().setVariable("_t", new Float(t));
-		PythonInterface.getPythonInterface().setVariable("_dt", new Float(0));
-		Object ret = null;
-		try {
-			ret = PythonInterface.getPythonInterface().executeStringReturnValue(text, "_r");
-		} catch (Throwable tr) {
+        PythonInterface.getPythonInterface().setVariable("_x", new Float(t));
+        t = (t - p.getStart()) / (p.getEnd() - p.getStart());
+        t = InterpretPythonAsDelegate.clamp(t);
+        p.beginExecute();
+        PythonInterface.getPythonInterface().setVariable("_t", new Float(t));
+        PythonInterface.getPythonInterface().setVariable("_dt", new Float(0));
+        Object ret = null;
+        try {
+            ret = PythonInterface.getPythonInterface().executeStringReturnValue(text, "_r");
+        } catch (Throwable tr) {
 
-			System.err.println(" exception throw while executing python ...<" + text + "> <" + tr + '>');
-			tr.printStackTrace();
-			new Exception().printStackTrace();
-			if (SystemProperties.getIntProperty("exitOnException", 0) == 1)
-				System.exit(1);
-		}
+            System.err.println(" exception throw while executing python ...<" + text + "> <" + tr + '>');
+            tr.printStackTrace();
+            new Exception().printStackTrace();
+            if (SystemProperties.getIntProperty("exitOnException", 0) == 1) System.exit(1);
+        }
 
-		p.endExecute();
-		Delegate d = delegateForReturnValue_static(t, p, forwards, ret, noDefaultBackwards);
-		return d;
-	}
-
-	protected static
-    Delegate delegateForReturnValue_static(float t, Promise p, boolean forwards, Object ret, final boolean noDefaultBackwards) {
-		Delegate d = InterpretPythonAsDelegate.delegateForReturnValue_impl(t, p, forwards, ret, noDefaultBackwards);
-		if (d == null) {
-			return new Delegate() {
-
-				public void continueToBeActive(float t, Promise p, boolean forwards) {
-				}
-
-				public void jumpStop(float t, Promise p, boolean forwards) {
-				}
-
-				public void start(float t, Promise p, boolean forwards) {
-				}
-
-				public void startAndStop(float t, Promise p, boolean forwards) {
-				}
-
-				public void stop(float t, Promise p, boolean forwards) {
-				}
-
-			};
-		}
+        p.endExecute();
+        Delegate d = delegateForReturnValue_static(t, p, forwards, ret, noDefaultBackwards);
         return d;
     }
 
-	protected final PythonScriptingSystem system;
+    protected static
+    Delegate delegateForReturnValue_static(float t,
+                                           Promise p,
+                                           boolean forwards,
+                                           Object ret,
+                                           final boolean noDefaultBackwards) {
+        Delegate d = InterpretPythonAsDelegate.delegateForReturnValue_impl(t, p, forwards, ret, noDefaultBackwards);
+        if (d == null) {
+            return new Delegate() {
 
-	protected boolean noDefaultBackwards = false;
+                public
+                void continueToBeActive(float t, Promise p, boolean forwards) {
+                }
 
-	protected boolean dontStartAndStopSkipped = false;
+                public
+                void jumpStop(float t, Promise p, boolean forwards) {
+                }
 
-	protected HashMap runningDelegates = new HashMap();
+                public
+                void start(float t, Promise p, boolean forwards) {
+                }
 
-	protected HashMap timeDelegates = new HashMap();
+                public
+                void startAndStop(float t, Promise p, boolean forwards) {
+                }
 
-	List alsoActive = new ArrayList();
+                public
+                void stop(float t, Promise p, boolean forwards) {
+                }
 
-	Comparator activeComparator = new Comparator() {
+            };
+        }
+        return d;
+    }
 
-		public int compare(Object o1, Object o2) {
-			Promise p1 = (Promise) o1;
-			Promise p2 = (Promise) o2;
-			float y1 = p1.getPriority();
-			float y2 = p2.getPriority();
-			return y1 < y2 ? -1 : 1;
-		}
-	};
+    protected final PythonScriptingSystem system;
 
-	boolean continueToBeActiveCanCreate = true;
+    protected boolean noDefaultBackwards = false;
 
-	public BasicRunner(PythonScriptingSystem system, float timeStart) {
-		system.super(timeStart);
-		this.system = system;
+    protected boolean dontStartAndStopSkipped = false;
 
-	}
+    protected HashMap runningDelegates = new HashMap();
 
-	public void addActive(float t, Promise p) {
-		if (!filter(p))
-			return;
-		start(t, p, true);
-		alsoActive.add(p);
-	}
+    protected HashMap timeDelegates = new HashMap();
 
-	public void addActive(iFloatProvider timeProvider, Promise p) {
+    List alsoActive = new ArrayList();
 
-		if (!filter(p))
-			return;
+    Comparator activeComparator = new Comparator() {
+
+        public
+        int compare(Object o1, Object o2) {
+            Promise p1 = (Promise) o1;
+            Promise p2 = (Promise) o2;
+            float y1 = p1.getPriority();
+            float y2 = p2.getPriority();
+            return y1 < y2 ? -1 : 1;
+        }
+    };
+
+    boolean continueToBeActiveCanCreate = true;
+
+    public
+    BasicRunner(PythonScriptingSystem system, float timeStart) {
+        system.super(timeStart);
+        this.system = system;
+
+    }
+
+    public
+    void addActive(float t, Promise p) {
+        if (!filter(p)) return;
+        start(t, p, true);
+        alsoActive.add(p);
+    }
+
+    public
+    void addActive(iFloatProvider timeProvider, Promise p) {
+
+        if (!filter(p)) return;
         if (runningDelegates.get(p) != null) {
             boolean also = alsoActive.contains(p);
-			removeActive(timeProvider.evaluate(), p);
-			runningDelegates.remove(p);
-			start(timeProvider.evaluate(), p, true);
-			if (also)
-				alsoActive.add(p);
-			return;
-		}
-		start(timeProvider.evaluate(), p, true);
-		alsoActive.add(p);
-		timeDelegates.put(p, timeProvider);
-	}
+            removeActive(timeProvider.evaluate(), p);
+            runningDelegates.remove(p);
+            start(timeProvider.evaluate(), p, true);
+            if (also) alsoActive.add(p);
+            return;
+        }
+        start(timeProvider.evaluate(), p, true);
+        alsoActive.add(p);
+        timeDelegates.put(p, timeProvider);
+    }
 
-	@Override
-	public boolean continueToBeActive(float t, Promise p, boolean forwards) {
-		if (!filter(p))
-			return true;
-		t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+    @Override
+    public
+    boolean continueToBeActive(float t, Promise p, boolean forwards) {
+        if (!filter(p)) return true;
+        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
 
-		Delegate delegate;
-		if (continueToBeActiveCanCreate) {
-			delegate = delegateForPromise(t, p, forwards);
-			runningDelegates.put(p, delegate);
-		} else
-			delegate = (Delegate) runningDelegates.get(p);
+        Delegate delegate;
+        if (continueToBeActiveCanCreate) {
+            delegate = delegateForPromise(t, p, forwards);
+            runningDelegates.put(p, delegate);
+        }
+        else delegate = (Delegate) runningDelegates.get(p);
 
-		if (delegate != null) {
+        if (delegate != null) {
 
-			delegate.continueToBeActive(rewriteTime(t, p), p, forwards);
-			return false;
-		} else {
-			alsoActive.remove(p);
-			runningDelegates.remove(p);
-			timeDelegates.remove(p);
-			return true;
-		}
-	}
+            delegate.continueToBeActive(rewriteTime(t, p), p, forwards);
+            return false;
+        }
+        else {
+            alsoActive.remove(p);
+            runningDelegates.remove(p);
+            timeDelegates.remove(p);
+            return true;
+        }
+    }
 
-	public iExecutesPromise dontExecuteBackwards() {
-		noDefaultBackwards = true;
-		return this;
-	}
+    public
+    iExecutesPromise dontExecuteBackwards() {
+        noDefaultBackwards = true;
+        return this;
+    }
 
-	public iExecutesPromise dontStartAndStopSkipped() {
-		dontStartAndStopSkipped = true;
-		return this;
-	}
+    public
+    iExecutesPromise dontStartAndStopSkipped() {
+        dontStartAndStopSkipped = true;
+        return this;
+    }
 
-	public iExecutesPromise doStartAndStopSkipped() {
-		dontStartAndStopSkipped = false;
-		return this;
-	}
+    public
+    iExecutesPromise doStartAndStopSkipped() {
+        dontStartAndStopSkipped = false;
+        return this;
+    }
 
-	public iExecutesPromise executeBackwards() {
-		noDefaultBackwards = false;
-		return this;
-	}
+    public
+    iExecutesPromise executeBackwards() {
+        noDefaultBackwards = false;
+        return this;
+    }
 
-	public ArrayList getActive() {
-		ArrayList al = new ArrayList(active);
-		al.addAll(alsoActive);
-		return al;
-	}
+    public
+    ArrayList getActive() {
+        ArrayList al = new ArrayList(active);
+        al.addAll(alsoActive);
+        return al;
+    }
 
-	@Override
-	public void jumpStop(float t, Promise p, boolean forwards) {
-		if (!filter(p))
-			return;
-		t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
-		Delegate delegate = delegateForPromise(t, p, forwards);
-		if (delegate != null)
-			delegate.jumpStop(rewriteTime(t, p), p, forwards);
-		runningDelegates.remove(p);
-	}
+    @Override
+    public
+    void jumpStop(float t, Promise p, boolean forwards) {
+        if (!filter(p)) return;
+        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        Delegate delegate = delegateForPromise(t, p, forwards);
+        if (delegate != null) delegate.jumpStop(rewriteTime(t, p), p, forwards);
+        runningDelegates.remove(p);
+    }
 
-	public void removeActive(float t, Promise p) {
-		t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
-		stop(t, p, true);
-		alsoActive.remove(p);
-		active.remove(p);
-		timeDelegates.remove(p);
+    public
+    void removeActive(float t, Promise p) {
+        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        stop(t, p, true);
+        alsoActive.remove(p);
+        active.remove(p);
+        timeDelegates.remove(p);
 
-		runningDelegates.remove(p);
-	}
+        runningDelegates.remove(p);
+    }
 
-	public void removeActive(Promise p) {
-		
-		if (runningDelegates.get(p) == null)
-			return;
-		if (timeDelegates.get(p) == null) {
-			removeActive(0, p);
-			return;
-		}
+    public
+    void removeActive(Promise p) {
 
-		float t = ((iFloatProvider) timeDelegates.remove(p)).evaluate();
+        if (runningDelegates.get(p) == null) return;
+        if (timeDelegates.get(p) == null) {
+            removeActive(0, p);
+            return;
+        }
 
-		removeActive(t, p);
+        float t = ((iFloatProvider) timeDelegates.remove(p)).evaluate();
 
-		active.remove(p);
-	}
+        removeActive(t, p);
 
-	@Override
-	public void start(float t, Promise p, boolean forwards) {
-		if (!filter(p))
-			return;
-		t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
-		Delegate delegate = delegateForPromise(t, p, forwards);
+        active.remove(p);
+    }
 
-		if (delegate != null) {
-			delegate.start(rewriteTime(t, p), p, forwards);
-			runningDelegates.put(p, delegate);
-		}
-	}
+    @Override
+    public
+    void start(float t, Promise p, boolean forwards) {
+        if (!filter(p)) return;
+        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        Delegate delegate = delegateForPromise(t, p, forwards);
 
-	@Override
-	public void startAndStop(float t, Promise p, boolean forwards) {
-		if (!filter(p))
-			return;
-		if (dontStartAndStopSkipped)
-			return;
+        if (delegate != null) {
+            delegate.start(rewriteTime(t, p), p, forwards);
+            runningDelegates.put(p, delegate);
+        }
+    }
 
-		t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
-		try {
-			PythonInterface.getPythonInterface().setVariable("_jump", true);
-			PythonInterface.getPythonInterface().setVariable("_backwards", !forwards);
+    @Override
+    public
+    void startAndStop(float t, Promise p, boolean forwards) {
+        if (!filter(p)) return;
+        if (dontStartAndStopSkipped) return;
 
-			Delegate delegate = delegateForPromise(t, p, forwards);
-			if (delegate != null)
-				delegate.startAndStop(rewriteTime(t, p), p, forwards);
-		} finally {
-			PythonInterface.getPythonInterface().setVariable("_jump", null);
-		}
-	}
+        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        try {
+            PythonInterface.getPythonInterface().setVariable("_jump", true);
+            PythonInterface.getPythonInterface().setVariable("_backwards", !forwards);
 
-	@Override
-	public void stop(float t, Promise p, boolean forwards) {
-		if (!filter(p))
-			return;
-		t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
-		Delegate delegate = (Delegate) runningDelegates.get(p);
-		if (delegate != null)
-			delegate.stop(rewriteTime(t, p), p, forwards);
-		runningDelegates.remove(p);
-	}
+            Delegate delegate = delegateForPromise(t, p, forwards);
+            if (delegate != null) delegate.startAndStop(rewriteTime(t, p), p, forwards);
+        } finally {
+            PythonInterface.getPythonInterface().setVariable("_jump", null);
+        }
+    }
 
-	public void stopAll(float t) {
-		for (int i = alsoActive.size() - 1; i >= 0; i--) {
-			stop(t, (Promise) alsoActive.remove(i), true);
-		}
-		Iterator i = new HashSet(runningDelegates.keySet()).iterator();
-		while (i.hasNext()) {
-			Promise p = (Promise) i.next();
-			stop(t, p, true);
-			active.remove(p);
-		}
-	}
+    @Override
+    public
+    void stop(float t, Promise p, boolean forwards) {
+        if (!filter(p)) return;
+        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        Delegate delegate = (Delegate) runningDelegates.get(p);
+        if (delegate != null) delegate.stop(rewriteTime(t, p), p, forwards);
+        runningDelegates.remove(p);
+    }
 
-	@Override
-	public void update(float t) {
-		continueToBeActiveCanCreate = false;
+    public
+    void stopAll(float t) {
+        for (int i = alsoActive.size() - 1; i >= 0; i--) {
+            stop(t, (Promise) alsoActive.remove(i), true);
+        }
+        Iterator i = new HashSet(runningDelegates.keySet()).iterator();
+        while (i.hasNext()) {
+            Promise p = (Promise) i.next();
+            stop(t, p, true);
+            active.remove(p);
+        }
+    }
 
-		super.update(t);
+    @Override
+    public
+    void update(float t) {
+        continueToBeActiveCanCreate = false;
 
-		for (int i = 0; i < alsoActive.size(); i++) {
-			Promise p = (Promise) alsoActive.get(i);
-			boolean removed = continueToBeActive(t, p, true);
-			if (removed)
-				i--;
-		}
-		continueToBeActiveCanCreate = true;
-	}
+        super.update(t);
+
+        for (int i = 0; i < alsoActive.size(); i++) {
+            Promise p = (Promise) alsoActive.get(i);
+            boolean removed = continueToBeActive(t, p, true);
+            if (removed) i--;
+        }
+        continueToBeActiveCanCreate = true;
+    }
 
     private static
     String info(Promise p) {
         return p.toString();
-	}
+    }
 
-	private static
+    private static
     float rewriteTime(float t, Promise p) {
         return PythonScriptingSystem.rewriteTime(t, p);
     }
 
-	protected Delegate createDelegateForPromise(float t, Promise p, boolean forwards, boolean noDefaultBackwards) {
+    protected
+    Delegate createDelegateForPromise(float t, Promise p, boolean forwards, boolean noDefaultBackwards) {
 
-		t = rewriteTime(t, p);
+        t = rewriteTime(t, p);
 
-		String text = p.getText();
+        String text = p.getText();
 
-		PythonInterface.getPythonInterface().setVariable("_x", new Float(t));
+        PythonInterface.getPythonInterface().setVariable("_x", new Float(t));
 
-		t = (t - p.getStart()) / (p.getEnd() - p.getStart());
-		p.beginExecute();
-		t = InterpretPythonAsDelegate.clamp(t);
-		PythonInterface.getPythonInterface().setVariable("_t", new Float(t));
-		PythonInterface.getPythonInterface().setVariable("_dt", new Float(0));
+        t = (t - p.getStart()) / (p.getEnd() - p.getStart());
+        p.beginExecute();
+        t = InterpretPythonAsDelegate.clamp(t);
+        PythonInterface.getPythonInterface().setVariable("_t", new Float(t));
+        PythonInterface.getPythonInterface().setVariable("_dt", new Float(0));
         PythonInterface.getPythonInterface().setVariable("_forwards", Boolean.valueOf(forwards));
         Object ret = null;
 
-		if (Logging.enabled())
-			Logging.logging.addEvent(new ElementTextWasExecuted(text));
+        if (Logging.enabled()) Logging.logging.addEvent(new ElementTextWasExecuted(text));
 
-		try {
-		
-			ret = PythonInterface.getPythonInterface().executeStringReturnValue(text, "_r");
+        try {
 
-		
-		} catch (Throwable tr) {
-			System.err.println(" exception throw while executing python ...<" + text + "> <" + tr + ">");
-			System.err.println(" python stack trace:");
-			PythonInterface.writeException(tr);
-			tr.printStackTrace();
+            ret = PythonInterface.getPythonInterface().executeStringReturnValue(text, "_r");
 
-			InterpretPythonAsDelegate.throwExceptionInside("trying to evaluate _r", p.getOngoingEnvironments(), tr);
 
-			System.err.println(" java stack trace");
-			new Exception().printStackTrace();
-			if (SystemProperties.getIntProperty("exitOnException", 0) == 1)
-				System.exit(1);
-		}
-		p.endExecute();
-		Delegate d = delegateForReturnValue(t, p, forwards, ret, noDefaultBackwards);
-		return d;
-	}
+        } catch (Throwable tr) {
+            System.err.println(" exception throw while executing python ...<" + text + "> <" + tr + ">");
+            System.err.println(" python stack trace:");
+            PythonInterface.writeException(tr);
+            tr.printStackTrace();
 
-	protected Delegate delegateForPromise(float t, Promise p, boolean forwards) {
-		t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
-		Delegate ret = (Delegate) runningDelegates.get(p);
-		if (ret == null) {
-			return createDelegateForPromise(t, p, forwards, noDefaultBackwards);
-		}
-		return ret;
-	}
+            InterpretPythonAsDelegate.throwExceptionInside("trying to evaluate _r", p.getOngoingEnvironments(), tr);
+
+            System.err.println(" java stack trace");
+            new Exception().printStackTrace();
+            if (SystemProperties.getIntProperty("exitOnException", 0) == 1) System.exit(1);
+        }
+        p.endExecute();
+        Delegate d = delegateForReturnValue(t, p, forwards, ret, noDefaultBackwards);
+        return d;
+    }
+
+    protected
+    Delegate delegateForPromise(float t, Promise p, boolean forwards) {
+        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        Delegate ret = (Delegate) runningDelegates.get(p);
+        if (ret == null) {
+            return createDelegateForPromise(t, p, forwards, noDefaultBackwards);
+        }
+        return ret;
+    }
 
     protected static
     Delegate delegateForReturnValue(float t,
@@ -370,18 +391,19 @@ public class BasicRunner extends Runner implements iExecutesPromise {
                                     final boolean noDefaultBackwards) {
         Delegate d = InterpretPythonAsDelegate.delegateForReturnValue_impl(t, p, forwards, ret, noDefaultBackwards);
 
-		return d;
-	}
+        return d;
+    }
 
-	protected boolean filter(Promise p) {
-		return true;
-	}
+    protected
+    boolean filter(Promise p) {
+        return true;
+    }
 
-	@Override
-	protected void sortActive() {
-		Collections.sort(active, activeComparator);
-	}
-	
-	
+    @Override
+    protected
+    void sortActive() {
+        Collections.sort(active, activeComparator);
+    }
+
 
 }

@@ -10,42 +10,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Above extends iReferenceAlgorithm.BaseReferenceAlgorithm {
+public
+class Above extends iReferenceAlgorithm.BaseReferenceAlgorithm {
 
-	Vector3 atPoint = new Vector3(0.5f, 0, 0f);
-	Vector3 targetDirection = new Vector3(0, -1, 0);
-	Vector3 otherDirection = new Vector3(1, 0, 0);
+    Vector3 atPoint = new Vector3(0.5f, 0, 0f);
+    Vector3 targetDirection = new Vector3(0, -1, 0);
+    Vector3 otherDirection = new Vector3(1, 0, 0);
 
-	@Override
-	protected List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement) {
-		ArrayList<iVisualElement> r = new ArrayList<iVisualElement>();
+    @Override
+    protected
+    List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement) {
+        ArrayList<iVisualElement> r = new ArrayList<iVisualElement>();
 
-		List<iVisualElement> all = allVisualElements(root);
+        List<iVisualElement> all = allVisualElements(root);
 
-		iVisualElement.Rect frame = forElement.getFrame(null);
+        iVisualElement.Rect frame = forElement.getFrame(null);
 
 
-		final Vector3 targetPoint = frame.relativize(atPoint);
-		iVisualElement best = ReflectionTools.argMin(all, new Object(){
-			public float distance(iVisualElement e) {
+        final Vector3 targetPoint = frame.relativize(atPoint);
+        iVisualElement best = ReflectionTools.argMin(all, new Object() {
+            public
+            float distance(iVisualElement e) {
 
-				if (e instanceof VisualElement) {
-					iVisualElement.Rect otherFrame = e.getFrame(null);
-					Vector3 m = otherFrame.midPoint();
+                if (e instanceof VisualElement) {
+                    iVisualElement.Rect otherFrame = e.getFrame(null);
+                    Vector3 m = otherFrame.midPoint();
 
-					m.sub(targetPoint);
+                    m.sub(targetPoint);
 
-					float d1 = m.dot(targetDirection);
-					if (d1 < 0) return Float.POSITIVE_INFINITY;
-					float d2 = Math.abs(m.dot(otherDirection));
-					return d1 + d2;
-				}
-				return Float.POSITIVE_INFINITY;
-			}
-		});
+                    float d1 = m.dot(targetDirection);
+                    if (d1 < 0) return Float.POSITIVE_INFINITY;
+                    float d2 = Math.abs(m.dot(otherDirection));
+                    return d1 + d2;
+                }
+                return Float.POSITIVE_INFINITY;
+            }
+        });
 
-		if (best != null) r.add(best);
+        if (best != null) r.add(best);
 
-		return r;
-	}
+        return r;
+    }
 }

@@ -11,9 +11,11 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-public class ExCLNonlinearExpression extends ExCLError {
-	@Override
-	public String description() {
-		return "(ExCLNonlinearExpression) The resulting expression would be nonlinear";
-	}
+public
+class ExCLNonlinearExpression extends ExCLError {
+    @Override
+    public
+    String description() {
+        return "(ExCLNonlinearExpression) The resulting expression would be nonlinear";
+    }
 }

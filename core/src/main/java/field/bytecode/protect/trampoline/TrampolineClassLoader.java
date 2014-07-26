@@ -13,7 +13,8 @@ import java.util.logging.Logger;
 /**
  * Created by jason on 7/14/14.
  */
-public class TrampolineClassLoader extends BaseTrampolineClassLoader {
+public
+class TrampolineClassLoader extends BaseTrampolineClassLoader {
     private static final Logger log = Logger.getLogger(TrampolineClassLoader.class.getName());
 
     private final TrampolineInstrumentation instrumentation;
@@ -31,7 +32,8 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
     private final InstrumentationFilter filter = InstrumentationFilter.getInstance();
 
 
-    public TrampolineClassLoader(URL[] u, ClassLoader loader, TrampolineInstrumentation instrumentation) {
+    public
+    TrampolineClassLoader(URL[] u, ClassLoader loader, TrampolineInstrumentation instrumentation) {
         super(u, loader);
         this.instrumentation = instrumentation;
 
@@ -40,27 +42,25 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
 
 
     @Deprecated
-    public boolean shouldLoadLocal(String s) {
+    public
+    boolean shouldLoadLocal(String s) {
 
         s = s.replace('/', '.');
         boolean failed = false;
         for (String root : filter.ignored) {
-            if (s.startsWith(root))
-                failed = true;
+            if (s.startsWith(root)) failed = true;
         }
 
-        if (s.contains(".protect"))
-            failed = true;
+        if (s.contains(".protect")) failed = true;
 
-        if (failed)
-            for (String root : filter.allowed)
-                if (s.contains(root))
-                    failed = false;
+        if (failed) for (String root : filter.allowed)
+            if (s.contains(root)) failed = false;
 
         return !failed;
     }
 
-    public Class<?> _defineClass(String name, byte[] b, int off, int len) throws ClassFormatError {
+    public
+    Class<?> _defineClass(String name, byte[] b, int off, int len) throws ClassFormatError {
         Class<?> name2 = super.defineClass(name, b, off, len);
         name2.getDeclaredMethods();
         already.put(name, name2);
@@ -71,7 +71,8 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
 
 
     @SuppressWarnings("unchecked")
-    public Set<Class> getAllLoadedClasses() {
+    public
+    Set<Class> getAllLoadedClasses() {
         try {
             HashSet<Class> al = new HashSet<Class>();
             al.addAll(previous.values());
@@ -91,11 +92,11 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
     }
 
 
-    protected Class checkHasBeenLoaded(String s) {
+    protected
+    Class checkHasBeenLoaded(String s) {
         try {
             Class c = already.get(s);
-            if (c != null)
-                return c;
+            if (c != null) return c;
 
             if (findLoadedClass_method1 == null) {
                 findLoadedClass_method1 = ClassLoader.class.getDeclaredMethod("findLoadedClass", String.class);
@@ -137,8 +138,7 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
     Class<?> loadClass(String class_name, boolean resolve) throws ClassNotFoundException {
 
 
-        if (alreadyFailed.contains(class_name))
-            throw new ClassNotFoundException(class_name);
+        if (alreadyFailed.contains(class_name)) throw new ClassNotFoundException(class_name);
 
         deferTo = getParent();
         try {
@@ -148,73 +148,76 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
             try {
 
                 Class loaded = previous.get(class_name);
-                if (loaded == null)
-                    if (!shouldLoadLocal(class_name)) {
-                        try {
-                            loaded = getParent().loadClass(class_name);
-                        } catch (ClassNotFoundException ex) {
-                            classNotFound = ex;
-                            log.log(Level.WARNING, "class {0} not found", class_name);
-                        }
+                if (loaded == null) if (!shouldLoadLocal(class_name)) {
+                    try {
+                        loaded = getParent().loadClass(class_name);
+                    } catch (ClassNotFoundException ex) {
+                        classNotFound = ex;
+                        log.log(Level.WARNING, "class {0} not found", class_name);
                     }
+                }
                 if (loaded == null) {
                     loaded = checkHasBeenLoaded(class_name);
                 }
 
-                if (classNotFound == null)
-                    if (loaded == null) {
-                        deferTo = getParent();
-                        byte[] bytes = instrumentation.instrumentClass(this, class_name);
+                if (classNotFound == null) if (loaded == null) {
+                    deferTo = getParent();
+                    byte[] bytes = instrumentation.instrumentClass(this, class_name);
 
-                        if (bytes != null) {
+                    if (bytes != null) {
 
-                            if (class_name.lastIndexOf('.') != -1) {
-                                String packageName = class_name.substring(0, class_name.lastIndexOf('.'));
-                                if (!knownPackages.contains(packageName)) {
-                                    try {
-                                        definePackage(packageName, null, null, null, null, null, null, null);
-                                    } catch (IllegalArgumentException e) {
-                                        e.printStackTrace();
-                                    }
-                                    knownPackages.add(packageName);
-                                }
-                            }
-
-                            loaded = Trampoline2.reloadingSupport.delegate(class_name, bytes);
-
-                            if (loaded == null) {
-
+                        if (class_name.lastIndexOf('.') != -1) {
+                            String packageName = class_name.substring(0, class_name.lastIndexOf('.'));
+                            if (!knownPackages.contains(packageName)) {
                                 try {
-                                    loaded = defineClass(class_name, bytes, 0, bytes.length);
-                                } catch (LinkageError le) {
-                                    le.printStackTrace();
-                                    return null;
+                                    definePackage(packageName, null, null, null, null, null, null, null);
+                                } catch (IllegalArgumentException e) {
+                                    e.printStackTrace();
                                 }
-
-                                if (resolve)
-                                    resolveClass(loaded);
-                                previous.put(class_name, loaded);
+                                knownPackages.add(packageName);
                             }
                         }
 
-                    }
-                if (classNotFound == null)
-                    if (loaded == null) {
-                        try {
-                            loaded = Class.forName(class_name);
+                        loaded = Trampoline2.reloadingSupport.delegate(class_name, bytes);
 
-                            // recent change
+                        if (loaded == null) {
+
+                            try {
+                                loaded = defineClass(class_name, bytes, 0, bytes.length);
+                            } catch (LinkageError le) {
+                                le.printStackTrace();
+                                return null;
+                            }
+
+                            if (resolve) resolveClass(loaded);
                             previous.put(class_name, loaded);
-
-                        } catch (ClassNotFoundException ex) {
-                            classNotFound = ex;
-                            log.log(Level.WARNING, "?!", ex);
                         }
                     }
+
+                }
+                if (classNotFound == null) if (loaded == null) {
+                    try {
+                        loaded = Class.forName(class_name);
+
+                        // recent change
+                        previous.put(class_name, loaded);
+
+                    } catch (ClassNotFoundException ex) {
+                        classNotFound = ex;
+                        log.log(Level.WARNING, "?!", ex);
+                    }
+                }
 
                 if (classNotFound != null) {
 
-                    log.log(Level.WARNING, "exception (" + classNotFound.getClass() + "): while trying to load <" + class_name + " / <" + loading + '>');
+                    log.log(Level.WARNING,
+                            "exception ("
+                            + classNotFound.getClass()
+                            + "): while trying to load <"
+                            + class_name
+                            + " / <"
+                            + loading
+                            + '>');
 
                     alreadyFailed.add(class_name);
 

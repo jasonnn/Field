@@ -11,312 +11,358 @@ import java.util.List;
 /**
  * attempts to have a spline that has a control node evenly spaced through distance
  */
-public class ConstantDistanceResampling {
+public
+class ConstantDistanceResampling {
 
-	private final float minResolution;
+    private final float minResolution;
 
-	private final int maxSubdiv;
+    private final int maxSubdiv;
 
-	public ConstantDistanceResampling(float minResolution, int maxSubdiv) {
-		this.minResolution = minResolution;
-		this.maxSubdiv = maxSubdiv;
-	}
+    public
+    ConstantDistanceResampling(float minResolution, int maxSubdiv) {
+        this.minResolution = minResolution;
+        this.maxSubdiv = maxSubdiv;
+    }
 
-	boolean firstOut = true;
+    boolean firstOut = true;
 
-	public CachedLine resample(int num, CachedLine input) {
-		return resample(num, input, false);
-	}
+    public
+    CachedLine resample(int num, CachedLine input) {
+        return resample(num, input, false);
+    }
 
-	List<Integer> mapping = new ArrayList<Integer>();
-	
-	public CachedLine resample(float num, CachedLine input, boolean numIsDistance) {
-		firstOut = true;
-		CachedLine fine = new CachedLine();
-		final iLine in = fine.getInput();
-		SmallLineEmitter em = new SmallLineEmitter(){
-			Vector2 lastOut = null;
+    List<Integer> mapping = new ArrayList<Integer>();
 
-			public void emitLinearFrame(Vector2 a, Vector2 b, java.util.List<Object> name, java.util.List<Object> name2, Dict properties, iLinearGraphicsContext contex) {
-				if (firstOut || (lastOut.distanceFrom(a) > 1e-5)) {
-					in.moveTo(a.x, a.y);
-					firstOut = false;
-					lastOut = new Vector2(b);
-				}
-				in.lineTo(b.x, b.y);
-				lastOut.x = b.x;
-				lastOut.y = b.y;
-			}
+    public
+    CachedLine resample(float num, CachedLine input, boolean numIsDistance) {
+        firstOut = true;
+        CachedLine fine = new CachedLine();
+        final iLine in = fine.getInput();
+        SmallLineEmitter em = new SmallLineEmitter() {
+            Vector2 lastOut = null;
 
-			public void emitCubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context) {
-				if (firstOut || (lastOut.distanceFrom(a) > 1e-5)) {
-					in.moveTo(a.x, a.y);
-					firstOut = false;
-					lastOut = new Vector2(b);
-				}
-				in.cubicTo(c1.x, c1.y, c2.x, c2.y, b.x, b.y);
-				lastOut.x = b.x;
-				lastOut.y = b.y;
-			}
+            public
+            void emitLinearFrame(Vector2 a,
+                                 Vector2 b,
+                                 java.util.List<Object> name,
+                                 java.util.List<Object> name2,
+                                 Dict properties,
+                                 iLinearGraphicsContext contex) {
+                if (firstOut || (lastOut.distanceFrom(a) > 1e-5)) {
+                    in.moveTo(a.x, a.y);
+                    firstOut = false;
+                    lastOut = new Vector2(b);
+                }
+                in.lineTo(b.x, b.y);
+                lastOut.x = b.x;
+                lastOut.y = b.y;
+            }
 
-			@Override
-			protected boolean shouldTerm(float flatness, Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, int n) {
-				return (n > maxSubdiv) || (a.distanceFrom(b) < minResolution);
-			}
-		}.setCanEmitCubic(true);
+            public
+            void emitCubicFrame(Vector2 a,
+                                Vector2 c1,
+                                Vector2 c2,
+                                Vector2 b,
+                                List<Object> name,
+                                List<Object> name2,
+                                Dict properties,
+                                iLinearGraphicsContext context) {
+                if (firstOut || (lastOut.distanceFrom(a) > 1e-5)) {
+                    in.moveTo(a.x, a.y);
+                    firstOut = false;
+                    lastOut = new Vector2(b);
+                }
+                in.cubicTo(c1.x, c1.y, c2.x, c2.y, b.x, b.y);
+                lastOut.x = b.x;
+                lastOut.y = b.y;
+            }
 
-		drawInto(input, em, fine);
+            @Override
+            protected
+            boolean shouldTerm(float flatness, Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, int n) {
+                return (n > maxSubdiv) || (a.distanceFrom(b) < minResolution);
+            }
+        }.setCanEmitCubic(true);
 
-		// compute overall length
+        drawInto(input, em, fine);
 
-		List<Float> subsegmentLengths = new ArrayList<Float>();
+        // compute overall length
 
-		Vector2 a = new Vector2();
-		Vector2 b = new Vector2();
-		Vector2 c1 = new Vector2();
-		Vector2 c2 = new Vector2();
-		Vector2 out = new Vector2();
-		{
-			CachedLineCursor cursor = new CachedLineCursor(fine);
-			while (cursor.hasNextSegment()) {
-				float length = 0;
+        List<Float> subsegmentLengths = new ArrayList<Float>();
 
-				while (cursor.hasNextInSpline()) {
+        Vector2 a = new Vector2();
+        Vector2 b = new Vector2();
+        Vector2 c1 = new Vector2();
+        Vector2 c2 = new Vector2();
+        Vector2 out = new Vector2();
+        {
+            CachedLineCursor cursor = new CachedLineCursor(fine);
+            while (cursor.hasNextSegment()) {
+                float length = 0;
 
-					if (cursor.nextIsCubic()) {
-						if (cursor.nextCubicFrame(a, c1, c2, b)) {
-							LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f, out);
-							length += a.distanceFrom(out);
-							length += out.distanceFrom(b);
-						}
-					} else {
-						if (cursor.nextLinearFrame(a, b)) {
-							length += a.distanceFrom(b);
-						}
-					}
+                while (cursor.hasNextInSpline()) {
 
-					cursor.next();
-				}
+                    if (cursor.nextIsCubic()) {
+                        if (cursor.nextCubicFrame(a, c1, c2, b)) {
+                            LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f, out);
+                            length += a.distanceFrom(out);
+                            length += out.distanceFrom(b);
+                        }
+                    }
+                    else {
+                        if (cursor.nextLinearFrame(a, b)) {
+                            length += a.distanceFrom(b);
+                        }
+                    }
 
-				subsegmentLengths.add(length);
+                    cursor.next();
+                }
 
-				if (cursor.hasNextSegment()) cursor.next();
-			}
-		}
+                subsegmentLengths.add(length);
 
-		if (numIsDistance && (num == minResolution)) return fine;
+                if (cursor.hasNextSegment()) cursor.next();
+            }
+        }
 
-		Vector2 c12 = new Vector2();
-		Vector2 c21 = new Vector2();
-		Vector2 m = new Vector2();
-		Vector2 tmp = new Vector2();
-		CachedLine resampled = new CachedLine();
-		iLine resampledIn = resampled.getInput();
-		{
-			CachedLineCursor cursor = new CachedLineCursor(fine);
-			while (cursor.hasNextSegment()) {
-				float length = subsegmentLengths.remove(0);
+        if (numIsDistance && (num == minResolution)) return fine;
 
-				float subsegTargetLength = numIsDistance ? num : (length / num);
-				float currentLength = 0;
+        Vector2 c12 = new Vector2();
+        Vector2 c21 = new Vector2();
+        Vector2 m = new Vector2();
+        Vector2 tmp = new Vector2();
+        CachedLine resampled = new CachedLine();
+        iLine resampledIn = resampled.getInput();
+        {
+            CachedLineCursor cursor = new CachedLineCursor(fine);
+            while (cursor.hasNextSegment()) {
+                float length = subsegmentLengths.remove(0);
 
-				List<Vector2> stream = new ArrayList<Vector2>();
+                float subsegTargetLength = numIsDistance ? num : (length / num);
+                float currentLength = 0;
 
-				boolean first = true;
-				Vector2 last = null;
+                List<Vector2> stream = new ArrayList<Vector2>();
 
-				segment: while (cursor.hasNextInSpline()) {
+                boolean first = true;
+                Vector2 last = null;
 
-					System.err.println(" processing <" + cursor.getCurrentIndex() + '>');
-					if (cursor.nextIsCubic()) {
-						if (cursor.nextCubicFrame(a, c1, c2, b)) {
-							if (first) {
-								stream.add(new Vector2(a));
-								first = false;
-							}
-							inner: while (true) {
-								System.err.println(" subdividing frame <" + a + ' ' + c1 + ' ' + c2 + ' ' + b + '>');
-								LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f, out);
-								float l1 = a.distanceFrom(out);
+segment:
+                while (cursor.hasNextInSpline()) {
+
+                    System.err.println(" processing <" + cursor.getCurrentIndex() + '>');
+                    if (cursor.nextIsCubic()) {
+                        if (cursor.nextCubicFrame(a, c1, c2, b)) {
+                            if (first) {
+                                stream.add(new Vector2(a));
+                                first = false;
+                            }
+inner:
+                            while (true) {
+                                System.err.println(" subdividing frame <" + a + ' ' + c1 + ' ' + c2 + ' ' + b + '>');
+                                LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f, out);
+                                float l1 = a.distanceFrom(out);
                                 //System.out.println("        " + l1 + " / " + subsegTargetLength + " " + currentLength);
                                 if ((currentLength + l1) > subsegTargetLength) {
-									float alpha = (subsegTargetLength - currentLength) / l1;
-									if (Float.isInfinite(alpha)) alpha = 0;
-									if (Float.isNaN(alpha)) alpha = 0;
-									if (alpha < 0) alpha = 0;
-									if (alpha > 1) alpha = 1;
-									LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f * alpha, out);
+                                    float alpha = (subsegTargetLength - currentLength) / l1;
+                                    if (Float.isInfinite(alpha)) alpha = 0;
+                                    if (Float.isNaN(alpha)) alpha = 0;
+                                    if (alpha < 0) alpha = 0;
+                                    if (alpha > 1) alpha = 1;
+                                    LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f * alpha, out);
 
-									stream.add(new Vector2(out));
+                                    stream.add(new Vector2(out));
                                     //System.out.println(" over 1, added <" + out + ">");
 
-									float nowLength = currentLength + out.distanceFrom(a);
-									subsegTargetLength = length / num - (nowLength - (length / num)) / 2;
-									currentLength = 0;
+                                    float nowLength = currentLength + out.distanceFrom(a);
+                                    subsegTargetLength = length / num - (nowLength - (length / num)) / 2;
+                                    currentLength = 0;
 
-									LineUtils.splitCubicFrame(a, c1, c2, b, 0.5f * alpha, c12, m, c21, tmp);
+                                    LineUtils.splitCubicFrame(a, c1, c2, b, 0.5f * alpha, c12, m, c21, tmp);
 
-									a.setValue(m);
-									c1.setValue(c21);
+                                    a.setValue(m);
+                                    c1.setValue(c21);
 
-									if (a.distanceFrom(b) > subsegTargetLength) {
+                                    if (a.distanceFrom(b) > subsegTargetLength) {
                                         //System.out.println(" still some more <" + a.distanceFrom(b) + ">");
                                         continue inner;
-									} else {
+                                    }
+                                    else {
                                         //System.out.println(" no more <" + a.distanceFrom(b) + ">");
                                         currentLength += a.distanceFrom(b);
-										cursor.next();
-										continue segment;
-									}
-								}
-								float l2 = out.distanceFrom(b);
+                                        cursor.next();
+                                        continue segment;
+                                    }
+                                }
+                                float l2 = out.distanceFrom(b);
                                 //System.out.println("         " + l2 + " / " + subsegTargetLength + " " + currentLength);
                                 if ((currentLength + l1 + l2) > subsegTargetLength) {
-									float alpha = (subsegTargetLength - currentLength - l1) / l2;
-									if (Float.isInfinite(alpha)) alpha = 0;
-									if (Float.isNaN(alpha)) alpha = 0;
-									if (alpha < 0) alpha = 0;
-									if (alpha > 1) alpha = 1;
-									LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f + (0.5f * alpha), out);
+                                    float alpha = (subsegTargetLength - currentLength - l1) / l2;
+                                    if (Float.isInfinite(alpha)) alpha = 0;
+                                    if (Float.isNaN(alpha)) alpha = 0;
+                                    if (alpha < 0) alpha = 0;
+                                    if (alpha > 1) alpha = 1;
+                                    LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f + (0.5f * alpha), out);
 
-									stream.add(new Vector2(out));
+                                    stream.add(new Vector2(out));
                                     //System.out.println(" over 2, added <" + out + ">");
 
-									float nowLength = currentLength + out.distanceFrom(a);
-									subsegTargetLength = length / num - (nowLength - (length / num)) / 2;
-									currentLength = 0;
-									LineUtils.splitCubicFrame(a, c1, c2, b, 0.5f + (0.5f * alpha), c12, m, c21, tmp);
+                                    float nowLength = currentLength + out.distanceFrom(a);
+                                    subsegTargetLength = length / num - (nowLength - (length / num)) / 2;
+                                    currentLength = 0;
+                                    LineUtils.splitCubicFrame(a, c1, c2, b, 0.5f + (0.5f * alpha), c12, m, c21, tmp);
 
-									a.setValue(m);
-									c1.setValue(c21);
+                                    a.setValue(m);
+                                    c1.setValue(c21);
 
-									if (a.distanceFrom(b) > subsegTargetLength) {
+                                    if (a.distanceFrom(b) > subsegTargetLength) {
                                         //System.out.println(" still some more <" + a.distanceFrom(b) + ">");
-                                    } else {
+                                    }
+                                    else {
                                         //System.out.println(" no more <" + a.distanceFrom(b) + ">");
                                         currentLength += a.distanceFrom(b);
-										cursor.next();
-										continue segment;
-									}
-								} else {
-									currentLength += l1 + l2;
-									break;
-								}
+                                        cursor.next();
+                                        continue segment;
+                                    }
+                                }
+                                else {
+                                    currentLength += l1 + l2;
+                                    break;
+                                }
 
-							}
-						}
-					} else {
-						if (cursor.nextLinearFrame(a, b)) {
-							if (first) {
-								stream.add(new Vector2(a));
-								first = false;
-							}
+                            }
+                        }
+                    }
+                    else {
+                        if (cursor.nextLinearFrame(a, b)) {
+                            if (first) {
+                                stream.add(new Vector2(a));
+                                first = false;
+                            }
 
-							while (true) {
-								float l1 = a.distanceFrom(b);
-								if ((currentLength + l1) > subsegTargetLength) {
-									float alpha = (subsegTargetLength - currentLength) / l1;
-									if (Float.isInfinite(alpha)) alpha = 0;
-									if (Float.isNaN(alpha)) alpha = 0;
-									if (alpha < 0) alpha = 0;
-									if (alpha > 1) alpha = 1;
+                            while (true) {
+                                float l1 = a.distanceFrom(b);
+                                if ((currentLength + l1) > subsegTargetLength) {
+                                    float alpha = (subsegTargetLength - currentLength) / l1;
+                                    if (Float.isInfinite(alpha)) alpha = 0;
+                                    if (Float.isNaN(alpha)) alpha = 0;
+                                    if (alpha < 0) alpha = 0;
+                                    if (alpha > 1) alpha = 1;
 
-									Vector2 v = new Vector2().interpolate(a, b, alpha);
-									stream.add(v);
-									float nowLength = currentLength + out.distanceFrom(a);
-									subsegTargetLength = length / num;
-									currentLength = 0;
-									a.setValue(v);
-									if (a.distanceFrom(b) > subsegTargetLength) {
+                                    Vector2 v = new Vector2().interpolate(a, b, alpha);
+                                    stream.add(v);
+                                    float nowLength = currentLength + out.distanceFrom(a);
+                                    subsegTargetLength = length / num;
+                                    currentLength = 0;
+                                    a.setValue(v);
+                                    if (a.distanceFrom(b) > subsegTargetLength) {
 
-									} else {
-										currentLength += a.distanceFrom(b);
-										cursor.next();
-										continue segment;
-									}
-								} else
-									break;
-							}
+                                    }
+                                    else {
+                                        currentLength += a.distanceFrom(b);
+                                        cursor.next();
+                                        continue segment;
+                                    }
+                                }
+                                else break;
+                            }
 
-						}
-					}
+                        }
+                    }
 
-					cursor.next();
-				}
-				stream.add(b);
+                    cursor.next();
+                }
+                stream.add(b);
 
-				convertStreamToSmoothSpline(stream, resampledIn);
+                convertStreamToSmoothSpline(stream, resampledIn);
 
-				subsegmentLengths.add(length);
+                subsegmentLengths.add(length);
 
-				if (cursor.hasNextSegment()) cursor.next();
-			}
-		}
+                if (cursor.hasNextSegment()) cursor.next();
+            }
+        }
 
-		return resampled;
+        return resampled;
 
-	}
+    }
 
     protected static
     void convertStreamToSmoothSpline(List<Vector2> stream, iLine resampledIn) {
         if (stream.size() < 3) return;
-		for (int i = 0; i < stream.size(); i++) {
-			if (i == 0)
-				resampledIn.moveTo(stream.get(i).x, stream.get(i).y);
-			else if ((i < (stream.size() - 1)) && (i > 1)) {
-				Vector2 t1 = new Vector2(stream.get(i + 1)).sub(stream.get(i - 1)).scale(-1 / 6f).add(stream.get(i));
-				Vector2 t2 = new Vector2(stream.get(i)).sub(stream.get(i - 2)).scale(1 / 6f).add(stream.get(i - 1));
-				resampledIn.cubicTo(t2.x, t2.y, t1.x, t1.y, stream.get(i).x, stream.get(i).y);
-			} else if (i == 1) {
-				Vector2 t1 = new Vector2(stream.get(i + 1)).sub(stream.get(i - 1)).scale(-1 / 6f).add(stream.get(i));
-				Vector2 t2 = new Vector2(stream.get(i)).sub(stream.get(i - 1)).scale(1 / 3f).add(stream.get(i - 1));
-				resampledIn.cubicTo(t2.x, t2.y, t1.x, t1.y, stream.get(i).x, stream.get(i).y);
-			} else if (i == (stream.size() - 1)) {
-				Vector2 t1 = new Vector2(stream.get(i)).sub(stream.get(i - 1)).scale(-1 / 3f).add(stream.get(i));
-				Vector2 t2 = new Vector2(stream.get(i)).sub(stream.get(i - 2)).scale(1 / 6f).add(stream.get(i - 1));
-				resampledIn.cubicTo(t2.x, t2.y, t1.x, t1.y, stream.get(i).x, stream.get(i).y);
-			}
-		}
-	}
+        for (int i = 0; i < stream.size(); i++) {
+            if (i == 0) resampledIn.moveTo(stream.get(i).x, stream.get(i).y);
+            else if ((i < (stream.size() - 1)) && (i > 1)) {
+                Vector2 t1 = new Vector2(stream.get(i + 1)).sub(stream.get(i - 1)).scale(-1 / 6f).add(stream.get(i));
+                Vector2 t2 = new Vector2(stream.get(i)).sub(stream.get(i - 2)).scale(1 / 6f).add(stream.get(i - 1));
+                resampledIn.cubicTo(t2.x, t2.y, t1.x, t1.y, stream.get(i).x, stream.get(i).y);
+            }
+            else if (i == 1) {
+                Vector2 t1 = new Vector2(stream.get(i + 1)).sub(stream.get(i - 1)).scale(-1 / 6f).add(stream.get(i));
+                Vector2 t2 = new Vector2(stream.get(i)).sub(stream.get(i - 1)).scale(1 / 3f).add(stream.get(i - 1));
+                resampledIn.cubicTo(t2.x, t2.y, t1.x, t1.y, stream.get(i).x, stream.get(i).y);
+            }
+            else if (i == (stream.size() - 1)) {
+                Vector2 t1 = new Vector2(stream.get(i)).sub(stream.get(i - 1)).scale(-1 / 3f).add(stream.get(i));
+                Vector2 t2 = new Vector2(stream.get(i)).sub(stream.get(i - 2)).scale(1 / 6f).add(stream.get(i - 1));
+                resampledIn.cubicTo(t2.x, t2.y, t1.x, t1.y, stream.get(i).x, stream.get(i).y);
+            }
+        }
+    }
 
-	
-	public List<Integer> getMapping() {
-		return mapping;
-	}
-	public void drawInto(CachedLine line, SmallLineEmitter lineEmitter, CachedLine in) {
 
-		CachedLineCursor cursor = new CachedLineCursor(line);
+    public
+    List<Integer> getMapping() {
+        return mapping;
+    }
 
-		line.finish();
+    public
+    void drawInto(CachedLine line, SmallLineEmitter lineEmitter, CachedLine in) {
 
-		Vector2 a = new Vector2();
-		Vector2 b = new Vector2();
-		Vector2 c1 = new Vector2();
-		Vector2 c2 = new Vector2();
-		lineEmitter.begin();
-		while (cursor.hasNextSegment()) {
-			lineEmitter.beginContour();
-			while (cursor.hasNextInSpline()) {
+        CachedLineCursor cursor = new CachedLineCursor(line);
 
-				if (cursor.nextIsCubic()) {
-					if (cursor.nextCubicFrame(a, c1, c2, b)) {
-						lineEmitter.flattenCubicFrame(a, c1, c2, b, lineEmitter.packet(cursor.getCurrent()), lineEmitter.packet(cursor.getAfter()), null, null, 0);
-					}
-					mapping.add(in.events.size());
-				} else {
-					if (cursor.nextLinearFrame(a, b)) {
-						lineEmitter.flattenLinearFrame(a, b, lineEmitter.packet(cursor.getCurrent()), lineEmitter.packet(cursor.getAfter()), null, null, 0);
-					}
-					mapping.add(in.events.size());
-				}
+        line.finish();
 
-				cursor.next();
-			}
-			lineEmitter.endContour();
+        Vector2 a = new Vector2();
+        Vector2 b = new Vector2();
+        Vector2 c1 = new Vector2();
+        Vector2 c2 = new Vector2();
+        lineEmitter.begin();
+        while (cursor.hasNextSegment()) {
+            lineEmitter.beginContour();
+            while (cursor.hasNextInSpline()) {
 
-			if (cursor.hasNextSegment()) cursor.next();
-		}
-		lineEmitter.end();
-	}
+                if (cursor.nextIsCubic()) {
+                    if (cursor.nextCubicFrame(a, c1, c2, b)) {
+                        lineEmitter.flattenCubicFrame(a,
+                                                      c1,
+                                                      c2,
+                                                      b,
+                                                      lineEmitter.packet(cursor.getCurrent()),
+                                                      lineEmitter.packet(cursor.getAfter()),
+                                                      null,
+                                                      null,
+                                                      0);
+                    }
+                    mapping.add(in.events.size());
+                }
+                else {
+                    if (cursor.nextLinearFrame(a, b)) {
+                        lineEmitter.flattenLinearFrame(a,
+                                                       b,
+                                                       lineEmitter.packet(cursor.getCurrent()),
+                                                       lineEmitter.packet(cursor.getAfter()),
+                                                       null,
+                                                       null,
+                                                       0);
+                    }
+                    mapping.add(in.events.size());
+                }
+
+                cursor.next();
+            }
+            lineEmitter.endContour();
+
+            if (cursor.hasNextSegment()) cursor.next();
+        }
+        lineEmitter.end();
+    }
 
 }

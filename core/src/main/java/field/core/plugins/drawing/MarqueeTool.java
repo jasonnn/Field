@@ -1,9 +1,9 @@
 package field.core.plugins.drawing;
 
-import field.bytecode.protect.iProvidesQueue;
-import field.bytecode.protect.iRegistersUpdateable;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.InQueue;
+import field.bytecode.protect.iProvidesQueue;
+import field.bytecode.protect.iRegistersUpdateable;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.VisualElement;
 import field.core.dispatch.iVisualElement;
@@ -29,139 +29,167 @@ import java.util.List;
 import java.util.Set;
 
 @Woven
-public class MarqueeTool implements iMousePeer, iProvidesQueue, iPaintPeer {
+public
+class MarqueeTool implements iMousePeer, iProvidesQueue, iPaintPeer {
 
-	private final iVisualElement root;
+    private final iVisualElement root;
 
-	private Vector2 mouseDownAt;
+    private Vector2 mouseDownAt;
 
-	private iDynamicMesh mesh;
+    private iDynamicMesh mesh;
 
-	private DynamicLine line;
+    private DynamicLine line;
 
-	private List<iVisualElement> allElements;
+    private List<iVisualElement> allElements;
 
-	Set<iVisualElement> currentSelectedSet = new HashSet<iVisualElement>();
+    Set<iVisualElement> currentSelectedSet = new HashSet<iVisualElement>();
 
-	TaskQueue queue = new TaskQueue();
+    TaskQueue queue = new TaskQueue();
 
-	public MarqueeTool(iVisualElement root) {
-		this.root = root;
-	}
+    public
+    MarqueeTool(iVisualElement root) {
+        this.root = root;
+    }
 
-	public iRegistersUpdateable getQueueFor(Method m) {
-		return queue;
-	}
+    public
+    iRegistersUpdateable getQueueFor(Method m) {
+        return queue;
+    }
 
-	public void keyPressed(ComponentContainer inside, Event arg0) {
-	}
+    public
+    void keyPressed(ComponentContainer inside, Event arg0) {
+    }
 
-	public void keyReleased(ComponentContainer inside, Event arg0) {
-	}
+    public
+    void keyReleased(ComponentContainer inside, Event arg0) {
+    }
 
-	public void keyTyped(ComponentContainer inside, Event arg0) {
-	}
+    public
+    void keyTyped(ComponentContainer inside, Event arg0) {
+    }
 
-	public void mouseClicked(ComponentContainer inside, Event arg0) {
-	}
+    public
+    void mouseClicked(ComponentContainer inside, Event arg0) {
+    }
 
-	public void mouseDragged(ComponentContainer inside, Event arg0) {
-		mouseDraggedImpl(inside, arg0);
-		inside.requestRedisplay();
-	}
+    public
+    void mouseDragged(ComponentContainer inside, Event arg0) {
+        mouseDraggedImpl(inside, arg0);
+        inside.requestRedisplay();
+    }
 
-	@InQueue
-	public void mouseDraggedImpl(ComponentContainer inside, Event arg0) {
+    @InQueue
+    public
+    void mouseDraggedImpl(ComponentContainer inside, Event arg0) {
 
-		// draw area
-		iDynamicMesh mesh = getMesh();
-		DynamicLine line = getLine();
+        // draw area
+        iDynamicMesh mesh = getMesh();
+        DynamicLine line = getLine();
 
-		Rect r = new Rect(Math.min(mouseDownAt.x, arg0.x), Math.min(mouseDownAt.y, arg0.y), Math.abs(mouseDownAt.x - arg0.x), Math.abs(mouseDownAt.y - arg0.y));
+        Rect r = new Rect(Math.min(mouseDownAt.x, arg0.x),
+                          Math.min(mouseDownAt.y, arg0.y),
+                          Math.abs(mouseDownAt.x - arg0.x),
+                          Math.abs(mouseDownAt.y - arg0.y));
 
-		ComponentDrawingUtils.drawRectangle(mesh, line, null, (float) r.x, (float) r.y, (float) r.w, (float) r.h, new Vector4(0, 0, 0.1f, 0.1), new Vector4(1, 1, 1, 0.2));
+        ComponentDrawingUtils.drawRectangle(mesh,
+                                            line,
+                                            null,
+                                            (float) r.x,
+                                            (float) r.y,
+                                            (float) r.w,
+                                            (float) r.h,
+                                            new Vector4(0, 0, 0.1f, 0.1),
+                                            new Vector4(1, 1, 1, 0.2));
 
         //System.out.println(" marquee drawing <" + r + ">");
 
-		mesh.getUnderlyingGeometry().performPass(null);
-		line.getUnderlyingGeometry().performPass(null);
+        mesh.getUnderlyingGeometry().performPass(null);
+        line.getUnderlyingGeometry().performPass(null);
 
-		// compute the current selected set
+        // compute the current selected set
 
-		Rect r2 = new Rect(0, 0, 0, 0);
+        Rect r2 = new Rect(0, 0, 0, 0);
 
-		for (iVisualElement e : allElements) {
-			e.getFrame(r2);
+        for (iVisualElement e : allElements) {
+            e.getFrame(r2);
 
-			if (r2.overlaps(r)) {
-				if (!currentSelectedSet.contains(e)) {
-					SelectionGroup<iComponent> group = VisualElement.selectionGroup.get(e);
-					iComponent localView = VisualElement.localView.get(e);
-					if (localView != null) {
-						group.addToSelection(localView);
-						currentSelectedSet.add(e);
-						localView.setSelected(true);
-					}
-				}
-			} else {
-				if (currentSelectedSet.contains(e)) {
-					SelectionGroup<iComponent> group = VisualElement.selectionGroup.get(e);
-					iComponent localView = VisualElement.localView.get(e);
-					if (localView != null) {
-						group.removeFromSelection(localView);
-						localView.setSelected(false);
-					}
-					currentSelectedSet.remove(e);
-				}
-			}
+            if (r2.overlaps(r)) {
+                if (!currentSelectedSet.contains(e)) {
+                    SelectionGroup<iComponent> group = VisualElement.selectionGroup.get(e);
+                    iComponent localView = VisualElement.localView.get(e);
+                    if (localView != null) {
+                        group.addToSelection(localView);
+                        currentSelectedSet.add(e);
+                        localView.setSelected(true);
+                    }
+                }
+            }
+            else {
+                if (currentSelectedSet.contains(e)) {
+                    SelectionGroup<iComponent> group = VisualElement.selectionGroup.get(e);
+                    iComponent localView = VisualElement.localView.get(e);
+                    if (localView != null) {
+                        group.removeFromSelection(localView);
+                        localView.setSelected(false);
+                    }
+                    currentSelectedSet.remove(e);
+                }
+            }
 
-		}
-	}
+        }
+    }
 
-	public void mouseEntered(ComponentContainer inside, Event arg0) {
-	}
+    public
+    void mouseEntered(ComponentContainer inside, Event arg0) {
+    }
 
-	public void mouseExited(ComponentContainer inside, Event arg0) {
-	}
+    public
+    void mouseExited(ComponentContainer inside, Event arg0) {
+    }
 
-	public void mouseMoved(ComponentContainer inside, Event arg0) {
-	}
+    public
+    void mouseMoved(ComponentContainer inside, Event arg0) {
+    }
 
-	public void mousePressed(ComponentContainer inside, Event arg0) {
-		mouseDownAt = new Vector2(arg0.x, arg0.y);
+    public
+    void mousePressed(ComponentContainer inside, Event arg0) {
+        mouseDownAt = new Vector2(arg0.x, arg0.y);
 
-		allElements = StandardFluidSheet.allVisualElements(root);
+        allElements = StandardFluidSheet.allVisualElements(root);
 
-		// this might have to be the actual current selected set, unless
-		// we are holding down shift or something
-		currentSelectedSet.clear();
-		inside.requestRedisplay();
+        // this might have to be the actual current selected set, unless
+        // we are holding down shift or something
+        currentSelectedSet.clear();
+        inside.requestRedisplay();
 
-		mouseDraggedImpl(inside, arg0);
-	}
+        mouseDraggedImpl(inside, arg0);
+    }
 
-	public void mouseReleased(ComponentContainer inside, Event arg0) {
-		inside.requestRedisplay();
-	}
+    public
+    void mouseReleased(ComponentContainer inside, Event arg0) {
+        inside.requestRedisplay();
+    }
 
-	public void paint(RootComponent inside) {
-		paintNow();
-	}
+    public
+    void paint(RootComponent inside) {
+        paintNow();
+    }
 
-	public void paintNow() {
-		queue.update();
-	}
+    public
+    void paintNow() {
+        queue.update();
+    }
 
-	private DynamicLine getLine() {
-		if (line == null)
-			line = DynamicLine.unshadedLine(null, 1);
-		return line;
-	}
+    private
+    DynamicLine getLine() {
+        if (line == null) line = DynamicLine.unshadedLine(null, 1);
+        return line;
+    }
 
-	private iDynamicMesh getMesh() {
-		if (mesh == null)
-			mesh = DynamicMesh.unshadedMesh();
-		return mesh;
-	}
+    private
+    iDynamicMesh getMesh() {
+        if (mesh == null) mesh = DynamicMesh.unshadedMesh();
+        return mesh;
+    }
 
 }

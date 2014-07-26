@@ -16,91 +16,108 @@ import java.util.List;
 import java.util.Map;
 
 
-public class AbsoluteTool extends BaseTool {
+public
+class AbsoluteTool extends BaseTool {
 
-	public static
+    public static
     class AbsoluteCoordinateChange implements iCoordDesc {
-		public iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
-			if (claimed.size() == 0) return null;
+        public
+        iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
+            if (claimed.size() == 0) return null;
 
-			final SelectedVertex c = claimed.remove(0);
-			final Vector2[] changes = { null, null, null};
-			if (c.frozenPosition.containsKey(SubSelection.previousControl) && c.absPosition.containsKey(SubSelection.previousControl)) {
-				if (c.frozenPosition.get(SubSelection.previousControl).distanceFrom(c.absPosition.get(SubSelection.previousControl)) > 1e-4) {
-					changes[0] = c.absPosition.get(SubSelection.previousControl);
-				}
-			}
-			if (c.frozenPosition.containsKey(SubSelection.postion) && c.absPosition.containsKey(SubSelection.postion)) {
-				if (c.frozenPosition.get(SubSelection.postion).distanceFrom(c.absPosition.get(SubSelection.postion)) > 1e-4) {
-					changes[1] = c.absPosition.get(SubSelection.postion);
-				}
-			}
-			if (c.frozenPosition.containsKey(SubSelection.nextControl) && c.absPosition.containsKey(SubSelection.nextControl)) {
-				if (c.frozenPosition.get(SubSelection.nextControl).distanceFrom(c.absPosition.get(SubSelection.nextControl)) > 1e-4) {
-					changes[2] = c.absPosition.get(SubSelection.nextControl);
-				}
-			}
+            final SelectedVertex c = claimed.remove(0);
+            final Vector2[] changes = {null, null, null};
+            if (c.frozenPosition.containsKey(SubSelection.previousControl)
+                && c.absPosition.containsKey(SubSelection.previousControl)) {
+                if (c.frozenPosition.get(SubSelection.previousControl)
+                                    .distanceFrom(c.absPosition.get(SubSelection.previousControl)) > 1e-4) {
+                    changes[0] = c.absPosition.get(SubSelection.previousControl);
+                }
+            }
+            if (c.frozenPosition.containsKey(SubSelection.postion) && c.absPosition.containsKey(SubSelection.postion)) {
+                if (c.frozenPosition.get(SubSelection.postion).distanceFrom(c.absPosition.get(SubSelection.postion))
+                    > 1e-4) {
+                    changes[1] = c.absPosition.get(SubSelection.postion);
+                }
+            }
+            if (c.frozenPosition.containsKey(SubSelection.nextControl)
+                && c.absPosition.containsKey(SubSelection.nextControl)) {
+                if (c.frozenPosition.get(SubSelection.nextControl)
+                                    .distanceFrom(c.absPosition.get(SubSelection.nextControl)) > 1e-4) {
+                    changes[2] = c.absPosition.get(SubSelection.nextControl);
+                }
+            }
 
-			if (changes[0] == null && changes[1] == null && changes[2] == null) return TweakSplineCodeGen.abort;
+            if (changes[0] == null && changes[1] == null && changes[2] == null) return TweakSplineCodeGen.abort;
 
-			return new iResult(){
-				public List<SelectedVertex> getClaimedVertex() {
-					return Collections.singletonList(c);
-				}
+            return new iResult() {
+                public
+                List<SelectedVertex> getClaimedVertex() {
+                    return Collections.singletonList(c);
+                }
 
-				public String toExpression() {
-					return "Abs(" + v(changes[0]) + ", " + v(changes[1]) + ", " + v(changes[2]) + ')';
-				}
+                public
+                String toExpression() {
+                    return "Abs(" + v(changes[0]) + ", " + v(changes[1]) + ", " + v(changes[2]) + ')';
+                }
 
-				protected String v(Vector2 vv) {
-					return (vv == null ? "None" : "Vector2(" + vv.x + ", " + vv.y + ')');
-				}
+                protected
+                String v(Vector2 vv) {
+                    return (vv == null ? "None" : "Vector2(" + vv.x + ", " + vv.y + ')');
+                }
 
-				public void toProperties(iVisualElement e, Map<String, Object> soFar) {
-				}
-			};
-		}
-	}
+                public
+                void toProperties(iVisualElement e, Map<String, Object> soFar) {
+                }
+            };
+        }
+    }
 
-	public static
+    public static
     class AbsoluteNodeDescription implements iNodeDesc {
 
-		public List<iResult> describe(List<CachedLine> index, List<SelectedVertex> claimed) {
-			if (claimed.size() == 0) return null;
+        public
+        List<iResult> describe(List<CachedLine> index, List<SelectedVertex> claimed) {
+            if (claimed.size() == 0) return null;
 
-			final SelectedVertex c = claimed.remove(0);
-			final int ind = index.indexOf(c.onLine);
-			assert ind != -1;
-			final String code = (c.whatSelected.contains(SubSelection.previousControl) ? "b" : "")+(c.whatSelected.contains(SubSelection.postion) ? "n" : "")+(c.whatSelected.contains(SubSelection.nextControl) ? "a" : "");
+            final SelectedVertex c = claimed.remove(0);
+            final int ind = index.indexOf(c.onLine);
+            assert ind != -1;
+            final String code = (c.whatSelected.contains(SubSelection.previousControl) ? "b" : "")
+                                + (c.whatSelected.contains(SubSelection.postion) ? "n" : "")
+                                + (c.whatSelected.contains(SubSelection.nextControl) ? "a" : "");
 
-			iResult r = new iResult(){
-				public List<SelectedVertex> getClaimedVertex() {
-					return Collections.singletonList(c);
-				}
+            iResult r = new iResult() {
+                public
+                List<SelectedVertex> getClaimedVertex() {
+                    return Collections.singletonList(c);
+                }
 
-				public String toExpression() {
-					return "Direct(" + ind + ", " + c.vertexIndex + ", \""+code+"\")";
-				}
+                public
+                String toExpression() {
+                    return "Direct(" + ind + ", " + c.vertexIndex + ", \"" + code + "\")";
+                }
 
-				public void toProperties(iVisualElement e, Map<String, Object> soFar) {
-				}
-			};
+                public
+                void toProperties(iVisualElement e, Map<String, Object> soFar) {
+                }
+            };
 
-			return Collections.singletonList(r);
-		}
-	}
+            return Collections.singletonList(r);
+        }
+    }
 
-	public AbsoluteTool() {
-		nodes.add(new AbsoluteNodeDescription());
-		coords.add(new AbsoluteCoordinateChange());
-	}
+    public
+    AbsoluteTool() {
+        nodes.add(new AbsoluteNodeDescription());
+        coords.add(new AbsoluteCoordinateChange());
+    }
 
-	public AbsoluteTool(boolean useRel) {
-		nodes.add(new AbsoluteNodeDescription());
-		if (!useRel)
-			coords.add(new AbsoluteCoordinateChange());
-		else
-			coords.add(new RelativeCoordinateChange());
-	}
+    public
+    AbsoluteTool(boolean useRel) {
+        nodes.add(new AbsoluteNodeDescription());
+        if (!useRel) coords.add(new AbsoluteCoordinateChange());
+        else coords.add(new RelativeCoordinateChange());
+    }
 
 }

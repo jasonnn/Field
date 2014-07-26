@@ -31,256 +31,266 @@ import org.eclipse.swt.widgets.Event;
 
 import java.util.*;
 
-public class FreehandTool3d_tweak implements iSimpleSelectionTool {
+public
+class FreehandTool3d_tweak implements iSimpleSelectionTool {
 
-	public static final VisualElementProperty<List<RawSplineData>> rawSplineData = new VisualElementProperty<List<RawSplineData>>("rawSplineData");
+    public static final VisualElementProperty<List<RawSplineData>> rawSplineData =
+            new VisualElementProperty<List<RawSplineData>>("rawSplineData");
 
-	public static
+    public static
     class RawSplineData implements iExtensible {
-		public List<Vector2> points = new ArrayList<Vector2>();
-		public List<Vector3> pressureData = new ArrayList<Vector3>();
-		public List<Long> timestamps = new ArrayList<Long>();
-		public List<Object> transformStates = new ArrayList<Object>();
+        public List<Vector2> points = new ArrayList<Vector2>();
+        public List<Vector3> pressureData = new ArrayList<Vector3>();
+        public List<Long> timestamps = new ArrayList<Long>();
+        public List<Object> transformStates = new ArrayList<Object>();
 
-		CachedLine cached;
+        CachedLine cached;
 
-		public Rect elementFrameAtDrawTime;
+        public Rect elementFrameAtDrawTime;
 
-		public Object transformState;
+        public Object transformState;
 
-		Dict d = new Dict();
+        Dict d = new Dict();
 
-		public RawSplineData copy() {
-			RawSplineData rsd = new RawSplineData();
-			rsd.points = new ArrayList<Vector2>(this.points);
-			rsd.pressureData = new ArrayList<Vector3>(this.pressureData);
-			rsd.timestamps = new ArrayList<Long>(this.timestamps);
-			rsd.elementFrameAtDrawTime = this.elementFrameAtDrawTime;
-			rsd.transformState = this.transformState;
-			return rsd;
-		}
+        public
+        RawSplineData copy() {
+            RawSplineData rsd = new RawSplineData();
+            rsd.points = new ArrayList<Vector2>(this.points);
+            rsd.pressureData = new ArrayList<Vector3>(this.pressureData);
+            rsd.timestamps = new ArrayList<Long>(this.timestamps);
+            rsd.elementFrameAtDrawTime = this.elementFrameAtDrawTime;
+            rsd.transformState = this.transformState;
+            return rsd;
+        }
 
-		public Dict getDict() {
-			if (d == null)
-				d = new Dict();
-			return d;
-		}
-	}
+        public
+        Dict getDict() {
+            if (d == null) d = new Dict();
+            return d;
+        }
+    }
 
     protected static
     String getPluginNameImpl() {
         return "freehand";
-	}
+    }
 
-	public FreehandTool3d_tweak() {
-	}
+    public
+    FreehandTool3d_tweak() {
+    }
 
-	String description = "This <i>(highly experimental)</i> tool allows you to draw freehand splines directly \"into\" properties associated with the currently selected <b>3d</b> element(s)";
-	private CachedLine currentLine1;
-	private CachedLine currentLine2;
-	RawSplineData creating = new RawSplineData();
+    String description =
+            "This <i>(highly experimental)</i> tool allows you to draw freehand splines directly \"into\" properties associated with the currently selected <b>3d</b> element(s)";
+    private CachedLine currentLine1;
+    private CachedLine currentLine2;
+    RawSplineData creating = new RawSplineData();
 
-	private Vector2 start;
+    private Vector2 start;
 
-	public boolean mouseDown(Event at) {
+    public
+    boolean mouseDown(Event at) {
 
-		if (Platform.isPopupTrigger(at) && (at.stateMask & SWT.ALT)==0 && (at.stateMask & SWT.SHIFT)==0)
-		{
-			pop(at);
-			return false;
-		}
-		if (at == null)
-			return false;
-		if ((at.stateMask & SWT.ALT)!=0 || (at.stateMask & SWT.SHIFT)!=0)
-			return false;
-		e = getSelection();
-		start = new Vector2(at.x, at.y);
-		creating = new RawSplineData();
+        if (Platform.isPopupTrigger(at) && (at.stateMask & SWT.ALT) == 0 && (at.stateMask & SWT.SHIFT) == 0) {
+            pop(at);
+            return false;
+        }
+        if (at == null) return false;
+        if ((at.stateMask & SWT.ALT) != 0 || (at.stateMask & SWT.SHIFT) != 0) return false;
+        e = getSelection();
+        start = new Vector2(at.x, at.y);
+        creating = new RawSplineData();
 
-		creating.points.add(new Vector2(start));
-		creating.pressureData.add(getPressureDataNow());
-		creating.timestamps.add(System.currentTimeMillis());
-		currentLine1 = null;
-		currentLine2 = null;
-		return true;
-	}
+        creating.points.add(new Vector2(start));
+        creating.pressureData.add(getPressureDataNow());
+        creating.timestamps.add(System.currentTimeMillis());
+        currentLine1 = null;
+        currentLine2 = null;
+        return true;
+    }
 
-	private void pop(Event at) {
-		
-		Set<iVisualElement> s = getSelection();
-		if (s.size()!=1) return;
-		
-		MarkingMenuBuilder builder = new MarkingMenuBuilder();
-		builder.newMenu("undo", "WH");
-		builder.addUpdateable("undo", new iUpdateable() {
+    private
+    void pop(Event at) {
 
-			public void update() {
-				Set<iVisualElement> s = getSelection();
-				for (iVisualElement ss : s) {
-					List<RawSplineData> data = rawSplineData.get(ss);
-					if (data != null) {
-						if (data.size() > 0)
-							data.remove(data.size() - 1);
-					}
-					SplineComputingOverride.executeMain(ss);
-				}
-			}
-		});
+        Set<iVisualElement> s = getSelection();
+        if (s.size() != 1) return;
 
-		builder.newMenu("clear", "NH");
-		builder.addUpdateable("clear everything", new iUpdateable() {
+        MarkingMenuBuilder builder = new MarkingMenuBuilder();
+        builder.newMenu("undo", "WH");
+        builder.addUpdateable("undo", new iUpdateable() {
 
-			public void update() {
-				Set<iVisualElement> s = getSelection();
-				for (iVisualElement ss : s) {
-					List<RawSplineData> data = rawSplineData.get(ss);
-					if (data != null) {
-						if (data.size() > 0)
-							data.clear();
-					}
-					SplineComputingOverride.executeMain(ss);
-				}
+            public
+            void update() {
+                Set<iVisualElement> s = getSelection();
+                for (iVisualElement ss : s) {
+                    List<RawSplineData> data = rawSplineData.get(ss);
+                    if (data != null) {
+                        if (data.size() > 0) data.remove(data.size() - 1);
+                    }
+                    SplineComputingOverride.executeMain(ss);
+                }
+            }
+        });
 
-			}
-		});
-		
-		Rectangle b = GLComponentWindow.getCurrentWindow(null).getCanvas().getShell().getBounds();
-		
-		builder.getMenu(GLComponentWindow.getCurrentWindow(null).getCanvas(), new Point(GLComponentWindow.getCurrentWindow(null).getCanvas().getParent().getBounds().x+at.x+b.x, at.y+b.y));
-	}
+        builder.newMenu("clear", "NH");
+        builder.addUpdateable("clear everything", new iUpdateable() {
 
-	public boolean mouseDrag(Event at) {
-		if (at == null)
-			return false;
-		if ((at.stateMask & SWT.ALT)!=0 || (at.stateMask & SWT.SHIFT)!=0)
-			return true;
-		creating.points.add(new Vector2(at.x, at.y));
-		creating.pressureData.add(getPressureDataNow());
-		creating.timestamps.add(System.currentTimeMillis());
+            public
+            void update() {
+                Set<iVisualElement> s = getSelection();
+                for (iVisualElement ss : s) {
+                    List<RawSplineData> data = rawSplineData.get(ss);
+                    if (data != null) {
+                        if (data.size() > 0) data.clear();
+                    }
+                    SplineComputingOverride.executeMain(ss);
+                }
 
-		// todo, update drawing?
-		// or ask visual element to
-		// update the drawing?
+            }
+        });
 
-		updateOngoing(creating);
-		return true;
-	}
+        Rectangle b = GLComponentWindow.getCurrentWindow(null).getCanvas().getShell().getBounds();
 
-	public boolean mouseUp(Event at) {
-		if (at == null)
-			return false;
-		if ((at.stateMask & SWT.ALT)!=0 || (at.stateMask & SWT.SHIFT)!=0)
-			return false;
-		handleNewRawSplineData(creating);
-		currentLine1 = null;
-		currentLine2 = null;
-		return false;
-	}
+        builder.getMenu(GLComponentWindow.getCurrentWindow(null).getCanvas(),
+                        new Point(GLComponentWindow.getCurrentWindow(null).getCanvas().getParent().getBounds().x
+                                  + at.x
+                                  + b.x, at.y + b.y));
+    }
 
-	public void paint() {
-		if (currentLine1 != null) {
-			GLComponentWindow.currentContext.submitLine(currentLine1, currentLine1.getProperties());
-			GLComponentWindow.currentContext.submitLine(currentLine2, currentLine2.getProperties());
-		}
-		Set<iVisualElement> ss = getSelection();
-		for (iVisualElement s : ss) {
-			iVisualElementOverrides o = iVisualElement.overrides.get(s);
-			if (o instanceof ThreedComputingOverride) {
-				Freehand3dUtils u = new Freehand3dUtils(s);
-				u.paintGuidePlaneNow(SplineComputingOverride.computed_linesToDraw.get(s), ((ThreedComputingOverride) o).defaultContext);
-			}
-		}
+    public
+    boolean mouseDrag(Event at) {
+        if (at == null) return false;
+        if ((at.stateMask & SWT.ALT) != 0 || (at.stateMask & SWT.SHIFT) != 0) return true;
+        creating.points.add(new Vector2(at.x, at.y));
+        creating.pressureData.add(getPressureDataNow());
+        creating.timestamps.add(System.currentTimeMillis());
 
-	}
+        // todo, update drawing?
+        // or ask visual element to
+        // update the drawing?
 
-	protected void updateOngoing(RawSplineData creating) {
-		CachedLine cl = new CachedLine();
-		iLine input = cl.getInput();
-		boolean first = true;
-		for (Vector2 v : creating.points) {
-			if (first) {
-				first = false;
-				input.moveTo(v.x, v.y);
-			} else
-				input.lineTo(v.x, v.y);
-		}
-		cl.getProperties().put(iLinearGraphicsContext.derived, 1f);
-		cl.getProperties().put(iLinearGraphicsContext.thickness, 1f);
-		cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0, 0, 0, 1f));
+        updateOngoing(creating);
+        return true;
+    }
 
-		currentLine1 = new LineUtils().transformLine(cl, null, null, null, null);
+    public
+    boolean mouseUp(Event at) {
+        if (at == null) return false;
+        if ((at.stateMask & SWT.ALT) != 0 || (at.stateMask & SWT.SHIFT) != 0) return false;
+        handleNewRawSplineData(creating);
+        currentLine1 = null;
+        currentLine2 = null;
+        return false;
+    }
 
-		cl.getProperties().put(iLinearGraphicsContext.derived, 1f);
-		cl.getProperties().put(iLinearGraphicsContext.thickness, 2f);
-		cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0, 0, 0, 0.25f));
+    public
+    void paint() {
+        if (currentLine1 != null) {
+            GLComponentWindow.currentContext.submitLine(currentLine1, currentLine1.getProperties());
+            GLComponentWindow.currentContext.submitLine(currentLine2, currentLine2.getProperties());
+        }
+        Set<iVisualElement> ss = getSelection();
+        for (iVisualElement s : ss) {
+            iVisualElementOverrides o = iVisualElement.overrides.get(s);
+            if (o instanceof ThreedComputingOverride) {
+                Freehand3dUtils u = new Freehand3dUtils(s);
+                u.paintGuidePlaneNow(SplineComputingOverride.computed_linesToDraw.get(s),
+                                     ((ThreedComputingOverride) o).defaultContext);
+            }
+        }
 
-		currentLine2 = new LineUtils().transformLine(cl, null, null, null, null);
+    }
 
-	}
+    protected
+    void updateOngoing(RawSplineData creating) {
+        CachedLine cl = new CachedLine();
+        iLine input = cl.getInput();
+        boolean first = true;
+        for (Vector2 v : creating.points) {
+            if (first) {
+                first = false;
+                input.moveTo(v.x, v.y);
+            }
+            else input.lineTo(v.x, v.y);
+        }
+        cl.getProperties().put(iLinearGraphicsContext.derived, 1f);
+        cl.getProperties().put(iLinearGraphicsContext.thickness, 1f);
+        cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0, 0, 0, 1f));
 
-	Set<iVisualElement> e = new HashSet<iVisualElement>();
-	private iVisualElement root;
+        currentLine1 = new LineUtils().transformLine(cl, null, null, null, null);
 
-	protected void handleNewRawSplineData(RawSplineData data) {
+        cl.getProperties().put(iLinearGraphicsContext.derived, 1f);
+        cl.getProperties().put(iLinearGraphicsContext.thickness, 2f);
+        cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0, 0, 0, 0.25f));
 
-		Iterator<iVisualElement> vi = e.iterator();
-		while (vi.hasNext()) {
-			iVisualElement v = vi.next();
-			handleNewRawSplineData(v, data);
-			if (vi.hasNext())
-				data = data.copy();
-		}
-	}
+        currentLine2 = new LineUtils().transformLine(cl, null, null, null, null);
 
-	public int whileKey() {
-		return '.';
-	}
+    }
 
-	public boolean begin(List<SelectedVertex> currentSelection, TweakSplineUI inside) {
-		root = inside.inside;
-		return true;
-	}
+    Set<iVisualElement> e = new HashSet<iVisualElement>();
+    private iVisualElement root;
 
-	private Set<iVisualElement> getSelection() {
-		SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
-		Set<iComponent> s = selectionGroup.getSelection();
-		Set<iVisualElement> e = new LinkedHashSet<iVisualElement>();
-		for (iComponent c : s) {
-			iVisualElement ve = c.getVisualElement();
-			if (ve != null)
-				e.add(ve);
-		}
-		return e;
-	}
+    protected
+    void handleNewRawSplineData(RawSplineData data) {
+
+        Iterator<iVisualElement> vi = e.iterator();
+        while (vi.hasNext()) {
+            iVisualElement v = vi.next();
+            handleNewRawSplineData(v, data);
+            if (vi.hasNext()) data = data.copy();
+        }
+    }
+
+    public
+    int whileKey() {
+        return '.';
+    }
+
+    public
+    boolean begin(List<SelectedVertex> currentSelection, TweakSplineUI inside) {
+        root = inside.inside;
+        return true;
+    }
+
+    private
+    Set<iVisualElement> getSelection() {
+        SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
+        Set<iComponent> s = selectionGroup.getSelection();
+        Set<iVisualElement> e = new LinkedHashSet<iVisualElement>();
+        for (iComponent c : s) {
+            iVisualElement ve = c.getVisualElement();
+            if (ve != null) e.add(ve);
+        }
+        return e;
+    }
 
     protected static
     void handleNewRawSplineData(iVisualElement v, RawSplineData data) {
         rawSplineData.addToList(ArrayList.class, v, data);
         //System.out.println(" adding new raw spline data to element <" + rawSplineData.get(v) + ">");
 
-		data.elementFrameAtDrawTime = v.getFrame(null);
+        data.elementFrameAtDrawTime = v.getFrame(null);
 
-		iVisualElementOverrides over = v.getProperty(iVisualElement.overrides);
-		if (over instanceof ThreedComputingOverride) {
-			ThreedContext targetContext = ((ThreedComputingOverride) over).defaultContext;
-			data.transformState = targetContext.getTransformState();
-		}
+        iVisualElementOverrides over = v.getProperty(iVisualElement.overrides);
+        if (over instanceof ThreedComputingOverride) {
+            ThreedContext targetContext = ((ThreedComputingOverride) over).defaultContext;
+            data.transformState = targetContext.getTransformState();
+        }
 
-		// we need callbacks and the like, no?
-		SplineComputingOverride.executeMain(v);
-	}
+        // we need callbacks and the like, no?
+        SplineComputingOverride.executeMain(v);
+    }
 
     public static
     Vector3 getPressureDataNow() {
 
-		// try {
-		// NSEvent v = NSApplication.sharedApplication().currentEvent();
-		// float p = v.pressure();
-		// ;//System.out.println("current event: " + v+
-		// " / "+p+" "+v.tilt());
-		// } catch (Throwable t) {
-		// }
-		return new Vector3(0.5, 0.5, 0.5);
-	}
+        // try {
+        // NSEvent v = NSApplication.sharedApplication().currentEvent();
+        // float p = v.pressure();
+        // ;//System.out.println("current event: " + v+
+        // " / "+p+" "+v.tilt());
+        // } catch (Throwable t) {
+        // }
+        return new Vector3(0.5, 0.5, 0.5);
+    }
 
 }

@@ -6,6 +6,7 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseWheelListener;
 
 
-public interface MouseEventDelegate extends MouseListener, MouseMoveListener, MouseWheelListener{
+public
+interface MouseEventDelegate extends MouseListener, MouseMoveListener, MouseWheelListener {
 
 }

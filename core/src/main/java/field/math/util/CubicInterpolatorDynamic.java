@@ -67,7 +67,6 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
     }
 
 
-
     private boolean extrapolation = false;
 
     ArrayList<Sample<T>> samples = new ArrayList<Sample<T>>();

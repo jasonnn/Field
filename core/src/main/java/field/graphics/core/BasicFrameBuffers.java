@@ -70,1859 +70,2499 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
 
 /**
  * support for FBO's
- * 
+ *
  * @author marc
- * 
  */
 @Woven
-public class BasicFrameBuffers {
+public
+class BasicFrameBuffers {
 
-	public static boolean use32 = false;
-	public static boolean useRG= false;
+    public static boolean use32 = false;
+    public static boolean useRG = false;
 
-	public static
+    public static
     class Any implements iMatchRule {
-		public boolean match(Object o) {
-			return true;
-		}
-	}
+        public
+        boolean match(Object o) {
+            return true;
+        }
+    }
 
-	public static
+    public static
     interface iDisplayable {
-		public void display();
-	}
+        public
+        void display();
+    }
 
-	public static
+    public static
     interface iHasFBO {
-		public int getFBO();
-	}
+        public
+        int getFBO();
+    }
 
-	public static
+    public static
     interface iHasRB {
-		public int getRB();
-	}
+        public
+        int getRB();
+    }
 
-	public static
+    public static
     interface iHasTexture {
-		public iProvider<Integer> getOutput();
-	}
+        public
+        iProvider<Integer> getOutput();
+    }
 
-	public static
+    public static
     class BaseFrameBufferObjectTexture extends BasicTextures.BaseTexture implements iDisplayable {
-		private final int width;
+        private final int width;
 
-		private final int height;
+        private final int height;
 
-		private int status;
+        private int status;
 
-		private final boolean useRect;
+        private final boolean useRect;
 
-		private float r;
+        private float r;
 
-		private float g;
+        private float g;
 
-		private float b;
+        private float b;
 
-		private float a;
+        private float a;
 
-		private boolean doClear;
+        private boolean doClear;
 
-		private final int target;
+        private final int target;
 
-		protected BasicCamera camera;
+        protected BasicCamera camera;
 
-		protected BasicSceneList rootSceneList;
+        protected BasicSceneList rootSceneList;
 
-		protected BasicSceneList sceneList;
+        protected BasicSceneList sceneList;
 
-		int[] fbo = { -1 };
+        int[] fbo = {-1};
 
-		int[] rb = { -1 };
+        int[] rb = {-1};
 
-		int[] tex = { -1 };
+        int[] tex = {-1};
 
-		int internalFormat = GL_RGBA;
+        int internalFormat = GL_RGBA;
 
-		int format = GL_RGBA;
+        int format = GL_RGBA;
 
-		int type = GL_UNSIGNED_BYTE;
+        int type = GL_UNSIGNED_BYTE;
 
-		boolean isFloat = false;
+        boolean isFloat = false;
 
-		public BaseFrameBufferObjectTexture(int width, int height, boolean useRect) {
-			this.width = width;
-			this.height = height;
-			this.useRect = useRect;
-			target = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
-			// camera.setViewport(0, 0,
-			// width, height);
-			// camera.setPerspective(camera.getFov(),
-			// width / (float) height,
-			// camera.getNear(),
-			// camera.getFar());
+        public
+        BaseFrameBufferObjectTexture(int width, int height, boolean useRect) {
+            this.width = width;
+            this.height = height;
+            this.useRect = useRect;
+            target = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
+            // camera.setViewport(0, 0,
+            // width, height);
+            // camera.setPerspective(camera.getFov(),
+            // width / (float) height,
+            // camera.getNear(),
+            // camera.getFar());
 
-			r = (float) SystemProperties.getDoubleProperty("background.red", 0);
-			g = (float) SystemProperties.getDoubleProperty("background.green", 0);
-			b = (float) SystemProperties.getDoubleProperty("background.blue", 0);
-			a = (float) SystemProperties.getDoubleProperty("background.alpha", 1);
+            r = (float) SystemProperties.getDoubleProperty("background.red", 0);
+            g = (float) SystemProperties.getDoubleProperty("background.green", 0);
+            b = (float) SystemProperties.getDoubleProperty("background.blue", 0);
+            a = (float) SystemProperties.getDoubleProperty("background.alpha", 1);
 
-			doClear = SystemProperties.getIntProperty("background.clear", 1) == 1;
-			createInitialLists();
-		}
+            doClear = SystemProperties.getIntProperty("background.clear", 1) == 1;
+            createInitialLists();
+        }
 
-		public BaseFrameBufferObjectTexture becomeFloat() {
-			this.internalFormat = GL_RGBA32F;
-			this.format = GL_RGBA;
-			this.type = (use32 ? GL_FLOAT : GL_HALF_FLOAT);
-			isFloat = true;
-			createInitialLists();
-			return this;
-		}
+        public
+        BaseFrameBufferObjectTexture becomeFloat() {
+            this.internalFormat = GL_RGBA32F;
+            this.format = GL_RGBA;
+            this.type = (use32 ? GL_FLOAT : GL_HALF_FLOAT);
+            isFloat = true;
+            createInitialLists();
+            return this;
+        }
 
-		public int bindForFrameBuffer() {
-			int[] a = new int[1];
-			a[0] = glGetInteger(GL_FRAMEBUFFER_BINDING);
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
-			return a[0];
-		}
+        public
+        int bindForFrameBuffer() {
+            int[] a = new int[1];
+            a[0] = glGetInteger(GL_FRAMEBUFFER_BINDING);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            return a[0];
+        }
 
-		public void display() {
-			if (FullScreenCanvasSWT.dropFrame > 0)
-				return;
+        public
+        void display() {
+            if (FullScreenCanvasSWT.dropFrame > 0) return;
 
-			currentFBOContext.push(this);
-			try {
-				gl = BasicContextManager.getGl();
-				glu = BasicContextManager.getGlu();
-				if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND)
-					setup();
+            currentFBOContext.push(this);
+            try {
+                gl = BasicContextManager.getGl();
+                glu = BasicContextManager.getGlu();
+                if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) setup();
 
-				glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
-				glViewport(0, 0, width, height);
-				if (isFloat) {
-					CoreHelpers.glEnable(GL_DEPTH_TEST);
-					glDepthFunc(GL_ALWAYS);
-					glDepthMask(true);
-				}
-				assert glGetError() == 0;
-				assert glGetError() == 0;
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+                glViewport(0, 0, width, height);
+                if (isFloat) {
+                    CoreHelpers.glEnable(GL_DEPTH_TEST);
+                    glDepthFunc(GL_ALWAYS);
+                    glDepthMask(true);
+                }
+                assert glGetError() == 0;
+                assert glGetError() == 0;
 
-				// glClearColor(0.3f,
-				// 0.5f, 0.2f,
-				// 0);
-				// glClear(GL_COLOR_BUFFER_BIT
-				// );
+                // glClearColor(0.3f,
+                // 0.5f, 0.2f,
+                // 0);
+                // glClear(GL_COLOR_BUFFER_BIT
+                // );
 
-				rootSceneList.update();
-				sceneList.update();
+                rootSceneList.update();
+                sceneList.update();
 
-				if (isFloat) {
-					glDepthFunc(GL_LESS);
-					CoreHelpers.glEnable(GL_DEPTH_TEST);
-					glDepthMask(true);
-				}
+                if (isFloat) {
+                    glDepthFunc(GL_LESS);
+                    CoreHelpers.glEnable(GL_DEPTH_TEST);
+                    glDepthMask(true);
+                }
 
-				// glFlush();
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				assert glGetError() == 0;
-			} finally {
-				Object popped = currentFBOContext.pop();
-				assert popped == this : popped;
-			}
-		}
+                // glFlush();
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                assert glGetError() == 0;
+            } finally {
+                Object popped = currentFBOContext.pop();
+                assert popped == this : popped;
+            }
+        }
 
-		public BasicCamera getCamera() {
-			return camera;
-		}
+        public
+        BasicCamera getCamera() {
+            return camera;
+        }
 
-		public int getHeight() {
-			return height;
-		}
+        public
+        int getHeight() {
+            return height;
+        }
 
-		// for debugging only, we should have a frame
-		// buffer that supports async reads from a
-		// renderbuffer as well
-		public ByteBuffer getImage(ByteBuffer storage) {
-			if (storage == null) {
-				storage = ByteBuffer.allocateDirect(width * height * 4);
-			}
+        // for debugging only, we should have a frame
+        // buffer that supports async reads from a
+        // renderbuffer as well
+        public
+        ByteBuffer getImage(ByteBuffer storage) {
+            if (storage == null) {
+                storage = ByteBuffer.allocateDirect(width * height * 4);
+            }
 
-			int[] a = new int[1];
-			a[0] = glGetInteger(GL_FRAMEBUFFER_BINDING);
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
-			glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, storage);
-			glBindFramebuffer(GL_FRAMEBUFFER, a[0]);
+            int[] a = new int[1];
+            a[0] = glGetInteger(GL_FRAMEBUFFER_BINDING);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, storage);
+            glBindFramebuffer(GL_FRAMEBUFFER, a[0]);
 
-			return storage;
-		}
+            return storage;
+        }
 
-		public BasicSceneList getSceneList() {
-			return sceneList;
-		}
+        public
+        BasicSceneList getSceneList() {
+            return sceneList;
+        }
 
-		public BasicSceneList getList() {
-			return sceneList;
-		}
+        public
+        BasicSceneList getList() {
+            return sceneList;
+        }
 
-		// I guess this should be called at the end of
-		// display(...) in full screen canvas
+        // I guess this should be called at the end of
+        // display(...) in full screen canvas
 
-		public int getWidth() {
-			return width;
-		}
+        public
+        int getWidth() {
+            return width;
+        }
 
-		public BaseFrameBufferObjectTexture setBackground(float r, float g, float b, float a, boolean doClear) {
-			this.r = r;
-			this.g = g;
-			this.b = b;
-			this.a = a;
-			this.doClear = doClear;
-			createInitialLists();
+        public
+        BaseFrameBufferObjectTexture setBackground(float r, float g, float b, float a, boolean doClear) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+            this.doClear = doClear;
+            createInitialLists();
 
-			return this;
-		}
+            return this;
+        }
 
         public static
         void unbindForFrameBuffer(int a) {
             glBindFramebuffer(GL_FRAMEBUFFER, a);
-		}
+        }
 
-		protected void createInitialLists() {
-			// defaults for color
+        protected
+        void createInitialLists() {
+            // defaults for color
 
-			// camera = new BasicCamera();
+            // camera = new BasicCamera();
 
-			rootSceneList = new BasicSceneList();
-			rootSceneList.addChild(new BasicUtilities.Standard());
-			if (doClear) {
-				// BasicUtilities.Clear
-				// clear = new
-				// BasicUtilities.Clear(new
-				// Vector3(0,0,0),
-				// (float) 1);
-				if (!isFloat) {
-					BasicUtilities.Clear clear = new BasicUtilities.Clear(new Vector3(r, g, b), a);
-					rootSceneList.addChild(clear);
-				}
+            rootSceneList = new BasicSceneList();
+            rootSceneList.addChild(new BasicUtilities.Standard());
+            if (doClear) {
+                // BasicUtilities.Clear
+                // clear = new
+                // BasicUtilities.Clear(new
+                // Vector3(0,0,0),
+                // (float) 1);
+                if (!isFloat) {
+                    BasicUtilities.Clear clear = new BasicUtilities.Clear(new Vector3(r, g, b), a);
+                    rootSceneList.addChild(clear);
+                }
 
-				// rootSceneList.addChild(new
-				// BasicUtilities.MotionBlur(new
-				// iFloatProvider.Constant(1),0,0,0));
+                // rootSceneList.addChild(new
+                // BasicUtilities.MotionBlur(new
+                // iFloatProvider.Constant(1),0,0,0));
 
-			} else {
-				if (!isFloat) {
-					rootSceneList.addChild(new BasicUtilities.ClearOnce(new Vector3(0, 0, 0), 1));
-				}
-			}
-			// rootSceneList.addChild(camera);
-			if (sceneList == null)
-				sceneList = new BasicSceneList();
-		}
+            }
+            else {
+                if (!isFloat) {
+                    rootSceneList.addChild(new BasicUtilities.ClearOnce(new Vector3(0, 0, 0), 1));
+                }
+            }
+            // rootSceneList.addChild(camera);
+            if (sceneList == null) sceneList = new BasicSceneList();
+        }
 
-		@Override
-		protected void post() {
-			assert glGetError() == 0;
-			glBindTexture(target, 0);
-			assert glGetError() == 0;
-			CoreHelpers.glDisable(target);
-			assert glGetError() == 0;
-		}
+        @Override
+        protected
+        void post() {
+            assert glGetError() == 0;
+            glBindTexture(target, 0);
+            assert glGetError() == 0;
+            CoreHelpers.glDisable(target);
+            assert glGetError() == 0;
+        }
 
-		@Override
-		protected void pre() {
+        @Override
+        protected
+        void pre() {
 
-			assert glGetError() == 0;
-			glBindTexture(target, tex[0]);
-			assert glGetError() == 0;
-			CoreHelpers.glEnable(target);
-			assert glGetError() == 0;
-		}
+            assert glGetError() == 0;
+            glBindTexture(target, tex[0]);
+            assert glGetError() == 0;
+            CoreHelpers.glEnable(target);
+            assert glGetError() == 0;
+        }
 
-		@Override
-		protected void setup() {
-			assert glGetError() == 0;
-			fbo[0] = glGenFramebuffers();
-			assert glGetError() == 0;
-			rb[0] = glGenRenderbuffers();
-			assert glGetError() == 0;
-			tex[0] = glGenTextures();
-			assert glGetError() == 0;
+        @Override
+        protected
+        void setup() {
+            assert glGetError() == 0;
+            fbo[0] = glGenFramebuffers();
+            assert glGetError() == 0;
+            rb[0] = glGenRenderbuffers();
+            assert glGetError() == 0;
+            tex[0] = glGenTextures();
+            assert glGetError() == 0;
 
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
-			assert glGetError() == 0;
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            assert glGetError() == 0;
 
-			glBindTexture(target, tex[0]);
-			assert glGetError() == 0;
-			glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, (ByteBuffer) null);
-			assert glGetError() == 0;
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, tex[0], 0);
-			if (!isFloat) {
-				assert glGetError() == 0;
-				glTexParameteri(target, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-				assert glGetError() == 0;
-				glTexParameteri(target, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-				assert glGetError() == 0;
-				glTexParameteri(target, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-				assert glGetError() == 0;
-				glTexParameteri(target, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
-				assert glGetError() == 0;
+            glBindTexture(target, tex[0]);
+            assert glGetError() == 0;
+            glTexImage2D(target, 0, internalFormat, width, height, 0, format, type, (ByteBuffer) null);
+            assert glGetError() == 0;
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, tex[0], 0);
+            if (!isFloat) {
+                assert glGetError() == 0;
+                glTexParameteri(target, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+                assert glGetError() == 0;
+                glTexParameteri(target, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+                assert glGetError() == 0;
+                glTexParameteri(target, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
+                assert glGetError() == 0;
+                glTexParameteri(target, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+                assert glGetError() == 0;
 
-				glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
-				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
-			}
-			status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			assert status == GL_FRAMEBUFFER_COMPLETE : "status is <" + status + '>';
-			assert glGetError() == 0;
-			BasicContextManager.putId(this, fbo[0]);
+                glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
+            }
+            status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+            assert status == GL_FRAMEBUFFER_COMPLETE : "status is <" + status + '>';
+            assert glGetError() == 0;
+            BasicContextManager.putId(this, fbo[0]);
 
-			glClearColor(0, 0, 0, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		}
-	}
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+    }
 
-	public static
+    public static
     class BiMultipasser extends MultiPasser implements iDisplayable {
 
-		private final boolean useFloat;
+        private final boolean useFloat;
 
-		protected int[] secondTex = new int[2];
+        protected int[] secondTex = new int[2];
 
-		protected final int secondUnit;
+        protected final int secondUnit;
 
-		public BiMultipasser(int width, int height, boolean useRect, int secondUnit) {
-			super(width, height, useRect);
-			this.secondUnit = secondUnit;
-			this.useFloat = false;
-		}
+        public
+        BiMultipasser(int width, int height, boolean useRect, int secondUnit) {
+            super(width, height, useRect);
+            this.secondUnit = secondUnit;
+            this.useFloat = false;
+        }
 
-		public BiMultipasser(int width, int height, boolean useRect, int secondUnit, boolean useFloat) {
-			super(width, height, useRect);
-			this.secondUnit = secondUnit;
-			this.useFloat = useFloat;
-		}
+        public
+        BiMultipasser(int width, int height, boolean useRect, int secondUnit, boolean useFloat) {
+            super(width, height, useRect);
+            this.secondUnit = secondUnit;
+            this.useFloat = useFloat;
+        }
 
-		@Override
-		public void bindOtherTexture() {
-			super.bindOtherTexture();
+        @Override
+        public
+        void bindOtherTexture() {
+            super.bindOtherTexture();
 
-			int[] acitve = { 0 };
-			acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
+            int[] acitve = {0};
+            acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
 
-			glActiveTexture(GL_TEXTURE0 + secondUnit);
+            glActiveTexture(GL_TEXTURE0 + secondUnit);
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, flip ? secondTex[1] : secondTex[0]);
-			glActiveTexture(acitve[0]);
-		}
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, flip ? secondTex[1] : secondTex[0]);
+            glActiveTexture(acitve[0]);
+        }
 
-		@Override
-		protected void post() {
-			super.post();
+        @Override
+        protected
+        void post() {
+            super.post();
 
-			int[] acitve = { 0 };
-			acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
-			glActiveTexture(GL_TEXTURE0 + secondUnit);
+            int[] acitve = {0};
+            acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
+            glActiveTexture(GL_TEXTURE0 + secondUnit);
 
-			assert !deallocated;
-			assert glGetError() == 0;
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			assert glGetError() == 0;
-			CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			assert glGetError() == 0;
-			glActiveTexture(acitve[0]);
+            assert !deallocated;
+            assert glGetError() == 0;
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            assert glGetError() == 0;
+            CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            assert glGetError() == 0;
+            glActiveTexture(acitve[0]);
 
-		}
+        }
 
-		@Override
-		protected void postDisplay() {
-			super.postDisplay();
-			assert glGetError() == 0;
-			glDrawBuffer(GL_BACK);
-			assert glGetError() == 0;
-		}
+        @Override
+        protected
+        void postDisplay() {
+            super.postDisplay();
+            assert glGetError() == 0;
+            glDrawBuffer(GL_BACK);
+            assert glGetError() == 0;
+        }
 
-		@Override
-		protected void pre() {
+        @Override
+        protected
+        void pre() {
 
-			super.pre();
-			int[] acitve = { 0 };
-			assert glGetError() == 0;
-			acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
-			assert glGetError() == 0;
-			glActiveTexture(GL_TEXTURE0 + secondUnit);
+            super.pre();
+            int[] acitve = {0};
+            assert glGetError() == 0;
+            acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
+            assert glGetError() == 0;
+            glActiveTexture(GL_TEXTURE0 + secondUnit);
 
-			assert !deallocated;
-			assert glGetError() == 0;
+            assert !deallocated;
+            assert glGetError() == 0;
 
-			if (flip) {
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, secondTex[0]);
-				CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			} else {
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, secondTex[1]);
-				CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			}
+            if (flip) {
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, secondTex[0]);
+                CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            }
+            else {
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, secondTex[1]);
+                CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            }
 
-			glActiveTexture(acitve[0]);
-			assert glGetError() == 0;
+            glActiveTexture(acitve[0]);
+            assert glGetError() == 0;
 
-		}
+        }
 
-		@Override
-		protected void preDisplay() {
-			super.preDisplay();
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, flip ? secondTex[0] : secondTex[1], 0);
-			// TODO lwjgl momentum
-			// glDrawBuffers(2, new int[] { GL_COLOR_ATTACHMENT0,
-			// GL_COLOR_ATTACHMENT1 }, 0);
-			assert glGetError() == 0;
-		}
+        @Override
+        protected
+        void preDisplay() {
+            super.preDisplay();
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT1,
+                                   useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                   flip ? secondTex[0] : secondTex[1],
+                                   0);
+            // TODO lwjgl momentum
+            // glDrawBuffers(2, new int[] { GL_COLOR_ATTACHMENT0,
+            // GL_COLOR_ATTACHMENT1 }, 0);
+            assert glGetError() == 0;
+        }
 
-		@Override
-		protected void setup() {
-			assert !deallocated;
-			assert glGetError() == 0;
+        @Override
+        protected
+        void setup() {
+            assert !deallocated;
+            assert glGetError() == 0;
 
-			fbo[0] = glGenFramebuffers();
-			assert glGetError() == 0;
+            fbo[0] = glGenFramebuffers();
+            assert glGetError() == 0;
 
-			rb[0] = glGenRenderbuffers();
-			assert glGetError() == 0;
+            rb[0] = glGenRenderbuffers();
+            assert glGetError() == 0;
 
-			tex[0] = glGenTextures();
-			tex[1] = glGenTextures();
-			secondTex[0] = glGenTextures();
-			secondTex[1] = glGenTextures();
-			assert glGetError() == 0;
+            tex[0] = glGenTextures();
+            tex[1] = glGenTextures();
+            secondTex[0] = glGenTextures();
+            secondTex[1] = glGenTextures();
+            assert glGetError() == 0;
 
-			assert glGetError() == 0;
+            assert glGetError() == 0;
 
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
 
-			gl_texture_min_filter = GL_LINEAR;
-			gl_texture_mag_filter = GL_LINEAR;
+            gl_texture_min_filter = GL_LINEAR;
+            gl_texture_mag_filter = GL_LINEAR;
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-			glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0], 0);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+            glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                         0,
+                         useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                         (ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT0,
+                                   useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                   tex[0],
+                                   0);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, secondTex[0]);
-			glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, secondTex[0], 0);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                          secondTex[0]);
+            glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                         0,
+                         useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                         (ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT1,
+                                   useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                   secondTex[0],
+                                   0);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
 
-			glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
-			status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			assert status == GL_FRAMEBUFFER_COMPLETE : status;
+            glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
+            status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+            assert status == GL_FRAMEBUFFER_COMPLETE : status;
             // System.out.println(" status <" + status + "> <" +
             // GL_FRAMEBUFFER_COMPLETE + ">");
-			BasicContextManager.putId(this, fbo[0]);
-			glClearColor(0, 0, 0, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            BasicContextManager.putId(this, fbo[0]);
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			assert glGetError() == 0;
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            assert glGetError() == 0;
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
-			glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
-			assert glGetError() == 0;
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
+            glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                         0,
+                         useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                         (ByteBuffer) null);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
+            assert glGetError() == 0;
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, secondTex[1]);
-			glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
-			assert glGetError() == 0;
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                          secondTex[1]);
+            glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                         0,
+                         useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                         (ByteBuffer) null);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
+            assert glGetError() == 0;
 
-		}
+        }
 
-	}
+    }
 
-	public static
+    public static
     class DepthMultipasser extends MultiPasser implements iDisplayable {
 
-		protected int[] depthTex = new int[2];
+        protected int[] depthTex = new int[2];
 
-		// protected int[] rbDepth = new int[1];
+        // protected int[] rbDepth = new int[1];
 
-		protected final int depthUnit;
+        protected final int depthUnit;
 
-		public DepthMultipasser(int width, int height, boolean useRect, int depthUnit) {
-			super(width, height, useRect);
-			fbo = new int[] { -1, -1 };
-			depthTex = new int[] { -1, -1 };
-			tex = new int[] { -1, -1 };
+        public
+        DepthMultipasser(int width, int height, boolean useRect, int depthUnit) {
+            super(width, height, useRect);
+            fbo = new int[]{-1, -1};
+            depthTex = new int[]{-1, -1};
+            tex = new int[]{-1, -1};
 
-			this.depthUnit = depthUnit;
+            this.depthUnit = depthUnit;
 
-			assert useRect == false;
-			if (useRect) {
-				System.err.println(" on ati this will cause a kernel panic");
-				System.exit(1);
-			}
+            assert useRect == false;
+            if (useRect) {
+                System.err.println(" on ati this will cause a kernel panic");
+                System.exit(1);
+            }
 
-		}
+        }
 
-		@Override
-		public void bindOtherTexture() {
-			super.bindOtherTexture();
+        @Override
+        public
+        void bindOtherTexture() {
+            super.bindOtherTexture();
 
-			int[] acitve = { 0 };
-			acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
+            int[] acitve = {0};
+            acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
 
-			glActiveTexture(GL_TEXTURE0 + depthUnit);
+            glActiveTexture(GL_TEXTURE0 + depthUnit);
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, flip ? depthTex[1] : depthTex[0]);
-			glActiveTexture(acitve[0]);
-		}
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, flip ? depthTex[1] : depthTex[0]);
+            glActiveTexture(acitve[0]);
+        }
 
-		@Override
-		@DispatchOverTopology(topology = Cont.class)
-		public void display() {
-			if (FullScreenCanvasSWT.dropFrame > 0)
-				return;
+        @Override
+        @DispatchOverTopology(topology = Cont.class)
+        public
+        void display() {
+            if (FullScreenCanvasSWT.dropFrame > 0) return;
 
-			assert !deallocated;
-			assert glGetError() == 0;
-			glBindFramebuffer(GL_FRAMEBUFFER, flip ? fbo[0] : fbo[1]);
-			assert glGetError() == 0;
-			assert glGetError() == 0;
-			preDisplay();
-			assert glGetError() == 0;
-			glViewport(0, 0, width, height);
-			assert glGetError() == 0;
+            assert !deallocated;
+            assert glGetError() == 0;
+            glBindFramebuffer(GL_FRAMEBUFFER, flip ? fbo[0] : fbo[1]);
+            assert glGetError() == 0;
+            assert glGetError() == 0;
+            preDisplay();
+            assert glGetError() == 0;
+            glViewport(0, 0, width, height);
+            assert glGetError() == 0;
 
-			if (fboCamera != null)
-				fboCamera.enter();
+            if (fboCamera != null) fboCamera.enter();
 
-			assert glGetError() == 0;
-			rootSceneList.update();
-			assert glGetError() == 0;
-			if (first) {
-				first = false;
-			} else {
-				sceneList.update();
-			}
-			assert glGetError() == 0;
+            assert glGetError() == 0;
+            rootSceneList.update();
+            assert glGetError() == 0;
+            if (first) {
+                first = false;
+            }
+            else {
+                sceneList.update();
+            }
+            assert glGetError() == 0;
 
-			queue.update();
+            queue.update();
 
-			assert glGetError() == 0;
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			assert glGetError() == 0;
+            assert glGetError() == 0;
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            assert glGetError() == 0;
 
-			postDisplay();
-			assert glGetError() == 0;
-			flip = !flip;
+            postDisplay();
+            assert glGetError() == 0;
+            flip = !flip;
 
-		}
+        }
 
-		@Override
-		protected void post() {
-			super.post();
+        @Override
+        protected
+        void post() {
+            super.post();
 
-			int[] acitve = { 0 };
-			acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
-			glActiveTexture(GL_TEXTURE0 + depthUnit);
+            int[] acitve = {0};
+            acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
+            glActiveTexture(GL_TEXTURE0 + depthUnit);
 
-			assert !deallocated;
-			assert glGetError() == 0;
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			assert glGetError() == 0;
-			CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			assert glGetError() == 0;
-			glActiveTexture(acitve[0]);
-		}
+            assert !deallocated;
+            assert glGetError() == 0;
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            assert glGetError() == 0;
+            CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            assert glGetError() == 0;
+            glActiveTexture(acitve[0]);
+        }
 
-		@Override
-		protected void pre() {
+        @Override
+        protected
+        void pre() {
 
-			super.pre();
+            super.pre();
 
-			int[] acitve = { 0 };
-			assert glGetError() == 0;
-			acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
-			assert glGetError() == 0;
-			glActiveTexture(GL_TEXTURE0 + depthUnit);
+            int[] acitve = {0};
+            assert glGetError() == 0;
+            acitve[0] = glGetInteger(GL_ACTIVE_TEXTURE);
+            assert glGetError() == 0;
+            glActiveTexture(GL_TEXTURE0 + depthUnit);
 
-			assert !deallocated;
-			assert glGetError() == 0;
+            assert !deallocated;
+            assert glGetError() == 0;
 
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, depthTex[0]);
-			CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, depthTex[0]);
+            CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
 
-			glActiveTexture(acitve[0]);
-			assert glGetError() == 0;
-		}
+            glActiveTexture(acitve[0]);
+            assert glGetError() == 0;
+        }
 
-		@Override
-		protected void setup() {
+        @Override
+        protected
+        void setup() {
 
-			assert !deallocated;
-			assert glGetError() == 0;
+            assert !deallocated;
+            assert glGetError() == 0;
 
-			fbo[0] = glGenFramebuffers();
-			fbo[1] = glGenFramebuffers();
-			tex[0] = glGenTextures();
-			tex[1] = glGenTextures();
-			depthTex[0] = glGenTextures();
-			depthTex[1] = glGenTextures();
-			assert glGetError() == 0;
+            fbo[0] = glGenFramebuffers();
+            fbo[1] = glGenFramebuffers();
+            tex[0] = glGenTextures();
+            tex[1] = glGenTextures();
+            depthTex[0] = glGenTextures();
+            depthTex[1] = glGenTextures();
+            assert glGetError() == 0;
 
-			{
-				glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
 
-				gl_texture_min_filter = GL_LINEAR_MIPMAP_LINEAR;
-				gl_texture_mag_filter = GL_LINEAR;
+                gl_texture_min_filter = GL_LINEAR_MIPMAP_LINEAR;
+                gl_texture_mag_filter = GL_LINEAR;
 
-				// texture 0
+                // texture 0
 
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-				// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE,
-				// 0);
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+                // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE,
+                // 0);
 
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                GL_TEXTURE_MAG_FILTER,
+                                gl_texture_mag_filter);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                GL_TEXTURE_MIN_FILTER,
+                                gl_texture_min_filter);
 
-				glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0], 0);
+                glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                             0,
+                             GL_RGBA8,
+                             width,
+                             height,
+                             0,
+                             GL_RGBA,
+                             GL_UNSIGNED_BYTE,
+                             (ByteBuffer) null);
+                glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                       GL_COLOR_ATTACHMENT0,
+                                       useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                       tex[0],
+                                       0);
 
-				// and now the
-				// depth texture
+                // and now the
+                // depth texture
 
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, depthTex[0]);
-				glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-				glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, (use32 ? GL_FLOAT : GL_HALF_FLOAT), (ByteBuffer) null);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, depthTex[0], 0);
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, depthTex[0]);
+                glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                             0,
+                             GL_DEPTH_COMPONENT,
+                             width,
+                             height,
+                             0,
+                             GL_DEPTH_COMPONENT,
+                             (use32 ? GL_FLOAT : GL_HALF_FLOAT),
+                             (ByteBuffer) null);
+                glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                       GL_DEPTH_ATTACHMENT,
+                                       useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                       depthTex[0],
+                                       0);
 
-				assert glGetError() == 0;
+                assert glGetError() == 0;
 
-				status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-				assert status == GL_FRAMEBUFFER_COMPLETE : status;
-				BasicContextManager.putId(this, fbo[0]);
+                status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+                assert status == GL_FRAMEBUFFER_COMPLETE : status;
+                BasicContextManager.putId(this, fbo[0]);
 
-				glClearColor(0, 0, 0, 0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glClearColor(0, 0, 0, 0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				assert glGetError() == 0;
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			}
-			{
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                assert glGetError() == 0;
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            }
+            {
 
-				glBindFramebuffer(GL_FRAMEBUFFER, fbo[1]);
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo[1]);
 
-				gl_texture_min_filter = GL_LINEAR_MIPMAP_LINEAR;
-				gl_texture_mag_filter = GL_LINEAR;
+                gl_texture_min_filter = GL_LINEAR_MIPMAP_LINEAR;
+                gl_texture_mag_filter = GL_LINEAR;
 
-				// texture 0
+                // texture 0
 
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
-				// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE,
-				// 0);
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
+                // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE,
+                // 0);
 
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                GL_TEXTURE_MAG_FILTER,
+                                gl_texture_mag_filter);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                GL_TEXTURE_MIN_FILTER,
+                                gl_texture_min_filter);
 
-				glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1], 0);
+                glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                             0,
+                             GL_RGBA8,
+                             width,
+                             height,
+                             0,
+                             GL_RGBA,
+                             GL_UNSIGNED_BYTE,
+                             (ByteBuffer) null);
+                glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                       GL_COLOR_ATTACHMENT0,
+                                       useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                       tex[1],
+                                       0);
 
-				// and now the
-				// depth texture
+                // and now the
+                // depth texture
 
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, depthTex[1]);
-				glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-				glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, (use32 ? GL_FLOAT : GL_HALF_FLOAT), (ByteBuffer) null);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, depthTex[1], 0);
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, depthTex[1]);
+                glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                glTexParameterf(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                             0,
+                             GL_DEPTH_COMPONENT,
+                             width,
+                             height,
+                             0,
+                             GL_DEPTH_COMPONENT,
+                             (use32 ? GL_FLOAT : GL_HALF_FLOAT),
+                             (ByteBuffer) null);
+                glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                       GL_DEPTH_ATTACHMENT,
+                                       useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                       depthTex[1],
+                                       0);
 
-				assert glGetError() == 0;
+                assert glGetError() == 0;
 
-				status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-				assert status == GL_FRAMEBUFFER_COMPLETE : status;
-				BasicContextManager.putId(this, fbo[0]);
+                status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+                assert status == GL_FRAMEBUFFER_COMPLETE : status;
+                BasicContextManager.putId(this, fbo[0]);
 
-				glClearColor(0, 0, 0, 0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glClearColor(0, 0, 0, 0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				assert glGetError() == 0;
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                assert glGetError() == 0;
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
 
-			}
+            }
 
-			assert glGetError() == 0;
-		}
+            assert glGetError() == 0;
+        }
 
-	}
+    }
 
-	public static
+    public static
     class DoubleFrameBuffer extends BasicTextures.BaseTexture implements iDisplayable {
-		private final int width;
+        private final int width;
 
-		private int status;
+        private int status;
 
-		private BasicSceneList rootSceneList;
+        private BasicSceneList rootSceneList;
 
-		private BasicSceneList sceneList;
+        private BasicSceneList sceneList;
 
-		private Vector4 c1;
+        private Vector4 c1;
 
-		private Vector4 c2;
+        private Vector4 c2;
 
-		private final int height;
+        private final int height;
 
-		int[] fbo = { -1 };
+        int[] fbo = {-1};
 
-		int[] rb = { -1 };
+        int[] rb = {-1};
 
-		int[] tex = { -1, -1 };
+        int[] tex = {-1, -1};
 
-		boolean useRect = false;
+        boolean useRect = false;
 
-		boolean useFloat = true;
+        boolean useFloat = true;
 
-		public DoubleFrameBuffer(int width) {
-			this.width = width;
-			this.height = width;
-			createInitialLists();
-			this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
-		}
+        public
+        DoubleFrameBuffer(int width) {
+            this.width = width;
+            this.height = width;
+            createInitialLists();
+            this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
+        }
 
-		public DoubleFrameBuffer(int depthWidth, int depthHeight) {
-			this.width = depthWidth;
-			this.height = depthHeight;
-			this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
-			createInitialLists();
-		}
+        public
+        DoubleFrameBuffer(int depthWidth, int depthHeight) {
+            this.width = depthWidth;
+            this.height = depthHeight;
+            this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
+            createInitialLists();
+        }
 
-		public DoubleFrameBuffer(int depthWidth, int depthHeight, boolean useFloat) {
-			this.width = depthWidth;
-			this.height = depthHeight;
-			this.useFloat = useFloat;
-			this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
-			createInitialLists();
-		}
+        public
+        DoubleFrameBuffer(int depthWidth, int depthHeight, boolean useFloat) {
+            this.width = depthWidth;
+            this.height = depthHeight;
+            this.useFloat = useFloat;
+            this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
+            createInitialLists();
+        }
 
-		public DoubleFrameBuffer(int depthWidth, int depthHeight, boolean useRect, boolean useFloat) {
-			this.width = depthWidth;
-			this.height = depthHeight;
-			this.useRect = useRect;
-			this.useFloat = useFloat;
-			this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
-			createInitialLists();
-		}
+        public
+        DoubleFrameBuffer(int depthWidth, int depthHeight, boolean useRect, boolean useFloat) {
+            this.width = depthWidth;
+            this.height = depthHeight;
+            this.useRect = useRect;
+            this.useFloat = useFloat;
+            this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
+            createInitialLists();
+        }
 
-		public iHasFBO getFBO(final int out) {
-			return new iHasFBO() {
+        public
+        iHasFBO getFBO(final int out) {
+            return new iHasFBO() {
 
-				@Override
-				public int getFBO() {
-					return fbo[out];
-				}
-			};
-		}
+                @Override
+                public
+                int getFBO() {
+                    return fbo[out];
+                }
+            };
+        }
 
-		public iProvider<Integer> getFBOOutput(final int out) {
-			return new iProvider<Integer>() {
-				@Override
-				public Integer get() {
-					return fbo[out];
-				}
-			};
-		}
+        public
+        iProvider<Integer> getFBOOutput(final int out) {
+            return new iProvider<Integer>() {
+                @Override
+                public
+                Integer get() {
+                    return fbo[out];
+                }
+            };
+        }
 
-		public iAcceptor<Number> addFadePlane(final Vector4 color1, final Vector4 color2) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        public
+        iAcceptor<Number> addFadePlane(final Vector4 color1, final Vector4 color2) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put(-1f).put(-1f).put(0f).put(-1f).put(1f).put(0f).put(1f).put(1f).put(0f).put(1f).put(-1f).put(0f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang", "content/shaders/VertexColor2Fragment.glslang"));
-			mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
+            mesh.vertex()
+                .put(-1f)
+                .put(-1f)
+                .put(0f)
+                .put(-1f)
+                .put(1f)
+                .put(0f)
+                .put(1f)
+                .put(1f)
+                .put(0f)
+                .put(1f)
+                .put(-1f)
+                .put(0f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
+                                                  "content/shaders/VertexColor2Fragment.glslang"));
+            mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
 
-			float colorAlpha = 0.1f;
-			float alphaAlpha = 0.5f;
-			mesh.aux(Base.color0_id, 4).put(new float[] { color1.x, color1.y, color1.z, color1.w, color1.x, color1.y, color1.z, color1.w, color1.x, color1.y, color1.z, color1.w, color1.x, color1.y, color1.z, color1.w, });
-			mesh.aux(Base.color0_id + 1, 4).put(new float[] { color2.x, color2.y, color2.z, color2.w, color2.x, color2.y, color2.z, color2.w, color2.x, color2.y, color2.z, color2.w, color2.x, color2.y, color2.z, color2.w, });
+            float colorAlpha = 0.1f;
+            float alphaAlpha = 0.5f;
+            mesh.aux(Base.color0_id, 4)
+                .put(new float[]{color1.x,
+                                 color1.y,
+                                 color1.z,
+                                 color1.w,
+                                 color1.x,
+                                 color1.y,
+                                 color1.z,
+                                 color1.w,
+                                 color1.x,
+                                 color1.y,
+                                 color1.z,
+                                 color1.w,
+                                 color1.x,
+                                 color1.y,
+                                 color1.z,
+                                 color1.w,});
+            mesh.aux(Base.color0_id + 1, 4)
+                .put(new float[]{color2.x,
+                                 color2.y,
+                                 color2.z,
+                                 color2.w,
+                                 color2.x,
+                                 color2.y,
+                                 color2.z,
+                                 color2.w,
+                                 color2.x,
+                                 color2.y,
+                                 color2.z,
+                                 color2.w,
+                                 color2.x,
+                                 color2.y,
+                                 color2.z,
+                                 color2.w,});
 
-			final FloatBuffer root = ByteBuffer.allocate(mesh.vertex().limit() * 4).asFloatBuffer().put(mesh.vertex());
+            final FloatBuffer root = ByteBuffer.allocate(mesh.vertex().limit() * 4).asFloatBuffer().put(mesh.vertex());
 
-			// driver bug. Horrible seam
-			// down middle of trianglulation
-			mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
-				boolean first = true;
+            // driver bug. Horrible seam
+            // down middle of trianglulation
+            mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
+                boolean first = true;
 
-				@Override
-				public void performPass() {
-				}
-			});
-			// mesh.addChild(new
-			// BasicUtilities.SetBlendMode(StandardPass.preRender,
-			// GL_CONSTANT_ALPHA,
-			// GL_ONE_MINUS_CONSTANT_ALPHA,
-			// new Vector4(0, 0, 0,
-			// 0.05f)));
-			// mesh.addChild(new
-			// BasicUtilities.SetBlendMode(StandardPass.preDisplay,
-			// GL_SRC_ALPHA,
-			// GL_ONE_MINUS_SRC_ALPHA,
-			// new Vector4(0, 0, 0,
-			// 0.05f)));
+                @Override
+                public
+                void performPass() {
+                }
+            });
+            // mesh.addChild(new
+            // BasicUtilities.SetBlendMode(StandardPass.preRender,
+            // GL_CONSTANT_ALPHA,
+            // GL_ONE_MINUS_CONSTANT_ALPHA,
+            // new Vector4(0, 0, 0,
+            // 0.05f)));
+            // mesh.addChild(new
+            // BasicUtilities.SetBlendMode(StandardPass.preDisplay,
+            // GL_SRC_ALPHA,
+            // GL_ONE_MINUS_SRC_ALPHA,
+            // new Vector4(0, 0, 0,
+            // 0.05f)));
 
-			rootSceneList.addChild(mesh);
+            rootSceneList.addChild(mesh);
 
-			return new iAcceptor<Number>() {
+            return new iAcceptor<Number>() {
 
-				float last = -1;
+                float last = -1;
 
-				@Override
-				public iAcceptor<Number> set(Number to) {
-					if (to.floatValue() != last) {
-						mesh.aux(Base.color0_id, 4).put(new float[] { color1.x, color1.y, color1.z, to.floatValue(), color1.x, color1.y, color1.z, to.floatValue(), color1.x, color1.y, color1.z, to.floatValue(), color1.x, color1.y, color1.z, to.floatValue(), });
-						mesh.aux(Base.color0_id + 1, 4).put(new float[] { color2.x, color2.y, color2.z, to.floatValue(), color2.x, color2.y, color2.z, to.floatValue(), color2.x, color2.y, color2.z, to.floatValue(), color2.x, color2.y, color2.z, to.floatValue(), });
-					}
-					last = to.floatValue();
-					return this;
-				}
-			};
-		}
+                @Override
+                public
+                iAcceptor<Number> set(Number to) {
+                    if (to.floatValue() != last) {
+                        mesh.aux(Base.color0_id, 4)
+                            .put(new float[]{color1.x,
+                                             color1.y,
+                                             color1.z,
+                                             to.floatValue(),
+                                             color1.x,
+                                             color1.y,
+                                             color1.z,
+                                             to.floatValue(),
+                                             color1.x,
+                                             color1.y,
+                                             color1.z,
+                                             to.floatValue(),
+                                             color1.x,
+                                             color1.y,
+                                             color1.z,
+                                             to.floatValue(),});
+                        mesh.aux(Base.color0_id + 1, 4)
+                            .put(new float[]{color2.x,
+                                             color2.y,
+                                             color2.z,
+                                             to.floatValue(),
+                                             color2.x,
+                                             color2.y,
+                                             color2.z,
+                                             to.floatValue(),
+                                             color2.x,
+                                             color2.y,
+                                             color2.z,
+                                             to.floatValue(),
+                                             color2.x,
+                                             color2.y,
+                                             color2.z,
+                                             to.floatValue(),});
+                    }
+                    last = to.floatValue();
+                    return this;
+                }
+            };
+        }
 
-		public void addFadePlane(iFloatProvider amount1, Vector4 color1, iFloatProvider amount2, Vector4 color2) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        public
+        void addFadePlane(iFloatProvider amount1, Vector4 color1, iFloatProvider amount2, Vector4 color2) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put(-1f).put(-1f).put(0f).put(-1f).put(1f).put(0f).put(1f).put(1f).put(0f).put(1f).put(-1f).put(0f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang", "content/shaders/VertexColor2Fragment.glslang"));
-			mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
+            mesh.vertex()
+                .put(-1f)
+                .put(-1f)
+                .put(0f)
+                .put(-1f)
+                .put(1f)
+                .put(0f)
+                .put(1f)
+                .put(1f)
+                .put(0f)
+                .put(1f)
+                .put(-1f)
+                .put(0f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
+                                                  "content/shaders/VertexColor2Fragment.glslang"));
+            mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
 
-			float colorAlpha = 0.1f;
-			float alphaAlpha = 0.5f;
-			mesh.aux(Base.color0_id, 4).put(new float[] { 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha });
-			mesh.aux(Base.color0_id + 1, 4).put(new float[] { 0.5f, 0.5f, 0.5f, alphaAlpha, 0.5f, 0.5f, 0.5f, alphaAlpha, 0.5f, 0.5f, 0.5f, alphaAlpha, 0.5f, 0.5f, 0.5f, alphaAlpha });
+            float colorAlpha = 0.1f;
+            float alphaAlpha = 0.5f;
+            mesh.aux(Base.color0_id, 4)
+                .put(new float[]{0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha});
+            mesh.aux(Base.color0_id + 1, 4)
+                .put(new float[]{0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha,
+                                 0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha,
+                                 0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha,
+                                 0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha});
 
-			final FloatBuffer root = ByteBuffer.allocate(mesh.vertex().limit() * 4).asFloatBuffer().put(mesh.vertex());
+            final FloatBuffer root = ByteBuffer.allocate(mesh.vertex().limit() * 4).asFloatBuffer().put(mesh.vertex());
 
-			// driver bug. Horrible seam
-			// down middle of trianglulation
-			mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
-				boolean first = true;
+            // driver bug. Horrible seam
+            // down middle of trianglulation
+            mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
+                boolean first = true;
 
-				@Override
-				public void performPass() {
+                @Override
+                public
+                void performPass() {
 
-					// if (!first)
-					// glColorMask(false, false, false,
-					// true);
-					// glClearColor(0, 0, 0, 0);
-					// glClear(GL_COLOR_BUFFER_BIT);
-					// glColorMask(true, true, true,
-					// true);
-					//
-					// first = false;
+                    // if (!first)
+                    // glColorMask(false, false, false,
+                    // true);
+                    // glClearColor(0, 0, 0, 0);
+                    // glClear(GL_COLOR_BUFFER_BIT);
+                    // glColorMask(true, true, true,
+                    // true);
+                    //
+                    // first = false;
 
-					// FloatBuffer
-					// m =
-					// mesh.vertex();
-					// for
-					// (int
-					// i =
-					// 0; i
-					// <
-					// m.capacity();
-					// i++)
-					// {
-					// m.put(i,
-					// (float)
-					// (root.get(i)
-					// * (1
-					// +
-					// Math.random()
-					// *
-					// 0.01f)));
-					// }
+                    // FloatBuffer
+                    // m =
+                    // mesh.vertex();
+                    // for
+                    // (int
+                    // i =
+                    // 0; i
+                    // <
+                    // m.capacity();
+                    // i++)
+                    // {
+                    // m.put(i,
+                    // (float)
+                    // (root.get(i)
+                    // * (1
+                    // +
+                    // Math.random()
+                    // *
+                    // 0.01f)));
+                    // }
 
-				}
-			});
-			// mesh.addChild(new
-			// BasicUtilities.SetBlendMode(StandardPass.preRender,
-			// GL_CONSTANT_ALPHA,
-			// GL_ONE_MINUS_CONSTANT_ALPHA,
-			// new Vector4(0, 0, 0,
-			// 0.05f)));
-			// mesh.addChild(new
-			// BasicUtilities.SetBlendMode(StandardPass.preDisplay,
-			// GL_SRC_ALPHA,
-			// GL_ONE_MINUS_SRC_ALPHA,
-			// new Vector4(0, 0, 0,
-			// 0.05f)));
+                }
+            });
+            // mesh.addChild(new
+            // BasicUtilities.SetBlendMode(StandardPass.preRender,
+            // GL_CONSTANT_ALPHA,
+            // GL_ONE_MINUS_CONSTANT_ALPHA,
+            // new Vector4(0, 0, 0,
+            // 0.05f)));
+            // mesh.addChild(new
+            // BasicUtilities.SetBlendMode(StandardPass.preDisplay,
+            // GL_SRC_ALPHA,
+            // GL_ONE_MINUS_SRC_ALPHA,
+            // new Vector4(0, 0, 0,
+            // 0.05f)));
 
-			rootSceneList.addChild(mesh);
-		}
+            rootSceneList.addChild(mesh);
+        }
 
-		IntBuffer buffers = ByteBuffer.allocateDirect(4 * 2).order(ByteOrder.nativeOrder()).asIntBuffer();
-		boolean disable2 = false;
+        IntBuffer buffers = ByteBuffer.allocateDirect(4 * 2).order(ByteOrder.nativeOrder()).asIntBuffer();
+        boolean disable2 = false;
 
-		public void display() {
+        public
+        void display() {
             // System.out.println(" --> ");
             currentFBOContext.push(this);
-			BasicGeometry.insideDoubleFloatFrameBuffer = false;
-			if (FullScreenCanvasSWT.dropFrame > 0)
-				return;
+            BasicGeometry.insideDoubleFloatFrameBuffer = false;
+            if (FullScreenCanvasSWT.dropFrame > 0) return;
 
-			try {
-				gl = BasicContextManager.getGl();
-				glu = BasicContextManager.getGlu();
-				if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
-					// assert
-					// false;
-					// System.exit(0);
-					setup();
-				}
+            try {
+                gl = BasicContextManager.getGl();
+                glu = BasicContextManager.getGlu();
+                if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
+                    // assert
+                    // false;
+                    // System.exit(0);
+                    setup();
+                }
 
-				glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
 
-				glDrawBuffer(GL_COLOR_ATTACHMENT0);
+                glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
-				if (c1 != null) {
-					glClearColor(c1.x, c1.y, c1.z, c1.w);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				} else {
-					glClear(GL_DEPTH_BUFFER_BIT);
-				}
+                if (c1 != null) {
+                    glClearColor(c1.x, c1.y, c1.z, c1.w);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                }
+                else {
+                    glClear(GL_DEPTH_BUFFER_BIT);
+                }
 
-				if (!disable2) {
-					glDrawBuffer(GL_COLOR_ATTACHMENT1);
-					if (c2 != null) {
-						glClearColor(c2.x, c2.y, c2.z, c2.w);
-						glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-					} else {
-						glClear(GL_DEPTH_BUFFER_BIT);
-					}
-				}
-				// TODO lwjgl momentum
-				// glDrawBuffers(2, new int[] {
-				// GL_COLOR_ATTACHMENT0,
-				// GL_COLOR_ATTACHMENT1 }, 0);
+                if (!disable2) {
+                    glDrawBuffer(GL_COLOR_ATTACHMENT1);
+                    if (c2 != null) {
+                        glClearColor(c2.x, c2.y, c2.z, c2.w);
+                        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                    }
+                    else {
+                        glClear(GL_DEPTH_BUFFER_BIT);
+                    }
+                }
+                // TODO lwjgl momentum
+                // glDrawBuffers(2, new int[] {
+                // GL_COLOR_ATTACHMENT0,
+                // GL_COLOR_ATTACHMENT1 }, 0);
 
-				if (disable2) {
-					glDrawBuffer(GL_COLOR_ATTACHMENT0);
-				} else {
-					buffers.put(GL_COLOR_ATTACHMENT0).put(GL_COLOR_ATTACHMENT1).rewind();
-					glDrawBuffers(buffers);
-				}
-				glClear(GL_DEPTH_BUFFER_BIT);
+                if (disable2) {
+                    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+                }
+                else {
+                    buffers.put(GL_COLOR_ATTACHMENT0).put(GL_COLOR_ATTACHMENT1).rewind();
+                    glDrawBuffers(buffers);
+                }
+                glClear(GL_DEPTH_BUFFER_BIT);
 
-				glViewport(0, 0, width, height);
-				rootSceneList.update();
-				glViewport(0, 0, width, height);
-				sceneList.update();
+                glViewport(0, 0, width, height);
+                rootSceneList.update();
+                glViewport(0, 0, width, height);
+                sceneList.update();
 
-				// glFlush();
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                // glFlush();
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-				glDrawBuffer(GL_BACK);
+                glDrawBuffer(GL_BACK);
 
-				assert glGetError() == 0;
-			} finally {
-				Object popped = currentFBOContext.pop();
-				BasicGeometry.insideDoubleFloatFrameBuffer = false;
+                assert glGetError() == 0;
+            } finally {
+                Object popped = currentFBOContext.pop();
+                BasicGeometry.insideDoubleFloatFrameBuffer = false;
 
-				assert popped == this : popped;
+                assert popped == this : popped;
                 // System.out.println(" <-- ");
 
-			}
-		}
-		
-		// advanced use
-		public void enter() {
-			currentFBOContext.push(this);
-			gl = BasicContextManager.getGl();
-			glu = BasicContextManager.getGlu();
-			if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
-				setup();
-			}
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
-			glViewport(0, 0, width, height);
-			buffers.put(GL_COLOR_ATTACHMENT0).put(GL_COLOR_ATTACHMENT1).rewind();
-			glDrawBuffers(buffers);
-		}
+            }
+        }
 
-		public void exit() {
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			glDrawBuffer(GL_BACK);
+        // advanced use
+        public
+        void enter() {
+            currentFBOContext.push(this);
+            gl = BasicContextManager.getGl();
+            glu = BasicContextManager.getGlu();
+            if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
+                setup();
+            }
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            glViewport(0, 0, width, height);
+            buffers.put(GL_COLOR_ATTACHMENT0).put(GL_COLOR_ATTACHMENT1).rewind();
+            glDrawBuffers(buffers);
+        }
 
-			assert glGetError() == 0;
+        public
+        void exit() {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glDrawBuffer(GL_BACK);
 
-			Object popped = currentFBOContext.pop();
-			assert popped == this : popped;
-		}
+            assert glGetError() == 0;
 
-		public void copyToVBO(final TriangleMesh mesh, final int aux, final boolean first) {
-			sceneList.add(StandardPass.preDisplay).register("__copyToVbo__" + System.identityHashCode(mesh) + ' '
-                                                            + aux + ' '
-                                                            + first, new iUpdateable() {
-				@Override
-				public void update() {
-                    // System.out.println(" copying to aux buffer ");
-                    copyToVBONow(mesh, aux, first);
-				}
-			});
-		}
+            Object popped = currentFBOContext.pop();
+            assert popped == this : popped;
+        }
 
-		protected void copyToVBONow(TriangleMesh mesh, int aux, boolean first) {
-			int target = mesh.getOpenGLBufferName(aux);
+        public
+        void copyToVBO(final TriangleMesh mesh, final int aux, final boolean first) {
+            sceneList.add(StandardPass.preDisplay)
+                     .register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux + ' ' + first,
+                               new iUpdateable() {
+                                   @Override
+                                   public
+                                   void update() {
+                                       // System.out.println(" copying to aux buffer ");
+                                       copyToVBONow(mesh, aux, first);
+                                   }
+                               });
+        }
 
-			if (target == -1)
-				return;
+        protected
+        void copyToVBONow(TriangleMesh mesh, int aux, boolean first) {
+            int target = mesh.getOpenGLBufferName(aux);
 
-			// glFinish();
-			int e = glGetError();
+            if (target == -1) return;
+
+            // glFinish();
+            int e = glGetError();
             // System.out.println(" error1 : "+e);
             glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, target);
-			e = glGetError();
+            e = glGetError();
             // System.out.println(" error2 : "+e);
             GL11.glReadBuffer(first ? GL_COLOR_ATTACHMENT0 : GL_COLOR_ATTACHMENT1);
-			e = glGetError();
+            e = glGetError();
             // System.out.println(" error3 : "+e);
             glReadPixels(0, 0, width, height, GL_RGBA, GL_FLOAT, 0);
-			e = glGetError();
+            e = glGetError();
             // System.out.println(" error4 : "+e);
             glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, 0);
-			// glFinish();
-		}
+            // glFinish();
+        }
 
-		public Vector4[] getClearColors() {
-			return new Vector4[] { c1, c2 };
-		}
+        public
+        Vector4[] getClearColors() {
+            return new Vector4[]{c1, c2};
+        }
 
-		public iProvider<Integer> getOutput(final int num) {
-			return new iProvider<Integer>() {
-				public Integer get() {
-					return tex[num];
-				}
-			};
-		}
+        public
+        iProvider<Integer> getOutput(final int num) {
+            return new iProvider<Integer>() {
+                public
+                Integer get() {
+                    return tex[num];
+                }
+            };
+        }
 
-		public NodeImpl<iSceneListElement> getRootSceneList() {
-			return rootSceneList;
-		}
+        public
+        NodeImpl<iSceneListElement> getRootSceneList() {
+            return rootSceneList;
+        }
 
-		public BasicSceneList getSceneList() {
-			return sceneList;
-		}
+        public
+        BasicSceneList getSceneList() {
+            return sceneList;
+        }
 
-		public void setClearColors(Vector4 c1, Vector4 c2) {
-			this.c1 = c1;
-			this.c2 = c2;
-		}
+        public
+        void setClearColors(Vector4 c1, Vector4 c2) {
+            this.c1 = c1;
+            this.c2 = c2;
+        }
 
-		protected void createInitialLists() {
-			// defaults for color
+        protected
+        void createInitialLists() {
+            // defaults for color
 
-			// camera = new BasicCamera();
+            // camera = new BasicCamera();
 
-			rootSceneList = new BasicSceneList();
-			rootSceneList.addChild(new BasicUtilities.Standard());
-			if (sceneList == null)
-				sceneList = new BasicSceneList();
-		}
+            rootSceneList = new BasicSceneList();
+            rootSceneList.addChild(new BasicUtilities.Standard());
+            if (sceneList == null) sceneList = new BasicSceneList();
+        }
 
-		public int[] bindToTexture = { 0, 1 };
+        public int[] bindToTexture = {0, 1};
 
-		@Override
-		protected void post() {
-			assert glGetError() == 0;
-			glActiveTexture(GL_TEXTURE0 + bindToTexture[0]);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE0 + bindToTexture[1]);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE0);
-		}
+        @Override
+        protected
+        void post() {
+            assert glGetError() == 0;
+            glActiveTexture(GL_TEXTURE0 + bindToTexture[0]);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            glActiveTexture(GL_TEXTURE0 + bindToTexture[1]);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            glActiveTexture(GL_TEXTURE0);
+        }
 
-		@Override
-		protected void pre() {
+        @Override
+        protected
+        void pre() {
 
-			glActiveTexture(GL_TEXTURE + bindToTexture[0]);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-			CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE + bindToTexture[1]);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
-			CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE0);
-		}
+            glActiveTexture(GL_TEXTURE + bindToTexture[0]);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+            CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            glActiveTexture(GL_TEXTURE + bindToTexture[1]);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
+            CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            glActiveTexture(GL_TEXTURE0);
+        }
 
-		boolean lumenOnly = false;
+        boolean lumenOnly = false;
 
-		@Override
-		protected void setup() {
+        @Override
+        protected
+        void setup() {
 
-			fbo[0] = glGenFramebuffers();
-			rb[0] = glGenRenderbuffers();
-			tex[0] = glGenTextures();
-			tex[1] = glGenTextures();
+            fbo[0] = glGenFramebuffers();
+            rb[0] = glGenRenderbuffers();
+            tex[0] = glGenTextures();
+            tex[1] = glGenTextures();
 
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
 
-			gl_texture_min_filter = GL_LINEAR;
-			gl_texture_mag_filter = GL_LINEAR;
+            gl_texture_min_filter = GL_LINEAR;
+            gl_texture_mag_filter = GL_LINEAR;
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
-			glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0], 0);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
+            glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                         0,
+                         useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                         (ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT0,
+                                   useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                   tex[0],
+                                   0);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
 
-			if (lumenOnly) {
-				glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? GL_RG16F : GL_RG8, width, height, 0, GL_RG, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1], 0);
-			} else {
-				glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1], 0);
-			}
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+            if (lumenOnly) {
+                glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                             0,
+                             useFloat ? GL_RG16F : GL_RG8,
+                             width,
+                             height,
+                             0,
+                             GL_RG,
+                             useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                             (ByteBuffer) null);
+                glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                       GL_COLOR_ATTACHMENT1,
+                                       useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                       tex[1],
+                                       0);
+            }
+            else {
+                glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                             0,
+                             useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                             width,
+                             height,
+                             0,
+                             GL_RGBA,
+                             useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                             (ByteBuffer) null);
+                glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                       GL_COLOR_ATTACHMENT1,
+                                       useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                       tex[1],
+                                       0);
+            }
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
 
-			glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
-			status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			assert status == GL_FRAMEBUFFER_COMPLETE : status;
-			BasicContextManager.putId(this, fbo[0]);
+            glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
+            status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+            assert status == GL_FRAMEBUFFER_COMPLETE : status;
+            BasicContextManager.putId(this, fbo[0]);
 
-			glClearColor(0, 0, 0, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		}
+        }
 
-		public iSceneListElement placeOnscreen(final Rect r, int output) {
-			return getOnscreenList(output, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
-		}
+        public
+        iSceneListElement placeOnscreen(final Rect r, int output) {
+            return getOnscreenList(output, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
+        }
 
-		public iSceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip, int output) {
-			return getOnscreenList(output, r, offset, mul, genMip);
-		}
+        public
+        iSceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip, int output) {
+            return getOnscreenList(output, r, offset, mul, genMip);
+        }
 
-		public iSceneListElement placeOnscreen(BasicGLSLangProgram p, final Rect r, int output) {
-			return getOnscreenList(p, output, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
-		}
+        public
+        iSceneListElement placeOnscreen(BasicGLSLangProgram p, final Rect r, int output) {
+            return getOnscreenList(p, output, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
+        }
 
-		public iSceneListElement getOnscreenList(BasicGLSLangProgram p, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip, int output) {
-			return getOnscreenList(p, output, r, offset, mul, genMip);
-		}
+        public
+        iSceneListElement getOnscreenList(BasicGLSLangProgram p,
+                                          final Rect r,
+                                          Vector4 offset,
+                                          Vector4 mul,
+                                          final boolean genMip,
+                                          int output) {
+            return getOnscreenList(p, output, r, offset, mul, genMip);
+        }
 
-		@HiddenInAutocomplete
-		public iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram, int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        @HiddenInAutocomplete
+        public
+        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+                                          int output,
+                                          final Rect r,
+                                          Vector4 offset,
+                                          Vector4 mul,
+                                          final boolean genMip) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.aux(Base.texture0_id, 2).put(useRect ? width : 1).put(0).put(useRect ? width : 1).put(useRect ? height : 1).put(0).put(useRect ? height : 1).put(0).put(0);
-			mesh.aux(Base.color0_id, 4).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1);
+            mesh.vertex()
+                .put((float) (r.x + r.w))
+                .put((float) r.y)
+                .put(0.5f)
+                .put((float) (r.x + r.w))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y))
+                .put(0.5f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.aux(Base.texture0_id, 2)
+                .put(useRect ? width : 1)
+                .put(0)
+                .put(useRect ? width : 1)
+                .put(useRect ? height : 1)
+                .put(0)
+                .put(useRect ? height : 1)
+                .put(0)
+                .put(0);
+            mesh.aux(Base.color0_id, 4)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1);
 
-			onscreenProgram.new SetIntegerUniform("depthTexture", 0);
-			onscreenProgram.new SetUniform("offset", offset);
-			onscreenProgram.new SetUniform("mul", mul);
-			onscreenProgram.addChild(mesh);
-			onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(output), 0));
-			onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.new SetIntegerUniform("depthTexture", 0);
+            onscreenProgram.new SetUniform("offset", offset);
+            onscreenProgram.new SetUniform("mul", mul);
+            onscreenProgram.addChild(mesh);
+            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(output), 0));
+            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
 
-			return onscreenProgram;
-		}
+            return onscreenProgram;
+        }
 
-		@HiddenInAutocomplete
-		public iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        @HiddenInAutocomplete
+        public
+        iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.aux(Base.texture0_id, 2).put(useRect ? width : 1).put(0).put(useRect ? width : 1).put(useRect ? height : 1).put(0).put(useRect ? height : 1).put(0).put(0);
-			mesh.aux(Base.color0_id, 4).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1);
+            mesh.vertex()
+                .put((float) (r.x + r.w))
+                .put((float) r.y)
+                .put(0.5f)
+                .put((float) (r.x + r.w))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y))
+                .put(0.5f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.aux(Base.texture0_id, 2)
+                .put(useRect ? width : 1)
+                .put(0)
+                .put(useRect ? width : 1)
+                .put(useRect ? height : 1)
+                .put(0)
+                .put(useRect ? height : 1)
+                .put(0)
+                .put(0);
+            mesh.aux(Base.color0_id, 4)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1);
 
-			// onscreen program
-			// BasicGLSLangProgram onscreenProgram = (!useRect ? new
-			// BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
-			// "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
-			// : new
-			// BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
-			// "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
-			BasicGLSLangProgram onscreenProgram = (!useRect ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang") : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
-			onscreenProgram.new SetIntegerUniform("depthTexture", 0);
-			onscreenProgram.new SetUniform("offset", offset);
-			onscreenProgram.new SetUniform("mul", mul);
-			onscreenProgram.addChild(mesh);
-			onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(output), 0));
-			onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            // onscreen program
+            // BasicGLSLangProgram onscreenProgram = (!useRect ? new
+            // BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+            // "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
+            // : new
+            // BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+            // "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
+            BasicGLSLangProgram onscreenProgram =
+                    (!useRect
+                     ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
+                     : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
+            onscreenProgram.new SetIntegerUniform("depthTexture", 0);
+            onscreenProgram.new SetUniform("offset", offset);
+            onscreenProgram.new SetUniform("mul", mul);
+            onscreenProgram.addChild(mesh);
+            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(output), 0));
+            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
 
-			return onscreenProgram;
-		}
-		
-		
-	}
+            return onscreenProgram;
+        }
 
-	public static
+
+    }
+
+    public static
     class TripleFrameBuffer extends BasicTextures.BaseTexture implements iDisplayable {
-		private final int width;
+        private final int width;
 
-		private int status;
+        private int status;
 
-		private BasicSceneList rootSceneList;
+        private BasicSceneList rootSceneList;
 
-		private BasicSceneList sceneList;
+        private BasicSceneList sceneList;
 
-		private Vector4 c1, c2, c3;
+        private Vector4 c1, c2, c3;
 
-		private final int height;
+        private final int height;
 
-		int[] fbo = { -1, -1, -1 };
+        int[] fbo = {-1, -1, -1};
 
-		int[] rb = { -1, -1, -1 };
+        int[] rb = {-1, -1, -1};
 
-		int[] tex = { -1, -1, -1 };
+        int[] tex = {-1, -1, -1};
 
-		boolean useRect = false;
+        boolean useRect = false;
 
-		boolean useFloat = true;
+        boolean useFloat = true;
 
-		public TripleFrameBuffer(int width) {
-			this.width = width;
-			this.height = width;
-			createInitialLists();
-		}
+        public
+        TripleFrameBuffer(int width) {
+            this.width = width;
+            this.height = width;
+            createInitialLists();
+        }
 
-		public TripleFrameBuffer(int depthWidth, int depthHeight) {
-			this.width = depthWidth;
-			this.height = depthHeight;
-			createInitialLists();
-		}
+        public
+        TripleFrameBuffer(int depthWidth, int depthHeight) {
+            this.width = depthWidth;
+            this.height = depthHeight;
+            createInitialLists();
+        }
 
-		public TripleFrameBuffer(int depthWidth, int depthHeight, boolean useFloat) {
-			this.width = depthWidth;
-			this.height = depthHeight;
-			this.useFloat = useFloat;
-			createInitialLists();
-		}
+        public
+        TripleFrameBuffer(int depthWidth, int depthHeight, boolean useFloat) {
+            this.width = depthWidth;
+            this.height = depthHeight;
+            this.useFloat = useFloat;
+            createInitialLists();
+        }
 
-		public void addFadePlane(iFloatProvider amount1, Vector4 color1, iFloatProvider amount2, Vector4 color2) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        public
+        void addFadePlane(iFloatProvider amount1, Vector4 color1, iFloatProvider amount2, Vector4 color2) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put(-1f).put(-1f).put(0f).put(-1f).put(1f).put(0f).put(1f).put(1f).put(0f).put(1f).put(-1f).put(0f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang", "content/shaders/VertexColor2Fragment.glslang"));
-			mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
+            mesh.vertex()
+                .put(-1f)
+                .put(-1f)
+                .put(0f)
+                .put(-1f)
+                .put(1f)
+                .put(0f)
+                .put(1f)
+                .put(1f)
+                .put(0f)
+                .put(1f)
+                .put(-1f)
+                .put(0f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
+                                                  "content/shaders/VertexColor2Fragment.glslang"));
+            mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
 
-			float colorAlpha = 0.1f;
-			float alphaAlpha = 0.95f;
-			mesh.aux(Base.color0_id, 4).put(new float[] { 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha });
-			mesh.aux(Base.color0_id + 1, 4).put(new float[] { 0.5f, 0.5f, 0.5f, alphaAlpha, 0.5f, 0.5f, 0.5f, alphaAlpha, 0.5f, 0.5f, 0.5f, alphaAlpha, 0.5f, 0.5f, 0.5f, alphaAlpha });
+            float colorAlpha = 0.1f;
+            float alphaAlpha = 0.95f;
+            mesh.aux(Base.color0_id, 4)
+                .put(new float[]{0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha});
+            mesh.aux(Base.color0_id + 1, 4)
+                .put(new float[]{0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha,
+                                 0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha,
+                                 0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha,
+                                 0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha});
 
-			final FloatBuffer root = ByteBuffer.allocate(mesh.vertex().limit() * 4).asFloatBuffer().put(mesh.vertex());
+            final FloatBuffer root = ByteBuffer.allocate(mesh.vertex().limit() * 4).asFloatBuffer().put(mesh.vertex());
 
-			// driver bug. Horrible seam
-			// down middle of trianglulation
-			mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
-				@Override
-				public void performPass() {
-					glColorMask(false, false, false, true);
-					glClearColor(0, 0, 0, 0);
-					glClear(GL_COLOR_BUFFER_BIT);
-					glColorMask(true, true, true, true);
+            // driver bug. Horrible seam
+            // down middle of trianglulation
+            mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
+                @Override
+                public
+                void performPass() {
+                    glColorMask(false, false, false, true);
+                    glClearColor(0, 0, 0, 0);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                    glColorMask(true, true, true, true);
 
-					// FloatBuffer
-					// m =
-					// mesh.vertex();
-					// for
-					// (int
-					// i =
-					// 0; i
-					// <
-					// m.capacity();
-					// i++)
-					// {
-					// m.put(i,
-					// (float)
-					// (root.get(i)
-					// * (1
-					// +
-					// Math.random()
-					// *
-					// 0.01f)));
-					// }
+                    // FloatBuffer
+                    // m =
+                    // mesh.vertex();
+                    // for
+                    // (int
+                    // i =
+                    // 0; i
+                    // <
+                    // m.capacity();
+                    // i++)
+                    // {
+                    // m.put(i,
+                    // (float)
+                    // (root.get(i)
+                    // * (1
+                    // +
+                    // Math.random()
+                    // *
+                    // 0.01f)));
+                    // }
 
-				}
-			});
-			// mesh.addChild(new
-			// BasicUtilities.SetBlendMode(StandardPass.preRender,
-			// GL_CONSTANT_ALPHA,
-			// GL_ONE_MINUS_CONSTANT_ALPHA,
-			// new Vector4(0, 0, 0,
-			// 0.05f)));
-			// mesh.addChild(new
-			// BasicUtilities.SetBlendMode(StandardPass.preDisplay,
-			// GL_SRC_ALPHA,
-			// GL_ONE_MINUS_SRC_ALPHA,
-			// new Vector4(0, 0, 0,
-			// 0.05f)));
+                }
+            });
+            // mesh.addChild(new
+            // BasicUtilities.SetBlendMode(StandardPass.preRender,
+            // GL_CONSTANT_ALPHA,
+            // GL_ONE_MINUS_CONSTANT_ALPHA,
+            // new Vector4(0, 0, 0,
+            // 0.05f)));
+            // mesh.addChild(new
+            // BasicUtilities.SetBlendMode(StandardPass.preDisplay,
+            // GL_SRC_ALPHA,
+            // GL_ONE_MINUS_SRC_ALPHA,
+            // new Vector4(0, 0, 0,
+            // 0.05f)));
 
-			rootSceneList.addChild(mesh);
-		}
+            rootSceneList.addChild(mesh);
+        }
 
-		boolean first = true;
+        boolean first = true;
 
-		public void display() {
-			currentFBOContext.push(this);
-			BasicGeometry.insideDoubleFloatFrameBuffer = false;
-			if (FullScreenCanvasSWT.dropFrame > 0)
-				return;
+        public
+        void display() {
+            currentFBOContext.push(this);
+            BasicGeometry.insideDoubleFloatFrameBuffer = false;
+            if (FullScreenCanvasSWT.dropFrame > 0) return;
 
-			try {
-				gl = BasicContextManager.getGl();
-				glu = BasicContextManager.getGlu();
-				if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
-					// assert
-					// false;
-					// System.exit(0);
-					setup();
-				}
+            try {
+                gl = BasicContextManager.getGl();
+                glu = BasicContextManager.getGlu();
+                if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
+                    // assert
+                    // false;
+                    // System.exit(0);
+                    setup();
+                }
 
-				glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
 
-				glDrawBuffer(GL_COLOR_ATTACHMENT0);
+                glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
-				if (first) {
-					glClearColor(0, 0, 0, 1);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				}
+                if (first) {
+                    glClearColor(0, 0, 0, 1);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                }
 
-				if (c1 != null) {
-					glClearColor(c1.x, c1.y, c1.z, c1.w);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				} else {
-				}
+                if (c1 != null) {
+                    glClearColor(c1.x, c1.y, c1.z, c1.w);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                }
+                else {
+                }
 
-				glDrawBuffer(GL_COLOR_ATTACHMENT1);
-				if (first) {
-					glClearColor(0, 0, 0, 1);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				}
-				if (c2 != null) {
-					glClearColor(c2.x, c2.y, c2.z, c2.w);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				} else {
-				}
+                glDrawBuffer(GL_COLOR_ATTACHMENT1);
+                if (first) {
+                    glClearColor(0, 0, 0, 1);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                }
+                if (c2 != null) {
+                    glClearColor(c2.x, c2.y, c2.z, c2.w);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                }
+                else {
+                }
 
-				glDrawBuffer(GL_COLOR_ATTACHMENT2);
-				if (first) {
-					glClearColor(0, 0, 0, 1);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				}
-				if (c3 != null) {
-					glClearColor(c3.x, c3.y, c3.z, c3.w);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				} else {
-				}
+                glDrawBuffer(GL_COLOR_ATTACHMENT2);
+                if (first) {
+                    glClearColor(0, 0, 0, 1);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                }
+                if (c3 != null) {
+                    glClearColor(c3.x, c3.y, c3.z, c3.w);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                }
+                else {
+                }
 
-				// TODO lwjgl momemntum
-				// glDrawBuffers(3, new int[] {
-				// GL_COLOR_ATTACHMENT0,
-				// GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 },
-				// 0);
-				glClear(GL_DEPTH_BUFFER_BIT);
+                // TODO lwjgl momemntum
+                // glDrawBuffers(3, new int[] {
+                // GL_COLOR_ATTACHMENT0,
+                // GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 },
+                // 0);
+                glClear(GL_DEPTH_BUFFER_BIT);
 
-				glViewport(0, 0, width, height);
-				rootSceneList.update();
-				glViewport(0, 0, width, height);
-				sceneList.update();
+                glViewport(0, 0, width, height);
+                rootSceneList.update();
+                glViewport(0, 0, width, height);
+                sceneList.update();
 
-				// glFlush();
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                // glFlush();
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-				glDrawBuffer(GL_BACK);
+                glDrawBuffer(GL_BACK);
 
-				assert glGetError() == 0;
-			} finally {
-				Object popped = currentFBOContext.pop();
-				BasicGeometry.insideDoubleFloatFrameBuffer = false;
+                assert glGetError() == 0;
+            } finally {
+                Object popped = currentFBOContext.pop();
+                BasicGeometry.insideDoubleFloatFrameBuffer = false;
 
-				first = false;
+                first = false;
 
-				assert popped == this : popped;
-			}
-		}
+                assert popped == this : popped;
+            }
+        }
 
-		public Vector4[] getClearColors() {
-			return new Vector4[] { c1, c2 };
-		}
+        public
+        Vector4[] getClearColors() {
+            return new Vector4[]{c1, c2};
+        }
 
-		public iProvider<Integer> getOutput(final int num) {
-			return new iProvider<Integer>() {
-				public Integer get() {
-					return tex[num];
-				}
-			};
-		}
+        public
+        iProvider<Integer> getOutput(final int num) {
+            return new iProvider<Integer>() {
+                public
+                Integer get() {
+                    return tex[num];
+                }
+            };
+        }
 
-		public NodeImpl<iSceneListElement> getRootSceneList() {
-			return rootSceneList;
-		}
+        public
+        NodeImpl<iSceneListElement> getRootSceneList() {
+            return rootSceneList;
+        }
 
-		public BasicSceneList getSceneList() {
-			return sceneList;
-		}
+        public
+        BasicSceneList getSceneList() {
+            return sceneList;
+        }
 
-		public void setClearColors(Vector4 c1, Vector4 c2, Vector4 c3) {
-			this.c1 = c1;
-			this.c2 = c2;
-			this.c3 = c3;
-		}
+        public
+        void setClearColors(Vector4 c1, Vector4 c2, Vector4 c3) {
+            this.c1 = c1;
+            this.c2 = c2;
+            this.c3 = c3;
+        }
 
-		protected void createInitialLists() {
-			// defaults for color
+        protected
+        void createInitialLists() {
+            // defaults for color
 
-			// camera = new BasicCamera();
+            // camera = new BasicCamera();
 
-			rootSceneList = new BasicSceneList();
-			rootSceneList.addChild(new BasicUtilities.Standard());
-			if (sceneList == null)
-				sceneList = new BasicSceneList();
-		}
+            rootSceneList = new BasicSceneList();
+            rootSceneList.addChild(new BasicUtilities.Standard());
+            if (sceneList == null) sceneList = new BasicSceneList();
+        }
 
-		@Override
-		public void post() {
-			assert glGetError() == 0;
-			glActiveTexture(GL_TEXTURE2);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+        @Override
+        public
+        void post() {
+            assert glGetError() == 0;
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
 
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-		}
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+        }
 
-		@Override
-		public void pre() {
+        @Override
+        public
+        void pre() {
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-			CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
-			CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE2);
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[2]);
-			CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE0);
-		}
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+            CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
+            CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[2]);
+            CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            glActiveTexture(GL_TEXTURE0);
+        }
 
-		@Override
-		public void setup() {
-			if (BasicContextManager.getId(this) != -1)
-				return;
+        @Override
+        public
+        void setup() {
+            if (BasicContextManager.getId(this) != -1) return;
 
-			fbo[0] = glGenFramebuffers();
-			rb[0] = glGenRenderbuffers();
-			tex[0] = glGenTextures();
-			tex[1] = glGenTextures();
-			tex[2] = glGenTextures();
+            fbo[0] = glGenFramebuffers();
+            rb[0] = glGenRenderbuffers();
+            tex[0] = glGenTextures();
+            tex[1] = glGenTextures();
+            tex[2] = glGenTextures();
 
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
 
-			gl_texture_min_filter = GL_LINEAR;
-			gl_texture_mag_filter = GL_LINEAR;
+            gl_texture_min_filter = GL_LINEAR;
+            gl_texture_mag_filter = GL_LINEAR;
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
-			glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0], 0);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
+            glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                         0,
+                         useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                         (ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT0,
+                                   useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                   tex[0],
+                                   0);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
-			glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1], 0);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
+            glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                         0,
+                         useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                         (ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT1,
+                                   useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                   tex[1],
+                                   0);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[2]);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
-			glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[2], 0);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[2]);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
+            glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                         0,
+                         useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                         (ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT2,
+                                   useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                   tex[2],
+                                   0);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
 
-			glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
-			status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			assert status == GL_FRAMEBUFFER_COMPLETE : status;
+            glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
+            status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+            assert status == GL_FRAMEBUFFER_COMPLETE : status;
 
             // System.out.println(" status is <" + status + ">");
 
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+            glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
-			glClearColor(0, 0, 0, 1);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0, 0, 0, 1);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glDrawBuffer(GL_COLOR_ATTACHMENT1);
-			glClearColor(0, 0, 0, 1);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glDrawBuffer(GL_COLOR_ATTACHMENT1);
+            glClearColor(0, 0, 0, 1);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glDrawBuffer(GL_COLOR_ATTACHMENT2);
-			glClearColor(0, 0, 0, 1);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glDrawBuffer(GL_COLOR_ATTACHMENT2);
+            glClearColor(0, 0, 0, 1);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			BasicContextManager.putId(this, fbo[0]);
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            BasicContextManager.putId(this, fbo[0]);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		}
+        }
 
-		public iReposition placeOnscreen(final BasicSceneList into, final int layer, int output, final Rect r, float width, float height, Vector4 offset, Vector4 mul, final boolean genMip) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        public
+        iReposition placeOnscreen(final BasicSceneList into,
+                                  final int layer,
+                                  int output,
+                                  final Rect r,
+                                  float width,
+                                  float height,
+                                  Vector4 offset,
+                                  Vector4 mul,
+                                  final boolean genMip) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
-			mesh.aux(Base.color0_id, 4).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1);
+            mesh.vertex()
+                .put((float) (r.x + r.w))
+                .put((float) r.y)
+                .put(0.5f)
+                .put((float) (r.x + r.w))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y))
+                .put(0.5f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
+            mesh.aux(Base.color0_id, 4)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1);
 
-			final boolean useRect = !(width == 1 && height == 1);
-			// onscreen program
-			final BasicGLSLangProgram onscreenProgram = (width == 1 && height == 1 ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang") : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
-			onscreenProgram.new SetIntegerUniform("depthTexture", 0);
-			onscreenProgram.new SetUniform("offset", offset);
-			onscreenProgram.new SetUniform("mul", mul);
-			onscreenProgram.addChild(mesh);
-			onscreenProgram.addChild(new TextureWrapper(genMip, useRect, new iProvider<Integer>() {
+            final boolean useRect = !(width == 1 && height == 1);
+            // onscreen program
+            final BasicGLSLangProgram onscreenProgram =
+                    (width == 1 && height == 1
+                     ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
+                     : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
+            onscreenProgram.new SetIntegerUniform("depthTexture", 0);
+            onscreenProgram.new SetUniform("offset", offset);
+            onscreenProgram.new SetUniform("mul", mul);
+            onscreenProgram.addChild(mesh);
+            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, new iProvider<Integer>() {
 
-				public Integer get() {
-					return tex[layer];
-				}
-			}, 0));
-			onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
-			into.addChild(onscreenProgram);
+                public
+                Integer get() {
+                    return tex[layer];
+                }
+            }, 0));
+            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            into.addChild(onscreenProgram);
 
-			return new iReposition() {
+            return new iReposition() {
 
-				Rect current = new Rect(0, 0, 0, 0).setValue(r);
+                Rect current = new Rect(0, 0, 0, 0).setValue(r);
 
-				public Rect getRect() {
-					return new Rect(0, 0, 0, 0).setValue(current);
-				}
+                public
+                Rect getRect() {
+                    return new Rect(0, 0, 0, 0).setValue(current);
+                }
 
-				public void setRect(Rect r) {
-					current.setValue(r);
-					mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-				}
+                public
+                void setRect(Rect r) {
+                    current.setValue(r);
+                    mesh.vertex()
+                        .put((float) (r.x + r.w))
+                        .put((float) r.y)
+                        .put(0.5f)
+                        .put((float) (r.x + r.w))
+                        .put((float) (r.y + r.h))
+                        .put(0.5f)
+                        .put((float) (r.x))
+                        .put((float) (r.y + r.h))
+                        .put(0.5f)
+                        .put((float) (r.x))
+                        .put((float) (r.y))
+                        .put(0.5f);
+                }
 
-				public void setRectRotated(Rect r) {
-					current.setValue(r);
-					mesh.vertex().put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f).put((float) (r.x + r.w)).put((float) r.y).put(0.5f);
+                public
+                void setRectRotated(Rect r) {
+                    current.setValue(r);
+                    mesh.vertex()
+                        .put((float) (r.x + r.w))
+                        .put((float) (r.y + r.h))
+                        .put(0.5f)
+                        .put((float) (r.x))
+                        .put((float) (r.y + r.h))
+                        .put(0.5f)
+                        .put((float) (r.x))
+                        .put((float) (r.y))
+                        .put(0.5f)
+                        .put((float) (r.x + r.w))
+                        .put((float) r.y)
+                        .put(0.5f);
 
-				}
+                }
 
-				@Override
-				public void remove() {
-					into.removeChild(onscreenProgram);
-				}
+                @Override
+                public
+                void remove() {
+                    into.removeChild(onscreenProgram);
+                }
 
-				public void add() {
-					if (!into.isChild(onscreenProgram))
-						into.addChild(onscreenProgram);
-				}
+                public
+                void add() {
+                    if (!into.isChild(onscreenProgram)) into.addChild(onscreenProgram);
+                }
 
-			};
-		}
-	}
+            };
+        }
+    }
 
-	/**
-	 * matches a camera, but with a subsection of the screen
-	 */
+    /**
+     * matches a camera, but with a subsection of the screen
+     */
     public static
     class FBOCamera {
-		protected final BasicCamera rootCamera;
+        protected final BasicCamera rootCamera;
 
-		protected final Rect ndcSubsetRect;
+        protected final Rect ndcSubsetRect;
 
-		public FBOCamera(BasicCamera rootCamera, Rect ndcSubsetRect) {
-			this.rootCamera = rootCamera;
-			this.ndcSubsetRect = ndcSubsetRect;
-		}
+        public
+        FBOCamera(BasicCamera rootCamera, Rect ndcSubsetRect) {
+            this.rootCamera = rootCamera;
+            this.ndcSubsetRect = ndcSubsetRect;
+        }
 
-		public void enter() {
+        public
+        void enter() {
 
-			assert glGetError() == 0;
-			CoreHelpers.glMatrixMode(GL_PROJECTION);
-			CoreHelpers.glLoadIdentity();
+            assert glGetError() == 0;
+            CoreHelpers.glMatrixMode(GL_PROJECTION);
+            CoreHelpers.glLoadIdentity();
 
-			// moved aspect
-			float oright = (float) (rootCamera.near * Math.tan((Math.PI * rootCamera.fov / 180f) / 2) * rootCamera.aspect) * rootCamera.frustrumMul;
-			float otop = (float) (rootCamera.near * Math.tan((Math.PI * rootCamera.fov / 180f) / 2)) * rootCamera.frustrumMul;
+            // moved aspect
+            float oright =
+                    (float) (rootCamera.near * Math.tan((Math.PI * rootCamera.fov / 180f) / 2) * rootCamera.aspect)
+                    * rootCamera.frustrumMul;
+            float otop = (float) (rootCamera.near * Math.tan((Math.PI * rootCamera.fov / 180f) / 2))
+                         * rootCamera.frustrumMul;
 
-			// the above correspond to the
-			// camea calculation.
-			// if ndcSubsetRect is (-1,-1,
-			// 2, 2)
+            // the above correspond to the
+            // camea calculation.
+            // if ndcSubsetRect is (-1,-1,
+            // 2, 2)
 
-			float left = -oright + oright * rootCamera.rshift;
-			float bottom = -otop + otop * rootCamera.tshift;
-			float right = oright + oright * rootCamera.rshift;
-			float top = otop + otop * rootCamera.tshift;
+            float left = -oright + oright * rootCamera.rshift;
+            float bottom = -otop + otop * rootCamera.tshift;
+            float right = oright + oright * rootCamera.rshift;
+            float top = otop + otop * rootCamera.tshift;
 
-			float nleft = (float) (left + (right - left) * (ndcSubsetRect.x + 1) / 2);
-			float nright = (float) (left + (right - left) * (ndcSubsetRect.x + 1 + ndcSubsetRect.w) / 2);
-			float ntop = (float) (bottom + (top - bottom) * (ndcSubsetRect.y + 1 + ndcSubsetRect.h) / 2);
-			float nbottom = (float) (bottom + (top - bottom) * (ndcSubsetRect.y + 1) / 2);
+            float nleft = (float) (left + (right - left) * (ndcSubsetRect.x + 1) / 2);
+            float nright = (float) (left + (right - left) * (ndcSubsetRect.x + 1 + ndcSubsetRect.w) / 2);
+            float ntop = (float) (bottom + (top - bottom) * (ndcSubsetRect.y + 1 + ndcSubsetRect.h) / 2);
+            float nbottom = (float) (bottom + (top - bottom) * (ndcSubsetRect.y + 1) / 2);
 
-			float io_frustra = rootCamera instanceof StereoCamera ? ((StereoCamera) rootCamera).io_frustra : 0;
-			float x = io_frustra * FullScreenCanvasSWT.getSide().x;
+            float io_frustra = rootCamera instanceof StereoCamera ? ((StereoCamera) rootCamera).io_frustra : 0;
+            float x = io_frustra * FullScreenCanvasSWT.getSide().x;
 
-			// inverted top and botom ?
+            // inverted top and botom ?
 
-			CoreHelpers.glFrustum(nleft + right * x, nright + right * x, nbottom, ntop, rootCamera.near, rootCamera.far);
+            CoreHelpers.glFrustum(nleft + right * x,
+                                  nright + right * x,
+                                  nbottom,
+                                  ntop,
+                                  rootCamera.near,
+                                  rootCamera.far);
 
-			CoreHelpers.glMatrixMode(GL_MODELVIEW);
-			CoreHelpers.glLoadIdentity();
+            CoreHelpers.glMatrixMode(GL_MODELVIEW);
+            CoreHelpers.glLoadIdentity();
 
-			Vector3 leftOffset = new Vector3().cross(rootCamera.getViewRay(null), rootCamera.getUp(null)).normalize();
-			leftOffset.x = leftOffset.x * (rootCamera instanceof StereoCamera ? ((StereoCamera) rootCamera).io_position.x * FullScreenCanvasSWT.getSide().x : 0);
-			leftOffset.y = leftOffset.y * (rootCamera instanceof StereoCamera ? ((StereoCamera) rootCamera).io_position.y * FullScreenCanvasSWT.getSide().x : 0);
-			leftOffset.z = leftOffset.z * (rootCamera instanceof StereoCamera ? ((StereoCamera) rootCamera).io_position.z * FullScreenCanvasSWT.getSide().x : 0);
+            Vector3 leftOffset = new Vector3().cross(rootCamera.getViewRay(null), rootCamera.getUp(null)).normalize();
+            leftOffset.x =
+                    leftOffset.x * (rootCamera instanceof StereoCamera ? ((StereoCamera) rootCamera).io_position.x
+                                                                         * FullScreenCanvasSWT.getSide().x : 0);
+            leftOffset.y =
+                    leftOffset.y * (rootCamera instanceof StereoCamera ? ((StereoCamera) rootCamera).io_position.y
+                                                                         * FullScreenCanvasSWT.getSide().x : 0);
+            leftOffset.z =
+                    leftOffset.z * (rootCamera instanceof StereoCamera ? ((StereoCamera) rootCamera).io_position.z
+                                                                         * FullScreenCanvasSWT.getSide().x : 0);
 
-			CoreHelpers.gluLookAt(rootCamera.position.x + leftOffset.x, rootCamera.position.y + leftOffset.y, rootCamera.position.z + leftOffset.z, rootCamera.lookAt.x, rootCamera.lookAt.y, rootCamera.lookAt.z, rootCamera.up.x, rootCamera.up.y, rootCamera.up.z);
-			assert glGetError() == 0;
-		}
+            CoreHelpers.gluLookAt(rootCamera.position.x + leftOffset.x,
+                                  rootCamera.position.y + leftOffset.y,
+                                  rootCamera.position.z + leftOffset.z,
+                                  rootCamera.lookAt.x,
+                                  rootCamera.lookAt.y,
+                                  rootCamera.lookAt.z,
+                                  rootCamera.up.x,
+                                  rootCamera.up.y,
+                                  rootCamera.up.z);
+            assert glGetError() == 0;
+        }
 
         public static
         void exit() {
             assert glGetError() == 0;
-			CoreHelpers.glMatrixMode(GL_PROJECTION);
-			CoreHelpers.glMatrixMode(GL_MODELVIEW);
+            CoreHelpers.glMatrixMode(GL_PROJECTION);
+            CoreHelpers.glMatrixMode(GL_MODELVIEW);
 
-			assert glGetError() == 0;
-		}
+            assert glGetError() == 0;
+        }
 
-		public BasicCamera getRootCamera() {
-			return rootCamera;
-		}
+        public
+        BasicCamera getRootCamera() {
+            return rootCamera;
+        }
 
-		public void setRect(Rect r) {
-			ndcSubsetRect.setValue(r);
-		}
-	}
+        public
+        void setRect(Rect r) {
+            ndcSubsetRect.setValue(r);
+        }
+    }
 
-	public interface iMatchRule {
-		public boolean match(Object o);
-	}
+    public
+    interface iMatchRule {
+        public
+        boolean match(Object o);
+    }
 
-	public static
+    public static
     class Inside implements iMatchRule {
-		private final Object o;
+        private final Object o;
 
-		public Inside(Object o) {
-			this.o = o;
-		}
+        public
+        Inside(Object o) {
+            this.o = o;
+        }
 
-		public boolean match(Object o) {
-			return this.o == o;
-		}
+        public
+        boolean match(Object o) {
+            return this.o == o;
+        }
 
-	}
+    }
 
-	@Woven
+    @Woven
     public static
     class MultiPasser extends BasicTextures.BaseTexture implements iDisplayable {
 
-		public static final Method method_display = ReflectionTools.methodOf("display", MultiPasser.class);
+        public static final Method method_display = ReflectionTools.methodOf("display", MultiPasser.class);
 
-		private float r;
+        private float r;
 
-		private float g;
+        private float g;
 
-		private float b;
+        private float b;
 
-		private float a;
+        private float a;
 
-		private boolean doClear;
+        private boolean doClear;
 
-		protected final int width;
+        protected final int width;
 
-		protected final int height;
+        protected final int height;
 
-		protected BasicCamera camera;
+        protected BasicCamera camera;
 
-		protected BasicSceneList rootSceneList;
+        protected BasicSceneList rootSceneList;
 
-		protected BasicSceneList sceneList;
+        protected BasicSceneList sceneList;
 
-		protected int status;
+        protected int status;
 
-		protected final boolean useRect;
+        protected final boolean useRect;
 
-		protected FBOCamera fboCamera;
+        protected FBOCamera fboCamera;
 
-		int[] fbo = { -1, -1 };
+        int[] fbo = {-1, -1};
 
-		int[] rb = { -1, -1 };
+        int[] rb = {-1, -1};
 
-		int[] tex = { -1, -1 };
+        int[] tex = {-1, -1};
 
-		boolean flip = false;
+        boolean flip = false;
 
-		boolean deallocated = false;
+        boolean deallocated = false;
 
-		boolean first = true;
+        boolean first = true;
 
-		TaskQueue queue = new TaskQueue();
+        TaskQueue queue = new TaskQueue();
 
-		public MultiPasser(int width, int height, boolean useRect) {
-			this.width = width;
-			this.height = height;
-			this.useRect = useRect;
-			createInitialLists();
-			// camera.setViewport(0, 0,
-			// width, height);
-			// camera.setPerspective(camera.getFov(),
-			// width / (float) height,
-			// camera.getNear(),
-			// camera.getFar());
+        public
+        MultiPasser(int width, int height, boolean useRect) {
+            this.width = width;
+            this.height = height;
+            this.useRect = useRect;
+            createInitialLists();
+            // camera.setViewport(0, 0,
+            // width, height);
+            // camera.setPerspective(camera.getFov(),
+            // width / (float) height,
+            // camera.getNear(),
+            // camera.getFar());
 
-			r = (float) SystemProperties.getDoubleProperty("background.red", 0);
-			g = (float) SystemProperties.getDoubleProperty("background.green", 0);
-			b = (float) SystemProperties.getDoubleProperty("background.blue", 0);
-			a = (float) SystemProperties.getDoubleProperty("background.alpha", 1);
+            r = (float) SystemProperties.getDoubleProperty("background.red", 0);
+            g = (float) SystemProperties.getDoubleProperty("background.green", 0);
+            b = (float) SystemProperties.getDoubleProperty("background.blue", 0);
+            a = (float) SystemProperties.getDoubleProperty("background.alpha", 1);
 
-			doClear = SystemProperties.getIntProperty("background.clear", 1) == 1;
-		}
+            doClear = SystemProperties.getIntProperty("background.clear", 1) == 1;
+        }
 
-		public void addOtherTexture(final BasicGLSLangProgram mesh) {
+        public
+        void addOtherTexture(final BasicGLSLangProgram mesh) {
             Cont.linkWith(mesh, OnePassListElement.method_performPass, new aRun() {
                 @Override
-				public ReturnCode head(Object calledOn, Object[] args) {
-					assert !deallocated;
-					bindOtherTexture();
-					return super.head(calledOn, args);
-				}
+                public
+                ReturnCode head(Object calledOn, Object[] args) {
+                    assert !deallocated;
+                    bindOtherTexture();
+                    return super.head(calledOn, args);
+                }
 
-				@Override
-				public ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
-					glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-					return super.tail(calledOn, args, returnWas);
-				}
-			});
-		}
+                @Override
+                public
+                ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
+                    glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+                    return super.tail(calledOn, args, returnWas);
+                }
+            });
+        }
 
-		public void addOtherTexture(final TriangleMesh mesh) {
+        public
+        void addOtherTexture(final TriangleMesh mesh) {
             Cont.linkWith(mesh, OnePassListElement.method_performPass, new aRun() {
                 @Override
-				public ReturnCode head(Object calledOn, Object[] args) {
-					bindOtherTexture();
-					return super.head(calledOn, args);
-				}
+                public
+                ReturnCode head(Object calledOn, Object[] args) {
+                    bindOtherTexture();
+                    return super.head(calledOn, args);
+                }
 
-				@Override
-				public ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
-					assert !deallocated;
-					glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-					return super.tail(calledOn, args, returnWas);
-				}
-			});
-		}
+                @Override
+                public
+                ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
+                    assert !deallocated;
+                    glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+                    return super.tail(calledOn, args, returnWas);
+                }
+            });
+        }
 
-		public void bindOtherTexture() {
-			assert !deallocated;
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, flip ? tex[1] : tex[0]);
-			// glBindTexture(useRect ?
-			// GL_TEXTURE_RECTANGLE :
-			// GL_TEXTURE_2D, tex[0]);
-		}
+        public
+        void bindOtherTexture() {
+            assert !deallocated;
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, flip ? tex[1] : tex[0]);
+            // glBindTexture(useRect ?
+            // GL_TEXTURE_RECTANGLE :
+            // GL_TEXTURE_2D, tex[0]);
+        }
 
-		/**
-		 * you still need to add a program (or two) to the mesh
-		 */
-		public Base.iGeometry constructDefaultDrawingPlane() {
-			assert !deallocated;
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.preRender);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        /**
+         * you still need to add a program (or two) to the mesh
+         */
+        public
+        Base.iGeometry constructDefaultDrawingPlane() {
+            assert !deallocated;
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.preRender);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put(-1).put(-1).put(0.5f).put(-1).put(1).put(0.5f).put(1).put(1).put(0.5f).put(1).put(-1).put(0.5f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			if (useRect)
-				mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(height).put(width).put(height).put(width).put(0);
-			else
-				mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(1).put(1).put(1).put(1).put(0);
+            mesh.vertex()
+                .put(-1)
+                .put(-1)
+                .put(0.5f)
+                .put(-1)
+                .put(1)
+                .put(0.5f)
+                .put(1)
+                .put(1)
+                .put(0.5f)
+                .put(1)
+                .put(-1)
+                .put(0.5f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            if (useRect)
+                mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(height).put(width).put(height).put(width).put(0);
+            else mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(1).put(1).put(1).put(1).put(0);
 
-			addOtherTexture(mesh);
+            addOtherTexture(mesh);
 
-			// attached twice???
+            // attached twice???
 
-			// sceneList.addChild(mesh);
+            // sceneList.addChild(mesh);
 
-			return mesh;
-		}
+            return mesh;
+        }
 
-		public void delete() {
-			deallocated = true;
+        public
+        void delete() {
+            deallocated = true;
 
 			/*
-			 * glGenFramebuffers(1, fbo, 0); assert glGetError() ==
+             * glGenFramebuffers(1, fbo, 0); assert glGetError() ==
 			 * 0;
 			 * 
 			 * glGenRenderbuffers(1, rb, 0); assert glGetError() ==
@@ -1931,1863 +2571,2376 @@ public class BasicFrameBuffers {
 			 * glGenTextures(2, tex, 0);
 			 */
 
-			glDeleteFramebuffers(fbo[0]);
-			glDeleteRenderbuffers(rb[0]);
-			glDeleteTextures(tex[0]);
-			glDeleteTextures(tex[1]);
-		}
+            glDeleteFramebuffers(fbo[0]);
+            glDeleteRenderbuffers(rb[0]);
+            glDeleteTextures(tex[0]);
+            glDeleteTextures(tex[1]);
+        }
 
-		// this should be called at the end of
-		// display(...) in full screen canvas
+        // this should be called at the end of
+        // display(...) in full screen canvas
 
-		@DispatchOverTopology(topology = Cont.class)
-		public void display() {
-			if (FullScreenCanvasSWT.dropFrame > 0)
-				return;
+        @DispatchOverTopology(topology = Cont.class)
+        public
+        void display() {
+            if (FullScreenCanvasSWT.dropFrame > 0) return;
 
             // System.out.println(" inside multipasser display ");
 
-			gl = BasicContextManager.getGl();
-			glu = BasicContextManager.getGlu();
+            gl = BasicContextManager.getGl();
+            glu = BasicContextManager.getGlu();
 
-			if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
-				// assert
-				// false;
-				// System.exit(0);
-				setup();
-			}
+            if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
+                // assert
+                // false;
+                // System.exit(0);
+                setup();
+            }
 
-			currentFBOContext.push(this);
-			try {
-				assert !deallocated;
-				assert glGetError() == 0;
-				glBindFramebuffer(GL_FRAMEBUFFER, flip ? fbo[0] : fbo[1]);
-				assert glGetError() == 0;
-				preDisplay();
-				assert glGetError() == 0;
-				glViewport(0, 0, width, height);
-				assert glGetError() == 0;
+            currentFBOContext.push(this);
+            try {
+                assert !deallocated;
+                assert glGetError() == 0;
+                glBindFramebuffer(GL_FRAMEBUFFER, flip ? fbo[0] : fbo[1]);
+                assert glGetError() == 0;
+                preDisplay();
+                assert glGetError() == 0;
+                glViewport(0, 0, width, height);
+                assert glGetError() == 0;
 
-				if (fboCamera != null)
-					fboCamera.enter();
+                if (fboCamera != null) fboCamera.enter();
 
-				assert glGetError() == 0;
-				rootSceneList.update();
-				assert glGetError() == 0;
-				if (first) {
-					first = false;
-				} else {
-					sceneList.update();
-				}
-				assert glGetError() == 0;
+                assert glGetError() == 0;
+                rootSceneList.update();
+                assert glGetError() == 0;
+                if (first) {
+                    first = false;
+                }
+                else {
+                    sceneList.update();
+                }
+                assert glGetError() == 0;
 
-				queue.update();
+                queue.update();
 
-				assert glGetError() == 0;
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				assert glGetError() == 0;
+                assert glGetError() == 0;
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                assert glGetError() == 0;
 
-				postDisplay();
-				assert glGetError() == 0;
-				flip = !flip;
+                postDisplay();
+                assert glGetError() == 0;
+                flip = !flip;
 
-			} finally {
-				Object popped = currentFBOContext.pop();
-				assert popped == this : popped;
-			}
-		}
+            } finally {
+                Object popped = currentFBOContext.pop();
+                assert popped == this : popped;
+            }
+        }
 
-		public BasicCamera getCamera() {
-			return fboCamera.getRootCamera();
-		}
+        public
+        BasicCamera getCamera() {
+            return fboCamera.getRootCamera();
+        }
 
-		public iProvider<Integer> getFBO() {
-			return new iProvider<Integer>() {
-				public Integer get() {
-					return flip ? fbo[0] : fbo[1];
-				}
-			};
-		}
+        public
+        iProvider<Integer> getFBO() {
+            return new iProvider<Integer>() {
+                public
+                Integer get() {
+                    return flip ? fbo[0] : fbo[1];
+                }
+            };
+        }
 
-		public iProvider<Integer> getTexture() {
-			return new iProvider<Integer>() {
-				public Integer get() {
-					return flip ? tex[0] : tex[1];
-				}
-			};
-		}
+        public
+        iProvider<Integer> getTexture() {
+            return new iProvider<Integer>() {
+                public
+                Integer get() {
+                    return flip ? tex[0] : tex[1];
+                }
+            };
+        }
 
-		public int getHeight() {
-			return height;
-		}
+        public
+        int getHeight() {
+            return height;
+        }
 
-		// for debugging only, we should have a frame
-		// buffer that supports async reads from a
-		// renderbuffer as well
-		// you can only call this at render time, see
-		// "savePNG" below
-		public ByteBuffer getImage(ByteBuffer storage) {
-			if (storage == null) {
-				storage = ByteBuffer.allocateDirect(width * height * 4);
-			}
+        // for debugging only, we should have a frame
+        // buffer that supports async reads from a
+        // renderbuffer as well
+        // you can only call this at render time, see
+        // "savePNG" below
+        public
+        ByteBuffer getImage(ByteBuffer storage) {
+            if (storage == null) {
+                storage = ByteBuffer.allocateDirect(width * height * 4);
+            }
 
-			int[] a = new int[1];
-			a[0] = glGetInteger(GL_FRAMEBUFFER_BINDING);
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, flip ? tex[0] : tex[1], 0);
-			glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, storage);
-			glBindFramebuffer(GL_FRAMEBUFFER, a[0]);
+            int[] a = new int[1];
+            a[0] = glGetInteger(GL_FRAMEBUFFER_BINDING);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT0,
+                                   useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                   flip ? tex[0] : tex[1],
+                                   0);
+            glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, storage);
+            glBindFramebuffer(GL_FRAMEBUFFER, a[0]);
 
-			return storage;
-		}
+            return storage;
+        }
 
-		public BasicSceneList getSceneList() {
-			return sceneList;
-		}
+        public
+        BasicSceneList getSceneList() {
+            return sceneList;
+        }
 
-		public int getWidth() {
-			return width;
-		}
+        public
+        int getWidth() {
+            return width;
+        }
 
-		public void saveImageToNullTexture(final NullTexture nt) {
+        public
+        void saveImageToNullTexture(final NullTexture nt) {
 
-			assert nt.width == this.width : "dimension mismatch " + nt.width + ' ' + this.width;
-			assert nt.height == this.height : "dimension mismatch " + nt.height + ' ' + this.height;
+            assert nt.width == this.width : "dimension mismatch " + nt.width + ' ' + this.width;
+            assert nt.height == this.height : "dimension mismatch " + nt.height + ' ' + this.height;
 
-			queue.new Task() {
-				@Override
-				protected void run() {
-					nt.pre();
-					assert glGetError() == 0;
-					glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, 0, 0, width, height);
-					assert glGetError() == 0;
-					nt.post();
-				}
-			};
-		}
+            queue.new Task() {
+                @Override
+                protected
+                void run() {
+                    nt.pre();
+                    assert glGetError() == 0;
+                    glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, 0, 0, width, height);
+                    assert glGetError() == 0;
+                    nt.post();
+                }
+            };
+        }
 
-		public void savePNG(final FullScreenCanvasSWT canvas, final String filename, final ByteBuffer s) {
+        public
+        void savePNG(final FullScreenCanvasSWT canvas, final String filename, final ByteBuffer s) {
             Cont.linkWith(canvas, FullScreenCanvasSWT.method_beforeFlush, new aRun() {
                 @Override
-				public ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
+                public
+                ReturnCode tail(Object calledOn, Object[] args, Object returnWas) {
 
-					ByteBuffer storage = getImage(s);
+                    ByteBuffer storage = getImage(s);
 
-					BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+                    BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
-					WritableRaster tile = bi.getWritableTile(0, 0);
-					DataBuffer buffer = tile.getDataBuffer();
+                    WritableRaster tile = bi.getWritableTile(0, 0);
+                    DataBuffer buffer = tile.getDataBuffer();
 
-					IntBuffer storagei = storage.asIntBuffer();
-					for (int y = 0; y < height; y++) {
-						for (int x = 0; x < width; x++) {
-							int r = BaseMath.intify(storage.get());
-							int g = BaseMath.intify(storage.get());
-							int b = BaseMath.intify(storage.get());
-							int a = BaseMath.intify(storage.get());
+                    IntBuffer storagei = storage.asIntBuffer();
+                    for (int y = 0; y < height; y++) {
+                        for (int x = 0; x < width; x++) {
+                            int r = BaseMath.intify(storage.get());
+                            int g = BaseMath.intify(storage.get());
+                            int b = BaseMath.intify(storage.get());
+                            int a = BaseMath.intify(storage.get());
 
-							int d = (g << 8) | (r << 16) | (b);// |
-							// (a
-							// <<
-							// 24);
-							buffer.setElem((height - 1 - y) * width + x, d);
-						}
-					}
+                            int d = (g << 8) | (r << 16) | (b);// |
+                            // (a
+                            // <<
+                            // 24);
+                            buffer.setElem((height - 1 - y) * width + x, d);
+                        }
+                    }
 
-					FileOutputStream fos;
-					RenderedOp op = JAI.create("filestore", bi, filename, "PNG");
+                    FileOutputStream fos;
+                    RenderedOp op = JAI.create("filestore", bi, filename, "PNG");
 
                     Cont.unlinkWith(canvas, FullScreenCanvasSWT.method_beforeFlush, this);
 
-					return ReturnCode.CONTINUE;
-				}
-			});
-		}
+                    return ReturnCode.CONTINUE;
+                }
+            });
+        }
 
-		public MultiPasser setBackground(float r, float g, float b, float a, boolean doClear) {
-			this.r = r;
-			this.g = g;
-			this.b = b;
-			this.a = a;
-			this.doClear = doClear;
-			createInitialLists();
+        public
+        MultiPasser setBackground(float r, float g, float b, float a, boolean doClear) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+            this.doClear = doClear;
+            createInitialLists();
 
-			return this;
-		}
+            return this;
+        }
 
-		public MultiPasser setFBOCamera(FBOCamera fboCamera) {
-			this.fboCamera = fboCamera;
-			return this;
-		}
+        public
+        MultiPasser setFBOCamera(FBOCamera fboCamera) {
+            this.fboCamera = fboCamera;
+            return this;
+        }
 
-		protected void createInitialLists() {
-			// defaults for color
+        protected
+        void createInitialLists() {
+            // defaults for color
 
-			// camera = new BasicCamera();
+            // camera = new BasicCamera();
 
-			rootSceneList = new BasicSceneList();
-			// rootSceneList.addChild(new
-			// BasicUtilities.Standard());
-			if (doClear) {
-				BasicUtilities.Clear clear = new BasicUtilities.Clear(new Vector3(r, g, b), a);
-				rootSceneList.addChild(clear);
-			} else {
-				rootSceneList.addChild(new BasicUtilities.ClearOnce(new Vector3(0, 0, 0), 1));
-			}
-			// rootSceneList.addChild(camera);
-			if (sceneList == null)
-				sceneList = new BasicSceneList();
-		}
+            rootSceneList = new BasicSceneList();
+            // rootSceneList.addChild(new
+            // BasicUtilities.Standard());
+            if (doClear) {
+                BasicUtilities.Clear clear = new BasicUtilities.Clear(new Vector3(r, g, b), a);
+                rootSceneList.addChild(clear);
+            }
+            else {
+                rootSceneList.addChild(new BasicUtilities.ClearOnce(new Vector3(0, 0, 0), 1));
+            }
+            // rootSceneList.addChild(camera);
+            if (sceneList == null) sceneList = new BasicSceneList();
+        }
 
-		@Override
-		protected void post() {
-			assert !deallocated;
-			assert glGetError() == 0;
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			assert glGetError() == 0;
-			CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			assert glGetError() == 0;
-		}
+        @Override
+        protected
+        void post() {
+            assert !deallocated;
+            assert glGetError() == 0;
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            assert glGetError() == 0;
+            CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            assert glGetError() == 0;
+        }
 
-		protected void postDisplay() {
-		}
+        protected
+        void postDisplay() {
+        }
 
-		@Override
-		protected void pre() {
-			assert !deallocated;
-			assert glGetError() == 0;
+        @Override
+        protected
+        void pre() {
+            assert !deallocated;
+            assert glGetError() == 0;
 
-			if (flip) {
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-				// glGenerateMipmap(GL_TEXTURE_2D);
+            if (flip) {
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+                // glGenerateMipmap(GL_TEXTURE_2D);
 
-				CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			} else {
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
-				// glGenerateMipmap(GL_TEXTURE_2D);
-				CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			}
+                CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            }
+            else {
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
+                // glGenerateMipmap(GL_TEXTURE_2D);
+                CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            }
 
-			assert glGetError() == 0;
-		}
+            assert glGetError() == 0;
+        }
 
-		protected void preDisplay() {
-		}
+        protected
+        void preDisplay() {
+        }
 
-		boolean useFloat = true;
+        boolean useFloat = true;
 
-		public MultiPasser setUseFloat(boolean useFloat) {
-			this.useFloat = useFloat;
-			return this;
-		}
+        public
+        MultiPasser setUseFloat(boolean useFloat) {
+            this.useFloat = useFloat;
+            return this;
+        }
 
-		@Override
-		protected void setup() {
+        @Override
+        protected
+        void setup() {
 
-			assert !deallocated;
-			assert glGetError() == 0;
+            assert !deallocated;
+            assert glGetError() == 0;
 
-			fbo[0] = glGenFramebuffers();
-			fbo[1] = glGenFramebuffers();
-			assert glGetError() == 0;
+            fbo[0] = glGenFramebuffers();
+            fbo[1] = glGenFramebuffers();
+            assert glGetError() == 0;
 
-			rb[0] = glGenRenderbuffers();
-			rb[1] = glGenRenderbuffers();
-			assert glGetError() == 0;
+            rb[0] = glGenRenderbuffers();
+            rb[1] = glGenRenderbuffers();
+            assert glGetError() == 0;
 
-			tex[0] = glGenTextures();
-			tex[1] = glGenTextures();
-			assert glGetError() == 0;
+            tex[0] = glGenTextures();
+            tex[1] = glGenTextures();
+            assert glGetError() == 0;
 
-			{
-				glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
 
-				gl_texture_min_filter = GL_LINEAR;
-				gl_texture_mag_filter = GL_LINEAR;
+                gl_texture_min_filter = GL_LINEAR;
+                gl_texture_mag_filter = GL_LINEAR;
 
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-				// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE,
-				// 0);
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+                // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE,
+                // 0);
 
-				// glTexImage2D(useRect ?
-				// GL_TEXTURE_RECTANGLE :
-				// GL_TEXTURE_2D, 0, GL_RGBA8, width,
-				// height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-				// null);
-				glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
+                // glTexImage2D(useRect ?
+                // GL_TEXTURE_RECTANGLE :
+                // GL_TEXTURE_2D, 0, GL_RGBA8, width,
+                // height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                // null);
+                glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                             0,
+                             useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                             width,
+                             height,
+                             0,
+                             GL_RGBA,
+                             useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                             (ByteBuffer) null);
 
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0], 0);
-				// glTexParameteri(useRect ?
-				// GL_TEXTURE_RECTANGLE :
-				// GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-				// gl_texture_wrap_s);
-				// glTexParameteri(useRect ?
-				// GL_TEXTURE_RECTANGLE :
-				// GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-				// gl_texture_wrap_t);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+                glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                       GL_COLOR_ATTACHMENT0,
+                                       useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                       tex[0],
+                                       0);
+                // glTexParameteri(useRect ?
+                // GL_TEXTURE_RECTANGLE :
+                // GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                // gl_texture_wrap_s);
+                // glTexParameteri(useRect ?
+                // GL_TEXTURE_RECTANGLE :
+                // GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+                // gl_texture_wrap_t);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                GL_TEXTURE_MAG_FILTER,
+                                gl_texture_mag_filter);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                GL_TEXTURE_MIN_FILTER,
+                                gl_texture_min_filter);
 
-				// glBindRenderbuffer(GL_RENDERBUFFER,
-				// rb[0]);
-				// glRenderbufferStorage(GL_RENDERBUFFER,
-				// GL_DEPTH_COMPONENT24, width, height);
-				// glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-				// GL_DEPTH_ATTACHMENT,
-				// GL_RENDERBUFFER, rb[0]);
+                // glBindRenderbuffer(GL_RENDERBUFFER,
+                // rb[0]);
+                // glRenderbufferStorage(GL_RENDERBUFFER,
+                // GL_DEPTH_COMPONENT24, width, height);
+                // glFramebufferRenderbuffer(GL_FRAMEBUFFER,
+                // GL_DEPTH_ATTACHMENT,
+                // GL_RENDERBUFFER, rb[0]);
 
-				status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-				assert status == GL_FRAMEBUFFER_COMPLETE : status;
-				BasicContextManager.putId(this, fbo[0]);
+                status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+                assert status == GL_FRAMEBUFFER_COMPLETE : status;
+                BasicContextManager.putId(this, fbo[0]);
 
-				glClearColor(0, 0, 0, 0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glClearColor(0, 0, 0, 0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-			}
+            }
 
-			{
-				glBindFramebuffer(GL_FRAMEBUFFER, fbo[1]);
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo[1]);
 
-				gl_texture_min_filter = GL_LINEAR;
-				gl_texture_mag_filter = GL_LINEAR;
+                gl_texture_min_filter = GL_LINEAR;
+                gl_texture_mag_filter = GL_LINEAR;
 
-				glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
-				// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE,
-				// 0);
-				glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
+                glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
+                // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE,
+                // 0);
+                glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                             0,
+                             useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA8,
+                             width,
+                             height,
+                             0,
+                             GL_RGBA,
+                             useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                             (ByteBuffer) null);
 
-				// glTexImage2D(useRect ?
-				// GL_TEXTURE_RECTANGLE :
-				// GL_TEXTURE_2D, 0, GL_RGBA8, width,
-				// height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-				// null);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1], 0);
-				// glTexParameteri(useRect ?
-				// GL_TEXTURE_RECTANGLE :
-				// GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-				// gl_texture_wrap_s);
-				// glTexParameteri(useRect ?
-				// GL_TEXTURE_RECTANGLE :
-				// GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-				// gl_texture_wrap_t);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-				glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+                // glTexImage2D(useRect ?
+                // GL_TEXTURE_RECTANGLE :
+                // GL_TEXTURE_2D, 0, GL_RGBA8, width,
+                // height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                // null);
+                glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                       GL_COLOR_ATTACHMENT0,
+                                       useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                       tex[1],
+                                       0);
+                // glTexParameteri(useRect ?
+                // GL_TEXTURE_RECTANGLE :
+                // GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                // gl_texture_wrap_s);
+                // glTexParameteri(useRect ?
+                // GL_TEXTURE_RECTANGLE :
+                // GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+                // gl_texture_wrap_t);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                GL_TEXTURE_MAG_FILTER,
+                                gl_texture_mag_filter);
+                glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                GL_TEXTURE_MIN_FILTER,
+                                gl_texture_min_filter);
 
-				// glBindRenderbuffer(GL_RENDERBUFFER,
-				// rb[1]);
-				// glRenderbufferStorage(GL_RENDERBUFFER,
-				// GL_DEPTH_COMPONENT24, width, height);
-				// glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-				// GL_DEPTH_ATTACHMENT,
-				// GL_RENDERBUFFER, rb[1]);
+                // glBindRenderbuffer(GL_RENDERBUFFER,
+                // rb[1]);
+                // glRenderbufferStorage(GL_RENDERBUFFER,
+                // GL_DEPTH_COMPONENT24, width, height);
+                // glFramebufferRenderbuffer(GL_FRAMEBUFFER,
+                // GL_DEPTH_ATTACHMENT,
+                // GL_RENDERBUFFER, rb[1]);
 
-				status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-				assert status == GL_FRAMEBUFFER_COMPLETE : status;
-				BasicContextManager.putId(this, fbo[1]);
+                status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+                assert status == GL_FRAMEBUFFER_COMPLETE : status;
+                BasicContextManager.putId(this, fbo[1]);
 
-				glClearColor(0, 0, 0, 0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glClearColor(0, 0, 0, 0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-			}
-		}
+            }
+        }
 
-		public iReposition placeOnscreen(final BasicSceneList into, final Rect r, float width, float height, Vector4 offset, Vector4 mul, final boolean genMip) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        public
+        iReposition placeOnscreen(final BasicSceneList into,
+                                  final Rect r,
+                                  float width,
+                                  float height,
+                                  Vector4 offset,
+                                  Vector4 mul,
+                                  final boolean genMip) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
-			mesh.aux(Base.color0_id, 4).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1);
+            mesh.vertex()
+                .put((float) (r.x + r.w))
+                .put((float) r.y)
+                .put(0.5f)
+                .put((float) (r.x + r.w))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y))
+                .put(0.5f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
+            mesh.aux(Base.color0_id, 4)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1);
 
-			final boolean useRect = !(width == 1 && height == 1);
-			// onscreen program
-			final BasicGLSLangProgram onscreenProgram = (width == 1 && height == 1 ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang") : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
-			// BasicGLSLangProgram onscreenProgram = (width == 1 &&
-			// height == 1 ? new
-			// BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
-			// "content/shaders/Whiet.glslang") : new
-			// BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
-			// "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
-			onscreenProgram.new SetIntegerUniform("depthTexture", 0);
-			onscreenProgram.new SetUniform("offset", offset);
-			onscreenProgram.new SetUniform("mul", mul);
-			onscreenProgram.addChild(mesh);
-			onscreenProgram.addChild(new TextureWrapper(genMip, useRect, new iProvider<Integer>() {
+            final boolean useRect = !(width == 1 && height == 1);
+            // onscreen program
+            final BasicGLSLangProgram onscreenProgram =
+                    (width == 1 && height == 1
+                     ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
+                     : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
+            // BasicGLSLangProgram onscreenProgram = (width == 1 &&
+            // height == 1 ? new
+            // BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+            // "content/shaders/Whiet.glslang") : new
+            // BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+            // "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
+            onscreenProgram.new SetIntegerUniform("depthTexture", 0);
+            onscreenProgram.new SetUniform("offset", offset);
+            onscreenProgram.new SetUniform("mul", mul);
+            onscreenProgram.addChild(mesh);
+            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, new iProvider<Integer>() {
 
-				public Integer get() {
-					int ff = flip ? tex[1] : tex[0];
+                public
+                Integer get() {
+                    int ff = flip ? tex[1] : tex[0];
                     // System.out.println(" texturing <" +
                     // ff + ">");
-					return ff;
-				}
-			}, 0));
-			onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
-			into.addChild(onscreenProgram);
+                    return ff;
+                }
+            }, 0));
+            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            into.addChild(onscreenProgram);
 
-			return new iReposition() {
+            return new iReposition() {
 
-				Rect current = new Rect(0, 0, 0, 0).setValue(r);
+                Rect current = new Rect(0, 0, 0, 0).setValue(r);
 
-				public Rect getRect() {
-					return new Rect(0, 0, 0, 0).setValue(current);
-				}
+                public
+                Rect getRect() {
+                    return new Rect(0, 0, 0, 0).setValue(current);
+                }
 
-				public void setRect(Rect r) {
-					current.setValue(r);
-					mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-				}
+                public
+                void setRect(Rect r) {
+                    current.setValue(r);
+                    mesh.vertex()
+                        .put((float) (r.x + r.w))
+                        .put((float) r.y)
+                        .put(0.5f)
+                        .put((float) (r.x + r.w))
+                        .put((float) (r.y + r.h))
+                        .put(0.5f)
+                        .put((float) (r.x))
+                        .put((float) (r.y + r.h))
+                        .put(0.5f)
+                        .put((float) (r.x))
+                        .put((float) (r.y))
+                        .put(0.5f);
+                }
 
-				public void setRectRotated(Rect r) {
-					current.setValue(r);
-					mesh.vertex().put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f).put((float) (r.x + r.w)).put((float) r.y).put(0.5f);
+                public
+                void setRectRotated(Rect r) {
+                    current.setValue(r);
+                    mesh.vertex()
+                        .put((float) (r.x + r.w))
+                        .put((float) (r.y + r.h))
+                        .put(0.5f)
+                        .put((float) (r.x))
+                        .put((float) (r.y + r.h))
+                        .put(0.5f)
+                        .put((float) (r.x))
+                        .put((float) (r.y))
+                        .put(0.5f)
+                        .put((float) (r.x + r.w))
+                        .put((float) r.y)
+                        .put(0.5f);
 
-				}
+                }
 
-				@Override
-				public void remove() {
-					into.removeChild(onscreenProgram);
-				}
+                @Override
+                public
+                void remove() {
+                    into.removeChild(onscreenProgram);
+                }
 
-				public void add() {
-					if (!into.isChild(onscreenProgram))
-						into.addChild(onscreenProgram);
-				}
+                public
+                void add() {
+                    if (!into.isChild(onscreenProgram)) into.addChild(onscreenProgram);
+                }
 
-			};
-		}
+            };
+        }
 
-	}
+    }
 
-	// untested (but likely to work, needs a driver)
+    // untested (but likely to work, needs a driver)
     public static
     class NTextureCrossfader extends BasicUtilities.TwoPassElement {
-		private final MultiPasser source;
+        private final MultiPasser source;
 
-		private final OnePassElement bug;
+        private final OnePassElement bug;
 
-		NullTexture[] textureA;
+        NullTexture[] textureA;
 
-		TextureUnit[] textureAWrapped;
+        TextureUnit[] textureAWrapped;
 
-		boolean[] copyToA;
+        boolean[] copyToA;
 
-		boolean hasData = false;
+        boolean hasData = false;
 
-		boolean hasSetup = false;
+        boolean hasSetup = false;
 
-		public NTextureCrossfader(MultiPasser source, int[] unitA) {
-			super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
-			this.source = source;
+        public
+        NTextureCrossfader(MultiPasser source, int[] unitA) {
+            super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
+            this.source = source;
 
-			textureA = new NullTexture[unitA.length];
-			for (int i = 0; i < textureA.length; i++)
-				textureA[i] = new NullTexture(source.width, source.height);
-			textureAWrapped = new TextureUnit[unitA.length];
-			for (int i = 0; i < textureA.length; i++)
-				textureAWrapped[i] = new TextureUnit(unitA[i], textureA[i]);
-			copyToA = new boolean[unitA.length];
-			for (int i = 0; i < copyToA.length; i++)
-				copyToA[i] = true;
+            textureA = new NullTexture[unitA.length];
+            for (int i = 0; i < textureA.length; i++)
+                textureA[i] = new NullTexture(source.width, source.height);
+            textureAWrapped = new TextureUnit[unitA.length];
+            for (int i = 0; i < textureA.length; i++)
+                textureAWrapped[i] = new TextureUnit(unitA[i], textureA[i]);
+            copyToA = new boolean[unitA.length];
+            for (int i = 0; i < copyToA.length; i++)
+                copyToA[i] = true;
 
-			bug = new BasicUtilities.OnePassElement(StandardPass.preDisplay) {
-				@Override
-				public void performPass() {
-					if (!hasSetup)
-						return;
+            bug = new BasicUtilities.OnePassElement(StandardPass.preDisplay) {
+                @Override
+                public
+                void performPass() {
+                    if (!hasSetup) return;
 
-					for (int i = 0; i < copyToA.length; i++)
-						if (copyToA[i]) {
-							assert glGetError() == 0;
-							textureAWrapped[i].pre();
-							textureAWrapped[i].in(gl);
-							assert glGetError() == 0;
-							glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, 0, 0, NTextureCrossfader.this.source.width, NTextureCrossfader.this.source.height);
-							assert glGetError() == 0;
+                    for (int i = 0; i < copyToA.length; i++)
+                        if (copyToA[i]) {
+                            assert glGetError() == 0;
+                            textureAWrapped[i].pre();
+                            textureAWrapped[i].in(gl);
+                            assert glGetError() == 0;
+                            glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE,
+                                                0,
+                                                0,
+                                                0,
+                                                0,
+                                                0,
+                                                NTextureCrossfader.this.source.width,
+                                                NTextureCrossfader.this.source.height);
+                            assert glGetError() == 0;
                             TextureUnit.out(gl);
                             textureAWrapped[i].post();
-							assert glGetError() == 0;
-							copyToA[i] = false;
-						}
-					hasData = true;
-				}
-			};
-			source.getSceneList().addChild(bug);
-		}
+                            assert glGetError() == 0;
+                            copyToA[i] = false;
+                        }
+                    hasData = true;
+                }
+            };
+            source.getSceneList().addChild(bug);
+        }
 
-		public void delete() {
-			for (int i = 0; i < textureA.length; i++)
-				textureA[i].delete();
+        public
+        void delete() {
+            for (int i = 0; i < textureA.length; i++)
+                textureA[i].delete();
 
-			source.removeChild(bug);
-		}
+            source.removeChild(bug);
+        }
 
-		public void doCopyTo(int i) {
-			copyToA[i] = true;
-		}
+        public
+        void doCopyTo(int i) {
+            copyToA[i] = true;
+        }
 
-		public int getLength() {
-			return copyToA.length;
-		}
+        public
+        int getLength() {
+            return copyToA.length;
+        }
 
-		@Override
-		protected void post() {
-			if (hasData) {
-				for (int i = 0; i < textureAWrapped.length; i++) {
-					textureAWrapped[i].gl = BasicContextManager.getGl();
-					textureAWrapped[i].glu = BasicContextManager.getGlu();
-					textureAWrapped[i].post();
-				}
-			}
-		}
+        @Override
+        protected
+        void post() {
+            if (hasData) {
+                for (int i = 0; i < textureAWrapped.length; i++) {
+                    textureAWrapped[i].gl = BasicContextManager.getGl();
+                    textureAWrapped[i].glu = BasicContextManager.getGlu();
+                    textureAWrapped[i].post();
+                }
+            }
+        }
 
-		@Override
-		protected void pre() {
-			if (hasData) {
+        @Override
+        protected
+        void pre() {
+            if (hasData) {
 
-				for (int i = 0; i < textureAWrapped.length; i++) {
-					textureAWrapped[i].gl = BasicContextManager.getGl();
-					textureAWrapped[i].glu = BasicContextManager.getGlu();
-					textureAWrapped[i].pre();
-				}
-			}
-		}
+                for (int i = 0; i < textureAWrapped.length; i++) {
+                    textureAWrapped[i].gl = BasicContextManager.getGl();
+                    textureAWrapped[i].glu = BasicContextManager.getGlu();
+                    textureAWrapped[i].pre();
+                }
+            }
+        }
 
-		@Override
-		protected void setup() {
-			hasSetup = true;
+        @Override
+        protected
+        void setup() {
+            hasSetup = true;
 
-			for (int i = 0; i < textureAWrapped.length; i++) {
-				textureAWrapped[i].gl = BasicContextManager.getGl();
-				textureAWrapped[i].glu = BasicContextManager.getGlu();
-				textureAWrapped[i].setup();
-			}
+            for (int i = 0; i < textureAWrapped.length; i++) {
+                textureAWrapped[i].gl = BasicContextManager.getGl();
+                textureAWrapped[i].glu = BasicContextManager.getGlu();
+                textureAWrapped[i].setup();
+            }
 
-			BasicContextManager.putId(this, 0);
-			BasicContextManager.markAsValidInThisContext(this);
-		}
-	}
+            BasicContextManager.putId(this, 0);
+            BasicContextManager.markAsValidInThisContext(this);
+        }
+    }
 
-	public static
+    public static
     class NullTexture extends BaseTexture implements iHasTexture {
-		private final int width;
+        private final int width;
 
-		private final int height;
+        private final int height;
 
-		private ByteBuffer fakeStorage;
+        private ByteBuffer fakeStorage;
 
-		int textureId = 0;
+        int textureId = 0;
 
-		boolean deallocated = false;
+        boolean deallocated = false;
 
-		boolean dirty = false;
+        boolean dirty = false;
 
-		public NullTexture(int width, int height) {
-			this.width = width;
-			this.height = height;
+        public
+        NullTexture(int width, int height) {
+            this.width = width;
+            this.height = height;
 
-			 fakeStorage =
-			 ByteBuffer.allocateDirect(width*height*16);
-		}
+            fakeStorage = ByteBuffer.allocateDirect(width * height * 16);
+        }
 
-		public void useStorage()
-		{
-			fakeStorage = ByteBuffer.allocateDirect(width*height*16);
-		}
-		
-		public void delete() {
-			glDeleteTextures(textureId);
-			deallocated = true;
-		}
+        public
+        void useStorage() {
+            fakeStorage = ByteBuffer.allocateDirect(width * height * 16);
+        }
 
-		public void dirty() {
-			dirty = true;
-		}
+        public
+        void delete() {
+            glDeleteTextures(textureId);
+            deallocated = true;
+        }
 
-		@Override
-		public void post() {
-			assert !deallocated;
-			CoreHelpers.glDisable(GL_TEXTURE_2D);
-		}
+        public
+        void dirty() {
+            dirty = true;
+        }
 
-		@Override
-		public void pre() {
-			assert !deallocated;
-			int textureId = BasicContextManager.getId(this);
-			if (textureId == BasicContextManager.ID_NOT_FOUND) {
-				setup();
-				textureId = BasicContextManager.getId(this);
-				assert textureId != BasicContextManager.ID_NOT_FOUND : "called setup() in texture, didn't get an ID has subclass forgotten to call BasicContextIDManager.pudId(...) ?";
-			}
-			assert (glGetError() == 0) : this.getClass().getName();
-			glBindTexture(GL_TEXTURE_2D, textureId);
-			assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
-			CoreHelpers.glEnable(GL_TEXTURE_2D);
-			assert (glGetError() == 0) : this.getClass().getName();
-		}
+        @Override
+        public
+        void post() {
+            assert !deallocated;
+            CoreHelpers.glDisable(GL_TEXTURE_2D);
+        }
 
-		@Override
-		protected void setup() {
-			assert !deallocated;
-			int[] textures = new int[1];
-			textures[0] = glGenTextures();
-			textureId = textures[0];
-			BasicContextManager.putId(this, textureId);
+        @Override
+        public
+        void pre() {
+            assert !deallocated;
+            int textureId = BasicContextManager.getId(this);
+            if (textureId == BasicContextManager.ID_NOT_FOUND) {
+                setup();
+                textureId = BasicContextManager.getId(this);
+                assert textureId
+                       != BasicContextManager.ID_NOT_FOUND : "called setup() in texture, didn't get an ID has subclass forgotten to call BasicContextIDManager.pudId(...) ?";
+            }
+            assert (glGetError() == 0) : this.getClass().getName();
+            glBindTexture(GL_TEXTURE_2D, textureId);
+            assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
+            CoreHelpers.glEnable(GL_TEXTURE_2D);
+            assert (glGetError() == 0) : this.getClass().getName();
+        }
 
-			int[] a = new int[1];
-			a[0] = glGetInteger(GL_ACTIVE_TEXTURE);
+        @Override
+        protected
+        void setup() {
+            assert !deallocated;
+            int[] textures = new int[1];
+            textures[0] = glGenTextures();
+            textureId = textures[0];
+            BasicContextManager.putId(this, textureId);
 
-			glBindTexture(GL_TEXTURE_2D, textureId);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
+            int[] a = new int[1];
+            a[0] = glGetInteger(GL_ACTIVE_TEXTURE);
 
-			// new
-			// Exception().printStackTrace();
-			// glTexParameteri(GL_TEXTURE_2D,
-			// GL_TEXTURE_STORAGE_HINT_APPLE,
-			// GL_STORAGE_CACHED_APPLE);
+            glBindTexture(GL_TEXTURE_2D, textureId);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
 
-			if (!doGenMip) {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			} else {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            // new
+            // Exception().printStackTrace();
+            // glTexParameteri(GL_TEXTURE_2D,
+            // GL_TEXTURE_STORAGE_HINT_APPLE,
+            // GL_STORAGE_CACHED_APPLE);
 
-			}
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			assert (glGetError() == 0);
-			// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
-			// width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-			// fakeStorage);
-			glTexImage2D(GL_TEXTURE_2D, 0, useRG ? (GL_RG16F) : (use32 ? GL_RGBA32F : GL_RGBA16F), width, height, 0, GL_RGBA, useRG ? GL_HALF_FLOAT : (use32 ? GL11.GL_FLOAT : GL_HALF_FLOAT), fakeStorage);
+            if (!doGenMip) {
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            }
+            else {
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			if (doGenMip) {
-				glGenerateMipmap(GL_TEXTURE_2D);
-			}
-			assert (glGetError() == 0);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 1);
-		}
+            }
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            assert (glGetError() == 0);
+            // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
+            // width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+            // fakeStorage);
+            glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         useRG ? (GL_RG16F) : (use32 ? GL_RGBA32F : GL_RGBA16F),
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useRG ? GL_HALF_FLOAT : (use32 ? GL11.GL_FLOAT : GL_HALF_FLOAT),
+                         fakeStorage);
 
-		@Override
-		public iProvider<Integer> getOutput() {
-			return new iProvider<Integer>() {
+            if (doGenMip) {
+                glGenerateMipmap(GL_TEXTURE_2D);
+            }
+            assert (glGetError() == 0);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 1);
+        }
 
-				@Override
-				public Integer get() {
-					return textureId;
-				}
-			};
-		}
-	}
+        @Override
+        public
+        iProvider<Integer> getOutput() {
+            return new iProvider<Integer>() {
 
-	public static
+                @Override
+                public
+                Integer get() {
+                    return textureId;
+                }
+            };
+        }
+    }
+
+    public static
     class NullTextureInt extends BaseTexture implements iHasTexture {
-		private final int width;
+        private final int width;
 
-		private final int height;
+        private final int height;
 
-		private ByteBuffer fakeStorage;
+        private ByteBuffer fakeStorage;
 
-		int textureId = 0;
+        int textureId = 0;
 
-		boolean deallocated = false;
+        boolean deallocated = false;
 
-		boolean dirty = false;
+        boolean dirty = false;
 
-		public NullTextureInt(int width, int height) {
-			this.width = width;
-			this.height = height;
-		}
+        public
+        NullTextureInt(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
 
-		public void delete() {
-			glDeleteTextures(textureId);
-			deallocated = true;
-		}
+        public
+        void delete() {
+            glDeleteTextures(textureId);
+            deallocated = true;
+        }
 
-		public void dirty() {
-			dirty = true;
-		}
+        public
+        void dirty() {
+            dirty = true;
+        }
 
-		@Override
-		public void post() {
-			assert !deallocated;
-			CoreHelpers.glDisable(GL_TEXTURE_2D);
-		}
+        @Override
+        public
+        void post() {
+            assert !deallocated;
+            CoreHelpers.glDisable(GL_TEXTURE_2D);
+        }
 
-		@Override
-		public void pre() {
-			assert !deallocated;
-			int textureId = BasicContextManager.getId(this);
-			if (textureId == BasicContextManager.ID_NOT_FOUND) {
-				setup();
-				textureId = BasicContextManager.getId(this);
-				assert textureId != BasicContextManager.ID_NOT_FOUND : "called setup() in texture, didn't get an ID has subclass forgotten to call BasicContextIDManager.pudId(...) ?";
-			}
-			assert (glGetError() == 0) : this.getClass().getName();
-			glBindTexture(GL_TEXTURE_2D, textureId);
-			assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
-			CoreHelpers.glEnable(GL_TEXTURE_2D);
-			assert (glGetError() == 0) : this.getClass().getName();
-		}
+        @Override
+        public
+        void pre() {
+            assert !deallocated;
+            int textureId = BasicContextManager.getId(this);
+            if (textureId == BasicContextManager.ID_NOT_FOUND) {
+                setup();
+                textureId = BasicContextManager.getId(this);
+                assert textureId
+                       != BasicContextManager.ID_NOT_FOUND : "called setup() in texture, didn't get an ID has subclass forgotten to call BasicContextIDManager.pudId(...) ?";
+            }
+            assert (glGetError() == 0) : this.getClass().getName();
+            glBindTexture(GL_TEXTURE_2D, textureId);
+            assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
+            CoreHelpers.glEnable(GL_TEXTURE_2D);
+            assert (glGetError() == 0) : this.getClass().getName();
+        }
 
-		@Override
-		protected void setup() {
-			assert !deallocated;
-			int[] textures = new int[1];
-			textures[0] = glGenTextures();
-			textureId = textures[0];
-			BasicContextManager.putId(this, textureId);
+        @Override
+        protected
+        void setup() {
+            assert !deallocated;
+            int[] textures = new int[1];
+            textures[0] = glGenTextures();
+            textureId = textures[0];
+            BasicContextManager.putId(this, textureId);
 
-			int[] a = new int[1];
-			a[0] = glGetInteger(GL_ACTIVE_TEXTURE);
+            int[] a = new int[1];
+            a[0] = glGetInteger(GL_ACTIVE_TEXTURE);
 
-			glBindTexture(GL_TEXTURE_2D, textureId);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
+            glBindTexture(GL_TEXTURE_2D, textureId);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
 
-			// new
-			// Exception().printStackTrace();
-			// glTexParameteri(GL_TEXTURE_2D,
-			// GL_TEXTURE_STORAGE_HINT_APPLE,
-			// GL_STORAGE_CACHED_APPLE);
+            // new
+            // Exception().printStackTrace();
+            // glTexParameteri(GL_TEXTURE_2D,
+            // GL_TEXTURE_STORAGE_HINT_APPLE,
+            // GL_STORAGE_CACHED_APPLE);
 
-			if (!doGenMip) {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			} else {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            if (!doGenMip) {
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            }
+            else {
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			}
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			assert (glGetError() == 0);
-			// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
-			// width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-			// fakeStorage);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL30.GL_R32UI, width, height, 0, GL30.GL_R32UI, GL11.GL_UNSIGNED_INT, fakeStorage);
+            }
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            assert (glGetError() == 0);
+            // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
+            // width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+            // fakeStorage);
+            glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         GL30.GL_R32UI,
+                         width,
+                         height,
+                         0,
+                         GL30.GL_R32UI,
+                         GL11.GL_UNSIGNED_INT,
+                         fakeStorage);
 
-			if (doGenMip) {
-				glGenerateMipmap(GL_TEXTURE_2D);
-			}
-			assert (glGetError() == 0);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 1);
-		}
+            if (doGenMip) {
+                glGenerateMipmap(GL_TEXTURE_2D);
+            }
+            assert (glGetError() == 0);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 1);
+        }
 
-		@Override
-		public iProvider<Integer> getOutput() {
-			return new iProvider<Integer>() {
+        @Override
+        public
+        iProvider<Integer> getOutput() {
+            return new iProvider<Integer>() {
 
-				@Override
-				public Integer get() {
-					return textureId;
-				}
-			};
-		}
-	}
+                @Override
+                public
+                Integer get() {
+                    return textureId;
+                }
+            };
+        }
+    }
 
-	public static
-    class PingPong extends BasicTextures.BaseTexture implements iDisplayable, iHasFBO, iHasTexture
-	{
-		private SingleFrameBuffer a;
-		private SingleFrameBuffer b;
+    public static
+    class PingPong extends BasicTextures.BaseTexture implements iDisplayable, iHasFBO, iHasTexture {
+        private SingleFrameBuffer a;
+        private SingleFrameBuffer b;
 
-		public PingPong(SingleFrameBuffer a, SingleFrameBuffer b)
-		{
-			this.a = a;
-			this.b = b;
-		}
-		
-		public void flip()
-		{
-			SingleFrameBuffer f = a;
-			a = b;
-			b = f;
-		}
-		
-		@Override
-		public void display() {
-			this.a.display();
-		}
+        public
+        PingPong(SingleFrameBuffer a, SingleFrameBuffer b) {
+            this.a = a;
+            this.b = b;
+        }
 
-		@Override
-		public iProvider<Integer> getOutput() {
-			return b.getOutput();
-		}
+        public
+        void flip() {
+            SingleFrameBuffer f = a;
+            a = b;
+            b = f;
+        }
 
-		@Override
-		public int getFBO() {
-			return b.getFBO();
-		}
+        @Override
+        public
+        void display() {
+            this.a.display();
+        }
 
-		@Override
-		protected void post() {
-			b.post();
-		}
+        @Override
+        public
+        iProvider<Integer> getOutput() {
+            return b.getOutput();
+        }
 
-		@Override
-		protected void pre() {
-			b.pre();
-		}
+        @Override
+        public
+        int getFBO() {
+            return b.getFBO();
+        }
 
-		@Override
-		protected void setup() {
-			a.setup();
-			b.setup();
-		}
-		
-		public iSceneListElement placeOnscreen(final Rect r) {
-			return getOnscreenList(0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
-		}
+        @Override
+        protected
+        void post() {
+            b.post();
+        }
 
-		public iSceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			return getOnscreenList(0, r, offset, mul, genMip);
-		}
+        @Override
+        protected
+        void pre() {
+            b.pre();
+        }
 
-		@HiddenInAutocomplete
-		public iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        @Override
+        protected
+        void setup() {
+            a.setup();
+            b.setup();
+        }
 
-			mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.aux(Base.texture0_id, 2).put(a.useRect ? a.width : 1).put(0).put(a.useRect ? a.width : 1).put(a.useRect ? a.height : 1).put(0).put(a.useRect ? a.height : 1).put(0).put(0);
-			mesh.aux(Base.color0_id, 4).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1);
+        public
+        iSceneListElement placeOnscreen(final Rect r) {
+            return getOnscreenList(0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
+        }
 
-			// onscreen program
-			// BasicGLSLangProgram onscreenProgram = (!useRect ? new
-			// BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
-			// "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
-			// : new
-			// BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
-			// "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
-			BasicGLSLangProgram onscreenProgram = (!a.useRect ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang") : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
-			onscreenProgram.new SetIntegerUniform("depthTexture", 0);
-			onscreenProgram.new SetUniform("offset", offset);
-			onscreenProgram.new SetUniform("mul", mul);
-			onscreenProgram.addChild(mesh);
-			onscreenProgram.addChild(new TextureWrapper(genMip, a.useRect, this.getOutput(), 0));
-			onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+        public
+        iSceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+            return getOnscreenList(0, r, offset, mul, genMip);
+        }
 
-			return onscreenProgram;
-		}
+        @HiddenInAutocomplete
+        public
+        iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-		public iSceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
-			return getOnscreenList(onscreenProgram, 0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
-		}
+            mesh.vertex()
+                .put((float) (r.x + r.w))
+                .put((float) r.y)
+                .put(0.5f)
+                .put((float) (r.x + r.w))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y))
+                .put(0.5f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.aux(Base.texture0_id, 2)
+                .put(a.useRect ? a.width : 1)
+                .put(0)
+                .put(a.useRect ? a.width : 1)
+                .put(a.useRect ? a.height : 1)
+                .put(0)
+                .put(a.useRect ? a.height : 1)
+                .put(0)
+                .put(0);
+            mesh.aux(Base.color0_id, 4)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1);
 
-		public iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			return getOnscreenList(onscreenProgram, 0, r, offset, mul, genMip);
-		}
+            // onscreen program
+            // BasicGLSLangProgram onscreenProgram = (!useRect ? new
+            // BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+            // "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
+            // : new
+            // BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+            // "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
+            BasicGLSLangProgram onscreenProgram =
+                    (!a.useRect
+                     ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
+                     : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
+            onscreenProgram.new SetIntegerUniform("depthTexture", 0);
+            onscreenProgram.new SetUniform("offset", offset);
+            onscreenProgram.new SetUniform("mul", mul);
+            onscreenProgram.addChild(mesh);
+            onscreenProgram.addChild(new TextureWrapper(genMip, a.useRect, this.getOutput(), 0));
+            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
 
-		@HiddenInAutocomplete
-		public iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram, int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+            return onscreenProgram;
+        }
 
-			mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.aux(Base.texture0_id, 2).put(a.useRect ? a.width : 1).put(0).put(a.useRect ? a.width : 1).put(a.useRect ? a.height : 1).put(0).put(a.useRect ? a.height : 1).put(0).put(0);
-			mesh.aux(Base.color0_id, 4).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1);
+        public
+        iSceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
+            return getOnscreenList(onscreenProgram, 0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
+        }
 
-			onscreenProgram.new SetIntegerUniform("depthTexture", 0);
-			onscreenProgram.new SetUniform("offset", offset);
-			onscreenProgram.new SetUniform("mul", mul);
-			onscreenProgram.addChild(mesh);
-			onscreenProgram.addChild(new TextureWrapper(genMip, a.useRect, this.getOutput(), 0));
-			onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+        public
+        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+                                          final Rect r,
+                                          Vector4 offset,
+                                          Vector4 mul,
+                                          final boolean genMip) {
+            return getOnscreenList(onscreenProgram, 0, r, offset, mul, genMip);
+        }
 
-			return onscreenProgram;
-		}
+        @HiddenInAutocomplete
+        public
+        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+                                          int output,
+                                          final Rect r,
+                                          Vector4 offset,
+                                          Vector4 mul,
+                                          final boolean genMip) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-	}
-	
-	public static
+            mesh.vertex()
+                .put((float) (r.x + r.w))
+                .put((float) r.y)
+                .put(0.5f)
+                .put((float) (r.x + r.w))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y))
+                .put(0.5f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.aux(Base.texture0_id, 2)
+                .put(a.useRect ? a.width : 1)
+                .put(0)
+                .put(a.useRect ? a.width : 1)
+                .put(a.useRect ? a.height : 1)
+                .put(0)
+                .put(a.useRect ? a.height : 1)
+                .put(0)
+                .put(0);
+            mesh.aux(Base.color0_id, 4)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1);
+
+            onscreenProgram.new SetIntegerUniform("depthTexture", 0);
+            onscreenProgram.new SetUniform("offset", offset);
+            onscreenProgram.new SetUniform("mul", mul);
+            onscreenProgram.addChild(mesh);
+            onscreenProgram.addChild(new TextureWrapper(genMip, a.useRect, this.getOutput(), 0));
+            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+
+            return onscreenProgram;
+        }
+
+    }
+
+    public static
     class SingleFrameBuffer extends BasicTextures.BaseTexture implements iDisplayable, iHasFBO, iHasTexture {
-		private final int width;
+        private final int width;
 
-		private final int height;
+        private final int height;
 
-		private int status;
+        private int status;
 
-		private BasicSceneList rootSceneList;
+        private BasicSceneList rootSceneList;
 
-		private BasicSceneList sceneList;
+        private BasicSceneList sceneList;
 
-		int[] fbo = { -1 };
+        int[] fbo = {-1};
 
-		int[] rb = { -1 };
+        int[] rb = {-1};
 
-		int[] tex = { -1 };
-		int[] colorTex = { -1 };
+        int[] tex = {-1};
+        int[] colorTex = {-1};
 
-		boolean useRect = false;
+        boolean useRect = false;
 
-		boolean useFloat = true;
+        boolean useFloat = true;
 
-		boolean genMip = false;
+        boolean genMip = false;
 
-		private Vector4 c1 = new Vector4(0, 0, 0, 1);
+        private Vector4 c1 = new Vector4(0, 0, 0, 1);
 
-		public SingleFrameBuffer(int width) {
-			this.width = width;
-			this.height = width;
-			this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
-			createInitialLists();
-		}
+        public
+        SingleFrameBuffer(int width) {
+            this.width = width;
+            this.height = width;
+            this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
+            createInitialLists();
+        }
 
-		public SingleFrameBuffer(int width, int height, boolean useRect, boolean useFloat, boolean genMip) {
-			this.width = width;
-			this.height = height;
-			this.useFloat = useFloat;
-			this.useRect = useRect;
-			this.genMip = genMip;
-			this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
-			createInitialLists();
-		}
+        public
+        SingleFrameBuffer(int width, int height, boolean useRect, boolean useFloat, boolean genMip) {
+            this.width = width;
+            this.height = height;
+            this.useFloat = useFloat;
+            this.useRect = useRect;
+            this.genMip = genMip;
+            this.textureTarget = useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
+            createInitialLists();
+        }
 
-		public void setClearColor(Vector4 c1) {
-			this.c1 = c1;
-		}
+        public
+        void setClearColor(Vector4 c1) {
+            this.c1 = c1;
+        }
 
-		boolean multisample = false;
+        boolean multisample = false;
 
-		boolean[] clearMask = { true, true, true, true };
+        boolean[] clearMask = {true, true, true, true};
 
-		public void display() {
-			if (deleted)
-				return;
+        public
+        void display() {
+            if (deleted) return;
 
-			if (FullScreenCanvasSWT.dropFrame > 0)
-				return;
+            if (FullScreenCanvasSWT.dropFrame > 0) return;
 
-			// ;//System.out.println(" -- single frame buffer <"+this+"> display -- ");
+            // ;//System.out.println(" -- single frame buffer <"+this+"> display -- ");
 
-			currentFBOContext.push(this);
-			try {
+            currentFBOContext.push(this);
+            try {
 
-				gl = BasicContextManager.getGl();
-				glu = BasicContextManager.getGlu();
-				if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
-					// assert
-					// false;
-					// System.exit(0);
-					setup();
-				}
+                gl = BasicContextManager.getGl();
+                glu = BasicContextManager.getGlu();
+                if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
+                    // assert
+                    // false;
+                    // System.exit(0);
+                    setup();
+                }
 
-				glBindFramebuffer(GL_FRAMEBUFFER, multisample ? fbo_multisample : fbo[0]);
+                glBindFramebuffer(GL_FRAMEBUFFER, multisample ? fbo_multisample : fbo[0]);
 
-				glViewport(0, 0, width, height);
-				rootSceneList.update();
-				if (c1 != null) {
+                glViewport(0, 0, width, height);
+                rootSceneList.update();
+                if (c1 != null) {
 
-					glColorMask(clearMask[0], clearMask[1], clearMask[2], clearMask[3]);
+                    glColorMask(clearMask[0], clearMask[1], clearMask[2], clearMask[3]);
 
-					glClearColor(c1.x, c1.y, c1.z, c1.w);
-					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                    glClearColor(c1.x, c1.y, c1.z, c1.w);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-					glColorMask(true, true, true, true);
+                    glColorMask(true, true, true, true);
 
-				} else {
-					glClear(GL_DEPTH_BUFFER_BIT);
-				}
-				sceneList.update();
+                }
+                else {
+                    glClear(GL_DEPTH_BUFFER_BIT);
+                }
+                sceneList.update();
 
-				assert glGetError() == 0;
+                assert glGetError() == 0;
 
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-				if (multisample) {
-					glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo_multisample);
-					glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo[0]);
-					glDrawBuffers(GL_COLOR_ATTACHMENT0);
-					glReadBuffer(GL_COLOR_ATTACHMENT0);
-					glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-				}
+                if (multisample) {
+                    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo_multisample);
+                    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo[0]);
+                    glDrawBuffers(GL_COLOR_ATTACHMENT0);
+                    glReadBuffer(GL_COLOR_ATTACHMENT0);
+                    glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+                }
 
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-			} finally {
-				Object popped = currentFBOContext.pop();
-				assert popped == this : popped;
-			}
-		}
+            } finally {
+                Object popped = currentFBOContext.pop();
+                assert popped == this : popped;
+            }
+        }
 
-		public iAcceptor<Number> addFadePlane() {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.transform);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        public
+        iAcceptor<Number> addFadePlane() {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.transform);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put(-1f).put(-1f).put(0f).put(-1f).put(1f).put(0f).put(1f).put(1f).put(0f).put(1f).put(-1f).put(0f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang", "content/shaders/VertexColor2Fragment.glslang", Base.StandardPass.preTransform));
-			mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.preTransform, Base.StandardPass.postRender));
+            mesh.vertex()
+                .put(-1f)
+                .put(-1f)
+                .put(0f)
+                .put(-1f)
+                .put(1f)
+                .put(0f)
+                .put(1f)
+                .put(1f)
+                .put(0f)
+                .put(1f)
+                .put(-1f)
+                .put(0f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
+                                                  "content/shaders/VertexColor2Fragment.glslang",
+                                                  Base.StandardPass.preTransform));
+            mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.preTransform, Base.StandardPass.postRender));
 
-			float colorAlpha = 0.1f;
-			float alphaAlpha = 0.5f;
-			mesh.aux(Base.color0_id, 4).put(new float[] { 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha });
-			mesh.aux(Base.color0_id + 1, 4).put(new float[] { 0.5f, 0.5f, 0.5f, alphaAlpha, 0.5f, 0.5f, 0.5f, alphaAlpha, 0.5f, 0.5f, 0.5f, alphaAlpha, 0.5f, 0.5f, 0.5f, alphaAlpha });
+            float colorAlpha = 0.1f;
+            float alphaAlpha = 0.5f;
+            mesh.aux(Base.color0_id, 4)
+                .put(new float[]{0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha});
+            mesh.aux(Base.color0_id + 1, 4)
+                .put(new float[]{0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha,
+                                 0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha,
+                                 0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha,
+                                 0.5f,
+                                 0.5f,
+                                 0.5f,
+                                 alphaAlpha});
 
-			final FloatBuffer root = ByteBuffer.allocate(mesh.vertex().limit() * 4).asFloatBuffer().put(mesh.vertex());
+            final FloatBuffer root = ByteBuffer.allocate(mesh.vertex().limit() * 4).asFloatBuffer().put(mesh.vertex());
 
-			rootSceneList.addChild(mesh);
+            rootSceneList.addChild(mesh);
 
-			return new iAcceptor<Number>() {
+            return new iAcceptor<Number>() {
 
-				float last = -1;
+                float last = -1;
 
-				TriangleMesh geometry = mesh;
+                TriangleMesh geometry = mesh;
 
-				@Override
-				public iAcceptor<Number> set(Number to) {
-					if (to.floatValue() != last)
-						mesh.aux(Base.color0_id, 4).put(new float[] { 0, 0, 0, to.floatValue(), 0, 0, 0, to.floatValue(), 0, 0, 0, to.floatValue(), 0, 0, 0, to.floatValue() });
-					last = to.floatValue();
-					return this;
-				}
-			};
-		}
+                @Override
+                public
+                iAcceptor<Number> set(Number to) {
+                    if (to.floatValue() != last) mesh.aux(Base.color0_id, 4)
+                                                     .put(new float[]{0,
+                                                                      0,
+                                                                      0,
+                                                                      to.floatValue(),
+                                                                      0,
+                                                                      0,
+                                                                      0,
+                                                                      to.floatValue(),
+                                                                      0,
+                                                                      0,
+                                                                      0,
+                                                                      to.floatValue(),
+                                                                      0,
+                                                                      0,
+                                                                      0,
+                                                                      to.floatValue()});
+                    last = to.floatValue();
+                    return this;
+                }
+            };
+        }
 
-		public void copyToVBO(final TriangleMesh mesh, final int aux) {
-			sceneList.add(StandardPass.preDisplay).register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux, new iUpdateable() {
-				@Override
-				public void update() {
-                    // System.out.println(" copying to aux buffer ");
-                    copyToVBONow(mesh, aux);
-				}
-			});
-		}
+        public
+        void copyToVBO(final TriangleMesh mesh, final int aux) {
+            sceneList.add(StandardPass.preDisplay)
+                     .register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux, new iUpdateable() {
+                         @Override
+                         public
+                         void update() {
+                             // System.out.println(" copying to aux buffer ");
+                             copyToVBONow(mesh, aux);
+                         }
+                     });
+        }
 
-		protected void copyToVBONow(TriangleMesh mesh, int aux) {
-			int target = mesh.getOpenGLBufferName(aux);
+        protected
+        void copyToVBONow(TriangleMesh mesh, int aux) {
+            int target = mesh.getOpenGLBufferName(aux);
 
-			if (target == -1)
-				return;
+            if (target == -1) return;
 
-			glFinish();
-			glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, target);
-			glReadPixels(0, 0, width, height, GL_RGBA, GL_FLOAT, 0);
-			glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, 0);
-			glFinish();
-		}
+            glFinish();
+            glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, target);
+            glReadPixels(0, 0, width, height, GL_RGBA, GL_FLOAT, 0);
+            glBindBuffer(GL_PIXEL_PACK_BUFFER_ARB, 0);
+            glFinish();
+        }
 
-		public void copyToNullTexture(final NullTexture nt) {
+        public
+        void copyToNullTexture(final NullTexture nt) {
 
-			sceneList.add(StandardPass.preDisplay).register("__copyToNullTexture__" + System.identityHashCode(nt), new iUpdateable() {
-				@Override
-				public void update() {
-					nt.pre();
-					glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height);
-					nt.post();
-				}
-			});
-		}
+            sceneList.add(StandardPass.preDisplay)
+                     .register("__copyToNullTexture__" + System.identityHashCode(nt), new iUpdateable() {
+                         @Override
+                         public
+                         void update() {
+                             nt.pre();
+                             glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height);
+                             nt.post();
+                         }
+                     });
+        }
 
-		public void copyToNullTextureOnce(final NullTexture nt) {
+        public
+        void copyToNullTextureOnce(final NullTexture nt) {
 
-			final String name = "__copyToNullTexture__" + System.identityHashCode(nt);
-			sceneList.add(StandardPass.preDisplay).register(name, new iUpdateable() {
-				@Override
-				public void update() {
-					nt.pre();
-					glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height);
-					nt.post();
-					sceneList.add(StandardPass.preDisplay).remove(name);
-				}
-			});
-		}
+            final String name = "__copyToNullTexture__" + System.identityHashCode(nt);
+            sceneList.add(StandardPass.preDisplay).register(name, new iUpdateable() {
+                @Override
+                public
+                void update() {
+                    nt.pre();
+                    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height);
+                    nt.post();
+                    sceneList.add(StandardPass.preDisplay).remove(name);
+                }
+            });
+        }
 
-		// advanced use
-		public void enter() {
-			currentFBOContext.push(this);
-			gl = BasicContextManager.getGl();
-			glu = BasicContextManager.getGlu();
-			if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
-				setup();
-			}
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
-			glViewport(0, 0, width, height);
-		}
+        // advanced use
+        public
+        void enter() {
+            currentFBOContext.push(this);
+            gl = BasicContextManager.getGl();
+            glu = BasicContextManager.getGlu();
+            if (BasicContextManager.getId(this) == BasicContextManager.ID_NOT_FOUND) {
+                setup();
+            }
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            glViewport(0, 0, width, height);
+        }
 
-		public void exit() {
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        public
+        void exit() {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-			assert glGetError() == 0;
+            assert glGetError() == 0;
 
-			Object popped = currentFBOContext.pop();
-			assert popped == this : popped;
-		}
+            Object popped = currentFBOContext.pop();
+            assert popped == this : popped;
+        }
 
-		public int getFBO() {
-			if (fbo[0] == -1)
-				setup();
+        public
+        int getFBO() {
+            if (fbo[0] == -1) setup();
 
-			return fbo[0];
-		}
+            return fbo[0];
+        }
 
-		public int getRB() {
-			if (rb[0] == -1)
-				setup();
+        public
+        int getRB() {
+            if (rb[0] == -1) setup();
 
-			return rb[0];
-		}
+            return rb[0];
+        }
 
-		public iProvider<Integer> getOutput() {
-			return new iProvider<Integer>() {
-				public Integer get() {
-					return tex[0];
-				}
-			};
-		}
+        public
+        iProvider<Integer> getOutput() {
+            return new iProvider<Integer>() {
+                public
+                Integer get() {
+                    return tex[0];
+                }
+            };
+        }
 
-		public NodeImpl<iSceneListElement> getRootSceneList() {
-			return rootSceneList;
-		}
+        public
+        NodeImpl<iSceneListElement> getRootSceneList() {
+            return rootSceneList;
+        }
 
-		public BasicSceneList getSceneList() {
-			return sceneList;
-		}
+        public
+        BasicSceneList getSceneList() {
+            return sceneList;
+        }
 
-		public void join(FullScreenCanvasSWT canvas) {
-			aRun arun = new aRun() {
-				@Override
-				public ReturnCode head(Object calledOn, Object[] args) {
-					display();
-					return super.head(calledOn, args);
-				}
-			};
+        public
+        void join(FullScreenCanvasSWT canvas) {
+            aRun arun = new aRun() {
+                @Override
+                public
+                ReturnCode head(Object calledOn, Object[] args) {
+                    display();
+                    return super.head(calledOn, args);
+                }
+            };
             Cont.linkWith(canvas, FullScreenCanvasSWT.method_beforeFlush, arun);
         }
 
-		public void replaceSceneList(BasicSceneList sceneList) {
-			this.sceneList = sceneList;
-		}
+        public
+        void replaceSceneList(BasicSceneList sceneList) {
+            this.sceneList = sceneList;
+        }
 
-		protected void createInitialLists() {
-			// defaults for color
+        protected
+        void createInitialLists() {
+            // defaults for color
 
-			// camera = new BasicCamera();
+            // camera = new BasicCamera();
 
-			rootSceneList = new BasicSceneList();
-			rootSceneList.addChild(new BasicUtilities.Standard());
-			// BasicUtilities.Clear clear = new
-			// BasicUtilities.Clear(new Vector3(0, 0, 0), 1);
-			// rootSceneList.addChild(clear);
-			if (sceneList == null)
-				sceneList = new BasicSceneList();
-		}
+            rootSceneList = new BasicSceneList();
+            rootSceneList.addChild(new BasicUtilities.Standard());
+            // BasicUtilities.Clear clear = new
+            // BasicUtilities.Clear(new Vector3(0, 0, 0), 1);
+            // rootSceneList.addChild(clear);
+            if (sceneList == null) sceneList = new BasicSceneList();
+        }
 
-		@Override
-		public void post() {
-			if (deleted)
-				return;
+        @Override
+        public
+        void post() {
+            if (deleted) return;
 
-			if (tex[0] == -1) {
+            if (tex[0] == -1) {
                 // System.out.println(" attempt to bind texture before it has been updated ");
                 return;
-			}
+            }
 
-			assert glGetError() == 0;
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
-			assert glGetError() == 0;
-			CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			assert glGetError() == 0;
-			// ;//System.out.println(" <<< unbinding texture " +
-			// this);
-		}
+            assert glGetError() == 0;
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0);
+            assert glGetError() == 0;
+            CoreHelpers.glDisable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            assert glGetError() == 0;
+            // ;//System.out.println(" <<< unbinding texture " +
+            // this);
+        }
 
-		@Override
-		public void pre() {
-			if (deleted)
-				return;
+        @Override
+        public
+        void pre() {
+            if (deleted) return;
 
-			if (tex[0] == -1) {
+            if (tex[0] == -1) {
                 // System.out.println(" attempt to bind texture before it has been updated ");
                 return;
-			}
+            }
 
-			assert glGetError() == 0;
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-			assert glGetError() == 0;
-			CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
-			assert glGetError() == 0;
-			if (genMip) {
-				glGenerateMipmap(GL_TEXTURE_2D);
-			}
-		}
+            assert glGetError() == 0;
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+            assert glGetError() == 0;
+            CoreHelpers.glEnable(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D);
+            assert glGetError() == 0;
+            if (genMip) {
+                glGenerateMipmap(GL_TEXTURE_2D);
+            }
+        }
 
-		public boolean doDepth = false;
+        public boolean doDepth = false;
 
-		int fbo_multisample = -1;
+        int fbo_multisample = -1;
 
-		@Override
-		protected void setup() {
+        @Override
+        protected
+        void setup() {
 
-			this.gl = BasicContextManager.getGl();
-			this.glu = BasicContextManager.getGlu();
+            this.gl = BasicContextManager.getGl();
+            this.glu = BasicContextManager.getGlu();
 
-			fbo[0] = glGenFramebuffers();
-			rb[0] = glGenRenderbuffers();
-			tex[0] = glGenTextures();
+            fbo[0] = glGenFramebuffers();
+            rb[0] = glGenRenderbuffers();
+            tex[0] = glGenTextures();
 
-			if (multisample) {
-				fbo_multisample = glGenFramebuffers();
-				int rb_multisample = glGenRenderbuffers();
-				int rb_multisample_depth = glGenRenderbuffers();
-				int converageSamples = 4;
-				int depthSamples = 4;
+            if (multisample) {
+                fbo_multisample = glGenFramebuffers();
+                int rb_multisample = glGenRenderbuffers();
+                int rb_multisample_depth = glGenRenderbuffers();
+                int converageSamples = 4;
+                int depthSamples = 4;
 
-				glBindFramebuffer(GL_FRAMEBUFFER, fbo_multisample);
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo_multisample);
 
-				glBindRenderbuffer(GL_RENDERBUFFER, rb_multisample);
-				glRenderbufferStorageMultisample(GL_RENDERBUFFER, converageSamples, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA, width, height);
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rb_multisample);
+                glBindRenderbuffer(GL_RENDERBUFFER, rb_multisample);
+                glRenderbufferStorageMultisample(GL_RENDERBUFFER,
+                                                 converageSamples,
+                                                 useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA,
+                                                 width,
+                                                 height);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rb_multisample);
 
-				glBindRenderbuffer(GL_RENDERBUFFER, rb_multisample_depth);
-				glRenderbufferStorageMultisample(GL_RENDERBUFFER, depthSamples, GL_DEPTH24_STENCIL8, width, height);
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb_multisample_depth);
-				int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+                glBindRenderbuffer(GL_RENDERBUFFER, rb_multisample_depth);
+                glRenderbufferStorageMultisample(GL_RENDERBUFFER, depthSamples, GL_DEPTH24_STENCIL8, width, height);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb_multisample_depth);
+                int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-				if (status != GL_FRAMEBUFFER_COMPLETE)
-					throw new IllegalArgumentException();
-			}
+                if (status != GL_FRAMEBUFFER_COMPLETE) throw new IllegalArgumentException();
+            }
 
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
 
-			gl_texture_min_filter = GL_LINEAR;
-			gl_texture_mag_filter = GL_LINEAR;
+            gl_texture_min_filter = GL_LINEAR;
+            gl_texture_mag_filter = GL_LINEAR;
 
-			if (genMip) {
-				gl_texture_min_filter = GL_LINEAR_MIPMAP_LINEAR;
-				gl_texture_mag_filter = GL_LINEAR;
-			}
+            if (genMip) {
+                gl_texture_min_filter = GL_LINEAR_MIPMAP_LINEAR;
+                gl_texture_mag_filter = GL_LINEAR;
+            }
 
-			glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
-			// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
-			glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA, width, height, 0, GL_RGBA, useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE, (ByteBuffer) null);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0], 0);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
-			glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
+            glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+            // glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
+            glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                         0,
+                         useFloat ? (use32 ? GL_RGBA32F : GL_RGBA16F) : GL_RGBA,
+                         width,
+                         height,
+                         0,
+                         GL_RGBA,
+                         useFloat ? (use32 ? GL_FLOAT : GL_HALF_FLOAT) : GL_UNSIGNED_BYTE,
+                         (ByteBuffer) null);
+            glFramebufferTexture2D(GL_FRAMEBUFFER,
+                                   GL_COLOR_ATTACHMENT0,
+                                   useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                                   tex[0],
+                                   0);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_texture_wrap_s);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_texture_wrap_t);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MAG_FILTER,
+                            gl_texture_mag_filter);
+            glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D,
+                            GL_TEXTURE_MIN_FILTER,
+                            gl_texture_min_filter);
 
-			if (genMip) {
-				// glTexParameterf(useRect ?
-				// GL_TEXTURE_RECTANGLE :
-				// GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-				// 16.0f);
-			}
+            if (genMip) {
+                // glTexParameterf(useRect ?
+                // GL_TEXTURE_RECTANGLE :
+                // GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
+                // 16.0f);
+            }
 
-			if (doDepth) {
-				glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
-				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
-			}
+            if (doDepth) {
+                glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
+            }
 
-			status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			assert status == GL_FRAMEBUFFER_COMPLETE : status;
-			BasicContextManager.putId(this, fbo[0]);
+            status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+            assert status == GL_FRAMEBUFFER_COMPLETE : status;
+            BasicContextManager.putId(this, fbo[0]);
 
-			glClearColor(0, 0, 0, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		}
+        }
 
-		public iSceneListElement placeOnscreen(final Rect r) {
-			return getOnscreenList(0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
-		}
+        public
+        iSceneListElement placeOnscreen(final Rect r) {
+            return getOnscreenList(0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
+        }
 
-		public iSceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			return getOnscreenList(0, r, offset, mul, genMip);
-		}
+        public
+        iSceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+            return getOnscreenList(0, r, offset, mul, genMip);
+        }
 
-		@HiddenInAutocomplete
-		public iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        @HiddenInAutocomplete
+        public
+        iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.aux(Base.texture0_id, 2).put(useRect ? width : 1).put(0).put(useRect ? width : 1).put(useRect ? height : 1).put(0).put(useRect ? height : 1).put(0).put(0);
-			mesh.aux(Base.color0_id, 4).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1);
+            mesh.vertex()
+                .put((float) (r.x + r.w))
+                .put((float) r.y)
+                .put(0.5f)
+                .put((float) (r.x + r.w))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y))
+                .put(0.5f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.aux(Base.texture0_id, 2)
+                .put(useRect ? width : 1)
+                .put(0)
+                .put(useRect ? width : 1)
+                .put(useRect ? height : 1)
+                .put(0)
+                .put(useRect ? height : 1)
+                .put(0)
+                .put(0);
+            mesh.aux(Base.color0_id, 4)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1);
 
-			// onscreen program
-			// BasicGLSLangProgram onscreenProgram = (!useRect ? new
-			// BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
-			// "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
-			// : new
-			// BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
-			// "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
-			BasicGLSLangProgram onscreenProgram = (!useRect ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang") : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang", "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
-			onscreenProgram.new SetIntegerUniform("depthTexture", 0);
-			onscreenProgram.new SetUniform("offset", offset);
-			onscreenProgram.new SetUniform("mul", mul);
-			onscreenProgram.addChild(mesh);
-			onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(), 0));
-			onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            // onscreen program
+            // BasicGLSLangProgram onscreenProgram = (!useRect ? new
+            // BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+            // "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
+            // : new
+            // BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+            // "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
+            BasicGLSLangProgram onscreenProgram =
+                    (!useRect
+                     ? new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentSquare.glslang")
+                     : new BasicGLSLangProgram("content/shaders/NDCvertex.glslang",
+                                               "content/shaders/PutImageProcessingOnscreenFragmentRect.glslang"));
+            onscreenProgram.new SetIntegerUniform("depthTexture", 0);
+            onscreenProgram.new SetUniform("offset", offset);
+            onscreenProgram.new SetUniform("mul", mul);
+            onscreenProgram.addChild(mesh);
+            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(), 0));
+            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
 
-			return onscreenProgram;
-		}
+            return onscreenProgram;
+        }
 
-		public iSceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
-			return getOnscreenList(onscreenProgram, 0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
-		}
+        public
+        iSceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
+            return getOnscreenList(onscreenProgram, 0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
+        }
 
-		public iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			return getOnscreenList(onscreenProgram, 0, r, offset, mul, genMip);
-		}
+        public
+        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+                                          final Rect r,
+                                          Vector4 offset,
+                                          Vector4 mul,
+                                          final boolean genMip) {
+            return getOnscreenList(onscreenProgram, 0, r, offset, mul, genMip);
+        }
 
-		@HiddenInAutocomplete
-		public iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram, int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
-			final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
-			mesh.rebuildTriangle(2);
-			mesh.rebuildVertex(4);
+        @HiddenInAutocomplete
+        public
+        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+                                          int output,
+                                          final Rect r,
+                                          Vector4 offset,
+                                          Vector4 mul,
+                                          final boolean genMip) {
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
+            mesh.rebuildTriangle(2);
+            mesh.rebuildVertex(4);
 
-			mesh.vertex().put((float) (r.x + r.w)).put((float) r.y).put(0.5f).put((float) (r.x + r.w)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y + r.h)).put(0.5f).put((float) (r.x)).put((float) (r.y)).put(0.5f);
-			mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-			mesh.aux(Base.texture0_id, 2).put(useRect ? width : 1).put(0).put(useRect ? width : 1).put(useRect ? height : 1).put(0).put(useRect ? height : 1).put(0).put(0);
-			mesh.aux(Base.color0_id, 4).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1).put(1);
+            mesh.vertex()
+                .put((float) (r.x + r.w))
+                .put((float) r.y)
+                .put(0.5f)
+                .put((float) (r.x + r.w))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y + r.h))
+                .put(0.5f)
+                .put((float) (r.x))
+                .put((float) (r.y))
+                .put(0.5f);
+            mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
+            mesh.aux(Base.texture0_id, 2)
+                .put(useRect ? width : 1)
+                .put(0)
+                .put(useRect ? width : 1)
+                .put(useRect ? height : 1)
+                .put(0)
+                .put(useRect ? height : 1)
+                .put(0)
+                .put(0);
+            mesh.aux(Base.color0_id, 4)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1)
+                .put(1);
 
-			onscreenProgram.new SetIntegerUniform("depthTexture", 0);
-			onscreenProgram.new SetUniform("offset", offset);
-			onscreenProgram.new SetUniform("mul", mul);
-			onscreenProgram.addChild(mesh);
-			onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(), 0));
-			onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.new SetIntegerUniform("depthTexture", 0);
+            onscreenProgram.new SetUniform("offset", offset);
+            onscreenProgram.new SetUniform("mul", mul);
+            onscreenProgram.addChild(mesh);
+            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(), 0));
+            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
 
-			return onscreenProgram;
-		}
+            return onscreenProgram;
+        }
 
-		boolean deleted = false;
+        boolean deleted = false;
 
-		public void delete(TaskQueue deletionQueue) {
-			deletionQueue.new Task() {
+        public
+        void delete(TaskQueue deletionQueue) {
+            deletionQueue.new Task() {
 
-				@Override
-				protected void run() {
-					if (deleted)
-						return;
+                @Override
+                protected
+                void run() {
+                    if (deleted) return;
 
-					deleted = true;
+                    deleted = true;
 
-					glDeleteFramebuffers(fbo[0]);
-					glDeleteRenderbuffers(fbo[1]);
-					glDeleteTextures(tex[0]);
+                    glDeleteFramebuffers(fbo[0]);
+                    glDeleteRenderbuffers(fbo[1]);
+                    glDeleteTextures(tex[0]);
 
-				}
-			};
-		}
+                }
+            };
+        }
 
-	}
+    }
 
-	public static
+    public static
     class Switcher extends BasicSceneList implements iSceneListElement {
 
-		public static final Method method_performPass = ReflectionTools.methodOf("performPass", OnePassListElement.class);
+        public static final Method method_performPass =
+                ReflectionTools.methodOf("performPass", OnePassListElement.class);
 
-		private final StandardPass ourPass;
+        private final StandardPass ourPass;
 
-		protected Base.StandardPass requestPass;
+        protected Base.StandardPass requestPass;
 
-		protected Set renderPass = new HashSet();
+        protected Set renderPass = new HashSet();
 
-		protected iPass ourRenderPass;
+        protected iPass ourRenderPass;
 
-		protected boolean preCalled = false;
+        protected boolean preCalled = false;
 
-		protected boolean postCalled = false;
+        protected boolean postCalled = false;
 
-		LinkedHashMapOfLists<iMatchRule, OnePassListElement> known = new LinkedHashMapOfLists<iMatchRule, OnePassListElement>();
+        LinkedHashMapOfLists<iMatchRule, OnePassListElement> known =
+                new LinkedHashMapOfLists<iMatchRule, OnePassListElement>();
 
-		Set<OnePassListElement> running = new HashSet<OnePassListElement>();
+        Set<OnePassListElement> running = new HashSet<OnePassListElement>();
 
-		boolean skipIfEmpty = false;
+        boolean skipIfEmpty = false;
 
-		public Switcher() {
-			this.ourPass = StandardPass.preRender;
-			this.ourRenderPass = this.requestPass(StandardPass.preRender);
-			this.requestPass = StandardPass.preRender;
-		}
+        public
+        Switcher() {
+            this.ourPass = StandardPass.preRender;
+            this.ourRenderPass = this.requestPass(StandardPass.preRender);
+            this.requestPass = StandardPass.preRender;
+        }
 
-		public Switcher(Base.StandardPass parentPass, Base.StandardPass ourPass) {
-			this.ourPass = ourPass;
-			this.ourRenderPass = this.requestPass(ourPass);
-			this.requestPass = parentPass;
-		}
+        public
+        Switcher(Base.StandardPass parentPass, Base.StandardPass ourPass) {
+            this.ourPass = ourPass;
+            this.ourRenderPass = this.requestPass(ourPass);
+            this.requestPass = parentPass;
+        }
 
-		public Switcher add(iMatchRule rule, OnePassListElement o) {
-			known.addToList(rule, o);
-			return this;
-		}
+        public
+        Switcher add(iMatchRule rule, OnePassListElement o) {
+            known.addToList(rule, o);
+            return this;
+        }
 
-		@Override
-		public void addChild(iSceneListElement newChild) {
+        @Override
+        public
+        void addChild(iSceneListElement newChild) {
 
-			HashSet<OnePassListElement> ex = new HashSet<OnePassListElement>();
+            HashSet<OnePassListElement> ex = new HashSet<OnePassListElement>();
 
-			for (Collection<OnePassListElement> q1 : known.values())
-				for (OnePassListElement q2 : q1) {
-					ex.add(q2);
-				}
-			for (OnePassListElement e : ex)
-				e.addChild(newChild);
-		}
+            for (Collection<OnePassListElement> q1 : known.values())
+                for (OnePassListElement q2 : q1) {
+                    ex.add(q2);
+                }
+            for (OnePassListElement e : ex)
+                e.addChild(newChild);
+        }
 
-		@Override
-		public void notifyAddParent(iMutable<iSceneListElement> newParent) {
-			super.notifyAddParent(newParent);
-			renderPass.add(((iSceneListElement) newParent).requestPass(requestPass));
-		}
+        @Override
+        public
+        void notifyAddParent(iMutable<iSceneListElement> newParent) {
+            super.notifyAddParent(newParent);
+            renderPass.add(((iSceneListElement) newParent).requestPass(requestPass));
+        }
 
-		public void performPass() {
-			pre();
-			for (OnePassListElement e : running) {
+        public
+        void performPass() {
+            pre();
+            for (OnePassListElement e : running) {
 
-				e.performPass();
-			}
-			post();
-		}
+                e.performPass();
+            }
+            post();
+        }
 
-		@Override
-		public void performPass(iPass p) {
+        @Override
+        public
+        void performPass(iPass p) {
 
-			if ((p == null) || (renderPass.contains(p))) {
+            if ((p == null) || (renderPass.contains(p))) {
 
-				running.clear();
+                running.clear();
 
-				Object key = currentFBOContext.size() == 0 ? null : currentFBOContext.peek();
+                Object key = currentFBOContext.size() == 0 ? null : currentFBOContext.peek();
 
-				for (Entry<iMatchRule, Collection<OnePassListElement>> e : known.entrySet()) {
-					if (e.getKey().match(key))
-						running.addAll(e.getValue());
-				}
+                for (Entry<iMatchRule, Collection<OnePassListElement>> e : known.entrySet()) {
+                    if (e.getKey().match(key)) running.addAll(e.getValue());
+                }
 
-				if (skipIfEmpty && this.getChildren().size() == 0)
-					return;
+                if (skipIfEmpty && this.getChildren().size() == 0) return;
 
-				preCalled = false;
-				postCalled = false;
-				assert (glGetError() == 0) : this.getClass();
-				performPass();
-				assert (glGetError() == 0) : this.getClass();
-				assert preCalled;
-				assert postCalled;
-			}
-		}
+                preCalled = false;
+                postCalled = false;
+                assert (glGetError() == 0) : this.getClass();
+                performPass();
+                assert (glGetError() == 0) : this.getClass();
+                assert preCalled;
+                assert postCalled;
+            }
+        }
 
-		public void setSkipIfEmpty() {
-			skipIfEmpty = true;
-		}
+        public
+        void setSkipIfEmpty() {
+            skipIfEmpty = true;
+        }
 
-		protected void post() {
-			postCalled = true;
-		}
+        protected
+        void post() {
+            postCalled = true;
+        }
 
-		/**
-		 * subclasses must call these, typically on entry and exit to
-		 * performPass ()
-		 */
-		protected void pre() {
-			preCalled = true;
+        /**
+         * subclasses must call these, typically on entry and exit to
+         * performPass ()
+         */
+        protected
+        void pre() {
+            preCalled = true;
 
-		}
+        }
 
-	}
+    }
 
-	public static
+    public static
     class TextureCrossfader extends BasicUtilities.TwoPassElement {
-		private final MultiPasser source;
+        private final MultiPasser source;
 
-		NullTexture textureA;
+        NullTexture textureA;
 
-		TextureUnit textureAWrapped;
+        TextureUnit textureAWrapped;
 
-		NullTexture textureB;
+        NullTexture textureB;
 
-		TextureUnit textureBWrapped;
+        TextureUnit textureBWrapped;
 
-		boolean copyToA = true;
+        boolean copyToA = true;
 
-		boolean copyToB = true;
+        boolean copyToB = true;
 
-		boolean hasData = false;
+        boolean hasData = false;
 
-		boolean hasSetup = false;
+        boolean hasSetup = false;
 
-		public TextureCrossfader(MultiPasser source, int unitA, int unitB) {
-			super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
-			this.source = source;
+        public
+        TextureCrossfader(MultiPasser source, int unitA, int unitB) {
+            super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
+            this.source = source;
 
-			textureA = new NullTexture(source.width, source.height);
-			textureAWrapped = new TextureUnit(unitA, textureA);
-			textureB = new NullTexture(source.width, source.height);
-			textureBWrapped = new TextureUnit(unitB, textureB);
+            textureA = new NullTexture(source.width, source.height);
+            textureAWrapped = new TextureUnit(unitA, textureA);
+            textureB = new NullTexture(source.width, source.height);
+            textureBWrapped = new TextureUnit(unitB, textureB);
 
-			source.getSceneList().addChild(new BasicUtilities.OnePassElement(StandardPass.preDisplay) {
-				@Override
-				public void performPass() {
-					if (!hasSetup)
-						return;
+            source.getSceneList().addChild(new BasicUtilities.OnePassElement(StandardPass.preDisplay) {
+                @Override
+                public
+                void performPass() {
+                    if (!hasSetup) return;
 
-					if (copyToA) {
-						assert glGetError() == 0;
-						long a = System.currentTimeMillis();
-						textureAWrapped.pre();
-						textureAWrapped.in(gl);
-						assert glGetError() == 0;
-						long b = System.currentTimeMillis();
-						glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, 0, 0, TextureCrossfader.this.source.width, TextureCrossfader.this.source.height);
-						long c = System.currentTimeMillis();
-						assert glGetError() == 0;
+                    if (copyToA) {
+                        assert glGetError() == 0;
+                        long a = System.currentTimeMillis();
+                        textureAWrapped.pre();
+                        textureAWrapped.in(gl);
+                        assert glGetError() == 0;
+                        long b = System.currentTimeMillis();
+                        glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            TextureCrossfader.this.source.width,
+                                            TextureCrossfader.this.source.height);
+                        long c = System.currentTimeMillis();
+                        assert glGetError() == 0;
                         TextureUnit.out(gl);
                         textureAWrapped.post();
-						assert glGetError() == 0;
-						long d = System.currentTimeMillis();
+                        assert glGetError() == 0;
+                        long d = System.currentTimeMillis();
 
                         // System.out.println(" timing information <"
                         // + (d - a) + " " + (c
-							// - b) + ">");
-					}
-					if (copyToB) {
-						assert glGetError() == 0;
-						textureBWrapped.pre();
-						textureBWrapped.in(gl);
-						assert glGetError() == 0;
-						glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, 0, 0, TextureCrossfader.this.source.width, TextureCrossfader.this.source.height);
-						assert glGetError() == 0;
-						assert glGetError() == 0;
+                        // - b) + ">");
+                    }
+                    if (copyToB) {
+                        assert glGetError() == 0;
+                        textureBWrapped.pre();
+                        textureBWrapped.in(gl);
+                        assert glGetError() == 0;
+                        glCopyTexSubImage2D(GL_TEXTURE_RECTANGLE,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            TextureCrossfader.this.source.width,
+                                            TextureCrossfader.this.source.height);
+                        assert glGetError() == 0;
+                        assert glGetError() == 0;
                         TextureUnit.out(gl);
                         textureBWrapped.post();
-						assert glGetError() == 0;
-					}
-					copyToA = false;
-					copyToB = false;
-					hasData = true;
-				}
-			});
-		}
+                        assert glGetError() == 0;
+                    }
+                    copyToA = false;
+                    copyToB = false;
+                    hasData = true;
+                }
+            });
+        }
 
-		public void doCopyToA() {
-			copyToA = true;
-		}
+        public
+        void doCopyToA() {
+            copyToA = true;
+        }
 
-		public void doCopyToB() {
-			copyToB = true;
-		}
+        public
+        void doCopyToB() {
+            copyToB = true;
+        }
 
-		@Override
-		protected void post() {
-			if (hasData) {
-				textureAWrapped.gl = BasicContextManager.getGl();
-				textureAWrapped.glu = BasicContextManager.getGlu();
+        @Override
+        protected
+        void post() {
+            if (hasData) {
+                textureAWrapped.gl = BasicContextManager.getGl();
+                textureAWrapped.glu = BasicContextManager.getGlu();
 
-				textureBWrapped.gl = BasicContextManager.getGl();
-				textureBWrapped.glu = BasicContextManager.getGlu();
-				textureAWrapped.post();
-				textureBWrapped.post();
-			}
-		}
+                textureBWrapped.gl = BasicContextManager.getGl();
+                textureBWrapped.glu = BasicContextManager.getGlu();
+                textureAWrapped.post();
+                textureBWrapped.post();
+            }
+        }
 
-		@Override
-		protected void pre() {
-			if (hasData) {
-				textureAWrapped.gl = BasicContextManager.getGl();
-				textureAWrapped.glu = BasicContextManager.getGlu();
+        @Override
+        protected
+        void pre() {
+            if (hasData) {
+                textureAWrapped.gl = BasicContextManager.getGl();
+                textureAWrapped.glu = BasicContextManager.getGlu();
 
-				textureBWrapped.gl = BasicContextManager.getGl();
-				textureBWrapped.glu = BasicContextManager.getGlu();
+                textureBWrapped.gl = BasicContextManager.getGl();
+                textureBWrapped.glu = BasicContextManager.getGlu();
 
-				textureAWrapped.pre();
-				textureBWrapped.pre();
-			}
-		}
+                textureAWrapped.pre();
+                textureBWrapped.pre();
+            }
+        }
 
-		@Override
-		protected void setup() {
-			hasSetup = true;
+        @Override
+        protected
+        void setup() {
+            hasSetup = true;
 
-			textureAWrapped.gl = BasicContextManager.getGl();
-			textureAWrapped.glu = BasicContextManager.getGlu();
+            textureAWrapped.gl = BasicContextManager.getGl();
+            textureAWrapped.glu = BasicContextManager.getGlu();
 
-			textureBWrapped.gl = BasicContextManager.getGl();
-			textureBWrapped.glu = BasicContextManager.getGlu();
+            textureBWrapped.gl = BasicContextManager.getGl();
+            textureBWrapped.glu = BasicContextManager.getGlu();
 
-			textureAWrapped.setup();
-			textureBWrapped.setup();
-			BasicContextManager.putId(this, 0);
-			BasicContextManager.markAsValidInThisContext(this);
-		}
-	}
+            textureAWrapped.setup();
+            textureBWrapped.setup();
+            BasicContextManager.putId(this, 0);
+            BasicContextManager.markAsValidInThisContext(this);
+        }
+    }
 
-	public static
+    public static
     class TextureCrossfader2 extends BasicUtilities.TwoPassElement {
-		private final iAcceptsSceneListElement source;
+        private final iAcceptsSceneListElement source;
 
-		NullTexture textureA;
+        NullTexture textureA;
 
-		TextureUnit textureAWrapped;
+        TextureUnit textureAWrapped;
 
-		NullTexture textureB;
+        NullTexture textureB;
 
-		TextureUnit textureBWrapped;
+        TextureUnit textureBWrapped;
 
-		boolean copyToA = true;
+        boolean copyToA = true;
 
-		boolean copyToB = true;
+        boolean copyToB = true;
 
-		boolean hasDataA = false;
-		boolean hasDataB = false;
+        boolean hasDataA = false;
+        boolean hasDataB = false;
 
-		boolean hasSetup = false;
+        boolean hasSetup = false;
 
-		private final int width;
+        private final int width;
 
-		private final int height;
+        private final int height;
 
-		public TextureCrossfader2(iAcceptsSceneListElement source, int unitA, int unitB, int width, int height) {
-			super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
-			this.source = source;
+        public
+        TextureCrossfader2(iAcceptsSceneListElement source, int unitA, int unitB, int width, int height) {
+            super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
+            this.source = source;
 
-			this.width = width;
-			this.height = height;
+            this.width = width;
+            this.height = height;
 
-			textureA = new NullTexture(width, height);
-			textureAWrapped = new TextureUnit(unitA, textureA);
-			textureB = new NullTexture(width, height);
-			textureBWrapped = new TextureUnit(unitB, textureB);
+            textureA = new NullTexture(width, height);
+            textureAWrapped = new TextureUnit(unitA, textureA);
+            textureB = new NullTexture(width, height);
+            textureBWrapped = new TextureUnit(unitB, textureB);
 
-			source.addChild(new BasicUtilities.OnePassElement(StandardPass.preDisplay) {
-				@Override
-				public void performPass() {
-					if (!hasSetup)
-						return;
+            source.addChild(new BasicUtilities.OnePassElement(StandardPass.preDisplay) {
+                @Override
+                public
+                void performPass() {
+                    if (!hasSetup) return;
 
-					if (copyToA || !hasDataA) {
+                    if (copyToA || !hasDataA) {
                         // System.out.println(" copy to A ");
                         assert glGetError() == 0;
-						textureAWrapped.pre();
-						textureAWrapped.in(gl);
-						assert glGetError() == 0;
-						glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, TextureCrossfader2.this.width, TextureCrossfader2.this.height);
-						assert glGetError() == 0;
+                        textureAWrapped.pre();
+                        textureAWrapped.in(gl);
+                        assert glGetError() == 0;
+                        glCopyTexSubImage2D(GL_TEXTURE_2D,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            TextureCrossfader2.this.width,
+                                            TextureCrossfader2.this.height);
+                        assert glGetError() == 0;
                         TextureUnit.out(gl);
                         textureAWrapped.post();
-						assert glGetError() == 0;
+                        assert glGetError() == 0;
 
                         // System.out.println(" copy to a ");
                         hasDataA = true;
 
-					}
-					if (copyToB || !hasDataB) {
+                    }
+                    if (copyToB || !hasDataB) {
                         // System.out.println(" copy to B ");
                         assert glGetError() == 0;
-						textureBWrapped.pre();
-						textureBWrapped.in(gl);
-						assert glGetError() == 0;
-						glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, TextureCrossfader2.this.width, TextureCrossfader2.this.height);
-						assert glGetError() == 0;
-						assert glGetError() == 0;
+                        textureBWrapped.pre();
+                        textureBWrapped.in(gl);
+                        assert glGetError() == 0;
+                        glCopyTexSubImage2D(GL_TEXTURE_2D,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            TextureCrossfader2.this.width,
+                                            TextureCrossfader2.this.height);
+                        assert glGetError() == 0;
+                        assert glGetError() == 0;
                         TextureUnit.out(gl);
                         textureBWrapped.post();
-						assert glGetError() == 0;
+                        assert glGetError() == 0;
 
                         // System.out.println(" copy to b ");
                         hasDataB = true;
 
-					}
-					copyToA = false;
-					copyToB = false;
-				}
-			});
-		}
+                    }
+                    copyToA = false;
+                    copyToB = false;
+                }
+            });
+        }
 
-		public void doCopyToA() {
-			copyToA = true;
-		}
+        public
+        void doCopyToA() {
+            copyToA = true;
+        }
 
-		public void doCopyToB() {
-			copyToB = true;
-		}
+        public
+        void doCopyToB() {
+            copyToB = true;
+        }
 
-		@Override
-		protected void post() {
-			if (hasDataA && hasDataB) {
-				textureAWrapped.gl = BasicContextManager.getGl();
-				textureAWrapped.glu = BasicContextManager.getGlu();
+        @Override
+        protected
+        void post() {
+            if (hasDataA && hasDataB) {
+                textureAWrapped.gl = BasicContextManager.getGl();
+                textureAWrapped.glu = BasicContextManager.getGlu();
 
-				textureBWrapped.gl = BasicContextManager.getGl();
-				textureBWrapped.glu = BasicContextManager.getGlu();
-				textureAWrapped.post();
-				textureBWrapped.post();
-			}
-		}
+                textureBWrapped.gl = BasicContextManager.getGl();
+                textureBWrapped.glu = BasicContextManager.getGlu();
+                textureAWrapped.post();
+                textureBWrapped.post();
+            }
+        }
 
-		@Override
-		protected void pre() {
-			if (hasDataA && hasDataB) {
-				textureAWrapped.gl = BasicContextManager.getGl();
-				textureAWrapped.glu = BasicContextManager.getGlu();
+        @Override
+        protected
+        void pre() {
+            if (hasDataA && hasDataB) {
+                textureAWrapped.gl = BasicContextManager.getGl();
+                textureAWrapped.glu = BasicContextManager.getGlu();
 
-				textureBWrapped.gl = BasicContextManager.getGl();
-				textureBWrapped.glu = BasicContextManager.getGlu();
+                textureBWrapped.gl = BasicContextManager.getGl();
+                textureBWrapped.glu = BasicContextManager.getGlu();
 
-				textureAWrapped.pre();
-				textureBWrapped.pre();
-			}
-		}
+                textureAWrapped.pre();
+                textureBWrapped.pre();
+            }
+        }
 
-		@Override
-		protected void setup() {
-			hasSetup = true;
+        @Override
+        protected
+        void setup() {
+            hasSetup = true;
 
-			textureAWrapped.gl = BasicContextManager.getGl();
-			textureAWrapped.glu = BasicContextManager.getGlu();
+            textureAWrapped.gl = BasicContextManager.getGl();
+            textureAWrapped.glu = BasicContextManager.getGlu();
 
-			textureBWrapped.gl = BasicContextManager.getGl();
-			textureBWrapped.glu = BasicContextManager.getGlu();
+            textureBWrapped.gl = BasicContextManager.getGl();
+            textureBWrapped.glu = BasicContextManager.getGlu();
 
-			textureAWrapped.setup();
-			textureBWrapped.setup();
-			BasicContextManager.putId(this, 0);
-			BasicContextManager.markAsValidInThisContext(this);
-		}
-	}
+            textureAWrapped.setup();
+            textureBWrapped.setup();
+            BasicContextManager.putId(this, 0);
+            BasicContextManager.markAsValidInThisContext(this);
+        }
+    }
 
-	static public final Stack<Object> currentFBOContext = new Stack<Object>();
+    static public final Stack<Object> currentFBOContext = new Stack<Object>();
 
-	static public class Wrap extends BasicUtilities.OnePassElement {
+    static public
+    class Wrap extends BasicUtilities.OnePassElement {
 
-		private final iGeometry geometry;
+        private final iGeometry geometry;
 
-		private final Method doPerformPass;
+        private final Method doPerformPass;
 
-		private final Method doSetup;
+        private final Method doSetup;
 
-		public Wrap(iGeometry geometry) {
-			super(StandardPass.render);
-			this.geometry = geometry;
-			doPerformPass = ReflectionTools.findFirstMethodCalled(geometry.getClass(), "doPerformPass");
-			doSetup = ReflectionTools.findFirstMethodCalled(geometry.getClass(), "doSetup");
-		}
+        public
+        Wrap(iGeometry geometry) {
+            super(StandardPass.render);
+            this.geometry = geometry;
+            doPerformPass = ReflectionTools.findFirstMethodCalled(geometry.getClass(), "doPerformPass");
+            doSetup = ReflectionTools.findFirstMethodCalled(geometry.getClass(), "doSetup");
+        }
 
-		CoordinateFrame frame = new CoordinateFrame();
-		private float[] matrix = null;
-		private final Matrix4 tmpStorage = new Matrix4();
+        CoordinateFrame frame = new CoordinateFrame();
+        private float[] matrix = null;
+        private final Matrix4 tmpStorage = new Matrix4();
 
-		FloatBuffer mm = ByteBuffer.allocateDirect(4 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        FloatBuffer mm = ByteBuffer.allocateDirect(4 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-		@Override
-		public void performPass() {
+        @Override
+        public
+        void performPass() {
 
-			try {
-				if (BasicContextManager.getId(geometry) == BasicContextManager.ID_NOT_FOUND) {
-					doSetup.invoke(geometry);
-				}
+            try {
+                if (BasicContextManager.getId(geometry) == BasicContextManager.ID_NOT_FOUND) {
+                    doSetup.invoke(geometry);
+                }
 
-				geometry.getCoordinateProvider().get(frame);
+                geometry.getCoordinateProvider().get(frame);
 
-				CoreHelpers.glPushMatrix();
+                CoreHelpers.glPushMatrix();
 
-				matrix = frame.getMatrix(tmpStorage).getColumnMajor(matrix);
+                matrix = frame.getMatrix(tmpStorage).getColumnMajor(matrix);
 
-				mm.rewind();
-				mm.put(matrix);
-				mm.rewind();
+                mm.rewind();
+                mm.put(matrix);
+                mm.rewind();
 
-				CoreHelpers.glMultMatrix(mm);
+                CoreHelpers.glMultMatrix(mm);
 
-				CoreHelpers.glActiveTexture(GL_TEXTURE5);
-				CoreHelpers.glMatrixMode(GL_TEXTURE);
-				CoreHelpers.glLoadIdentity();
-				CoreHelpers.glMultMatrix(mm);
-				CoreHelpers.glActiveTexture(GL_TEXTURE0);
-				CoreHelpers.glMatrixMode(GL_MODELVIEW);
+                CoreHelpers.glActiveTexture(GL_TEXTURE5);
+                CoreHelpers.glMatrixMode(GL_TEXTURE);
+                CoreHelpers.glLoadIdentity();
+                CoreHelpers.glMultMatrix(mm);
+                CoreHelpers.glActiveTexture(GL_TEXTURE0);
+                CoreHelpers.glMatrixMode(GL_MODELVIEW);
 
-				doPerformPass.invoke(geometry);
+                doPerformPass.invoke(geometry);
 
-				glPopMatrix();
+                glPopMatrix();
 
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-				// throw new IllegalArgumentException(e);
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-				// throw new IllegalArgumentException(e);
-			}
-		}
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                // throw new IllegalArgumentException(e);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                // throw new IllegalArgumentException(e);
+            }
+        }
 
-		public iGeometry getGeometry() {
-			return geometry;
-		}
+        public
+        iGeometry getGeometry() {
+            return geometry;
+        }
 
-	}
+    }
 
-	static public class WrapInstance extends BasicUtilities.OnePassElement {
+    static public
+    class WrapInstance extends BasicUtilities.OnePassElement {
 
-		private final Instance geometry;
+        private final Instance geometry;
 
-		private final Method doPerformPass;
+        private final Method doPerformPass;
 
-		private Method doSetup;
+        private Method doSetup;
 
-		public WrapInstance(Instance geometry) {
-			super(StandardPass.render);
-			this.geometry = geometry;
-			doPerformPass = ReflectionTools.findFirstMethodCalled(geometry.getClass(), "performPass");
-		}
+        public
+        WrapInstance(Instance geometry) {
+            super(StandardPass.render);
+            this.geometry = geometry;
+            doPerformPass = ReflectionTools.findFirstMethodCalled(geometry.getClass(), "performPass");
+        }
 
-		CoordinateFrame frame = new CoordinateFrame();
-		private float[] matrix = null;
-		private final Matrix4 tmpStorage = new Matrix4();
+        CoordinateFrame frame = new CoordinateFrame();
+        private float[] matrix = null;
+        private final Matrix4 tmpStorage = new Matrix4();
 
-		FloatBuffer mm = ByteBuffer.allocateDirect(4 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        FloatBuffer mm = ByteBuffer.allocateDirect(4 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-		@Override
-		public void performPass() {
+        @Override
+        public
+        void performPass() {
 
-			try {
+            try {
 
-				CoordinateFrame frame = new CoordinateFrame().setValue(geometry.getFrame());
+                CoordinateFrame frame = new CoordinateFrame().setValue(geometry.getFrame());
 
-				matrix = frame.getMatrix(tmpStorage).getColumnMajor(matrix);
+                matrix = frame.getMatrix(tmpStorage).getColumnMajor(matrix);
 
-				mm.rewind();
-				mm.put(matrix);
-				mm.rewind();
+                mm.rewind();
+                mm.put(matrix);
+                mm.rewind();
 
-				CoreHelpers.glActiveTexture(GL_TEXTURE5);
-				CoreHelpers.glMatrixMode(GL_TEXTURE);
-				CoreHelpers.glLoadIdentity();
-				CoreHelpers.glMultMatrix(mm);
-				CoreHelpers.glActiveTexture(GL_TEXTURE0);
-				CoreHelpers.glMatrixMode(GL_MODELVIEW);
+                CoreHelpers.glActiveTexture(GL_TEXTURE5);
+                CoreHelpers.glMatrixMode(GL_TEXTURE);
+                CoreHelpers.glLoadIdentity();
+                CoreHelpers.glMultMatrix(mm);
+                CoreHelpers.glActiveTexture(GL_TEXTURE0);
+                CoreHelpers.glMatrixMode(GL_MODELVIEW);
 
-				doPerformPass.invoke(geometry);
+                doPerformPass.invoke(geometry);
 
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-				// throw new IllegalArgumentException(e);
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-				// throw new IllegalArgumentException(e);
-			}
-		}
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                // throw new IllegalArgumentException(e);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                // throw new IllegalArgumentException(e);
+            }
+        }
 
-		public Instance getGeometry() {
-			return geometry;
-		}
+        public
+        Instance getGeometry() {
+            return geometry;
+        }
 
-	}
+    }
 
 }
 

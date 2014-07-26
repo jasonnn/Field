@@ -9,28 +9,33 @@ import java.util.List;
 
 
 // a tag class for special handling of loading
-public class VEList extends ArrayList<iVisualElement> implements List<iVisualElement>{
+public
+class VEList extends ArrayList<iVisualElement> implements List<iVisualElement> {
 
-	public VEList(VEList list) {
-		super(list);
-	}
+    public
+    VEList(VEList list) {
+        super(list);
+    }
 
-	public VEList() {
-	}
+    public
+    VEList() {
+    }
 
-	@NotNull
+    @NotNull
     @Override
-	public Iterator<iVisualElement> iterator() {
-		scrubNull();
-		return super.iterator();
-	}
+    public
+    Iterator<iVisualElement> iterator() {
+        scrubNull();
+        return super.iterator();
+    }
 
-	protected void scrubNull() {
-		for (int i = 0; i < this.size(); i++) {
-			if (this.get(i) == null) {
-				this.remove(i);
-				i--;
-			}
-		}
-	}
+    protected
+    void scrubNull() {
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i) == null) {
+                this.remove(i);
+                i--;
+            }
+        }
+    }
 }

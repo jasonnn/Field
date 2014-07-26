@@ -5,18 +5,21 @@ import java.io.Serializable;
 /**
  * Created by jason on 7/21/14.
  */
-public class Pair<A, B> implements Serializable {
+public
+class Pair<A, B> implements Serializable {
     public A left;
     public B right;
 
-    public Pair(A a, B b) {
+    public
+    Pair(A a, B b) {
         left = a;
         right = b;
     }
 
     @SuppressWarnings("RedundantIfStatement")
     @Override
-    public boolean equals(Object o) {
+    public
+    boolean equals(Object o) {
         if (this == o) return true;
         if ((o == null) || (getClass() != o.getClass())) return false;
 
@@ -29,13 +32,15 @@ public class Pair<A, B> implements Serializable {
     }
 
     @Override
-    public int hashCode() {
+    public
+    int hashCode() {
         int result = (left != null) ? left.hashCode() : 0;
         result = 31 * result + ((right != null) ? right.hashCode() : 0);
         return result;
     }
 
-    public String toString() {
+    public
+    String toString() {
         return "left:" + left + " right:" + right;
     }
 }

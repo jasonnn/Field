@@ -8,35 +8,43 @@ import field.launch.iLaunchable;
 import field.launch.iUpdateable;
 import field.util.MiscNative;
 
-public class Faceless implements iLaunchable {
-	public double t;
+public
+class Faceless implements iLaunchable {
+    public double t;
 
-	private PhantomFluidSheet phantom;
+    private PhantomFluidSheet phantom;
 
-	public PhantomFluidSheet getSheet() {
-		return phantom;
-	}
+    public
+    PhantomFluidSheet getSheet() {
+        return phantom;
+    }
 
-	public void launch() {
+    public
+    void launch() {
 
-		phantom= new PhantomFluidSheet(System.getProperty("user.home") + "/Documents/FieldWorkspace/"+SystemProperties.getProperty("field.scratch", "field.Blank.field"), false, false);
-		
-		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        phantom = new PhantomFluidSheet(System.getProperty("user.home")
+                                        + "/Documents/FieldWorkspace/"
+                                        + SystemProperties.getProperty("field.scratch", "field.Blank.field"),
+                                        false,
+                                        false);
 
-			public void update() {
-				phantom.update((float) t);
-			}
-		});
+        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
 
-		if (SystemProperties.getIntProperty("black", 0) == 1) {
-			MiscNative.goToBlack();
+            public
+            void update() {
+                phantom.update((float) t);
+            }
+        });
 
-		}
+        if (SystemProperties.getIntProperty("black", 0) == 1) {
+            MiscNative.goToBlack();
 
-		String a = SystemProperties.getProperty("auto", "");
-		if (a != null && !a.isEmpty()) {
-			AutoEngage auto = new AutoEngage(phantom.getRoot());
-			auto.start(a);
-		}
-	}
+        }
+
+        String a = SystemProperties.getProperty("auto", "");
+        if (a != null && !a.isEmpty()) {
+            AutoEngage auto = new AutoEngage(phantom.getRoot());
+            auto.start(a);
+        }
+    }
 }

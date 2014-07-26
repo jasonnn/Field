@@ -23,43 +23,42 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class OverDrawing {
-	
-	public static VisualElementProperty<OverDrawing> overdraw = new VisualElementProperty<OverDrawing>("__overdraw");
-	private final BaseGLGraphicsContext context;
-	private final GLComponentWindow window;
-	
-	
-	public OverDrawing(iVisualElement root, GLComponentWindow window, BaseGLGraphicsContext context)
-	{
-		this.window = window;
-		this.context = context;
-		overdraw.set(root, root, this);	
-	}
-	
-	public void draw(PaintEvent e, Control c)
-	{
-		
-		Set<CachedLine> a = context.getAllLines();
-		
-		Set<CachedLine> bleeding = new LinkedHashSet<CachedLine>();
-		for(CachedLine aa : a)
-		{
-			if (aa.getProperties().isTrue(iLinearGraphicsContext.bleedsOntoTextEditor, false))
-			{
-				bleeding.add(aa);
-			}
-		}
+public
+class OverDrawing {
 
-		for(CachedLine aa : bleeding)
-		{
-			bleed(aa, e, c);
-		}
-	}
+    public static VisualElementProperty<OverDrawing> overdraw = new VisualElementProperty<OverDrawing>("__overdraw");
+    private final BaseGLGraphicsContext context;
+    private final GLComponentWindow window;
 
-	private void bleed(CachedLine aa, PaintEvent e, Control c) {
-		
-		GC gc = e.gc;
+
+    public
+    OverDrawing(iVisualElement root, GLComponentWindow window, BaseGLGraphicsContext context) {
+        this.window = window;
+        this.context = context;
+        overdraw.set(root, root, this);
+    }
+
+    public
+    void draw(PaintEvent e, Control c) {
+
+        Set<CachedLine> a = context.getAllLines();
+
+        Set<CachedLine> bleeding = new LinkedHashSet<CachedLine>();
+        for (CachedLine aa : a) {
+            if (aa.getProperties().isTrue(iLinearGraphicsContext.bleedsOntoTextEditor, false)) {
+                bleeding.add(aa);
+            }
+        }
+
+        for (CachedLine aa : bleeding) {
+            bleed(aa, e, c);
+        }
+    }
+
+    private
+    void bleed(CachedLine aa, PaintEvent e, Control c) {
+
+        GC gc = e.gc;
 
         Point top = Launcher.display.map(c, window.getFrame(), new Point(0, 0));
         Point topC = Launcher.display.map(window.getCanvas(), window.getFrame(), new Point(0, 0));
@@ -67,64 +66,67 @@ public class OverDrawing {
         Path p = new Path(Launcher.display);
 
         List<Event> events = aa.events;
-		for (Event ee : events) {
-			
-			if (ee.method.equals(iLine_m.moveTo_m))
-			{
-				Vector2 a = transform(ee.getAt(), top, topC);
-				p.moveTo(a.x, a.y);
-			}
-			else if (ee.method.equals(iLine_m.lineTo_m))
-			{
-				Vector2 a = transform(ee.getAt(), top, topC);
-				p.lineTo(a.x, a.y);				
-			}
-			else if (ee.method.equals(iLine_m.cubicTo_m))
-			{
-				Vector2 a0 = transform(ee.getAt(0), top, topC);
-				Vector2 a1 = transform(ee.getAt(1), top, topC);
-				Vector2 a2 = transform(ee.getAt(2), top, topC);
-				p.cubicTo(a0.x, a0.y, a1.x, a1.y, a2.x, a2.y);	
-			}
-		}
+        for (Event ee : events) {
+
+            if (ee.method.equals(iLine_m.moveTo_m)) {
+                Vector2 a = transform(ee.getAt(), top, topC);
+                p.moveTo(a.x, a.y);
+            }
+            else if (ee.method.equals(iLine_m.lineTo_m)) {
+                Vector2 a = transform(ee.getAt(), top, topC);
+                p.lineTo(a.x, a.y);
+            }
+            else if (ee.method.equals(iLine_m.cubicTo_m)) {
+                Vector2 a0 = transform(ee.getAt(0), top, topC);
+                Vector2 a1 = transform(ee.getAt(1), top, topC);
+                Vector2 a2 = transform(ee.getAt(2), top, topC);
+                p.cubicTo(a0.x, a0.y, a1.x, a1.y, a2.x, a2.y);
+            }
+        }
 
         gc.setForeground(Launcher.display.getSystemColor(SWT.COLOR_BLACK));
 
-        if (aa.getProperties().isTrue(iLinearGraphicsContext.filled, false))
-		{
-			gc.setBackground(toColor(aa.getProperties().get(iLinearGraphicsContext.fillColor), aa.getProperties().get(iLinearGraphicsContext.color)));
-			gc.setAlpha(toAlpha(aa.getProperties().get(iLinearGraphicsContext.fillColor), aa.getProperties().get(iLinearGraphicsContext.color)));
-			gc.fillPath(p);
-		}
-		if (aa.getProperties().isTrue(iLinearGraphicsContext.stroked, true))
-		{
-			gc.setForeground(toColor(aa.getProperties().get(iLinearGraphicsContext.fillColor), aa.getProperties().get(iLinearGraphicsContext.color)));
-			gc.setAlpha(toAlpha(aa.getProperties().get(iLinearGraphicsContext.fillColor), aa.getProperties().get(iLinearGraphicsContext.color)));
-			gc.drawPath(p);
-		}
-	}
+        if (aa.getProperties().isTrue(iLinearGraphicsContext.filled, false)) {
+            gc.setBackground(toColor(aa.getProperties().get(iLinearGraphicsContext.fillColor),
+                                     aa.getProperties().get(iLinearGraphicsContext.color)));
+            gc.setAlpha(toAlpha(aa.getProperties().get(iLinearGraphicsContext.fillColor),
+                                aa.getProperties().get(iLinearGraphicsContext.color)));
+            gc.fillPath(p);
+        }
+        if (aa.getProperties().isTrue(iLinearGraphicsContext.stroked, true)) {
+            gc.setForeground(toColor(aa.getProperties().get(iLinearGraphicsContext.fillColor),
+                                     aa.getProperties().get(iLinearGraphicsContext.color)));
+            gc.setAlpha(toAlpha(aa.getProperties().get(iLinearGraphicsContext.fillColor),
+                                aa.getProperties().get(iLinearGraphicsContext.color)));
+            gc.drawPath(p);
+        }
+    }
 
     private static
     Color toColor(Vector4 a, Vector4 b) {
-        if (a==null) a = b;
+        if (a == null) a = b;
         if (b == null) return Launcher.display.getSystemColor(SWT.COLOR_BLACK);
 
-        return new Color(Launcher.display, (int) Math.max(0, Math.min(255, 255 * a.x)), (int) Math.max(0, Math.min(255, 255 * a.y)), (int) Math.max(0, Math.min(255, 255 * a.z)));
+        return new Color(Launcher.display,
+                         (int) Math.max(0, Math.min(255, 255 * a.x)),
+                         (int) Math.max(0, Math.min(255, 255 * a.y)),
+                         (int) Math.max(0, Math.min(255, 255 * a.z)));
     }
 
     private static
     int toAlpha(Vector4 a, Vector4 b) {
-        if (a==null) a = b;
-		if (b==null) return 255;
-		
-		return (int)Math.max(0, Math.min(255, 255*a.w));
-	}
+        if (a == null) a = b;
+        if (b == null) return 255;
 
-	private Vector2 transform(Vector2 at, Point top, Point topC) {
-		
-		at.x = (at.x-window.getDXTranslation())/window.getDXScale()+topC.x-top.x;
-		at.y = (at.y-window.getDYTranslation())/window.getDYScale()+topC.y-top.y;
-		return at;
-	}
-	
+        return (int) Math.max(0, Math.min(255, 255 * a.w));
+    }
+
+    private
+    Vector2 transform(Vector2 at, Point top, Point topC) {
+
+        at.x = (at.x - window.getDXTranslation()) / window.getDXScale() + topC.x - top.x;
+        at.y = (at.y - window.getDYTranslation()) / window.getDYScale() + topC.y - top.y;
+        return at;
+    }
+
 }

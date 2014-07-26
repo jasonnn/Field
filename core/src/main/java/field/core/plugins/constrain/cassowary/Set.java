@@ -16,67 +16,79 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 class Set {
-	public Set() {
-		hash = new Hashtable<Object, Object>();
-	}
+    public
+    Set() {
+        hash = new Hashtable<Object, Object>();
+    }
 
-	public Set(int i) {
-		hash = new Hashtable<Object, Object>(i);
-	}
+    public
+    Set(int i) {
+        hash = new Hashtable<Object, Object>(i);
+    }
 
-	public Set(int i, float f) {
-		hash = new Hashtable<Object, Object>(i, f);
-	}
+    public
+    Set(int i, float f) {
+        hash = new Hashtable<Object, Object>(i, f);
+    }
 
-	public Set(Hashtable<Object, Object> h) {
-		hash = h;
-	}
+    public
+    Set(Hashtable<Object, Object> h) {
+        hash = h;
+    }
 
-	public boolean containsKey(Object o) {
-		return hash.containsKey(o);
-	}
+    public
+    boolean containsKey(Object o) {
+        return hash.containsKey(o);
+    }
 
-	public boolean insert(Object o) {
-		return (hash.put(o, o) == null) ? true : false;
-	}
+    public
+    boolean insert(Object o) {
+        return (hash.put(o, o) == null) ? true : false;
+    }
 
-	public boolean remove(Object o) {
-		return (hash.remove(o) == null) ? true : false;
-	}
+    public
+    boolean remove(Object o) {
+        return (hash.remove(o) == null) ? true : false;
+    }
 
-	public void clear() {
-		hash.clear();
-	}
+    public
+    void clear() {
+        hash.clear();
+    }
 
-	public int size() {
-		return hash.size();
-	}
+    public
+    int size() {
+        return hash.size();
+    }
 
-	public boolean isEmpty() {
-		return hash.isEmpty();
-	}
+    public
+    boolean isEmpty() {
+        return hash.isEmpty();
+    }
 
-	@Override
-	public Object clone() {
-		return new Set((Hashtable<Object, Object>) hash.clone());
-	}
+    @Override
+    public
+    Object clone() {
+        return new Set((Hashtable<Object, Object>) hash.clone());
+    }
 
-	public Enumeration<Object> elements() {
-		return hash.elements();
-	}
+    public
+    Enumeration<Object> elements() {
+        return hash.elements();
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder bstr = new StringBuilder("{ ");
-		Enumeration<Object> e = hash.keys();
-		if (e.hasMoreElements())
-			bstr.append(e.nextElement().toString());
-		while (e.hasMoreElements()) {
-			bstr.append(", ").append(e.nextElement());
-		}
-		bstr.append(" }\n");
-		return bstr.toString();
-	}
+    @Override
+    public
+    String toString() {
+        StringBuilder bstr = new StringBuilder("{ ");
+        Enumeration<Object> e = hash.keys();
+        if (e.hasMoreElements()) bstr.append(e.nextElement().toString());
+        while (e.hasMoreElements()) {
+            bstr.append(", ").append(e.nextElement());
+        }
+        bstr.append(" }\n");
+        return bstr.toString();
+    }
 
-	private final Hashtable<Object, Object> hash;
+    private final Hashtable<Object, Object> hash;
 }

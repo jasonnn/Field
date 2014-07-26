@@ -11,9 +11,11 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-public class ExCLConstraintNotFound extends ExCLError {
-	@Override
-	public String description() {
-		return "(ExCLConstraintNotFound) Tried to remove a constraint never added to the tableu";
-	}
+public
+class ExCLConstraintNotFound extends ExCLError {
+    @Override
+    public
+    String description() {
+        return "(ExCLConstraintNotFound) Tried to remove a constraint never added to the tableu";
+    }
 }

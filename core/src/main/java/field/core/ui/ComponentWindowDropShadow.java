@@ -18,142 +18,156 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.nio.IntBuffer;
 
-public class ComponentWindowDropShadow {
+public
+class ComponentWindowDropShadow {
 
-	int width = 20;
-	int height = 2560;
+    int width = 20;
+    int height = 2560;
 
-	private GraphicsDevice dev;
-	private BufferedImage image;
-	private Graphics2D g2;
-	private Font font;
-	private int[] data;
-	private IntBuffer intBuffer;
-	private final TriangleMesh labelTriangles;
-	private final DynamicMesh labelTriangle;
-	private final GLComponentWindow inside;
-	private AribitraryComponent component;
-	private final BasicGLSLangProgram dcvertex;
+    private GraphicsDevice dev;
+    private BufferedImage image;
+    private Graphics2D g2;
+    private Font font;
+    private int[] data;
+    private IntBuffer intBuffer;
+    private final TriangleMesh labelTriangles;
+    private final DynamicMesh labelTriangle;
+    private final GLComponentWindow inside;
+    private AribitraryComponent component;
+    private final BasicGLSLangProgram dcvertex;
 
-	public ComponentWindowDropShadow(final GLComponentWindow inside, TextSystem text) {
-		this.inside = inside;
-		inside.getPostQueue().addUpdateable(new iUpdateable() {
-			public void update() {
-				ComponentWindowDropShadow.this.paintNow();
-			}
-		});
+    public
+    ComponentWindowDropShadow(final GLComponentWindow inside, TextSystem text) {
+        this.inside = inside;
+        inside.getPostQueue().addUpdateable(new iUpdateable() {
+            public
+            void update() {
+                ComponentWindowDropShadow.this.paintNow();
+            }
+        });
 
-		try {
-			component = text.new AribitraryComponent(width, height);
-		} catch (NullPointerException e) {
+        try {
+            component = text.new AribitraryComponent(width, height);
+        } catch (NullPointerException e) {
 
-		}
-		labelTriangles = new BasicGeometry.TriangleMesh(new field.math.abstraction.iInplaceProvider<iMutable>() {
-			public iMutable get(iMutable o) {
-				return new CoordinateFrame();
-			}
-		});
-		labelTriangle = new DynamicMesh(labelTriangles);
+        }
+        labelTriangles = new BasicGeometry.TriangleMesh(new field.math.abstraction.iInplaceProvider<iMutable>() {
+            public
+            iMutable get(iMutable o) {
+                return new CoordinateFrame();
+            }
+        });
+        labelTriangle = new DynamicMesh(labelTriangles);
 
-		dcvertex = new BasicGLSLangProgram("content/shaders/DCvertex_status.glslang", "content/shaders/Texture2DRectTimesDiffuseFragment_status.glslang");
-		dcvertex.new SetUniform("screenDimensions2", new iToFloatArray() {
+        dcvertex = new BasicGLSLangProgram("content/shaders/DCvertex_status.glslang",
+                                           "content/shaders/Texture2DRectTimesDiffuseFragment_status.glslang");
+        dcvertex.new SetUniform("screenDimensions2", new iToFloatArray() {
 
-			public float[] get() {
+            public
+            float[] get() {
 
-				return new float[] { 2f / inside.getCanvas().getSize().x, -2f / inside.getCanvas().getSize().y, 1, -1 };
-			}
-		});
-		dcvertex.new SetUniform("add", new iToFloatArray() {
+                return new float[]{2f / inside.getCanvas().getSize().x, -2f / inside.getCanvas().getSize().y, 1, -1};
+            }
+        });
+        dcvertex.new SetUniform("add", new iToFloatArray() {
 
-			public float[] get() {
-				return new float[] { 0, 0, 0, 0 };
-			}
-		});
-		dcvertex.new SetUniform("mul", new iToFloatArray() {
+            public
+            float[] get() {
+                return new float[]{0, 0, 0, 0};
+            }
+        });
+        dcvertex.new SetUniform("mul", new iToFloatArray() {
 
-			public float[] get() {
-				return new float[] { 1, 1, 1, 1 };
-			}
-		});
-		dcvertex.new SetUniform("fade", new iToFloatArray() {
+            public
+            float[] get() {
+                return new float[]{1, 1, 1, 1};
+            }
+        });
+        dcvertex.new SetUniform("fade", new iToFloatArray() {
 
-			public float[] get() {
-				return new float[] { 0, 0, 0, 0 };
-			}
-		});
-		dcvertex.new SetIntegerUniform("tex", 0);
-		
-		labelTriangles.addChild(dcvertex);
-	}
+            public
+            float[] get() {
+                return new float[]{0, 0, 0, 0};
+            }
+        });
+        dcvertex.new SetIntegerUniform("tex", 0);
 
-	int lw = 0;
-	String lt = "";
+        labelTriangles.addChild(dcvertex);
+    }
 
-	protected boolean backgroundHeavy = false;
+    int lw = 0;
+    String lt = "";
 
-	int neutral = Platform.isMac() ? 200 : 220;
+    protected boolean backgroundHeavy = false;
 
-	Color c1 = new Color(neutral / 255f, neutral / 255f, neutral / 255f, 0f);
-	Color c2 = new Color(0, 0, 0, 0.0f);
-	Color c3 = new Color(neutral / 255f, neutral / 255f, neutral / 255f, 0.15f);
+    int neutral = Platform.isMac() ? 200 : 220;
 
-	protected void paintNow() {
-		if (component==null) return;
-		
-		if (off)
-			return;
-		// if (true) return;
+    Color c1 = new Color(neutral / 255f, neutral / 255f, neutral / 255f, 0f);
+    Color c2 = new Color(0, 0, 0, 0.0f);
+    Color c3 = new Color(neutral / 255f, neutral / 255f, neutral / 255f, 0.15f);
 
-		int w = inside.getCanvas().getSize().x;
-		int h = inside.getCanvas().getSize().y;
-		int inset = 5;
+    protected
+    void paintNow() {
+        if (component == null) return;
 
-		// if (!(h == lw))
-		{
+        if (off) return;
+        // if (true) return;
 
-			lw = h;
+        int w = inside.getCanvas().getSize().x;
+        int h = inside.getCanvas().getSize().y;
+        int inset = 5;
 
-			Graphics2D g2 = component.getG2();
-			g2.clearRect(0, 0, width, height);
-			g2.setComposite(AlphaComposite.Src);
-			g2.setColor(new Color(0, 0, 0, 0.0f));
-			g2.fillRect(0, 0, width, height);
+        // if (!(h == lw))
+        {
 
-			LinearGradientPaint paint = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(width, 0), new float[] { 0, 0.5f, 1 }, new Color[] { c1, c2, c3 });
+            lw = h;
 
-			g2.setPaint(paint);
-			g2.fillRect(0, 0, width, height);
+            Graphics2D g2 = component.getG2();
+            g2.clearRect(0, 0, width, height);
+            g2.setComposite(AlphaComposite.Src);
+            g2.setColor(new Color(0, 0, 0, 0.0f));
+            g2.fillRect(0, 0, width, height);
 
-			component.reupload();
+            LinearGradientPaint paint = new LinearGradientPaint(new Point2D.Double(0, 0),
+                                                                new Point2D.Double(width, 0),
+                                                                new float[]{0, 0.5f, 1},
+                                                                new Color[]{c1, c2, c3});
 
-		}
+            g2.setPaint(paint);
+            g2.fillRect(0, 0, width, height);
 
-		component.drawIntoMesh(labelTriangle, 1, 1, 1, 1, w - width, 0);
+            component.reupload();
 
-		// component.drawIntoMesh(labelTriangle, 1, 1, 1, 1, 50, 50);
+        }
 
-		component.on();
-		labelTriangles.performPass(null);
-		component.off();
+        component.drawIntoMesh(labelTriangle, 1, 1, 1, 1, w - width, 0);
 
-		component.drawIntoMeshXFlipped(labelTriangle, 1, 1, 1, 1, 0, 0);
+        // component.drawIntoMesh(labelTriangle, 1, 1, 1, 1, 50, 50);
 
-		// component.drawIntoMesh(labelTriangle, 1, 1, 1, 1, 50, 50);
+        component.on();
+        labelTriangles.performPass(null);
+        component.off();
 
-		component.on();
-		labelTriangles.performPass(null);
-		component.off();
+        component.drawIntoMeshXFlipped(labelTriangle, 1, 1, 1, 1, 0, 0);
 
-	}
+        // component.drawIntoMesh(labelTriangle, 1, 1, 1, 1, 50, 50);
 
-	boolean off = false;
+        component.on();
+        labelTriangles.performPass(null);
+        component.off();
 
-	public void off() {
-		off = true;
-	}
+    }
 
-	public void on() {
-		off = false;
-	}
+    boolean off = false;
+
+    public
+    void off() {
+        off = true;
+    }
+
+    public
+    void on() {
+        off = false;
+    }
 
 }

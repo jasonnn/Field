@@ -4,6 +4,7 @@ import org.python.core.PyObject;
 
 interface iLocalDictionary {
 
-	public abstract PyObject __superfinditem__(String arg0);
+    public abstract
+    PyObject __superfinditem__(String arg0);
 
 }

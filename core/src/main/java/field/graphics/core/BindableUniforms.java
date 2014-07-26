@@ -8,50 +8,55 @@ import static org.lwjgl.opengl.EXTBindableUniform.glUniformBufferEXT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL31.GL_UNIFORM_BUFFER;
 
-public class BindableUniforms {
+public
+class BindableUniforms {
 
-	public static
+    public static
     class UniformBufferVec4 {
-		private final String name;
-		private final int length;
-		private final ByteBuffer storageB;
-		private final FloatBuffer storage;
-		private final int buffer;
+        private final String name;
+        private final int length;
+        private final ByteBuffer storageB;
+        private final FloatBuffer storage;
+        private final int buffer;
 
-		public boolean dirty = true;
+        public boolean dirty = true;
 
-		public UniformBufferVec4(String name, int length) {
-			this.name = name;
-			this.length = length;
+        public
+        UniformBufferVec4(String name, int length) {
+            this.name = name;
+            this.length = length;
 
-			storageB = ByteBuffer.allocateDirect(4 * 4 * length);
-			storage = storageB.order(ByteOrder.nativeOrder()).asFloatBuffer();
+            storageB = ByteBuffer.allocateDirect(4 * 4 * length);
+            storage = storageB.order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-			buffer = glGenBuffers();
+            buffer = glGenBuffers();
 
-			dirty = true;
-		}
+            dirty = true;
+        }
 
-		public FloatBuffer data() {
-			dirty = true;
-			return storage;
-		}
+        public
+        FloatBuffer data() {
+            dirty = true;
+            return storage;
+        }
 
-		public void bindNow(BasicGLSLangProgram inside, UniformCache c) {
-			// int location =
-			// glGetUniformLocation(inside.getProgram(), name);
+        public
+        void bindNow(BasicGLSLangProgram inside, UniformCache c) {
+            // int location =
+            // glGetUniformLocation(inside.getProgram(), name);
 
-			int location = c.find(null, inside.getProgram(), name);
-			if (c.lastWasNew) {
-				glBindBuffer(GL_UNIFORM_BUFFER, buffer);
-				storage.clear();
-				glBufferData(GL_UNIFORM_BUFFER, storage, GL_STATIC_READ);
-				glUniformBufferEXT(inside.getProgram(), location, buffer);
-			} else if (dirty) {
-				storage.clear();
-				glBufferData(GL_UNIFORM_BUFFER, storage, GL_STATIC_READ);
-			}
-		}
-	}
+            int location = c.find(null, inside.getProgram(), name);
+            if (c.lastWasNew) {
+                glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+                storage.clear();
+                glBufferData(GL_UNIFORM_BUFFER, storage, GL_STATIC_READ);
+                glUniformBufferEXT(inside.getProgram(), location, buffer);
+            }
+            else if (dirty) {
+                storage.clear();
+                glBufferData(GL_UNIFORM_BUFFER, storage, GL_STATIC_READ);
+            }
+        }
+    }
 
 }

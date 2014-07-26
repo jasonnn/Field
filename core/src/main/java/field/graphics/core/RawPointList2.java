@@ -5,54 +5,58 @@ import java.io.IOException;
 import static org.lwjgl.opengl.APPLEVertexArrayObject.glBindVertexArrayAPPLE;
 import static org.lwjgl.opengl.GL11.*;
 
-public class RawPointList2 extends RawMesh2 {
-	public RawPointList2(String filename) throws IOException {
-		super(filename);
-	}
+public
+class RawPointList2 extends RawMesh2 {
+    public
+    RawPointList2(String filename) throws IOException {
+        super(filename);
+    }
 
-	float size = 5;
-	
-	@Override
-	public void doPerformPass() {
-		glPointSize(size);
-		
-		glBindVertexArrayAPPLE(0);
-		int vertexObjectID = BasicContextManager.getId(this);
-		clean();
-		if (inFrame != null) {
-			glPushMatrix();
-			
-			matrix = inFrame.get().getMatrix(tmpStorage).getColumnMajor(matrix);
-			matrixm.rewind();
-			matrixm.put(matrix);
-			matrixm.rewind();
-			glMultMatrix(matrixm);
+    float size = 5;
 
-		}
+    @Override
+    public
+    void doPerformPass() {
+        glPointSize(size);
+
+        glBindVertexArrayAPPLE(0);
+        int vertexObjectID = BasicContextManager.getId(this);
+        clean();
+        if (inFrame != null) {
+            glPushMatrix();
+
+            matrix = inFrame.get().getMatrix(tmpStorage).getColumnMajor(matrix);
+            matrixm.rewind();
+            matrixm.put(matrix);
+            matrixm.rewind();
+            glMultMatrix(matrixm);
+
+        }
 
 
-		
-		//;//System.out.println(" drawing <" + frame.get(0).length / 3+"> points <"+matrix+"> <"+System.identityHashCode(this)+">");
+        //;//System.out.println(" drawing <" + frame.get(0).length / 3+"> points <"+matrix+"> <"+System.identityHashCode(this)+">");
 
-		glBindVertexArrayAPPLE(vertexObjectID);
+        glBindVertexArrayAPPLE(vertexObjectID);
 
-		glDrawArrays(GL_POINTS, 0, (int) frame.get(0).length / 3);
-		glBindVertexArrayAPPLE(0);
+        glDrawArrays(GL_POINTS, 0, (int) frame.get(0).length / 3);
+        glBindVertexArrayAPPLE(0);
 
-		if (inFrame != null) {
-			glPopMatrix();
-		}
-	}
-	
-	@Override
-	public void doSetup() {
-		elementBufferNeedsReconstruction = false;
-		super.doSetup();
-	}
-	
-	@Override
-	protected void clean() {
-		elementBufferNeedsReconstruction = false;
-			super.clean();
-	}
+        if (inFrame != null) {
+            glPopMatrix();
+        }
+    }
+
+    @Override
+    public
+    void doSetup() {
+        elementBufferNeedsReconstruction = false;
+        super.doSetup();
+    }
+
+    @Override
+    protected
+    void clean() {
+        elementBufferNeedsReconstruction = false;
+        super.clean();
+    }
 }

@@ -7,15 +7,18 @@ import java.util.*;
 /**
  * Created by jason on 7/14/14.
  */
-public class TrampolineReflection {
+public
+class TrampolineReflection {
     static HashMap<Class, Field[]> fieldsCache = new HashMap<Class, Field[]>();
     static HashMap<Class, Method[]> methodsCache = new HashMap<Class, Method[]>();
 
-    static class FieldComparator implements Comparator<Field> {
+    static
+    class FieldComparator implements Comparator<Field> {
         static final FieldComparator INSTANCE = new FieldComparator();
 
         @Override
-        public int compare(Field o1, Field o2) {
+        public
+        int compare(Field o1, Field o2) {
             return o1.getName().compareTo(o2.getName());
         }
     }
@@ -57,8 +60,7 @@ public class TrampolineReflection {
 
     protected static
     void _getAllFields(Class of, List<Field> into) {
-        if (of == null)
-            return;
+        if (of == null) return;
         Field[] m = of.getDeclaredFields();
         List<Field> list = Arrays.asList(m);
         Collections.sort(list, FieldComparator.INSTANCE);
@@ -70,8 +72,7 @@ public class TrampolineReflection {
 
     protected static
     void _getAllMethods(Class of, List<Method> into) {
-        if (of == null)
-            return;
+        if (of == null) return;
         Method[] m = of.getDeclaredMethods();
         List<Method> list = Arrays.asList(m);
         into.addAll(list);

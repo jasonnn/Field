@@ -9,300 +9,328 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-public class MiscNative {
+public
+class MiscNative {
 
-	static boolean nativeAvailable = true;
+    static boolean nativeAvailable = true;
 
-	static {
-		MiscNative.load();
-		// System.loadLibrary("miscNative2");
-	}
+    static {
+        MiscNative.load();
+        // System.loadLibrary("miscNative2");
+    }
 
-	public static
+    public static
     void goToBlack() {
-		FloatBuffer wrOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
-		FloatBuffer wgOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
-		FloatBuffer wbOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
+        FloatBuffer wrOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
+        FloatBuffer wgOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
+        FloatBuffer wbOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
 
-		for (int i = 0; i < wrOut.capacity(); i++) {
-			wrOut.put(0);
-			wgOut.put(0);
-			wbOut.put(0);
-		}
+        for (int i = 0; i < wrOut.capacity(); i++) {
+            wrOut.put(0);
+            wgOut.put(0);
+            wbOut.put(0);
+        }
 
-		wrOut.rewind();
-		wgOut.rewind();
-		wbOut.rewind();
+        wrOut.rewind();
+        wgOut.rewind();
+        wbOut.rewind();
 
-		new MiscNative().setScreenTransferTable(wrOut, wgOut, wbOut);
-	}
+        new MiscNative().setScreenTransferTable(wrOut, wgOut, wbOut);
+    }
 
-	public static
+    public static
     void fadeUp() {
-		final FloatBuffer wrOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
-		final FloatBuffer wgOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
-		final FloatBuffer wbOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
+        final FloatBuffer wrOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
+        final FloatBuffer wgOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
+        final FloatBuffer wbOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
 
-		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
 
-			int t = 0;
-			float length = 100;
+            int t = 0;
+            float length = 100;
 
-			public void update() {
-				t++;
+            public
+            void update() {
+                t++;
 
-				for (int i = 0; i < wrOut.capacity(); i++) {
-					wrOut.put(t / length);
-					wgOut.put(t / length);
-					wbOut.put(t / length);
-				}
+                for (int i = 0; i < wrOut.capacity(); i++) {
+                    wrOut.put(t / length);
+                    wgOut.put(t / length);
+                    wbOut.put(t / length);
+                }
 
-				wrOut.rewind();
-				wgOut.rewind();
-				wbOut.rewind();
+                wrOut.rewind();
+                wgOut.rewind();
+                wbOut.rewind();
 
-				new MiscNative().setScreenTransferTable(wrOut, wgOut, wbOut);
-				if (t >= length)
-					Launcher.getLauncher().deregisterUpdateable(this);
-			}
-		});
-	}
+                new MiscNative().setScreenTransferTable(wrOut, wgOut, wbOut);
+                if (t >= length) Launcher.getLauncher().deregisterUpdateable(this);
+            }
+        });
+    }
 
-	public static
+    public static
     void load() {
-		try {
+        try {
             //System.out.println(" loading native (snow)");
             System.loadLibrary("miscNative2_snow");
 
-		} catch (UnsatisfiedLinkError e) {
-			try {
+        } catch (UnsatisfiedLinkError e) {
+            try {
                 //System.out.println(" loading native (non-snow)");
                 System.loadLibrary("miscNative2");
-			} catch (UnsatisfiedLinkError ee) {
-				nativeAvailable = false;
+            } catch (UnsatisfiedLinkError ee) {
+                nativeAvailable = false;
                 //System.out.println("\n\n -- no native lib available (tried snow leopard and leopard)-- " + System.getProperty("java.library.path") + "\n\n");
             }
-		}
-	}
+        }
+    }
 
-	public native int connexionStart();
+    public native
+    int connexionStart();
 
     public static
     boolean disableScreenUpdates() {
         return true;
-	}
+    }
 
     public static
     boolean disableScreenUpdates(JComponent inside) {
         // Graphics g = inside.getGraphics();
-		// if (g != null) {
-		// final SurfaceData sd;
-		// if (g instanceof sun.java2d.SunGraphics2D) {
-		// sd = ((sun.java2d.SunGraphics2D) g).surfaceData;
-		// } else
-		// sd = null;
-		//
-		// if (sd != null) {
-		// sd.disableFlushing();
-		// Launcher.getLauncher().registerUpdateable(new iUpdateable() {
-		//
-		// public void update() {
-		// sd.enableFlushing();
-		// Launcher.getLauncher().deregisterUpdateable(this);
-		// }
-		// });
-		// return true;
-		// }
-		// }
-		return false;
-	}
+        // if (g != null) {
+        // final SurfaceData sd;
+        // if (g instanceof sun.java2d.SunGraphics2D) {
+        // sd = ((sun.java2d.SunGraphics2D) g).surfaceData;
+        // } else
+        // sd = null;
+        //
+        // if (sd != null) {
+        // sd.disableFlushing();
+        // Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        //
+        // public void update() {
+        // sd.enableFlushing();
+        // Launcher.getLauncher().deregisterUpdateable(this);
+        // }
+        // });
+        // return true;
+        // }
+        // }
+        return false;
+    }
 
     public static
     void doSplash() {
         //
-		// new Thread(new Runnable() {
-		// public void run() {
-		// }
-		// }).start();
-		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
-			int t = 0;
+        // new Thread(new Runnable() {
+        // public void run() {
+        // }
+        // }).start();
+        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+            int t = 0;
 
-			public void update() {
-				t++;
-				if (t == 1)
-					new Thread(new Runnable() {
-						public void run() {
-							new MiscNative().splashDown_safe();
-						}
-					}).start();
-			}
-		});
-	}
+            public
+            void update() {
+                t++;
+                if (t == 1) new Thread(new Runnable() {
+                    public
+                    void run() {
+                        new MiscNative().splashDown_safe();
+                    }
+                }).start();
+            }
+        });
+    }
 
     public static
     boolean enableScreenUpdates() {
         return false;
-	}
+    }
 
-	public native
+    public native
     void performFloat(Buffer matrix, int rows, int cols, Buffer output);
 
-	public native int fastRandom(FloatBuffer floats, int length);
+    public native
+    int fastRandom(FloatBuffer floats, int length);
 
-	public native int fastRandomAdd(FloatBuffer floats, int length, float mul);
+    public native
+    int fastRandomAdd(FloatBuffer floats, int length, float mul);
 
-	public native int fastRandomAmp(FloatBuffer floats, int length, float mul, long seed);
+    public native
+    int fastRandomAmp(FloatBuffer floats, int length, float mul, long seed);
 
-	public boolean fixTransparentWindowBug_safe(Object frame, float opacity) {
-		if (nativeAvailable)
-			return fixTransparentWindowBug(frame, opacity);
-		return false;
-	}
+    public
+    boolean fixTransparentWindowBug_safe(Object frame, float opacity) {
+        if (nativeAvailable) return fixTransparentWindowBug(frame, opacity);
+        return false;
+    }
 
-	public native
+    public native
     void makeScreenSaverLevel(Object frame);
 
-	public native
+    public native
     void makePopUpLevel(Object frame);
 
-	public native boolean fixTransparentWindowBug(Object frame, float opacity);
+    public native
+    boolean fixTransparentWindowBug(Object frame, float opacity);
 
-	public native
+    public native
     void goMultithreadedRenderer();
 
-	public boolean makeChildWindowOf_safe(Object insideParent, Object insideChild) {
-		if (nativeAvailable)
-			return makeChildWindowOf(insideParent, insideChild);
-		return false;
-	}
+    public
+    boolean makeChildWindowOf_safe(Object insideParent, Object insideChild) {
+        if (nativeAvailable) return makeChildWindowOf(insideParent, insideChild);
+        return false;
+    }
 
-	public native boolean makeChildWindowOf(Object insideParent, Object insideChild);
+    public native
+    boolean makeChildWindowOf(Object insideParent, Object insideChild);
 
-	public boolean makeReallyTransparent_safe(long nsContext) {
-		if (nativeAvailable)
-			return makeReallyTransparent(nsContext);
-		return false;
-	}
+    public
+    boolean makeReallyTransparent_safe(long nsContext) {
+        if (nativeAvailable) return makeReallyTransparent(nsContext);
+        return false;
+    }
 
-	public native boolean makeReallyTransparent(long nsContext);
+    public native
+    boolean makeReallyTransparent(long nsContext);
 
-	public native void nativeFourSSED(Buffer buffer);
+    public native
+    void nativeFourSSED(Buffer buffer);
 
-	public native void nativeFourSSEDInit(int width, int height);
+    public native
+    void nativeFourSSEDInit(int width, int height);
 
-	public native int nativeRLEDecompress(ByteBuffer input, int length, ByteBuffer output);
+    public native
+    int nativeRLEDecompress(ByteBuffer input, int length, ByteBuffer output);
 
-	public native
+    public native
     void setFrameVisibleSpecial(long nsContext, boolean b);
 
-	public void setScreenTransferTable(FloatBuffer red, FloatBuffer green, FloatBuffer blue) {
-		assert (red.capacity() == green.capacity());
-		assert (green.capacity() == blue.capacity());
+    public
+    void setScreenTransferTable(FloatBuffer red, FloatBuffer green, FloatBuffer blue) {
+        assert (red.capacity() == green.capacity());
+        assert (green.capacity() == blue.capacity());
 
-		setGammaRamp(red, green, blue, red.capacity());
-	}
+        setGammaRamp(red, green, blue, red.capacity());
+    }
 
-	public void splashDown_safe() {
-		if (nativeAvailable)
-			splashDown();
-	}
+    public
+    void splashDown_safe() {
+        if (nativeAvailable) splashDown();
+    }
 
-	public native
+    public native
     void splashDown();
 
-	public void splashUp_safe() {
-		if (nativeAvailable)
-			splashUp();
-	}
+    public
+    void splashUp_safe() {
+        if (nativeAvailable) splashUp();
+    }
 
-	public native
+    public native
     void splashUp();
 
-	public void noteDown_safe() {
-		if (nativeAvailable)
-			noteDown();
-	}
+    public
+    void noteDown_safe() {
+        if (nativeAvailable) noteDown();
+    }
 
-	public native
+    public native
     void noteDown();
 
-	public void noteUp_safe(String text, int x, int y, Object windowParent) {
-		if (nativeAvailable)
-			noteUp(text, x, y, windowParent);
-	}
+    public
+    void noteUp_safe(String text, int x, int y, Object windowParent) {
+        if (nativeAvailable) noteUp(text, x, y, windowParent);
+    }
 
-	public native
+    public native
     void noteUp(String text, int x, int y, Object windowParent);
 
-	public boolean unmakeChildWindowOf_safe(Object insideParent, Object insideChild) {
-		if (nativeAvailable)
-			return unmakeChildWindowOf(insideParent, insideChild);
+    public
+    boolean unmakeChildWindowOf_safe(Object insideParent, Object insideChild) {
+        if (nativeAvailable) return unmakeChildWindowOf(insideParent, insideChild);
 
-		return false;
-	}
+        return false;
+    }
 
-	public native
+    public native
     boolean unmakeChildWindowOf(Object insideParent, Object insideChild);
 
-	public void forceFullScreenNow_safe(long context) {
-		if (nativeAvailable)
-			forceFullScreenNow(context);
-	}
+    public
+    void forceFullScreenNow_safe(long context) {
+        if (nativeAvailable) forceFullScreenNow(context);
+    }
 
-	public native void forceFullScreenNow(long context);
+    public native
+    void forceFullScreenNow(long context);
 
-	public native void vDivergence(Buffer input, int width, int height, Buffer tmp);
+    public native
+    void vDivergence(Buffer input, int width, int height, Buffer tmp);
 
-	protected native void setGammaRamp(FloatBuffer red, FloatBuffer green, FloatBuffer blue, int len);
+    protected native
+    void setGammaRamp(FloatBuffer red, FloatBuffer green, FloatBuffer blue, int len);
 
-	public void enterKiosk_safe() {
-		if (nativeAvailable)
-			enterKiosk();
-	}
+    public
+    void enterKiosk_safe() {
+        if (nativeAvailable) enterKiosk();
+    }
 
-	public native void enterKiosk();
+    public native
+    void enterKiosk();
 
-	public void exitKiosk_safe() {
-		if (nativeAvailable)
-			exitKiosk();
-	}
+    public
+    void exitKiosk_safe() {
+        if (nativeAvailable) exitKiosk();
+    }
 
-	public void becomeKeyWindow_safe(Component c) {
-		if (nativeAvailable)
-			becomeKeyWindow(c);
-	}
+    public
+    void becomeKeyWindow_safe(Component c) {
+        if (nativeAvailable) becomeKeyWindow(c);
+    }
 
-	public native void becomeKeyWindow(Component c);
+    public native
+    void becomeKeyWindow(Component c);
 
-	public native void exitKiosk();
+    public native
+    void exitKiosk();
 
-	public String getDefaultsProperty_safe(String key) {
-		if (nativeAvailable)
-			return getDefaultsProperty(key);
-		return null;
-	}
+    public
+    String getDefaultsProperty_safe(String key) {
+        if (nativeAvailable) return getDefaultsProperty(key);
+        return null;
+    }
 
-	public native String getDefaultsProperty(String key);
+    public native
+    String getDefaultsProperty(String key);
 
-	public String getPropertyKeys_safe() {
-		if (nativeAvailable)
-			return getPropertyKeys();
-		return "";
-	}
+    public
+    String getPropertyKeys_safe() {
+        if (nativeAvailable) return getPropertyKeys();
+        return "";
+    }
 
-	public native String getPropertyKeys();
+    public native
+    String getPropertyKeys();
 
-	public native long getCurrentContextShareGroup();
+    public native
+    long getCurrentContextShareGroup();
 
-	public native void lookupAndBindIOSurfaceNow(int surface);
+    public native
+    void lookupAndBindIOSurfaceNow(int surface);
 
-	public native void printBeamPositions();
+    public native
+    void printBeamPositions();
 
-	public native void forceStereoOnAllDisplays();
+    public native
+    void forceStereoOnAllDisplays();
 
-	public native long windowNumberFor(Component c);
+    public native
+    long windowNumberFor(Component c);
 
-	public native void forceVsync();
+    public native
+    void forceVsync();
 
-	public native void allViewsAcceptFirstMouse();
+    public native
+    void allViewsAcceptFirstMouse();
 }

@@ -15,85 +15,86 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class AttributeHistory {
+public
+class AttributeHistory {
 
-	static
-	{
-		FieldPyObjectAdaptor2.isHandlesAttributes(AttributeHistoryAccess.class);
-	}
-	
-	public static
-    class AttributeHistoryAccess implements iHandlesAttributes
-	{
-		private final iVisualElement e;
+    static {
+        FieldPyObjectAdaptor2.isHandlesAttributes(AttributeHistoryAccess.class);
+    }
 
-		private final HistoryExplorerHG hg;
+    public static
+    class AttributeHistoryAccess implements iHandlesAttributes {
+        private final iVisualElement e;
 
-		HashMap<String, WeakReference<AttributeHistory>> cache = new HashMap<String, WeakReference<AttributeHistory>>();
+        private final HistoryExplorerHG hg;
 
-		public AttributeHistoryAccess(HistoryExplorerHG hg, iVisualElement e)
-		{
-			this.hg = hg;
-			this.e = e;
-		}
+        HashMap<String, WeakReference<AttributeHistory>> cache = new HashMap<String, WeakReference<AttributeHistory>>();
 
-		public Object getAttribute(String name) {
-			VisualElementProperty p = new VisualElementProperty(name);
-			if (!p.containsSuffix("v")) return null;
+        public
+        AttributeHistoryAccess(HistoryExplorerHG hg, iVisualElement e) {
+            this.hg = hg;
+            this.e = e;
+        }
 
-			WeakReference<AttributeHistory> n = cache.get(name);
-			AttributeHistory ah = n==null ? null : n.get();
-			if (ah == null)
-			{
-				ah = new AttributeHistory(hg, e, p);
-				cache.put(name, new WeakReference<AttributeHistory>(ah));
-			}
-			return ah.new AttributeHistoryPy();
-		}
+        public
+        Object getAttribute(String name) {
+            VisualElementProperty p = new VisualElementProperty(name);
+            if (!p.containsSuffix("v")) return null;
 
-		public void setAttribute(String name,
-				Object value) {
-		}
+            WeakReference<AttributeHistory> n = cache.get(name);
+            AttributeHistory ah = n == null ? null : n.get();
+            if (ah == null) {
+                ah = new AttributeHistory(hg, e, p);
+                cache.put(name, new WeakReference<AttributeHistory>(ah));
+            }
+            return ah.new AttributeHistoryPy();
+        }
 
-	}
+        public
+        void setAttribute(String name, Object value) {
+        }
 
-	public class AttributeHistoryPy extends PyObject
-	{
-		@Override
-		public PyObject __finditem__(PyObject key) {
+    }
 
-			if (key.isNumberType())
-			{
-				Number n = (Number) key.__tojava__(Number.class);
-				Pair<VersionNode, Object> element = values.get(n.intValue());
-				return Py.java2py(element);
-			}
-			else return null;
-		}
+    public
+    class AttributeHistoryPy extends PyObject {
+        @Override
+        public
+        PyObject __finditem__(PyObject key) {
 
-		@Override
-		public int __len__() {
-			return values.size();
-		}
-	}
+            if (key.isNumberType()) {
+                Number n = (Number) key.__tojava__(Number.class);
+                Pair<VersionNode, Object> element = values.get(n.intValue());
+                return Py.java2py(element);
+            }
+            else return null;
+        }
 
-	public static final VisualElementProperty<AttributeHistoryAccess> history = new VisualElementProperty<AttributeHistoryAccess>("history");
+        @Override
+        public
+        int __len__() {
+            return values.size();
+        }
+    }
 
-	List<Pair<VersionNode, Object>> values = new ArrayList<Pair<VersionNode, Object>>();
+    public static final VisualElementProperty<AttributeHistoryAccess> history =
+            new VisualElementProperty<AttributeHistoryAccess>("history");
+
+    List<Pair<VersionNode, Object>> values = new ArrayList<Pair<VersionNode, Object>>();
 
 
-	public AttributeHistory(HistoryExplorerHG ex,iVisualElement e, VisualElementProperty propertyName)
-	{
+    public
+    AttributeHistory(HistoryExplorerHG ex, iVisualElement e, VisualElementProperty propertyName) {
         Set<VersionNode> versions = HistoryExplorerHG.buildHistoryGraph(ex.getSheetPrefix()
                                                                         + e.getUniqueID()
                                                                         + '/'
                                                                         + propertyName.getName()
                                                                         + ".property");
-        for(VersionNode n : versions)
-		{
-			Object versionProperty = ex.getVersionProperty(n.revision, ex.getSheetPrefix()+e.getUniqueID()+ '/', propertyName);
-			values.add(new Pair<VersionNode, Object>(n, versionProperty));
-		}
-	}
+        for (VersionNode n : versions) {
+            Object versionProperty =
+                    ex.getVersionProperty(n.revision, ex.getSheetPrefix() + e.getUniqueID() + '/', propertyName);
+            values.add(new Pair<VersionNode, Object>(n, versionProperty));
+        }
+    }
 
 }

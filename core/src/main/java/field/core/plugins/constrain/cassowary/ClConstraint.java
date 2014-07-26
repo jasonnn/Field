@@ -11,72 +11,88 @@
 //
 package field.core.plugins.constrain.cassowary;
 
-public abstract class ClConstraint {
-	public ClConstraint(ClStrength strength, double weight) {
-		_strength = strength;
-		_weight = weight;
-	}
+public abstract
+class ClConstraint {
+    public
+    ClConstraint(ClStrength strength, double weight) {
+        _strength = strength;
+        _weight = weight;
+    }
 
-	public ClConstraint(ClStrength strength) {
-		_strength = strength;
-		_weight = 1.0;
-	}
+    public
+    ClConstraint(ClStrength strength) {
+        _strength = strength;
+        _weight = 1.0;
+    }
 
-	public ClConstraint() {
-		_strength = ClStrength.required;
-		_weight = 1.0;
-	}
+    public
+    ClConstraint() {
+        _strength = ClStrength.required;
+        _weight = 1.0;
+    }
 
-	public abstract ClLinearExpression expression();
+    public abstract
+    ClLinearExpression expression();
 
-	public boolean isEditConstraint() {
-		return false;
-	}
+    public
+    boolean isEditConstraint() {
+        return false;
+    }
 
-	public boolean isInequality() {
-		return false;
-	}
+    public
+    boolean isInequality() {
+        return false;
+    }
 
-	public boolean isRequired() {
-		return _strength.isRequired();
-	}
+    public
+    boolean isRequired() {
+        return _strength.isRequired();
+    }
 
-	public boolean isStayConstraint() {
-		return false;
-	}
+    public
+    boolean isStayConstraint() {
+        return false;
+    }
 
-	public ClStrength strength() {
-		return _strength;
-	}
+    public
+    ClStrength strength() {
+        return _strength;
+    }
 
-	public double weight() {
-		return _weight;
-	}
+    public
+    double weight() {
+        return _weight;
+    }
 
-	@Override
-	public String toString() {
-		return _strength.toString() + " {" + weight() + "} (" + expression();
-	}
+    @Override
+    public
+    String toString() {
+        return _strength.toString() + " {" + weight() + "} (" + expression();
+    }
 
-	public void setAttachedObject(Object o) {
-		_attachedObject = o;
-	}
+    public
+    void setAttachedObject(Object o) {
+        _attachedObject = o;
+    }
 
-	public Object getAttachedObject() {
-		return _attachedObject;
-	}
+    public
+    Object getAttachedObject() {
+        return _attachedObject;
+    }
 
-	private void setStrength(ClStrength strength) {
-		_strength = strength;
-	}
+    private
+    void setStrength(ClStrength strength) {
+        _strength = strength;
+    }
 
-	private void setWeight(double weight) {
-		_weight = weight;
-	}
+    private
+    void setWeight(double weight) {
+        _weight = weight;
+    }
 
-	private ClStrength _strength;
+    private ClStrength _strength;
 
-	private double _weight;
+    private double _weight;
 
-	private Object _attachedObject;
+    private Object _attachedObject;
 }

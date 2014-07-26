@@ -7,7 +7,8 @@ import org.objectweb.asm.MethodVisitor;
 import java.util.Collections;
 import java.util.Map;
 
-public class AnnotatedMethodHandlersTest extends BytecodeTestCase {
+public
+class AnnotatedMethodHandlersTest extends BytecodeTestCase {
 
     public static final Map<String, HandlesAnnontatedMethod> DEFAULT_HANDLERS =
             Collections.unmodifiableMap(AnnotatedMethodHandlers.getHandlers());
@@ -22,15 +23,15 @@ public class AnnotatedMethodHandlersTest extends BytecodeTestCase {
                                                     byte[] originalByteCode,
                                                     String class_name) {
         return new AnnotationMethodAdaptor(DEFAULT_HANDLERS,
-                access,
-                name,
-                desc,
-                signature,
-                classDelegate,
-                arg0,
-                super_name,
-                originalByteCode,
-                class_name);
+                                           access,
+                                           name,
+                                           desc,
+                                           signature,
+                                           classDelegate,
+                                           arg0,
+                                           super_name,
+                                           originalByteCode,
+                                           class_name);
     }
 
 

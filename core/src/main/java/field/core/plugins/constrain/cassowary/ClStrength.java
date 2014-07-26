@@ -10,51 +10,60 @@
 // ClStrength
 package field.core.plugins.constrain.cassowary;
 
-public class ClStrength {
-	public ClStrength(String name, ClSymbolicWeight symbolicWeight) {
-		_name = name;
-		_symbolicWeight = symbolicWeight;
-	}
+public
+class ClStrength {
+    public
+    ClStrength(String name, ClSymbolicWeight symbolicWeight) {
+        _name = name;
+        _symbolicWeight = symbolicWeight;
+    }
 
-	public ClStrength(String name, double w1, double w2, double w3) {
-		_name = name;
-		_symbolicWeight = new ClSymbolicWeight(w1, w2, w3);
-	}
+    public
+    ClStrength(String name, double w1, double w2, double w3) {
+        _name = name;
+        _symbolicWeight = new ClSymbolicWeight(w1, w2, w3);
+    }
 
-	public boolean isRequired() {
-		return (this == required);
-	}
+    public
+    boolean isRequired() {
+        return (this == required);
+    }
 
-	@Override
-	public String toString() {
-		return name() + (!isRequired() ? (":" + symbolicWeight()) : "");
-	}
+    @Override
+    public
+    String toString() {
+        return name() + (!isRequired() ? (":" + symbolicWeight()) : "");
+    }
 
-	public ClSymbolicWeight symbolicWeight() {
-		return _symbolicWeight;
-	}
+    public
+    ClSymbolicWeight symbolicWeight() {
+        return _symbolicWeight;
+    }
 
-	public String name() {
-		return _name;
-	}
+    public
+    String name() {
+        return _name;
+    }
 
-	public void set_name(String name) {
-		_name = name;
-	}
+    public
+    void set_name(String name) {
+        _name = name;
+    }
 
-	public void set_symbolicWeight(ClSymbolicWeight symbolicWeight) {
-		_symbolicWeight = symbolicWeight;
-	}
+    public
+    void set_symbolicWeight(ClSymbolicWeight symbolicWeight) {
+        _symbolicWeight = symbolicWeight;
+    }
 
-	public static final ClStrength required = new ClStrength("<Required>", 1000, 1000, 1000);
+    public static final ClStrength required = new ClStrength("<Required>", 1000, 1000, 1000);
 
-	public static final ClStrength strong = new ClStrength("strong", 1.0, 0.0, 0.0);
+    public static final ClStrength strong = new ClStrength("strong", 1.0, 0.0, 0.0);
 
-	public static final ClStrength medium = new ClStrength("medium", 0.0, 1.0, 0.0);
+    public static final ClStrength medium = new ClStrength("medium", 0.0, 1.0, 0.0);
 
-	public static final ClStrength weak = new ClStrength("weak", 0.0, 0.0, 1.0);
+    public static final ClStrength weak = new ClStrength("weak", 0.0, 0.0, 1.0);
 
-	private String _name;
+    private String _name;
 
-	private ClSymbolicWeight _symbolicWeight;
+    private ClSymbolicWeight _symbolicWeight;
 }

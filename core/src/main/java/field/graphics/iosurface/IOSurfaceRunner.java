@@ -10,211 +10,232 @@ import java.io.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
-public class IOSurfaceRunner {
 
-	public static final String iosurfacer_executable = SystemProperties.getProperty("iosurfacer", "./iosurfacer");
-	private final Process process;
-	private final BufferedReader in;
-	private final String filename;
-	private final IOSurfaceElement element;
-	private final OutputStreamWriter out;
+public
+class IOSurfaceRunner {
 
-	public IOSurfaceRunner(String filename) throws IOException {
+    public static final String iosurfacer_executable = SystemProperties.getProperty("iosurfacer", "./iosurfacer");
+    private final Process process;
+    private final BufferedReader in;
+    private final String filename;
+    private final IOSurfaceElement element;
+    private final OutputStreamWriter out;
 
-		this.filename = filename;
-		if (!new File(filename).exists())
-			throw new IllegalArgumentException(" file <" + filename + "> does not exist");
+    public
+    IOSurfaceRunner(String filename) throws IOException {
 
-		ProcessBuilder p = new ProcessBuilder(iosurfacer_executable, filename);
-		p.directory(new File("."));
-		p.redirectErrorStream(true);
-		process = p.start();
+        this.filename = filename;
+        if (!new File(filename).exists()) throw new IllegalArgumentException(" file <" + filename + "> does not exist");
 
-		in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        ProcessBuilder p = new ProcessBuilder(iosurfacer_executable, filename);
+        p.directory(new File("."));
+        p.redirectErrorStream(true);
+        process = p.start();
 
-		out = new OutputStreamWriter(process.getOutputStream());
-		new Thread() {
-			public void run() {
-				IOSurfaceRunner.this.run();
+        in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        out = new OutputStreamWriter(process.getOutputStream());
+        new Thread() {
+            public
+            void run() {
+                IOSurfaceRunner.this.run();
             }
         }.start();
 
-		element = new IOSurfaceElement();
+        element = new IOSurfaceElement();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				try {
-					process.destroy();
-				} catch (Throwable t) {
-					t.printStackTrace();
-				}
-			}
-		});
-	}
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public
+            void run() {
+                try {
+                    process.destroy();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }
+        });
+    }
 
-	public void dispose() {
-		running = false;
-		try {
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		process.destroy();
-	}
+    public
+    void dispose() {
+        running = false;
+        try {
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        process.destroy();
+    }
 
-	boolean running = true;
-	private double duration;
+    boolean running = true;
+    private double duration;
 
-	private int id = -1;
-	private double currentTime;
+    private int id = -1;
+    private double currentTime;
 
-	// HashMap<Integer, Integer> id = new HashMap<Integer, Integer>();
-	// HashMap<Integer, Double> currentTime= new HashMap<Integer, Double>();
+    // HashMap<Integer, Integer> id = new HashMap<Integer, Integer>();
+    // HashMap<Integer, Double> currentTime= new HashMap<Integer, Double>();
 
-	private double width;
-	private double height;
+    private double width;
+    private double height;
 
-	public void setTime(double seconds) {
-		try {
-			out.append("setposition#").append(Double.toString(seconds)).append('\n');
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public
+    void setTime(double seconds) {
+        try {
+            out.append("setposition#").append(Double.toString(seconds)).append('\n');
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void setRate(double fractionOfRealtime) {
-		try {
-			out.append("setrate#").append(Double.toString(fractionOfRealtime)).append('\n');
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public
+    void setRate(double fractionOfRealtime) {
+        try {
+            out.append("setrate#").append(Double.toString(fractionOfRealtime)).append('\n');
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	protected void run() {
+    protected
+    void run() {
 
-		boolean thrown = false;
+        boolean thrown = false;
 
-		while (running) {
-			try {
-				String line = in.readLine();
-				if (line == null)
-					continue;
-				parse(line);
-			} catch (Throwable t) {
-				if (!thrown) {
-					System.err.println(" an error has occured while reading from the IOSurfaceRunner task for movie <" + filename + ">. We're going to keep going, but it can't be a good sign.");
-					t.printStackTrace();
-				}
-				thrown = true;
-			}
-		}
-	}
+        while (running) {
+            try {
+                String line = in.readLine();
+                if (line == null) continue;
+                parse(line);
+            } catch (Throwable t) {
+                if (!thrown) {
+                    System.err.println(" an error has occured while reading from the IOSurfaceRunner task for movie <"
+                                       + filename
+                                       + ">. We're going to keep going, but it can't be a good sign.");
+                    t.printStackTrace();
+                }
+                thrown = true;
+            }
+        }
+    }
 
-	public TwoPassElement getElement() {
-		return element;
-	}
+    public
+    TwoPassElement getElement() {
+        return element;
+    }
 
-	public TwoPassElement makeElement() {
-		return new IOSurfaceElement();
-	}
+    public
+    TwoPassElement makeElement() {
+        return new IOSurfaceElement();
+    }
 
-	private void parse(String line) {
-		synchronized (this) {
+    private
+    void parse(String line) {
+        synchronized (this) {
 
-			if (!line.startsWith("--"))
-				return;
-			if (line.startsWith("--DURATION")) {
-				String[] parts = line.split("#");
-				duration = Double.parseDouble(parts[1]);
-			} else if (line.startsWith("--DIMENSIONS")) {
-				String[] parts = line.split("#");
-				width = Double.parseDouble(parts[1]);
-				height = Double.parseDouble(parts[2]);
-			} else if (line.startsWith("--ID")) {
-				String[] parts = line.split("#");
+            if (!line.startsWith("--")) return;
+            if (line.startsWith("--DURATION")) {
+                String[] parts = line.split("#");
+                duration = Double.parseDouble(parts[1]);
+            }
+            else if (line.startsWith("--DIMENSIONS")) {
+                String[] parts = line.split("#");
+                width = Double.parseDouble(parts[1]);
+                height = Double.parseDouble(parts[2]);
+            }
+            else if (line.startsWith("--ID")) {
+                String[] parts = line.split("#");
 
-				int idNow = Integer.parseInt(parts[1]);
-				double currentTimeNow = Double.parseDouble(parts[2]);
-				int slot = Integer.parseInt(parts[3]);
+                int idNow = Integer.parseInt(parts[1]);
+                double currentTimeNow = Double.parseDouble(parts[2]);
+                int slot = Integer.parseInt(parts[3]);
 
-				// id.put(slot, idNow);
-				// currentTime.put(slot, currentTimeNow);
+                // id.put(slot, idNow);
+                // currentTime.put(slot, currentTimeNow);
 
-				id = idNow;
-				currentTime = currentTimeNow;
-			}
+                id = idNow;
+                currentTime = currentTimeNow;
+            }
 
-		}
-	}
+        }
+    }
 
-	public double getDuration() {
-		return duration;
-	}
+    public
+    double getDuration() {
+        return duration;
+    }
 
-	public double getCurrentTime() {
-		return currentTime;
-	}
+    public
+    double getCurrentTime() {
+        return currentTime;
+    }
 
-	public int getID() {
-		return id;
-	}
+    public
+    int getID() {
+        return id;
+    }
 
-	public double getWidth() {
-		return width;
-	}
+    public
+    double getWidth() {
+        return width;
+    }
 
-	public double getHeight() {
-		return height;
-	}
+    public
+    double getHeight() {
+        return height;
+    }
 
-	class IOSurfaceElement extends TwoPassElement {
+    class IOSurfaceElement extends TwoPassElement {
 
-		public IOSurfaceElement() {
-			super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
-		}
+        public
+        IOSurfaceElement() {
+            super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
+        }
 
-		@Override
-		protected void post() {
-			glBindTexture(GL_TEXTURE_RECTANGLE, 0);
-			glDisable(GL_TEXTURE_RECTANGLE);
-		}
+        @Override
+        protected
+        void post() {
+            glBindTexture(GL_TEXTURE_RECTANGLE, 0);
+            glDisable(GL_TEXTURE_RECTANGLE);
+        }
 
-		double lastTime = -1;
+        double lastTime = -1;
 
-		@Override
-		protected void pre() {
-			glEnable(GL_TEXTURE_RECTANGLE);
-			glBindTexture(GL_TEXTURE_RECTANGLE, textureId);
+        @Override
+        protected
+        void pre() {
+            glEnable(GL_TEXTURE_RECTANGLE);
+            glBindTexture(GL_TEXTURE_RECTANGLE, textureId);
 
-			synchronized (IOSurfaceRunner.this) {
+            synchronized (IOSurfaceRunner.this) {
 
-				//;//System.out.println(" -- <bind to <" + textureId + ">");
+                //;//System.out.println(" -- <bind to <" + textureId + ">");
 
-				if (lastTime != id)
-					new MiscNative().lookupAndBindIOSurfaceNow(id);
-				else {
-					lastTime = id;
-				}
-			}
+                if (lastTime != id) new MiscNative().lookupAndBindIOSurfaceNow(id);
+                else {
+                    lastTime = id;
+                }
+            }
 
-		}
+        }
 
-		int textureId;
+        int textureId;
 
-		@Override
-		protected void setup() {
-			int[] textures = new int[1];
-			glEnable(GL_TEXTURE_RECTANGLE);
-			textures[0] = glGenTextures();
-			glDisable(GL_TEXTURE_RECTANGLE);
+        @Override
+        protected
+        void setup() {
+            int[] textures = new int[1];
+            glEnable(GL_TEXTURE_RECTANGLE);
+            textures[0] = glGenTextures();
+            glDisable(GL_TEXTURE_RECTANGLE);
 
-			textureId = textures[0];
-			BasicContextManager.putId(this, textureId);
+            textureId = textures[0];
+            BasicContextManager.putId(this, textureId);
 
-		}
+        }
 
-	}
+    }
 }

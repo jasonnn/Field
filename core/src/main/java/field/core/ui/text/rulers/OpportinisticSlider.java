@@ -11,183 +11,174 @@ import java.text.NumberFormat;
 
 /**
  * gui elements by tokenization
- * 
+ *
  * @author marc
- * 
  */
-public class OpportinisticSlider {
+public
+class OpportinisticSlider {
 
-	public static Prop<OpportinisticSlider> oSlider = new Prop<OpportinisticSlider>(
-			"oSlider");
+    public static Prop<OpportinisticSlider> oSlider = new Prop<OpportinisticSlider>("oSlider");
 
-	private double dw;
-	private double dn;
-	private int loc;
-	private String sn;
+    private double dw;
+    private double dn;
+    private int loc;
+    private String sn;
 
-	private double increment;
+    private double increment;
 
-	public OpportinisticSlider() {
-	}
+    public
+    OpportinisticSlider() {
+    }
 
-	// todo \u2014\u2014handle negative numbers!
+    // todo \u2014\u2014handle negative numbers!
 
-	public boolean execute(String previous, String now) {
-		try {
-			PyList was = (PyList) PythonInterface.getPythonInterface()
-					.executeStringReturnPyObject(
-							"__tok = __tokenizeHelper('''" + previous
-									+ "''')", "__tok");
-			PyList is = (PyList) PythonInterface
-					.getPythonInterface()
-					.executeStringReturnPyObject(
-							"__tok = __tokenizeHelper('''" + now + "''')",
-							"__tok");
+    public
+    boolean execute(String previous, String now) {
+        try {
+            PyList was = (PyList) PythonInterface.getPythonInterface()
+                                                 .executeStringReturnPyObject("__tok = __tokenizeHelper('''"
+                                                                              + previous
+                                                                              + "''')", "__tok");
+            PyList is = (PyList) PythonInterface.getPythonInterface()
+                                                .executeStringReturnPyObject("__tok = __tokenizeHelper('''"
+                                                                             + now
+                                                                             + "''')", "__tok");
 
-			if (was.__len__() != is.__len__())
-				return false;
+            if (was.__len__() != is.__len__()) return false;
 
-			for (int i = 0; i < was.__len__(); i++) {
-				PyTuple w = (PyTuple) was.get(i);
-				PyTuple n = (PyTuple) is.get(i);
+            for (int i = 0; i < was.__len__(); i++) {
+                PyTuple w = (PyTuple) was.get(i);
+                PyTuple n = (PyTuple) is.get(i);
 
-                if ((Py.py2int(w.__getitem__(0)) == Py.py2int(n.__getitem__(0))) && (Py.py2int(n.__getitem__(0)) == 2)) {
-                    String sw = Py.tojava(w.__getitem__(1),
-                            String.class);
-                    String sn = Py.tojava(n.__getitem__(1),
-                            String.class);
-					if (!sw.equals(sn)) {
-                        int wrstart = Py.py2int(w
-                                .__getitem__(2).__getitem__(0));
-                        int wrend = Py.py2int(w
-                                .__getitem__(3).__getitem__(0));
-                        int nrstart = Py.py2int(n
-                                .__getitem__(2).__getitem__(0));
-                        int nrend = Py.py2int(n
-                                .__getitem__(3).__getitem__(0));
-                        int wcstart = Py.py2int(w
-                                .__getitem__(2).__getitem__(1));
-                        int wcend = Py.py2int(w
-                                .__getitem__(3).__getitem__(1));
-                        int ncstart = Py.py2int(n
-                                .__getitem__(2).__getitem__(1));
-                        int ncend = Py.py2int(n
-                                .__getitem__(3).__getitem__(1));
+                if ((Py.py2int(w.__getitem__(0)) == Py.py2int(n.__getitem__(0))) && (Py.py2int(n.__getitem__(0))
+                                                                                     == 2)) {
+                    String sw = Py.tojava(w.__getitem__(1), String.class);
+                    String sn = Py.tojava(n.__getitem__(1), String.class);
+                    if (!sw.equals(sn)) {
+                        int wrstart = Py.py2int(w.__getitem__(2).__getitem__(0));
+                        int wrend = Py.py2int(w.__getitem__(3).__getitem__(0));
+                        int nrstart = Py.py2int(n.__getitem__(2).__getitem__(0));
+                        int nrend = Py.py2int(n.__getitem__(3).__getitem__(0));
+                        int wcstart = Py.py2int(w.__getitem__(2).__getitem__(1));
+                        int wcend = Py.py2int(w.__getitem__(3).__getitem__(1));
+                        int ncstart = Py.py2int(n.__getitem__(2).__getitem__(1));
+                        int ncend = Py.py2int(n.__getitem__(3).__getitem__(1));
 
-						createSliderAt(sw, sn, nrstart, ncstart, nrend, ncend,
-								now);
-					}
-				}
+                        createSliderAt(sw, sn, nrstart, ncstart, nrend, ncend, now);
+                    }
+                }
 
-			}
+            }
 
             //System.out.println(" os = <" + was + "> <" + is + ">");
             return true;
-		} catch (Throwable t) {
-			t.printStackTrace();
-			return false;
-		}
-	}
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return false;
+        }
+    }
 
-	private void createSliderAt(String sw, String sn, int nrstart, int ncstart,
-			int nrend, int ncend, String now) {
+    private
+    void createSliderAt(String sw, String sn, int nrstart, int ncstart, int nrend, int ncend, String now) {
 
-		dw = Double.parseDouble(sw);				
+        dw = Double.parseDouble(sw);
 
-		dn = Double.parseDouble(sn);
+        dn = Double.parseDouble(sn);
 
-		loc = convertToLocation(nrstart, ncstart, nrend, ncend, now);
+        loc = convertToLocation(nrstart, ncstart, nrend, ncend, now);
 
-		this.sn = sn;
+        this.sn = sn;
 
-		increment = Math.pow(10, Math.round(Math.log10(Math.abs(dn - dw))));
+        increment = Math.pow(10, Math.round(Math.log10(Math.abs(dn - dw))));
 
-	}
+    }
 
     private static
     int convertToLocation(int nrstart, int ncstart, int nrend, int ncend, String now) {
         String[] mm = now.split("\n");
-		int row = 0;
-		int offset = 0;
-		for (int i = 0; i < mm.length; i++) {
-			if (!mm[i].isEmpty()) {
-				row++;
-				if (row == nrstart) {
-					break;
-				}
-			}
-			offset += mm[i].length() + 1;
-		}
+        int row = 0;
+        int offset = 0;
+        for (int i = 0; i < mm.length; i++) {
+            if (!mm[i].isEmpty()) {
+                row++;
+                if (row == nrstart) {
+                    break;
+                }
+            }
+            offset += mm[i].length() + 1;
+        }
 
-		return offset + ncstart;
-	}
+        return offset + ncstart;
+    }
 
-	public iFunction<String, String> getUp() {
-		return new iFunction<String, String>() {
-			public String f(String in) {
-				return up(in);
-			}
-		};
-	}
+    public
+    iFunction<String, String> getUp() {
+        return new iFunction<String, String>() {
+            public
+            String f(String in) {
+                return up(in);
+            }
+        };
+    }
 
-	public String up(String x) {
-		if (x.length() < loc)
-			return x;
-		if (!x.substring(loc).startsWith(sn))
-			return x;
+    public
+    String up(String x) {
+        if (x.length() < loc) return x;
+        if (!x.substring(loc).startsWith(sn)) return x;
 
-		double nn = dn + increment;
+        double nn = dn + increment;
 
-		String next = roundLike(nn, sn);
-		String n = x.substring(0, loc) + next + x.substring(loc + sn.length());
+        String next = roundLike(nn, sn);
+        String n = x.substring(0, loc) + next + x.substring(loc + sn.length());
 
-		dn = nn;
+        dn = nn;
 
         sn = next;
 
-		return n;
-	}
+        return n;
+    }
 
-	public iFunction<String, String> getDown() {
-		return new iFunction<String, String>() {
-			public String f(String in) {
-				return down(in);
-			}
-		};
-	}
+    public
+    iFunction<String, String> getDown() {
+        return new iFunction<String, String>() {
+            public
+            String f(String in) {
+                return down(in);
+            }
+        };
+    }
 
-	public String down(String x) {
-		if (x.length() < loc)
-			return x;
-		if (!x.substring(loc).startsWith(sn))
-			return x;
+    public
+    String down(String x) {
+        if (x.length() < loc) return x;
+        if (!x.substring(loc).startsWith(sn)) return x;
 
-		double nn = dn - increment;
+        double nn = dn - increment;
 
-		String next = roundLike(nn, sn);
-		String n = x.substring(0, loc) + next + x.substring(loc + sn.length());
+        String next = roundLike(nn, sn);
+        String n = x.substring(0, loc) + next + x.substring(loc + sn.length());
 
-		dn = nn;
+        dn = nn;
 
         sn = roundLike(nn, sn);
 
-		return n;
-	}
+        return n;
+    }
 
-	private static
+    private static
     String roundLike(double nn, String like) {
 
-		int mm = 0;
-		if (like.indexOf('.') == -1) {
-			mm = 1;
-			mm = like.length() - like.indexOf('.');
-		}
+        int mm = 0;
+        if (like.indexOf('.') == -1) {
+            mm = 1;
+            mm = like.length() - like.indexOf('.');
+        }
 
-		NumberFormat _format = NumberFormat.getInstance();
-		_format.setMaximumFractionDigits(mm);
-		_format.setMinimumFractionDigits(0);
+        NumberFormat _format = NumberFormat.getInstance();
+        _format.setMaximumFractionDigits(mm);
+        _format.setMinimumFractionDigits(0);
 
-		return _format.format(nn);
-	}
+        return _format.format(nn);
+    }
 
 }

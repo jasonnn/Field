@@ -14,25 +14,32 @@ import java.util.*;
 /**
  * @author marc Created on Dec 21, 2003
  */
-public class Adaptation {
+public
+class Adaptation {
 
-    public interface iAdaptor<X, Y> {
-        public Y adapt(Class<X> from, Class<Y> to, X object);
+    public
+    interface iAdaptor<X, Y> {
+        public
+        Y adapt(Class<X> from, Class<Y> to, X object);
     }
 
 
-    public static class Node {
+    public static
+    class Node {
 
         Class represents;
 
-        LinkedHashMap<Class, Triple<Node, iFloatProvider, iAdaptor>> edges = new LinkedHashMap<Class, Triple<Node, iFloatProvider, iAdaptor>>();
+        LinkedHashMap<Class, Triple<Node, iFloatProvider, iAdaptor>> edges =
+                new LinkedHashMap<Class, Triple<Node, iFloatProvider, iAdaptor>>();
 
-        public Node(Class from) {
+        public
+        Node(Class from) {
             this.represents = from;
         }
 
         @Override
-        public String toString() {
+        public
+        String toString() {
             return String.valueOf(represents);
         }
     }
@@ -44,7 +51,8 @@ public class Adaptation {
     HashMap<Pair<Class, Class>, List<Triple<Node, iFloatProvider, iAdaptor>>> cached;
 
     iTopology<Node> nodeTopology = new iTopology<Node>() {
-        public List<Node> getChildrenOf(Node of) {
+        public
+        List<Node> getChildrenOf(Node of) {
             ArrayList<Node> al = new ArrayList<Node>(of.edges.size());
             for (Triple<Node, iFloatProvider, iAdaptor> t : of.edges.values()) {
                 al.add(t.left);
@@ -52,13 +60,15 @@ public class Adaptation {
             return al;
         }
 
-        public List<Node> getParentsOf(Node of) {
+        public
+        List<Node> getParentsOf(Node of) {
             return null;
         }
     };
 
     AStarMetric<Node> nodeMetric = new AStarMetric<Node>() {
-        public double distance(Node from, Node to) {
+        public
+        double distance(Node from, Node to) {
             Triple<Node, iFloatProvider, iAdaptor> n = from.edges.get(to.represents);
             if (from.represents.equals(to.represents)) return 0;
             if (n == null) return 1e4;
@@ -66,10 +76,12 @@ public class Adaptation {
         }
     };
 
-    public Adaptation() {
+    public
+    Adaptation() {
     }
 
-    public <T> T adapt(Object from, Class<T> to) {
+    public
+    <T> T adapt(Object from, Class<T> to) {
         if (from == null) {
             return null;
         }
@@ -122,7 +134,8 @@ public class Adaptation {
                 return null;
             }
 
-            TopologyAStarSearch<Node> search = new TopologySearching.TopologyAStarSearch<Node>(nodeTopology, nodeMetric);
+            TopologyAStarSearch<Node> search =
+                    new TopologySearching.TopologyAStarSearch<Node>(nodeTopology, nodeMetric);
             float bestDistance = Float.POSITIVE_INFINITY;
             List<Node> bestRoute = null;
 
@@ -164,19 +177,22 @@ public class Adaptation {
 
     }
 
-    public <X, Y> void declare(Class<X> from, Class<Y> to, iAdaptor<X, Y> adaptor, iFloatProvider f) {
+    public
+    <X, Y> void declare(Class<X> from, Class<Y> to, iAdaptor<X, Y> adaptor, iFloatProvider f) {
         Node nf = getNodeFor(from, true);
         Node nt = getNodeFor(to, true);
 
         nf.edges.put(to, new Triple<Node, iFloatProvider, iAdaptor>(nt, f, adaptor));
     }
 
-    public Adaptation doCaching() {
+    public
+    Adaptation doCaching() {
         cached = new HashMap<Pair<Class, Class>, List<Triple<Node, iFloatProvider, iAdaptor>>>();
         return this;
     }
 
-    protected Node getNodeFor(Class from, boolean autoConstruct) {
+    protected
+    Node getNodeFor(Class from, boolean autoConstruct) {
         Node node = nodes.get(from);
         if (node == null) nodes.put(from, node = new Node(from));
         return node;

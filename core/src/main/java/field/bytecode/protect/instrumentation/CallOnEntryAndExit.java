@@ -12,9 +12,10 @@ import java.util.Map;
 import static field.bytecode.protect.instrumentation.FieldBytecodeAdapterConstants.*;
 
 /**
-* Created by jason on 7/14/14.
-*/
-public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implements EntryHandler, ExitHandler {
+ * Created by jason on 7/14/14.
+ */
+public abstract
+class CallOnEntryAndExit extends FieldASMGeneratorAdapter implements EntryHandler, ExitHandler {
     private final String name;
 
     private final ASMMethod onMethod;
@@ -27,7 +28,12 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
 
     boolean isConstructor = false;
 
-    public CallOnEntryAndExit(String name, int access, ASMMethod onMethod, MethodVisitor delegateTo, HashMap<String, Object> parameters) {
+    public
+    CallOnEntryAndExit(String name,
+                       int access,
+                       ASMMethod onMethod,
+                       MethodVisitor delegateTo,
+                       HashMap<String, Object> parameters) {
         super(access, onMethod, delegateTo);
         this.name = name;
         this.onMethod = onMethod;
@@ -45,21 +51,22 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
 
     public abstract
     Object handleExit(Object returningThis,
-                                      String fromName,
-                                      Object fromThis,
-                                      String methodName,
-                                      Map<String, Object> parameterName,
-                                      String methodReturnName);
+                      String fromName,
+                      Object fromThis,
+                      String methodName,
+                      Map<String, Object> parameterName,
+                      String methodReturnName);
 
     public abstract
     void handleEntry(String fromName,
-                                     Object fromThis,
-                                     String methodName,
-                                     Map<String, Object> parameterName,
-                                     Object[] argArray);
+                     Object fromThis,
+                     String methodName,
+                     Map<String, Object> parameterName,
+                     Object[] argArray);
 
     @Override
-    public void visitCode() {
+    public
+    void visitCode() {
 
         if ("<init>".equals(onMethod.getName())) {
 
@@ -67,7 +74,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             // invoke special
             isConstructor = true;
 
-        } else {
+        }
+        else {
             push(name);
             loadThis();
             push(onMethod.getName());
@@ -79,7 +87,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
     }
 
     @Override
-    public void visitInsn(int op) {
+    public
+    void visitInsn(int op) {
         if (op == Opcodes.RETURN) {
             push((String) null);
             push(name);
@@ -89,7 +98,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             push(String.valueOf(returnNumber++));
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleDefered_V_SOSSoc);
             pop();
-        } else if (op == Opcodes.IRETURN) {
+        }
+        else if (op == Opcodes.IRETURN) {
             box(ASMType.INT_TYPE);
 
             push(name);
@@ -100,7 +110,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleEntry_V_SOSSo);
             // new ASMMethod("handle2", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(ASMType.INT_TYPE);
-        } else if (op == Opcodes.FRETURN) {
+        }
+        else if (op == Opcodes.FRETURN) {
             box(ASMType.FLOAT_TYPE);
 
             push(name);
@@ -111,7 +122,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
             invokeStatic(FIELD_BYTECODE_ADAPTER_TYPE, handleEntry_V_SOSSo);
             // invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle2", Type.VOID_TYPE, new Type[]{Type.getType(Object.class), Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(String.class)}));
             unbox(ASMType.FLOAT_TYPE);
-        } else if (op == Opcodes.ARETURN) {
+        }
+        else if (op == Opcodes.ARETURN) {
             dup();
 
             push(name);
@@ -127,7 +139,8 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
     }
 
     @Override
-    public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+    public
+    void visitMethodInsn(int opcode, String owner, String name, String desc) {
         if (isConstructor) {
             if (opcode == Opcodes.INVOKESPECIAL) {
                 super.visitMethodInsn(opcode, owner, name, desc);
@@ -142,11 +155,11 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
                 //invokeStatic(Type.getType(BasicInstrumentation2.class), new ASMMethod("handle2", Type.VOID_TYPE, new Type[]{Type.getType(String.class), Type.getType(Object.class), Type.getType(String.class), Type.getType(String.class), Type.getType(Object[].class)}));
 
                 isConstructor = false;
-            } else
-                super.visitMethodInsn(opcode, owner, name, desc);
+            }
+            else super.visitMethodInsn(opcode, owner, name, desc);
 
-        } else
-            super.visitMethodInsn(opcode, owner, name, desc);
+        }
+        else super.visitMethodInsn(opcode, owner, name, desc);
 
     }
 }

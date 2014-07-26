@@ -11,26 +11,32 @@
 // 
 package field.core.plugins.constrain.cassowary;
 
-public class ClStayConstraint extends ClEditOrStayConstraint {
-	public ClStayConstraint(ClVariable var, ClStrength strength, double weight) {
-		super(var, strength, weight);
-	}
+public
+class ClStayConstraint extends ClEditOrStayConstraint {
+    public
+    ClStayConstraint(ClVariable var, ClStrength strength, double weight) {
+        super(var, strength, weight);
+    }
 
-	public ClStayConstraint(ClVariable var, ClStrength strength) {
-		super(var, strength, 1.0);
-	}
+    public
+    ClStayConstraint(ClVariable var, ClStrength strength) {
+        super(var, strength, 1.0);
+    }
 
-	public ClStayConstraint(ClVariable var) {
-		super(var, ClStrength.weak, 1.0);
-	}
+    public
+    ClStayConstraint(ClVariable var) {
+        super(var, ClStrength.weak, 1.0);
+    }
 
-	@Override
-	public boolean isStayConstraint() {
-		return true;
-	}
+    @Override
+    public
+    boolean isStayConstraint() {
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return "stay " + super.toString();
-	}
+    @Override
+    public
+    String toString() {
+        return "stay " + super.toString();
+    }
 }

@@ -13,40 +13,40 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class AddToStandardLibrary {
+public
+class AddToStandardLibrary {
 
-	public static void addThis(iVisualElement from, String text, boolean plainText, StyledText fc) {
-		String name = iVisualElement.name.get(from);
-		String extensionsDir = SystemProperties.getProperty("extensions.dir", "../../extensions/");
+    public static
+    void addThis(iVisualElement from, String text, boolean plainText, StyledText fc) {
+        String name = iVisualElement.name.get(from);
+        String extensionsDir = SystemProperties.getProperty("extensions.dir", "../../extensions/");
 
-		File newFile = new File(extensionsDir + name+".py");
-		if (newFile.exists()) {
-			// need to ask the user what to
-			// do.
-			
-			MessageBox mb = new MessageBox(iVisualElement.enclosingFrame.get(from).getFrame(), SWT.OK | SWT.CANCEL);
+        File newFile = new File(extensionsDir + name + ".py");
+        if (newFile.exists()) {
+            // need to ask the user what to
+            // do.
 
-			int oo = mb.open();
-			
-			if (oo == SWT.CANCEL) {
-				return;
-			}
-		}
-            final Closer closer = Closer.create();
-		try {
-			BufferedWriter out = closer.register(new BufferedWriter(new FileWriter(newFile)));
-			if (plainText)
-				out.write("#field-library\n");
-			out.write(text);
-			out.write("\n");
-			out.close();
-			
-			OverlayAnimationManager.notifyAsText(from, "Wrote text to file '"+name+".py'", null);
+            MessageBox mb = new MessageBox(iVisualElement.enclosingFrame.get(from).getFrame(), SWT.OK | SWT.CANCEL);
 
-		} catch (IOException e) {
-			e.printStackTrace();
+            int oo = mb.open();
+
+            if (oo == SWT.CANCEL) {
+                return;
+            }
         }
-        finally {
+        final Closer closer = Closer.create();
+        try {
+            BufferedWriter out = closer.register(new BufferedWriter(new FileWriter(newFile)));
+            if (plainText) out.write("#field-library\n");
+            out.write(text);
+            out.write("\n");
+            out.close();
+
+            OverlayAnimationManager.notifyAsText(from, "Wrote text to file '" + name + ".py'", null);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
             try {
                 closer.close();
             } catch (IOException e) {

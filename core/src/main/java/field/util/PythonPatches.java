@@ -5,78 +5,85 @@ import field.namespace.generic.Bind.iFunction;
 import org.python.core.Py;
 import org.python.core.PyObject;
 
-public class PythonPatches {
+public
+class PythonPatches {
 
-	public static
+    public static
     class Filter<T> implements iFunction<T, T> {
 
-		public PyObject callable;
+        public PyObject callable;
 
-		public CapturedEnvironment env;
+        public CapturedEnvironment env;
 
-		private final String name;
+        private final String name;
 
-		private final Class<Object> coerceTo;
+        private final Class<Object> coerceTo;
 
-		public Filter(String name) {
-			this.name = name;
-			coerceTo = Object.class;
-		}
+        public
+        Filter(String name) {
+            this.name = name;
+            coerceTo = Object.class;
+        }
 
-		public Filter(String name, Class coerceTo) {
-			this.name = name;
-			this.coerceTo = coerceTo;
-		}
+        public
+        Filter(String name, Class coerceTo) {
+            this.name = name;
+            this.coerceTo = coerceTo;
+        }
 
-		public T f(T in) {
-			if (callable == null)
-				return computeDefault(in);
+        public
+        T f(T in) {
+            if (callable == null) return computeDefault(in);
 
-			enter();
-			try {
-				PyObject o = callable.__call__(Py.java2py(in));
-				if (o == null)
-					return null;
-				return (T) o.__tojava__(coerceTo);
-			} catch (Throwable t) {
-				System.err.println(" exception thrown in callable <" + this.getName() + "> -- it will be called no more");
-				callable = null;
-				return computeDefault(in);
-			} finally {
-				exit();
-			}
+            enter();
+            try {
+                PyObject o = callable.__call__(Py.java2py(in));
+                if (o == null) return null;
+                return (T) o.__tojava__(coerceTo);
+            } catch (Throwable t) {
+                System.err.println(" exception thrown in callable <"
+                                   + this.getName()
+                                   + "> -- it will be called no more");
+                callable = null;
+                return computeDefault(in);
+            } finally {
+                exit();
+            }
 
-		}
+        }
 
-		public void set(PyObject to) {
-			env = null;
-			callable = to;
-		}
+        public
+        void set(PyObject to) {
+            env = null;
+            callable = to;
+        }
 
-		public void set(PyObject to, CapturedEnvironment env) {
-			this.env = env;
-			callable = to;
-		}
+        public
+        void set(PyObject to, CapturedEnvironment env) {
+            this.env = env;
+            callable = to;
+        }
 
-		protected T computeDefault(T in) {
-			return in;
-		}
+        protected
+        T computeDefault(T in) {
+            return in;
+        }
 
-		protected void enter() {
-			if (env != null)
-				env.enter();
-		}
+        protected
+        void enter() {
+            if (env != null) env.enter();
+        }
 
-		protected void exit() {
-			if (env != null)
-				env.exit();
-		}
+        protected
+        void exit() {
+            if (env != null) env.exit();
+        }
 
-		protected String getName() {
-			return name;
-		}
-	}
-
+        protected
+        String getName() {
+            return name;
+        }
+    }
 
 
 }

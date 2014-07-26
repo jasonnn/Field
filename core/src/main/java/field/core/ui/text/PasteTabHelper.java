@@ -3,75 +3,71 @@ package field.core.ui.text;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-public class PasteTabHelper {
+public
+class PasteTabHelper {
 
-	public static
+    public static
     String entab(String text) {
-		if (text.trim().length() == 0)
-			return text;
-		
-		text = text.replace("\r", "\n");
-		String[] lines = text.split("\n");
-		if (lines.length < 2)
-			return text;
+        if (text.trim().length() == 0) return text;
 
-		TreeSet<Integer> leadings = new TreeSet<Integer>();
+        text = text.replace("\r", "\n");
+        String[] lines = text.split("\n");
+        if (lines.length < 2) return text;
 
-		for (int i = 0; i < lines.length; i++) {
-			int leading = leadingFor(lines[i]);
-			if (leading > 0)
-				leadings.add(leading);
-		}
+        TreeSet<Integer> leadings = new TreeSet<Integer>();
 
-		Integer unit = null;
+        for (int i = 0; i < lines.length; i++) {
+            int leading = leadingFor(lines[i]);
+            if (leading > 0) leadings.add(leading);
+        }
 
-		if (leadings.size() == 0)
-			return text;
+        Integer unit = null;
 
-		if (leadings.size() == 1) {
-			unit = leadings.iterator().next();
-		} else {
-			Iterator<Integer> m = leadings.iterator();
-			while (m.hasNext()) {
-				Integer g = m.next();
-				if (unit == null)
-					unit = g;
-				else {
-					unit = gcd(unit, g);
-				}
-			}
-		}
-		
-		if (unit == null) return text;
-		if (unit == 1) unit = 2;
-		
+        if (leadings.size() == 0) return text;
 
-		StringBuilder b = new StringBuilder(unit);
-		for (int i = 0; i < unit; i++)
-			b.append(' ');
+        if (leadings.size() == 1) {
+            unit = leadings.iterator().next();
+        }
+        else {
+            Iterator<Integer> m = leadings.iterator();
+            while (m.hasNext()) {
+                Integer g = m.next();
+                if (unit == null) unit = g;
+                else {
+                    unit = gcd(unit, g);
+                }
+            }
+        }
 
-		StringBuilder o = new StringBuilder(text.length());
+        if (unit == null) return text;
+        if (unit == 1) unit = 2;
 
-		for (String s : lines) {
-			o.append(s.replaceAll(b.toString(), "\t")).append('\n');
-		}
 
-		return o.toString();
+        StringBuilder b = new StringBuilder(unit);
+        for (int i = 0; i < unit; i++)
+            b.append(' ');
 
-	}
+        StringBuilder o = new StringBuilder(text.length());
 
-	private static int leadingFor(String string) {
-		int index = 0;
-		while (index < string.length() && string.charAt(index) == ' ')
-			index++;
-		return index;
-	}
+        for (String s : lines) {
+            o.append(s.replaceAll(b.toString(), "\t")).append('\n');
+        }
 
-	protected static
+        return o.toString();
+
+    }
+
+    private static
+    int leadingFor(String string) {
+        int index = 0;
+        while (index < string.length() && string.charAt(index) == ' ') index++;
+        return index;
+    }
+
+    protected static
     int gcd(int x, int y) {
-		if (y == 0)
-			return x;
-		return gcd(y, x % y);
-	}
+        if (y == 0) return x;
+        return gcd(y, x % y);
+    }
 
 }

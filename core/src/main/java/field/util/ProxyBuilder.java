@@ -9,12 +9,14 @@ import java.util.List;
 /**
  * Created by jason on 7/14/14.
  */
-public class ProxyBuilder<T> {
+public
+class ProxyBuilder<T> {
     ClassLoader loader;
     List<Class> interfaces = new ArrayList<Class>();
     InvocationHandler handler;
 
-    public static <T> ProxyBuilder<T> proxyFor(Class<T> cls, Class... rest) {
+    public static
+    <T> ProxyBuilder<T> proxyFor(Class<T> cls, Class... rest) {
         ProxyBuilder<T> b = new ProxyBuilder<T>();
         b.interfaces.add(cls);
         Collections.addAll(b.interfaces, rest);
@@ -23,19 +25,22 @@ public class ProxyBuilder<T> {
     }
 
 
-    public ProxyBuilder<T> withClassLoader(ClassLoader loader) {
+    public
+    ProxyBuilder<T> withClassLoader(ClassLoader loader) {
         this.loader = loader;
         return this;
     }
 
-    public T withHandler(InvocationHandler handler) {
+    public
+    T withHandler(InvocationHandler handler) {
         this.handler = handler;
         return build();
     }
 
 
     @SuppressWarnings("unchecked")
-    public T build() {
+    public
+    T build() {
         return (T) Proxy.newProxyInstance(loader, interfaces.toArray(new Class[interfaces.size()]), handler);
     }
 

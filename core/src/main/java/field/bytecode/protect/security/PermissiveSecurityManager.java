@@ -8,210 +8,221 @@ import java.net.InetAddress;
 import java.security.Permission;
 
 @SuppressWarnings("deprecation")
-public class PermissiveSecurityManager extends
-        SecurityManager {
+public
+class PermissiveSecurityManager extends SecurityManager {
     @Override
-    public void checkWrite(
-            FileDescriptor fd) {
+    public
+    void checkWrite(FileDescriptor fd) {
     }
 
     @Override
-    public void checkWrite(
-            String fd) {
+    public
+    void checkWrite(String fd) {
     }
 
     @Override
-    public void checkAccept(
-            String host,
-            int port) {
+    public
+    void checkAccept(String host, int port) {
     }
 
     @Override
-    public void checkAccess(Thread t) {
+    public
+    void checkAccess(Thread t) {
     }
 
     @Override
-    public void checkAccess(
-            ThreadGroup g) {
+    public
+    void checkAccess(ThreadGroup g) {
     }
 
     @Override
-    public void checkAwtEventQueueAccess() {
+    public
+    void checkAwtEventQueueAccess() {
     }
 
     @Override
-    public void checkConnect(
-            String host,
-            int port,
-            Object context) {
+    public
+    void checkConnect(String host, int port, Object context) {
     }
 
     @Override
-    public void checkConnect(
-            String host,
-            int port) {
+    public
+    void checkConnect(String host, int port) {
     }
 
     @Override
-    public void checkCreateClassLoader() {
+    public
+    void checkCreateClassLoader() {
     }
 
     @Override
-    public void checkDelete(
-            String file) {
+    public
+    void checkDelete(String file) {
     }
 
     @Override
-    public void checkExec(String cmd) {
+    public
+    void checkExec(String cmd) {
     }
 
     @Override
-    public void checkExit(int status) {
+    public
+    void checkExit(int status) {
     }
 
     @Override
-    public void checkLink(String lib) {
+    public
+    void checkLink(String lib) {
     }
 
     @Override
-    public void checkListen(int port) {
+    public
+    void checkListen(int port) {
     }
 
     @Override
-    public void checkMemberAccess(
-            Class<?> clazz,
-            int which) {
+    public
+    void checkMemberAccess(Class<?> clazz, int which) {
     }
 
     @Override
-    public void checkMulticast(
-            InetAddress maddr,
-            byte ttl) {
+    public
+    void checkMulticast(InetAddress maddr, byte ttl) {
     }
 
     @Override
-    public void checkMulticast(
-            InetAddress maddr) {
+    public
+    void checkMulticast(InetAddress maddr) {
     }
 
     @Override
-    public void checkPackageAccess(
-            String pkg) {
+    public
+    void checkPackageAccess(String pkg) {
     }
 
     @Override
-    public void checkPackageDefinition(
-            String pkg) {
+    public
+    void checkPackageDefinition(String pkg) {
     }
 
     @Override
-    public void checkPermission(
-            Permission perm,
-            Object context) {
+    public
+    void checkPermission(Permission perm, Object context) {
     }
 
     @Override
-    public void checkPermission(
-            Permission perm) {
+    public
+    void checkPermission(Permission perm) {
     }
 
     @Override
-    public void checkPrintJobAccess() {
+    public
+    void checkPrintJobAccess() {
     }
 
     @Override
-    public void checkPropertiesAccess() {
+    public
+    void checkPropertiesAccess() {
     }
 
     @Override
-    public void checkPropertyAccess(
-            String key) {
+    public
+    void checkPropertyAccess(String key) {
     }
 
     @Override
-    public void checkRead(
-            FileDescriptor fd) {
+    public
+    void checkRead(FileDescriptor fd) {
     }
 
     @Override
-    public void checkRead(
-            String file,
-            Object context) {
+    public
+    void checkRead(String file, Object context) {
     }
 
     @Override
-    public void checkRead(
-            String file) {
+    public
+    void checkRead(String file) {
     }
 
     @Override
-    public void checkSecurityAccess(
-            String target) {
+    public
+    void checkSecurityAccess(String target) {
     }
 
     @Override
-    public void checkSetFactory() {
+    public
+    void checkSetFactory() {
     }
 
     @Override
-    public void checkSystemClipboardAccess() {
+    public
+    void checkSystemClipboardAccess() {
     }
 
     @Override
-    public boolean checkTopLevelWindow(
-            Object window) {
+    public
+    boolean checkTopLevelWindow(Object window) {
         return true;
     }
 
     @Override
-    protected int classDepth(
-            String name) {
+    protected
+    int classDepth(String name) {
         return super.classDepth(name);
     }
 
     @Override
-    protected int classLoaderDepth() {
+    protected
+    int classLoaderDepth() {
         return super.classLoaderDepth();
     }
 
     @Override
-    protected ClassLoader currentClassLoader() {
+    protected
+    ClassLoader currentClassLoader() {
         return super.currentClassLoader();
     }
 
     @Override
-    protected Class<?> currentLoadedClass() {
+    protected
+    Class<?> currentLoadedClass() {
         return super.currentLoadedClass();
     }
 
     @Override
-    protected Class[] getClassContext() {
+    protected
+    Class[] getClassContext() {
         return super.getClassContext();
     }
 
     @Override
-    public boolean getInCheck() {
+    public
+    boolean getInCheck() {
         return super.getInCheck();
     }
 
     @Override
-    public Object getSecurityContext() {
+    public
+    Object getSecurityContext() {
         return super.getSecurityContext();
     }
 
     @Override
-    public ThreadGroup getThreadGroup() {
+    public
+    ThreadGroup getThreadGroup() {
         return super.getThreadGroup();
     }
 
     @Override
-    protected boolean inClass(
-            String name) {
+    protected
+    boolean inClass(String name) {
         return super.inClass(name);
     }
 
     @Override
-    protected boolean inClassLoader() {
+    protected
+    boolean inClassLoader() {
         return super.inClassLoader();
     }
 }

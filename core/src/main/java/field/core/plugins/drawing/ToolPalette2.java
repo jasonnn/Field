@@ -15,87 +15,99 @@ import org.eclipse.swt.widgets.ToolItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToolPalette2 {
+public
+class ToolPalette2 {
 
-	public interface iTool {
-		public void begin();
+    public
+    interface iTool {
+        public
+        void begin();
 
-		public void end();
+        public
+        void end();
 
-		public Image getIcon();
+        public
+        Image getIcon();
 
-		public Image getSelectedIcon();
+        public
+        Image getSelectedIcon();
 
-		public String getToolTip();
-		
-		public String getName();
-		public String getDescription();
-	}
+        public
+        String getToolTip();
+
+        public
+        String getName();
+
+        public
+        String getDescription();
+    }
 
     public static Rectangle defaultRect = AutoPersist.persist("modalMousePosition", new Rectangle(700, 150, 300, 200));
 
-	private final ToolBarFolder toolBarPaletteInspector;
+    private final ToolBarFolder toolBarPaletteInspector;
 
-	public ToolPalette2() {
+    public
+    ToolPalette2() {
 
-		toolBarPaletteInspector = new ToolBarFolder(defaultRect);
-		toolBarPaletteInspector.getContainer().setBackground(ToolBarFolder.firstLineBackground);
+        toolBarPaletteInspector = new ToolBarFolder(defaultRect);
+        toolBarPaletteInspector.getContainer().setBackground(ToolBarFolder.firstLineBackground);
 
-		if (toolBarPaletteInspector.getShell() != null) {
-			toolBarPaletteInspector.getShell().setText("Mouse tools");
-			toolBarPaletteInspector.getShell().open();
+        if (toolBarPaletteInspector.getShell() != null) {
+            toolBarPaletteInspector.getShell().setText("Mouse tools");
+            toolBarPaletteInspector.getShell().open();
             //System.out.println(" tool palette 2 is open and on screen? <" + toolBarPaletteInspector.getShell().getBounds() + ">");
         }
 
-	}
+    }
 
-	List<iTool> tools = new ArrayList<iTool>();
+    List<iTool> tools = new ArrayList<iTool>();
 
-	iTool current = null;
+    iTool current = null;
 
-	public ToolItem addTool(final iTool tool) {
+    public
+    ToolItem addTool(final iTool tool) {
 
-		tools.add(tool);
+        tools.add(tool);
 
-		Label description = new Label(toolBarPaletteInspector.getContainer(), SWT.WRAP );
-		description.setFont(new Font(Launcher.display, Constants.defaultFont, 10, 0));
-		
+        Label description = new Label(toolBarPaletteInspector.getContainer(), SWT.WRAP);
+        description.setFont(new Font(Launcher.display, Constants.defaultFont, 10, 0));
+
 //		description.setText(tool.getDescription());
-		
-	
-		
-		if (toolBarPaletteInspector.getShell()!=null)
-			toolBarPaletteInspector.getShell().setMinimumSize(300, 200);
 
-		ToolItem a = toolBarPaletteInspector.add(tool.getIcon(), description, new iUpdateable() {
 
-			@Override
-			public void update() {
-				if (current != null)
-					current.end();
-				tool.begin();
-				current = tool;
+        if (toolBarPaletteInspector.getShell() != null) toolBarPaletteInspector.getShell().setMinimumSize(300, 200);
 
-				// toolBarPaletteInspector.getShell().pack();
+        ToolItem a = toolBarPaletteInspector.add(tool.getIcon(), description, new iUpdateable() {
 
-			}
-		});
+            @Override
+            public
+            void update() {
+                if (current != null) current.end();
+                tool.begin();
+                current = tool;
 
-		toolBarPaletteInspector.select(0);
-		return a;
-	}
+                // toolBarPaletteInspector.getShell().pack();
 
-	public void setTool(int i) {
-		toolBarPaletteInspector.select(i);
+            }
+        });
 
-		// toolBarPaletteInspector.moveOut(toolBarPaletteInspector.current);
-		// toolBarPaletteInspector.moveIn(i);
-		// toolBarPaletteInspector.group.setSelected(toolBarPaletteInspector.toolbarButtons.get(i).getModel(),
-		// true);
+        toolBarPaletteInspector.select(0);
+        return a;
+    }
 
-	}
+    public
+    void setTool(int i) {
+        toolBarPaletteInspector.select(i);
 
-	public int getTool() {
-		return toolBarPaletteInspector.get();
-	}
+        // toolBarPaletteInspector.moveOut(toolBarPaletteInspector.current);
+        // toolBarPaletteInspector.moveIn(i);
+        // toolBarPaletteInspector.group.setSelected(toolBarPaletteInspector.toolbarButtons.get(i).getModel(),
+        // true);
+
+    }
+
+    public
+    int getTool() {
+        return toolBarPaletteInspector.get();
+    }
 }

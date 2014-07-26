@@ -13,161 +13,169 @@ import java.util.Map;
 
 //import field.util.BiMap;
 
-public class ContextualUniform {
+public
+class ContextualUniform {
 
-	public static final ThreadLocal<BiMap<String, String>> tags = new ThreadLocal<BiMap<String, String>>() {
-		protected BiMap<String, String> initialValue() {
-			return HashBiMap.create();//return new BiMap<String, String>();
+    public static final ThreadLocal<BiMap<String, String>> tags = new ThreadLocal<BiMap<String, String>>() {
+        protected
+        BiMap<String, String> initialValue() {
+            return HashBiMap.create();//return new BiMap<String, String>();
         }
     };
 
-	public static
+    public static
     void setTag(String key, String value) {
-		tags.get().put(key, value);
-	}
+        tags.get().put(key, value);
+    }
 
-	public static
+    public static
     class TagGroup {
-		Map<String, String> tags = new LinkedHashMap<String, String>();
+        Map<String, String> tags = new LinkedHashMap<String, String>();
 
-		Map<String, String> pushed = null;
+        Map<String, String> pushed = null;
 
-		public void push() {
+        public
+        void push() {
 
-			if (Base.trace) if (tags.size() > 0)
-				;//System.out.println(" pushing uniform <" + tags + ">");
+            if (Base.trace) if (tags.size() > 0) ;//System.out.println(" pushing uniform <" + tags + ">");
 
-			pushed = new LinkedHashMap<String, String>();
+            pushed = new LinkedHashMap<String, String>();
 
-			Map<String, String> target = ContextualUniform.tags.get();
-			for (Map.Entry<String, String> t : tags.entrySet()) {
-				String displaced = target.put(t.getKey(), t.getValue());
+            Map<String, String> target = ContextualUniform.tags.get();
+            for (Map.Entry<String, String> t : tags.entrySet()) {
+                String displaced = target.put(t.getKey(), t.getValue());
 
-				pushed.put(t.getKey(), displaced);
-			}
+                pushed.put(t.getKey(), displaced);
+            }
 
-		}
+        }
 
-		public void pop() {
+        public
+        void pop() {
 
-			if (pushed == null)
-				return;
-			// throw new IllegalStateException(" pop without push");
+            if (pushed == null) return;
+            // throw new IllegalStateException(" pop without push");
 
-			if (Base.trace)  ;//System.out.println(" popping <" + pushed + ">");
+            if (Base.trace) ;//System.out.println(" popping <" + pushed + ">");
 
-			Map<String, String> target = ContextualUniform.tags.get();
-			for (Map.Entry<String, String> e : pushed.entrySet()) {
-				if (e.getValue() == null) {
-					target.remove(e.getKey());
-				} else {
-					target.put(e.getKey(), e.getValue());
-				}
-			}
+            Map<String, String> target = ContextualUniform.tags.get();
+            for (Map.Entry<String, String> e : pushed.entrySet()) {
+                if (e.getValue() == null) {
+                    target.remove(e.getKey());
+                }
+                else {
+                    target.put(e.getKey(), e.getValue());
+                }
+            }
 
-			pushed = null;
+            pushed = null;
 
-		}
+        }
 
-		public void put(String key, String value) {
-			tags.put(key, value);
-		}
-	}
+        public
+        void put(String key, String value) {
+            tags.put(key, value);
+        }
+    }
 
-	public static
+    public static
     class Matches<T> implements iHandlesAttributes {
-		List<Pair<String, String>> m = new ArrayList<Pair<String, String>>();
+        List<Pair<String, String>> m = new ArrayList<Pair<String, String>>();
 
-		T value;
+        T value;
 
-		public void add(String key, String value) {
-			m.add(new Pair<String, String>(key, value));
-		}
+        public
+        void add(String key, String value) {
+            m.add(new Pair<String, String>(key, value));
+        }
 
-		public boolean matches(Map<String, String> current) {
-			for (Pair<String, String> s : m) {
-				String tt = current.get(s.left);
-				if (tt == null && s.right == null)
-					continue;
-				if (tt == null)
-					return false;
+        public
+        boolean matches(Map<String, String> current) {
+            for (Pair<String, String> s : m) {
+                String tt = current.get(s.left);
+                if (tt == null && s.right == null) continue;
+                if (tt == null) return false;
 
-				if (!tt.equals(s.right))
-					return false;
-			}
-			return true;
-		}
+                if (!tt.equals(s.right)) return false;
+            }
+            return true;
+        }
 
-		@Override
-		public Object getAttribute(String name) {
-			for (Pair<String, String> q : m) {
-				if (q.left.equals(name))
-					return q.right;
-			}
-			return null;
-		}
+        @Override
+        public
+        Object getAttribute(String name) {
+            for (Pair<String, String> q : m) {
+                if (q.left.equals(name)) return q.right;
+            }
+            return null;
+        }
 
-		@Override
-		public void setAttribute(String name, Object value) {
-			for (Pair<String, String> q : m) {
-				if (q.left.equals(name)) {
+        @Override
+        public
+        void setAttribute(String name, Object value) {
+            for (Pair<String, String> q : m) {
+                if (q.left.equals(name)) {
                     q.right = String.valueOf(value);
                     return;
-				}
-			}
+                }
+            }
             add(name, String.valueOf(value));
         }
 
-		public Matches(T value) {
-			this.value = value;
-		}
+        public
+        Matches(T value) {
+            this.value = value;
+        }
 
-	}
+    }
 
-	public static
+    public static
     class Multivalue<T> implements iProvider<T> {
-		List<Matches<T>> matchers = new ArrayList<Matches<T>>();
+        List<Matches<T>> matchers = new ArrayList<Matches<T>>();
 
-		T defaultValue;
+        T defaultValue;
 
-		public Multivalue(T value) {
-			this.defaultValue = value;
+        public
+        Multivalue(T value) {
+            this.defaultValue = value;
 
-		}
+        }
 
-		public Multivalue<T> add(Matches<T> m) {
-			matchers.add(m);
-			return this;
-		}
+        public
+        Multivalue<T> add(Matches<T> m) {
+            matchers.add(m);
+            return this;
+        }
 
-		@Override
-		public T get() {
-			BiMap<String, String> target = ContextualUniform.tags.get();
-			for (Matches<T> m : matchers) {
-				if (m.matches(target))
-					return m.value;
-			}
-			return this.defaultValue;
-		}
-	}
+        @Override
+        public
+        T get() {
+            BiMap<String, String> target = ContextualUniform.tags.get();
+            for (Matches<T> m : matchers) {
+                if (m.matches(target)) return m.value;
+            }
+            return this.defaultValue;
+        }
+    }
 
-	public static
+    public static
     class FlatContextualValue implements iProvider<Object> {
-		LinkedHashMap<String, Object> values = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> values = new LinkedHashMap<String, Object>();
 
-		Object defaultValue = null;
+        Object defaultValue = null;
 
-		public Object get() {
-			BiMap<String, String> target = ContextualUniform.tags.get();
+        public
+        Object get() {
+            BiMap<String, String> target = ContextualUniform.tags.get();
 
-			for (Map.Entry<String, Object> e : values.entrySet()) {
-				if (target.containsValue(e.getKey())) {
-					return e.getValue();
-				}
-			}
-			return defaultValue;
-		}
+            for (Map.Entry<String, Object> e : values.entrySet()) {
+                if (target.containsValue(e.getKey())) {
+                    return e.getValue();
+                }
+            }
+            return defaultValue;
+        }
 
-	}
+    }
 
 }

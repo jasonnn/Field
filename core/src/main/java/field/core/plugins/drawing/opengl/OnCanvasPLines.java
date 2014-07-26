@@ -5,12 +5,13 @@ import field.graphics.windowing.FullScreenCanvasSWT;
 
 /**
  * class for backwards compatability with Field 12 and 13
- *
  */
-public class OnCanvasPLines extends OnCanvasLines {
+public
+class OnCanvasPLines extends OnCanvasLines {
 
-	public OnCanvasPLines(iAcceptsSceneListElement on, FullScreenCanvasSWT canvas) {
-		super(on, canvas);
-	}
+    public
+    OnCanvasPLines(iAcceptsSceneListElement on, FullScreenCanvasSWT canvas) {
+        super(on, canvas);
+    }
 
 }

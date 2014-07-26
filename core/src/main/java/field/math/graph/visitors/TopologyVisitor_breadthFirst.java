@@ -8,9 +8,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
-* Created by jason on 7/15/14.
-*/
-public abstract class TopologyVisitor_breadthFirst<T> {
+ * Created by jason on 7/15/14.
+ */
+public abstract
+class TopologyVisitor_breadthFirst<T> {
     private final boolean avoidLoops;
 
     HashSet<T> seen = new HashSet<T>();
@@ -19,24 +20,27 @@ public abstract class TopologyVisitor_breadthFirst<T> {
 
     LinkedHashSet<T> fringe2 = new LinkedHashSet<T>();
 
-    public TopologyVisitor_breadthFirst(boolean avoidLoops) {
+    public
+    TopologyVisitor_breadthFirst(boolean avoidLoops) {
         this.avoidLoops = avoidLoops;
     }
 
-    public void apply(iTopology<T> top, T root) {
+    public
+    void apply(iTopology<T> top, T root) {
         seen.clear();
         fringe.clear();
         _apply(top, root, fringe, fringe2);
     }
 
-    public void preSee(Collection<T> seen2) {
+    public
+    void preSee(Collection<T> seen2) {
         seen.addAll(seen2);
     }
 
-    private void _apply(iTopology<T> top, T root, LinkedHashSet<T> localFringe, LinkedHashSet<T> tempFringe) {
+    private
+    void _apply(iTopology<T> top, T root, LinkedHashSet<T> localFringe, LinkedHashSet<T> tempFringe) {
         GraphNodeSearching.VisitCode code = visit(root);
-        if (code == GraphNodeSearching.VisitCode.stop)
-            return;
+        if (code == GraphNodeSearching.VisitCode.stop) return;
         if (code == GraphNodeSearching.VisitCode.skip) {
             return;
         }
@@ -49,15 +53,14 @@ public abstract class TopologyVisitor_breadthFirst<T> {
             for (T t : maybeWrap(fringe)) {
                 if (!avoidLoops || !seen.contains(t)) {
                     GraphNodeSearching.VisitCode vc = visit(t);
-                    if (vc == GraphNodeSearching.VisitCode.stop)
-                        return;
+                    if (vc == GraphNodeSearching.VisitCode.stop) return;
                     if (vc == GraphNodeSearching.VisitCode.skip) {
-                    } else {
+                    }
+                    else {
                         List<T> childrenOf = top.getChildrenOf(t);
                         fringe2.addAll(childrenOf);
                     }
-                    if (avoidLoops)
-                        seen.add(t);
+                    if (avoidLoops) seen.add(t);
                 }
             }
             LinkedHashSet<T> t = fringe;
@@ -70,13 +73,15 @@ public abstract class TopologyVisitor_breadthFirst<T> {
         }
     }
 
-    protected LinkedHashSet<T> maybeWrap(LinkedHashSet<T> f) {
+    protected
+    LinkedHashSet<T> maybeWrap(LinkedHashSet<T> f) {
         return f;
     }
 
     protected abstract
     GraphNodeSearching.VisitCode visit(T root);
 
-    protected void visitFringe(Collection<T> fringe) {
+    protected
+    void visitFringe(Collection<T> fringe) {
     }
 }

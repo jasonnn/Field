@@ -1,5 +1,6 @@
 package field.core.util;
 
-public class TypedPythonCallableMap {
+public
+class TypedPythonCallableMap {
 
 }

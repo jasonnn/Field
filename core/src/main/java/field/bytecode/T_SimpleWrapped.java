@@ -9,30 +9,32 @@ import field.math.linalg.Vector3;
 
 import java.lang.reflect.Method;
 
-public class T_SimpleWrapped implements iLaunchable {
-	
-	@Woven
+public
+class T_SimpleWrapped implements iLaunchable {
+
+    @Woven
     public static
     class Banana implements iProvidesWrapping {
-		
-		@SimplyWrapped
-		public static
-        Object banana()
-		{
+
+        @SimplyWrapped
+        public static
+        Object banana() {
             //System.out.println(" I'm a banana ");
-            return new Vector3(0,0,0);
-		}
-		
-		public iWrappedExit enter(Method m) {
+            return new Vector3(0, 0, 0);
+        }
+
+        public
+        iWrappedExit enter(Method m) {
             //System.out.println(" entering <"+m+">");
             return null;
-		}
-		
-	}
-	
-	public void launch() {
+        }
 
-		Banana.banana();
-		
-	}
+    }
+
+    public
+    void launch() {
+
+        Banana.banana();
+
+    }
 }

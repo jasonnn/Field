@@ -5,16 +5,18 @@ import com.apple.concurrent.Dispatch;
 /**
  *
  */
-public class OSXMain {
-    public static void main(final String[] args) {
+public
+class OSXMain {
+    public static
+    void main(final String[] args) {
         System.setProperty("main.class", "field.Blank2");
-        Dispatch.getInstance().getBlockingMainQueueExecutor()
-                .execute(new Runnable() {
+        Dispatch.getInstance().getBlockingMainQueueExecutor().execute(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        Launcher.main(args);
-                    }
-                });
+            @Override
+            public
+            void run() {
+                Launcher.main(args);
+            }
+        });
     }
 }

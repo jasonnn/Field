@@ -21,103 +21,110 @@ import java.util.Set;
 import static java.lang.System.out;
 
 @Woven
-public class DragDuplicator {
+public
+class DragDuplicator {
 
-	private final MainSelectionGroup group;
-	private final iVisualElement root;
+    private final MainSelectionGroup group;
+    private final iVisualElement root;
 
-	public DragDuplicator(MainSelectionGroup group, iVisualElement root) {
-		this.group = group;
-		this.root = root;
-	}
+    public
+    DragDuplicator(MainSelectionGroup group, iVisualElement root) {
+        this.group = group;
+        this.root = root;
+    }
 
-	boolean isDragging = false;
-	private HashSet<iVisualElement> ongoing;
+    boolean isDragging = false;
+    private HashSet<iVisualElement> ongoing;
 
-	Vector2 at = new Vector2();
+    Vector2 at = new Vector2();
 
-	@NextUpdate
-	public void begin(Event event) {
+    @NextUpdate
+    public
+    void begin(Event event) {
 
 
-		Set<iComponent> c = group.getSelection();
-		Set<iVisualElement> v = new LinkedHashSet<iVisualElement>();
-		for (iComponent cc : c) {
-			iVisualElement vv = cc.getVisualElement();
-			if (vv != null)
-				v.add(vv);
-		}
+        Set<iComponent> c = group.getSelection();
+        Set<iVisualElement> v = new LinkedHashSet<iVisualElement>();
+        for (iComponent cc : c) {
+            iVisualElement vv = cc.getVisualElement();
+            if (vv != null) v.add(vv);
+        }
 
-		isDragging = !v.isEmpty();
+        isDragging = !v.isEmpty();
 
         //System.out.println(" begin drag <"+isDragging+">");
 
-		if (isDragging) {
-			GLComponentWindow.getCurrentWindow(null).getCanvas().setCursor(Launcher.display.getSystemCursor(SWT.CURSOR_HAND));
-			
-			
-			FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
+        if (isDragging) {
+            GLComponentWindow.getCurrentWindow(null)
+                             .getCanvas()
+                             .setCursor(Launcher.display.getSystemCursor(SWT.CURSOR_HAND));
 
-			StringWriter temp = new StringWriter();
-			HashSet<iVisualElement> savedOut = new HashSet<iVisualElement>();
-			ObjectOutputStream oos = copier.getObjectOutputStream(temp, savedOut, v);
-			try {
-				oos.writeObject(v);
-				oos.close();
 
-				HashSet<iVisualElement> all = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+            FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
 
-				ongoing = new HashSet<iVisualElement>();
-				ObjectInputStream ois = copier.getObjectInputStream(new StringReader(temp.getBuffer().toString()), ongoing, all);
-				Object in = ois.readObject();
+            StringWriter temp = new StringWriter();
+            HashSet<iVisualElement> savedOut = new HashSet<iVisualElement>();
+            ObjectOutputStream oos = copier.getObjectOutputStream(temp, savedOut, v);
+            try {
+                oos.writeObject(v);
+                oos.close();
 
-				ois.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		at.x = event.x;
-		at.y = event.y;
+                HashSet<iVisualElement> all = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
 
-		out.println(" output <"+ongoing+ '>');
-	}
+                ongoing = new HashSet<iVisualElement>();
+                ObjectInputStream ois =
+                        copier.getObjectInputStream(new StringReader(temp.getBuffer().toString()), ongoing, all);
+                Object in = ois.readObject();
 
-	public void drag(Event event) {
-		
-		if (!isDragging)
-			return;
+                ois.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        at.x = event.x;
+        at.y = event.y;
 
-		float deltaX = event.x - at.x;
-		float deltaY = event.y - at.y;
+        out.println(" output <" + ongoing + '>');
+    }
 
-		out.println(" delta <"+deltaX+", "+deltaY+"> ongoing <"+ongoing+ '>');
+    public
+    void drag(Event event) {
 
-		at.x = event.x;
-		at.y = event.y;
+        if (!isDragging) return;
 
-		for (iVisualElement v : ongoing) {
-			Rect f = v.getFrame(null);
-			f.x += deltaX;
-			f.y += deltaY;
-			v.setFrame(f);
-		}
-	}
+        float deltaX = event.x - at.x;
+        float deltaY = event.y - at.y;
 
-	public void end(Event event) {
+        out.println(" delta <" + deltaX + ", " + deltaY + "> ongoing <" + ongoing + '>');
 
-		//TODO: 64 \u2014 confront mouse cursor setting in pure java
-		//NSCursor.arrowCursor().set();
-		//GLComponentWindow.getCurrentWindow(null).getCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		GLComponentWindow.getCurrentWindow(null).getCanvas().setCursor(Launcher.display.getSystemCursor(SWT.CURSOR_ARROW));
-		
-		if (!isDragging)
-			return;
-		
-		isDragging = false;
-		ongoing.clear();
+        at.x = event.x;
+        at.y = event.y;
 
-	}
+        for (iVisualElement v : ongoing) {
+            Rect f = v.getFrame(null);
+            f.x += deltaX;
+            f.y += deltaY;
+            v.setFrame(f);
+        }
+    }
+
+    public
+    void end(Event event) {
+
+        //TODO: 64 \u2014 confront mouse cursor setting in pure java
+        //NSCursor.arrowCursor().set();
+        //GLComponentWindow.getCurrentWindow(null).getCanvas().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        GLComponentWindow.getCurrentWindow(null)
+                         .getCanvas()
+                         .setCursor(Launcher.display.getSystemCursor(SWT.CURSOR_ARROW));
+
+        if (!isDragging) return;
+
+        isDragging = false;
+        ongoing.clear();
+
+    }
 
 }

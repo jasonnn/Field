@@ -10,33 +10,38 @@ import field.core.plugins.help.HelpBrowser;
 import field.core.plugins.history.ElementFileSystemTree.SheetDropSupport;
 
 @Woven
-public class ElementFileSystemTreePlugin extends BaseSimplePlugin {
+public
+class ElementFileSystemTreePlugin extends BaseSimplePlugin {
 
-	public static final VisualElementProperty<ElementFileSystemTreePlugin> fileSystemTree = new VisualElementProperty<ElementFileSystemTreePlugin>("fileSystemTree");
-	private ElementFileSystemTree efst;
+    public static final VisualElementProperty<ElementFileSystemTreePlugin> fileSystemTree =
+            new VisualElementProperty<ElementFileSystemTreePlugin>("fileSystemTree");
+    private ElementFileSystemTree efst;
 
-	@Override
-	protected String getPluginNameImpl() {
-		return "efs";
-	}
+    @Override
+    protected
+    String getPluginNameImpl() {
+        return "efs";
+    }
 
-	@Override
-	public void registeredWith(iVisualElement root) {
-		super.registeredWith(root);
+    @Override
+    public
+    void registeredWith(iVisualElement root) {
+        super.registeredWith(root);
 
-		efst = new ElementFileSystemTree();
+        efst = new ElementFileSystemTree();
 
-		new SheetDropSupport(iVisualElement.enclosingFrame.get(root).getCanvas(), root);
+        new SheetDropSupport(iVisualElement.enclosingFrame.get(root).getCanvas(), root);
 
-		fileSystemTree.set(root, root, this);
+        fileSystemTree.set(root, root, this);
 
-		installHelpBrowser(root);
-	}
+        installHelpBrowser(root);
+    }
 
-	@NextUpdate(delay = 3)
-	private void installHelpBrowser(final iVisualElement root) {
-		HelpBrowser h = HelpBrowser.helpBrowser.get(root);
-		ContextualHelp ch = h.getContextualHelp();
+    @NextUpdate(delay = 3)
+    private
+    void installHelpBrowser(final iVisualElement root) {
+        HelpBrowser h = HelpBrowser.helpBrowser.get(root);
+        ContextualHelp ch = h.getContextualHelp();
         ch.addContextualHelpForWidget("filesyste",
                                       efst.tree,
                                       ContextualHelp.providerForStaticMarkdownResource("contextual/filesystem.md"),

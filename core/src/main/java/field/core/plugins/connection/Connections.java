@@ -32,99 +32,113 @@ import java.util.Map;
 /**
  * plugin for connecting visual elements together
  */
-public class Connections implements iPlugin{
+public
+class Connections implements iPlugin {
 
-	public class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    public
+    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
 
-		public <T> void deleteProperty(VisualElementProperty<T> p) {
-		}
+        public
+        <T> void deleteProperty(VisualElementProperty<T> p) {
+        }
 
-		public void dispose() {
-		}
+        public
+        void dispose() {
+        }
 
-		public Rect getFrame(Rect out) {
-			return null;
-		}
+        public
+        Rect getFrame(Rect out) {
+            return null;
+        }
 
-		public <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
-			if (p.equals(overrides)) return (T) elementOverride;
-			Object o = properties.get(p);
-			return (T) o;
-		}
+        public
+        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+            if (p.equals(overrides)) return (T) elementOverride;
+            Object o = properties.get(p);
+            return (T) o;
+        }
 
-		public String getUniqueID() {
-			return pluginId;
-		}
+        public
+        String getUniqueID() {
+            return pluginId;
+        }
 
-		public Map<Object, Object> payload() {
-			return properties;
-		}
+        public
+        Map<Object, Object> payload() {
+            return properties;
+        }
 
-		public void setFrame(Rect out) {
-		}
+        public
+        void setFrame(Rect out) {
+        }
 
-		public iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
-			properties = t;
-			return this;
-		}
+        public
+        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+            properties = t;
+            return this;
+        }
 
-		public <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
-			properties.put(p, to);
-			return this;
-		}
+        public
+        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+            properties.put(p, to);
+            return this;
+        }
 
-		public void setUniqueID(String uid) {
-		}
-	}
+        public
+        void setUniqueID(String uid) {
+        }
+    }
 
-	public class Overrides extends iVisualElementOverrides.DefaultOverride
-	{
-		@Override
-		public VisitCode deleted(iVisualElement source) {
-			if (connections.containsKey(source.getUniqueID()))
-			{
-				iVisualElement removed = connections.remove(source.getUniqueID());
-				PythonPluginEditor.delete(removed, root);
-			}
+    public
+    class Overrides extends iVisualElementOverrides.DefaultOverride {
+        @Override
+        public
+        VisitCode deleted(iVisualElement source) {
+            if (connections.containsKey(source.getUniqueID())) {
+                iVisualElement removed = connections.remove(source.getUniqueID());
+                PythonPluginEditor.delete(removed, root);
+            }
 
-			return VisitCode.cont;
-		}
-	}
+            return VisitCode.cont;
+        }
+    }
 
-	public static final VisualElementProperty<Connections> connections_plugin = new VisualElementProperty<Connections>("connection_plugin");
+    public static final VisualElementProperty<Connections> connections_plugin =
+            new VisualElementProperty<Connections>("connection_plugin");
 
-	public static final String pluginId = "//plugin_connections";
+    public static final String pluginId = "//plugin_connections";
 
-	public static int uniq;
+    public static int uniq;
 
-	public Map<String, iVisualElement> connections = new HashMap<String, iVisualElement>();
+    public Map<String, iVisualElement> connections = new HashMap<String, iVisualElement>();
 
-	private final iVisualElement rootElement;
+    private final iVisualElement rootElement;
 
-	private iVisualElement root;
-
-
-	private LocalVisualElement lve;
-
-	private SelectionGroup<iComponent> group;
-
-	private final StandardFluidSheet sheet;
-
-	DefaultOverride  elementOverride;
-
-	Map<Object, Object> properties = new HashMap<Object, Object>();
-
-	public Connections(StandardFluidSheet sheet, iVisualElement rootElement)
-	{
-		uniq++;
-		this.sheet = sheet;
-		this.rootElement = rootElement;
-
-	}
+    private iVisualElement root;
 
 
-	public void close() {
-	}
+    private LocalVisualElement lve;
+
+    private SelectionGroup<iComponent> group;
+
+    private final StandardFluidSheet sheet;
+
+    DefaultOverride elementOverride;
+
+    Map<Object, Object> properties = new HashMap<Object, Object>();
+
+    public
+    Connections(StandardFluidSheet sheet, iVisualElement rootElement) {
+        uniq++;
+        this.sheet = sheet;
+        this.rootElement = rootElement;
+
+    }
+
+
+    public
+    void close() {
+    }
 
 //	public iVisualElement connect(iVisualElement from, iVisualElement to)
 //	{
@@ -142,101 +156,121 @@ public class Connections implements iPlugin{
 //		return c1.left;
 //	}
 
-	public <T extends iVisualElementOverrides.DefaultOverride> iVisualElement connect(final iVisualElement from,final  iVisualElement to, Class<T> connective, boolean askforname)
-	{
-		final Triple<VisualElement, PlainComponent, T> c1 = VisualElement.create(new Rect(30,30,30,30), VisualElement.class, PlainComponent.class, connective);
+    public
+    <T extends iVisualElementOverrides.DefaultOverride> iVisualElement connect(final iVisualElement from,
+                                                                               final iVisualElement to,
+                                                                               Class<T> connective,
+                                                                               boolean askforname) {
+        final Triple<VisualElement, PlainComponent, T> c1 =
+                VisualElement.create(new Rect(30, 30, 30, 30), VisualElement.class, PlainComponent.class, connective);
 
-		c1.left.addChild(rootElement);
-		new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(c1.left).added(c1.left);
-		new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(c1.left).added(c1.left);
+        c1.left.addChild(rootElement);
+        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(c1.left).added(c1.left);
+        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(c1.left).added(c1.left);
 
-		LineDrawingOverride.lineDrawing_to.set(c1.left, c1.left, new VisualElementReference(to));
-		LineDrawingOverride.lineDrawing_from.set(c1.left, c1.left, new VisualElementReference(from));
+        LineDrawingOverride.lineDrawing_to.set(c1.left, c1.left, new VisualElementReference(to));
+        LineDrawingOverride.lineDrawing_from.set(c1.left, c1.left, new VisualElementReference(from));
 
-		final GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
+        final GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
 
-		if (askforname)
-		PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(c1.left), "name :",
-                                     '\'' +iVisualElement.name.get(from)+"' to '"+iVisualElement.name.get(to)+ '\'', new iAcceptor<String>() {
-			public iAcceptor<String> set(String x) {
-				iVisualElement.name.set(c1.left, c1.left, x);
-				iVisualElement.dirty.set(c1.left, c1.left, true);
+        if (askforname) PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(c1.left),
+                                                     "name :",
+                                                     '\''
+                                                     + iVisualElement.name.get(from)
+                                                     + "' to '"
+                                                     + iVisualElement.name.get(to)
+                                                     + '\'',
+                                                     new iAcceptor<String>() {
+                                                         public
+                                                         iAcceptor<String> set(String x) {
+                                                             iVisualElement.name.set(c1.left, c1.left, x);
+                                                             iVisualElement.dirty.set(c1.left, c1.left, true);
 
-				if (frame != null) {
-					OverlayAnimationManager.notifyAsText(from, "created connection '" + to + '\'', to.getFrame(null).union(from.getFrame(null)));
-				}
+                                                             if (frame != null) {
+                                                                 OverlayAnimationManager.notifyAsText(from,
+                                                                                                      "created connection '"
+                                                                                                      + to
+                                                                                                      + '\'',
+                                                                                                      to.getFrame(null)
+                                                                                                        .union(from.getFrame(null)));
+                                                             }
 
-				return this;
-			}
-		});
-		else
-		{
-			iVisualElement.name.set(c1.left, c1.left,
+                                                             return this;
+                                                         }
+                                                     });
+        else {
+            iVisualElement.name.set(c1.left,
+                                    c1.left,
                                     '\''
-                                    +from.getProperty(iVisualElement.name)+"'->'"+to.getProperty(iVisualElement.name)+ '\'');
-		}
+                                    + from.getProperty(iVisualElement.name)
+                                    + "'->'"
+                                    + to.getProperty(iVisualElement.name)
+                                    + '\'');
+        }
 
 
-		connections.put(c1.left.getUniqueID(), c1.left);
-		return c1.left;
-	}
+        connections.put(c1.left.getUniqueID(), c1.left);
+        return c1.left;
+    }
 
-	public Object getPersistanceInformation() {
-		return new Pair<String, Collection<String>>(pluginId+"version_1", new ArrayList(connections.keySet()));
-	}
+    public
+    Object getPersistanceInformation() {
+        return new Pair<String, Collection<String>>(pluginId + "version_1", new ArrayList(connections.keySet()));
+    }
 
-	public iVisualElement getWellKnownVisualElement(String id) {
-		if (id.equals(pluginId))
-			return lve;
-		return null;
-	}
+    public
+    iVisualElement getWellKnownVisualElement(String id) {
+        if (id.equals(pluginId)) return lve;
+        return null;
+    }
 
 
-	public void registeredWith(iVisualElement root) {
+    public
+    void registeredWith(iVisualElement root) {
 
-		this.root = root;
+        this.root = root;
 
-		lve = new LocalVisualElement();
-		lve.setProperty(connections_plugin, this);
+        lve = new LocalVisualElement();
+        lve.setProperty(connections_plugin, this);
 
-		// add a next to root that adds some overrides
-		root.addChild(lve);
+        // add a next to root that adds some overrides
+        root.addChild(lve);
 
-		// register for selection updates? (no, do it in subclass)
-		group = root.getProperty(iVisualElement.selectionGroup);
+        // register for selection updates? (no, do it in subclass)
+        group = root.getProperty(iVisualElement.selectionGroup);
 
-		elementOverride = createElementOverrides();
-		elementOverride.setVisualElement(lve);
-	}
+        elementOverride = createElementOverrides();
+        elementOverride.setVisualElement(lve);
+    }
 
-	public void setPersistanceInformation(Object o) {
-		if (o instanceof Pair) {
-			Pair<String,  Collection<String>> p = (Pair<String, Collection<String>>) o;
-			if (p.left.equals(pluginId + "version_1")) {
-				// need to go through and find those elements
-				for(String s : p.right)
-				{
-					iVisualElement element = StandardFluidSheet.findVisualElement(root, s);
-					if (element == null)
-					{
-					}
-					else
-					{
-						connections.put(s, element);
+    public
+    void setPersistanceInformation(Object o) {
+        if (o instanceof Pair) {
+            Pair<String, Collection<String>> p = (Pair<String, Collection<String>>) o;
+            if (p.left.equals(pluginId + "version_1")) {
+                // need to go through and find those elements
+                for (String s : p.right) {
+                    iVisualElement element = StandardFluidSheet.findVisualElement(root, s);
+                    if (element == null) {
+                    }
+                    else {
+                        connections.put(s, element);
 
-						iVisualElementOverrides over = element.getProperty(iVisualElement.overrides);
-					}
-				}
-			}
-		}
-	}
+                        iVisualElementOverrides over = element.getProperty(iVisualElement.overrides);
+                    }
+                }
+            }
+        }
+    }
 
-	public void update() {
-		if (connections == null)
-			connections = new HashMap<String, iVisualElement>();
-	}
-	protected DefaultOverride  createElementOverrides() {
-		return new Overrides();
-	}
+    public
+    void update() {
+        if (connections == null) connections = new HashMap<String, iVisualElement>();
+    }
+
+    protected
+    DefaultOverride createElementOverrides() {
+        return new Overrides();
+    }
 
 }

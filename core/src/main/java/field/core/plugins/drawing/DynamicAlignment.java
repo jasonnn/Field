@@ -15,80 +15,95 @@ import java.util.LinkedHashMap;
 
 /**
  * allows an element to offer up alignment options dynamically
- * 
+ *
  * @author marc
- * 
  */
 @Woven
-public abstract class DynamicAlignment  implements iOffering {
+public abstract
+class DynamicAlignment implements iOffering {
 
-	public DynamicAlignment() {
-	}
+    public
+    DynamicAlignment() {
+    }
 
-	public iDrawable drawableForDict(final AnAlignment align) {
-		if (align == null)
-			return null;
-		if (align.score == 0)
-			return null;
-		return new BaseDrawable(align.name, align.score, null, null) {
-			@Override
-			protected void drawWithOpacity(OfferedAlignment alignment, float alpha) {
+    public
+    iDrawable drawableForDict(final AnAlignment align) {
+        if (align == null) return null;
+        if (align.score == 0) return null;
+        return new BaseDrawable(align.name, align.score, null, null) {
+            @Override
+            protected
+            void drawWithOpacity(OfferedAlignment alignment, float alpha) {
                 //System.out.println(" drawing <"+align.toDraw+">");
 
-				// set opacity, and make sure to resbumit
-				if (align.toDraw != null) {
+                // set opacity, and make sure to resbumit
+                if (align.toDraw != null) {
 
-					for (CachedLine c : align.toDraw) {
-						c.getProperties().put(iLinearGraphicsContext.totalOpacity, alpha);
-						if (GLComponentWindow.fastContext!=null)
-							GLComponentWindow.fastContext.resubmitLine(c, c.getProperties());
-						else
-							GLComponentWindow.currentContext.resubmitLine(c, c.getProperties());
-					}
-				}
-			}
+                    for (CachedLine c : align.toDraw) {
+                        c.getProperties().put(iLinearGraphicsContext.totalOpacity, alpha);
+                        if (GLComponentWindow.fastContext != null)
+                            GLComponentWindow.fastContext.resubmitLine(c, c.getProperties());
+                        else GLComponentWindow.currentContext.resubmitLine(c, c.getProperties());
+                    }
+                }
+            }
 
-			@Override
-			public void process(Rect currentrect, Rect newRect) {
+            @Override
+            public
+            void process(Rect currentrect, Rect newRect) {
 
                 //System.out.println(" process <"+currentrect+", "+newRect+", "+align.newRect+" "+align.score+" "+align.name+">");
 
-				newRect.setValue(align.newRect);
-				
-				deferredFinish(align);
-			}
+                newRect.setValue(align.newRect);
 
-			@Override
-			public void update(Rect currentrect, Rect newRect) {
+                deferredFinish(align);
+            }
+
+            @Override
+            public
+            void update(Rect currentrect, Rect newRect) {
 
                 //System.out.println(" update <"+currentrect+", "+newRect+", "+align.newRect+" "+align.score+" "+align.name+">");
 
-				newRect.setValue(align.newRect);
+                newRect.setValue(align.newRect);
 
-			}
-			
-			@Override
-			public iDrawable merge(iDrawable d) {
-				((BaseDrawable)d).alpha = this.alpha;
-			
-				return d;
-			}
+            }
 
-		};
-	}
+            @Override
+            public
+            iDrawable merge(iDrawable d) {
+                ((BaseDrawable) d).alpha = this.alpha;
 
-	@NextUpdate
-	protected void deferredFinish(AnAlignment align) {
-		finish(align);
-	}
-	
-	protected void finish(AnAlignment align)
-	{
-	}
-	
+                return d;
+            }
 
-	public void createConstraint(iVisualElement root, LinkedHashMap<iVisualElement, Rect> current, iVisualElement element, Rect or, Rect originalRect, Rect currentRect) {
-	}
+        };
+    }
 
-	public abstract iDrawable score(LinkedHashMap<iVisualElement, Rect> current, iVisualElement element, Rect originalRect, Rect currentRect, Rect newRect);
+    @NextUpdate
+    protected
+    void deferredFinish(AnAlignment align) {
+        finish(align);
+    }
+
+    protected
+    void finish(AnAlignment align) {
+    }
+
+
+    public
+    void createConstraint(iVisualElement root,
+                          LinkedHashMap<iVisualElement, Rect> current,
+                          iVisualElement element,
+                          Rect or,
+                          Rect originalRect,
+                          Rect currentRect) {
+    }
+
+    public abstract
+    iDrawable score(LinkedHashMap<iVisualElement, Rect> current,
+                    iVisualElement element,
+                    Rect originalRect,
+                    Rect currentRect,
+                    Rect newRect);
 }

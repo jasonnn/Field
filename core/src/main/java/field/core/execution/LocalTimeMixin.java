@@ -6,50 +6,54 @@ import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 
-public class LocalTimeMixin extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
+public
+class LocalTimeMixin extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
 
-	public static
+    public static
     void mixin(iVisualElement e) {
-		new Mixins().mixInOverride(LocalTimeMixin.class, e);
-	}
+        new Mixins().mixInOverride(LocalTimeMixin.class, e);
+    }
 
-	public VisualElementProperty<PythonScriptingSystem> localScriptingSystem = new VisualElementProperty<PythonScriptingSystem>("localPSS_");
+    public VisualElementProperty<PythonScriptingSystem> localScriptingSystem =
+            new VisualElementProperty<PythonScriptingSystem>("localPSS_");
 
-	@Override
-	public <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
-		if (isChild(source)) {
-			if (prop.equals(PythonScriptingSystem.pythonScriptingSystem)) {
-				PythonScriptingSystem overrides = forElement.getProperty(localScriptingSystem);
+    @Override
+    public
+    <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+        if (isChild(source)) {
+            if (prop.equals(PythonScriptingSystem.pythonScriptingSystem)) {
+                PythonScriptingSystem overrides = forElement.getProperty(localScriptingSystem);
 
-				if (overrides == null) {
-					overrides = makeLocalPSS();
-					if (overrides != null) {
-						forElement.setProperty(localScriptingSystem, overrides);
-					}
-				}
+                if (overrides == null) {
+                    overrides = makeLocalPSS();
+                    if (overrides != null) {
+                        forElement.setProperty(localScriptingSystem, overrides);
+                    }
+                }
 
-				if (overrides != null) {
+                if (overrides != null) {
 
-					PythonScriptingSystem parent = PythonScriptingSystem.pythonScriptingSystem.get(forElement);
-					Promise oldPromise = parent.revokePromise(source);
-					if (oldPromise != null) {
-						overrides.promisePythonScriptingElement(source, oldPromise);
-					}
-					ref.set((T) overrides);
-					return VisitCode.stop;
-				}
-			}
-		}
-		return super.getProperty(source, prop, ref);
-	}
+                    PythonScriptingSystem parent = PythonScriptingSystem.pythonScriptingSystem.get(forElement);
+                    Promise oldPromise = parent.revokePromise(source);
+                    if (oldPromise != null) {
+                        overrides.promisePythonScriptingElement(source, oldPromise);
+                    }
+                    ref.set((T) overrides);
+                    return VisitCode.stop;
+                }
+            }
+        }
+        return super.getProperty(source, prop, ref);
+    }
 
-	private boolean isChild(iVisualElement source) {
-		return forElement.getParents().contains(source);
-	}
+    private
+    boolean isChild(iVisualElement source) {
+        return forElement.getParents().contains(source);
+    }
 
     protected static
     PythonScriptingSystem makeLocalPSS() {
         return new PythonScriptingSystem();
-	}
+    }
 
 }

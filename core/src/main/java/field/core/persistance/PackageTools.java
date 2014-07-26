@@ -24,49 +24,53 @@ import java.util.Set;
 /**
  * we'de like a single button that wraps selected elements up into a single
  * archive and opens them at the other end
- * 
+ *
  * @author marc
- * 
  */
-public class PackageTools {
+public
+class PackageTools {
 
-	public static final VisualElementProperty<String> isPackageImported = new VisualElementProperty<String>("isPackageImported");
+    public static final VisualElementProperty<String> isPackageImported =
+            new VisualElementProperty<String>("isPackageImported");
 
-	HashMap<String, String> packagesToSheets = new HashMap<String, String>();
+    HashMap<String, String> packagesToSheets = new HashMap<String, String>();
 
-	public PackageTools() {
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			public void run() {
-				new PythonUtils().persistAsXML(packagesToSheets, FieldMenus2.getFieldDir() + "/packagesToSheets");
-			}
-		}));
+    public
+    PackageTools() {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public
+            void run() {
+                new PythonUtils().persistAsXML(packagesToSheets, FieldMenus2.getFieldDir() + "/packagesToSheets");
+            }
+        }));
 
-		try {
-			packagesToSheets = (HashMap<String, String>) PythonUtils.loadAsXML(FieldMenus2.getFieldDir()
-                                                                               + "/packagesToSheets");
-		} catch (Throwable e) {
-		} finally {
-			if (packagesToSheets == null)
-				packagesToSheets = new HashMap<String, String>();
-		}
-	}
+        try {
+            packagesToSheets =
+                    (HashMap<String, String>) PythonUtils.loadAsXML(FieldMenus2.getFieldDir() + "/packagesToSheets");
+        } catch (Throwable e) {
+        } finally {
+            if (packagesToSheets == null) packagesToSheets = new HashMap<String, String>();
+        }
+    }
 
     public static
     boolean isPackage(String file) {
         boolean endsWith = file.endsWith(".fieldpackage");
-		try {
-			if (endsWith && !new File(file).getCanonicalFile().getPath().startsWith(FieldMenus2.getCanonicalVersioningDir()))
-				return true;
-		} catch (IOException e) {
-			return false;
-		}
-		return false;
-	}
+        try {
+            if (endsWith && !new File(file).getCanonicalFile()
+                                           .getPath()
+                                           .startsWith(FieldMenus2.getCanonicalVersioningDir())) return true;
+        } catch (IOException e) {
+            return false;
+        }
+        return false;
+    }
 
-	public void handle(String openingFile) {
-		
-		//TODO swt \u2014 resolve issues with FieldMenus
-		
+    public
+    void handle(String openingFile) {
+
+        //TODO swt \u2014 resolve issues with FieldMenus
+
 //		String known = packagesToSheets.get(openingFile);
 //		if (known == null) {
 //			ArrayList<Sheet> sheets = FieldMenus.fieldMenus.getOpenSheets();
@@ -126,150 +130,152 @@ public class PackageTools {
 //			return;
 //		}
 
-	}
+    }
 
-	private void makeNewSheet(String openingFile) {
-		String fn = getSuggestedFileName(openingFile);
-		if (fn == null)
-			fn = new File(openingFile).getName() + ".field";
+    private
+    void makeNewSheet(String openingFile) {
+        String fn = getSuggestedFileName(openingFile);
+        if (fn == null) fn = new File(openingFile).getName() + ".field";
 
-		PhantomFluidSheet ps = FieldMenus2.fieldMenus.open(fn);
-		importFieldPackage(ps.getRoot(), openingFile);
+        PhantomFluidSheet ps = FieldMenus2.fieldMenus.open(fn);
+        importFieldPackage(ps.getRoot(), openingFile);
 
-		packagesToSheets.put(openingFile, fn);
-	}
+        packagesToSheets.put(openingFile, fn);
+    }
 
-	public static
+    public static
     File newTempFileWithSelected(iVisualElement root, String suggestedName) {
-		FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
+        FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
 
-		SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(root);
+        SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(root);
 
-		Set<iComponent> c = group.getSelection();
-		Set<iVisualElement> v = new LinkedHashSet<iVisualElement>();
-		for (iComponent cc : c) {
-			iVisualElement vv = cc.getVisualElement();
-			if (vv != null)
-				v.add(vv);
-		}
+        Set<iComponent> c = group.getSelection();
+        Set<iVisualElement> v = new LinkedHashSet<iVisualElement>();
+        for (iComponent cc : c) {
+            iVisualElement vv = cc.getVisualElement();
+            if (vv != null) v.add(vv);
+        }
 
-		return newTempFileWithSet(suggestedName, copier, v);
-	}
+        return newTempFileWithSet(suggestedName, copier, v);
+    }
 
     public static
     File newTempFileWithSet(String suggestedName, FluidCopyPastePersistence copier, Set<iVisualElement> v) {
         //System.out.println(" output is <" + v + ">");
 
-		File tmpFile = null;
-		try {
-			tmpFile = File.createTempFile("fieldtmp_", ".fieldpackage");
-			Writer temp = new BufferedWriter(new FileWriter(tmpFile));
-			HashSet<iVisualElement> savedOut = new HashSet<iVisualElement>();
-			ObjectOutputStream oos = copier.getObjectOutputStream(temp, savedOut, v);
-			try {
-				oos.writeObject(suggestedName);
-				oos.writeObject(v);
-				oos.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return tmpFile;
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		return null;
-	}
+        File tmpFile = null;
+        try {
+            tmpFile = File.createTempFile("fieldtmp_", ".fieldpackage");
+            Writer temp = new BufferedWriter(new FileWriter(tmpFile));
+            HashSet<iVisualElement> savedOut = new HashSet<iVisualElement>();
+            ObjectOutputStream oos = copier.getObjectOutputStream(temp, savedOut, v);
+            try {
+                oos.writeObject(suggestedName);
+                oos.writeObject(v);
+                oos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return tmpFile;
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return null;
+    }
 
     public static
     String getSuggestedFileName(String filename) {
         XStream stream = new XStream(new Sun14ReflectionProvider());
-		try {
-			ObjectInputStream o = stream.createObjectInputStream(new BufferedReader(new FileReader(filename)));
-			String suggested = (String) o.readObject();
-			o.close();
-			if (!suggested.endsWith(".field"))
-				return suggested + ".field";
-			return suggested;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+        try {
+            ObjectInputStream o = stream.createObjectInputStream(new BufferedReader(new FileReader(filename)));
+            String suggested = (String) o.readObject();
+            o.close();
+            if (!suggested.endsWith(".field")) return suggested + ".field";
+            return suggested;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static
     void importFieldPackage(iVisualElement root, String filename) {
         FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
 
-		SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
-		selectionGroup.deselectAll();
+        SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
+        selectionGroup.deselectAll();
 
-		HashSet<iVisualElement> all = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+        HashSet<iVisualElement> all = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
 
-		try {
-			HashSet<iVisualElement> ongoing = new HashSet<iVisualElement>();
-			ObjectInputStream ois = copier.getObjectInputStream(new BufferedReader(new FileReader(filename)), ongoing, all);
-			String suggestedFilename = (String) ois.readObject();
-			Object in = ois.readObject();
-			ois.close();
+        try {
+            HashSet<iVisualElement> ongoing = new HashSet<iVisualElement>();
+            ObjectInputStream ois =
+                    copier.getObjectInputStream(new BufferedReader(new FileReader(filename)), ongoing, all);
+            String suggestedFilename = (String) ois.readObject();
+            Object in = ois.readObject();
+            ois.close();
 
-			for (iVisualElement o : ongoing) {
-				iVisualElement.localView.get(o).setSelected(true);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+            for (iVisualElement o : ongoing) {
+                iVisualElement.localView.get(o).setSelected(true);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static
     void importFieldPackage(iVisualElement root, String filename, Vector2 centerOn) {
         FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
 
-		SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
-		selectionGroup.deselectAll();
+        SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
+        selectionGroup.deselectAll();
 
-		HashSet<iVisualElement> all = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+        HashSet<iVisualElement> all = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
 
-		try {
-			HashSet<iVisualElement> ongoing = new HashSet<iVisualElement>();
-			ObjectInputStream ois = copier.getObjectInputStream(new BufferedReader(new FileReader(filename)), ongoing, all);
-			String suggestedFilename = (String) ois.readObject();
-			Object in = ois.readObject();
-			ois.close();
+        try {
+            HashSet<iVisualElement> ongoing = new HashSet<iVisualElement>();
+            ObjectInputStream ois =
+                    copier.getObjectInputStream(new BufferedReader(new FileReader(filename)), ongoing, all);
+            String suggestedFilename = (String) ois.readObject();
+            Object in = ois.readObject();
+            ois.close();
 
-			Vector2 offsetBy = new Vector2();
-			for (iVisualElement o : ongoing) {
-				iVisualElement.localView.get(o).setSelected(true);
-				offsetBy.add(o.getFrame(null).midpoint2());
-			}
-			offsetBy.scale(1f/ongoing.size());
-			
-			for (iVisualElement o : ongoing) {
-				Rect f = o.getFrame(null);
-				f.x+=centerOn.x-offsetBy.x;
-				f.y+=centerOn.y-offsetBy.y;
-				o.setFrame(f);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+            Vector2 offsetBy = new Vector2();
+            for (iVisualElement o : ongoing) {
+                iVisualElement.localView.get(o).setSelected(true);
+                offsetBy.add(o.getFrame(null).midpoint2());
+            }
+            offsetBy.scale(1f / ongoing.size());
+
+            for (iVisualElement o : ongoing) {
+                Rect f = o.getFrame(null);
+                f.x += centerOn.x - offsetBy.x;
+                f.y += centerOn.y - offsetBy.y;
+                o.setFrame(f);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static
     void copyFileReferenceToClipboard(final String file) {
 
-		try {
-			new AppleScript("set the clipboard to (\"" + new File(file).toURL().toExternalForm() + "\" as POSIX file)\n", true);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            new AppleScript("set the clipboard to (\""
+                            + new File(file).toURL().toExternalForm()
+                            + "\" as POSIX file)\n", true);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

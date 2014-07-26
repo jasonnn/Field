@@ -4,70 +4,80 @@ import field.core.dispatch.iVisualElement;
 import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.dispatch.iVisualElementOverrides;
 import field.core.dispatch.iVisualElementOverrides.Ref;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.TopologyViewOfGraphNodes;
+import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public interface iReferenceAlgorithm {
+public
+interface iReferenceAlgorithm {
 
-	public abstract static
-    class BaseReferenceAlgorithm implements iReferenceAlgorithm
-	{
-		public List<iVisualElement> evaluate(iVisualElement root, String uniqueReferenceID, String algorithmName, iVisualElement forElement)
-		{
-			VisualElementProperty pr = new VisualElementProperty(uniqueReferenceID);
-			List<iVisualElement> prop = (List<iVisualElement>) forElement.getProperty(pr);
-			List<iVisualElement> newProp = doEvaluation(root, prop, forElement);
-
-
-			//forElement.setProperty(	pr, newProp)
-
-			String name = algorithmName;
-			forElement.setProperty(	new VisualElementProperty(uniqueReferenceID+"-source"), name);
-			new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(forElement).setProperty(forElement, pr, new Ref(newProp));
-			new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).setProperty(forElement, pr, new Ref(newProp));
-
-			assert newProp!=null;
-			return newProp;
-		}
+    public abstract static
+    class BaseReferenceAlgorithm implements iReferenceAlgorithm {
+        public
+        List<iVisualElement> evaluate(iVisualElement root,
+                                      String uniqueReferenceID,
+                                      String algorithmName,
+                                      iVisualElement forElement) {
+            VisualElementProperty pr = new VisualElementProperty(uniqueReferenceID);
+            List<iVisualElement> prop = (List<iVisualElement>) forElement.getProperty(pr);
+            List<iVisualElement> newProp = doEvaluation(root, prop, forElement);
 
 
+            //forElement.setProperty(	pr, newProp)
 
-		protected List<iVisualElement> allVisualElements(iVisualElement root)
-		{
+            String name = algorithmName;
+            forElement.setProperty(new VisualElementProperty(uniqueReferenceID + "-source"), name);
+            new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(forElement)
+                                                           .setProperty(forElement, pr, new Ref(newProp));
+            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+                                                           .setProperty(forElement, pr, new Ref(newProp));
+
+            assert newProp != null;
+            return newProp;
+        }
 
 
-			final List<iVisualElement> ret = new ArrayList<iVisualElement>();
-			new TopologyVisitor_breadthFirst<iVisualElement>(true){
-				@Override
-				protected VisitCode visit(iVisualElement n) {
-					String name = n.getProperty(iVisualElement.name);
+        protected
+        List<iVisualElement> allVisualElements(iVisualElement root) {
+
+
+            final List<iVisualElement> ret = new ArrayList<iVisualElement>();
+            new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+                @Override
+                protected
+                VisitCode visit(iVisualElement n) {
+                    String name = n.getProperty(iVisualElement.name);
                     //System.out.println(" adding <"+n+" called <"+name+">");
                     ret.add(n);
-					return VisitCode.cont;
-				}
+                    return VisitCode.cont;
+                }
 
-			}.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
-			return ret;
-		}
+            }.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+            return ret;
+        }
 
-		protected abstract
+        protected abstract
         List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement);
 
-	}
+    }
 
 
-	/**
-	 * in addition to computing and returning, this must set a property uniqueReferenceID on forElement
-	 *
-	 * we can scrub these, upon deletion, when changes are posted to the text, and __minimalReferences dissappear from the python source
-	 *
-	 * (we'll have an additional plugin here for that)
-	 * @param algorithmName TODO
-	 */
-	public List<iVisualElement> evaluate(iVisualElement root, String uniqueReferenceID, String algorithmName, iVisualElement forElement) ;
+    /**
+     * in addition to computing and returning, this must set a property uniqueReferenceID on forElement
+     * <p/>
+     * we can scrub these, upon deletion, when changes are posted to the text, and __minimalReferences dissappear from the python source
+     * <p/>
+     * (we'll have an additional plugin here for that)
+     *
+     * @param algorithmName TODO
+     */
+    public
+    List<iVisualElement> evaluate(iVisualElement root,
+                                  String uniqueReferenceID,
+                                  String algorithmName,
+                                  iVisualElement forElement);
 }

@@ -16,18 +16,21 @@ import java.io.File;
  * a helper for opening paths that aren't in the workspace.
  */
 @GenerateMethods
-public class PathNotInWorkspaceHelperMenu2 {
+public
+class PathNotInWorkspaceHelperMenu2 {
 
-	private final FieldMenus2 manager;
+    private final FieldMenus2 manager;
 
-	public PathNotInWorkspaceHelperMenu2(FieldMenus2 manager) {
-		this.manager = manager;
-	}
+    public
+    PathNotInWorkspaceHelperMenu2(FieldMenus2 manager) {
+        this.manager = manager;
+    }
 
-	String filename;
+    String filename;
 
-	public void open(Shell fc, final String filename) {
-		this.filename = filename;
+    public
+    void open(Shell fc, final String filename) {
+        this.filename = filename;
 
         //System.out.println(" filename is <" + filename + "> and versioning dir is <" + FieldMenus2.getCanonicalVersioningDir() + "> therefore <" + filename.startsWith(FieldMenus2.getCanonicalVersioningDir()) + ">");
 
@@ -68,48 +71,54 @@ public class PathNotInWorkspaceHelperMenu2 {
             }
         }
 
-	}
+    }
 
-	@Mirror
-	protected void move(File to) {
-		new File(filename).renameTo(to);
-	}
+    @Mirror
+    protected
+    void move(File to) {
+        new File(filename).renameTo(to);
+    }
 
-	@Mirror
-	protected void copy(File to) {
-		new ExecuteCommand(".", new String[] { "/bin/cp", "-r", filename, to.getAbsolutePath() }, true).waitFor();
-	}
+    @Mirror
+    protected
+    void copy(File to) {
+        new ExecuteCommand(".", new String[]{"/bin/cp", "-r", filename, to.getAbsolutePath()}, true).waitFor();
+    }
 
     private static
     File uniqName(Shell fc, String filename, iAcceptor<File> acceptor) {
 
-		String name = new File(filename).getName();
-		if (!name.endsWith(".field"))
-			name = name + ".field";
+        String name = new File(filename).getName();
+        if (!name.endsWith(".field")) name = name + ".field";
 
-		File destination = new File(FieldMenus2.getCanonicalVersioningDir() + name);
-		File originalDestination = destination;
-		if (destination.exists()) {
-			int n = 1;
-			while (destination.exists()) {
-				destination = new File(FieldMenus2.getCanonicalVersioningDir() + '/'
-                                       + name.substring(0, name.length() - ".field".length()) + n + ".field");
-				n++;
-			}
+        File destination = new File(FieldMenus2.getCanonicalVersioningDir() + name);
+        File originalDestination = destination;
+        if (destination.exists()) {
+            int n = 1;
+            while (destination.exists()) {
+                destination = new File(FieldMenus2.getCanonicalVersioningDir()
+                                       + '/'
+                                       + name.substring(0,
+                                                        name.length()
+                                                        - ".field".length())
+                                       + n
+                                       + ".field");
+                n++;
+            }
 
-			acceptor.set(destination);
+            acceptor.set(destination);
 
-			return destination;
+            return destination;
 
-		}
+        }
 
-		acceptor.set(destination);
+        acceptor.set(destination);
 
-		HGVersioningSystem vs = (HGVersioningSystem) VersioningSystem.newDefault();
-		vs.scmAddFile(destination);
-		vs.scmCommitDirectory(destination);
+        HGVersioningSystem vs = (HGVersioningSystem) VersioningSystem.newDefault();
+        vs.scmAddFile(destination);
+        vs.scmCommitDirectory(destination);
 
-		return destination;
-	}
+        return destination;
+    }
 
 }

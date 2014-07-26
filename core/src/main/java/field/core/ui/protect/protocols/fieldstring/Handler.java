@@ -7,26 +7,32 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
-public class Handler extends URLStreamHandler {
+public
+class Handler extends URLStreamHandler {
 
-	@Override
-	protected URLConnection openConnection(final URL u) throws IOException {
-		final String p = FieldStrings.known.get(u.getPath());
-		return new URLConnection(u) {
+    @Override
+    protected
+    URLConnection openConnection(final URL u) throws IOException {
+        final String p = FieldStrings.known.get(u.getPath());
+        return new URLConnection(u) {
 
-			@Override
-			public void connect() throws IOException {
-				if (p == null)
-					throw new IOException(" no string for '" + u.getPath() + '\'');
-			}
+            @Override
+            public
+            void connect() throws IOException {
+                if (p == null) throw new IOException(" no string for '" + u.getPath() + '\'');
+            }
 
-			@Override
-			public InputStream getInputStream() throws IOException {
-				if (p == null)
-					throw new IOException(" no string for '" + u.getPath() + "', strings are <"+FieldStrings.known.keySet()+ '>');
-				return new ByteArrayInputStream(p.getBytes());
-			}
-		};
-	}
+            @Override
+            public
+            InputStream getInputStream() throws IOException {
+                if (p == null) throw new IOException(" no string for '"
+                                                     + u.getPath()
+                                                     + "', strings are <"
+                                                     + FieldStrings.known.keySet()
+                                                     + '>');
+                return new ByteArrayInputStream(p.getBytes());
+            }
+        };
+    }
 
 }

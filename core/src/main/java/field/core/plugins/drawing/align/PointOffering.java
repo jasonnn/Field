@@ -16,184 +16,208 @@ import java.util.Set;
 
 /**
  * baseclass for point to point offerings
- * 
+ *
  * @author marc
- * 
  */
-public abstract class PointOffering implements iOffering {
+public abstract
+class PointOffering implements iOffering {
 
-	public abstract static
+    public abstract static
     class BaseDrawable implements iDrawable {
-		public int fadeIn = 10;
-		public int fadeOut = 10;
-		private final float score;
-		private final String token;
-		protected final Vector2 from;
-		protected final Set<Vector2> to;
+        public int fadeIn = 10;
+        public int fadeOut = 10;
+        private final float score;
+        private final String token;
+        protected final Vector2 from;
+        protected final Set<Vector2> to;
 
-		public float alpha = 0;
-		boolean stopping = false;
-		boolean stopped = false;
+        public float alpha = 0;
+        boolean stopping = false;
+        boolean stopped = false;
 
-		public BaseDrawable(String uid, float score, Vector2 from, Set<Vector2> to) {
-			this.score = score;
-			this.from = from;
-			this.to = to;
+        public
+        BaseDrawable(String uid, float score, Vector2 from, Set<Vector2> to) {
+            this.score = score;
+            this.from = from;
+            this.to = to;
 
             this.token = uid + to;
         }
 
-		public void draw(OfferedAlignment alignment) {
+        public
+        void draw(OfferedAlignment alignment) {
 
-			if (stopped)
-				return;
-			if (stopping)
-				alpha = alpha * 0.85f;
-			else
-				alpha = alpha * 0.9f + 1 * 0.1f;
+            if (stopped) return;
+            if (stopping) alpha = alpha * 0.85f;
+            else alpha = alpha * 0.9f + 1 * 0.1f;
 
-			if (stopping && alpha < 0.01f)
-				stopped = true;
+            if (stopping && alpha < 0.01f) stopped = true;
 
-			drawWithOpacity(alignment, alpha);
-		}
+            drawWithOpacity(alignment, alpha);
+        }
 
-		public float getScore() {
-			return score;
-		}
+        public
+        float getScore() {
+            return score;
+        }
 
-		public String getToken() {
-			return token;
-		}
+        public
+        String getToken() {
+            return token;
+        }
 
-		public boolean hasStopped() {
-			return stopped;
-		}
+        public
+        boolean hasStopped() {
+            return stopped;
+        }
 
-		public boolean isStopping() {
-			return stopping;
-		}
+        public
+        boolean isStopping() {
+            return stopping;
+        }
 
-		public abstract
+        public abstract
         void process(Rect currentrect, Rect newRect);
 
-		public boolean restart() {
-			if (stopping)
-				stopping = false;
-			if (stopped)
-				stopped = false;
-			return true;
-		}
+        public
+        boolean restart() {
+            if (stopping) stopping = false;
+            if (stopped) stopped = false;
+            return true;
+        }
 
-		public void stop() {
-			stopping = true;
-		}
+        public
+        void stop() {
+            stopping = true;
+        }
 
-		public abstract
+        public abstract
         void update(Rect currentrect, Rect newRect);
 
-		protected abstract
+        protected abstract
         void drawWithOpacity(OfferedAlignment alignment, float alpha);
 
-		public iDrawable merge(iDrawable d) {
-			return this;
-		}
+        public
+        iDrawable merge(iDrawable d) {
+            return this;
+        }
 
-	}
+    }
 
-	public PointOffering() {
-	}
+    public
+    PointOffering() {
+    }
 
-	public void createConstraint(iVisualElement root, LinkedHashMap<iVisualElement, Rect> current, iVisualElement element, Rect or, Rect originalRect, Rect currentRect) {
+    public
+    void createConstraint(iVisualElement root,
+                          LinkedHashMap<iVisualElement, Rect> current,
+                          iVisualElement element,
+                          Rect or,
+                          Rect originalRect,
+                          Rect currentRect) {
 
-		Vector2 oPoint = originalPoint(currentRect);
-		if (oPoint == null)
-			return;
+        Vector2 oPoint = originalPoint(currentRect);
+        if (oPoint == null) return;
 
-		Set<iVisualElement> best = new HashSet<iVisualElement>();
-		float bestScore = Float.NEGATIVE_INFINITY;
+        Set<iVisualElement> best = new HashSet<iVisualElement>();
+        float bestScore = Float.NEGATIVE_INFINITY;
 
-		Set<Entry<iVisualElement, Rect>> es = current.entrySet();
-		for (Entry<iVisualElement, Rect> e : es) {
+        Set<Entry<iVisualElement, Rect>> es = current.entrySet();
+        for (Entry<iVisualElement, Rect> e : es) {
 
-			if (e.getKey().getProperty(OfferedAlignment.alignment_doNotParticipate) != null)
-				continue;
+            if (e.getKey().getProperty(OfferedAlignment.alignment_doNotParticipate) != null) continue;
 
-			Vector2 aPoint = connectionPoint(element, oPoint, e.getKey(), e.getValue());
-			if (aPoint != null) {
-				float s = returnLastScore();
-				if (s > bestScore) {
-					best.clear();
-					best.add(e.getKey());
-					bestScore = s;
-				} else if (s == bestScore && bestScore > Float.NEGATIVE_INFINITY) {
-					best.add(e.getKey());
-				}
-			}
-		}
+            Vector2 aPoint = connectionPoint(element, oPoint, e.getKey(), e.getValue());
+            if (aPoint != null) {
+                float s = returnLastScore();
+                if (s > bestScore) {
+                    best.clear();
+                    best.add(e.getKey());
+                    bestScore = s;
+                }
+                else if (s == bestScore && bestScore > Float.NEGATIVE_INFINITY) {
+                    best.add(e.getKey());
+                }
+            }
+        }
 
-		if (bestScore == Float.NEGATIVE_INFINITY)
-			return;
+        if (bestScore == Float.NEGATIVE_INFINITY) return;
 
-		if (best.size() == 0)
-			return;
+        if (best.size() == 0) return;
 
-		iVisualElement b = best.iterator().next();
-		createConstraint(root, b, element);
+        iVisualElement b = best.iterator().next();
+        createConstraint(root, b, element);
 
-		GLComponentWindow c = GLComponentWindow.getCurrentWindow(null);
-		if (c != null) {
-			OverlayAnimationManager.notifyAsText(root, "Created constraint between " + b.getProperty(iVisualElement.name) + " & " + element.getProperty(iVisualElement.name), b.getFrame(null));
-		}
+        GLComponentWindow c = GLComponentWindow.getCurrentWindow(null);
+        if (c != null) {
+            OverlayAnimationManager.notifyAsText(root,
+                                                 "Created constraint between "
+                                                 + b.getProperty(iVisualElement.name)
+                                                 + " & "
+                                                 + element.getProperty(iVisualElement.name),
+                                                 b.getFrame(null));
+        }
 
-	}
+    }
 
-	public iDrawable score(LinkedHashMap<iVisualElement, Rect> current, iVisualElement element, Rect originalRect, Rect currentRect, Rect newRect) {
+    public
+    iDrawable score(LinkedHashMap<iVisualElement, Rect> current,
+                    iVisualElement element,
+                    Rect originalRect,
+                    Rect currentRect,
+                    Rect newRect) {
 
-		Vector2 oPoint = originalPoint(currentRect);
-		if (oPoint == null)
-			return null;
+        Vector2 oPoint = originalPoint(currentRect);
+        if (oPoint == null) return null;
 
-		Set<Vector2> best = new HashSet<Vector2>();
-		float bestScore = Float.NEGATIVE_INFINITY;
+        Set<Vector2> best = new HashSet<Vector2>();
+        float bestScore = Float.NEGATIVE_INFINITY;
 
-		Set<Entry<iVisualElement, Rect>> es = current.entrySet();
-		for (Entry<iVisualElement, Rect> e : es) {
+        Set<Entry<iVisualElement, Rect>> es = current.entrySet();
+        for (Entry<iVisualElement, Rect> e : es) {
 
-			if (e.getKey().getProperty(OfferedAlignment.alignment_doNotParticipate) != null)
-				continue;
+            if (e.getKey().getProperty(OfferedAlignment.alignment_doNotParticipate) != null) continue;
 
-			Vector2 aPoint = connectionPoint(element, oPoint, e.getKey(), e.getValue());
-			if (aPoint != null) {
-				float s = returnLastScore();
-				if (s > bestScore) {
-					best.clear();
-					best.add(aPoint);
-					bestScore = s;
-				} else if (s == bestScore && bestScore > Float.NEGATIVE_INFINITY) {
-					best.add(aPoint);
-				}
-			}
-		}
+            Vector2 aPoint = connectionPoint(element, oPoint, e.getKey(), e.getValue());
+            if (aPoint != null) {
+                float s = returnLastScore();
+                if (s > bestScore) {
+                    best.clear();
+                    best.add(aPoint);
+                    bestScore = s;
+                }
+                else if (s == bestScore && bestScore > Float.NEGATIVE_INFINITY) {
+                    best.add(aPoint);
+                }
+            }
+        }
 
-		if (bestScore == Float.NEGATIVE_INFINITY)
-			return null;
+        if (bestScore == Float.NEGATIVE_INFINITY) return null;
 
-		return newDrawableFor(bestScore, best, oPoint, current, element, originalRect, currentRect, newRect);
+        return newDrawableFor(bestScore, best, oPoint, current, element, originalRect, currentRect, newRect);
 
-	}
+    }
 
-	protected abstract
+    protected abstract
     Vector2 connectionPoint(iVisualElement source, Vector2 sourcePoint, iVisualElement target, Rect targetRect);
 
-	protected void createConstraint(iVisualElement root, iVisualElement from, iVisualElement to) {
-	}
+    protected
+    void createConstraint(iVisualElement root, iVisualElement from, iVisualElement to) {
+    }
 
-	protected abstract
+    protected abstract
     Vector2 originalPoint(Rect currentRect);
 
-	protected abstract
+    protected abstract
     float returnLastScore();
 
-	abstract iDrawable newDrawableFor(float bestScore, Set<Vector2> best, Vector2 point, LinkedHashMap<iVisualElement, Rect> current, iVisualElement element, Rect originalRect, Rect currentRect, Rect newRect);
+    abstract
+    iDrawable newDrawableFor(float bestScore,
+                             Set<Vector2> best,
+                             Vector2 point,
+                             LinkedHashMap<iVisualElement, Rect> current,
+                             iVisualElement element,
+                             Rect originalRect,
+                             Rect currentRect,
+                             Rect newRect);
 }

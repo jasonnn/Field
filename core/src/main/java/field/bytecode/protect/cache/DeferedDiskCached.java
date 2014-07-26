@@ -23,153 +23,176 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public final class DeferedDiskCached extends DeferCallingFast {
+public final
+class DeferedDiskCached extends DeferCallingFast {
 
-	public static final String diskCacheRoot = SystemProperties.getDirProperty("deferedDiskCachedRoot", "/var/tmp/expCache/");
+    public static final String diskCacheRoot =
+            SystemProperties.getDirProperty("deferedDiskCachedRoot", "/var/tmp/expCache/");
 
-	private final HashMap<String, Object> parameters;
+    private final HashMap<String, Object> parameters;
 
-	Map<ImmutableArrayWrapper, Object> cache = new WeakHashMap<ImmutableArrayWrapper, Object>();
+    Map<ImmutableArrayWrapper, Object> cache = new WeakHashMap<ImmutableArrayWrapper, Object>();
 
-	List<Field> implicatedFields = null;
+    List<Field> implicatedFields = null;
 
-	Method original = null;
+    Method original = null;
 
-	Map<ImmutableArrayWrapper, Object> strongCache = new HashMap<ImmutableArrayWrapper, Object>();
+    Map<ImmutableArrayWrapper, Object> strongCache = new HashMap<ImmutableArrayWrapper, Object>();
 
 
+    public
+    DeferedDiskCached(String name,
+                      int access,
+                      ASMMethod method,
+                      ClassVisitor delegate,
+                      MethodVisitor to,
+                      String signature,
+                      HashMap<String, Object> parameters) {
+        super(name, access, method, delegate, to, signature, parameters);
+        this.parameters = parameters;
+    }
 
-	public DeferedDiskCached(String name, int access, ASMMethod method, ClassVisitor delegate, MethodVisitor to, String signature, HashMap<String, Object> parameters) {
-		super(name, access, method, delegate, to, signature, parameters);
-		this.parameters = parameters;
-	}
+    @Override
+    public
+    Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
+        if (original == null) {
+            Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
+            for (Method m : all) {
+                if (m.getName().equals(originalMethod)) {
+                    original = m;
+                    break;
+                }
+            }
+            assert original != null : originalMethod;
 
-	@Override
-	public Object handle(int fromName, Object fromThis, String originalMethod, Object[] argArray) {
-		if (original == null) {
-			Method[] all = TrampolineReflection.getAllMethods(fromThis.getClass());
-			for (Method m : all) {
-				if (m.getName().equals(originalMethod)) {
-					original = m;
-					break;
-				}
-			}
-			assert original != null : originalMethod;
+            original.setAccessible(true);
 
-			original.setAccessible(true);
+            String storageType = (String) parameters.get("storage");
+            if ((storageType != null) && "strong".equals(storageType)) {
+                cache = strongCache;
+            }
+        }
+        if (implicatedFields == null) {
+            implicatedFields = new ArrayList<Field>();
+            Field[] allFields = TrampolineReflection.getAllFields(fromThis.getClass());
+            for (Field f : allFields) {
 
-			String storageType = (String) parameters.get("storage");
-			if ((storageType != null) && "strong".equals(storageType)) {
-				cache = strongCache;
-			}
-		}
-		if (implicatedFields == null) {
-			implicatedFields = new ArrayList<Field>();
-			Field[] allFields = TrampolineReflection.getAllFields(fromThis.getClass());
-			for (Field f : allFields) {
+                CacheParameter ann = f.getAnnotation(CacheParameter.class);
+                if (ann != null) {
+                    if (((ann.name() == null) && (parameters.get("name") == null)) || ann.name()
+                                                                                         .equals(parameters.get("name"))) {
+                        f.setAccessible(true);
+                        implicatedFields.add(f);
+                    }
+                }
+            }
+        }
 
-				CacheParameter ann = f.getAnnotation(CacheParameter.class);
-				if (ann != null) {
-					if (((ann.name() == null) && (parameters.get("name") == null)) || ann.name().equals(parameters.get("name"))) {
-						f.setAccessible(true);
-						implicatedFields.add(f);
-					}
-				}
-			}
-		}
+        Object[] na = null;
 
-		Object[] na = null;
+        if (!implicatedFields.isEmpty()) {
+            na = new Object[argArray.length + implicatedFields.size()];
+            System.arraycopy(argArray, 0, na, 0, argArray.length);
+            for (int i = 0; i < implicatedFields.size(); i++)
+                try {
+                    na[argArray.length + i] = implicatedFields.get(i).get(fromThis);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+        }
+        else {
+            na = argArray;
+        }
 
-		if (!implicatedFields.isEmpty()) {
-			na = new Object[argArray.length + implicatedFields.size()];
-			System.arraycopy(argArray, 0, na, 0, argArray.length);
-			for (int i = 0; i < implicatedFields.size(); i++)
-				try {
-					na[argArray.length + i] = implicatedFields.get(i).get(fromThis);
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-		} else {
-			na = argArray;
-		}
+        ImmutableArrayWrapper iaw = new ImmutableArrayWrapper(na, false);
 
-		ImmutableArrayWrapper iaw = new ImmutableArrayWrapper(na, false);
+        Object object = cache.get(iaw);
+        if ((object == null) && !cache.containsKey(iaw)) {
 
-		Object object = cache.get(iaw);
-		if ((object == null) && !cache.containsKey(iaw)) {
+            // now check the disk cache
 
-			// now check the disk cache
+            String string = iaw.toString();
+            string = string.replace('<', '_');
+            string = string.replace('>', '_');
+            string = string.replace('$', '_');
+            string = string.replace('[', '_');
+            string = string.replace(']', '_');
+            string = string.replace('/', '_');
+            string = string.replace(" ", "");
 
-			String string = iaw.toString();
-			string = string.replace('<', '_');
-			string = string.replace('>', '_');
-			string = string.replace('$', '_');
-			string = string.replace('[', '_');
-			string = string.replace(']', '_');
-			string = string.replace('/', '_');
-			string = string.replace(" ", "");
+            String name = (String) parameters.get("name");
+            name = name == null ? "unknown" : name;
+            name += "_" + fromThis.getClass();
 
-			String name = (String) parameters.get("name");
-			name = name == null ? "unknown" : name;
-			name += "_" + fromThis.getClass();
+            final String filename = diskCacheRoot + name + '/' + string;
 
-			final String filename = diskCacheRoot + name + '/' + string;
-
-			if (new File(filename).exists()) {
-				Object ty = parameters.get("type");
-				Object loaded = null;
-				if ((ty == null) || "xml".equals(ty)) {
-					try {
-						loaded = PythonUtils.loadAsXML(filename);
-					} catch (Throwable t) {
+            if (new File(filename).exists()) {
+                Object ty = parameters.get("type");
+                Object loaded = null;
+                if ((ty == null) || "xml".equals(ty)) {
+                    try {
+                        loaded = PythonUtils.loadAsXML(filename);
+                    } catch (Throwable t) {
                         //System.out.println(" (( non fatal error while attempting to load (xml) cache from <" + filename + "> is ))");
                         t.printStackTrace();
-					}
-				} else {
+                    }
+                }
+                else {
                     loaded = Protected.loadSerialized(filename);
                 }
 
-				if (loaded != null) {
-					cache.put(iaw, loaded);
-					return loaded;
-				}
-			} else {
-			}
+                if (loaded != null) {
+                    cache.put(iaw, loaded);
+                    return loaded;
+                }
+            }
+            else {
+            }
 
-			try {
-				cache.put(iaw, object = original.invoke(fromThis, argArray));
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
+            try {
+                cache.put(iaw, object = original.invoke(fromThis, argArray));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
 
-			if (object != null) {
-				new File(diskCacheRoot + name).mkdirs();
-				Object ty = parameters.get("type");
-				if ((ty == null) || "xml".equals(ty)) {
-					try {
-						new PythonUtils().persistAsXML(object, filename);
-					} catch (Throwable t) {
-						System.err.println(" (( non fatal error while attempting to save (xml) cache from <" + filename + "> --- will not try again, " + ANSIColorUtils.yellow("WARNING: cache may be out of date") + "))");
-						t.printStackTrace();
-					}
-				} else {
-					try {
-						ObjectOutputStream ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(new File(filename))));
-						ois.writeObject(object);
-						ois.close();
-					} catch (Throwable t) {
-						System.err.println(" (( non fatal error while attempting to save (serializable) cache from <" + filename + "> is -- will not try again, " + ANSIColorUtils.yellow("WARNING: cache may be out of date") + "))");
-						t.printStackTrace();
-					}
-				}
+            if (object != null) {
+                new File(diskCacheRoot + name).mkdirs();
+                Object ty = parameters.get("type");
+                if ((ty == null) || "xml".equals(ty)) {
+                    try {
+                        new PythonUtils().persistAsXML(object, filename);
+                    } catch (Throwable t) {
+                        System.err.println(" (( non fatal error while attempting to save (xml) cache from <"
+                                           + filename
+                                           + "> --- will not try again, "
+                                           + ANSIColorUtils.yellow("WARNING: cache may be out of date")
+                                           + "))");
+                        t.printStackTrace();
+                    }
+                }
+                else {
+                    try {
+                        ObjectOutputStream ois =
+                                new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(new File(filename))));
+                        ois.writeObject(object);
+                        ois.close();
+                    } catch (Throwable t) {
+                        System.err.println(" (( non fatal error while attempting to save (serializable) cache from <"
+                                           + filename
+                                           + "> is -- will not try again, "
+                                           + ANSIColorUtils.yellow("WARNING: cache may be out of date")
+                                           + "))");
+                        t.printStackTrace();
+                    }
+                }
 
-			}
-		}
-		return object;
+            }
+        }
+        return object;
 
-	}
+    }
 }

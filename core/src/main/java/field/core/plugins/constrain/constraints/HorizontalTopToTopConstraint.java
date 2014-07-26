@@ -23,108 +23,109 @@ import org.eclipse.swt.widgets.Event;
 
 import java.util.Map;
 
-public class HorizontalTopToTopConstraint extends BaseConstraintOverrides {
+public
+class HorizontalTopToTopConstraint extends BaseConstraintOverrides {
 
-	private CachedLine geometry;
+    private CachedLine geometry;
 
-	@Override
-	public VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
-		if (source == forElement) {
-			if (geometry != null) {
-				boolean m = LineUtils.hitTest(geometry, new Vector2(event.x, event.y), 15);
-				if (m)
-					is.set(true);
-				else
-					is.set(false);
-			}
-		}
-		return VisitCode.cont;
-	}
+    @Override
+    public
+    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+        if (source == forElement) {
+            if (geometry != null) {
+                boolean m = LineUtils.hitTest(geometry, new Vector2(event.x, event.y), 15);
+                if (m) is.set(true);
+                else is.set(false);
+            }
+        }
+        return VisitCode.cont;
+    }
 
-	private Boolean isSelected() {
-		iComponent v = forElement.getProperty(iVisualElement.localView);
-		if (v!=null)
-			return v.isSelected();
-		return false;
-	}
+    private
+    Boolean isSelected() {
+        iComponent v = forElement.getProperty(iVisualElement.localView);
+        if (v != null) return v.isSelected();
+        return false;
+    }
 
-	@Override
-	protected ClConstraint createConstraint(Map<String, iVisualElement> property) {
+    @Override
+    protected
+    ClConstraint createConstraint(Map<String, iVisualElement> property) {
 
-		ComplexConstraints cc = getComplexConstraintsPlugin();
-		assert cc != null;
-		if (cc == null)
-			return null;
-		iVisualElement left = property.get("left");
-		iVisualElement right = property.get("right");
+        ComplexConstraints cc = getComplexConstraintsPlugin();
+        assert cc != null;
+        if (cc == null) return null;
+        iVisualElement left = property.get("left");
+        iVisualElement right = property.get("right");
 
-		assert left != null : property;
-		assert right != null : property;
-		if ((left == null) || (right == null))
-			return null;
-		VariablesForRect vLeft = cc.getVariablesFor(left);
-		VariablesForRect vRight = cc.getVariablesFor(right);
+        assert left != null : property;
+        assert right != null : property;
+        if ((left == null) || (right == null)) return null;
+        VariablesForRect vLeft = cc.getVariablesFor(left);
+        VariablesForRect vRight = cc.getVariablesFor(right);
 
-		return createConstraint(vLeft, vRight);
-	}
+        return createConstraint(vLeft, vRight);
+    }
 
-	protected ClLinearEquation createConstraint(VariablesForRect vLeft, VariablesForRect vRight) {
-		return new ClLinearEquation(vLeft.variableY, new ClLinearExpression(vRight.variableY));
-	}
-	@Override
-	protected void paint(Rect bounds, boolean visible) {
-		ComplexConstraints cc = getComplexConstraintsPlugin();
-		assert cc != null;
-		if (cc == null)
-			return;
+    protected
+    ClLinearEquation createConstraint(VariablesForRect vLeft, VariablesForRect vRight) {
+        return new ClLinearEquation(vLeft.variableY, new ClLinearExpression(vRight.variableY));
+    }
 
-		CachedLine cl = new CachedLine();
-		iLine line = cl.getInput();
+    @Override
+    protected
+    void paint(Rect bounds, boolean visible) {
+        ComplexConstraints cc = getComplexConstraintsPlugin();
+        assert cc != null;
+        if (cc == null) return;
 
-		geometry = cl;
+        CachedLine cl = new CachedLine();
+        iLine line = cl.getInput();
 
-		Map<String, iVisualElement> parameters = getConstraintParameters();
-		iVisualElement left = parameters.get("left");
-		iVisualElement right = parameters.get("right");
-		assert left != null : parameters;
-		assert right != null : parameters;
+        geometry = cl;
 
-		if ((left == null) || (right == null))
-			return;
-		VariablesForRect vLeft = cc.getVariablesFor(left);
-		VariablesForRect vRight = cc.getVariablesFor(right);
+        Map<String, iVisualElement> parameters = getConstraintParameters();
+        iVisualElement left = parameters.get("left");
+        iVisualElement right = parameters.get("right");
+        assert left != null : parameters;
+        assert right != null : parameters;
 
-		Vector3 p1 = point1(vLeft);
-		Vector3 p2 = point2(vRight);
+        if ((left == null) || (right == null)) return;
+        VariablesForRect vLeft = cc.getVariablesFor(left);
+        VariablesForRect vRight = cc.getVariablesFor(right);
 
-		line.moveTo(p1.x, p1.y);
-		line.lineTo(p1.x + ((p2.x - p1.x) * 0.1f), p1.y+5);
-		line.lineTo(p1.x + ((p2.x - p1.x) * 0.9f), p1.y+5);
-		line.lineTo(p2.x, p2.y);
-		line.lineTo(p1.x + ((p2.x - p1.x) * 0.9f), p1.y-5);
-		line.lineTo(p1.x + ((p2.x - p1.x) * 0.1f), p1.y-5);
-		line.lineTo(p1.x, p1.y);
+        Vector3 p1 = point1(vLeft);
+        Vector3 p2 = point2(vRight);
+
+        line.moveTo(p1.x, p1.y);
+        line.lineTo(p1.x + ((p2.x - p1.x) * 0.1f), p1.y + 5);
+        line.lineTo(p1.x + ((p2.x - p1.x) * 0.9f), p1.y + 5);
+        line.lineTo(p2.x, p2.y);
+        line.lineTo(p1.x + ((p2.x - p1.x) * 0.9f), p1.y - 5);
+        line.lineTo(p1.x + ((p2.x - p1.x) * 0.1f), p1.y - 5);
+        line.lineTo(p1.x, p1.y);
 
 
-		cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0.25, 0, 0, 0.15f));
-		cl.getProperties().put(iLinearGraphicsContext.thickness, 0.5f);
-		cl.getProperties().put(iLinearGraphicsContext.filled, true);
+        cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0.25, 0, 0, 0.15f));
+        cl.getProperties().put(iLinearGraphicsContext.thickness, 0.5f);
+        cl.getProperties().put(iLinearGraphicsContext.filled, true);
 
-		cl.getProperties().put(iLinearGraphicsContext.shouldHighlight, isSelected());
+        cl.getProperties().put(iLinearGraphicsContext.shouldHighlight, isSelected());
 
-		iLinearGraphicsContext context = null;//GLComponentWindow.fastContext;
-		if (context == null)
-			context = GLComponentWindow.currentContext;
-		context.submitLine(cl, cl.getProperties());
+        iLinearGraphicsContext context = null;//GLComponentWindow.fastContext;
+        if (context == null) context = GLComponentWindow.currentContext;
+        context.submitLine(cl, cl.getProperties());
 
-	}
+    }
 
-	protected Vector3 point1(VariablesForRect vLeft) {
-		return new Vector3(vLeft.variableX.value() + (vLeft.variableH.value() / 2), vLeft.variableY.value(), 0);
-	}
+    protected
+    Vector3 point1(VariablesForRect vLeft) {
+        return new Vector3(vLeft.variableX.value() + (vLeft.variableH.value() / 2), vLeft.variableY.value(), 0);
+    }
 
-	protected Vector3 point2(VariablesForRect vRight) {
-		return new Vector3(vRight.variableX.value() + (vRight.variableH.value() / 2), vRight.variableY.value(), 0);
-	}
+    protected
+    Vector3 point2(VariablesForRect vRight) {
+        return new Vector3(vRight.variableX.value() + (vRight.variableH.value() / 2), vRight.variableY.value(), 0);
+    }
 
 }

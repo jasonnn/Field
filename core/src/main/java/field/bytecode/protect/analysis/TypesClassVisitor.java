@@ -12,86 +12,99 @@ import org.objectweb.asm.*;
 
 public abstract
 class TypesClassVisitor extends ClassVisitor {
-	// private MetricsClassVisitor mMetrics = null;
+    // private MetricsClassVisitor mMetrics = null;
 
-	private String mClassName = null;
+    private String mClassName = null;
 
-	private String mEntryMethod = null;
+    private String mEntryMethod = null;
 
-	private TypesContext[] mPauseContexts = null;
+    private TypesContext[] mPauseContexts = null;
 
-	private TypesContext[] mLabelContexts = null;
+    private TypesContext[] mLabelContexts = null;
 
-	private int mPauseContextCounter = 0;
+    private int mPauseContextCounter = 0;
 
-	private int mLabelContextCounter = 0;
+    private int mLabelContextCounter = 0;
 
-	public TypesClassVisitor(String className, String entryMethod) {
+    public
+    TypesClassVisitor(String className, String entryMethod) {
         super(Opcodes.ASM5);
-		// mMetrics = metrics;
-		mClassName = className;
-		mEntryMethod = entryMethod;
-	}
+        // mMetrics = metrics;
+        mClassName = className;
+        mEntryMethod = entryMethod;
+    }
 
-	//
-	// MetricsClassVisitor getMetrics() {
-	// return mMetrics;
-	// }
+    //
+    // MetricsClassVisitor getMetrics() {
+    // return mMetrics;
+    // }
 
-	void setPauseContexts(TypesContext[] pauseContexts) {
-		mPauseContexts = pauseContexts;
-	}
+    void setPauseContexts(TypesContext[] pauseContexts) {
+        mPauseContexts = pauseContexts;
+    }
 
-	public TypesContext nextPauseContext() {
-		return mPauseContexts[mPauseContextCounter++];
-	}
+    public
+    TypesContext nextPauseContext() {
+        return mPauseContexts[mPauseContextCounter++];
+    }
 
-	void setLabelContexts(TypesContext[] labelContexts) {
-		mLabelContexts = labelContexts;
-	}
+    void setLabelContexts(TypesContext[] labelContexts) {
+        mLabelContexts = labelContexts;
+    }
 
-	TypesContext nextLabelTypes() {
-		return mLabelContexts[mLabelContextCounter++];
-	}
+    TypesContext nextLabelTypes() {
+        return mLabelContexts[mLabelContextCounter++];
+    }
 
-	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		if (mEntryMethod.equals(name + desc)) { return new TypesMethodVisitor(this, mClassName){
-			protected boolean isYieldCall(String owner_classname, String name, String desc) {
-				return TypesClassVisitor.this.isYieldCall(owner_classname, name, desc);
-            }
-        };
+    public
+    MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+        if (mEntryMethod.equals(name + desc)) {
+            return new TypesMethodVisitor(this, mClassName) {
+                protected
+                boolean isYieldCall(String owner_classname, String name, String desc) {
+                    return TypesClassVisitor.this.isYieldCall(owner_classname, name, desc);
+                }
+            };
 
-		}
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	protected abstract
+    protected abstract
     boolean isYieldCall(String owner_classname, String name, String desc);
 
-	public void visitInnerClass(String name, String outerName, String innerName, int access) {
-	}
+    public
+    void visitInnerClass(String name, String outerName, String innerName, int access) {
+    }
 
-	public void visitOuterClass(String owner, String name, String desc) {
-	}
+    public
+    void visitOuterClass(String owner, String name, String desc) {
+    }
 
-	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-	}
+    public
+    void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+    }
 
-	public void visitSource(String source, String debug) {
-	}
+    public
+    void visitSource(String source, String debug) {
+    }
 
-	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-		return  EmptyVisitors.fieldVisitor;
-	}
+    public
+    FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+        return EmptyVisitors.fieldVisitor;
+    }
 
-	public void visitAttribute(Attribute attr) {
-	}
+    public
+    void visitAttribute(Attribute attr) {
+    }
 
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		return EmptyVisitors.annotationVisitor;
-	}
+    public
+    AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+        return EmptyVisitors.annotationVisitor;
+    }
 
-	public void visitEnd() {
-	}
+    public
+    void visitEnd() {
+    }
 }

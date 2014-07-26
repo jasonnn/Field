@@ -21,680 +21,788 @@ import field.util.TaskQueue;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class TranscriptViewing {
+public
+class TranscriptViewing {
 
-	@Woven
+    @Woven
     public static
     class FilterEventsWithNoDirectEffect implements iProvidesQueue, iTranscriptViewTransformation {
-		TaskQueue q = new TaskQueue();
+        TaskQueue q = new TaskQueue();
 
-		public void filterView(LoggingEventModel root) {
+        public
+        void filterView(LoggingEventModel root) {
 
-			new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false) {
-				@Override
-				protected VisitCode visit(LoggingEventModel n) {
+            new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false) {
+                @Override
+                protected
+                VisitCode visit(LoggingEventModel n) {
 
-					// check
-					// to
-					// see
-					// if
-					// there
-					// is a
-					// call
-					// that
-					// follows
-					// directly
-					// on
-					// from
-					// a
-					// set
-					for (int i = 0; i < n.getChildren().size(); i++) {
-						LoggingEventModel c = n.getChildren().get(i);
-						if (c.node != null && (c.node instanceof MoveEvent)) {
-							Link last = (Link) ((MoveEvent) c.node).move.links.get(((MoveEvent) c.node).move.links.size() - 1);
-							if (last.before != null && last.after != null && last.before.equals(last.after))
-								removeChild(n, c);
-						}
-					}
+                    // check
+                    // to
+                    // see
+                    // if
+                    // there
+                    // is a
+                    // call
+                    // that
+                    // follows
+                    // directly
+                    // on
+                    // from
+                    // a
+                    // set
+                    for (int i = 0; i < n.getChildren().size(); i++) {
+                        LoggingEventModel c = n.getChildren().get(i);
+                        if (c.node != null && (c.node instanceof MoveEvent)) {
+                            Link last =
+                                    (Link) ((MoveEvent) c.node).move.links.get(((MoveEvent) c.node).move.links.size()
+                                                                               - 1);
+                            if (last.before != null && last.after != null && last.before.equals(last.after))
+                                removeChild(n, c);
+                        }
+                    }
 
-					return VisitCode.cont;
-				}
-			}.apply(root);
-			q.update();
-		}
+                    return VisitCode.cont;
+                }
+            }.apply(root);
+            q.update();
+        }
 
-		public iRegistersUpdateable getQueueFor(Method m) {
-			return q;
-		}
+        public
+        iRegistersUpdateable getQueueFor(Method m) {
+            return q;
+        }
 
-		@InQueue
+        @InQueue
         protected static
         void removeChild(LoggingEventModel model, LoggingEventModel child) {
             model.removeChild(child);
-		}
-		
-		@Override
-		public String toString() {
-			return "Only Direct Effects";
-		}
-	}
+        }
 
-	@Woven
+        @Override
+        public
+        String toString() {
+            return "Only Direct Effects";
+        }
+    }
+
+    @Woven
     public static
     class FilterPotentiallyRedundantCalls implements iProvidesQueue, iTranscriptViewTransformation {
 
-		TaskQueue q = new TaskQueue();
+        TaskQueue q = new TaskQueue();
 
-		public void filterView(LoggingEventModel root) {
+        public
+        void filterView(LoggingEventModel root) {
 
-			new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false) {
-				@Override
-				protected VisitCode visit(LoggingEventModel n) {
+            new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false) {
+                @Override
+                protected
+                VisitCode visit(LoggingEventModel n) {
 
-					// check
-					// to
-					// see
-					// if
-					// there
-					// is a
-					// call
-					// that
-					// follows
-					// directly
-					// on
-					// from
-					// a
-					// set
-					for (int i = 0; i < n.getChildren().size(); i++) {
-						LoggingEventModel c = n.getChildren().get(i);
-						if (c.node != null && (c.node instanceof MoveEvent)) {
-							Link last = (Link) ((MoveEvent) c.node).move.links.get(((MoveEvent) c.node).move.links.size() - 1);
-							if (last.type == LinkType.set) {
-								if (i < n.getChildren().size() - 1) {
-									LoggingEventModel m = n.getChildren().get(i + 1);
-									if (m.node instanceof MoveEvent) {
-										Link last2 = (Link) ((MoveEvent) m.node).move.links.get(((MoveEvent) m.node).move.links.size() - 1);
-										if (last2.type == LinkType.call && (((MoveEvent) c.node).move.expression.startsWith((((MoveEvent) m.node).move.expression)))) {
-											removeChild(n, n.getChildren().get(i + 1));
-										}
-									}
-								}
-							}
-						}
-					}
+                    // check
+                    // to
+                    // see
+                    // if
+                    // there
+                    // is a
+                    // call
+                    // that
+                    // follows
+                    // directly
+                    // on
+                    // from
+                    // a
+                    // set
+                    for (int i = 0; i < n.getChildren().size(); i++) {
+                        LoggingEventModel c = n.getChildren().get(i);
+                        if (c.node != null && (c.node instanceof MoveEvent)) {
+                            Link last =
+                                    (Link) ((MoveEvent) c.node).move.links.get(((MoveEvent) c.node).move.links.size()
+                                                                               - 1);
+                            if (last.type == LinkType.set) {
+                                if (i < n.getChildren().size() - 1) {
+                                    LoggingEventModel m = n.getChildren().get(i + 1);
+                                    if (m.node instanceof MoveEvent) {
+                                        Link last2 =
+                                                (Link) ((MoveEvent) m.node).move.links.get(((MoveEvent) m.node).move.links
+                                                                                                   .size() - 1);
+                                        if (last2.type == LinkType.call
+                                            && (((MoveEvent) c.node).move.expression.startsWith((((MoveEvent) m.node).move.expression)))) {
+                                            removeChild(n, n.getChildren().get(i + 1));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-					return VisitCode.cont;
-				}
-			}.apply(root);
-			q.update();
-		}
+                    return VisitCode.cont;
+                }
+            }.apply(root);
+            q.update();
+        }
 
-		public iRegistersUpdateable getQueueFor(Method m) {
-			return q;
-		}
+        public
+        iRegistersUpdateable getQueueFor(Method m) {
+            return q;
+        }
 
-		@InQueue
+        @InQueue
         protected static
         void removeChild(LoggingEventModel model, LoggingEventModel child) {
             model.removeChild(child);
-		}
-		
-		@Override
-		public String toString() {
-			return "No Redundant Calls";
-		}
-	}
+        }
 
-	@Woven
+        @Override
+        public
+        String toString() {
+            return "No Redundant Calls";
+        }
+    }
+
+    @Woven
     public static
     class GroupByElementWithin implements iProvidesQueue, iTranscriptViewTransformation {
 
-		TaskQueue q = new TaskQueue();
+        TaskQueue q = new TaskQueue();
 
-		public void filterView(LoggingEventModel root) {
+        public
+        void filterView(LoggingEventModel root) {
 
-			new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false) {
-				@Override
-				protected VisitCode visit(LoggingEventModel n) {
+            new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false) {
+                @Override
+                protected
+                VisitCode visit(LoggingEventModel n) {
 
-					iVisualElement currentFocus = null;
-					LoggingEventModel currentIntermediate = null;
+                    iVisualElement currentFocus = null;
+                    LoggingEventModel currentIntermediate = null;
 
-					// check
-					// to
-					// see
-					// if
-					// there
-					// is a
-					// call
-					// that
-					// follows
-					// directly
-					// on
-					// from
-					// a
-					// set
-					for (int i = 0; i < n.getChildren().size(); i++) {
-						LoggingEventModel c = n.getChildren().get(i);
+                    // check
+                    // to
+                    // see
+                    // if
+                    // there
+                    // is a
+                    // call
+                    // that
+                    // follows
+                    // directly
+                    // on
+                    // from
+                    // a
+                    // set
+                    for (int i = 0; i < n.getChildren().size(); i++) {
+                        LoggingEventModel c = n.getChildren().get(i);
 
-						if (c.node instanceof iProvidesContextStack) {
-							LinkedHashSet<iLoggingEvent> context = ((iProvidesContextStack) c.node).getSuspendedContext();
-							iVisualElement newFocus = null;
-							boolean isFragment = true;
+                        if (c.node instanceof iProvidesContextStack) {
+                            LinkedHashSet<iLoggingEvent> context =
+                                    ((iProvidesContextStack) c.node).getSuspendedContext();
+                            iVisualElement newFocus = null;
+                            boolean isFragment = true;
 
-							for (iLoggingEvent cc : context) {
+                            for (iLoggingEvent cc : context) {
 
-								if (cc instanceof ElementExecutionBegin) {
-									newFocus = (iVisualElement) ((ElementExecutionBegin) cc).getToken();
-									isFragment = false;
-								}
-								if (cc instanceof ElementExecutionFocusBegin) {
-									newFocus = (iVisualElement) ((ElementExecutionFocusBegin) cc).getToken();
-								}
-							}
+                                if (cc instanceof ElementExecutionBegin) {
+                                    newFocus = (iVisualElement) ((ElementExecutionBegin) cc).getToken();
+                                    isFragment = false;
+                                }
+                                if (cc instanceof ElementExecutionFocusBegin) {
+                                    newFocus = (iVisualElement) ((ElementExecutionFocusBegin) cc).getToken();
+                                }
+                            }
 
-							if (newFocus == currentFocus) {
-							} else {
-								currentFocus = newFocus;
-								if (newFocus == null) {
-									currentIntermediate = null;
-								} else
-									currentIntermediate = new LoggingEventModel(LoggingEventType.informative, null, "<HTML><font color='#" + Constants.defaultTreeColor + "'> execution inside <" + ElementInvocationLogging.describeElementLink(newFocus) + ' '
-                                                                                                                    + (isFragment ? "(fragment)" : ""));
-							}
-							insertParent(n, currentIntermediate, c);
-						} else {
-							currentFocus = null;
-							currentIntermediate = null;
-						}
-					}
+                            if (newFocus == currentFocus) {
+                            }
+                            else {
+                                currentFocus = newFocus;
+                                if (newFocus == null) {
+                                    currentIntermediate = null;
+                                }
+                                else currentIntermediate = new LoggingEventModel(LoggingEventType.informative,
+                                                                                 null,
+                                                                                 "<HTML><font color='#"
+                                                                                 + Constants.defaultTreeColor
+                                                                                 + "'> execution inside <"
+                                                                                 + ElementInvocationLogging.describeElementLink(newFocus)
+                                                                                 + ' '
+                                                                                 + (isFragment ? "(fragment)" : ""));
+                            }
+                            insertParent(n, currentIntermediate, c);
+                        }
+                        else {
+                            currentFocus = null;
+                            currentIntermediate = null;
+                        }
+                    }
 
-					return VisitCode.cont;
-				}
-			}.apply(root);
-			q.update();
-		}
+                    return VisitCode.cont;
+                }
+            }.apply(root);
+            q.update();
+        }
 
-		public iRegistersUpdateable getQueueFor(Method m) {
-			return q;
-		}
+        public
+        iRegistersUpdateable getQueueFor(Method m) {
+            return q;
+        }
 
-		@InQueue
+        @InQueue
         protected static
         void insertParent(LoggingEventModel parent, LoggingEventModel intermediate, LoggingEventModel child) {
-            if (intermediate == null)
-				return;
+            if (intermediate == null) return;
 
-			if (!parent.getChildren().contains(intermediate))
-				parent.addChild(intermediate);
-			if (parent.getChildren().contains(child))
-				parent.removeChild(child);
-			intermediate.addChild(child);
-		}
+            if (!parent.getChildren().contains(intermediate)) parent.addChild(intermediate);
+            if (parent.getChildren().contains(child)) parent.removeChild(child);
+            intermediate.addChild(child);
+        }
 
-		@InQueue
+        @InQueue
         protected static
         void removeChild(LoggingEventModel model, LoggingEventModel child) {
             model.removeChild(child);
-		}
-		
-		@Override
-		public String toString() {
-			return "Grouped by Element";
-		}
-	}
+        }
 
-	public static
+        @Override
+        public
+        String toString() {
+            return "Grouped by Element";
+        }
+    }
+
+    public static
     class Join implements iTranscriptViewGeneration {
-		private final iTranscriptViewGeneration gen;
+        private final iTranscriptViewGeneration gen;
 
-		private final iTranscriptViewTransformation[] trans;
+        private final iTranscriptViewTransformation[] trans;
 
-		public Join(iTranscriptViewGeneration gen, iTranscriptViewTransformation... trans) {
-			this.gen = gen;
-			this.trans = trans;
-		}
+        public
+        Join(iTranscriptViewGeneration gen, iTranscriptViewTransformation... trans) {
+            this.gen = gen;
+            this.trans = trans;
+        }
 
-		public boolean generateView(ArrayList<iLoggingEvent> transcript, LoggingEventModel root) {
-			gen.generateView(transcript, root);
-			for (int i = 0; i < trans.length; i++) {
-				trans[i].filterView(root);
-			}
-			return true;
-		}
-		
-		@Override
-		public String toString() {
-			return gen+" & "+Arrays.asList(trans);
-		}
-	}
+        public
+        boolean generateView(ArrayList<iLoggingEvent> transcript, LoggingEventModel root) {
+            gen.generateView(transcript, root);
+            for (int i = 0; i < trans.length; i++) {
+                trans[i].filterView(root);
+            }
+            return true;
+        }
 
-	// suitible for a "hard bake"
+        @Override
+        public
+        String toString() {
+            return gen + " & " + Arrays.asList(trans);
+        }
+    }
+
+    // suitible for a "hard bake"
     @Woven
     public static
     class OnlyLastEffect implements iProvidesQueue, iTranscriptViewTransformation {
-		TaskQueue q = new TaskQueue();
+        TaskQueue q = new TaskQueue();
 
-		public void filterView(LoggingEventModel root) {
+        public
+        void filterView(LoggingEventModel root) {
 
-			// order goes from most recent
-			// to least recent, unless we
-			// reverse it
+            // order goes from most recent
+            // to least recent, unless we
+            // reverse it
 
-			final HashMap<Object, LoggingEventModel> targets = new HashMap<Object, LoggingEventModel>();
+            final HashMap<Object, LoggingEventModel> targets = new HashMap<Object, LoggingEventModel>();
 
-			new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
-				@Override
-				protected VisitCode visit(LoggingEventModel n) {
+            new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
+                @Override
+                protected
+                VisitCode visit(LoggingEventModel n) {
 
-					if (n.node instanceof MoveEvent) {
-						MoveEvent m = ((MoveEvent) n.node);
+                    if (n.node instanceof MoveEvent) {
+                        MoveEvent m = ((MoveEvent) n.node);
 
-						if (m.move.after != null && m.move.current != null && targets.get(m.move.current) == null) {
-							// keep
-							// it,
-							// but
-							// repurpose
-							// it
-							LoggingEventModel q = new LoggingEventModel(LoggingEventType.replayable, new SimpleStringEvent(m.move.current, m.move.after, ((Link) m.move.links.get(m.move.links.size() - 1)).path, m.getDoExpression(), m.getUndoExpression(), m.isError()), null);
-							addChild((LoggingEventModel) n.getParents().get(0), q);
-							removeChild((LoggingEventModel) n.getParents().get(0), n);
-							targets.put(m.move.current, q);
-						} else if (m.move.after != null && m.move.current != null && targets.get(m.move.current) != null) {
-							removeChild((LoggingEventModel) n.getParents().get(0), n);
-						}
-					}
+                        if (m.move.after != null && m.move.current != null && targets.get(m.move.current) == null) {
+                            // keep
+                            // it,
+                            // but
+                            // repurpose
+                            // it
+                            LoggingEventModel q = new LoggingEventModel(LoggingEventType.replayable,
+                                                                        new SimpleStringEvent(m.move.current,
+                                                                                              m.move.after,
+                                                                                              ((Link) m.move.links.get(m.move.links
+                                                                                                                               .size()
+                                                                                                                       - 1)).path,
+                                                                                              m.getDoExpression(),
+                                                                                              m.getUndoExpression(),
+                                                                                              m.isError()),
+                                                                        null);
+                            addChild((LoggingEventModel) n.getParents().get(0), q);
+                            removeChild((LoggingEventModel) n.getParents().get(0), n);
+                            targets.put(m.move.current, q);
+                        }
+                        else if (m.move.after != null
+                                 && m.move.current != null
+                                 && targets.get(m.move.current) != null) {
+                            removeChild((LoggingEventModel) n.getParents().get(0), n);
+                        }
+                    }
 
-					return VisitCode.cont;
-				}
-			}.apply(root);
-			q.update();
-		}
+                    return VisitCode.cont;
+                }
+            }.apply(root);
+            q.update();
+        }
 
-		public iRegistersUpdateable getQueueFor(Method m) {
-			return q;
-		}
+        public
+        iRegistersUpdateable getQueueFor(Method m) {
+            return q;
+        }
 
-		@InQueue
+        @InQueue
         protected static
         void addChild(LoggingEventModel model, LoggingEventModel child) {
             model.addChild(child);
-		}
+        }
 
-		@InQueue
+        @InQueue
         protected static
         void removeChild(LoggingEventModel model, LoggingEventModel child) {
             model.removeChild(child);
-		}
-		
-		@Override
-		public String toString() {
-			return "Only last effect";
-		}
+        }
 
-	}
+        @Override
+        public
+        String toString() {
+            return "Only last effect";
+        }
 
-	// groups by update cycle, except for the most recent update
-	// cycle
-	// further groups by box execution ?
+    }
+
+    // groups by update cycle, except for the most recent update
+    // cycle
+    // further groups by box execution ?
     public static
     class Overview implements iTranscriptViewGeneration {
-		public boolean generateView(ArrayList<iLoggingEvent> transcript, LoggingEventModel root) {
-			ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(root.getChildren());
-			for (LoggingEventModel m : a)
-				root.removeChild(m);
+        public
+        boolean generateView(ArrayList<iLoggingEvent> transcript, LoggingEventModel root) {
+            ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(root.getChildren());
+            for (LoggingEventModel m : a)
+                root.removeChild(m);
 
-			LoggingEventModel parent = root;
+            LoggingEventModel parent = root;
 
-			for (int i = transcript.size() - 1; i >= 0; i--) {
-				iLoggingEvent e = transcript.get(i);
+            for (int i = transcript.size() - 1; i >= 0; i--) {
+                iLoggingEvent e = transcript.get(i);
 
-				if (e instanceof UpdateCycle) {
-					LoggingEventModel em = new LoggingEventModel(LoggingEventType.replayable, e, null);
-					// if
-					// (next
-					// !=
-					// null
-					// &&
-					// next
-					// !=
-					// root
-					// &&
-					// next.getChildren().size()
-					// ==
-					// 0)
-					// root.removeChild(next);
-					root.addChild(em);
-					// next
-					// =
-					// em;
+                if (e instanceof UpdateCycle) {
+                    LoggingEventModel em = new LoggingEventModel(LoggingEventType.replayable, e, null);
+                    // if
+                    // (next
+                    // !=
+                    // null
+                    // &&
+                    // next
+                    // !=
+                    // root
+                    // &&
+                    // next.getChildren().size()
+                    // ==
+                    // 0)
+                    // root.removeChild(next);
+                    root.addChild(em);
+                    // next
+                    // =
+                    // em;
 
-					parent = em;
-				} else {
-					LoggingEventModel em = new LoggingEventModel(LoggingEventType.replayable, e, null);
-					parent.addChild(em);
-				}
-			}
-			// if (next != null && next !=
-			// root &&
-			// next.getChildren().size() ==
-			// 0) root.removeChild(next);
+                    parent = em;
+                }
+                else {
+                    LoggingEventModel em = new LoggingEventModel(LoggingEventType.replayable, e, null);
+                    parent.addChild(em);
+                }
+            }
+            // if (next != null && next !=
+            // root &&
+            // next.getChildren().size() ==
+            // 0) root.removeChild(next);
 
-			return true;
-		}
+            return true;
+        }
 
-		@Override
-		public String toString() {
-			return "Overview";
-		}
-		
-	}
+        @Override
+        public
+        String toString() {
+            return "Overview";
+        }
 
-	public static
+    }
+
+    public static
     class PivotToCommonTarget implements iTranscriptViewTransformation {
 
-		public void filterView(LoggingEventModel root) {
-			final LoggingEventModel tmpRoot = new LoggingEventModel(LoggingEventType.informative, null, "tmpRoot");
+        public
+        void filterView(LoggingEventModel root) {
+            final LoggingEventModel tmpRoot = new LoggingEventModel(LoggingEventType.informative, null, "tmpRoot");
 
-			final HashMap<Object, LoggingEventModel> targets = new HashMap<Object, LoggingEventModel>();
+            final HashMap<Object, LoggingEventModel> targets = new HashMap<Object, LoggingEventModel>();
 
-			new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
-				@Override
-				protected VisitCode visit(LoggingEventModel n) {
+            new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
+                @Override
+                protected
+                VisitCode visit(LoggingEventModel n) {
 
                     //System.out.println(" filtering node " + n.node + " " + (n.node == null ? null : n.node.getClass()));
 
-					if (n.node instanceof MoveEvent) {
-						MoveEvent m = ((MoveEvent) n.node);
+                    if (n.node instanceof MoveEvent) {
+                        MoveEvent m = ((MoveEvent) n.node);
 
-						if (m.move.after != null && m.move.current != null) {
-							LoggingEventModel parent = targets.get(m.move.current);
-							if (parent == null) {
-								parent = new LoggingEventModel(LoggingEventType.informative, null, "var \u2014 <b>" + m.getDoExpressionLHS()+ "</b>");
-								tmpRoot.addChild(parent);
-								targets.put(m.move.current, parent);
-							}
-							parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
-						}
-					} else if (n.node instanceof DidSetLocalVariable) {
-						DidSetLocalVariable m = ((DidSetLocalVariable) n.node);
-						LoggingEventModel parent = targets.get(m.name);
-						if (parent == null) {
-							parent = new LoggingEventModel(LoggingEventType.informative, null, "var \u2014 <b>" + m.name + "</b>");
-							tmpRoot.addChild(parent);
-							targets.put(m.name, parent);
-						}
-						parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
-					} else if (n.node instanceof DidGetLocalVariable) {
-						DidGetLocalVariable m = ((DidGetLocalVariable) n.node);
-						LoggingEventModel parent = targets.get(m.name);
-						if (parent == null) {
-							parent = new LoggingEventModel(LoggingEventType.informative, null, "var \u2014 <b>" + m.name + "</b>");
-							tmpRoot.addChild(parent);
-							targets.put(m.name, parent);
-						}
-						parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
-					} else if (n.node instanceof DidGetLocalVariableByAutoExecution) {
-						DidGetLocalVariableByAutoExecution m = ((DidGetLocalVariableByAutoExecution) n.node);
-						LoggingEventModel parent = targets.get(m.name);
-						if (parent == null) {
-							parent = new LoggingEventModel(LoggingEventType.informative, null, "var \u2014 <b>" + m.name + "</b>");
-							tmpRoot.addChild(parent);
-							targets.put(m.name, parent);
-						}
-						parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
-					}
+                        if (m.move.after != null && m.move.current != null) {
+                            LoggingEventModel parent = targets.get(m.move.current);
+                            if (parent == null) {
+                                parent = new LoggingEventModel(LoggingEventType.informative,
+                                                               null,
+                                                               "var \u2014 <b>" + m.getDoExpressionLHS() + "</b>");
+                                tmpRoot.addChild(parent);
+                                targets.put(m.move.current, parent);
+                            }
+                            parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
+                        }
+                    }
+                    else if (n.node instanceof DidSetLocalVariable) {
+                        DidSetLocalVariable m = ((DidSetLocalVariable) n.node);
+                        LoggingEventModel parent = targets.get(m.name);
+                        if (parent == null) {
+                            parent = new LoggingEventModel(LoggingEventType.informative,
+                                                           null,
+                                                           "var \u2014 <b>" + m.name + "</b>");
+                            tmpRoot.addChild(parent);
+                            targets.put(m.name, parent);
+                        }
+                        parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
+                    }
+                    else if (n.node instanceof DidGetLocalVariable) {
+                        DidGetLocalVariable m = ((DidGetLocalVariable) n.node);
+                        LoggingEventModel parent = targets.get(m.name);
+                        if (parent == null) {
+                            parent = new LoggingEventModel(LoggingEventType.informative,
+                                                           null,
+                                                           "var \u2014 <b>" + m.name + "</b>");
+                            tmpRoot.addChild(parent);
+                            targets.put(m.name, parent);
+                        }
+                        parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
+                    }
+                    else if (n.node instanceof DidGetLocalVariableByAutoExecution) {
+                        DidGetLocalVariableByAutoExecution m = ((DidGetLocalVariableByAutoExecution) n.node);
+                        LoggingEventModel parent = targets.get(m.name);
+                        if (parent == null) {
+                            parent = new LoggingEventModel(LoggingEventType.informative,
+                                                           null,
+                                                           "var \u2014 <b>" + m.name + "</b>");
+                            tmpRoot.addChild(parent);
+                            targets.put(m.name, parent);
+                        }
+                        parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
+                    }
 
-					return VisitCode.cont;
-				}
-			}.apply(root);
+                    return VisitCode.cont;
+                }
+            }.apply(root);
 
-			{
-				ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(root.getChildren());
-				for (LoggingEventModel m : a)
-					root.removeChild(m);
-			}
-			{
-				ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(tmpRoot.getChildren());
-				for (LoggingEventModel m : a) {
-					tmpRoot.removeChild(m);
-					root.addChild(m);
-				}
-			}
-		}
-		
-		@Override
-		public String toString() {
-			return "By Name";
-		}
-		
-	}
+            {
+                ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(root.getChildren());
+                for (LoggingEventModel m : a)
+                    root.removeChild(m);
+            }
+            {
+                ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(tmpRoot.getChildren());
+                for (LoggingEventModel m : a) {
+                    tmpRoot.removeChild(m);
+                    root.addChild(m);
+                }
+            }
+        }
 
-	public static
+        @Override
+        public
+        String toString() {
+            return "By Name";
+        }
+
+    }
+
+    public static
     class PivotToCommonClass implements iTranscriptViewTransformation {
 
-		public void filterView(LoggingEventModel root) {
-			final LoggingEventModel tmpRoot = new LoggingEventModel(LoggingEventType.informative, null, "tmpRoot");
+        public
+        void filterView(LoggingEventModel root) {
+            final LoggingEventModel tmpRoot = new LoggingEventModel(LoggingEventType.informative, null, "tmpRoot");
 
-			final HashMap<Object, LoggingEventModel> targets = new HashMap<Object, LoggingEventModel>();
+            final HashMap<Object, LoggingEventModel> targets = new HashMap<Object, LoggingEventModel>();
 
-			new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
-				@Override
-				protected VisitCode visit(LoggingEventModel n) {
+            new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
+                @Override
+                protected
+                VisitCode visit(LoggingEventModel n) {
 
                     //System.out.println(" filtering node " + n.node + " " + (n.node == null ? null : n.node.getClass()));
 
-					if (n.node instanceof DidSetLocalVariable) {
-						DidSetLocalVariable m = ((DidSetLocalVariable) n.node);
-						LoggingEventModel parent = targets.get(safeClass(m.o));
-						if (parent == null) {
-							parent = new LoggingEventModel(LoggingEventType.informative, null, "var \u2014 <b>" + safeClass(m.o) + "</b>");
-							tmpRoot.addChild(parent);
-							targets.put(safeClass(m.o), parent);
-						}
-						parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
-					} else if (n.node instanceof DidGetLocalVariable) {
-						DidGetLocalVariable m = ((DidGetLocalVariable) n.node);
-						LoggingEventModel parent = targets.get(safeClass(m.o));
-						if (parent == null) {
-							parent = new LoggingEventModel(LoggingEventType.informative, null, "var \u2014 <b>" + safeClass(m.o) + "</b>");
-							tmpRoot.addChild(parent);
-							targets.put(safeClass(m.o), parent);
-						}
-						parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
-					} else if (n.node instanceof DidGetLocalVariableByAutoExecution) {
-						DidGetLocalVariableByAutoExecution m = ((DidGetLocalVariableByAutoExecution) n.node);
-						LoggingEventModel parent = targets.get(safeClass(m.got));
-						if (parent == null) {
-							parent = new LoggingEventModel(LoggingEventType.informative, null, "var \u2014 <b>" + safeClass(m.got) + "</b>");
-							tmpRoot.addChild(parent);
-							targets.put(safeClass(m.got), parent);
-						}
-						parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
-					}
+                    if (n.node instanceof DidSetLocalVariable) {
+                        DidSetLocalVariable m = ((DidSetLocalVariable) n.node);
+                        LoggingEventModel parent = targets.get(safeClass(m.o));
+                        if (parent == null) {
+                            parent = new LoggingEventModel(LoggingEventType.informative,
+                                                           null,
+                                                           "var \u2014 <b>" + safeClass(m.o) + "</b>");
+                            tmpRoot.addChild(parent);
+                            targets.put(safeClass(m.o), parent);
+                        }
+                        parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
+                    }
+                    else if (n.node instanceof DidGetLocalVariable) {
+                        DidGetLocalVariable m = ((DidGetLocalVariable) n.node);
+                        LoggingEventModel parent = targets.get(safeClass(m.o));
+                        if (parent == null) {
+                            parent = new LoggingEventModel(LoggingEventType.informative,
+                                                           null,
+                                                           "var \u2014 <b>" + safeClass(m.o) + "</b>");
+                            tmpRoot.addChild(parent);
+                            targets.put(safeClass(m.o), parent);
+                        }
+                        parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
+                    }
+                    else if (n.node instanceof DidGetLocalVariableByAutoExecution) {
+                        DidGetLocalVariableByAutoExecution m = ((DidGetLocalVariableByAutoExecution) n.node);
+                        LoggingEventModel parent = targets.get(safeClass(m.got));
+                        if (parent == null) {
+                            parent = new LoggingEventModel(LoggingEventType.informative,
+                                                           null,
+                                                           "var \u2014 <b>" + safeClass(m.got) + "</b>");
+                            tmpRoot.addChild(parent);
+                            targets.put(safeClass(m.got), parent);
+                        }
+                        parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
+                    }
 
-					return VisitCode.cont;
-				}
+                    return VisitCode.cont;
+                }
 
-				private Object safeClass(Object o) {
-					if (o == null) return "<i>unknown</i>";
-					o = PythonUtils.maybeToJava(o);
-					return o.getClass().getSimpleName();
-				}
-			}.apply(root);
+                private
+                Object safeClass(Object o) {
+                    if (o == null) return "<i>unknown</i>";
+                    o = PythonUtils.maybeToJava(o);
+                    return o.getClass().getSimpleName();
+                }
+            }.apply(root);
 
-			{
-				ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(root.getChildren());
-				for (LoggingEventModel m : a)
-					root.removeChild(m);
-			}
-			{
-				ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(tmpRoot.getChildren());
-				for (LoggingEventModel m : a) {
-					tmpRoot.removeChild(m);
-					root.addChild(m);
-				}
-			}
-		}
+            {
+                ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(root.getChildren());
+                for (LoggingEventModel m : a)
+                    root.removeChild(m);
+            }
+            {
+                ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(tmpRoot.getChildren());
+                for (LoggingEventModel m : a) {
+                    tmpRoot.removeChild(m);
+                    root.addChild(m);
+                }
+            }
+        }
 
-		@Override
-		public String toString() {
-			return "By Value";
-		}
+        @Override
+        public
+        String toString() {
+            return "By Value";
+        }
 
-	}
+    }
 
-	public static
+    public static
     class PivotToElement implements iTranscriptViewTransformation {
 
-		public void filterView(LoggingEventModel root) {
-			final LoggingEventModel tmpRoot = new LoggingEventModel(LoggingEventType.informative, null, "tmpRoot");
+        public
+        void filterView(LoggingEventModel root) {
+            final LoggingEventModel tmpRoot = new LoggingEventModel(LoggingEventType.informative, null, "tmpRoot");
 
-			final List<LoggingEventModel> flat = new ArrayList<LoggingEventModel>();
+            final List<LoggingEventModel> flat = new ArrayList<LoggingEventModel>();
 
-			new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
-				@Override
-				protected VisitCode visit(LoggingEventModel n) {
+            new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
+                @Override
+                protected
+                VisitCode visit(LoggingEventModel n) {
 
-					if (n.getParents().size() > 0)
-						flat.add(n);
-					return VisitCode.cont;
-				}
-			}.apply(root);
+                    if (n.getParents().size() > 0) flat.add(n);
+                    return VisitCode.cont;
+                }
+            }.apply(root);
 
-			HashMap<List<iLoggingEvent>, LoggingEventModel> contexts = new LinkedHashMap<List<iLoggingEvent>, LoggingEventModel>();
-			// every time there is a
-			// different context, change
-			// next;
+            HashMap<List<iLoggingEvent>, LoggingEventModel> contexts =
+                    new LinkedHashMap<List<iLoggingEvent>, LoggingEventModel>();
+            // every time there is a
+            // different context, change
+            // next;
 
-			List<iLoggingEvent> currentContext = new ArrayList<iLoggingEvent>();
+            List<iLoggingEvent> currentContext = new ArrayList<iLoggingEvent>();
 
-			LoggingEventModel currentParent = tmpRoot;
+            LoggingEventModel currentParent = tmpRoot;
 
-			for (int i = 0; i < flat.size(); i++) {
-				LoggingEventModel f = flat.get(i);
-				LinkedHashSet<iLoggingEvent> sc;
-				ArrayList<iLoggingEvent> aca;
-				if (f.node instanceof iProvidesContextStack) {
-					sc = ((iProvidesContextStack) f.node).getSuspendedContext();
-					aca = new ArrayList<iLoggingEvent>(sc);
-				} else {
-					sc = new LinkedHashSet<iLoggingEvent>();
-					aca = new ArrayList<iLoggingEvent>();
-				}
-				if (!aca.equals(currentContext)) {
-					// remove
-					// eveything
-					// that
-					// isn't
-					// the
-					// common
-					// root
-					// between
-					// currentContext
-					// and
-					// sc
-					for (int q = currentContext.size() - 1; q >= 0; q--) {
-						if (currentContext.size() > aca.size() || !currentContext.equals(aca.subList(0, currentContext.size()))) {
-							contexts.remove(currentContext);
-							currentContext = new ArrayList<iLoggingEvent>(currentContext.subList(0, currentContext.size() - 1));
-							currentParent = (LoggingEventModel) currentParent.getParents().get(0);
-						} else {
-							break;
-						}
-					}
-					currentContext = new ArrayList<iLoggingEvent>(currentContext);
-					while (!currentContext.equals(aca)) {
-						iLoggingEvent added = aca.get(currentContext.size());
-						Object tok = ((iSuspendedContext) added).getToken();
-						if (tok instanceof iVisualElement)
-							tok = SelectionSetDriver.nameFor((iVisualElement) tok);
-						LoggingEventModel newParent = new LoggingEventModel(LoggingEventType.informative, null, "<HTML><font color='#" + Constants.defaultTreeColor + "'> inside \u2014 " + tok);
-						currentParent.addChild(newParent);
-						currentContext = new ArrayList<iLoggingEvent>(currentContext);
-						currentContext.add(added);
-						contexts.put(currentContext, newParent);
-						currentParent = newParent;
-					}
-				}
+            for (int i = 0; i < flat.size(); i++) {
+                LoggingEventModel f = flat.get(i);
+                LinkedHashSet<iLoggingEvent> sc;
+                ArrayList<iLoggingEvent> aca;
+                if (f.node instanceof iProvidesContextStack) {
+                    sc = ((iProvidesContextStack) f.node).getSuspendedContext();
+                    aca = new ArrayList<iLoggingEvent>(sc);
+                }
+                else {
+                    sc = new LinkedHashSet<iLoggingEvent>();
+                    aca = new ArrayList<iLoggingEvent>();
+                }
+                if (!aca.equals(currentContext)) {
+                    // remove
+                    // eveything
+                    // that
+                    // isn't
+                    // the
+                    // common
+                    // root
+                    // between
+                    // currentContext
+                    // and
+                    // sc
+                    for (int q = currentContext.size() - 1; q >= 0; q--) {
+                        if (currentContext.size() > aca.size() || !currentContext.equals(aca.subList(0,
+                                                                                                     currentContext.size()))) {
+                            contexts.remove(currentContext);
+                            currentContext =
+                                    new ArrayList<iLoggingEvent>(currentContext.subList(0, currentContext.size() - 1));
+                            currentParent = (LoggingEventModel) currentParent.getParents().get(0);
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    currentContext = new ArrayList<iLoggingEvent>(currentContext);
+                    while (!currentContext.equals(aca)) {
+                        iLoggingEvent added = aca.get(currentContext.size());
+                        Object tok = ((iSuspendedContext) added).getToken();
+                        if (tok instanceof iVisualElement) tok = SelectionSetDriver.nameFor((iVisualElement) tok);
+                        LoggingEventModel newParent = new LoggingEventModel(LoggingEventType.informative,
+                                                                            null,
+                                                                            "<HTML><font color='#"
+                                                                            + Constants.defaultTreeColor
+                                                                            + "'> inside \u2014 "
+                                                                            + tok);
+                        currentParent.addChild(newParent);
+                        currentContext = new ArrayList<iLoggingEvent>(currentContext);
+                        currentContext.add(added);
+                        contexts.put(currentContext, newParent);
+                        currentParent = newParent;
+                    }
+                }
 
-				{
-					f.getParents().get(0).removeChild(f);
-				}
+                {
+                    f.getParents().get(0).removeChild(f);
+                }
 
-				currentParent.addChild(f);
-			}
+                currentParent.addChild(f);
+            }
 
-			{
-				ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(root.getChildren());
-				for (LoggingEventModel m : a)
-					root.removeChild(m);
-			}
-			{
-				ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(tmpRoot.getChildren());
-				for (LoggingEventModel m : a) {
-					tmpRoot.removeChild(m);
-					root.addChild(m);
-				}
-			}
-		}
+            {
+                ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(root.getChildren());
+                for (LoggingEventModel m : a)
+                    root.removeChild(m);
+            }
+            {
+                ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(tmpRoot.getChildren());
+                for (LoggingEventModel m : a) {
+                    tmpRoot.removeChild(m);
+                    root.addChild(m);
+                }
+            }
+        }
 
-		@Override
-		public String toString() {
-			return "By Visual Element";
-		}
+        @Override
+        public
+        String toString() {
+            return "By Visual Element";
+        }
 
-	}
+    }
 
-	public static
+    public static
     class SimpleStringEvent implements Logging.iLoggingEvent, iUndoable {
-		private final Object target;
+        private final Object target;
 
-		private final Object value;
+        private final Object value;
 
-		private final String path;
+        private final String path;
 
-		private final String forwardExpression;
+        private final String forwardExpression;
 
-		private final String backwardsExpression;
+        private final String backwardsExpression;
 
-		private final boolean isError;
+        private final boolean isError;
 
-		public SimpleStringEvent(Object target, Object value, String path, String forwardExpression, String backwardsExpression, boolean isError) {
-			this.target = target;
-			this.value = value;
-			this.path = path;
-			this.forwardExpression = forwardExpression;
-			this.backwardsExpression = backwardsExpression;
-			this.isError = isError;
-		}
+        public
+        SimpleStringEvent(Object target,
+                          Object value,
+                          String path,
+                          String forwardExpression,
+                          String backwardsExpression,
+                          boolean isError) {
+            this.target = target;
+            this.value = value;
+            this.path = path;
+            this.forwardExpression = forwardExpression;
+            this.backwardsExpression = backwardsExpression;
+            this.isError = isError;
+        }
 
-		public void executeSimpleUndo() {
-		}
+        public
+        void executeSimpleUndo() {
+        }
 
-		public String getDoExpression() {
-			return forwardExpression;
-		}
+        public
+        String getDoExpression() {
+            return forwardExpression;
+        }
 
-		public String getLongDescription() {
-			return "on target <" + target + " / " + path + ">\n set value <" + value + ">\n fowards <" + forwardExpression + ">\n backwards <" + backwardsExpression + '>';
-		}
+        public
+        String getLongDescription() {
+            return "on target <"
+                   + target
+                   + " / "
+                   + path
+                   + ">\n set value <"
+                   + value
+                   + ">\n fowards <"
+                   + forwardExpression
+                   + ">\n backwards <"
+                   + backwardsExpression
+                   + '>';
+        }
 
-		public String getReplayExpression() {
-			return forwardExpression;
-		}
+        public
+        String getReplayExpression() {
+            return forwardExpression;
+        }
 
-		public String getTextDescription() {
-			return "<html><font color='#" + Constants.defaultTreeColor + ">baked \u2014 " + forwardExpression;
-		}
+        public
+        String getTextDescription() {
+            return "<html><font color='#" + Constants.defaultTreeColor + ">baked \u2014 " + forwardExpression;
+        }
 
-		public String getUndoExpression() {
-			return backwardsExpression;
-		}
+        public
+        String getUndoExpression() {
+            return backwardsExpression;
+        }
 
-		public boolean isError() {
-			return isError;
-		}
+        public
+        boolean isError() {
+            return isError;
+        }
 
-	}
+    }
 }

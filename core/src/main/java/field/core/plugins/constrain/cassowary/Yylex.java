@@ -4,7 +4,8 @@ package field.core.plugins.constrain.cassowary;
 import com.sun.java_cup.internal.runtime.Scanner;
 import com.sun.java_cup.internal.runtime.Symbol;
 
-public class Yylex implements Scanner {
+public
+class Yylex implements Scanner {
     private static final int YY_BUFFER_SIZE = 512;
 
     private static final int YY_F = -1;
@@ -23,200 +24,213 @@ public class Yylex implements Scanner {
 
     private static final int YY_EOF = 129;
 
-	// added code to lexer class
-	private java.util.Hashtable<String, ClVariable> m_variable_name_object_hash;
+    // added code to lexer class
+    private java.util.Hashtable<String, ClVariable> m_variable_name_object_hash;
 
-	public boolean m_debug_lex = false;
+    public boolean m_debug_lex = false;
 
-	public void setVariableNameObjectHash(java.util.Hashtable<String, ClVariable> variable_name_object_hash) {
-		m_variable_name_object_hash = variable_name_object_hash;
-	}
+    public
+    void setVariableNameObjectHash(java.util.Hashtable<String, ClVariable> variable_name_object_hash) {
+        m_variable_name_object_hash = variable_name_object_hash;
+    }
 
-	private java.io.BufferedReader yy_reader;
+    private java.io.BufferedReader yy_reader;
 
-	private int yy_buffer_index;
+    private int yy_buffer_index;
 
-	private int yy_buffer_read;
+    private int yy_buffer_read;
 
-	private int yy_buffer_start;
+    private int yy_buffer_start;
 
-	private int yy_buffer_end;
+    private int yy_buffer_end;
 
-	private char[] yy_buffer;
+    private char[] yy_buffer;
 
-	private boolean yy_at_bol;
+    private boolean yy_at_bol;
 
-	private int yy_lexical_state;
+    private int yy_lexical_state;
 
-	public Yylex(java.io.Reader reader) {
-		this();
-		if (null == reader) {
-			throw (new Error("Error: Bad input stream initializer."));
-		}
-		yy_reader = new java.io.BufferedReader(reader);
-	}
+    public
+    Yylex(java.io.Reader reader) {
+        this();
+        if (null == reader) {
+            throw (new Error("Error: Bad input stream initializer."));
+        }
+        yy_reader = new java.io.BufferedReader(reader);
+    }
 
-	public Yylex(java.io.InputStream instream) {
-		this();
-		if (null == instream) {
-			throw (new Error("Error: Bad input stream initializer."));
-		}
-		yy_reader = new java.io.BufferedReader(new java.io.InputStreamReader(instream));
-	}
+    public
+    Yylex(java.io.InputStream instream) {
+        this();
+        if (null == instream) {
+            throw (new Error("Error: Bad input stream initializer."));
+        }
+        yy_reader = new java.io.BufferedReader(new java.io.InputStreamReader(instream));
+    }
 
-	private Yylex() {
-		yy_buffer = new char[YY_BUFFER_SIZE];
-		yy_buffer_read = 0;
-		yy_buffer_index = 0;
-		yy_buffer_start = 0;
-		yy_buffer_end = 0;
-		yy_at_bol = true;
-		yy_lexical_state = YYINITIAL;
-		// code to go into constructor
-	}
+    private
+    Yylex() {
+        yy_buffer = new char[YY_BUFFER_SIZE];
+        yy_buffer_read = 0;
+        yy_buffer_index = 0;
+        yy_buffer_start = 0;
+        yy_buffer_end = 0;
+        yy_at_bol = true;
+        yy_lexical_state = YYINITIAL;
+        // code to go into constructor
+    }
 
-	private static final boolean yy_eof_done = false;
+    private static final boolean yy_eof_done = false;
 
     private static final int YYINITIAL = 0;
 
-	private final int[] yy_state_dtrans = { 0 };
+    private final int[] yy_state_dtrans = {0};
 
-	private void yybegin(int state) {
-		yy_lexical_state = state;
-	}
+    private
+    void yybegin(int state) {
+        yy_lexical_state = state;
+    }
 
-	private int yy_advance() throws java.io.IOException {
-		int next_read;
-		int i;
-		int j;
-		if (yy_buffer_index < yy_buffer_read) {
-			return yy_buffer[yy_buffer_index++];
-		}
-		if (0 != yy_buffer_start) {
-			i = yy_buffer_start;
-			j = 0;
-			while (i < yy_buffer_read) {
-				yy_buffer[j] = yy_buffer[i];
-				++i;
-				++j;
-			}
-			yy_buffer_end = yy_buffer_end - yy_buffer_start;
-			yy_buffer_start = 0;
-			yy_buffer_read = j;
-			yy_buffer_index = j;
-			next_read = yy_reader.read(yy_buffer, yy_buffer_read, yy_buffer.length - yy_buffer_read);
-			if (-1 == next_read) {
-				return YY_EOF;
-			}
-			yy_buffer_read = yy_buffer_read + next_read;
-		}
-		while (yy_buffer_index >= yy_buffer_read) {
-			if (yy_buffer_index >= yy_buffer.length) {
-				yy_buffer = yy_double(yy_buffer);
-			}
-			next_read = yy_reader.read(yy_buffer, yy_buffer_read, yy_buffer.length - yy_buffer_read);
-			if (-1 == next_read) {
-				return YY_EOF;
-			}
-			yy_buffer_read = yy_buffer_read + next_read;
-		}
-		return yy_buffer[yy_buffer_index++];
-	}
+    private
+    int yy_advance() throws java.io.IOException {
+        int next_read;
+        int i;
+        int j;
+        if (yy_buffer_index < yy_buffer_read) {
+            return yy_buffer[yy_buffer_index++];
+        }
+        if (0 != yy_buffer_start) {
+            i = yy_buffer_start;
+            j = 0;
+            while (i < yy_buffer_read) {
+                yy_buffer[j] = yy_buffer[i];
+                ++i;
+                ++j;
+            }
+            yy_buffer_end = yy_buffer_end - yy_buffer_start;
+            yy_buffer_start = 0;
+            yy_buffer_read = j;
+            yy_buffer_index = j;
+            next_read = yy_reader.read(yy_buffer, yy_buffer_read, yy_buffer.length - yy_buffer_read);
+            if (-1 == next_read) {
+                return YY_EOF;
+            }
+            yy_buffer_read = yy_buffer_read + next_read;
+        }
+        while (yy_buffer_index >= yy_buffer_read) {
+            if (yy_buffer_index >= yy_buffer.length) {
+                yy_buffer = yy_double(yy_buffer);
+            }
+            next_read = yy_reader.read(yy_buffer, yy_buffer_read, yy_buffer.length - yy_buffer_read);
+            if (-1 == next_read) {
+                return YY_EOF;
+            }
+            yy_buffer_read = yy_buffer_read + next_read;
+        }
+        return yy_buffer[yy_buffer_index++];
+    }
 
-	private void yy_move_end() {
-		if ((yy_buffer_end > yy_buffer_start) && ('\n' == yy_buffer[yy_buffer_end - 1]))
-			yy_buffer_end--;
-		if ((yy_buffer_end > yy_buffer_start) && ('\r' == yy_buffer[yy_buffer_end - 1]))
-			yy_buffer_end--;
-	}
+    private
+    void yy_move_end() {
+        if ((yy_buffer_end > yy_buffer_start) && ('\n' == yy_buffer[yy_buffer_end - 1])) yy_buffer_end--;
+        if ((yy_buffer_end > yy_buffer_start) && ('\r' == yy_buffer[yy_buffer_end - 1])) yy_buffer_end--;
+    }
 
-	private static final boolean yy_last_was_cr = false;
+    private static final boolean yy_last_was_cr = false;
 
-	private void yy_mark_start() {
-		yy_buffer_start = yy_buffer_index;
-	}
+    private
+    void yy_mark_start() {
+        yy_buffer_start = yy_buffer_index;
+    }
 
-	private void yy_mark_end() {
-		yy_buffer_end = yy_buffer_index;
-	}
+    private
+    void yy_mark_end() {
+        yy_buffer_end = yy_buffer_index;
+    }
 
-	private void yy_to_mark() {
-		yy_buffer_index = yy_buffer_end;
-		yy_at_bol = (yy_buffer_end > yy_buffer_start) && (('\r' == yy_buffer[yy_buffer_end - 1])
+    private
+    void yy_to_mark() {
+        yy_buffer_index = yy_buffer_end;
+        yy_at_bol = (yy_buffer_end > yy_buffer_start) && (('\r' == yy_buffer[yy_buffer_end - 1])
                                                           || ('\n' == yy_buffer[yy_buffer_end
                                                                                 - 1])
                                                           || (2028 == yy_buffer[yy_buffer_end - 1])
                                                           || (2029 == yy_buffer[yy_buffer_end - 1]));
-	}
+    }
 
-	private java.lang.String yytext() {
-		return (new java.lang.String(yy_buffer, yy_buffer_start, yy_buffer_end - yy_buffer_start));
-	}
+    private
+    java.lang.String yytext() {
+        return (new java.lang.String(yy_buffer, yy_buffer_start, yy_buffer_end - yy_buffer_start));
+    }
 
-	private int yylength() {
-		return yy_buffer_end - yy_buffer_start;
-	}
+    private
+    int yylength() {
+        return yy_buffer_end - yy_buffer_start;
+    }
 
-	private char[] yy_double(char[] buf) {
-		int i;
-		char[] newbuf;
-		newbuf = new char[2 * buf.length];
-		for (i = 0; i < buf.length; ++i) {
-			newbuf[i] = buf[i];
-		}
-		return newbuf;
-	}
+    private
+    char[] yy_double(char[] buf) {
+        int i;
+        char[] newbuf;
+        newbuf = new char[2 * buf.length];
+        for (i = 0; i < buf.length; ++i) {
+            newbuf[i] = buf[i];
+        }
+        return newbuf;
+    }
 
     private static final int YY_E_INTERNAL = 0;
 
     private static final int YY_E_MATCH = 1;
 
-	private final java.lang.String[] yy_error_string = { "Error: Internal error.\n", "Error: Unmatched input.\n" };
+    private final java.lang.String[] yy_error_string = {"Error: Internal error.\n", "Error: Unmatched input.\n"};
 
-	private void yy_error(int code, boolean fatal) {
-		java.lang.System.out.print(yy_error_string[code]);
-		java.lang.System.out.flush();
-		if (fatal) {
-			throw new Error("Fatal Error.\n");
-		}
-	}
+    private
+    void yy_error(int code, boolean fatal) {
+        java.lang.System.out.print(yy_error_string[code]);
+        java.lang.System.out.flush();
+        if (fatal) {
+            throw new Error("Fatal Error.\n");
+        }
+    }
 
-	private int[][] unpackFromString(int size1, int size2, String st) {
-		int colonIndex = -1;
-		String lengthString;
-		int sequenceLength = 0;
-		int sequenceInteger = 0;
-		int commaIndex;
-		String workString;
-		int[][] res = new int[size1][size2];
-		for (int i = 0; i < size1; i++) {
-			for (int j = 0; j < size2; j++) {
-				if (sequenceLength != 0) {
-					res[i][j] = sequenceInteger;
-					sequenceLength--;
-					continue;
-				}
-				commaIndex = st.indexOf(',');
-				workString = (commaIndex == -1) ? st : st.substring(0, commaIndex);
-				st = st.substring(commaIndex + 1);
-				colonIndex = workString.indexOf(':');
-				if (colonIndex == -1) {
-					res[i][j] = Integer.parseInt(workString);
-					continue;
-				}
-				lengthString = workString.substring(colonIndex + 1);
-				sequenceLength = Integer.parseInt(lengthString);
-				workString = workString.substring(0, colonIndex);
-				sequenceInteger = Integer.parseInt(workString);
-				res[i][j] = sequenceInteger;
-				sequenceLength--;
-			}
-		}
-		return res;
-	}
+    private
+    int[][] unpackFromString(int size1, int size2, String st) {
+        int colonIndex = -1;
+        String lengthString;
+        int sequenceLength = 0;
+        int sequenceInteger = 0;
+        int commaIndex;
+        String workString;
+        int[][] res = new int[size1][size2];
+        for (int i = 0; i < size1; i++) {
+            for (int j = 0; j < size2; j++) {
+                if (sequenceLength != 0) {
+                    res[i][j] = sequenceInteger;
+                    sequenceLength--;
+                    continue;
+                }
+                commaIndex = st.indexOf(',');
+                workString = (commaIndex == -1) ? st : st.substring(0, commaIndex);
+                st = st.substring(commaIndex + 1);
+                colonIndex = workString.indexOf(':');
+                if (colonIndex == -1) {
+                    res[i][j] = Integer.parseInt(workString);
+                    continue;
+                }
+                lengthString = workString.substring(colonIndex + 1);
+                sequenceLength = Integer.parseInt(lengthString);
+                workString = workString.substring(0, colonIndex);
+                sequenceInteger = Integer.parseInt(workString);
+                res[i][j] = sequenceInteger;
+                sequenceLength--;
+            }
+        }
+        return res;
+    }
 
-	private final int[] yy_acpt = {
-	/* 0 */YY_NOT_ACCEPT,
+    private final int[] yy_acpt = {
+    /* 0 */YY_NOT_ACCEPT,
 	/* 1 */YY_NO_ANCHOR,
 	/* 2 */YY_NO_ANCHOR,
 	/* 3 */YY_NO_ANCHOR,
@@ -234,38 +248,43 @@ public class Yylex implements Scanner {
 	/* 15 */YY_NO_ANCHOR,
 	/* 16 */YY_NO_ANCHOR,
 	/* 17 */YY_NO_ANCHOR,
-	/* 18 */YY_NO_ANCHOR };
+	/* 18 */YY_NO_ANCHOR};
 
-	private final int[] yy_cmap = unpackFromString(1, 130, "14:9,1:2,14,1:2,14:18,1,14:7,9,10,7,5,14,6,12,8,11:10,14:2,4,3,2,14:2,13:26" + ",14:6,13:26,14:5,0:2")[0];
+    private final int[] yy_cmap = unpackFromString(1,
+                                                   130,
+                                                   "14:9,1:2,14,1:2,14:18,1,14:7,9,10,7,5,14,6,12,8,11:10,14:2,4,3,2,14:2,13:26"
+                                                   + ",14:6,13:26,14:5,0:2")[0];
 
-	private final int[] yy_rmap = unpackFromString(1, 19, "0,1,2,3,1:7,4,5,1:2,6,7:2,1")[0];
+    private final int[] yy_rmap = unpackFromString(1, 19, "0,1,2,3,1:7,4,5,1:2,6,7:2,1")[0];
 
-	private final int[][] yy_nxt = unpackFromString(8, 15, "1,2,3,4,15,5,6,7,8,9,10,11,17,12,18,-1:16,2,-1:16,13,-1:22,11,16,-1:13,12,-" + "1,12,-1:4,14,-1:22,16,-1:3");
+    private final int[][] yy_nxt = unpackFromString(8,
+                                                    15,
+                                                    "1,2,3,4,15,5,6,7,8,9,10,11,17,12,18,-1:16,2,-1:16,13,-1:22,11,16,-1:13,12,-"
+                                                    + "1,12,-1:4,14,-1:22,16,-1:3");
 
-	public Symbol next_token() throws java.io.IOException {
-		int yy_lookahead;
-		int yy_anchor = YY_NO_ANCHOR;
-		int yy_state = yy_state_dtrans[yy_lexical_state];
-		int yy_next_state = YY_NO_STATE;
-		int yy_last_accept_state = YY_NO_STATE;
-		boolean yy_initial = true;
-		int yy_this_accept;
-		yy_mark_start();
-		yy_this_accept = yy_acpt[yy_state];
-		if (YY_NOT_ACCEPT != yy_this_accept) {
-			yy_last_accept_state = yy_state;
-			yy_mark_end();
-		}
-		while (true) {
-			if (yy_initial && yy_at_bol)
-				yy_lookahead = YY_BOL;
-			else
-				yy_lookahead = yy_advance();
-			yy_next_state = YY_F;
-			yy_next_state = yy_nxt[yy_rmap[yy_state]][yy_cmap[yy_lookahead]];
-			if ((YY_EOF == yy_lookahead) && (true == yy_initial)) {
-				return null;
-			}
+    public
+    Symbol next_token() throws java.io.IOException {
+        int yy_lookahead;
+        int yy_anchor = YY_NO_ANCHOR;
+        int yy_state = yy_state_dtrans[yy_lexical_state];
+        int yy_next_state = YY_NO_STATE;
+        int yy_last_accept_state = YY_NO_STATE;
+        boolean yy_initial = true;
+        int yy_this_accept;
+        yy_mark_start();
+        yy_this_accept = yy_acpt[yy_state];
+        if (YY_NOT_ACCEPT != yy_this_accept) {
+            yy_last_accept_state = yy_state;
+            yy_mark_end();
+        }
+        while (true) {
+            if (yy_initial && yy_at_bol) yy_lookahead = YY_BOL;
+            else yy_lookahead = yy_advance();
+            yy_next_state = YY_F;
+            yy_next_state = yy_nxt[yy_rmap[yy_state]][yy_cmap[yy_lookahead]];
+            if ((YY_EOF == yy_lookahead) && (true == yy_initial)) {
+                return null;
+            }
             if (YY_F == yy_next_state) {
                 if (YY_NO_STATE == yy_last_accept_state) {
                     throw (new Error("Lexical Error: Unmatched Input."));
@@ -417,6 +436,6 @@ public class Yylex implements Scanner {
                     yy_mark_end();
                 }
             }
-		}
-	}
+        }
+    }
 }

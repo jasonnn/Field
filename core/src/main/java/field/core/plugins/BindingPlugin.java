@@ -12,135 +12,153 @@ import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import java.util.List;
 
 @Woven
-public class BindingPlugin extends BaseSimplePlugin {
+public
+class BindingPlugin extends BaseSimplePlugin {
 
-	@Override
-	protected String getPluginNameImpl() {
-		return "binding";
-	}
+    @Override
+    protected
+    String getPluginNameImpl() {
+        return "binding";
+    }
 
-	@Override
-	public void registeredWith(iVisualElement root) {
-		super.registeredWith(root);
-	}
+    @Override
+    public
+    void registeredWith(iVisualElement root) {
+        super.registeredWith(root);
+    }
 
-	boolean first = true;
+    boolean first = true;
 
-	@Override
-	public void update() {
-		super.update();
-		if (first) {
-			first = false;
-			addAll();
+    @Override
+    public
+    void update() {
+        super.update();
+        if (first) {
+            first = false;
+            addAll();
 
-		}
-	}
+        }
+    }
 
-	private void addAll() {
-		List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
-		for (iVisualElement e : all) {
-			added(e);
-		}
-	}
+    private
+    void addAll() {
+        List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
+        for (iVisualElement e : all) {
+            added(e);
+        }
+    }
 
-	@NextUpdate(delay=1)
-	protected void addAllNext() {
-		List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
-		for (iVisualElement e : all) {
-			added(e);
-		}
-	}
+    @NextUpdate(delay = 1)
+    protected
+    void addAllNext() {
+        List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
+        for (iVisualElement e : all) {
+            added(e);
+        }
+    }
 
     protected static
     void added(iVisualElement e) {
         String b = e.getProperty(iVisualElement.boundTo);
-		if ((b != null) && !b.trim().isEmpty()) {
+        if ((b != null) && !b.trim().isEmpty()) {
 
             //System.out.println(" initializing boundto with <" + b + "> for <" + e + ">");
 
-			PythonPluginEditor.makeBoxLocalEverywhere(b.trim());
-			List<iVisualElement> c = e.getChildren();
-			for (iVisualElement ee : c)
-				ee.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + '_'), e);
-			e.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + '_'), e);
-		}
-	}
+            PythonPluginEditor.makeBoxLocalEverywhere(b.trim());
+            List<iVisualElement> c = e.getChildren();
+            for (iVisualElement ee : c)
+                ee.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + '_'), e);
+            e.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + '_'), e);
+        }
+    }
 
-	@Override
-	protected DefaultOverride newVisualElementOverrides() {
-		return new DefaultOverride() {
-			@Override
-			public <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
-				if (prop.equals(iVisualElement.boundTo)) {
-					String was = source.getProperty(iVisualElement.boundTo);
+    @Override
+    protected
+    DefaultOverride newVisualElementOverrides() {
+        return new DefaultOverride() {
+            @Override
+            public
+            <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+                if (prop.equals(iVisualElement.boundTo)) {
+                    String was = source.getProperty(iVisualElement.boundTo);
 
-					if ((was == null) || was.trim().isEmpty()) {
-						if ((to.get() == null) || ((String) to.get()).trim().isEmpty()) {
-						} else {
-							PythonPluginEditor.makeBoxLocalEverywhere(((String) to.get()).trim());
-							List<iVisualElement> c = source.getChildren();
-							for (iVisualElement ee : c)
-								ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + '_'), source);
-							source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + '_'), source);
-						}
-					} else {
-						if ((to.get() == null) || ((String) to.get()).trim().isEmpty()) {
-							PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
-							List<iVisualElement> c = source.getChildren();
-							for (iVisualElement ee : c)
-								ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
-							source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+                    if ((was == null) || was.trim().isEmpty()) {
+                        if ((to.get() == null) || ((String) to.get()).trim().isEmpty()) {
+                        }
+                        else {
+                            PythonPluginEditor.makeBoxLocalEverywhere(((String) to.get()).trim());
+                            List<iVisualElement> c = source.getChildren();
+                            for (iVisualElement ee : c)
+                                ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim()
+                                                                                         + '_'), source);
+                            source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim()
+                                                                                         + '_'), source);
+                        }
+                    }
+                    else {
+                        if ((to.get() == null) || ((String) to.get()).trim().isEmpty()) {
+                            PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
+                            List<iVisualElement> c = source.getChildren();
+                            for (iVisualElement ee : c)
+                                ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+                            source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
 
-							addAllNext();
+                            addAllNext();
 
-						} else {
-							PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
-							List<iVisualElement> c = source.getChildren();
-							for (iVisualElement ee : c)
-								ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
-							source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+                        }
+                        else {
+                            PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
+                            List<iVisualElement> c = source.getChildren();
+                            for (iVisualElement ee : c)
+                                ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+                            source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
 
-							PythonPluginEditor.makeBoxLocalEverywhere(((String) to.get()).trim());
-							for (iVisualElement ee : c)
-								ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + '_'), source);
-							source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + '_'), source);
+                            PythonPluginEditor.makeBoxLocalEverywhere(((String) to.get()).trim());
+                            for (iVisualElement ee : c)
+                                ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim()
+                                                                                         + '_'), source);
+                            source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim()
+                                                                                         + '_'), source);
 
-						}
+                        }
 
-					}
-				}
-				return super.setProperty(source, prop, to);
-			}
+                    }
+                }
+                return super.setProperty(source, prop, to);
+            }
 
-			@Override
-			public VisitCode deleted(iVisualElement source) {
+            @Override
+            public
+            VisitCode deleted(iVisualElement source) {
 
-				String was = source.getProperty(iVisualElement.boundTo);
+                String was = source.getProperty(iVisualElement.boundTo);
                 //System.out.println(" handling deleted for <" + source + " -> " + was);
 
-				if ((was == null) || was.trim().isEmpty()) {
-				} else {
+                if ((was == null) || was.trim().isEmpty()) {
+                }
+                else {
 
                     //System.out.println(" children are <" + source.getChildren() + ">");
                     PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
-					List<iVisualElement> c = source.getChildren();
-					for (iVisualElement ee : c)
-						ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
-					source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
-				}
+                    List<iVisualElement> c = source.getChildren();
+                    for (iVisualElement ee : c)
+                        ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+                    source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+                }
 
-				addAllNext();
+                addAllNext();
 
-				return super.deleted(source);
-			}
+                return super.deleted(source);
+            }
 
-			@Override
-			public VisitCode added(iVisualElement source) {
+            @Override
+            public
+            VisitCode added(iVisualElement source) {
                 BindingPlugin.added(source);
                 return super.added(source);
-			}
+            }
 
-		};
-	}
+        };
+    }
 
 }

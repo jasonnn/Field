@@ -29,12 +29,12 @@ class MyDispatchOverTopology_Desired {
     int case2_new_ex() {
         FieldBytecodeAdapter2.handleEntry(__generated_params_for_case2, null);
         int val = 0;
-        boolean success= false;
+        boolean success = false;
         try {
-          val=  case2_orig();
-            success=true;
+            val = case2_orig();
+            success = true;
         } finally {
-            FieldBytecodeAdapter2.handleExit(success,val,__generated_params_for_case2);
+            FieldBytecodeAdapter2.handleExit(success, val, __generated_params_for_case2);
         }
         return val;
 

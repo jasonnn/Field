@@ -85,453 +85,486 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 @Woven
-public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVisualElementRoot {
+public
+class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVisualElementRoot {
 
-	public static final VisualElementProperty<String> keyboardShortcut = new VisualElementProperty<String>("keyboardShortcut");
+    public static final VisualElementProperty<String> keyboardShortcut =
+            new VisualElementProperty<String>("keyboardShortcut");
 
-	public class RootSheetElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    public
+    class RootSheetElement extends NodeImpl<iVisualElement> implements iVisualElement {
 
-		public <T> void deleteProperty(VisualElementProperty<T> p) {
-			rootProperties.remove(p);
-		}
+        public
+        <T> void deleteProperty(VisualElementProperty<T> p) {
+            rootProperties.remove(p);
+        }
 
-		public void dispose() {
-		}
+        public
+        void dispose() {
+        }
 
-		public Rect getFrame(Rect out) {
-			return null;
-		}
+        public
+        Rect getFrame(Rect out) {
+            return null;
+        }
 
-		public <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
-			if (p == overrides)
-				return (T) StandardFluidSheet.this;
-			Object o = rootProperties.get(p);
-			return (T) o;
-		}
+        public
+        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+            if (p == overrides) return (T) StandardFluidSheet.this;
+            Object o = rootProperties.get(p);
+            return (T) o;
+        }
 
-		public String getUniqueID() {
-			return rootSheetElement_uid;
-		}
+        public
+        String getUniqueID() {
+            return rootSheetElement_uid;
+        }
 
-		public Map<Object, Object> payload() {
-			return rootProperties;
-		}
+        public
+        Map<Object, Object> payload() {
+            return rootProperties;
+        }
 
-		public void setFrame(Rect out) {
-		}
+        public
+        void setFrame(Rect out) {
+        }
 
-		public iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
-			return this;
-		}
+        public
+        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+            return this;
+        }
 
-		public <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
-			rootProperties.put(p, to);
-			return this;
-		}
+        public
+        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+            rootProperties.put(p, to);
+            return this;
+        }
 
-		public void setUniqueID(String uid) {
-		}
+        public
+        void setUniqueID(String uid) {
+        }
 
-		@Override
-		public String toString() {
-			return "root <" + System.identityHashCode(this) + '>';
-		}
+        @Override
+        public
+        String toString() {
+            return "root <" + System.identityHashCode(this) + '>';
+        }
 
-	}
+    }
 
-	public static final SimpleContextTopology context =  SimpleContextTopology.newInstance();
+    public static final SimpleContextTopology context = SimpleContextTopology.newInstance();
 
-	public static final VisualElementProperty<VersioningSystem> versioningSystem = new VisualElementProperty<VersioningSystem>("versioningSystem_");
+    public static final VisualElementProperty<VersioningSystem> versioningSystem =
+            new VisualElementProperty<VersioningSystem>("versioningSystem_");
 
-	public static String rootSheetElement_uid = "//rootSheetElement";
+    public static String rootSheetElement_uid = "//rootSheetElement";
 
-	protected static int uniq = 0;
+    protected static int uniq = 0;
 
-	public static
+    public static
     List<iVisualElement> allVisualElements(iVisualElement root) {
-		final List<iVisualElement> ret = new ArrayList<iVisualElement>();
-		new TopologyVisitor_breadthFirst<iVisualElement>(true) {
-			@Override
-			protected VisitCode visit(iVisualElement n) {
-				ret.add(n);
-				return VisitCode.cont;
-			}
+        final List<iVisualElement> ret = new ArrayList<iVisualElement>();
+        new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+            @Override
+            protected
+            VisitCode visit(iVisualElement n) {
+                ret.add(n);
+                return VisitCode.cont;
+            }
 
-		}.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
-		return ret;
-	}
+        }.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+        return ret;
+    }
 
-	public static
+    public static
     iVisualElement findVisualElement(iVisualElement root, final String s) {
-		final iVisualElement[] ans = new iVisualElement[1];
+        final iVisualElement[] ans = new iVisualElement[1];
 
-		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
-			@Override
-			protected VisitCode visit(iVisualElement n) {
-				if (n.getUniqueID().equals(s)) {
-					ans[0] = n;
-					return VisitCode.stop;
-				}
-				return VisitCode.cont;
-			}
+        TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+            @Override
+            protected
+            VisitCode visit(iVisualElement n) {
+                if (n.getUniqueID().equals(s)) {
+                    ans[0] = n;
+                    return VisitCode.stop;
+                }
+                return VisitCode.cont;
+            }
 
-		};
+        };
 
-		search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
-		return ans[0];
-	}
+        search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+        return ans[0];
+    }
 
-	public static
+    public static
     iVisualElement findVisualElementWithName(iVisualElement root, final String pattern) {
 
-		final Pattern p = Pattern.compile(pattern);
+        final Pattern p = Pattern.compile(pattern);
 
-		final iVisualElement[] ans = new iVisualElement[1];
+        final iVisualElement[] ans = new iVisualElement[1];
 
-		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
-			@Override
-			protected VisitCode visit(iVisualElement n) {
-				String name = n.getProperty(iVisualElement.name);
-				if ((name != null) && p.matcher(name).matches()) {
-					ans[0] = n;
-					return VisitCode.stop;
-				}
-				return VisitCode.cont;
-			}
+        TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+            @Override
+            protected
+            VisitCode visit(iVisualElement n) {
+                String name = n.getProperty(iVisualElement.name);
+                if ((name != null) && p.matcher(name).matches()) {
+                    ans[0] = n;
+                    return VisitCode.stop;
+                }
+                return VisitCode.cont;
+            }
 
-		};
+        };
 
-		search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
-		return ans[0];
-	}
+        search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+        return ans[0];
+    }
 
-	public static
+    public static
     List<iVisualElement> findVisualElementWithNameExpression(iVisualElement root, final String pattern) {
 
-		final Pattern p = Pattern.compile(pattern);
+        final Pattern p = Pattern.compile(pattern);
 
-		final List<iVisualElement> ans = new ArrayList<iVisualElement>();
+        final List<iVisualElement> ans = new ArrayList<iVisualElement>();
 
-		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
-			@Override
-			protected VisitCode visit(iVisualElement n) {
-				String name = n.getProperty(iVisualElement.name);
-				if ((name != null) && p.matcher(name).matches()) {
-					ans.add(n);
-				}
-				return VisitCode.cont;
-			}
+        TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+            @Override
+            protected
+            VisitCode visit(iVisualElement n) {
+                String name = n.getProperty(iVisualElement.name);
+                if ((name != null) && p.matcher(name).matches()) {
+                    ans.add(n);
+                }
+                return VisitCode.cont;
+            }
 
-		};
+        };
 
-		search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
-		return ans;
-	}
+        search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+        return ans;
+    }
 
-	public static
+    public static
     StandardFluidSheet scratchBegin(VersioningSystem system) {
-		return scratchBegin(system, SystemProperties.getProperty("fluid.scratch", SystemProperties.getProperty("main.class") + ".xml"));
-	}
+        return scratchBegin(system,
+                            SystemProperties.getProperty("fluid.scratch",
+                                                         SystemProperties.getProperty("main.class") + ".xml"));
+    }
 
-	public static
+    public static
     StandardFluidSheet scratchBegin(VersioningSystem system, String filename) {
-		final StandardFluidSheet sheet = new StandardFluidSheet(filename, system);
-		sheet.setFilename(filename);
+        final StandardFluidSheet sheet = new StandardFluidSheet(filename, system);
+        sheet.setFilename(filename);
 
-		Launcher.getLauncher().registerUpdateable(sheet);
+        Launcher.getLauncher().registerUpdateable(sheet);
 
-		sheet.registerPlugin(new PythonPluginEditor(SystemProperties.getDirProperty("versioning.dir"), filename));
+        sheet.registerPlugin(new PythonPluginEditor(SystemProperties.getDirProperty("versioning.dir"), filename));
 
-		ToolBarFolder folder = new ToolBarFolder();
-		ToolBarFolder.currentFolder = folder;
-		sheet.registerPlugin(new NewInspectorPlugin());
-		sheet.registerPlugin(new BindingPlugin());
-		// sheet.registerPlugin(new HelpBrowser());
+        ToolBarFolder folder = new ToolBarFolder();
+        ToolBarFolder.currentFolder = folder;
+        sheet.registerPlugin(new NewInspectorPlugin());
+        sheet.registerPlugin(new BindingPlugin());
+        // sheet.registerPlugin(new HelpBrowser());
 
-		Connections connections = new Connections(sheet, sheet.rootSheetElement);
-		SimpleConstraints constraints = new SimpleConstraints();
-		sheet.registerPlugin(connections);
-		sheet.registerPlugin(constraints);
-		sheet.registerPlugin(new PseudoPropertiesPlugin());
-		sheet.registerPlugin(new AutoExecutePythonPlugin());
-		//
-		// sheet.registerPlugin(new LoggingPlugin(sheet));
-		// sheet.registerPlugin(new HistoryPlugin(sheet,
-		// SystemProperties.getDirProperty("versioning.dir"), filename,
-		// system));
-		// sheet.registerPlugin(new ComplexConstraints());
+        Connections connections = new Connections(sheet, sheet.rootSheetElement);
+        SimpleConstraints constraints = new SimpleConstraints();
+        sheet.registerPlugin(connections);
+        sheet.registerPlugin(constraints);
+        sheet.registerPlugin(new PseudoPropertiesPlugin());
+        sheet.registerPlugin(new AutoExecutePythonPlugin());
+        //
+        // sheet.registerPlugin(new LoggingPlugin(sheet));
+        // sheet.registerPlugin(new HistoryPlugin(sheet,
+        // SystemProperties.getDirProperty("versioning.dir"), filename,
+        // system));
+        // sheet.registerPlugin(new ComplexConstraints());
 
-		sheet.registerPlugin(new BasicDrawingPlugin());
+        sheet.registerPlugin(new BasicDrawingPlugin());
 
-		sheet.registerPlugin(new SnippetsPlugin());
+        sheet.registerPlugin(new SnippetsPlugin());
 
-		sheet.registerPlugin(new ElementFileSystemTreePlugin());
+        sheet.registerPlugin(new ElementFileSystemTreePlugin());
 
-		sheet.registerPlugin(new HelpBrowser());
-		ToolBarFolder.helpFolder.select(0);
+        sheet.registerPlugin(new HelpBrowser());
+        ToolBarFolder.helpFolder.select(0);
 
-		sheet.registerPlugin(new TreeBrowserPlugin());
+        sheet.registerPlugin(new TreeBrowserPlugin());
 
-		sheet.rootSheetElement.setProperty(iVisualElement.toolPalette2, new ToolPalette2());
-		registerExtendedPlugins(sheet);
+        sheet.rootSheetElement.setProperty(iVisualElement.toolPalette2, new ToolPalette2());
+        registerExtendedPlugins(sheet);
 
-		((SashForm) sheet.window.leftComp1).setWeights(new int[] { 4, 4, 1 });
-		new BetterSash((SashForm) sheet.window.leftComp1, false);
+        ((SashForm) sheet.window.leftComp1).setWeights(new int[]{4, 4, 1});
+        new BetterSash((SashForm) sheet.window.leftComp1, false);
 
-		PythonInterface.getPythonInterface().setVariable("T", Launcher.mainInstance);
-		PythonInterface.getPythonInterface().setVariable("S", sheet);
+        PythonInterface.getPythonInterface().setVariable("T", Launcher.mainInstance);
+        PythonInterface.getPythonInterface().setVariable("S", sheet);
 
-		new PythonUtils().install();
+        new PythonUtils().install();
 
-		folder.selectFirst();
+        folder.selectFirst();
 
-		return sheet;
-	}
+        return sheet;
+    }
 
-	public static
+    public static
     void scratchEnd(final StandardFluidSheet sheet, VersioningSystem system) {
 
-		String filename = SystemProperties.getDirProperty("versioning.dir") + sheet.getFilename() + "/sheet.xml";
-		try {
-			sheet.load(new BufferedReader(new FileReader(filename), 1024 * 1 * 1024));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        String filename = SystemProperties.getDirProperty("versioning.dir") + sheet.getFilename() + "/sheet.xml";
+        try {
+            sheet.load(new BufferedReader(new FileReader(filename), 1024 * 1 * 1024));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		Launcher.getLauncher().addShutdown(sheet.shutdownhook = new iUpdateable() {
+        Launcher.getLauncher().addShutdown(sheet.shutdownhook = new iUpdateable() {
 
-			@Override
-			public void update() {
+            @Override
+            public
+            void update() {
                 // System.out.println(" inside shutdown hook ");
 
-				singleThreadedSave(sheet);
-			}
-		});
+                singleThreadedSave(sheet);
+            }
+        });
 
-		Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created = TemporalSliderOverrides.newTemporalSlider("time", sheet.getRoot());
+        Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created =
+                TemporalSliderOverrides.newTemporalSlider("time", sheet.getRoot());
 
-		sheet.deferredRequestRepaint();
+        sheet.deferredRequestRepaint();
 
-	}
+    }
 
-	@NextUpdate(delay = 2)
-	protected void deferredRequestRepaint() {
-		window.requestRepaint();
-	}
+    @NextUpdate(delay = 2)
+    protected
+    void deferredRequestRepaint() {
+        window.requestRepaint();
+    }
 
-	public static
+    public static
     StandardFluidSheet versionedScratch(String filenameInWorkspace) {
-		VersioningSystem vs = VersioningSystem.newDefault(filenameInWorkspace);
-		StandardFluidSheet sheet = StandardFluidSheet.scratchBegin(vs, filenameInWorkspace);
-		StandardFluidSheet.scratchEnd(sheet, vs);
-		return sheet;
-	}
+        VersioningSystem vs = VersioningSystem.newDefault(filenameInWorkspace);
+        StandardFluidSheet sheet = StandardFluidSheet.scratchBegin(vs, filenameInWorkspace);
+        StandardFluidSheet.scratchEnd(sheet, vs);
+        return sheet;
+    }
 
-	private static void registerExtendedPlugins(final StandardFluidSheet sheet) {
-		HashSet<String> p = Trampoline2.plugins;
+    private static
+    void registerExtendedPlugins(final StandardFluidSheet sheet) {
+        HashSet<String> p = Trampoline2.plugins;
         // System.out.println(" extended plugins are <" + p + ">");
         for (String s : p) {
             // System.out.println("   loading plugin <" + s + ">");
             try {
-				Class<?> loaded = sheet.getClass().getClassLoader().loadClass(s);
-				iPlugin instance = (iPlugin) loaded.newInstance();
-				sheet.registerPlugin(instance);
-			} catch (ClassNotFoundException e) {
+                Class<?> loaded = sheet.getClass().getClassLoader().loadClass(s);
+                iPlugin instance = (iPlugin) loaded.newInstance();
+                sheet.registerPlugin(instance);
+            } catch (ClassNotFoundException e) {
                 // System.out.println("   error loading plugin <"
                 // + s + ">, continuing");
-				e.printStackTrace();
-			} catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
                 // System.out.println("   error loading plugin <"
                 // + s + ">, continuing");
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
                 // System.out.println("   error loading plugin <"
                 // + s + ">, continuing");
-				e.printStackTrace();
-			} catch (Throwable t) {
+                e.printStackTrace();
+            } catch (Throwable t) {
                 // System.out.println("   error loading plugin <"
                 // + s + ">, continuing");
-				t.printStackTrace();
-			}
-		}
-	}
+                t.printStackTrace();
+            }
+        }
+    }
 
-	private final GLComponentWindow window;
+    private final GLComponentWindow window;
 
-	private final MainSelectionGroup group;
+    private final MainSelectionGroup group;
 
-	private FluidPersistence persistence;
+    private FluidPersistence persistence;
 
-	private final PythonScriptingSystem pss;
+    private final PythonScriptingSystem pss;
 
-	private BasicRunner basicRunner;
+    private BasicRunner basicRunner;
 
-	private final MainSelectionGroup markingGroup;
+    private final MainSelectionGroup markingGroup;
 
-	private final FluidCopyPastePersistence copyPastePersisence;
+    private final FluidCopyPastePersistence copyPastePersisence;
 
-	private iUpdateable shutdownhook;
+    private iUpdateable shutdownhook;
 
-	private String filename;
+    private String filename;
 
-	protected iVisualElement rootSheetElement;
+    protected iVisualElement rootSheetElement;
 
-	protected HashMap<Object, Object> rootProperties = new HashMap<Object, Object>();
+    protected HashMap<Object, Object> rootProperties = new HashMap<Object, Object>();
 
-	protected VersioningSystem vs;
+    protected VersioningSystem vs;
 
-	// implementation of iVisualElementOverrides
+    // implementation of iVisualElementOverrides
 
-	String name = null;
+    String name = null;
 
-	TaskQueue eventProcessingQueue = new TaskQueue();
+    TaskQueue eventProcessingQueue = new TaskQueue();
 
-	boolean tick = false;
-	boolean drawTick = false;
+    boolean tick = false;
+    boolean drawTick = false;
 
-	List<iPlugin> plugins = new ArrayList<iPlugin>();
+    List<iPlugin> plugins = new ArrayList<iPlugin>();
 
-	private final BasicRunner multiThreadedRunner;
+    private final BasicRunner multiThreadedRunner;
 
-	private final DragDuplicator dragDuplicator;
+    private final DragDuplicator dragDuplicator;
 
-	public StandardFluidSheet() {
-		this("sheet:" + (uniq++), null);
-	}
+    public
+    StandardFluidSheet() {
+        this("sheet:" + (uniq++), null);
+    }
 
-	public StandardFluidSheet(String name, VersioningSystem vs) {
+    public
+    StandardFluidSheet(String name, VersioningSystem vs) {
 
-		context.begin(name);
-		this.name = name;
+        context.begin(name);
+        this.name = name;
 
-		// FluidSubstance.init();
+        // FluidSubstance.init();
 
-		window = new GLComponentWindow(name, eventProcessingQueue);
-		// SavedFramePositions.doFrame(window.getFrame(), "Canvas");
+        window = new GLComponentWindow(name, eventProcessingQueue);
+        // SavedFramePositions.doFrame(window.getFrame(), "Canvas");
 
-		Launcher.getLauncher().registerUpdateable(window);
+        Launcher.getLauncher().registerUpdateable(window);
 
-		group = new MainSelectionGroup();
-		markingGroup = new MainSelectionGroup();
+        group = new MainSelectionGroup();
+        markingGroup = new MainSelectionGroup();
 
-		RootComponent r1 = new RootComponent(window.getFrame());
-		window.getRoot().addComponent(r1);
+        RootComponent r1 = new RootComponent(window.getFrame());
+        window.getRoot().addComponent(r1);
 
-		r1.addToSelectionGroup(group);
+        r1.addToSelectionGroup(group);
 
-		rootSheetElement = new RootSheetElement();
-		window.setEditorSpaceHelper(this.rootSheetElement);
+        rootSheetElement = new RootSheetElement();
+        window.setEditorSpaceHelper(this.rootSheetElement);
 
-		r1.setOverrides(new Dispatch<iVisualElement, iVisualElementOverrides>(iVisualElementOverrides.topology).getOverrideProxyFor(rootSheetElement, iVisualElementOverrides.class));
+        r1.setOverrides(new Dispatch<iVisualElement, iVisualElementOverrides>(iVisualElementOverrides.topology).getOverrideProxyFor(rootSheetElement,
+                                                                                                                                    iVisualElementOverrides.class));
 
-		rootSheetElement.setProperty(iVisualElement.enclosingFrame, window);
-		rootSheetElement.setProperty(iVisualElement.rootComponent, r1);
-		rootSheetElement.setProperty(iVisualElement.localView, null);
-		rootSheetElement.setProperty(iVisualElement.sheetView, this);
-		GlobalKeyboardShortcuts gks = new GlobalKeyboardShortcuts();
-		rootSheetElement.setProperty(GlobalKeyboardShortcuts.shortcuts, gks);
+        rootSheetElement.setProperty(iVisualElement.enclosingFrame, window);
+        rootSheetElement.setProperty(iVisualElement.rootComponent, r1);
+        rootSheetElement.setProperty(iVisualElement.localView, null);
+        rootSheetElement.setProperty(iVisualElement.sheetView, this);
+        GlobalKeyboardShortcuts gks = new GlobalKeyboardShortcuts();
+        rootSheetElement.setProperty(GlobalKeyboardShortcuts.shortcuts, gks);
         gks.add(new GlobalKeyboardShortcuts.Shortcut('s', Platform.getCommandModifier(), Platform.getCommandModifier()),
                 new iUpdateable() {
 
-			@Override
-			public void update() {
-				saveNow();
-			}
-		});
+                    @Override
+                    public
+                    void update() {
+                        saveNow();
+                    }
+                });
 
         gks.add(new GlobalKeyboardShortcuts.Shortcut(0, 0, 0) {
             @Override
-			public boolean matches(char c, int code, int state) {
-				if ((state & Platform.getCommandModifier()) != 0) {
-					List<iVisualElement> e = allVisualElements(getRoot());
+            public
+            boolean matches(char c, int code, int state) {
+                if ((state & Platform.getCommandModifier()) != 0) {
+                    List<iVisualElement> e = allVisualElements(getRoot());
                     String match = String.valueOf(Character.toLowerCase(c));
                     for (iVisualElement ee : e) {
-						String s = ee.getProperty(keyboardShortcut);
+                        String s = ee.getProperty(keyboardShortcut);
 
-						if (s != null) {
-							if (s.equals(match)) {
+                        if (s != null) {
+                            if (s.equals(match)) {
                                 if ((state & SWT.SHIFT) == 0) beginExecution(ee);
                                 else endExecution(ee);
-								return true;
-							}
-						}
+                                return true;
+                            }
+                        }
 
-					}
-				}
-				return false;
-			}
-		}, new iUpdateable() {
+                    }
+                }
+                return false;
+            }
+        }, new iUpdateable() {
 
-			@Override
-			public void update() {
+            @Override
+            public
+            void update() {
 
-			}
-		});
+            }
+        });
 
-		// rootSheetElement.setProperty(iVisualElement.
-		// toolPalette,
-		// new ToolPalette());
-		rootSheetElement.setProperty(iVisualElement.selectionGroup, group);
-		rootSheetElement.setProperty(iVisualElement.markingGroup, markingGroup);
-		rootSheetElement.setProperty(iVisualElement.name, "((sheet root))");
+        // rootSheetElement.setProperty(iVisualElement.
+        // toolPalette,
+        // new ToolPalette());
+        rootSheetElement.setProperty(iVisualElement.selectionGroup, group);
+        rootSheetElement.setProperty(iVisualElement.markingGroup, markingGroup);
+        rootSheetElement.setProperty(iVisualElement.name, "((sheet root))");
 
-		copyPastePersisence = new FluidCopyPastePersistence(new FluidPersistence.iWellKnownElementResolver() {
-			public iVisualElement getWellKnownElement(String uid) {
-				if (uid.equals(rootSheetElement_uid))
-					return rootSheetElement;
-				for (iPlugin p : plugins) {
-					iVisualElement ve = p.getWellKnownVisualElement(uid);
-					if (ve != null) {
-						return ve;
-					}
-				}
+        copyPastePersisence = new FluidCopyPastePersistence(new FluidPersistence.iWellKnownElementResolver() {
+            public
+            iVisualElement getWellKnownElement(String uid) {
+                if (uid.equals(rootSheetElement_uid)) return rootSheetElement;
+                for (iPlugin p : plugins) {
+                    iVisualElement ve = p.getWellKnownVisualElement(uid);
+                    if (ve != null) {
+                        return ve;
+                    }
+                }
                 // System.out.println(" WARNING: not well known in copySource <"
                 // + uid + ">");
-				return null;
-			}
-		}, new iNotifyDuplication() {
-			public String beginNewUID(String uidToCopy) {
-				String target = "__" + new UID().toString();
+                return null;
+            }
+        }, new iNotifyDuplication() {
+            public
+            String beginNewUID(String uidToCopy) {
+                String target = "__" + new UID().toString();
                 // System.out.println(" copied uid <" +
                 // uidToCopy + "> to <" + target + ">");
-				return target;
-			}
+                return target;
+            }
 
-			public void endCopy(iVisualElement newCopy, iVisualElement old) {
-				StandardFluidSheet.this.endCopy(newCopy, old);
-			}
-		});
+            public
+            void endCopy(iVisualElement newCopy, iVisualElement old) {
+                StandardFluidSheet.this.endCopy(newCopy, old);
+            }
+        });
 
-		iVisualElement.copyPaste.set(rootSheetElement, rootSheetElement, copyPastePersisence);
+        iVisualElement.copyPaste.set(rootSheetElement, rootSheetElement, copyPastePersisence);
 
-		pss = new PythonScriptingSystem() {
-			@Override
-			protected void filterIntersections(LinkedHashSet ret) {
-				Iterator n = ret.iterator();
-				while (n.hasNext()) {
-					Promise nn = (Promise) n.next();
-					iVisualElement elem = (iVisualElement) pss.keyForPromise(nn);
-					Boolean m = elem.getProperty(WindowSpaceBox.isWindowSpace);
-					if ((m != null) && m) {
-						n.remove();
-					}
-				}
-			}
-		};
-		basicRunner = new BasicRunner(pss, 0) {
-			@Override
-			protected boolean filter(Promise p) {
-				iVisualElement v = (iVisualElement) system.keyForPromise(p);
-				if (v == null)
-					return false;
-				return iExecutesPromise.promiseExecution.get(v) == this;
-			}
-		};
+        pss = new PythonScriptingSystem() {
+            @Override
+            protected
+            void filterIntersections(LinkedHashSet ret) {
+                Iterator n = ret.iterator();
+                while (n.hasNext()) {
+                    Promise nn = (Promise) n.next();
+                    iVisualElement elem = (iVisualElement) pss.keyForPromise(nn);
+                    Boolean m = elem.getProperty(WindowSpaceBox.isWindowSpace);
+                    if ((m != null) && m) {
+                        n.remove();
+                    }
+                }
+            }
+        };
+        basicRunner = new BasicRunner(pss, 0) {
+            @Override
+            protected
+            boolean filter(Promise p) {
+                iVisualElement v = (iVisualElement) system.keyForPromise(p);
+                if (v == null) return false;
+                return iExecutesPromise.promiseExecution.get(v) == this;
+            }
+        };
 
-		multiThreadedRunner = /*
-				 * ThreadedLauncher.getLauncher() != null ? new
+        multiThreadedRunner = /*
+                 * ThreadedLauncher.getLauncher() != null ? new
 				 * BasicRunner(pss, 0) {
 				 * 
 				 * @Override protected boolean filter(Promise p)
@@ -542,1334 +575,1453 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 				 * this; } } :
 				 */basicRunner;
 
-		// if (ThreadedLauncher.getLauncher() != null) {
-		// ThreadedLauncher.addThreadedUpdatable(new iUpdateable() {
-		//
-		// public void update() {
-		// TimeSystem ts =
-		// rootSheetElement.getProperty(TemporalSliderOverrides.currentTimeSystem);
-		// // ;//System.out.println(" inside multithreaded runner <"
-		// // + ts + ">");
-		// if (ts != null) {
-		// ts.update();
-		// double tsTimeNow = ts.evaluate();
-		// multiThreadedRunner.update((float) tsTimeNow);
-		// } else
-		// multiThreadedRunner.update(-1);
-		// }
-		// });
-		// }
+        // if (ThreadedLauncher.getLauncher() != null) {
+        // ThreadedLauncher.addThreadedUpdatable(new iUpdateable() {
+        //
+        // public void update() {
+        // TimeSystem ts =
+        // rootSheetElement.getProperty(TemporalSliderOverrides.currentTimeSystem);
+        // // ;//System.out.println(" inside multithreaded runner <"
+        // // + ts + ">");
+        // if (ts != null) {
+        // ts.update();
+        // double tsTimeNow = ts.evaluate();
+        // multiThreadedRunner.update((float) tsTimeNow);
+        // } else
+        // multiThreadedRunner.update(-1);
+        // }
+        // });
+        // }
 
-		rootSheetElement.setProperty(PythonScriptingSystem.pythonScriptingSystem, pss);
-		rootSheetElement.setProperty(iExecutesPromise.promiseExecution, basicRunner);
-		rootSheetElement.setProperty(BasicRunner.basicRunner, basicRunner);
-		rootSheetElement.setProperty(iVisualElement.multithreadedRunner, multiThreadedRunner);
+        rootSheetElement.setProperty(PythonScriptingSystem.pythonScriptingSystem, pss);
+        rootSheetElement.setProperty(iExecutesPromise.promiseExecution, basicRunner);
+        rootSheetElement.setProperty(BasicRunner.basicRunner, basicRunner);
+        rootSheetElement.setProperty(iVisualElement.multithreadedRunner, multiThreadedRunner);
 
-		this.vs = vs;
-		rootSheetElement.setProperty(versioningSystem, vs);
+        this.vs = vs;
+        rootSheetElement.setProperty(versioningSystem, vs);
 
-		UbiquitousLinks.sheets.add(this);
+        UbiquitousLinks.sheets.add(this);
 
-		GlassComponent g1 = new GlassComponent(r1, dragDuplicator = new DragDuplicator(group, rootSheetElement));
-		rootSheetElement.setProperty(iVisualElement.glassComponent, g1);
-		window.getRoot().addComponent(g1);
+        GlassComponent g1 = new GlassComponent(r1, dragDuplicator = new DragDuplicator(group, rootSheetElement));
+        rootSheetElement.setProperty(iVisualElement.glassComponent, g1);
+        window.getRoot().addComponent(g1);
 
-		rootSheetElement.setProperty(iVisualElement.name, "root");
+        rootSheetElement.setProperty(iVisualElement.name, "root");
 
-		HashMap<String, Object> c1 = SystemProperties.getProperties();
-		for (Entry<String, Object> e : c1.entrySet()) {
-			rootSheetElement.setProperty(new VisualElementProperty(e.getKey()), e.getValue());
-		}
+        HashMap<String, Object> c1 = SystemProperties.getProperties();
+        for (Entry<String, Object> e : c1.entrySet()) {
+            rootSheetElement.setProperty(new VisualElementProperty(e.getKey()), e.getValue());
+        }
 
-	}
+    }
 
-	public VisitCode added(iVisualElement newSource) {
-		iComponent component = newSource.getProperty(iVisualElement.localView);
+    public
+    VisitCode added(iVisualElement newSource) {
+        iComponent component = newSource.getProperty(iVisualElement.localView);
 
-		if (component != null)
-			window.getRoot().addComponent(component);
-		else {
-			System.err.println(" !!!!!!!!! no component for <" + newSource + "> !!!!!!!!!!!!");
-		}
+        if (component != null) window.getRoot().addComponent(component);
+        else {
+            System.err.println(" !!!!!!!!! no component for <" + newSource + "> !!!!!!!!!!!!");
+        }
 
-		if (iVisualElement.isRenderer.getBoolean(newSource, false))
-			iExecutesPromise.promiseExecution.set(newSource, newSource, multiThreadedRunner);
+        if (iVisualElement.isRenderer.getBoolean(newSource, false))
+            iExecutesPromise.promiseExecution.set(newSource, newSource, multiThreadedRunner);
 
-		window.getRoot().requestRedisplay();
-		return VisitCode.cont;
-	}
+        window.getRoot().requestRedisplay();
+        return VisitCode.cont;
+    }
 
-	public void addToSheet(iVisualElement newSource) {
-		newSource.addChild(rootSheetElement);
-		new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newSource).added(newSource);
-		new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource).added(newSource);
-	}
+    public
+    void addToSheet(iVisualElement newSource) {
+        newSource.addChild(rootSheetElement);
+        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newSource).added(newSource);
+        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource).added(newSource);
+    }
 
-	ThreadLocal<LinkedHashSet<iVisualElement>> inprogress = new ThreadLocal<LinkedHashSet<iVisualElement>>() {
-		@Override
-		public LinkedHashSet<iVisualElement> get() {
-			return new LinkedHashSet<iVisualElement>();
-		}
-	};
+    ThreadLocal<LinkedHashSet<iVisualElement>> inprogress = new ThreadLocal<LinkedHashSet<iVisualElement>>() {
+        @Override
+        public
+        LinkedHashSet<iVisualElement> get() {
+            return new LinkedHashSet<iVisualElement>();
+        }
+    };
 
-	public VisitCode beginExecution(final iVisualElement source) {
+    public
+    VisitCode beginExecution(final iVisualElement source) {
 
-		if (inprogress.get().contains(source))
-			return VisitCode.stop;
+        if (inprogress.get().contains(source)) return VisitCode.stop;
 
-		System.out.println(" inprogress <" + inprogress.get() + '>');
-		inprogress.get().add(source);
+        System.out.println(" inprogress <" + inprogress.get() + '>');
+        inprogress.get().add(source);
 
-		try {
+        try {
 
-			// should be
-			// lookup to
-			// support
+            // should be
+            // lookup to
+            // support
 
             // System.out.println(" begin exec <" + source + ">");
 
-			PythonPlugin p = PythonPlugin.python_plugin.get(source);
-			if (p instanceof PythonPluginEditor)
-				try {
-					((PythonPluginEditor) p).getEditor()
-                                            .getInput()
-                                            .append("Running '")
-                                            .append(source.getProperty(iVisualElement.name))
-                                            .append('\'');
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+            PythonPlugin p = PythonPlugin.python_plugin.get(source);
+            if (p instanceof PythonPluginEditor) try {
+                ((PythonPluginEditor) p).getEditor()
+                                        .getInput()
+                                        .append("Running '")
+                                        .append(source.getProperty(iVisualElement.name))
+                                        .append('\'');
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-			PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(source);
-			iExecutesPromise runner = iExecutesPromise.promiseExecution.get(source);
+            PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(source);
+            iExecutesPromise runner = iExecutesPromise.promiseExecution.get(source);
 
-			Promise promise = pss.promiseForKey(source);
+            Promise promise = pss.promiseForKey(source);
 
-			Vector2 currentMousePosition = GLComponentWindow.getCurrentWindow(null).getCurrentMousePosition();
-			PythonInterface.getPythonInterface().setVariable("_y", new Float(currentMousePosition.y));
+            Vector2 currentMousePosition = GLComponentWindow.getCurrentWindow(null).getCurrentMousePosition();
+            PythonInterface.getPythonInterface().setVariable("_y", new Float(currentMousePosition.y));
 
-			// todo: execute
-			// in correct
-			// context (this
-			// is handled
-			// for us
-			// automatically,
-			// if we are
-			// using the
-			// main runner
-			// (which we
-			// probably
-			// aren't)
+            // todo: execute
+            // in correct
+            // context (this
+            // is handled
+            // for us
+            // automatically,
+            // if we are
+            // using the
+            // main runner
+            // (which we
+            // probably
+            // aren't)
 
-			if (promise != null) {
-				runner.addActive(new iFloatProvider() {
+            if (promise != null) {
+                runner.addActive(new iFloatProvider() {
 
-					public float evaluate() {
-						Vector2 v = window.getCurrentMouseInWindowCoordinates();
+                    public
+                    float evaluate() {
+                        Vector2 v = window.getCurrentMouseInWindowCoordinates();
 
-						Rect o = new Rect(0, 0, 0, 0);
-						source.getFrame(o);
+                        Rect o = new Rect(0, 0, 0, 0);
+                        source.getFrame(o);
 
-						return v.x;
-					}
+                        return v.x;
+                    }
 
-				}, promise);
-			}
+                }, promise);
+            }
 
-			SnippetsPlugin.addText(source, "_self.find[\"" + source.getProperty(iVisualElement.name) + "\"].begin()\n_self.begin()\n_self.end()\n_self.find[\"" + source.getProperty(iVisualElement.name) + "\"].end()", "element started", new String[] { "start running an element", "start running </i>this<i> element", "STOP running </i>this<i> element'", "STOP running an element" }, "alternative form");
+            SnippetsPlugin.addText(source,
+                                   "_self.find[\""
+                                   + source.getProperty(iVisualElement.name)
+                                   + "\"].begin()\n_self.begin()\n_self.end()\n_self.find[\""
+                                   + source.getProperty(iVisualElement.name)
+                                   + "\"].end()",
+                                   "element started",
+                                   new String[]{"start running an element",
+                                                "start running </i>this<i> element",
+                                                "STOP running </i>this<i> element'",
+                                                "STOP running an element"},
+                                   "alternative form");
 
-			return VisitCode.cont;
-		} finally {
-			inprogress.get().remove(source);
-		}
-	}
+            return VisitCode.cont;
+        } finally {
+            inprogress.get().remove(source);
+        }
+    }
 
-	public void close() {
+    public
+    void close() {
 
-		for (iPlugin p : plugins)
-			p.close();
+        for (iPlugin p : plugins)
+            p.close();
 
-		Launcher.getLauncher().registerUpdateable(this);
-		Launcher.getLauncher().deregisterUpdateable(window);
-		window.getFrame().setVisible(false);
-		window.getFrame().dispose();
+        Launcher.getLauncher().registerUpdateable(this);
+        Launcher.getLauncher().deregisterUpdateable(window);
+        window.getFrame().setVisible(false);
+        window.getFrame().dispose();
 
-		if (shutdownhook != null)
-			Launcher.getLauncher().removeShutdownHook(shutdownhook);
-	}
+        if (shutdownhook != null) Launcher.getLauncher().removeShutdownHook(shutdownhook);
+    }
 
-	public VisitCode deleted(iVisualElement source) {
-		iComponent component = source.getProperty(iVisualElement.localView);
-		if (component != null)
-			window.getRoot().removeComponent(component);
-		window.getRoot().requestRedisplay();
+    public
+    VisitCode deleted(iVisualElement source) {
+        iComponent component = source.getProperty(iVisualElement.localView);
+        if (component != null) window.getRoot().removeComponent(component);
+        window.getRoot().requestRedisplay();
 
-		if (vs != null) {
-			vs.notifyElementDeleted(source);
-		}
+        if (vs != null) {
+            vs.notifyElementDeleted(source);
+        }
 
-		group.removeFromSelection(source.getProperty(iVisualElement.localView));
-		markingGroup.removeFromSelection(source.getProperty(iVisualElement.localView));
+        group.removeFromSelection(source.getProperty(iVisualElement.localView));
+        markingGroup.removeFromSelection(source.getProperty(iVisualElement.localView));
 
-		return VisitCode.cont;
-	}
+        return VisitCode.cont;
+    }
 
-	public <T> VisitCode deleteProperty(iVisualElement source, VisualElementProperty<T> prop) {
-		if (source == rootSheetElement) {
-			VisualElementProperty<T> a = prop.getAliasedTo();
-			while (a != null) {
-				prop = a;
-				a = a.getAliasedTo();
-			}
+    public
+    <T> VisitCode deleteProperty(iVisualElement source, VisualElementProperty<T> prop) {
+        if (source == rootSheetElement) {
+            VisualElementProperty<T> a = prop.getAliasedTo();
+            while (a != null) {
+                prop = a;
+                a = a.getAliasedTo();
+            }
 
-			rootSheetElement.deleteProperty(prop);
-		}
-		if (prop.containsSuffix("v")) {
-			if (vs != null) {
-				vs.notifyPropertyDeleted(prop, source);
-			}
-		}
+            rootSheetElement.deleteProperty(prop);
+        }
+        if (prop.containsSuffix("v")) {
+            if (vs != null) {
+                vs.notifyPropertyDeleted(prop, source);
+            }
+        }
 
-		return VisitCode.cont;
-	}
+        return VisitCode.cont;
+    }
 
-	public VisitCode endExecution(iVisualElement source) {
+    public
+    VisitCode endExecution(iVisualElement source) {
 
-		Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-		new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source).getProperty(source, PythonScriptingSystem.pythonScriptingSystem, refPss);
-		assert refPss.get() != null;
+        Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
+        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+                                                       .getProperty(source,
+                                                                    PythonScriptingSystem.pythonScriptingSystem,
+                                                                    refPss);
+        assert refPss.get() != null;
 
-		Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-		new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source).getProperty(source, iExecutesPromise.promiseExecution, refRunner);
-		assert refRunner.get() != null;
+        Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
+        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+                                                       .getProperty(source,
+                                                                    iExecutesPromise.promiseExecution,
+                                                                    refRunner);
+        assert refRunner.get() != null;
 
-		Promise p = refPss.get().promiseForKey(source);
+        Promise p = refPss.get().promiseForKey(source);
 
-		if (p != null) {
-			refRunner.get().removeActive(p);
-		}
+        if (p != null) {
+            refRunner.get().removeActive(p);
+        }
 
-		return VisitCode.cont;
-	}
+        return VisitCode.cont;
+    }
 
-	public BasicRunner getBasicRunner() {
-		return basicRunner;
-	}
+    public
+    BasicRunner getBasicRunner() {
+        return basicRunner;
+    }
 
-	public <T> VisitCode getProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> property, Ref<T> ref) {
-		if (rootProperties.containsKey(property)) {
-			VisualElementProperty<T> a = property.getAliasedTo();
-			while (a != null) {
-				property = a;
-				a = a.getAliasedTo();
-			}
+    public
+    <T> VisitCode getProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> property, Ref<T> ref) {
+        if (rootProperties.containsKey(property)) {
+            VisualElementProperty<T> a = property.getAliasedTo();
+            while (a != null) {
+                property = a;
+                a = a.getAliasedTo();
+            }
 
-			if (ref.get() == null)
-				ref.set((T) rootProperties.get(property), rootSheetElement);
+            if (ref.get() == null) ref.set((T) rootProperties.get(property), rootSheetElement);
 
-		}
+        }
 
-		return VisitCode.cont;
-	}
+        return VisitCode.cont;
+    }
 
-	public iVisualElement getRoot() {
-		return rootSheetElement;
-	}
+    public
+    iVisualElement getRoot() {
+        return rootSheetElement;
+    }
 
-	public GLComponentWindow getWindow() {
-		return window;
-	}
+    public
+    GLComponentWindow getWindow() {
+        return window;
+    }
 
-	public VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
+    public
+    VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
 
-		if (event == null)
-			return VisitCode.cont;
+        if (event == null) return VisitCode.cont;
 
-		if (!event.doit)
-			return VisitCode.cont;
+        if (!event.doit) return VisitCode.cont;
 
-		if (tick && (event.type == SWT.KeyDown) && (event.character == 'n')) {
+        if (tick && (event.type == SWT.KeyDown) && (event.character == 'n')) {
 
-			tick = false;
-			List<iVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
-			iVisualElement ee = getRoot();
-			boolean exclusive = false;
-			for (iVisualElement a : all) {
-				Boolean f = a.getProperty(PythonPluginEditor.python_isDefaultGroup);
-				if ((f != null) && f) {
-					Boolean ex = a.getProperty(PythonPluginEditor.python_isDefaultGroupExclusive);
-					if ((ex != null) && ex)
-						exclusive = true;
-					ee = a;
-					break;
-				}
-			}
+            tick = false;
+            List<iVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
+            iVisualElement ee = getRoot();
+            boolean exclusive = false;
+            for (iVisualElement a : all) {
+                Boolean f = a.getProperty(PythonPluginEditor.python_isDefaultGroup);
+                if ((f != null) && f) {
+                    Boolean ex = a.getProperty(PythonPluginEditor.python_isDefaultGroupExclusive);
+                    if ((ex != null) && ex) exclusive = true;
+                    ee = a;
+                    break;
+                }
+            }
 
-			GLComponentWindow frame = iVisualElement.enclosingFrame.get(getRoot());
+            GLComponentWindow frame = iVisualElement.enclosingFrame.get(getRoot());
 
-			Rect bounds = new Rect(30, 30, 60, 60);
-			if (frame != null) {
-				Vector2 cmp = frame.getCurrentMouseInWindowCoordinates();
-				bounds.x = cmp.x - 25;
-				bounds.y = cmp.y + 25;
-			}
+            Rect bounds = new Rect(30, 30, 60, 60);
+            if (frame != null) {
+                Vector2 cmp = frame.getCurrentMouseInWindowCoordinates();
+                bounds.x = cmp.x - 25;
+                bounds.y = cmp.y + 25;
+            }
 
-			Triple<VisualElement, DraggableComponent, DefaultOverride> created = VisualElement.createAddAndName(bounds, ee, "untitled", VisualElement.class, DraggableComponent.class, DefaultOverride.class, null);
+            Triple<VisualElement, DraggableComponent, DefaultOverride> created = VisualElement.createAddAndName(bounds,
+                                                                                                                ee,
+                                                                                                                "untitled",
+                                                                                                                VisualElement.class,
+                                                                                                                DraggableComponent.class,
+                                                                                                                DefaultOverride.class,
+                                                                                                                null);
 
-			if ((ee != getRoot()) && !exclusive) {
-				created.left.addChild(getRoot());
-			}
-		}
-		if (tick && (event.type == SWT.KeyDown) && (event.keyCode == 13)) {
+            if ((ee != getRoot()) && !exclusive) {
+                created.left.addChild(getRoot());
+            }
+        }
+        if (tick && (event.type == SWT.KeyDown) && (event.keyCode == 13)) {
 
-			tick = false;
+            tick = false;
 
-			boolean success = ((PythonPluginEditor) PythonPluginEditor.python_plugin.get(rootSheetElement)).getEditor().getInputEditor().forceFocus();
+            boolean success = ((PythonPluginEditor) PythonPluginEditor.python_plugin.get(rootSheetElement)).getEditor()
+                                                                                                           .getInputEditor()
+                                                                                                           .forceFocus();
             // System.out.println(" forcing focus " + success);
 
-		} else if (tick && (event.type == SWT.KeyDown) && (event.character == 'p')) {
-			tick = false;
-			List<iVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
-			iVisualElement ee = getRoot();
-			boolean exclusive = false;
-			for (iVisualElement a : all) {
-				Boolean f = a.getProperty(PythonPluginEditor.python_isDefaultGroup);
-				if ((f != null) && f) {
-					Boolean ex = a.getProperty(PythonPluginEditor.python_isDefaultGroupExclusive);
-					if ((ex != null) && ex)
-						exclusive = true;
-					ee = a;
-					break;
-				}
-			}
-			GLComponentWindow frame = iVisualElement.enclosingFrame.get(getRoot());
+        }
+        else if (tick && (event.type == SWT.KeyDown) && (event.character == 'p')) {
+            tick = false;
+            List<iVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
+            iVisualElement ee = getRoot();
+            boolean exclusive = false;
+            for (iVisualElement a : all) {
+                Boolean f = a.getProperty(PythonPluginEditor.python_isDefaultGroup);
+                if ((f != null) && f) {
+                    Boolean ex = a.getProperty(PythonPluginEditor.python_isDefaultGroupExclusive);
+                    if ((ex != null) && ex) exclusive = true;
+                    ee = a;
+                    break;
+                }
+            }
+            GLComponentWindow frame = iVisualElement.enclosingFrame.get(getRoot());
 
-			Rect bounds = new Rect(30, 30, 50, 50);
-			if (frame != null) {
-				Vector2 cmp = frame.getCurrentMouseInWindowCoordinates();
-				bounds.x = cmp.x - 25;
-				bounds.y = cmp.y + 25;
-			}
+            Rect bounds = new Rect(30, 30, 50, 50);
+            if (frame != null) {
+                Vector2 cmp = frame.getCurrentMouseInWindowCoordinates();
+                bounds.x = cmp.x - 25;
+                bounds.y = cmp.y + 25;
+            }
 
-			Triple<VisualElement, PlainDraggableComponent, SplineComputingOverride> created = VisualElement.createAddAndName(bounds, ee, "untitled", VisualElement.class, PlainDraggableComponent.class, SplineComputingOverride.class, null);
+            Triple<VisualElement, PlainDraggableComponent, SplineComputingOverride> created =
+                    VisualElement.createAddAndName(bounds,
+                                                   ee,
+                                                   "untitled",
+                                                   VisualElement.class,
+                                                   PlainDraggableComponent.class,
+                                                   SplineComputingOverride.class,
+                                                   null);
 
-			if ((ee != getRoot()) && !exclusive) {
-				created.left.addChild(getRoot());
-			}
-		} else
-
-		if (tick && (event.type == SWT.KeyDown) && (event.keyCode == 'c') && ((event.stateMask
-                                                                               & Platform.getCommandModifier()) != 0)) {
+            if ((ee != getRoot()) && !exclusive) {
+                created.left.addChild(getRoot());
+            }
+        }
+        else if (tick && (event.type == SWT.KeyDown) && (event.keyCode == 'c') && ((event.stateMask
+                                                                                    & Platform.getCommandModifier())
+                                                                                   != 0)) {
             // System.out.println(" copying file reference to clipboard ");
             tick = false;
-			File tmp = PackageTools.newTempFileWithSelected(rootSheetElement, "copied");
+            File tmp = PackageTools.newTempFileWithSelected(rootSheetElement, "copied");
             PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
 
-			OverlayAnimationManager.notifyAsText(getRoot(), "Copied to clipboard", null);
+            OverlayAnimationManager.notifyAsText(getRoot(), "Copied to clipboard", null);
 
-			// OverlayAnimationManager m =
-			// window.getOverlayAnimationManager();
-			// if (m!=null)
-			// {
-			// m.no
-			// }
+            // OverlayAnimationManager m =
+            // window.getOverlayAnimationManager();
+            // if (m!=null)
+            // {
+            // m.no
+            // }
 
-		} else if (tick && (event.type == SWT.KeyDown) && (event.keyCode == 'v') && ((event.stateMask
-                                                                                      & Platform.getCommandModifier())
-                                                                                     != 0)) {
-			try {
-				tick = false;
+        }
+        else if (tick && (event.type == SWT.KeyDown) && (event.keyCode == 'v') && ((event.stateMask
+                                                                                    & Platform.getCommandModifier())
+                                                                                   != 0)) {
+            try {
+                tick = false;
 
-				Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-				Transferable t = c.getContents(null);
-				Object data = c.getData(DataFlavor.javaFileListFlavor);
-				if (((List) data).get(0) instanceof File) {
-					if (((File) ((List) data).get(0)).getName().endsWith(".fieldpackage")) {
-						OverlayAnimationManager.notifyAsText(getRoot(), "Pasted from clipboard", null);
+                Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+                Transferable t = c.getContents(null);
+                Object data = c.getData(DataFlavor.javaFileListFlavor);
+                if (((List) data).get(0) instanceof File) {
+                    if (((File) ((List) data).get(0)).getName().endsWith(".fieldpackage")) {
+                        OverlayAnimationManager.notifyAsText(getRoot(), "Pasted from clipboard", null);
                         PackageTools.importFieldPackage(rootSheetElement,
                                                         ((File) ((List) data).get(0)).getAbsolutePath());
                     }
-				} else {
-				}
+                }
+                else {
+                }
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else if (tick && (event.type == SWT.KeyDown) && (event.character == 's') && ((event.stateMask
-                                                                                        & Platform.getCommandModifier())
-                                                                                       != 0)) {
-			saveNow();
-		} else if (tick
-                   && (event.type == SWT.KeyDown)
-                   && ((event.character == SWT.BS) || (event.character == SWT.DEL))
-                   && ((event.stateMask & Platform.getCommandModifier()) != 0)) {
-			Set<iComponent> c = group.getSelection();
-			HashSet<iVisualElement> toDelete = new HashSet<iVisualElement>();
-			for (iComponent cc : c) {
-				iVisualElement v = cc.getVisualElement();
-				if (v != null)
-					toDelete.add(v);
-			}
-			for (iVisualElement v : toDelete) {
-				VisualElement.delete(this.getRoot(), v);
-			}
-		} else if ((event.type == SWT.KeyDown) && (event.character == ' ') && tick) {
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else if (tick && (event.type == SWT.KeyDown) && (event.character == 's') && ((event.stateMask
+                                                                                      & Platform.getCommandModifier())
+                                                                                     != 0)) {
+            saveNow();
+        }
+        else if (tick
+                 && (event.type == SWT.KeyDown)
+                 && ((event.character == SWT.BS) || (event.character == SWT.DEL))
+                 && ((event.stateMask & Platform.getCommandModifier()) != 0)) {
+            Set<iComponent> c = group.getSelection();
+            HashSet<iVisualElement> toDelete = new HashSet<iVisualElement>();
+            for (iComponent cc : c) {
+                iVisualElement v = cc.getVisualElement();
+                if (v != null) toDelete.add(v);
+            }
+            for (iVisualElement v : toDelete) {
+                VisualElement.delete(this.getRoot(), v);
+            }
+        }
+        else if ((event.type == SWT.KeyDown) && (event.character == ' ') && tick) {
 
             // System.out.println(" opening space menu ...");
 
-			HashSet<iVisualElement> sel = selectionOrOver();
+            HashSet<iVisualElement> sel = selectionOrOver();
 
-			if (sel.isEmpty())
-				return VisitCode.cont;
+            if (sel.isEmpty()) return VisitCode.cont;
 
-			iComponent c = iVisualElement.localView.get(sel.iterator().next());
+            iComponent c = iVisualElement.localView.get(sel.iterator().next());
 
-			// iComponent c = window.getRoot().hit(window, new
-			// Vector2(locationInScreenp.x, locationInScreenp.y));
+            // iComponent c = window.getRoot().hit(window, new
+            // Vector2(locationInScreenp.x, locationInScreenp.y));
 
             // System.out.println(" comp is <" + c + ">");
 
-			if (c != null) {
-				final iVisualElement v = c.getVisualElement();
+            if (c != null) {
+                final iVisualElement v = c.getVisualElement();
 
                 // System.out.println(" v is <" + v + ">");
                 if (newSource == v) {
-					tick = false;
-					// todo, should auto select
+                    tick = false;
+                    // todo, should auto select
 
-					FastVisualElementOverridesPropertyCombiner<MarkingMenuBuilder, MarkingMenuBuilder> combiner = new FastVisualElementOverridesPropertyCombiner<MarkingMenuBuilder, MarkingMenuBuilder>(false);
-					MarkingMenuBuilder marker = combiner.getProperty(newSource, iVisualElement.spaceMenu, new iCombiner<MarkingMenuBuilder, MarkingMenuBuilder>() {
+                    FastVisualElementOverridesPropertyCombiner<MarkingMenuBuilder, MarkingMenuBuilder> combiner =
+                            new FastVisualElementOverridesPropertyCombiner<MarkingMenuBuilder, MarkingMenuBuilder>(false);
+                    MarkingMenuBuilder marker = combiner.getProperty(newSource,
+                                                                     iVisualElement.spaceMenu,
+                                                                     new iCombiner<MarkingMenuBuilder, MarkingMenuBuilder>() {
 
-						public MarkingMenuBuilder bind(MarkingMenuBuilder t, MarkingMenuBuilder u) {
+                                                                         public
+                                                                         MarkingMenuBuilder bind(MarkingMenuBuilder t,
+                                                                                                 MarkingMenuBuilder u) {
 
-                            // System.out.println("t : "
-                            // + t + " " +
-								// u);
+                                                                             // System.out.println("t : "
+                                                                             // + t + " " +
+                                                                             // u);
 
-							if (t == null)
-								return u;
-							if (u == null)
-								return t;
-							return t.mergeWith(u);
-						}
+                                                                             if (t == null) return u;
+                                                                             if (u == null) return t;
+                                                                             return t.mergeWith(u);
+                                                                         }
 
-						public MarkingMenuBuilder unit() {
-							return null;
-						}
-					});
+                                                                         public
+                                                                         MarkingMenuBuilder unit() {
+                                                                             return null;
+                                                                         }
+                                                                     });
 
-					// ;//System.out.println(" marker is <"
-					// +
-					// marker + "> at <" + locationInScreeno
-					// + ">");
+                    // ;//System.out.println(" marker is <"
+                    // +
+                    // marker + "> at <" + locationInScreeno
+                    // + ">");
 
-					if (marker != null) {
-						if (marker.insertCopyPasteItems) {
-							group.deselectAll();
-							iVisualElement.localView.get(v).setSelected(true);
-							group.addToSelection(iVisualElement.localView.get(v));
-							insertCopyPasteMenuItems(rootSheetElement, group, marker.getMap());
-						}
+                    if (marker != null) {
+                        if (marker.insertCopyPasteItems) {
+                            group.deselectAll();
+                            iVisualElement.localView.get(v).setSelected(true);
+                            group.addToSelection(iVisualElement.localView.get(v));
+                            insertCopyPasteMenuItems(rootSheetElement, group, marker.getMap());
+                        }
 
-						if (marker.insertDeleteItem) {
-							Map<String, iUpdateable> m = marker.getMap();
-							m.put("   \u232b  <b>delete</b> element ///meta BACK_SPACE///", new iUpdateable() {
-								public void update() {
-									PythonPluginEditor.delete(v, rootSheetElement);
-								}
-							});
+                        if (marker.insertDeleteItem) {
+                            Map<String, iUpdateable> m = marker.getMap();
+                            m.put("   \u232b  <b>delete</b> element ///meta BACK_SPACE///", new iUpdateable() {
+                                public
+                                void update() {
+                                    PythonPluginEditor.delete(v, rootSheetElement);
+                                }
+                            });
 
-						}
+                        }
 
-						// TODO swt
-						// marker.getMenu(this.getWindow().getCanvas(),
-						// locationInScreeno);
+                        // TODO swt
+                        // marker.getMenu(this.getWindow().getCanvas(),
+                        // locationInScreeno);
 
-						// Vector2 currentMousePosition
-						// =
-						// GLComponentWindow.getCurrentWindow(null).getCurrentMousePosition();
+                        // Vector2 currentMousePosition
+                        // =
+                        // GLComponentWindow.getCurrentWindow(null).getCurrentMousePosition();
 
-						Point locationInScreenp = Launcher.display.getCursorLocation();
+                        Point locationInScreenp = Launcher.display.getCursorLocation();
 
-						// locationInScreenp =
-						// Launcher.display.map(null,
-						// window.getFrame(),
-						// locationInScreenp);
+                        // locationInScreenp =
+                        // Launcher.display.map(null,
+                        // window.getFrame(),
+                        // locationInScreenp);
 
                         // System.out.println(" location on screen mapped is <"
                         // + locationInScreenp +
-							// ">");
+                        // ">");
 
-						marker.getMenu(window.getCanvas(), locationInScreenp);
+                        marker.getMenu(window.getCanvas(), locationInScreenp);
 
-					}
-				}
-			}
-		} else if ((event.type == SWT.KeyDown) && (event.character == 'y') && tick) {
-			tick = false;
-			createFromTemplate();
-		} else if ((event.type == SWT.KeyDown) && (event.keyCode == SWT.PAGE_UP) && tick) {
-			tick = false;
-			HashSet<iVisualElement> s = selectionOrOver();
-
-            // System.out.println(" selection or over is <" + s +
-            // ">");
-
-			if (!s.isEmpty()) {
-				for (iVisualElement ss : s) {
-					Beginner beginner = PseudoPropertiesPlugin.begin.get(ss);
-					beginner.call(new Object[] {});
-				}
-			}
-		} else if ((event.type == SWT.KeyDown) && (event.keyCode == SWT.PAGE_DOWN) && tick) {
-			tick = false;
-			HashSet<iVisualElement> s = selectionOrOver();
+                    }
+                }
+            }
+        }
+        else if ((event.type == SWT.KeyDown) && (event.character == 'y') && tick) {
+            tick = false;
+            createFromTemplate();
+        }
+        else if ((event.type == SWT.KeyDown) && (event.keyCode == SWT.PAGE_UP) && tick) {
+            tick = false;
+            HashSet<iVisualElement> s = selectionOrOver();
 
             // System.out.println(" selection or over is <" + s +
             // ">");
 
-			if (!s.isEmpty()) {
-				for (iVisualElement ss : s) {
-					Ender beginner = PseudoPropertiesPlugin.end.get(ss);
-					beginner.call(new Object[] {});
-				}
-			}
-		} else if (tick) {
+            if (!s.isEmpty()) {
+                for (iVisualElement ss : s) {
+                    Beginner beginner = PseudoPropertiesPlugin.begin.get(ss);
+                    beginner.call(new Object[]{});
+                }
+            }
+        }
+        else if ((event.type == SWT.KeyDown) && (event.keyCode == SWT.PAGE_DOWN) && tick) {
+            tick = false;
+            HashSet<iVisualElement> s = selectionOrOver();
 
-			if (((event.stateMask & Platform.getCommandModifier()) != 0) && (event.type == SWT.KeyDown)) {
-				{
+            // System.out.println(" selection or over is <" + s +
+            // ">");
+
+            if (!s.isEmpty()) {
+                for (iVisualElement ss : s) {
+                    Ender beginner = PseudoPropertiesPlugin.end.get(ss);
+                    beginner.call(new Object[]{});
+                }
+            }
+        }
+        else if (tick) {
+
+            if (((event.stateMask & Platform.getCommandModifier()) != 0) && (event.type == SWT.KeyDown)) {
+                {
                     String match = String.valueOf(Character.toLowerCase(event.character));
                     String s = keyboardShortcut.get(newSource);
-					if (s != null) {
-						if (s.equals(match)) {
-							tick = false;
+                    if (s != null) {
+                        if (s.equals(match)) {
+                            tick = false;
                             if ((event.stateMask & SWT.SHIFT) == 0) beginExecution(newSource);
                             else endExecution(newSource);
-						}
-					}
-				}
+                        }
+                    }
+                }
                 String match = String.valueOf(Character.toLowerCase((char) event.keyCode));
                 String s = keyboardShortcut.get(newSource);
-				if (s != null) {
-					if (s.equals(match)) {
-						tick = false;
+                if (s != null) {
+                    if (s.equals(match)) {
+                        tick = false;
                         if ((event.stateMask & SWT.SHIFT) == 0) beginExecution(newSource);
                         else endExecution(newSource);
-					}
-				}
+                    }
+                }
 
-			}
-		}
+            }
+        }
 
-		else if (tick) {
+        else if (tick) {
 
-			String m = "";
+            String m = "";
             String c = (String.valueOf(event.character)).toLowerCase();
 
-			String match = (m + c).trim().toLowerCase();
+            String match = (m + c).trim().toLowerCase();
 
-			String s = keyboardShortcut.get(newSource);
-			if (s != null) {
-				if (s.equals(match)) {
-					tick = false;
+            String s = keyboardShortcut.get(newSource);
+            if (s != null) {
+                if (s.equals(match)) {
+                    tick = false;
                     if ((event.stateMask & SWT.SHIFT) == 0) beginExecution(newSource);
                     else endExecution(newSource);
-				}
-			}
-		}
+                }
+            }
+        }
 
-		return VisitCode.cont;
-	}
+        return VisitCode.cont;
+    }
 
-	private HashSet<iVisualElement> selectionOrOver() {
+    private
+    HashSet<iVisualElement> selectionOrOver() {
 
         // System.out.println(" inside selection or over ");
 
-		HashSet<iVisualElement> sel = new HashSet<iVisualElement>();
+        HashSet<iVisualElement> sel = new HashSet<iVisualElement>();
 
-		Point locationInScreenp = Launcher.display.getCursorLocation();
+        Point locationInScreenp = Launcher.display.getCursorLocation();
 
         // System.out.println(" cursor location on the screen is <" +
         // locationInScreenp + ">");
 
-		locationInScreenp = Launcher.display.map(null, window.getCanvas(), locationInScreenp);
-		// locationInScreenp.x -=
-		// window.getCanvas().getParent().getLocation().x;
+        locationInScreenp = Launcher.display.map(null, window.getCanvas(), locationInScreenp);
+        // locationInScreenp.x -=
+        // window.getCanvas().getParent().getLocation().x;
 
         // System.out.println(" cursor location in canvas is <" +
         // locationInScreenp + ">");
 
-		Vector2 t = new Vector2(locationInScreenp.x, locationInScreenp.y);
-		window.transformWindowToDrawing(t);
+        Vector2 t = new Vector2(locationInScreenp.x, locationInScreenp.y);
+        window.transformWindowToDrawing(t);
 
-		t.y += 25;
+        t.y += 25;
 
         // System.out.println(" cursor location in drawing coords <" +
         // t + ">");
 
-		iComponent cc = window.getRoot().hit(window, t);
+        iComponent cc = window.getRoot().hit(window, t);
 
         // System.out.println(" hit :" + cc);
 
-		if (cc != null) {
-			iVisualElement v = cc.getVisualElement();
-			if (v != null)
-				sel.add(v);
-		}
+        if (cc != null) {
+            iVisualElement v = cc.getVisualElement();
+            if (v != null) sel.add(v);
+        }
 
-		Set<iComponent> c = group.getSelection();
-		HashSet<iVisualElement> sel2 = new HashSet<iVisualElement>();
-		for (iComponent ccc : c) {
-			iVisualElement v = ccc.getVisualElement();
-			if (v != null)
-				sel2.add(v);
-		}
+        Set<iComponent> c = group.getSelection();
+        HashSet<iVisualElement> sel2 = new HashSet<iVisualElement>();
+        for (iComponent ccc : c) {
+            iVisualElement v = ccc.getVisualElement();
+            if (v != null) sel2.add(v);
+        }
 
-		if (sel.isEmpty())
-			return sel2;
-		if (sel2.containsAll(sel))
-			return sel2;
+        if (sel.isEmpty()) return sel2;
+        if (sel2.containsAll(sel)) return sel2;
 
-		return sel;
-	}
+        return sel;
+    }
 
-	public VisitCode inspectablePropertiesFor(iVisualElement source, List<Prop> properties) {
-		return VisitCode.cont;
-	}
+    public
+    VisitCode inspectablePropertiesFor(iVisualElement source, List<Prop> properties) {
+        return VisitCode.cont;
+    }
 
-	public VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
-		//
-		//
-		// ;//System.out.println(" \n\n is hit "+event+" "+event.type+" \n\n");
-		// if (event.doit && (event.stateMask &
-		// Platform.getCommandModifier()) != 0
-		// && (event.stateMask & SWT.SHIFT) != 0
-		// && !Platform.isPopupTrigger(event)) {
-		//
-		// if (event.type == SWT.MouseDown) {
-		// dragDuplicator.begin(event);
-		// event.doit = false;
-		// }
-		//
-		// } else if (event.type == SWT.MouseMove)
-		// dragDuplicator.drag(event);
-		// else if (event.type == SWT.MouseUp)
-		// dragDuplicator.end(event);
-		//
-		return VisitCode.cont;
-	}
+    public
+    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+        //
+        //
+        // ;//System.out.println(" \n\n is hit "+event+" "+event.type+" \n\n");
+        // if (event.doit && (event.stateMask &
+        // Platform.getCommandModifier()) != 0
+        // && (event.stateMask & SWT.SHIFT) != 0
+        // && !Platform.isPopupTrigger(event)) {
+        //
+        // if (event.type == SWT.MouseDown) {
+        // dragDuplicator.begin(event);
+        // event.doit = false;
+        // }
+        //
+        // } else if (event.type == SWT.MouseMove)
+        // dragDuplicator.drag(event);
+        // else if (event.type == SWT.MouseUp)
+        // dragDuplicator.end(event);
+        //
+        return VisitCode.cont;
+    }
 
-	public void load(Reader reader) {
-		LinkedHashSet<iVisualElement> created = new LinkedHashSet<iVisualElement>();
-		synchronized (Launcher.lock) {
+    public
+    void load(Reader reader) {
+        LinkedHashSet<iVisualElement> created = new LinkedHashSet<iVisualElement>();
+        synchronized (Launcher.lock) {
 
-			try {
-				reader.mark(500);
-				int defaultVersion = 1;
-				ObjectInputStream objectInputStream = getPersistence(defaultVersion).getObjectInputStream(reader, created);
-				String version = (String) objectInputStream.readObject();
-				int versionToLoad = 0;
-				if ("version_1".equals(version)) {
-					versionToLoad = 0;
-				} else if ("version_2".equals(version)) {
-					versionToLoad = 1;
-				} else
-					assert false : version;
+            try {
+                reader.mark(500);
+                int defaultVersion = 1;
+                ObjectInputStream objectInputStream =
+                        getPersistence(defaultVersion).getObjectInputStream(reader, created);
+                String version = (String) objectInputStream.readObject();
+                int versionToLoad = 0;
+                if ("version_1".equals(version)) {
+                    versionToLoad = 0;
+                }
+                else if ("version_2".equals(version)) {
+                    versionToLoad = 1;
+                }
+                else assert false : version;
 
-				if (versionToLoad != defaultVersion) {
-					reader.reset();
-					objectInputStream = getPersistence(versionToLoad).getObjectInputStream(reader, created);
-					objectInputStream.readObject();
-				}
+                if (versionToLoad != defaultVersion) {
+                    reader.reset();
+                    objectInputStream = getPersistence(versionToLoad).getObjectInputStream(reader, created);
+                    objectInputStream.readObject();
+                }
 
-				iVisualElement oldRoot = (iVisualElement) objectInputStream.readObject();
+                iVisualElement oldRoot = (iVisualElement) objectInputStream.readObject();
 
-				VersioningSystem system = vs;
-				if (system != null) {
-					for (iVisualElement ve : created) {
-						if (SystemProperties.getIntProperty("noCommit", 0) == 0)
-							system.synchronizeElementWithFileStructure(ve);
-					}
-				}
+                VersioningSystem system = vs;
+                if (system != null) {
+                    for (iVisualElement ve : created) {
+                        if (SystemProperties.getIntProperty("noCommit", 0) == 0)
+                            system.synchronizeElementWithFileStructure(ve);
+                    }
+                }
 
-				assert oldRoot == rootSheetElement : oldRoot;
+                assert oldRoot == rootSheetElement : oldRoot;
 
                 // System.out.println(" -- reading persistance information for plugins --");
 
-				while (true) {
+                while (true) {
                     // System.out.println(" -- reading --");
                     try {
-						Object persistanceInformation = objectInputStream.readObject();
+                        Object persistanceInformation = objectInputStream.readObject();
                         // System.out.println(" -- read :"
                         // +
-							// persistanceInformation);
-						for (iPlugin p : plugins) {
-							p.setPersistanceInformation(persistanceInformation);
-						}
-					} catch (com.thoughtworks.xstream.converters.ConversionException conv) {
+                        // persistanceInformation);
+                        for (iPlugin p : plugins) {
+                            p.setPersistanceInformation(persistanceInformation);
+                        }
+                    } catch (com.thoughtworks.xstream.converters.ConversionException conv) {
                         // System.out.println(" got a conversion exception on reading persistance information for plugin. This is probably caused by the plugin storing something that we can't find unless we load the plugin. This is usually recoverable");
                     }
-				}
+                }
 
-			} catch (StreamException e) {
-				if (e.getMessage().endsWith("input contained no data")) {
-				} else
-					e.printStackTrace();
-			} catch (EOFException e) {
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+            } catch (StreamException e) {
+                if (e.getMessage().endsWith("input contained no data")) {
+                }
+                else e.printStackTrace();
+            } catch (EOFException e) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
 
-			// was:
-			// for
-			// (iVisualElement
-			// ve : created)
-			// {
-			// this.added(ve);
-			// }
+            // was:
+            // for
+            // (iVisualElement
+            // ve : created)
+            // {
+            // this.added(ve);
+            // }
 
-			for (iVisualElement ve : created) {
-				iVisualElementOverrides.topology.begin(ve);
-				iVisualElementOverrides.backward.added.f(ve);
-				iVisualElementOverrides.forward.added.f(ve);
-				iVisualElementOverrides.topology.end(ve);
-			}
-		}
-	}
+            for (iVisualElement ve : created) {
+                iVisualElementOverrides.topology.begin(ve);
+                iVisualElementOverrides.backward.added.f(ve);
+                iVisualElementOverrides.forward.added.f(ve);
+                iVisualElementOverrides.topology.end(ve);
+            }
+        }
+    }
 
-	public static
+    public static
     boolean canPaste() {
 
-		// TODO sometimes Ubuntu just deadlocks during this call. We
-		// need to do this with SWT instead
+        // TODO sometimes Ubuntu just deadlocks during this call. We
+        // need to do this with SWT instead
 
-		if (!Platform.isMac())
-			return false;
+        if (!Platform.isMac()) return false;
 
-		try {
-			Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-			Transferable t = c.getContents(null);
-			Object data = c.getData(DataFlavor.javaFileListFlavor);
-			if (((List) data).get(0) instanceof File)
-				return true;
-		} catch (Exception e) {
-		}
+        try {
+            Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable t = c.getContents(null);
+            Object data = c.getData(DataFlavor.javaFileListFlavor);
+            if (((List) data).get(0) instanceof File) return true;
+        } catch (Exception e) {
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
-		
-		if (Platform.isLinux())
-			insertFileMenuItems(rootSheetElement, group, items);
-		
-		insertCopyPasteMenuItems(rootSheetElement, group, items);
+    public
+    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
 
-		final HashSet<iVisualElement> o = selectionOrOver();
-		if (!o.isEmpty()) {
-			items.put("Templating", null);
+        if (Platform.isLinux()) insertFileMenuItems(rootSheetElement, group, items);
+
+        insertCopyPasteMenuItems(rootSheetElement, group, items);
+
+        final HashSet<iVisualElement> o = selectionOrOver();
+        if (!o.isEmpty()) {
+            items.put("Templating", null);
             // System.out.println(" selection or over is <" + o +
             // ">");
-			items.put("\u1d40 <b>Make element" + ((o.size() > 1) ? "s" : "") + " into template</b>", new iUpdateable() {
+            items.put("\u1d40 <b>Make element" + ((o.size() > 1) ? "s" : "") + " into template</b>", new iUpdateable() {
 
-				public void update() {
-					final NewTemplates templates = new NewTemplates(rootSheetElement);
+                public
+                void update() {
+                    final NewTemplates templates = new NewTemplates(rootSheetElement);
 
-					final Point x = Launcher.display.getCursorLocation();
+                    final Point x = Launcher.display.getCursorLocation();
 
-					// x.x -=
-					// window.getFrame().getLocation().x;
-					// x.y -=
-					// window.getFrame().getLocation().y;
+                    // x.x -=
+                    // window.getFrame().getLocation().x;
+                    // x.y -=
+                    // window.getFrame().getLocation().y;
 
-                    PopupTextBox.Modal.getStringOrCancel(new java.awt.Point(x.x, x.y), "Template name", "personal.something", new iAcceptor<String>() {
-                        public iAcceptor<String> set(final String to) {
+                    PopupTextBox.Modal.getStringOrCancel(new java.awt.Point(x.x, x.y),
+                                                         "Template name",
+                                                         "personal.something",
+                                                         new iAcceptor<String>() {
+                                                             public
+                                                             iAcceptor<String> set(final String to) {
 
-                            PopupTextBox.Modal.getStringOrCancel(new java.awt.Point(x.x, x.y), "Template description", "", new iAcceptor<String>() {
-                                public iAcceptor<String> set(String to2) {
+                                                                 PopupTextBox.Modal.getStringOrCancel(new java.awt.Point(x.x,
+                                                                                                                         x.y),
+                                                                                                      "Template description",
+                                                                                                      "",
+                                                                                                      new iAcceptor<String>() {
+                                                                                                          public
+                                                                                                          iAcceptor<String> set(String to2) {
 
-                                    // System.out.println(" here is the make <"
-                                    // +
-										// to
-										// +
-										// "> <"
-										// +
-										// to2
-										// +
-										// ">");
+                                                                                                              // System.out.println(" here is the make <"
+                                                                                                              // +
+                                                                                                              // to
+                                                                                                              // +
+                                                                                                              // "> <"
+                                                                                                              // +
+                                                                                                              // to2
+                                                                                                              // +
+                                                                                                              // ">");
 
-                                    File tmp = PackageTools.newTempFileWithSet(to2, copyPastePersisence, o);
-                                    String ff = templates.templateFolder + to + templates.suffix;
-                                    // System.out.println(" renaming file to <"
-                                    // +
-										// ff
-										// +
-										// ">");
-									tmp.renameTo(new File(ff));
+                                                                                                              File tmp =
+                                                                                                                      PackageTools
+                                                                                                                              .newTempFileWithSet(to2,
+                                                                                                                                                  copyPastePersisence,
+                                                                                                                                                  o);
+                                                                                                              String
+                                                                                                                      ff =
+                                                                                                                      templates.templateFolder
+                                                                                                                      + to
+                                                                                                                      + templates.suffix;
+                                                                                                              // System.out.println(" renaming file to <"
+                                                                                                              // +
+                                                                                                              // ff
+                                                                                                              // +
+                                                                                                              // ">");
+                                                                                                              tmp.renameTo(new File(ff));
 
-									OverlayAnimationManager.notifyAsText(getRoot(), "Element" + ((o.size() > 1)
-                                                                                                 ? "s are"
-                                                                                                 : " is") + " now '" + to + "'", null);
+                                                                                                              OverlayAnimationManager
+                                                                                                                      .notifyAsText(getRoot(),
+                                                                                                                                    "Element"
+                                                                                                                                    + ((o.size()
+                                                                                                                                        > 1)
+                                                                                                                                       ? "s are"
+                                                                                                                                       : " is")
+                                                                                                                                    + " now '"
+                                                                                                                                    + to
+                                                                                                                                    + "'",
+                                                                                                                                    null);
 
-									return this;
-								}
-							});
-							return this;
-						}
-					});
-				}
-			});
-		}
+                                                                                                              return this;
+                                                                                                          }
+                                                                                                      });
+                                                                 return this;
+                                                             }
+                                                         });
+                }
+            });
+        }
 
-		return VisitCode.cont;
-	}
+        return VisitCode.cont;
+    }
 
-	public void insertFileMenuItems(final iVisualElement rootSheetElement, MainSelectionGroup group, Map<String, iUpdateable> items) {
-		items.put("File", null);
-		items.put("\t<b>New File...</b>", new iUpdateable() {
+    public
+    void insertFileMenuItems(final iVisualElement rootSheetElement,
+                             MainSelectionGroup group,
+                             Map<String, iUpdateable> items) {
+        items.put("File", null);
+        items.put("\t<b>New File...</b>", new iUpdateable() {
 
-			@Override
-			public void update() {
-				Sheet s = FieldMenus2.fieldMenus.sheetForSheet(StandardFluidSheet.this);
-				FieldMenus2.fieldMenus.doNewFile();
-			}
-		});
-		items.put("\t<b>Save</b>", new iUpdateable() {
+            @Override
+            public
+            void update() {
+                Sheet s = FieldMenus2.fieldMenus.sheetForSheet(StandardFluidSheet.this);
+                FieldMenus2.fieldMenus.doNewFile();
+            }
+        });
+        items.put("\t<b>Save</b>", new iUpdateable() {
 
-			@Override
-			public void update() {
-				saveNow();
-			}
-		});
-		items.put("\t<b>Save As...</b>", new iUpdateable() {
+            @Override
+            public
+            void update() {
+                saveNow();
+            }
+        });
+        items.put("\t<b>Save As...</b>", new iUpdateable() {
 
-			@Override
-			public void update() {
-				Sheet s = FieldMenus2.fieldMenus.sheetForSheet(StandardFluidSheet.this);
-				FieldMenus2.fieldMenus.doSaveAs(s, window.getFrame());
-			}
-		});
-	}
+            @Override
+            public
+            void update() {
+                Sheet s = FieldMenus2.fieldMenus.sheetForSheet(StandardFluidSheet.this);
+                FieldMenus2.fieldMenus.doSaveAs(s, window.getFrame());
+            }
+        });
+    }
 
-	public static
-    void insertCopyPasteMenuItems(final iVisualElement rootSheetElement, MainSelectionGroup group, Map<String, iUpdateable> items) {
-		boolean header = false;
-		if (!group.getSelection().isEmpty()) {
-			if (!header) {
-				items.put("Clipboard", null);
-				header = true;
-			}
-			items.put(" \u2397 <b>Copy</b> elements ///meta C///", new iUpdateable() {
+    public static
+    void insertCopyPasteMenuItems(final iVisualElement rootSheetElement,
+                                  MainSelectionGroup group,
+                                  Map<String, iUpdateable> items) {
+        boolean header = false;
+        if (!group.getSelection().isEmpty()) {
+            if (!header) {
+                items.put("Clipboard", null);
+                header = true;
+            }
+            items.put(" \u2397 <b>Copy</b> elements ///meta C///", new iUpdateable() {
 
-				public void update() {
-					File tmp = PackageTools.newTempFileWithSelected(rootSheetElement, "copied");
+                public
+                void update() {
+                    File tmp = PackageTools.newTempFileWithSelected(rootSheetElement, "copied");
                     PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
-                    OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(rootSheetElement), "Copied to clipboard", null, 1, new Vector4(1, 1, 1, 0.15f));
-				}
-			});
+                    OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(rootSheetElement),
+                                                               "Copied to clipboard",
+                                                               null,
+                                                               1,
+                                                               new Vector4(1, 1, 1, 0.15f));
+                }
+            });
 
-		}
+        }
 
-		if (canPaste()) {
-			if (!header) {
-				items.put("Clipboard", null);
-				header = true;
-			}
+        if (canPaste()) {
+            if (!header) {
+                items.put("Clipboard", null);
+                header = true;
+            }
 
-			items.put(" \u2398 <b>Paste</b> elements ///meta V///", new iUpdateable() {
+            items.put(" \u2398 <b>Paste</b> elements ///meta V///", new iUpdateable() {
 
-				public void update() {
-					try {
+                public
+                void update() {
+                    try {
                         // System.out.println(" pasting ");
                         Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-						Transferable t = c.getContents(null);
-						Object data = c.getData(DataFlavor.javaFileListFlavor);
-						if (((List) data).get(0) instanceof File) {
-							if (((File) ((List) data).get(0)).getName().endsWith(".fieldpackage")) {
+                        Transferable t = c.getContents(null);
+                        Object data = c.getData(DataFlavor.javaFileListFlavor);
+                        if (((List) data).get(0) instanceof File) {
+                            if (((File) ((List) data).get(0)).getName().endsWith(".fieldpackage")) {
                                 PackageTools.importFieldPackage(rootSheetElement,
                                                                 ((File) ((List) data).get(0)).getAbsolutePath());
                             }
-						} else {
-						}
+                        }
+                        else {
+                        }
 
-						OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(rootSheetElement), "Pasted from clipboard", null, 1, new Vector4(1, 1, 1, 0.15f));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		}
-	}
+                        OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(rootSheetElement),
+                                                                   "Pasted from clipboard",
+                                                                   null,
+                                                                   1,
+                                                                   new Vector4(1, 1, 1, 0.15f));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
 
-	public VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
-		if ((getRoot().getParents().size() <= 1) && drawTick) {
-			drawTick = false;
+    public
+    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+        if ((getRoot().getParents().size() <= 1) && drawTick) {
+            drawTick = false;
 
-			{
-				CachedLine text = new CachedLine();
-				Vector2 upper = window.transformWindowToCanvas(new Vector2(0.5f, 0.5f));
+            {
+                CachedLine text = new CachedLine();
+                Vector2 upper = window.transformWindowToCanvas(new Vector2(0.5f, 0.5f));
 
                 // System.out.println(" transform window to canvas got <"+upper+">");
 
-				text.getInput().moveTo(upper.x, upper.y);
+                text.getInput().moveTo(upper.x, upper.y);
 
-				text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "right-click, or type N to create a new element");
-				text.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new java.awt.Font(Constants.defaultFont, 0, 30));
-				text.getInput().setPointAttribute(iLinearGraphicsContext.alignment_v, 0f);
-				text.getProperties().put(iLinearGraphicsContext.containsText, true);
-				text.getProperties().put(iLinearGraphicsContext.pointed, false);
-				text.getProperties().put(iLinearGraphicsContext.color, new Vector4(0.0f, 0, 0, 0.25f));
+                text.getInput()
+                    .setPointAttribute(iLinearGraphicsContext.text_v, "right-click, or type N to create a new element");
+                text.getInput()
+                    .setPointAttribute(iLinearGraphicsContext.font_v, new java.awt.Font(Constants.defaultFont, 0, 30));
+                text.getInput().setPointAttribute(iLinearGraphicsContext.alignment_v, 0f);
+                text.getProperties().put(iLinearGraphicsContext.containsText, true);
+                text.getProperties().put(iLinearGraphicsContext.pointed, false);
+                text.getProperties().put(iLinearGraphicsContext.color, new Vector4(0.0f, 0, 0, 0.25f));
                 GLComponentWindow.currentContext.submitLine(text, text.getProperties());
             }
-			{
-				CachedLine text = new CachedLine();
-				Vector2 upper = window.transformWindowToCanvas(new Vector2(0.5f, 0.5f));
+            {
+                CachedLine text = new CachedLine();
+                Vector2 upper = window.transformWindowToCanvas(new Vector2(0.5f, 0.5f));
 
-				text.getInput().moveTo(upper.x, upper.y + 30);
+                text.getInput().moveTo(upper.x, upper.y + 30);
 
-				text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "shift-T will make elements from templates, P makes a drawing element");
-				text.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new java.awt.Font(Constants.defaultFont, 0, 15));
-				text.getInput().setPointAttribute(iLinearGraphicsContext.alignment_v, 0f);
-				text.getProperties().put(iLinearGraphicsContext.containsText, true);
-				text.getProperties().put(iLinearGraphicsContext.pointed, false);
-				text.getProperties().put(iLinearGraphicsContext.color, new Vector4(0.0f, 0, 0, 0.25f));
+                text.getInput()
+                    .setPointAttribute(iLinearGraphicsContext.text_v,
+                                       "shift-T will make elements from templates, P makes a drawing element");
+                text.getInput()
+                    .setPointAttribute(iLinearGraphicsContext.font_v, new java.awt.Font(Constants.defaultFont, 0, 15));
+                text.getInput().setPointAttribute(iLinearGraphicsContext.alignment_v, 0f);
+                text.getProperties().put(iLinearGraphicsContext.containsText, true);
+                text.getProperties().put(iLinearGraphicsContext.pointed, false);
+                text.getProperties().put(iLinearGraphicsContext.color, new Vector4(0.0f, 0, 0, 0.25f));
                 GLComponentWindow.currentContext.submitLine(text, text.getProperties());
             }
 
-		}
+        }
 
-		return VisitCode.cont;
-	}
+        return VisitCode.cont;
+    }
 
-	public VisitCode prepareForSave() {
-		return VisitCode.cont;
-	}
+    public
+    VisitCode prepareForSave() {
+        return VisitCode.cont;
+    }
 
-	public StandardFluidSheet registerPlugin(iPlugin plugin) {
+    public
+    StandardFluidSheet registerPlugin(iPlugin plugin) {
 
-		plugins.add(plugin);
+        plugins.add(plugin);
 
-		plugin.registeredWith(this.rootSheetElement);
+        plugin.registeredWith(this.rootSheetElement);
 
-		return this;
-	}
+        return this;
+    }
 
-	public List<String> save(Writer writer) {
+    public
+    List<String> save(Writer writer) {
 
-		new Exception().printStackTrace();
+        new Exception().printStackTrace();
 
         // System.out.println(" a ");
 
-		window.hasReset = false;
-		window.resetViewParameters();
+        window.hasReset = false;
+        window.resetViewParameters();
 
         // System.out.println(" b ");
 
-		iVisualElementOverrides.topology.begin(rootSheetElement);
-		iVisualElementOverrides.forward.prepareForSave.update();
-		iVisualElementOverrides.backward.prepareForSave.update();
-		iVisualElementOverrides.topology.end(rootSheetElement);
+        iVisualElementOverrides.topology.begin(rootSheetElement);
+        iVisualElementOverrides.forward.prepareForSave.update();
+        iVisualElementOverrides.backward.prepareForSave.update();
+        iVisualElementOverrides.topology.end(rootSheetElement);
 
         // System.out.println(" c ");
 
-		try {
-			Set<iVisualElement> saved = new HashSet<iVisualElement>();
-			FluidPersistence pp = getPersistence(1);
+        try {
+            Set<iVisualElement> saved = new HashSet<iVisualElement>();
+            FluidPersistence pp = getPersistence(1);
             // System.out.println(" -- e");
             ObjectOutputStream objectOutputStream = pp.getObjectOutputStream(writer, saved);
             // System.out.println(" d ");
 
-			try {
-				objectOutputStream.writeObject("version_2");
+            try {
+                objectOutputStream.writeObject("version_2");
                 // System.out.println(" writing root -------");
                 // System.out.println(" total is <" +
                 // allVisualElements(rootSheetElement) +
-					// ">");
-				objectOutputStream.writeObject(rootSheetElement);
-				for (iPlugin p : plugins) {
+                // ">");
+                objectOutputStream.writeObject(rootSheetElement);
+                for (iPlugin p : plugins) {
                     // System.out.println(" writing plugin <"
                     // + p + ">");
-					Object persistanceInformation = p.getPersistanceInformation();
-					objectOutputStream.writeObject(persistanceInformation);
-				}
+                    Object persistanceInformation = p.getPersistanceInformation();
+                    objectOutputStream.writeObject(persistanceInformation);
+                }
 
                 // System.out.println(" save finished ");
                 objectOutputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-			VersioningSystem system = vs;
-			if (system != null) {
-				if (SystemProperties.getIntProperty("noCommit", 0) == 0) {
-					system.commitAll(saved);
-				}
-			}
+            VersioningSystem system = vs;
+            if (system != null) {
+                if (SystemProperties.getIntProperty("noCommit", 0) == 0) {
+                    system.commitAll(saved);
+                }
+            }
 
-			List<String> w = pp.getWarnings();
-			if (!w.isEmpty()) {
-				System.err.println(" warning while saving :" + w);
-			}
+            List<String> w = pp.getWarnings();
+            if (!w.isEmpty()) {
+                System.err.println(" warning while saving :" + w);
+            }
 
-			window.resetViewParameters();
+            window.resetViewParameters();
 
-			return pp.getWarnings();
-		} catch (Throwable t) {
-			t.printStackTrace();
-			return null;
+            return pp.getWarnings();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return null;
 
-		}
+        }
 
-	}
+    }
 
-	public List<String> saveTwoPart(String filename) {
+    public
+    List<String> saveTwoPart(String filename) {
 
         // System.out.println(" a ");
 
-		window.hasReset = false;
-		window.resetViewParameters();
+        window.hasReset = false;
+        window.resetViewParameters();
 
         // System.out.println(" b ");
 
-		iVisualElementOverrides.topology.begin(rootSheetElement);
-		iVisualElementOverrides.forward.prepareForSave.update();
-		iVisualElementOverrides.backward.prepareForSave.update();
-		iVisualElementOverrides.topology.end(rootSheetElement);
+        iVisualElementOverrides.topology.begin(rootSheetElement);
+        iVisualElementOverrides.forward.prepareForSave.update();
+        iVisualElementOverrides.backward.prepareForSave.update();
+        iVisualElementOverrides.topology.end(rootSheetElement);
 
         // System.out.println(" c ");
 
-		try {
-			Set<iVisualElement> saved = new HashSet<iVisualElement>();
-			FluidPersistence pp = getPersistence(1);
+        try {
+            Set<iVisualElement> saved = new HashSet<iVisualElement>();
+            FluidPersistence pp = getPersistence(1);
             // System.out.println(" -- e");
-            ObjectOutputStream objectOutputStream = pp.getObjectOutputStream(new BufferedWriter(new FileWriter(filename + "_next"), 1024 * 1024 * 4), saved);
+            ObjectOutputStream objectOutputStream =
+                    pp.getObjectOutputStream(new BufferedWriter(new FileWriter(filename + "_next"), 1024 * 1024 * 4),
+                                             saved);
             // System.out.println(" d ");
 
-			try {
-				objectOutputStream.writeObject("version_2");
+            try {
+                objectOutputStream.writeObject("version_2");
                 // System.out.println(" writing root -------");
                 // System.out.println(" total is <" +
                 // allVisualElements(rootSheetElement) +
-					// ">");
-				objectOutputStream.writeObject(rootSheetElement);
-				for (iPlugin p : plugins) {
+                // ">");
+                objectOutputStream.writeObject(rootSheetElement);
+                for (iPlugin p : plugins) {
                     // System.out.println(" writing plugin <"
                     // + p + ">");
-					Object persistanceInformation = p.getPersistanceInformation();
-					objectOutputStream.writeObject(persistanceInformation);
-				}
+                    Object persistanceInformation = p.getPersistanceInformation();
+                    objectOutputStream.writeObject(persistanceInformation);
+                }
 
                 // System.out.println(" save finished ");
                 objectOutputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             // System.out.println(" renaming ");
             new File(filename + "_next").renameTo(new File(filename));
             // System.out.println(" renaming complete ");
             VersioningSystem system = vs;
-			if (system != null) {
-				if (SystemProperties.getIntProperty("noCommit", 0) == 0) {
-					system.commitAll(saved);
-				}
-			}
+            if (system != null) {
+                if (SystemProperties.getIntProperty("noCommit", 0) == 0) {
+                    system.commitAll(saved);
+                }
+            }
 
-			List<String> w = pp.getWarnings();
-			if (!w.isEmpty()) {
-				System.err.println(" warning while saving :" + w);
-			}
+            List<String> w = pp.getWarnings();
+            if (!w.isEmpty()) {
+                System.err.println(" warning while saving :" + w);
+            }
 
-			window.resetViewParameters();
+            window.resetViewParameters();
 
-			return pp.getWarnings();
-		} catch (Throwable t) {
-			t.printStackTrace();
-			return null;
+            return pp.getWarnings();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return null;
 
-		}
+        }
 
-	}
+    }
 
-	public void saveNow() {
-		saveNowPart1();
-		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+    public
+    void saveNow() {
+        saveNowPart1();
+        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
 
-			int m = 0;
+            int m = 0;
 
-			public void update() {
-				m++;
-				if (m == 10) {
-					saveNowPart2();
-					Launcher.getLauncher().deregisterUpdateable(this);
-				}
-			}
-		});
-	}
+            public
+            void update() {
+                m++;
+                if (m == 10) {
+                    saveNowPart2();
+                    Launcher.getLauncher().deregisterUpdateable(this);
+                }
+            }
+        });
+    }
 
-	public void setBasicRunner(BasicRunner basicRunner) {
-		this.basicRunner = basicRunner;
-	}
+    public
+    void setBasicRunner(BasicRunner basicRunner) {
+        this.basicRunner = basicRunner;
+    }
 
-	public void setFilename(String f) {
-		this.filename = f;
-	}
+    public
+    void setFilename(String f) {
+        this.filename = f;
+    }
 
-	public <T> VisitCode setProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> property, Ref<T> to) {
+    public
+    <T> VisitCode setProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> property, Ref<T> to) {
 
-		if (/* rootProperties.containsKey(property) || */source == getRoot()) {
-			VisualElementProperty<T> a = property.getAliasedTo();
-			while (a != null) {
-				property = a;
-				a = a.getAliasedTo();
-			}
+        if (/* rootProperties.containsKey(property) || */source == getRoot()) {
+            VisualElementProperty<T> a = property.getAliasedTo();
+            while (a != null) {
+                property = a;
+                a = a.getAliasedTo();
+            }
 
-			rootProperties.put(property, to.get());
-			// return
-			// VisitCode.STOP;
-		}
-		if (property.getName().endsWith(".+")) {
-			if (vs != null) {
-				vs.notifyPropertySet(property, to, source);
-			}
-		}
+            rootProperties.put(property, to.get());
+            // return
+            // VisitCode.STOP;
+        }
+        if (property.getName().endsWith(".+")) {
+            if (vs != null) {
+                vs.notifyPropertySet(property, to, source);
+            }
+        }
 
-		return VisitCode.cont;
-	}
+        return VisitCode.cont;
+    }
 
-	public VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-		return VisitCode.cont;
-	}
+    public
+    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+        return VisitCode.cont;
+    }
 
-	@DispatchOverTopology(topology = Cont.class)
-	public void update() {
+    @DispatchOverTopology(topology = Cont.class)
+    public
+    void update() {
 
-		eventProcessingQueue.update();
+        eventProcessingQueue.update();
 
-		for (iPlugin p : plugins)
-			p.update();
+        for (iPlugin p : plugins)
+            p.update();
 
-		// TimeSystem ts =
-		// TemporalSliderOverrides.currentTimeSystem.get(
-		// this.rootSheetElement);
+        // TimeSystem ts =
+        // TemporalSliderOverrides.currentTimeSystem.get(
+        // this.rootSheetElement);
 
-		TimeSystem ts = this.rootSheetElement.getProperty(TemporalSliderOverrides.currentTimeSystem);
-		if (ts != null) {
-			ts.update();
-			double tsTimeNow = ts.evaluate();
-			basicRunner.update((float) tsTimeNow);
-		} else
-			basicRunner.update(-1);
+        TimeSystem ts = this.rootSheetElement.getProperty(TemporalSliderOverrides.currentTimeSystem);
+        if (ts != null) {
+            ts.update();
+            double tsTimeNow = ts.evaluate();
+            basicRunner.update((float) tsTimeNow);
+        }
+        else basicRunner.update(-1);
 
-		tick = true;
-		drawTick = true;
-	}
+        tick = true;
+        drawTick = true;
+    }
 
-	public static
+    public static
     void _debugPrintGraph(iVisualElement newCopy, String indent, HashSet<iVisualElement> seen) {
         // System.out.println(indent + "<" + newCopy + " / " +
         // newCopy.hashCode() + ">");
-		if (seen.contains(newCopy))
-			return;
-		seen.add(newCopy);
-		List<iVisualElement> cc = newCopy.getChildren();
-		if (!cc.isEmpty()) {
+        if (seen.contains(newCopy)) return;
+        seen.add(newCopy);
+        List<iVisualElement> cc = newCopy.getChildren();
+        if (!cc.isEmpty()) {
             // System.out.println(indent + "  children:");
             for (iVisualElement c : cc) {
-				_debugPrintGraph(c, indent + "     ", seen);
-			}
-		}
+                _debugPrintGraph(c, indent + "     ", seen);
+            }
+        }
 
-		List<iVisualElement> pp = (List<iVisualElement>) newCopy.getParents();
-		if (!pp.isEmpty()) {
+        List<iVisualElement> pp = (List<iVisualElement>) newCopy.getParents();
+        if (!pp.isEmpty()) {
             // System.out.println(indent + "  parents:");
             for (iVisualElement c : pp) {
-				_debugPrintGraph(c, indent + "     ", seen);
-			}
-		}
-	}
+                _debugPrintGraph(c, indent + "     ", seen);
+            }
+        }
+    }
 
-	public static
+    public static
     void debugPrintGraph(iVisualElement newCopy) {
 
-		HashSet<iVisualElement> seen = new HashSet<iVisualElement>();
-		_debugPrintGraph(newCopy, "  ", seen);
-	}
+        HashSet<iVisualElement> seen = new HashSet<iVisualElement>();
+        _debugPrintGraph(newCopy, "  ", seen);
+    }
 
-	private FluidPersistence getPersistence(int version) {
-		return new FluidPersistence(new FluidPersistence.iWellKnownElementResolver() {
-			public iVisualElement getWellKnownElement(String uid) {
-				if (uid.equals(rootSheetElement_uid))
-					return rootSheetElement;
-				for (iPlugin p : plugins) {
-					iVisualElement ve = p.getWellKnownVisualElement(uid);
-					if (ve != null) {
-						return ve;
-					}
-				}
-				return null;
-			}
-		}, version);
-	}
+    private
+    FluidPersistence getPersistence(int version) {
+        return new FluidPersistence(new FluidPersistence.iWellKnownElementResolver() {
+            public
+            iVisualElement getWellKnownElement(String uid) {
+                if (uid.equals(rootSheetElement_uid)) return rootSheetElement;
+                for (iPlugin p : plugins) {
+                    iVisualElement ve = p.getWellKnownVisualElement(uid);
+                    if (ve != null) {
+                        return ve;
+                    }
+                }
+                return null;
+            }
+        }, version);
+    }
 
-	private void saveNowPart1() {
-		tick = false;
-		OverlayAnimationManager.notifyAsText(getRoot(), "Saving...", null);
-	}
+    private
+    void saveNowPart1() {
+        tick = false;
+        OverlayAnimationManager.notifyAsText(getRoot(), "Saving...", null);
+    }
 
-	public void saveNowPart2() {
-		List<String> warnings = null;
-		try {
+    public
+    void saveNowPart2() {
+        List<String> warnings = null;
+        try {
 
-			String file = SystemProperties.getDirProperty("versioning.dir") + filename + "/sheet.xml_next";
+            String file = SystemProperties.getDirProperty("versioning.dir") + filename + "/sheet.xml_next";
 
-			if (SystemProperties.getIntProperty("paranoidSave", 0) == 1) {
-				int n = 0;
-				while (new File(filename + n).exists()) {
-					n++;
-				}
-				new File(filename).renameTo(new File(filename + n));
-			}
-			warnings = this.save(new BufferedWriter(new FileWriter(new File(file)), 1024 * 16 * 1024));
+            if (SystemProperties.getIntProperty("paranoidSave", 0) == 1) {
+                int n = 0;
+                while (new File(filename + n).exists()) {
+                    n++;
+                }
+                new File(filename).renameTo(new File(filename + n));
+            }
+            warnings = this.save(new BufferedWriter(new FileWriter(new File(file)), 1024 * 16 * 1024));
 
-			new File(file).renameTo(new File(file.replace("_next", "")));
+            new File(file).renameTo(new File(file.replace("_next", "")));
 
-			vs.commitAll(allVisualElements(getRoot()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (vs instanceof HGVersioningSystem) {
-			int v = ((HGVersioningSystem) vs).getLastVersion();
+            vs.commitAll(allVisualElements(getRoot()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (vs instanceof HGVersioningSystem) {
+            int v = ((HGVersioningSystem) vs).getLastVersion();
 
-			// OverlayAnimationManager.notifyAsText(getRoot(),
-			// "Saved Sheet, revision '" + v + "'", null);
-			if ((warnings != null) && !warnings.isEmpty())
-				for (String w : warnings)
-					OverlayAnimationManager.warnAsText(getRoot(), w, null);
-		} else {
-			// OverlayAnimationManager.notifyAsText(getRoot(),
-			// "Saved Sheet", null);
-			if ((warnings != null) && !warnings.isEmpty())
-				for (String w : warnings)
-					OverlayAnimationManager.warnAsText(getRoot(), w, null);
-		}
-	}
+            // OverlayAnimationManager.notifyAsText(getRoot(),
+            // "Saved Sheet, revision '" + v + "'", null);
+            if ((warnings != null) && !warnings.isEmpty()) for (String w : warnings)
+                OverlayAnimationManager.warnAsText(getRoot(), w, null);
+        }
+        else {
+            // OverlayAnimationManager.notifyAsText(getRoot(),
+            // "Saved Sheet", null);
+            if ((warnings != null) && !warnings.isEmpty()) for (String w : warnings)
+                OverlayAnimationManager.warnAsText(getRoot(), w, null);
+        }
+    }
 
-	private void setPersistence(FluidPersistence persistence) {
-		this.persistence = persistence;
-	}
+    private
+    void setPersistence(FluidPersistence persistence) {
+        this.persistence = persistence;
+    }
 
-	protected void endCopy(iVisualElement newCopy, iVisualElement old) {
+    protected
+    void endCopy(iVisualElement newCopy, iVisualElement old) {
 
-		// debugPrintGraph(newCopy);
+        // debugPrintGraph(newCopy);
 
-		iVisualElementOverrides.topology.begin(newCopy);
-		try {
-			iVisualElementOverrides.forward.added.added(newCopy);
-			iVisualElementOverrides.backward.added.added(newCopy);
-		} finally {
-			iVisualElementOverrides.topology.end(newCopy);
-		}
+        iVisualElementOverrides.topology.begin(newCopy);
+        try {
+            iVisualElementOverrides.forward.added.added(newCopy);
+            iVisualElementOverrides.backward.added.added(newCopy);
+        } finally {
+            iVisualElementOverrides.topology.end(newCopy);
+        }
 
-		if (vs == null) {
+        if (vs == null) {
             // System.out.println(" warning: no versioning system for copy <"
             // + newCopy + " <- " + old + ">");
-			return;
-		}
+            return;
+        }
 
-		Rect f = newCopy.getFrame(null);
-		f.x += 10;
-		f.y += 10;
-		newCopy.setFrame(f);
-		vs.notifyElementCopied(old, newCopy);
+        Rect f = newCopy.getFrame(null);
+        f.x += 10;
+        f.y += 10;
+        newCopy.setFrame(f);
+        vs.notifyElementCopied(old, newCopy);
 
-	}
+    }
 
-	protected String getFilename() {
-		return filename;
-	}
+    protected
+    String getFilename() {
+        return filename;
+    }
 
-	private void createFromTemplate() {
-		// TODO swt
-		// final Vector2 x =
-		// window.getCurrentMouseInWindowCoordinates();
-		final Vector2 x2 = window.getCurrentMouseInWindowCoordinates();
-		x2.y += 20;
+    private
+    void createFromTemplate() {
+        // TODO swt
+        // final Vector2 x =
+        // window.getCurrentMouseInWindowCoordinates();
+        final Vector2 x2 = window.getCurrentMouseInWindowCoordinates();
+        x2.y += 20;
 
-		final NewTemplates templates = new NewTemplates(rootSheetElement);
+        final NewTemplates templates = new NewTemplates(rootSheetElement);
 
-		Point x = Launcher.display.getCursorLocation();
-		x.x -= window.getFrame().getLocation().x;
-		x.y -= window.getFrame().getLocation().y + 20;
+        Point x = Launcher.display.getCursorLocation();
+        x.x -= window.getFrame().getLocation().x;
+        x.y -= window.getFrame().getLocation().y + 20;
 
         // System.out.println(" about to go templates !");
 
         templates.getTemplateName(new Point(x.x, x.y), new iAcceptor<String>() {
 
-			public iAcceptor<String> set(String to) {
+            public
+            iAcceptor<String> set(String to) {
                 // System.out.println(" importing <" + to +
                 // ">");
-					// x.x +=
-					// window.getFrame().getLocation().x;
-					// x.y +=
-					// window.getFrame().getLocation().y;
+                // x.x +=
+                // window.getFrame().getLocation().x;
+                // x.y +=
+                // window.getFrame().getLocation().y;
 
                 PackageTools.importFieldPackage(rootSheetElement, templates.templateFolder + to + templates.suffix, x2);
 
-				OverlayAnimationManager.notifyAsText(getRoot(), "Instantiated '" + to + "'", null);
+                OverlayAnimationManager.notifyAsText(getRoot(), "Instantiated '" + to + "'", null);
 
-				return this;
-			}
-		});
-	}
+                return this;
+            }
+        });
+    }
 
-	protected static synchronized
+    protected static synchronized
     void singleThreadedSave(final StandardFluidSheet sheet) {
 
         // System.out.println(" inside shutdown save ");
 
-		synchronized (Launcher.lock) {
+        synchronized (Launcher.lock) {
             // System.out.println(" got lock");
 
-			// ThreadedLauncher.lock2.lock();
-			try {
+            // ThreadedLauncher.lock2.lock();
+            try {
                 // System.out.println(" got lock2");
 
-				if (!(SystemProperties.getIntProperty("noSave", 0) == 1))
-					try {
-						String file = SystemProperties.getDirProperty("versioning.dir") + sheet.getFilename() + "/sheet.xml";
+                if (!(SystemProperties.getIntProperty("noSave", 0) == 1)) try {
+                    String file =
+                            SystemProperties.getDirProperty("versioning.dir") + sheet.getFilename() + "/sheet.xml";
 
-						if (SystemProperties.getIntProperty("paranoidSave", 0) == 1) {
-							int n = 0;
-							while (new File(file + n).exists()) {
-								n++;
-							}
-							new File(file).renameTo(new File(file + n));
-						}
-                        // System.out.println(" saving to <"
-                        // + sheet.getFilename()
-							// + ">");
-						sheet.saveTwoPart(file);
-                        // System.out.println(" saving to <"
-                        // + sheet.getFilename()
-							// + "> complete");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-			} finally {
-				// ThreadedLauncher.lock2.unlock();
-			}
-		}
-	}
+                    if (SystemProperties.getIntProperty("paranoidSave", 0) == 1) {
+                        int n = 0;
+                        while (new File(file + n).exists()) {
+                            n++;
+                        }
+                        new File(file).renameTo(new File(file + n));
+                    }
+                    // System.out.println(" saving to <"
+                    // + sheet.getFilename()
+                    // + ">");
+                    sheet.saveTwoPart(file);
+                    // System.out.println(" saving to <"
+                    // + sheet.getFilename()
+                    // + "> complete");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } finally {
+                // ThreadedLauncher.lock2.unlock();
+            }
+        }
+    }
 
-	@NextUpdate(delay = 200)
+    @NextUpdate(delay = 200)
     public static
     void quitLater() {
         // System.out.println(" attempting to exit in thread <" +
         // Thread.currentThread() + ">");
-		Runtime.getRuntime().halt(0);
-		// System.exit(0);
-	}
+        Runtime.getRuntime().halt(0);
+        // System.exit(0);
+    }
 }

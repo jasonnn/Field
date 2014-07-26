@@ -18,9 +18,9 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 
 /**
  * @author marc
- * 
  */
-public class AdvancedUtilities {
+public
+class AdvancedUtilities {
 
 //	static public class DeProjectionMatrix extends BasicUtilities.OnePassElement {
 //		BasicCamera realCamera;
@@ -107,146 +107,180 @@ public class AdvancedUtilities {
 //
 //		
 //	}
-	
 
-	public static
+
+    public static
     class DeProjectionMatrixFast extends BasicUtilities.OnePassElement {
-		BasicCamera realCamera;
+        BasicCamera realCamera;
 
-		BasicCamera textureCamera;
+        BasicCamera textureCamera;
 
-		float width = 1;
+        float width = 1;
 
-		float height = 1;
+        float height = 1;
 
-		float h = 0.5f;
+        float h = 0.5f;
 
-		public DeProjectionMatrixFast(BasicCamera realCamera, BasicCamera textureCamera, float width, float height) {
-			super(StandardPass.preTransform);
-			this.textureCamera = textureCamera;
-			this.realCamera = realCamera;
-			this.width = width;
-			this.height = height;
+        public
+        DeProjectionMatrixFast(BasicCamera realCamera, BasicCamera textureCamera, float width, float height) {
+            super(StandardPass.preTransform);
+            this.textureCamera = textureCamera;
+            this.realCamera = realCamera;
+            this.width = width;
+            this.height = height;
 //			this.matrix = new float[] { h * width, 0, 0, 0, 0, -h * height, 0, 0, 0, 0, 1, 0, h * width, h * height, 0, 1};
-			this.matrix.put(new float[] { h * width, 0, 0, 0, 0, h * height, 0, 0, 0, 0, h, 0, h * width, h * height, 0, 1});
-			this.matrix.rewind();
-		}
+            this.matrix.put(new float[]{h * width,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        h * height,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        h,
+                                        0,
+                                        h * width,
+                                        h * height,
+                                        0,
+                                        1});
+            this.matrix.rewind();
+        }
 
-		public DeProjectionMatrixFast(BasicCamera realCamera, BasicCamera textureCamera, float width, float height, boolean flipH) {
-			super(StandardPass.preTransform);
-			this.textureCamera = textureCamera;
-			this.realCamera = realCamera;
-			this.width = width;
-			this.height = height;
-			System.err.println(" building deprojection matrix");
+        public
+        DeProjectionMatrixFast(BasicCamera realCamera,
+                               BasicCamera textureCamera,
+                               float width,
+                               float height,
+                               boolean flipH) {
+            super(StandardPass.preTransform);
+            this.textureCamera = textureCamera;
+            this.realCamera = realCamera;
+            this.width = width;
+            this.height = height;
+            System.err.println(" building deprojection matrix");
 
-			this.matrix.put(new float[] { (flipH ? 1f : 1) * h * width, 0, 0, 0, 0, (flipH ? 1f : -1) * h * height, 0, 0, 1, 0, 0, 0, (flipH ? 1 : 1) * h * width, (flipH ? 1 : 1) * h * height, 0, 1});
-			this.matrix.rewind();
-			// this.matrix= new float[] { h * width, 0, 0, h*width, 0, 0*h * width, 0, 0*h*height, 0, 0, 0, 0, 0,0,0,1};
-		}
+            this.matrix.put(new float[]{(flipH ? 1f : 1) * h * width,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        (flipH ? 1f : -1) * h * height,
+                                        0,
+                                        0,
+                                        1,
+                                        0,
+                                        0,
+                                        0,
+                                        (flipH ? 1 : 1) * h * width,
+                                        (flipH ? 1 : 1) * h * height,
+                                        0,
+                                        1});
+            this.matrix.rewind();
+            // this.matrix= new float[] { h * width, 0, 0, h*width, 0, 0*h * width, 0, 0*h*height, 0, 0, 0, 0, 0,0,0,1};
+        }
 
 //		float[] matrix;
 
-		FloatBuffer deView = ByteBuffer.allocateDirect(4*16).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		FloatBuffer matrix = ByteBuffer.allocateDirect(4*16).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        FloatBuffer deView = ByteBuffer.allocateDirect(4 * 16).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        FloatBuffer matrix = ByteBuffer.allocateDirect(4 * 16).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-//		float[] entexture = new float[16];
-		FloatBuffer entexture = ByteBuffer.allocateDirect(4*16).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        //		float[] entexture = new float[16];
+        FloatBuffer entexture = ByteBuffer.allocateDirect(4 * 16).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-		float[] mult = new float[16];
+        float[] mult = new float[16];
 
-		float[] texturingMatrix = new float[16];
+        float[] texturingMatrix = new float[16];
 
 //		float[] deViewInverse = new float[16];
 
-		float[] temp_debug1 = new float[16];
+        float[] temp_debug1 = new float[16];
 
-		float[] temp_debug2 = new float[16];
+        float[] temp_debug2 = new float[16];
 
-		public void rebuildMatrix(float w1, float h1, float w2, float h2) {
-			this.matrix.rewind();
-			this.matrix.put(new float[] { w1, 0, 0, 0, 0, h1, 0, 0, 0, 0, 0, 0, w2, h2, 0, 1});
-			this.matrix.rewind();
-		}
+        public
+        void rebuildMatrix(float w1, float h1, float w2, float h2) {
+            this.matrix.rewind();
+            this.matrix.put(new float[]{w1, 0, 0, 0, 0, h1, 0, 0, 0, 0, 0, 0, w2, h2, 0, 1});
+            this.matrix.rewind();
+        }
 
-		/*
-		 * @see innards.graphics.basic.BasicUtilities.OnePassElement#performPass()
-		 */
-		public void performPass() {
+        /*
+         * @see innards.graphics.basic.BasicUtilities.OnePassElement#performPass()
+         */
+        public
+        void performPass() {
 
-			// here we get to compute the matrix
-			// what we are going to do is freeze GL's matrix state, and use the camera code
-			CoreHelpers.glPushMatrix();
-			double[] viewMatrix = new double[16];
-			Vector3 position = new Vector3();
-			Vector3 lookAt = new Vector3();
-			Vector3 up = new Vector3();
-			assert (glGetError() == 0);
-			CoreHelpers.glLoadIdentity();
-			realCamera.getPosition(position);
-			realCamera.getLookAt(lookAt);
-			realCamera.getUp(up);
-			CoreHelpers.gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
-			glGetFloat(GL_MODELVIEW_MATRIX, deView);
+            // here we get to compute the matrix
+            // what we are going to do is freeze GL's matrix state, and use the camera code
+            CoreHelpers.glPushMatrix();
+            double[] viewMatrix = new double[16];
+            Vector3 position = new Vector3();
+            Vector3 lookAt = new Vector3();
+            Vector3 up = new Vector3();
+            assert (glGetError() == 0);
+            CoreHelpers.glLoadIdentity();
+            realCamera.getPosition(position);
+            realCamera.getLookAt(lookAt);
+            realCamera.getUp(up);
+            CoreHelpers.gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
+            glGetFloat(GL_MODELVIEW_MATRIX, deView);
 //			transposeNegate(deView, deViewInverse);
-			assert (glGetError() == 0);
+            assert (glGetError() == 0);
 
-			CoreHelpers.glLoadIdentity();
-			CoreHelpers.glMultMatrix(matrix);
+            CoreHelpers.glLoadIdentity();
+            CoreHelpers.glMultMatrix(matrix);
 
-			float fov = textureCamera.getFov();
-			float aspect = textureCamera.getAspect();
-			float near = textureCamera.getNear();
-			float far = textureCamera.getFar();
+            float fov = textureCamera.getFov();
+            float aspect = textureCamera.getAspect();
+            float near = textureCamera.getNear();
+            float far = textureCamera.getFar();
 
-			assert (glGetError() == 0);
-			
+            assert (glGetError() == 0);
+
 //			CoreHelpers.gluPerspective((float) fov, (float) aspect, (float) near, (float) far);
-			float right = (float) (near * Math.tan((Math.PI * fov / 180f) / 2) * aspect) ;
-			float top = (float) (near * Math.tan((Math.PI * fov / 180f) / 2)) ;
-			CoreHelpers.glFrustum(-right , right , -top , top , near, far);
+            float right = (float) (near * Math.tan((Math.PI * fov / 180f) / 2) * aspect);
+            float top = (float) (near * Math.tan((Math.PI * fov / 180f) / 2));
+            CoreHelpers.glFrustum(-right, right, -top, top, near, far);
 
-			assert (glGetError() == 0);
+            assert (glGetError() == 0);
 
-			// now the PV of the texture camera
+            // now the PV of the texture camera
 
 
-			textureCamera.getPosition(position);
-			textureCamera.getLookAt(lookAt);
-			textureCamera.getUp(up);
-			CoreHelpers.gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
-			assert (glGetError() == 0);
-			//glMultMatrixf(deViewInverse, 0);
+            textureCamera.getPosition(position);
+            textureCamera.getLookAt(lookAt);
+            textureCamera.getUp(up);
+            CoreHelpers.gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
+            assert (glGetError() == 0);
+            //glMultMatrixf(deViewInverse, 0);
 
-			
-			entexture.rewind();
-			glGetFloat(GL_MODELVIEW_MATRIX, entexture);
 
-			
-			
-			
-			CoreHelpers.glActiveTexture(GL_TEXTURE0);
-			CoreHelpers.glMatrixMode(GL_TEXTURE);
-			CoreHelpers.glLoadIdentity();
-		
-			
-			
+            entexture.rewind();
+            glGetFloat(GL_MODELVIEW_MATRIX, entexture);
+
+
+            CoreHelpers.glActiveTexture(GL_TEXTURE0);
+            CoreHelpers.glMatrixMode(GL_TEXTURE);
+            CoreHelpers.glLoadIdentity();
+
+
 //			for(int i=0;i<entexture.length;i++)
 //			{
 //				entexture[i] = (float) Math.random();
 //			}
-			
-			entexture.rewind();
-			CoreHelpers.glMultMatrix(entexture);
 
-			assert (glGetError() == 0);
-			CoreHelpers.glMatrixMode(GL_MODELVIEW);
+            entexture.rewind();
+            CoreHelpers.glMultMatrix(entexture);
 
-			CoreHelpers.glPopMatrix();
+            assert (glGetError() == 0);
+            CoreHelpers.glMatrixMode(GL_MODELVIEW);
 
-		}
+            CoreHelpers.glPopMatrix();
 
-		
+        }
+
 
 //		public void installParameters(BasicGLSLangProgram into, String name) {
 //			for (int m = 0; m < 4; m++) {
@@ -270,52 +304,53 @@ public class AdvancedUtilities {
 //				});
 //			}
 //		}
-	}
+    }
 
-	// matrix "inversion"
+    // matrix "inversion"
 
-	public static
+    public static
     void transposeNegate(float[] src, float[] dst) {
 
-		dst[0 * 4 + 0] = src[0 * 4 + 0];
-		dst[1 * 4 + 0] = src[0 * 4 + 1];
-		dst[2 * 4 + 0] = src[0 * 4 + 2];
-		dst[3 * 4 + 0] = -dot(src, 4 * 3, src, 4 * 0);
+        dst[0 * 4 + 0] = src[0 * 4 + 0];
+        dst[1 * 4 + 0] = src[0 * 4 + 1];
+        dst[2 * 4 + 0] = src[0 * 4 + 2];
+        dst[3 * 4 + 0] = -dot(src, 4 * 3, src, 4 * 0);
 
-		dst[0 * 4 + 1] = src[1 * 4 + 0];
-		dst[1 * 4 + 1] = src[1 * 4 + 1];
-		dst[2 * 4 + 1] = src[1 * 4 + 2];
-		dst[3 * 4 + 1] = -dot(src, 4 * 3, src, 4 * 1);
+        dst[0 * 4 + 1] = src[1 * 4 + 0];
+        dst[1 * 4 + 1] = src[1 * 4 + 1];
+        dst[2 * 4 + 1] = src[1 * 4 + 2];
+        dst[3 * 4 + 1] = -dot(src, 4 * 3, src, 4 * 1);
 
-		dst[0 * 4 + 2] = src[2 * 4 + 0];
-		dst[1 * 4 + 2] = src[2 * 4 + 1];
-		dst[2 * 4 + 2] = src[2 * 4 + 2];
-		dst[3 * 4 + 2] = -dot(src, 4 * 3, src, 4 * 2);
+        dst[0 * 4 + 2] = src[2 * 4 + 0];
+        dst[1 * 4 + 2] = src[2 * 4 + 1];
+        dst[2 * 4 + 2] = src[2 * 4 + 2];
+        dst[3 * 4 + 2] = -dot(src, 4 * 3, src, 4 * 2);
 
-		dst[0 * 4 + 3] = 0;
-		dst[1 * 4 + 3] = 0;
-		dst[2 * 4 + 3] = 0;
-		dst[3 * 4 + 3] = 1;
-	}
+        dst[0 * 4 + 3] = 0;
+        dst[1 * 4 + 3] = 0;
+        dst[2 * 4 + 3] = 0;
+        dst[3 * 4 + 3] = 1;
+    }
 
-	public static
+    public static
     float dot(float[] src, int i, float[] src2, int j) {
-		return src[i] * src2[j] + src[i + 1] * src2[j + 1] + src[i + 2] * src2[j + 2];
-	}
+        return src[i] * src2[j] + src[i + 1] * src2[j + 1] + src[i + 2] * src2[j + 2];
+    }
 
-	public static
-    class TextureBarrier extends OnePassElement
-	{
+    public static
+    class TextureBarrier extends OnePassElement {
 
-		public TextureBarrier() {
-			super(StandardPass.preRender);
-		}
+        public
+        TextureBarrier() {
+            super(StandardPass.preRender);
+        }
 
-		@Override
-		public void performPass() {
-			NVTextureBarrier.glTextureBarrierNV();
-		}
-		
-	}
-	
+        @Override
+        public
+        void performPass() {
+            NVTextureBarrier.glTextureBarrierNV();
+        }
+
+    }
+
 }

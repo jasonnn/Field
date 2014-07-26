@@ -6,83 +6,92 @@ import field.math.linalg.Vector2;
 import java.util.List;
 
 
-public class TextBrackets {
+public
+class TextBrackets {
 
-	public static
+    public static
     enum BracketElementType {
         line, foot, corner, fixedExternalPosition
     }
 
-	public static
+    public static
     class BracketElement {
-		BracketElementType type;
+        BracketElementType type;
 
-		Vector2 start;
+        Vector2 start;
 
-		Vector2 end;
-	}
+        Vector2 end;
+    }
 
-	public static
+    public static
     class BracketConnection {
-		BracketElementType from;
+        BracketElementType from;
 
-		float alphaFrom;
+        float alphaFrom;
 
-		BracketElementType to;
+        BracketElementType to;
 
-		float alphaTo;
-	}
+        float alphaTo;
+    }
 
-	public static
+    public static
     interface iBracketFactory {
-		public List<BracketElement> getBracketFor(AdvancedTextToCachedLine layout);
+        public
+        List<BracketElement> getBracketFor(AdvancedTextToCachedLine layout);
 
-		public Vector2 getPositionForLink(AdvancedTextToCachedLine layout);
+        public
+        Vector2 getPositionForLink(AdvancedTextToCachedLine layout);
 
-	}
+    }
 
-	public static
+    public static
     interface iBracketConnectionFactory {
-		public BracketConnection getConnectionFor(AdvancedTextToCachedLine leftLayout, List<BracketElement> left, AdvancedTextToCachedLine rightLayout, List<BracketElement> right);
-	}
+        public
+        BracketConnection getConnectionFor(AdvancedTextToCachedLine leftLayout,
+                                           List<BracketElement> left,
+                                           AdvancedTextToCachedLine rightLayout,
+                                           List<BracketElement> right);
+    }
 
-	public static
+    public static
     interface iBracketConnectionEvaluation {
-		public float score(AdvancedTextToCachedLine leftLayout, List<BracketElement> left, AdvancedTextToCachedLine rightLayout, List<BracketElement> right, BracketConnection connection);
-	}
+        public
+        float score(AdvancedTextToCachedLine leftLayout,
+                    List<BracketElement> left,
+                    AdvancedTextToCachedLine rightLayout,
+                    List<BracketElement> right,
+                    BracketConnection connection);
+    }
 
-	public static
+    public static
     CachedLine drawBracketElements(List<BracketElement> elements) {
-		CachedLine cl = new CachedLine();
+        CachedLine cl = new CachedLine();
 
-		boolean f = true;
+        boolean f = true;
 
-		for (BracketElement e : elements) {
-			if (f)
-				cl.getInput().moveTo(e.start.x, e.start.y);
-			else
-				cl.getInput().lineTo(e.start.x, e.start.y);
-			cl.getInput().lineTo(e.end.x, e.end.y);
-			f = false;
-		}
-		return cl;
-	}
+        for (BracketElement e : elements) {
+            if (f) cl.getInput().moveTo(e.start.x, e.start.y);
+            else cl.getInput().lineTo(e.start.x, e.start.y);
+            cl.getInput().lineTo(e.end.x, e.end.y);
+            f = false;
+        }
+        return cl;
+    }
 
-	public static
+    public static
     CachedLine drawBracketElementsNoFeet(List<BracketElement> elements) {
-		CachedLine cl = new CachedLine();
+        CachedLine cl = new CachedLine();
 
-		boolean f = true;
+        boolean f = true;
 
-		for (BracketElement e : elements) {
-			if (e.type == BracketElementType.line) {
-				if (f)
-					cl.getInput().moveTo(e.start.x, e.start.y);
-				cl.getInput().lineTo(e.end.x, e.end.y);
-				f = false;
-			}
-		}
-		return cl;
-	}
+        for (BracketElement e : elements) {
+            if (e.type == BracketElementType.line) {
+                if (f) cl.getInput().moveTo(e.start.x, e.start.y);
+                cl.getInput().lineTo(e.end.x, e.end.y);
+                f = false;
+            }
+        }
+        return cl;
+    }
 
 }

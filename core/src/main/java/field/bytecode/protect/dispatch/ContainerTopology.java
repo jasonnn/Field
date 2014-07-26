@@ -7,82 +7,102 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ContainerTopology implements DispatchProvider {
+public
+class ContainerTopology implements DispatchProvider {
 
-	public static ThreadLocal<MethodUtilities> utilities = new ThreadLocal<MethodUtilities>() {
-		@Override
-		protected MethodUtilities initialValue() {
-			return new MethodUtilities();
-		}
-	};
+    public static ThreadLocal<MethodUtilities> utilities = new ThreadLocal<MethodUtilities>() {
+        @Override
+        protected
+        MethodUtilities initialValue() {
+            return new MethodUtilities();
+        }
+    };
 
-	HashSet<Object> alreadyDone = new HashSet<Object>();
+    HashSet<Object> alreadyDone = new HashSet<Object>();
 
-	ClassLoader cachedLoader = null;
+    ClassLoader cachedLoader = null;
 
-	Apply nullApply = new Apply() {
+    Apply nullApply = new Apply() {
 
-		public void head(Object[] args) {
-		}
+        public
+        void head(Object[] args) {
+        }
 
-		public Object tail(Object[] args, Object returnWas) {
-			return returnWas;
-		}
+        public
+        Object tail(Object[] args, Object returnWas) {
+            return returnWas;
+        }
 
-	};
+    };
 
-	public Apply getTopologyForEntrance(final Object root, final Map<String, Object> parameters, Object[] args, final String className) {
-		if (!alreadyDone.contains(root)) {
-			alreadyDone.add(root);
-			if ((parameters.get("forwards") == null) || (Boolean) parameters.get("forwards")) {
-				final ClassLoader loader =
+    public
+    Apply getTopologyForEntrance(final Object root,
+                                 final Map<String, Object> parameters,
+                                 Object[] args,
+                                 final String className) {
+        if (!alreadyDone.contains(root)) {
+            alreadyDone.add(root);
+            if ((parameters.get("forwards") == null) || (Boolean) parameters.get("forwards")) {
+                final ClassLoader loader =
                         (cachedLoader == null) ? (cachedLoader = root.getClass().getClassLoader()) : cachedLoader;
-				final org.objectweb.asm.commons.Method method = (org.objectweb.asm.commons.Method) parameters.get("method");
-				final Method m = utilities.get().getMethodFor(loader, method, null, className);
-				return new Apply() {
+                final org.objectweb.asm.commons.Method method =
+                        (org.objectweb.asm.commons.Method) parameters.get("method");
+                final Method m = utilities.get().getMethodFor(loader, method, null, className);
+                return new Apply() {
 
-					public void head(Object[] args) {
-						applyToForwards(root, args, m, loader, method, className, (String) parameters.get("id"));
-					}
+                    public
+                    void head(Object[] args) {
+                        applyToForwards(root, args, m, loader, method, className, (String) parameters.get("id"));
+                    }
 
-					public Object tail(Object[] args, Object returnWas) {
-						return returnWas;
-					}
-				};
-			}
-		}
-		return nullApply;
-	}
+                    public
+                    Object tail(Object[] args, Object returnWas) {
+                        return returnWas;
+                    }
+                };
+            }
+        }
+        return nullApply;
+    }
 
-	public Apply getTopologyForExit(final Object root, final Map<String, Object> parameters, Object[] args, final String className) {
-		if (alreadyDone.contains(root)) {
-			if ((parameters.get("forwards") != null) && !(Boolean) parameters.get("forwards")) {
-				final ClassLoader loader =
+    public
+    Apply getTopologyForExit(final Object root,
+                             final Map<String, Object> parameters,
+                             Object[] args,
+                             final String className) {
+        if (alreadyDone.contains(root)) {
+            if ((parameters.get("forwards") != null) && !(Boolean) parameters.get("forwards")) {
+                final ClassLoader loader =
                         (cachedLoader == null) ? (cachedLoader = root.getClass().getClassLoader()) : cachedLoader;
-				final org.objectweb.asm.commons.Method method = (org.objectweb.asm.commons.Method) parameters.get("method");
-				final Method m = utilities.get().getMethodFor(loader, method, null, className);
-				return new Apply() {
+                final org.objectweb.asm.commons.Method method =
+                        (org.objectweb.asm.commons.Method) parameters.get("method");
+                final Method m = utilities.get().getMethodFor(loader, method, null, className);
+                return new Apply() {
 
-					public void head(Object[] args) {
-					}
+                    public
+                    void head(Object[] args) {
+                    }
 
-					public Object tail(Object[] args, Object returnWas) {
-						applyToBackwards(root, args, m, loader, method, className, (String) parameters.get("id"));
-						return returnWas;
-					}
-				};
-			}
-			alreadyDone.remove(root);
-		}
-		return null;
-	}
+                    public
+                    Object tail(Object[] args, Object returnWas) {
+                        applyToBackwards(root, args, m, loader, method, className, (String) parameters.get("id"));
+                        return returnWas;
+                    }
+                };
+            }
+            alreadyDone.remove(root);
+        }
+        return null;
+    }
 
-	public void notifyExecuteBegin(Object fromThis, Map<String, Object> parameterName) {
-	}
+    public
+    void notifyExecuteBegin(Object fromThis, Map<String, Object> parameterName) {
+    }
 
-	public void notifyExecuteEnds(Object fromThis, Map<String, Object> parameterName) {
-		alreadyDone.remove(fromThis);
-	}
+    public
+    void notifyExecuteEnds(Object fromThis, Map<String, Object> parameterName) {
+        alreadyDone.remove(fromThis);
+    }
 
     protected static
     void applyToBackwards(Object root,
@@ -93,32 +113,31 @@ public class ContainerTopology implements DispatchProvider {
                           String className,
                           String id) {
         if (root instanceof iContainer) {
-			List list = ((iContainer) root).propagateTo(id, null, m, args);
-			if (list == null)
-				return;
+            List list = ((iContainer) root).propagateTo(id, null, m, args);
+            if (list == null) return;
 
-			for (int i = 0; i < list.size(); i++) {
-				Object o = list.get(list.size() - 1 - i);
-				Method nMethod = utilities.get().getPossibleMethodFor(loader, method, o.getClass(), o.getClass().getName());
-				if (nMethod != null)
-					try {
-						nMethod.invoke(o, args);
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						e.printStackTrace();
-					}
-			}
-			for (int i = 0; i < list.size(); i++) {
-				Object o = list.get(list.size() - 1 - i);
-				if (o instanceof iContainer) {
-					applyToBackwards(o, args, m, loader, method, className, id);
-				}
-			}
-		}
-	}
+            for (int i = 0; i < list.size(); i++) {
+                Object o = list.get(list.size() - 1 - i);
+                Method nMethod =
+                        utilities.get().getPossibleMethodFor(loader, method, o.getClass(), o.getClass().getName());
+                if (nMethod != null) try {
+                    nMethod.invoke(o, args);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+            for (int i = 0; i < list.size(); i++) {
+                Object o = list.get(list.size() - 1 - i);
+                if (o instanceof iContainer) {
+                    applyToBackwards(o, args, m, loader, method, className, id);
+                }
+            }
+        }
+    }
 
     protected static
     void applyToForwards(Object root,
@@ -129,32 +148,31 @@ public class ContainerTopology implements DispatchProvider {
                          String className,
                          String id) {
         if (root instanceof iContainer) {
-			List list = ((iContainer) root).propagateTo(id, null, m, args);
-			if (list == null)
-				return;
+            List list = ((iContainer) root).propagateTo(id, null, m, args);
+            if (list == null) return;
 
-			for (int i = 0; i < list.size(); i++) {
-				Object o = list.get(i);
-				if (o instanceof iContainer) {
-					applyToForwards(o, args, m, loader, method, className, id);
-				}
-			}
-			for (int i = 0; i < list.size(); i++) {
-				Object o = list.get(i);
-				Method nMethod = utilities.get().getPossibleMethodFor(loader, method, o.getClass(), o.getClass().getName());
-				if (nMethod != null)
-					try {
-						nMethod.invoke(o, args);
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						e.printStackTrace();
-					}
-			}
+            for (int i = 0; i < list.size(); i++) {
+                Object o = list.get(i);
+                if (o instanceof iContainer) {
+                    applyToForwards(o, args, m, loader, method, className, id);
+                }
+            }
+            for (int i = 0; i < list.size(); i++) {
+                Object o = list.get(i);
+                Method nMethod =
+                        utilities.get().getPossibleMethodFor(loader, method, o.getClass(), o.getClass().getName());
+                if (nMethod != null) try {
+                    nMethod.invoke(o, args);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
 
-		}
-	}
+        }
+    }
 
 }

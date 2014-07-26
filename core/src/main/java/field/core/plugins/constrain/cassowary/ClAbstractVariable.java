@@ -10,55 +10,67 @@
 // ClAbstractVariable
 package field.core.plugins.constrain.cassowary;
 
-public abstract class ClAbstractVariable {
-	public ClAbstractVariable(String name) {
-		//hash_code = iVariableNumber;
-		_name = name;
-		iVariableNumber++;
-	}
+public abstract
+class ClAbstractVariable {
+    public
+    ClAbstractVariable(String name) {
+        //hash_code = iVariableNumber;
+        _name = name;
+        iVariableNumber++;
+    }
 
-	public ClAbstractVariable() {
-		//hash_code = iVariableNumber;
-		_name = "v" + iVariableNumber;
-		iVariableNumber++;
-	}
+    public
+    ClAbstractVariable() {
+        //hash_code = iVariableNumber;
+        _name = "v" + iVariableNumber;
+        iVariableNumber++;
+    }
 
-	public ClAbstractVariable(long varnumber, String prefix) {
-		//hash_code = iVariableNumber;
-		_name = prefix + varnumber;
-		iVariableNumber++;
-	}
+    public
+    ClAbstractVariable(long varnumber, String prefix) {
+        //hash_code = iVariableNumber;
+        _name = prefix + varnumber;
+        iVariableNumber++;
+    }
 
-	public String name() {
-		return _name;
-	}
+    public
+    String name() {
+        return _name;
+    }
 
-	public void setName(String name) {
-		_name = name;
-	}
+    public
+    void setName(String name) {
+        _name = name;
+    }
 
-	public boolean isDummy() {
-		return false;
-	}
+    public
+    boolean isDummy() {
+        return false;
+    }
 
-	public abstract boolean isExternal();
+    public abstract
+    boolean isExternal();
 
-	public abstract boolean isPivotable();
+    public abstract
+    boolean isPivotable();
 
-	public abstract boolean isRestricted();
+    public abstract
+    boolean isRestricted();
 
-	@Override
-	public abstract String toString();
+    @Override
+    public abstract
+    String toString();
 
-	public static int numCreated() {
-		return iVariableNumber;
-	}
+    public static
+    int numCreated() {
+        return iVariableNumber;
+    }
 
-	// for debugging
-	//  public final int hashCode() { return hash_code; }
-	private String _name;
+    // for debugging
+    //  public final int hashCode() { return hash_code; }
+    private String _name;
 
-	// for debugging
-	// private int hash_code;
-	private static int iVariableNumber;
+    // for debugging
+    // private int hash_code;
+    private static int iVariableNumber;
 }

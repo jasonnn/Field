@@ -110,50 +110,57 @@ void main()
 	EmitVertex();
 	
 } */
-public class BasicGLSLangImage_dynamic extends OnePassElement{
+public
+class BasicGLSLangImage_dynamic extends OnePassElement {
 
 
-	private final PointList target;
-	private final int height;
-	private final int unit;
-	private final int stride;
+    private final PointList target;
+    private final int height;
+    private final int unit;
+    private final int stride;
 
-	public BasicGLSLangImage_dynamic(PointList target, int stride, int height, int unit) {
-		super(StandardPass.preRender);
-		this.target = target;
-		this.stride = stride;
-		this.height = height;
-		this.unit = unit;
-	}
-	
-	NullTexture texture = null;
-	int width = 0;
-	BasicGLSLangImage image = null;
-	private TextureUnit textureWrap;
-	
-	@Override
-	public void performPass() {
-		int nc= target.vertex(false).limit()/3;
+    public
+    BasicGLSLangImage_dynamic(PointList target, int stride, int height, int unit) {
+        super(StandardPass.preRender);
+        this.target = target;
+        this.stride = stride;
+        this.height = height;
+        this.unit = unit;
+    }
 
-		if (texture==null || width<nc)
-		{
+    NullTexture texture = null;
+    int width = 0;
+    BasicGLSLangImage image = null;
+    private TextureUnit textureWrap;
+
+    @Override
+    public
+    void performPass() {
+        int nc = target.vertex(false).limit() / 3;
+
+        if (texture == null || width < nc) {
 //			BasicFrameBuffers.use32 = true;
-			BasicFrameBuffers.use32 = false;
-			BasicFrameBuffers.useRG = true;
-			
-			int num = target.vertex(false).capacity()/3;
-			texture = new NullTexture(stride, (1+num/stride)*height);
-			textureWrap = new TextureUnit(unit, texture);
-//			image = new BasicGLSLangImage(unit, texture,  GL30.GL_RGBA32F);
-			image = new BasicGLSLangImage(unit, texture,  GL30.GL_RG16F);
-			width = stride*(1+num/stride);
-			System.out.println(" reallocted texture at dimensions <"+stride+"> <"+(1+num/stride)*height+"> <"+width+ '>');
-		}
-		
-		textureWrap.performPass(null);
-		image.performPass(null);
-	}
+            BasicFrameBuffers.use32 = false;
+            BasicFrameBuffers.useRG = true;
 
-	
-	
+            int num = target.vertex(false).capacity() / 3;
+            texture = new NullTexture(stride, (1 + num / stride) * height);
+            textureWrap = new TextureUnit(unit, texture);
+//			image = new BasicGLSLangImage(unit, texture,  GL30.GL_RGBA32F);
+            image = new BasicGLSLangImage(unit, texture, GL30.GL_RG16F);
+            width = stride * (1 + num / stride);
+            System.out.println(" reallocted texture at dimensions <"
+                               + stride
+                               + "> <"
+                               + (1 + num / stride) * height
+                               + "> <"
+                               + width
+                               + '>');
+        }
+
+        textureWrap.performPass(null);
+        image.performPass(null);
+    }
+
+
 }
