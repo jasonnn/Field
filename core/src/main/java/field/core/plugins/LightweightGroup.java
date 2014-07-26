@@ -11,7 +11,7 @@ import java.util.List;
 
 public class LightweightGroup extends SplineComputingOverride {
 
-	static public final VisualElementProperty<Integer> groupOutset = new VisualElementProperty<Integer>("groupOutset_i");
+	public static final VisualElementProperty<Integer> groupOutset = new VisualElementProperty<Integer>("groupOutset_i");
 
 	boolean inside = false;
 
@@ -72,8 +72,8 @@ public class LightweightGroup extends SplineComputingOverride {
 
 		double x1 = (oldChildFrame.x - oldParentFrame.x) / oldParentFrame.w;
 		double y1 = (oldChildFrame.y - oldParentFrame.y) / oldParentFrame.h;
-		double x2 = (oldChildFrame.x + oldChildFrame.w - oldParentFrame.x) / oldParentFrame.w;
-		double y2 = (oldChildFrame.y + oldChildFrame.h - oldParentFrame.y) / oldParentFrame.h;
+		double x2 = ((oldChildFrame.x + oldChildFrame.w) - oldParentFrame.x) / oldParentFrame.w;
+		double y2 = ((oldChildFrame.y + oldChildFrame.h) - oldParentFrame.y) / oldParentFrame.h;
 
 		x1 = newParentFrame.x + x1 * newParentFrame.w;
 		y1 = newParentFrame.y + y1 * newParentFrame.h;
@@ -83,8 +83,9 @@ public class LightweightGroup extends SplineComputingOverride {
 		return new Rect(x1, y1, x2 - x1, y2 - y1);
 	}
 
-	protected Rect computeNewBoundingFrame(List<iVisualElement> c, Rect oldParentFrame, int out) {
-		if (c.size() == 0)
+	protected static
+    Rect computeNewBoundingFrame(List<iVisualElement> c, Rect oldParentFrame, int out) {
+		if (c.isEmpty())
 			return oldParentFrame;
 		float mx = Float.POSITIVE_INFINITY;
 		float my = Float.POSITIVE_INFINITY;
@@ -99,14 +100,14 @@ public class LightweightGroup extends SplineComputingOverride {
 					mx = (float) t.x;
 				if (t.y < my)
 					my = (float) t.y;
-				if (t.x + t.w > xx)
+				if ((t.x + t.w) > xx)
 					xx = (float) (t.x + t.w);
-				if (t.y + t.h > yy)
+				if ((t.y + t.h) > yy)
 					yy = (float) (t.y + t.h);
 			}
 		}
 
-		return new Rect(mx - out, my - out, out * 2 + xx - mx, out * 2 + yy - my);
+		return new Rect(mx - out, my - out, ((out * 2) + xx) - mx, ((out * 2) + yy) - my);
 	}
 
     protected static

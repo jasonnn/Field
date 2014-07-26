@@ -80,7 +80,7 @@ public class TristateCheckBox extends JCheckBox {
 			// Set internal state
 			this.state = state;
 			displayState();
-			if (state == TristateState.INDETERMINATE && isEnabled()) {
+			if ((state == TristateState.INDETERMINATE) && isEnabled()) {
 				// force the events to fire
 
 				// Send ChangeEvent

@@ -24,7 +24,7 @@ public class InterpretPythonAsDelegate {
 		public Delegate delegateForReturnValue(float t, Promise p, boolean forwards, Object ret, final boolean noDefaultBackwards);
 	}
 
-	static public List<iDelegateForReturnValue> factories = new ArrayList<iDelegateForReturnValue>();
+	public static List<iDelegateForReturnValue> factories = new ArrayList<iDelegateForReturnValue>();
 
 	static {
 		factories.add(new iDelegateForReturnValue() {
@@ -176,7 +176,7 @@ public class InterpretPythonAsDelegate {
 							try {
 								stack.evaluateReturn();
 							} catch (Throwable tr) {
-								System.err.println(" exception throw while executing python ...<" + tr + ">");
+								System.err.println(" exception throw while executing python ...<" + tr + '>');
 								tr.printStackTrace();
 								throwExceptionInside("trying to evaluate function stack", p.getOngoingEnvironments(), tr);
 								new Exception().printStackTrace();
@@ -252,7 +252,7 @@ public class InterpretPythonAsDelegate {
 							try {
 								stack.evaluateReturn();
 							} catch (Throwable tr) {
-								System.err.println(" exception throw while executing python ...<" + tr + ">");
+								System.err.println(" exception throw while executing python ...<" + tr + '>');
 								tr.printStackTrace();
 								throwExceptionInside("trying to evaluate function stack", p.getOngoingEnvironments(), tr);
 								new Exception().printStackTrace();
@@ -335,7 +335,7 @@ public class InterpretPythonAsDelegate {
 									stop(t, p, forwards);
 								}
 							} catch (Throwable tr) {
-								System.err.println(" exception throw while executing python ...<" + tr + ">");
+								System.err.println(" exception throw while executing python ...<" + tr + '>');
 								tr.printStackTrace();
 								throwExceptionInside("trying to evaluate function stack", p.getOngoingEnvironments(), tr);
 								new Exception().printStackTrace();
@@ -417,7 +417,7 @@ public class InterpretPythonAsDelegate {
 							try {
 								stack.evaluateReturn();
 							} catch (Throwable tr) {
-								System.err.println(" exception throw while executing python ...<" + tr + ">");
+								System.err.println(" exception throw while executing python ...<" + tr + '>');
 								tr.printStackTrace();
 								throwExceptionInside("trying to evaluate generator stack", p.getOngoingEnvironments(), tr);
 								new Exception().printStackTrace();
@@ -712,7 +712,8 @@ public class InterpretPythonAsDelegate {
 		// });
 	}
 
-	static public Delegate delegateForReturnValue_impl(float t, Promise p, boolean forwards, Object ret, final boolean noDefaultBackwards) {
+	public static
+    Delegate delegateForReturnValue_impl(float t, Promise p, boolean forwards, Object ret, final boolean noDefaultBackwards) {
 
         //System.out.println(" dfrv_i :"+ret+" "+(ret == null ? null : ret.getClass()));
 
@@ -725,7 +726,8 @@ public class InterpretPythonAsDelegate {
 
 	}
 
-	static public void throwExceptionInside(String when, Stack<CapturedEnvironment> ongoingEnvironments, Throwable t) {
+	public static
+    void throwExceptionInside(String when, Stack<CapturedEnvironment> ongoingEnvironments, Throwable t) {
 
         //System.out.println(" ongoing environments are <" + ongoingEnvironments + ">");
 
@@ -737,7 +739,8 @@ public class InterpretPythonAsDelegate {
 
 	}
 
-	static public float clamp(float t) {
+	public static
+    float clamp(float t) {
 		return Math.max(0, Math.min(1, t));
 	}
 

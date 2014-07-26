@@ -283,10 +283,10 @@ public class SWTGraphics2D extends Graphics2D {
         org.eclipse.swt.graphics.Font cachedFont = (org.eclipse.swt.graphics.Font) FONT_CACHE.get(fontString);
         if (cachedFont == null) {
             int style = 0;
-            if (fontString.indexOf("bold=true") != -1) {
+            if (fontString.contains("bold=true")) {
                 style = style | SWT.BOLD;
             }
-            if (fontString.indexOf("italic=true") != -1) {
+            if (fontString.contains("italic=true")) {
                 style = style | SWT.ITALIC;
             }
 
@@ -436,7 +436,7 @@ public class SWTGraphics2D extends Graphics2D {
             PT.setLocation(xPoints[i], yPoints[i]);
             transform.transform(PT, PT);
             ptArray[2 * i] = xPoints[i];
-            ptArray[2 * i + 1] = yPoints[i];
+            ptArray[((2 * i) + 1)] = yPoints[i];
         }
 
         gc.setLineWidth(getTransformedLineWidth());
@@ -454,7 +454,7 @@ public class SWTGraphics2D extends Graphics2D {
             PT.setLocation(xPoints[i], yPoints[i]);
             transform.transform(PT, PT);
             ptArray[2 * i] = xPoints[i];
-            ptArray[2 * i + 1] = yPoints[i];
+            ptArray[((2 * i) + 1)] = yPoints[i];
         }
 
         gc.drawPolygon(ptArray);
@@ -471,7 +471,7 @@ public class SWTGraphics2D extends Graphics2D {
             PT.setLocation(xPoints[i], yPoints[i]);
             transform.transform(PT, PT);
             ptArray[2 * i] = xPoints[i];
-            ptArray[2 * i + 1] = yPoints[i];
+            ptArray[((2 * i) + 1)] = yPoints[i];
         }
 
         gc.fillPolygon(ptArray);

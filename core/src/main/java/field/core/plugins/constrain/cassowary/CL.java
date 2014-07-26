@@ -13,11 +13,11 @@
 package field.core.plugins.constrain.cassowary;
 
 public class CL {
-	protected final static boolean fDebugOn = false;
+	protected static final boolean fDebugOn = false;
 
-	protected final static boolean fTraceOn = false;
+	protected static final boolean fTraceOn = false;
 
-	protected final static boolean fGC = false;
+	protected static final boolean fGC = false;
 
 	protected static void debugprint(String s) {
 		System.err.println(s);
@@ -132,7 +132,7 @@ public class CL {
 		} else if (b == 0.0) {
 			return (Math.abs(a) < epsilon);
 		} else {
-			return (Math.abs(a - b) < Math.abs(a) * epsilon);
+			return (Math.abs(a - b) < (Math.abs(a) * epsilon));
 		}
 	}
 

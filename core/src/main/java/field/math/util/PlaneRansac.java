@@ -9,7 +9,8 @@ import java.util.List;
 
 public class PlaneRansac {
 
-	public class Model {
+	public static
+    class Model {
 		public Vector3 offset;
 		public Vector3 up;
 		public FitBox f;
@@ -39,11 +40,11 @@ public class PlaneRansac {
 			float d1 = distance(axes[1].direction.normalize(), m.up);
 			float d2 = distance(axes[2].direction.normalize(), m.up);
 
-			if (d1 < d0 && d1 < d2) {
+			if ((d1 < d0) && (d1 < d2)) {
 				Axis a0 = axes[0];
 				axes[0] = axes[1];
 				axes[1] = a0;
-			} else if (d2 < d0 && d2 < d1) {
+			} else if ((d2 < d0) && (d2 < d1)) {
 				Axis a0 = axes[0];
 				axes[0] = axes[2];
 				axes[2] = a0;
@@ -158,7 +159,7 @@ public class PlaneRansac {
 		int i2 = 0;
 		int i3 = 0;
 
-		while (i1 == i2 || i2 == i3 || i1 == i3) {
+		while ((i1 == i2) || (i2 == i3) || (i1 == i3)) {
 			i1 = (int) (Math.random() * points.size());
 			i2 = (int) (Math.random() * points.size());
 			i3 = (int) (Math.random() * points.size());

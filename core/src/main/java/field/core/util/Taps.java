@@ -19,16 +19,21 @@ import java.util.WeakHashMap;
  */
 public class Taps {
 
-	static public abstract class StatisticsPackage {
+	public abstract static
+    class StatisticsPackage {
 
-		abstract public void accept(Number n);
+		public abstract
+        void accept(Number n);
 
-		abstract public String descriptiveString();
+		public abstract
+        String descriptiveString();
 
-		abstract public void output(String key, CapturedEnvironment env, iVisualElement inside);
+		public abstract
+        void output(String key, CapturedEnvironment env, iVisualElement inside);
 	}
 
-	static public class DefaultStats extends StatisticsPackage {
+	public static
+    class DefaultStats extends StatisticsPackage {
 		float min = Float.POSITIVE_INFINITY;
 
 		float max = Float.NEGATIVE_INFINITY;
@@ -104,13 +109,15 @@ public class Taps {
 
 	static WeakHashMap<Object, Map<String, StatisticsPackage>> stats = new WeakHashMap<Object, Map<String, StatisticsPackage>>();
 
-	static public void tap(Number n, Object executionUID, String key) {
+	public static
+    void tap(Number n, Object executionUID, String key) {
 		StatisticsPackage p = getPackage(executionUID, key);
 		p.accept(n);
 
 	}
 
-	static public void tapAndPrint(Number n, final Object executionUID, final String key, final CapturedEnvironment env, final iVisualElement inside) {
+	public static
+    void tapAndPrint(Number n, final Object executionUID, final String key, final CapturedEnvironment env, final iVisualElement inside) {
 		if (!env.hasExitHandler(key)) {
 			env.addExitHandler(key, new iUpdateable() {
 				public void update() {
@@ -125,7 +132,8 @@ public class Taps {
 		tap(n, executionUID, key);
 	}
 
-	static public void finish(Object executionUID) {
+	public static
+    void finish(Object executionUID) {
 		stats.remove(executionUID);
 	}
 

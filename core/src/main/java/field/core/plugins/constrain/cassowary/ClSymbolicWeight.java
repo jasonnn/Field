@@ -128,13 +128,13 @@ public class ClSymbolicWeight {
 
 	@Override
 	public String toString() {
-		StringBuffer bstr = new StringBuffer("[");
-		for (int i = 0; i < _values.length - 1; i++) {
+		StringBuilder bstr = new StringBuilder("[");
+		for (int i = 0; i < (_values.length - 1); i++) {
 			bstr.append(_values[i]);
-			bstr.append(",");
+			bstr.append(',');
 		}
 		bstr.append(_values[_values.length - 1]);
-		bstr.append("]");
+		bstr.append(']');
 		return bstr.toString();
 	}
 
@@ -142,5 +142,5 @@ public class ClSymbolicWeight {
 		return _values.length;
 	}
 
-	private double[] _values;
+	private final double[] _values;
 }

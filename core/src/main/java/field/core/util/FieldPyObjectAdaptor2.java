@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class FieldPyObjectAdaptor2 {
 
-	static protected boolean initialized = false;
+	protected static boolean initialized = false;
 	public static FieldPyObjectAdaptor2 fieldPyObjectAdaptor;
 	public static ExtensiblePyObjectAdapter adaptor;
 
@@ -48,9 +48,10 @@ public class FieldPyObjectAdaptor2 {
 		}
 	}
 
-	static public Map<String, PyObject> injectedSelfMethods = new HashMap<String, PyObject>();
+	public static Map<String, PyObject> injectedSelfMethods = new HashMap<String, PyObject>();
 
-	static public void isCallable(Class<? extends iCallable> c) {
+	public static
+    void isCallable(Class<? extends iCallable> c) {
 		// iCallable
 		// ---------------------------------------------------------------------
 		PyBuiltinMethodNarrow meth = new PyBuiltinMethodNarrow("__call__") {
@@ -85,7 +86,8 @@ public class FieldPyObjectAdaptor2 {
 		PyType.fromClass(c).addMethod(meth);
 	}
 
-	static public void isExtensible(Class<? extends iExtensible> c) {
+	public static
+    void isExtensible(Class<? extends iExtensible> c) {
 		// iCallable
 		// ---------------------------------------------------------------------
 		{
@@ -130,7 +132,8 @@ public class FieldPyObjectAdaptor2 {
 		}
 	}
 
-	static public void isHandlesAttributes(Class<? extends iHandlesAttributes> c) {
+	public static
+    void isHandlesAttributes(Class<? extends iHandlesAttributes> c) {
 		{
 			final PyObject objectGetattribute = PyObject.TYPE.__getattr__("__getattribute__");
 			PyBuiltinMethodNarrow meth = new PyBuiltinMethodNarrow("__getattribute__", 1) {
@@ -180,7 +183,8 @@ public class FieldPyObjectAdaptor2 {
 		}
 	}
 
-	static public void isHandlesFindItem(Class<? extends iHandlesFindItem> c) {
+	public static
+    void isHandlesFindItem(Class<? extends iHandlesFindItem> c) {
 		{
 			PyBuiltinMethodNarrow meth = new PyBuiltinMethodNarrow("__finditem__", 1) {
 				@Override
@@ -217,7 +221,8 @@ public class FieldPyObjectAdaptor2 {
 		}
 	}
 
-	static public class PairToPyTuple extends ClassAdapter {
+	public static
+    class PairToPyTuple extends ClassAdapter {
 
 		public PairToPyTuple() {
 			super(Pair.class);
@@ -230,7 +235,8 @@ public class FieldPyObjectAdaptor2 {
 
 	}
 
-	static public class TripleToPyTuple extends ClassAdapter {
+	public static
+    class TripleToPyTuple extends ClassAdapter {
 
 		public TripleToPyTuple() {
 			super(Triple.class);
@@ -338,7 +344,7 @@ public class FieldPyObjectAdaptor2 {
 						});
 					}
 
-					if (alt == null || alt == Py.None || alt.__tojava__(Object.class) instanceof VisualElementProperty || name.equals("frame")) {
+					if (alt == null || alt == Py.None || alt.__tojava__(Object.class) instanceof VisualElementProperty || "frame".equals(name)) {
 						Object o = PythonPlugin.getAttr(d, name);
 
 						if (o == null)
@@ -357,7 +363,7 @@ public class FieldPyObjectAdaptor2 {
 				public PyObject __call__(PyObject n, PyObject value) {
 					String name = Py.tojava(n, String.class);
 					iVisualElement contents = Py.tojava(self, iVisualElement.class);
-					if (name.equals("frame")) {
+					if ("frame".equals(name)) {
 						contents.getProperty(iVisualElement.overrides).shouldChangeFrame(contents, ((Rect) value.__tojava__(Rect.class)), contents.getFrame(null), true);
 					} else
 						PythonPlugin.setAttr(contents, contents, name, value.__tojava__(Object.class));
@@ -510,7 +516,8 @@ public class FieldPyObjectAdaptor2 {
 		return this;
 	}
 
-	static public class HasScalarToPyHasScalar implements PyObjectAdapter {
+	public static
+    class HasScalarToPyHasScalar implements PyObjectAdapter {
 
 		public HasScalarToPyHasScalar() {
 		}
@@ -525,7 +532,8 @@ public class FieldPyObjectAdaptor2 {
 
 	}
 
-	static public class PyHasScalar extends PyFloat {
+	public static
+    class PyHasScalar extends PyFloat {
 
 		private final iHasScalar contents;
 		private final PyObjectDerived instance;

@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class DirectLine {
 
-	static public int fixedCurveSampling = 50;
+	public static int fixedCurveSampling = 50;
 
 	public class LineCache extends BasicUtilities.OnePassElement {
 
@@ -77,7 +77,7 @@ public class DirectLine {
 
 		SubLine_long cache;
 		int mod = -1;
-		private CachedLine from;
+		private final CachedLine from;
 
 		public LineAdaptor(CachedLine from) {
 			this.from = from;
@@ -126,7 +126,8 @@ public class DirectLine {
 	}
 
 	float currentTotalOpacity = 1;
-	
+
+    //TODO explode
 	public SubLine_long makeConcrete(CachedLine from, SubLine_long prev) {
 
 //		;//System.out.println(" making copy ");
@@ -281,7 +282,7 @@ public class DirectLine {
 			return;
 
 		if (a instanceof Number)
-			cache.setAux(cache.getVertexCursor() - 1, value, ((Float) a).floatValue());
+			cache.setAux(cache.getVertexCursor() - 1, value, ((Number) a).floatValue());
 		else if (a instanceof Vector2)
 			cache.setAux(cache.getVertexCursor() - 1, value, ((Vector2) a).x, ((Vector2) a).y);
 		else if (a instanceof Vector3)
@@ -321,7 +322,7 @@ public class DirectLine {
 			return;
 		}
 
-		boolean skip = false;
+		//boolean skip = false;
 
 		HashSet<LineAdaptor> remove = new LinkedHashSet<LineAdaptor>();
 		

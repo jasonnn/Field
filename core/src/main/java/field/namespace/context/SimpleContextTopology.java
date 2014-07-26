@@ -50,7 +50,7 @@ public class SimpleContextTopology extends ContextTopology<field.namespace.conte
 
         @Override
         public String toString() {
-            return "c:" + name + "{" + values + "}";
+            return "c:" + name + '{' + values + '}';
         }
 
         public VisitCode unset(String name) {
@@ -128,7 +128,7 @@ public class SimpleContextTopology extends ContextTopology<field.namespace.conte
 
     public <T> T get(String name, T def) {
         Object o = getAt().values.get(name);
-        if (o == null && !getAt().values.containsKey(name))
+        if ((o == null) && !getAt().values.containsKey(name))
             return def;
         return (T) o;
     }
@@ -157,7 +157,7 @@ public class SimpleContextTopology extends ContextTopology<field.namespace.conte
         HashSet<Context> seen = new HashSet<Context>();
         Context aa = getAt();
         String p = "";
-        while (!seen.contains(aa) && aa != null) {
+        while (!seen.contains(aa) && (aa != null)) {
             seen.add(aa);
             p = aa + "/" + p;
             aa = aa.parent == null ? null : aa.parent.get();

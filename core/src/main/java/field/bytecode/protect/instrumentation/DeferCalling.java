@@ -49,7 +49,8 @@ public abstract class DeferCalling extends FieldASMGeneratorAdapter implements D
 
     }
 
-    abstract public void handleDefered(String fromName,
+    public abstract
+    void handleDefered(String fromName,
                                        Object fromThis,
                                        String methodName,
                                        Map<String, Object> parameters,

@@ -9,7 +9,8 @@ public class TreeState {
 
 	LinkedHashSet<String> expanded = new LinkedHashSet<String>();
 
-	static public TreeState save(Tree t) {
+	public static
+    TreeState save(Tree t) {
 		TreeState ts = new TreeState();
 		TreeItem[] ii = t.getItems();
 		for (TreeItem iii : ii) {

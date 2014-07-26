@@ -187,7 +187,7 @@ public class ComplexConstraints implements iPlugin {
 		public ClVariable variableH;
 	}
 
-	static public final String pluginId = "//plugin_complexConstraints";
+	public static final String pluginId = "//plugin_complexConstraints";
 
 	public static final VisualElementProperty<ComplexConstraints> complexConstraints_plugin = new VisualElementProperty<ComplexConstraints>("//plugin_complexConstraints");
 
@@ -256,10 +256,10 @@ public class ComplexConstraints implements iPlugin {
 				@Override
 				public void change_value(double value) {
 					double diff = Math.abs(this.value() - value);
-					if (diff > 20 && initialized)
+					if ((diff > 20) && initialized)
 						return;
 					super.change_value(value);
-					if (initialized && diff > -1) {
+					if (initialized && (diff > -1)) {
 						postEditQueue.queueSingleUpdate(nr, instance.updateFrameFromVariables.updateable(nr));
 					} else
 						initialized = true;
@@ -271,10 +271,10 @@ public class ComplexConstraints implements iPlugin {
 				@Override
 				public void change_value(double value) {
 					double diff = Math.abs(this.value() - value);
-					if (diff > 20 && initialized)
+					if ((diff > 20) && initialized)
 						return;
 					super.change_value(value);
-					if (initialized && diff > -1) {
+					if (initialized && (diff > -1)) {
 						postEditQueue.queueSingleUpdate(nr, instance.updateFrameFromVariables.updateable(nr));
 					} else
 						initialized = true;
@@ -286,10 +286,10 @@ public class ComplexConstraints implements iPlugin {
 				@Override
 				public void change_value(double value) {
 					double diff = Math.abs(this.value() - value);
-					if (diff > 20 && initialized)
+					if ((diff > 20) && initialized)
 						return;
 					super.change_value(value);
-					if (initialized && diff > -1) {
+					if (initialized && (diff > -1)) {
 						postEditQueue.queueSingleUpdate(nr, instance.updateFrameFromVariables.updateable(nr));
 					} else
 						initialized = true;
@@ -301,10 +301,10 @@ public class ComplexConstraints implements iPlugin {
 				@Override
 				public void change_value(double value) {
 					double diff = Math.abs(this.value() - value);
-					if (diff > 20 && initialized)
+					if ((diff > 20) && initialized)
 						return;
 					super.change_value(value);
-					if (initialized && diff > -1) {
+					if (initialized && (diff > -1)) {
 						postEditQueue.queueSingleUpdate(nr, instance.updateFrameFromVariables.updateable(nr));
 					} else
 						initialized = true;
@@ -378,7 +378,7 @@ public class ComplexConstraints implements iPlugin {
 		try {
 			ClConstraint c = getConstraintForElement(ve);
 
-			if (c != null && c != nc) {
+			if ((c != null) && (c != nc)) {
 				offeredConstraint.remove(ve);
 				solver.removeConstraint(c);
 			}
@@ -406,7 +406,8 @@ public class ComplexConstraints implements iPlugin {
 
 	}
 
-	private double roundy(double d) {
+	private static
+    double roundy(double d) {
 		return d;
 	}
 

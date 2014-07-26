@@ -93,9 +93,9 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 	}
 
 	public Vector3(FloatBuffer positions, int vertexNumber) {
-		this.x = positions.get(3 * vertexNumber + 0);
-		this.y = positions.get(3 * vertexNumber + 1);
-		this.z = positions.get(3 * vertexNumber + 2);
+		this.x = positions.get((3 * vertexNumber) + 0);
+		this.y = positions.get((3 * vertexNumber) + 1);
+		this.z = positions.get((3 * vertexNumber) + 2);
 	}
 
 	public Vector3(FloatBuffer v) {
@@ -117,7 +117,7 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 	 * @return the String representation
 	 */
 	public String toString() {
-		return "(" + this.x + ", " + this.y + ", " + this.z + ")";
+		return "(" + this.x + ", " + this.y + ", " + this.z + ')';
 	}
 
 	/**
@@ -410,7 +410,7 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 	 */
 	public boolean equals(Vector3 t1) {
 		try {
-			return (this.x == t1.x && this.y == t1.y && this.z == t1.z);
+			return ((this.x == t1.x) && (this.y == t1.y) && (this.z == t1.z));
 		} catch (NullPointerException e2) {
 			return false;
 		}
@@ -428,7 +428,7 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 	public boolean equals(Object t1) {
 		try {
 			Vector3 t2 = (Vector3) t1;
-			return (this.x == t2.x && this.y == t2.y && this.z == t2.z);
+			return ((this.x == t2.x) && (this.y == t2.y) && (this.z == t2.z));
 		} catch (NullPointerException e2) {
 			return false;
 		} catch (ClassCastException e1) {
@@ -452,15 +452,15 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 		float diff;
 
 		diff = x - t1.x;
-		if ((diff < 0 ? -diff : diff) > epsilon)
+		if (((diff < 0) ? -diff : diff) > epsilon)
 			return false;
 
 		diff = y - t1.y;
-		if ((diff < 0 ? -diff : diff) > epsilon)
+		if (((diff < 0) ? -diff : diff) > epsilon)
 			return false;
 
 		diff = z - t1.z;
-		if ((diff < 0 ? -diff : diff) > epsilon)
+		if (((diff < 0) ? -diff : diff) > epsilon)
 			return false;
 
 		return true;
@@ -726,7 +726,7 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 	 * @return the squared length of this vector
 	 */
 	public final float magSquared() {
-		return (this.x * this.x + this.y * this.y + this.z * this.z);
+		return ((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
 	}
 
 	/**
@@ -735,8 +735,7 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 	 * @return the length of this vector
 	 */
 	public final float mag() {
-		return (float) Math.sqrt(this.x * this.x + this.y * this.y + this.z
-				* this.z);
+		return (float) Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
 	}
 
 	/**
@@ -749,9 +748,10 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 	 * @return
 	 */
 	public final Vector3 cross(Vector3 v1, Vector3 v2) {
-		float x, y;
+		float x;
+        float y;
 
-		x = v1.y * v2.z - v1.z * v2.y;
+        x = v1.y * v2.z - v1.z * v2.y;
 		y = v2.x * v1.z - v2.z * v1.x;
 		this.z = v1.x * v2.y - v1.y * v2.x;
 		this.x = x;
@@ -827,7 +827,8 @@ public class Vector3 implements java.io.Serializable, Cloneable,
                 + (z - o.z) * (z - o.z);
     }
 
-	static public Vector3 add(Vector3 a, float w, Vector3 b, Vector3 o) {
+	public static
+    Vector3 add(Vector3 a, float w, Vector3 b, Vector3 o) {
 		if (o == null)
 			o = new Vector3();
 
@@ -1168,7 +1169,8 @@ public class Vector3 implements java.io.Serializable, Cloneable,
 		return new Quaternion(angle).rotateVector(this);
 	}
 
-	static public Vector3 blend(List<Vector3> q, List<? extends Number> w) {
+	public static
+    Vector3 blend(List<Vector3> q, List<? extends Number> w) {
 		Vector3 a = new Vector3();
 		float tot = 0;
 

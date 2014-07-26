@@ -8,7 +8,7 @@ public abstract class Horizon<X> implements iUpdateable{
 
 	
 	protected Channel<X> c;
-	private iDoubleProvider time;
+	private final iDoubleProvider time;
 	private double history;
 
 	double previous = Double.NEGATIVE_INFINITY;

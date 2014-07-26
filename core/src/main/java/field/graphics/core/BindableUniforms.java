@@ -10,12 +10,13 @@ import static org.lwjgl.opengl.GL31.GL_UNIFORM_BUFFER;
 
 public class BindableUniforms {
 
-	static public class UniformBufferVec4 {
+	public static
+    class UniformBufferVec4 {
 		private final String name;
 		private final int length;
-		private ByteBuffer storageB;
-		private FloatBuffer storage;
-		private int buffer;
+		private final ByteBuffer storageB;
+		private final FloatBuffer storage;
+		private final int buffer;
 
 		public boolean dirty = true;
 

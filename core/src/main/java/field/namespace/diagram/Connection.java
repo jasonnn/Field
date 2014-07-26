@@ -59,9 +59,9 @@ public class Connection<t_up, t_down> implements DiagramZero.iConnection {
 
 			public void markerRefNowDifferent(iMarkerRef<t_up> ref, iMarker<t_up> was) {
 				if (wasValid) {
-					if (was != null && was instanceof Marker) ((Marker) was).removeConnection(relationshipFrom);
+					if ((was != null) && (was instanceof Marker)) ((Marker) was).removeConnection(relationshipFrom);
 					iMarker<t_up> marker = ref.getMarker();
-					if (marker != null && marker instanceof Marker) ((Marker) marker).addConnection(relationshipFrom, Connection.this);
+					if ((marker != null) && (marker instanceof Marker)) ((Marker) marker).addConnection(relationshipFrom, Connection.this);
 				} else {
 				}
 			}
@@ -92,9 +92,9 @@ public class Connection<t_up, t_down> implements DiagramZero.iConnection {
 
 			public void markerRefNowDifferent(iMarkerRef<t_down> ref, iMarker<t_down> was) {
 				if (wasValid) {
-					if (was != null && was instanceof Marker) ((Marker) was).removeConnection(relationshipTo);
+					if ((was != null) && (was instanceof Marker)) ((Marker) was).removeConnection(relationshipTo);
 					iMarker<t_down> marker = ref.getMarker();
-					if (marker != null && marker instanceof Marker) ((Marker) marker).addConnection(relationshipTo, Connection.this);
+					if ((marker != null) && (marker instanceof Marker)) ((Marker) marker).addConnection(relationshipTo, Connection.this);
 				} else {
 				}
 			}
@@ -134,9 +134,9 @@ public class Connection<t_up, t_down> implements DiagramZero.iConnection {
 		}
 
 		iMarker<t_up> u = up.getMarker();
-		if (u != null && u instanceof Marker) ((Marker) u).removeConnection(relationshipFrom);
+		if ((u != null) && (u instanceof Marker)) ((Marker) u).removeConnection(relationshipFrom);
 		iMarker<t_down> d = down.getMarker();
-		if (u != null && d instanceof Marker) ((Marker) d).removeConnection(relationshipTo);
+		if ((u != null) && (d instanceof Marker)) ((Marker) d).removeConnection(relationshipTo);
 
 		wasValid = false;
 	}
@@ -148,14 +148,14 @@ public class Connection<t_up, t_down> implements DiagramZero.iConnection {
 			ReflectionTools.apply(notify, DiagramZero.iConnectionNotify.endConnectionNotify);
 		}
 		iMarker<t_up> u = up.getMarker();
-		if (u != null && u instanceof Marker) ((Marker) u).removeConnection(relationshipFrom);
+		if ((u != null) && (u instanceof Marker)) ((Marker) u).removeConnection(relationshipFrom);
 		iMarker<t_down> d = down.getMarker();
-		if (d != null && d instanceof Marker) ((Marker) d).removeConnection(relationshipTo);
+		if ((d != null) && (d instanceof Marker)) ((Marker) d).removeConnection(relationshipTo);
 		wasValid = false;
 	}
 
 	public boolean isValid() {
-		return wasValid && (up.getMarker() != null && down.getMarker() != null);
+		return wasValid && ((up.getMarker() != null) && (down.getMarker() != null));
 	}
 
 	public String toString() {

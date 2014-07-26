@@ -23,7 +23,7 @@ public class PathRendering extends OnePassElement {
 	public void performPass() {
 
 		int id = BasicContextManager.getId(this);
-		if (id == BasicContextManager.ID_NOT_FOUND || !BasicContextManager.isValid(this))
+		if ((id == BasicContextManager.ID_NOT_FOUND) || !BasicContextManager.isValid(this))
 			BasicContextManager.putId(this, setup());
 
 		glClearStencil(0);
@@ -51,7 +51,7 @@ public class PathRendering extends OnePassElement {
 	private int setup() {
 
         int p = BasicContextManager.getId(this);
-        p = (p == BasicContextManager.ID_NOT_FOUND ? NVPathRendering.glGenPathsNV(1) : p);
+        p = ((p == BasicContextManager.ID_NOT_FOUND) ? NVPathRendering.glGenPathsNV(1) : p);
 
 		byte[] b = curve.getBytes();
 		ByteBuffer bb = ByteBuffer.allocateDirect(b.length + 1);

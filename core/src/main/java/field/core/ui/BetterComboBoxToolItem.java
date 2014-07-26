@@ -28,7 +28,7 @@ public class BetterComboBoxToolItem {
 	public ToolItem combo;
 
 
-	private ToolBar inside;
+	private final ToolBar inside;
 
 	public BetterComboBoxToolItem(final ToolBar inside, String[] labels) {
 

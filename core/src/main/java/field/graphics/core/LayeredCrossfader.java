@@ -11,11 +11,11 @@ import java.util.List;
 
 public class LayeredCrossfader {
 
-	private int width;
-	private int height;
-	private int layers;
-	private LayeredFrameBuffer a;
-	private LayeredFrameBuffer b;
+	private final int width;
+	private final int height;
+	private final int layers;
+	private final LayeredFrameBuffer a;
+	private final LayeredFrameBuffer b;
 
 	List<iDisplayable> withA = new ArrayList<iDisplayable>();
 	List<iDisplayable> withB = new ArrayList<iDisplayable>();

@@ -65,33 +65,33 @@ public class DynamicPointlist_quad extends DynamicQuad_long implements iDynamicM
 	@Override
 	public void setAux(int vertex, int id, float a) {
 		super.setAux(vertex * 4, id, a);
-		super.setAux(vertex * 4 + 1, id, a);
-		super.setAux(vertex * 4 + 2, id, a);
-		super.setAux(vertex * 4 + 3, id, a);
+		super.setAux((vertex * 4) + 1, id, a);
+		super.setAux((vertex * 4) + 2, id, a);
+		super.setAux((vertex * 4) + 3, id, a);
 	}
 
 	@Override
 	public void setAux(int vertex, int id, float a, float b) {
 		super.setAux(vertex * 4, id, a, b);
-		super.setAux(vertex * 4 + 1, id, a, b);
-		super.setAux(vertex * 4 + 2, id, a, b);
-		super.setAux(vertex * 4 + 3, id, a, b);
+		super.setAux((vertex * 4) + 1, id, a, b);
+		super.setAux((vertex * 4) + 2, id, a, b);
+		super.setAux((vertex * 4) + 3, id, a, b);
 	}
 
 	@Override
 	public void setAux(int vertex, int id, float a, float b, float c) {
 		super.setAux(vertex * 4, id, a, b, c);
-		super.setAux(vertex * 4 + 1, id, a, b, c);
-		super.setAux(vertex * 4 + 2, id, a, b, c);
-		super.setAux(vertex * 4 + 3, id, a, b, c);
+		super.setAux((vertex * 4) + 1, id, a, b, c);
+		super.setAux((vertex * 4) + 2, id, a, b, c);
+		super.setAux((vertex * 4) + 3, id, a, b, c);
 	}
 
 	@Override
 	public void setAux(int vertex, int id, float a, float b, float c, float d) {
 		super.setAux(vertex * 4, id, a, b, c, d);
-		super.setAux(vertex * 4 + 1, id, a, b, c, d);
-		super.setAux(vertex * 4 + 2, id, a, b, c, d);
-		super.setAux(vertex * 4 + 3, id, a, b, c, d);
+		super.setAux((vertex * 4) + 1, id, a, b, c, d);
+		super.setAux((vertex * 4) + 2, id, a, b, c, d);
+		super.setAux((vertex * 4) + 3, id, a, b, c, d);
 	}
 	
 	public void setAuxD(int vertex, int id, double a, double b, double c, double d) {

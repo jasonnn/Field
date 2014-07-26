@@ -23,7 +23,7 @@ public class parser extends lr_parser {
 	}
 
 	/** Production table. */
-	protected static final short _production_table[][] = unpackFromStrings(new String[] { "\000\016\000\002\003\003\000\002\002\004\000\002\003" + "\003\000\002\004\005\000\002\005\005\000\002\005\005" + "\000\002\006\003\000\002\006\003\000\002\006\005\000" + "\002\006\005\000\002\006\005\000\002\006\005\000\002" + "\006\004\000\002\006\005" });
+	protected static final short[][] _production_table = unpackFromStrings(new String[] { "\000\016\000\002\003\003\000\002\002\004\000\002\003" + "\003\000\002\004\005\000\002\005\005\000\002\005\005" + "\000\002\006\003\000\002\006\003\000\002\006\005\000" + "\002\006\005\000\002\006\005\000\002\006\005\000\002" + "\006\004\000\002\006\005" });
 
 	/** Access to production table. */
 	@Override
@@ -212,10 +212,11 @@ class CUP$parser$actions {
 				System.err.println("	Don't have hash.");
 			}
 			if (parser.m_debug_parse) {
-				if (!parser.m_variable_name_object_hash.containsKey(a)) {
-                    //System.out.println("	Unrecognized variable parsed: <" + a + ">");
-                } else {
+                if (parser.m_variable_name_object_hash.containsKey(a)) {
                     //System.out.println("	Found variable: <" + a + "> in hash.");
+                }
+                else {
+                    //System.out.println("	Unrecognized variable parsed: <" + a + ">");
                 }
 			}
 			ClVariable variable_object = parser.m_variable_name_object_hash.get(a);
@@ -233,7 +234,7 @@ class CUP$parser$actions {
 			int aleft = ((Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 0)).left;
 			int aright = ((Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 0)).right;
 			Double a = (Double) ((Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 0)).value;
-			RESULT = (new ClLinearExpression(a.doubleValue()));
+			RESULT = (new ClLinearExpression(a));
 			CUP$parser$result = new Symbol(4/*expr*/, ((Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 0)).left, ((Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 0)).right, RESULT);
 		}
 			return CUP$parser$result;

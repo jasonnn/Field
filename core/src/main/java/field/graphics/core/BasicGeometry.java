@@ -58,12 +58,13 @@ public class BasicGeometry {
 	 * the matrix prior to and after rendering. Subclasses should put their
 	 * rendering code in doPerformPass(), and their setup code in doSetup()
 	 */
-	@Woven
-	abstract static public class BasicMesh extends BasicUtilities.OnePassListElement {
+    @Woven
+    public abstract static
+    class BasicMesh extends BasicUtilities.OnePassListElement {
 
 		public static Method method_doPerformPass = ReflectionTools.methodOf("doPerformPass", BasicMesh.class);
 
-		private float matrix[] = null;
+		private float[] matrix = null;
 
 		private final Matrix4 tmpStorage = new Matrix4();
 
@@ -254,7 +255,8 @@ public class BasicGeometry {
 	}
 
 	@Woven
-	static public class LineList extends TriangleMesh implements iGeometry {
+    public static
+    class LineList extends TriangleMesh implements iGeometry {
 
 		float width = 3;
 
@@ -267,7 +269,7 @@ public class BasicGeometry {
 				int z = triangleBuffer.sBuffer.get(i);
 
 				if (z >= vertexLimit || z < 0) {
-					System.err.println(" bad line -- element <" + i + "> which is <" + z + "> outside [0, " + vertexLimit + "]");
+					System.err.println(" bad line -- element <" + i + "> which is <" + z + "> outside [0, " + vertexLimit + ']');
 					triangleBuffer.sBuffer.put(i, (short) 0);
 					assert false;
 				}
@@ -395,7 +397,8 @@ public class BasicGeometry {
 	}
 
 	@Woven
-	static public class LineList_long extends TriangleMesh_long implements iGeometry {
+    public static
+    class LineList_long extends TriangleMesh_long implements iGeometry {
 
 		float width = 3;
 		private boolean fakeAa;
@@ -417,8 +420,8 @@ public class BasicGeometry {
 				Vector3 at = new Vector3(vv);
 
 				if (z >= vertexLimit || z < 0) {
-					System.out.println(z + " " + vertexCount + " " + vertexLimit + " (" + at + ")");
-					System.err.println(" bad line -- element <" + i + "> which is <" + z + "> outside [0, " + vertexLimit + "]");
+					System.out.println(z + " " + vertexCount + ' ' + vertexLimit + " (" + at + ')');
+					System.err.println(" bad line -- element <" + i + "> which is <" + z + "> outside [0, " + vertexLimit + ']');
 					triangleBuffer.iBuffer.put(i, 0);
 					assert false;
 				}
@@ -566,7 +569,8 @@ public class BasicGeometry {
 	}
 
 	@Woven
-	static public class QuadMesh extends TriangleMesh implements iGeometry {
+    public static
+    class QuadMesh extends TriangleMesh implements iGeometry {
 
 		boolean ff = true;
 
@@ -656,7 +660,8 @@ public class BasicGeometry {
 
 	}
 
-	static public class Instance extends BasicUtilities.OnePassListElement {
+	public static
+    class Instance extends BasicUtilities.OnePassListElement {
 
 		CoordinateFrame frame = new CoordinateFrame();
 		private final List<BasicMesh> m;
@@ -679,7 +684,7 @@ public class BasicGeometry {
 
 		public boolean off = false;
 
-		private float matrix[] = null;
+		private float[] matrix = null;
 
 		private final Matrix4 tmpStorage = new Matrix4();
 		FloatBuffer matrixm = ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -742,8 +747,9 @@ public class BasicGeometry {
 	 * an interface for geometry
 	 */
 
-	@Woven
-	static public class TriangleMesh extends BasicMesh implements iGeometry {
+    @Woven
+    public static
+    class TriangleMesh extends BasicMesh implements iGeometry {
 
 		public Map<Integer, VertexBuffer> auxBuffers = new LinkedHashMap<Integer, VertexBuffer>();
 
@@ -761,11 +767,12 @@ public class BasicGeometry {
 
 		protected int vertexStride = 3;
 
-		protected int[] attributeBuffers = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+		protected int[] attributeBuffers = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 
-		protected int[] elementBuffer = new int[] { -1 };
+		protected int[] elementBuffer = { -1 };
 
-		protected boolean[] needsReconstruction = new boolean[] { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
+		protected boolean[] needsReconstruction =
+                { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 
 		protected boolean elementBufferNeedsReconstruction = true;
 
@@ -957,7 +964,7 @@ public class BasicGeometry {
 
 		@Override
 		public String toString() {
-			return "triangleMesh(" + this.getClass() + ") with <" + numVertex() + "> <" + numTriangle() + ">";
+			return "triangleMesh(" + this.getClass() + ") with <" + numVertex() + "> <" + numTriangle() + '>';
 		}
 
 		public ShortBuffer triangle() {
@@ -1140,7 +1147,8 @@ public class BasicGeometry {
 						// ;//System.out.println("C");
 						ByteBuffer buffer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY, null);
 						if (buffer != null) {
-							assert vbuffer.bBuffer.capacity() == buffer.capacity() : vbuffer.bBuffer + " " + buffer + " " + vbuffer.elementSize + "   " + aid;
+							assert vbuffer.bBuffer.capacity() == buffer.capacity() : vbuffer.bBuffer + " " + buffer + ' '
+                                                                                     + vbuffer.elementSize + "   " + aid;
 
 							// if (this instanceof
 							// QuadMesh)
@@ -1378,7 +1386,7 @@ public class BasicGeometry {
 
 		int type = GL_STATIC_DRAW;
 
-		int[] divisors = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		int[] divisors = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 		public TriangleMesh setDivisor(int aux, int div) {
 			if (divisors[aux] == div)
@@ -1569,7 +1577,7 @@ public class BasicGeometry {
 
 		@Override
 		public String toString() {
-			return super.toString() + "@" + System.identityHashCode(this);
+			return super.toString() + '@' + System.identityHashCode(this);
 		}
 	}
 
@@ -1753,7 +1761,7 @@ public class BasicGeometry {
 				this.elementSize = elementSize;
 			} catch (OutOfMemoryError e) {
 				e.printStackTrace();
-				System.err.println(" tried to allocate <" + attrib + " " + count + " " + elementSize + ">");
+				System.err.println(" tried to allocate <" + attrib + ' ' + count + ' ' + elementSize + '>');
 				throw e;
 			}
 		}
@@ -1839,7 +1847,9 @@ public class BasicGeometry {
 
 	static public boolean disableUpload = false;
 
-	static protected Integer[] integers = { new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4), new Integer(5), new Integer(6), new Integer(7), new Integer(8), new Integer(9), new Integer(10), new Integer(11), new Integer(12), new Integer(13), new Integer(14), new Integer(15), new Integer(16) };
+	static protected Integer[] integers = { new Integer(0), new Integer(1), new Integer(2), new Integer(3), new Integer(4), new Integer(5), new Integer(6), new Integer(7), new Integer(8), new Integer(9),
+                                            10,
+                                            11, new Integer(12), new Integer(13), new Integer(14), new Integer(15), new Integer(16) };
 
 	static public void freeFloatBuffer(FloatBuffer i) {
 	}

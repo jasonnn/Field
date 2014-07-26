@@ -26,7 +26,8 @@ import java.util.LinkedHashMap;
 
 public class MinimalSlider extends JComponent implements iAcceptsInsertRenderingContext{
 
-	static public class Component extends ProvidedComponent {
+	public static
+    class Component extends ProvidedComponent {
 		public transient iUpdateable notify;
 		protected float value;
 
@@ -101,7 +102,8 @@ public class MinimalSlider extends JComponent implements iAcceptsInsertRendering
 		}
 	}
 
-	static public class Component_iFloatProvider extends Component {
+	public static
+    class Component_iFloatProvider extends Component {
 
 		String name = "Component_iFloatProvider:" + new UID().toString() + ".transient";
 		FKey localKey;

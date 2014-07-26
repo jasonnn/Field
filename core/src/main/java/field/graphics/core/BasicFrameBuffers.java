@@ -77,32 +77,38 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
 @Woven
 public class BasicFrameBuffers {
 
-	static public boolean use32 = false;
-	static public boolean useRG= false;
+	public static boolean use32 = false;
+	public static boolean useRG= false;
 
-	static public class Any implements iMatchRule {
+	public static
+    class Any implements iMatchRule {
 		public boolean match(Object o) {
 			return true;
 		}
 	}
 
-	static public interface iDisplayable {
+	public static
+    interface iDisplayable {
 		public void display();
 	}
 
-	static public interface iHasFBO {
+	public static
+    interface iHasFBO {
 		public int getFBO();
 	}
 
-	static public interface iHasRB {
+	public static
+    interface iHasRB {
 		public int getRB();
 	}
 
-	static public interface iHasTexture {
+	public static
+    interface iHasTexture {
 		public iProvider<Integer> getOutput();
 	}
 
-	static public class BaseFrameBufferObjectTexture extends BasicTextures.BaseTexture implements iDisplayable {
+	public static
+    class BaseFrameBufferObjectTexture extends BasicTextures.BaseTexture implements iDisplayable {
 		private final int width;
 
 		private final int height;
@@ -366,7 +372,7 @@ public class BasicFrameBuffers {
 				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
 			}
 			status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			assert status == GL_FRAMEBUFFER_COMPLETE : "status is <" + status + ">";
+			assert status == GL_FRAMEBUFFER_COMPLETE : "status is <" + status + '>';
 			assert glGetError() == 0;
 			BasicContextManager.putId(this, fbo[0]);
 
@@ -377,7 +383,8 @@ public class BasicFrameBuffers {
 		}
 	}
 
-	static public class BiMultipasser extends MultiPasser implements iDisplayable {
+	public static
+    class BiMultipasser extends MultiPasser implements iDisplayable {
 
 		private final boolean useFloat;
 
@@ -546,7 +553,8 @@ public class BasicFrameBuffers {
 
 	}
 
-	static public class DepthMultipasser extends MultiPasser implements iDisplayable {
+	public static
+    class DepthMultipasser extends MultiPasser implements iDisplayable {
 
 		protected int[] depthTex = new int[2];
 
@@ -773,7 +781,8 @@ public class BasicFrameBuffers {
 
 	}
 
-	static public class DoubleFrameBuffer extends BasicTextures.BaseTexture implements iDisplayable {
+	public static
+    class DoubleFrameBuffer extends BasicTextures.BaseTexture implements iDisplayable {
 		private final int width;
 
 		private int status;
@@ -1078,7 +1087,9 @@ public class BasicFrameBuffers {
 		}
 
 		public void copyToVBO(final TriangleMesh mesh, final int aux, final boolean first) {
-			sceneList.add(StandardPass.preDisplay).register("__copyToVbo__" + System.identityHashCode(mesh) + " " + aux + " " + first, new iUpdateable() {
+			sceneList.add(StandardPass.preDisplay).register("__copyToVbo__" + System.identityHashCode(mesh) + ' '
+                                                            + aux + ' '
+                                                            + first, new iUpdateable() {
 				@Override
 				public void update() {
                     // System.out.println(" copying to aux buffer ");
@@ -1292,7 +1303,8 @@ public class BasicFrameBuffers {
 		
 	}
 
-	static public class TripleFrameBuffer extends BasicTextures.BaseTexture implements iDisplayable {
+	public static
+    class TripleFrameBuffer extends BasicTextures.BaseTexture implements iDisplayable {
 		private final int width;
 
 		private int status;
@@ -1682,7 +1694,8 @@ public class BasicFrameBuffers {
 	/**
 	 * matches a camera, but with a subsection of the screen
 	 */
-	static public class FBOCamera {
+    public static
+    class FBOCamera {
 		protected final BasicCamera rootCamera;
 
 		protected final Rect ndcSubsetRect;
@@ -1758,7 +1771,8 @@ public class BasicFrameBuffers {
 		public boolean match(Object o);
 	}
 
-	static public class Inside implements iMatchRule {
+	public static
+    class Inside implements iMatchRule {
 		private final Object o;
 
 		public Inside(Object o) {
@@ -1772,9 +1786,10 @@ public class BasicFrameBuffers {
 	}
 
 	@Woven
-	static public class MultiPasser extends BasicTextures.BaseTexture implements iDisplayable {
+    public static
+    class MultiPasser extends BasicTextures.BaseTexture implements iDisplayable {
 
-		static public final Method method_display = ReflectionTools.methodOf("display", MultiPasser.class);
+		public static final Method method_display = ReflectionTools.methodOf("display", MultiPasser.class);
 
 		private float r;
 
@@ -2036,8 +2051,8 @@ public class BasicFrameBuffers {
 
 		public void saveImageToNullTexture(final NullTexture nt) {
 
-			assert nt.width == this.width : "dimension mismatch " + nt.width + " " + this.width;
-			assert nt.height == this.height : "dimension mismatch " + nt.height + " " + this.height;
+			assert nt.width == this.width : "dimension mismatch " + nt.width + ' ' + this.width;
+			assert nt.height == this.height : "dimension mismatch " + nt.height + ' ' + this.height;
 
 			queue.new Task() {
 				@Override
@@ -2350,7 +2365,8 @@ public class BasicFrameBuffers {
 	}
 
 	// untested (but likely to work, needs a driver)
-	static public class NTextureCrossfader extends BasicUtilities.TwoPassElement {
+    public static
+    class NTextureCrossfader extends BasicUtilities.TwoPassElement {
 		private final MultiPasser source;
 
 		private final OnePassElement bug;
@@ -2457,7 +2473,8 @@ public class BasicFrameBuffers {
 		}
 	}
 
-	static public class NullTexture extends BaseTexture implements iHasTexture {
+	public static
+    class NullTexture extends BaseTexture implements iHasTexture {
 		private final int width;
 
 		private final int height;
@@ -2509,7 +2526,7 @@ public class BasicFrameBuffers {
 			}
 			assert (glGetError() == 0) : this.getClass().getName();
 			glBindTexture(GL_TEXTURE_2D, textureId);
-			assert (glGetError() == 0) : this.getClass().getName() + " " + BasicContextManager.getCurrentContext();
+			assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
 			CoreHelpers.glEnable(GL_TEXTURE_2D);
 			assert (glGetError() == 0) : this.getClass().getName();
 		}
@@ -2569,7 +2586,8 @@ public class BasicFrameBuffers {
 		}
 	}
 
-	static public class NullTextureInt extends BaseTexture implements iHasTexture {
+	public static
+    class NullTextureInt extends BaseTexture implements iHasTexture {
 		private final int width;
 
 		private final int height;
@@ -2613,7 +2631,7 @@ public class BasicFrameBuffers {
 			}
 			assert (glGetError() == 0) : this.getClass().getName();
 			glBindTexture(GL_TEXTURE_2D, textureId);
-			assert (glGetError() == 0) : this.getClass().getName() + " " + BasicContextManager.getCurrentContext();
+			assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
 			CoreHelpers.glEnable(GL_TEXTURE_2D);
 			assert (glGetError() == 0) : this.getClass().getName();
 		}
@@ -2673,7 +2691,8 @@ public class BasicFrameBuffers {
 		}
 	}
 
-	static public class PingPong extends BasicTextures.BaseTexture implements iDisplayable, iHasFBO, iHasTexture
+	public static
+    class PingPong extends BasicTextures.BaseTexture implements iDisplayable, iHasFBO, iHasTexture
 	{
 		private SingleFrameBuffer a;
 		private SingleFrameBuffer b;
@@ -2790,7 +2809,8 @@ public class BasicFrameBuffers {
 
 	}
 	
-	static public class SingleFrameBuffer extends BasicTextures.BaseTexture implements iDisplayable, iHasFBO, iHasTexture {
+	public static
+    class SingleFrameBuffer extends BasicTextures.BaseTexture implements iDisplayable, iHasFBO, iHasTexture {
 		private final int width;
 
 		private final int height;
@@ -2936,7 +2956,7 @@ public class BasicFrameBuffers {
 		}
 
 		public void copyToVBO(final TriangleMesh mesh, final int aux) {
-			sceneList.add(StandardPass.preDisplay).register("__copyToVbo__" + System.identityHashCode(mesh) + " " + aux, new iUpdateable() {
+			sceneList.add(StandardPass.preDisplay).register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux, new iUpdateable() {
 				@Override
 				public void update() {
                     // System.out.println(" copying to aux buffer ");
@@ -3270,9 +3290,10 @@ public class BasicFrameBuffers {
 
 	}
 
-	static public class Switcher extends BasicSceneList implements iSceneListElement {
+	public static
+    class Switcher extends BasicSceneList implements iSceneListElement {
 
-		static public final Method method_performPass = ReflectionTools.methodOf("performPass", OnePassListElement.class);
+		public static final Method method_performPass = ReflectionTools.methodOf("performPass", OnePassListElement.class);
 
 		private final StandardPass ourPass;
 
@@ -3383,7 +3404,8 @@ public class BasicFrameBuffers {
 
 	}
 
-	static public class TextureCrossfader extends BasicUtilities.TwoPassElement {
+	public static
+    class TextureCrossfader extends BasicUtilities.TwoPassElement {
 		private final MultiPasser source;
 
 		NullTexture textureA;
@@ -3507,7 +3529,8 @@ public class BasicFrameBuffers {
 		}
 	}
 
-	static public class TextureCrossfader2 extends BasicUtilities.TwoPassElement {
+	public static
+    class TextureCrossfader2 extends BasicUtilities.TwoPassElement {
 		private final iAcceptsSceneListElement source;
 
 		NullTexture textureA;
@@ -3527,9 +3550,9 @@ public class BasicFrameBuffers {
 
 		boolean hasSetup = false;
 
-		private int width;
+		private final int width;
 
-		private int height;
+		private final int height;
 
 		public TextureCrossfader2(iAcceptsSceneListElement source, int unitA, int unitB, int width, int height) {
 			super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
@@ -3646,9 +3669,9 @@ public class BasicFrameBuffers {
 
 		private final iGeometry geometry;
 
-		private Method doPerformPass;
+		private final Method doPerformPass;
 
-		private Method doSetup;
+		private final Method doSetup;
 
 		public Wrap(iGeometry geometry) {
 			super(StandardPass.render);
@@ -3658,8 +3681,8 @@ public class BasicFrameBuffers {
 		}
 
 		CoordinateFrame frame = new CoordinateFrame();
-		private float matrix[] = null;
-		private Matrix4 tmpStorage = new Matrix4();
+		private float[] matrix = null;
+		private final Matrix4 tmpStorage = new Matrix4();
 
 		FloatBuffer mm = ByteBuffer.allocateDirect(4 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
@@ -3713,7 +3736,7 @@ public class BasicFrameBuffers {
 
 		private final Instance geometry;
 
-		private Method doPerformPass;
+		private final Method doPerformPass;
 
 		private Method doSetup;
 
@@ -3724,8 +3747,8 @@ public class BasicFrameBuffers {
 		}
 
 		CoordinateFrame frame = new CoordinateFrame();
-		private float matrix[] = null;
-		private Matrix4 tmpStorage = new Matrix4();
+		private float[] matrix = null;
+		private final Matrix4 tmpStorage = new Matrix4();
 
 		FloatBuffer mm = ByteBuffer.allocateDirect(4 * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 

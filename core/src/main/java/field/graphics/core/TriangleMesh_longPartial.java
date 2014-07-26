@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL15.*;
  */
 public class TriangleMesh_longPartial extends BasicGeometry.TriangleMesh_long {
 
-	static public int vertexPerFrame = 5000;
+	public static int vertexPerFrame = 5000;
 
 	int uploadedVertex = 0;
 	int uploadedTriangle = 0;
@@ -102,7 +102,7 @@ public class TriangleMesh_longPartial extends BasicGeometry.TriangleMesh_long {
 		uploadedVertex = Math.min(vertexLimit, uploadedVertex + vertexPerFrame);
 		uploadedTriangle = Math.min(triangleLimit, uploadedTriangle + vertexPerFrame);
 
-		if (uploadedVertex == vertexLimit && uploadedTriangle == triangleLimit)
+		if ((uploadedVertex == vertexLimit) && (uploadedTriangle == triangleLimit))
 			uploadComplete = true;
 
 	}

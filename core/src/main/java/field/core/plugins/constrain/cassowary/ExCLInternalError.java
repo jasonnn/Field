@@ -21,5 +21,5 @@ public class ExCLInternalError extends ExCLError {
 		return "(ExCLInternalError) " + description_;
 	}
 
-	private String description_;
+	private final String description_;
 }

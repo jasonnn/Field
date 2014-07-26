@@ -61,9 +61,10 @@ import java.util.*;
  */
 public class TweakSplineUI {
 
-	static public VisualElementProperty<Object> postProcess = new VisualElementProperty<Object>("postProcessLine_");
+	public static VisualElementProperty<Object> postProcess = new VisualElementProperty<Object>("postProcessLine_");
 
-	static public class MouseInfo {
+	public static
+    class MouseInfo {
 		float lastOdx = 0;
 
 		float lastOdy = 0;
@@ -93,7 +94,8 @@ public class TweakSplineUI {
 		}
 	}
 
-	static public class SelectedVertex {
+	public static
+    class SelectedVertex {
 		public CachedLine onLine;
 
 		public CachedLine.Event vertex;
@@ -268,7 +270,7 @@ public class TweakSplineUI {
 
 		@Override
 		public String toString() {
-			return "sv :" + vertexIndex + " " + whatSelected;
+			return "sv :" + vertexIndex + ' ' + whatSelected;
 		}
 	}
 
@@ -458,7 +460,7 @@ public class TweakSplineUI {
 				doMarquee((arg0.stateMask & SWT.SHIFT) != 0);
 				inside.requestRedisplay();
 
-				System.err.println(" dragging marquee iis <" + marqueeRect + ">");
+				System.err.println(" dragging marquee iis <" + marqueeRect + '>');
 			} else if (getCurrentSelectionTool() != null) {
 				arg0.doit = false;
 				if (!getCurrentSelectionTool().mouseDrag(arg0))
@@ -705,7 +707,7 @@ public class TweakSplineUI {
 				known.clear();
 				for (int i = 0; i < ((PyTuple) o).__len__(); i++) {
 					Object o2 = ((PyTuple) o).get(i);
-					System.err.println(" eval to <" + o2 + ">");
+					System.err.println(" eval to <" + o2 + '>');
 
 					iNodeSelection ns = ((iNodeSelection) o2);
 					List<Pair<SelectedVertex, Float>> newSelection = ns.selectFrom(getOutput());
@@ -734,7 +736,7 @@ public class TweakSplineUI {
 
 	static HashMap<String, iSimpleSelectionTool> knownSelectionTools = new LinkedHashMap<String, iSimpleSelectionTool>();
 
-	private static AbsoluteTool defaultTool;
+	private static final AbsoluteTool defaultTool;
 
 	/**
 	 * modifies selection based on current selection, lets hope this lets us
@@ -816,7 +818,7 @@ public class TweakSplineUI {
 	}
 
 	public void addToSelection(Selectable hit) {
-		System.err.println(" adding <" + hit + "> <" + hit.add + " to " + hit.current.vertex + ">");
+		System.err.println(" adding <" + hit + "> <" + hit.add + " to " + hit.current.vertex + '>');
 		if (known.containsKey(hit.current.vertex)) {
 			known.get(hit.current.vertex).whatSelected.addAll(hit.add);
 		} else {
@@ -825,7 +827,7 @@ public class TweakSplineUI {
 			hit.current.whatSelected.addAll(hit.add);
 			known.put(hit.current.vertex, hit.current);
 		}
-		System.err.println(" selection now <" + selection + " / " + known + ">");
+		System.err.println(" selection now <" + selection + " / " + known + '>');
 	}
 
 	public void aquireToolMenu(LinkedHashMap<String, iUpdateable> upup) {
@@ -862,7 +864,7 @@ public class TweakSplineUI {
 							System.err.println(" expression: \n" + expressions.toExpression() + "\n properties: \n" + pp);
 							System.err.println(" ------- codegen complete ---");
 
-							String ft2 = ft + "\n" + expressions.toExpression();
+							String ft2 = ft + '\n' + expressions.toExpression();
 
 							// todo,
 							// properties
@@ -1040,7 +1042,7 @@ public class TweakSplineUI {
 		else if (p instanceof iFilter)
 			o = (PLineList) ((iFilter) p).filter(o);
 		else
-			System.err.println(" unknown object for postprocess hook <" + p + ">");
+			System.err.println(" unknown object for postprocess hook <" + p + '>');
 
 		return o == null ? original : o;
 	}
@@ -1075,7 +1077,7 @@ public class TweakSplineUI {
 			dy *= 10;
 		}
 		for (SelectedVertex v : selection) {
-			System.err.println(" offsetting <" + selection + ">");
+			System.err.println(" offsetting <" + selection + '>');
 			for (SubSelection s : v.whatSelected) {
 				Vector2 a = new Vector2();
 
@@ -1128,7 +1130,7 @@ public class TweakSplineUI {
 						((iCoordTransformation) o).transformNode(1f, all.get(q).left);
 					}
 				} else {
-					assert false : "unknown class in the tuple <" + o + ">";
+					assert false : "unknown class in the tuple <" + o + '>';
 				}
 			}
 			for (int q = 0; q < selection.size(); q++) {
@@ -1252,7 +1254,7 @@ public class TweakSplineUI {
 				String text = v.vertex.getDict().get(iLinearGraphicsContext.infoText_v);
 				if (firstText) {
 					if (text == null)
-						text = " _self.lines[" + on.indexOf(v.onLine) + "].events[" + v.vertexIndex + "]";
+						text = " _self.lines[" + on.indexOf(v.onLine) + "].events[" + v.vertexIndex + ']';
 					pointLine.getProperties().put(iLinearGraphicsContext.containsText, true);
 					points.setPointAttribute(iLinearGraphicsContext.text_v, text);
 
@@ -1510,7 +1512,7 @@ public class TweakSplineUI {
 			String t = inside.getProperty(SplineComputingOverride.tweak);
 			if (t == null)
 				t = "";
-			t += "\n" + ee;
+			t += '\n' + ee;
 
 			if (ee.trim().length() > 0) {
 				SplineComputingOverride.tweak.set(inside, inside, t);

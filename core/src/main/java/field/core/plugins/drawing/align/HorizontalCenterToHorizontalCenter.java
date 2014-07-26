@@ -10,7 +10,8 @@ import java.util.Set;
 
 public class HorizontalCenterToHorizontalCenter extends VerticalLeftToLeftAlign {
 
-	static public class Resize extends HorizontalCenterToHorizontalCenter {
+	public static
+    class Resize extends HorizontalCenterToHorizontalCenter {
 		public Resize(float baseScore) {
 			super(baseScore);
 		}

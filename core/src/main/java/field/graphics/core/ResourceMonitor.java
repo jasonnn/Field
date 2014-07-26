@@ -10,9 +10,9 @@ import java.lang.reflect.Method;
 
 public class ResourceMonitor extends OnePassElement {
 
-	static public boolean checkResources = SystemProperties.getIntProperty("glResources", 0) == 1;
+	public static boolean checkResources = SystemProperties.getIntProperty("glResources", 0) == 1;
 
-	static public ResourceMonitor resourceMonitor = null;
+	public static ResourceMonitor resourceMonitor = null;
 
 	int t = 0;
 
@@ -52,7 +52,7 @@ public class ResourceMonitor extends OnePassElement {
 //			}
 		}
 		if (q.getNumTasks() > 0) {
-			System.err.println("RESOURCE: queue contains: <" + q.getNumTasks() + ">");
+			System.err.println("RESOURCE: queue contains: <" + q.getNumTasks() + '>');
 			q.update();
 		}
 		

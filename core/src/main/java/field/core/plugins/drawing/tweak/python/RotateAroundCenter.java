@@ -37,7 +37,7 @@ public class RotateAroundCenter implements iWholeCoordTransform {
 
 	public void setNodes(List<Pair<SelectedVertex, Float>> all) {
 		int n = 0;
-		if (all.size() == 0) return;
+		if (all.isEmpty()) return;
 
 		float total = 0;
 		center.scale(0);
@@ -59,7 +59,7 @@ public class RotateAroundCenter implements iWholeCoordTransform {
 			center.scale(1 / total);
 		}
 
-		r = new Quaternion(new Vector3(dx + ox - center.x, dy + oy - center.y, 0), new Vector3(ox - center.x, oy - center.y, 0));
+		r = new Quaternion(new Vector3((dx + ox) - center.x, (dy + oy) - center.y, 0), new Vector3(ox - center.x, oy - center.y, 0));
 
 	}
 

@@ -114,7 +114,7 @@ public class SaverOnscreen {
     String pad(int i) {
         String s = String.valueOf(i);
         while (s.length() < 5)
-			s = "0" + s;
+			s = '0' + s;
 		return s;
 	}
 
@@ -159,7 +159,7 @@ public class SaverOnscreen {
 						int a = BaseMath.intify(storage.get());
 
 						int d = (g << 8) | (r << 16) | (b);// | (a << 24);
-						buffer.setElem((height - 1 - y) * width + x, d);
+						buffer.setElem(((height - 1 - y) * width) + x, d);
 					}
 				}
 

@@ -66,7 +66,8 @@ public class BaseTextEditor2 {
 		public boolean enabled;
 		public boolean isDocumentation = false;
 
-		abstract public void update();
+		public abstract
+        void update();
 
 		public String optionalDocumentation;
 		public String optionalPlainText;
@@ -94,8 +95,8 @@ public class BaseTextEditor2 {
 
 	// private final JPanel toolbarPanel;
 
-	private SashForm vsplit;
-	private SashForm hsplit;
+	private final SashForm vsplit;
+	private final SashForm hsplit;
 
 	protected StyledText ed;
 	protected StyledText edOut;
@@ -124,17 +125,17 @@ public class BaseTextEditor2 {
 
 	protected org.eclipse.swt.widgets.Canvas rulerCanvas;
 
-	private PythonScanner scanner;
+	private final PythonScanner scanner;
 
-	private Composite composite;
+	private final Composite composite;
 
 	private ToolBar toolbar;
 
     static public Rectangle defaultRect = AutoPersist.persist("textEditorPosition", new Rectangle(500, 50, 500, 600));
 
-	private StyledTextUndo undoHelper;
+	private final StyledTextUndo undoHelper;
 
-	private Color[] colors;
+	private final Color[] colors;
 
 	PythonCallableMap textDecoration = new PythonCallableMap();
 
@@ -183,9 +184,9 @@ public class BaseTextEditor2 {
 
 	LinkedHashMap<LineRec, StyleRange[]> cache;
 
-	private OpportunisticSlider2 sliders;
+	private final OpportunisticSlider2 sliders;
 
-	private FindAndReplace fandr;
+	private final FindAndReplace fandr;
 
 	public BaseTextEditor2() {
 
@@ -512,7 +513,7 @@ public class BaseTextEditor2 {
 			public void verifyKey(VerifyEvent event) {
 				lcw.requestRepaint();
 
-				System.out.println(" event.stateMask :" + event.stateMask + " " + Platform.getCommandModifier2() + " " + event.keyCode);
+				System.out.println(" event.stateMask :" + event.stateMask + ' ' + Platform.getCommandModifier2() + ' ' + event.keyCode);
 
 				if (event.keyCode == '\r' && (event.stateMask & Platform.getCommandModifier2()) != 0) {
 					if ((event.stateMask & SWT.ALT) != 0) {
@@ -594,7 +595,7 @@ public class BaseTextEditor2 {
 					event.doit = false;
 				} else if ((event.keyCode == 'f') && (event.stateMask & Platform.getCommandModifier()) != 0) {
 					fandr.setVisible(!fandr.getVisible());
-					System.out.println(" now <" + fandr.getVisible() + ">");
+					System.out.println(" now <" + fandr.getVisible() + '>');
 					String m = ed.getSelectionText();
 					if (m != null && m.length() != 0) {
 						fandr.setFind(m);
@@ -1251,7 +1252,7 @@ public class BaseTextEditor2 {
 		line = ed.getLocationAtOffset(pos);
 
 		String text = ed.getText();
-		int a = text.lastIndexOf("\n", pos - 1);
+		int a = text.lastIndexOf('\n', pos - 1);
 		if (a == -1)
 			a = 0;
 		String leftText = text.substring(a, pos).trim();
@@ -1340,13 +1341,13 @@ public class BaseTextEditor2 {
 
 	public void executeBrowseHandle() {
 		String s = ed.getSelectionText();
-		if (s == null || s.equals("")) {
+		if (s == null || s.isEmpty()) {
 			int pos = ed.getCaretOffset();
 			String text = ed.getText();
-			int a = text.lastIndexOf("\n", pos - 1);
+			int a = text.lastIndexOf('\n', pos - 1);
 			if (a == -1)
 				a = 0;
-			int b = text.indexOf("\n", pos);
+			int b = text.indexOf('\n', pos);
 			if (b == -1)
 				b = text.length();
 			s = text.substring(a, b);
@@ -1416,7 +1417,7 @@ public class BaseTextEditor2 {
 			left = "./";
 			right = string;
 		} else {
-			left = string.substring(0, lastSlash) + "/";
+			left = string.substring(0, lastSlash) + '/';
 			right = string.substring(lastSlash + 1, string.length());
 		}
 
@@ -1441,7 +1442,8 @@ public class BaseTextEditor2 {
 		}
 
 		if (allFiles.length == 1) {
-			completions.put((allFiles[0].isDirectory() ? "\u2208 reveal in Finder - <b>" : "\u2802 <i> reveal in Finder - ") + allFiles[0].getName() + " " + (allFiles[0].isDirectory() ? "</b>" : "</i"), new iUpdateable() {
+			completions.put((allFiles[0].isDirectory() ? "\u2208 reveal in Finder - <b>" : "\u2802 <i> reveal in Finder - ") + allFiles[0].getName() + ' '
+                            + (allFiles[0].isDirectory() ? "</b>" : "</i"), new iUpdateable() {
 				public void update() {
 					UbiquitousLinks.showPathInFinder(allFiles[0].getAbsolutePath());
 				}
@@ -1461,7 +1463,7 @@ public class BaseTextEditor2 {
 		line = ed.getLocationAtOffset(pos);
 
 		String text = ed.getText();
-		int a = text.lastIndexOf("\n", pos - 1);
+		int a = text.lastIndexOf('\n', pos - 1);
 		if (a == -1)
 			a = 0;
 		String leftText = text.substring(a, pos);
@@ -1490,11 +1492,11 @@ public class BaseTextEditor2 {
 			}
 		};
 
-		if (leftText.lastIndexOf("(\"") != -1 && leftText.lastIndexOf("(\"") == leftText.lastIndexOf("\"") - 1) {
+		if (leftText.lastIndexOf("(\"") != -1 && leftText.lastIndexOf("(\"") == leftText.lastIndexOf('\"') - 1) {
 			if (!completionKeyHandle(leftText, items, ks))
-				completionsForFilename(leftText.substring(leftText.lastIndexOf("\"") + 1), items);
+				completionsForFilename(leftText.substring(leftText.lastIndexOf('\"') + 1), items);
 		} else
-			completionsForFilename(leftText.substring(leftText.lastIndexOf("\"") + 1), items);
+			completionsForFilename(leftText.substring(leftText.lastIndexOf('\"') + 1), items);
 
 		menu = new SmallMenu().createMenu(items, frame, ks);
 		menu.doneHook = new iUpdateable() {
@@ -1608,7 +1610,7 @@ public class BaseTextEditor2 {
 		line = ed.getLocationAtOffset(pos);
 
 		String text = ed.getText();
-		int a = text.lastIndexOf("\n", pos - 1);
+		int a = text.lastIndexOf('\n', pos - 1);
 		if (a == -1)
 			a = 0;
 		String leftText = text.substring(a, pos).trim();
@@ -1620,7 +1622,7 @@ public class BaseTextEditor2 {
 
 		List<Completion> completions = getImportations(leftText);
 
-		if (completions.size() == 0)
+		if (completions.isEmpty())
 			return;
 
 		LinkedHashMap<String, iUpdateable> insert = new LinkedHashMap<String, iUpdateable>();

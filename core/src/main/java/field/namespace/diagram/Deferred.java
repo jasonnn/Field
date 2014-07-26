@@ -24,7 +24,8 @@ public class Deferred {
 	 * it's expected that this will be a good base class for things that get
 	 * executed
 	 */
-	static public abstract class Executable implements iUpdateable, Serializable {
+    public abstract static
+    class Executable implements iUpdateable, Serializable {
 
 		public String name;
 
@@ -46,7 +47,8 @@ public class Deferred {
 			consumed++;
 		}
 
-		abstract public void cont();
+		public abstract
+        void cont();
 
 		public String getName() {
 			return name;
@@ -74,7 +76,7 @@ public class Deferred {
 
 		@Override
 		public String toString() {
-			return "exec:" + name + (isConsumed() ? "!" : "") + "(" + source + ")";
+			return "exec:" + name + (isConsumed() ? "!" : "") + '(' + source + ')';
 		}
 
 		public void unconsume() {
@@ -88,7 +90,8 @@ public class Deferred {
 		}
 	}
 
-	static public class Increment extends OneShot {
+	public static
+    class Increment extends OneShot {
 		private final Object in;
 
 		private final Field field;
@@ -124,7 +127,8 @@ public class Deferred {
 		}
 	}
 
-	static public abstract class OneShot extends Executable implements Serializable {
+	public abstract static
+    class OneShot extends Executable implements Serializable {
 
 		private boolean first = false;
 
@@ -148,7 +152,8 @@ public class Deferred {
 			first = true;
 		}
 
-		abstract protected void fire();
+		protected abstract
+        void fire();
 	}
 
 	/**
@@ -158,7 +163,8 @@ public class Deferred {
 	 * a more complicated subclass of this would recognize things other than
 	 * the ones that it created as its own
 	 */
-	static public class Production {
+    public static
+    class Production {
 
 		private final iChannel into;
 
@@ -246,7 +252,8 @@ public class Deferred {
 		}
 	}
 
-	static public class Set extends OneShot {
+	public static
+    class Set extends OneShot {
 		private final Object in;
 
 		private final Field field;
@@ -271,7 +278,8 @@ public class Deferred {
 		}
 	}
 
-	static public class SetToProgress extends Executable {
+	public static
+    class SetToProgress extends Executable {
 
 		private final Object in;
 
@@ -327,7 +335,8 @@ public class Deferred {
 		}
 	}
 
-	static public class SimpleExecutingHorizon extends Horizon {
+	public static
+    class SimpleExecutingHorizon extends Horizon {
 
 		WeakHashMap<iMarker<Object>, Object> alreadySeen = new WeakHashMap<iMarker<Object>, Object>();
 

@@ -85,7 +85,7 @@ public class BetterComboBox {
 					}
 					for (int n = 0; n < BetterComboBox.this.labels.length; n++) {
 						final int fn = n;
-						map.put((n == currentlySelected ? "!" : "") + BetterComboBox.this.labels[n], new iUpdateable() {
+						map.put(((n == currentlySelected) ? "!" : "") + BetterComboBox.this.labels[n], new iUpdateable() {
                             
 							@Override
 							public void update() {
@@ -97,7 +97,7 @@ public class BetterComboBox {
 						});
 					}
                     
-					BetterPopup b = new SmallMenu().createMenu(map, combo.getShell(), null, hu);
+					BetterPopup b = SmallMenu.createMenu(map, combo.getShell(), null, hu);
 					Point x = Launcher.display.map(combo, combo.getShell(), new Point(e.x, e.y));
                     
 					if (rightJustified) {
@@ -197,13 +197,13 @@ public class BetterComboBox {
 		if (currentlySelected >= labels.length)
 			currentlySelected = labels.length - 1;
         
-		if (currentlySelected != -1 && !fixedText)
+		if ((currentlySelected != -1) && !fixedText)
 			combo.setText(labels[currentlySelected]);
 	}
     
 	public void setLabelsWithHTML(String[] labels) {
         
-		String c = currentlySelected == -1 ? "" : this.labels[currentlySelected];
+		String c = (currentlySelected == -1) ? "" : this.labels[currentlySelected];
 		this.labels = labels;
 		for (int i = 0; i < this.labels.length; i++)
 			if (labels[i].equals(c))
@@ -230,7 +230,7 @@ public class BetterComboBox {
 		do {
 			selectNext();
 			n++;
-		} while (shouldSkip(currentlySelected) && n < 100);
+		} while (shouldSkip(currentlySelected) && (n < 100));
 	}
     
 	protected boolean shouldSkip(int index) {

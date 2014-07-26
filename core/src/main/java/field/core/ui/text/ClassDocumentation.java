@@ -17,7 +17,7 @@ public class ClassDocumentation {
     public static
     List<Comp> getPackageCustomCompletion(String packageName, String prefix) {
         if (!packageName.endsWith("."))
-			packageName = packageName + ".";
+			packageName = packageName + '.';
 		packageName = packageName.replace("<b>", "");
 		try {
 			Class<?> c = Class.forName(packageName + "__CompletionDocumentation__");

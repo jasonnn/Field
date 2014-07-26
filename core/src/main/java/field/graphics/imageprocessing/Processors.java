@@ -17,12 +17,13 @@ import static org.lwjgl.opengl.GL11.GL_REPEAT;
 
 public class Processors {
 
-	static public class AddGrain extends BasicGLSLangProgram implements iProcessesMesh {
-		static public Vector4 lightGrain = new Vector4(0, 0, 0.1f, 0);
+	public static
+    class AddGrain extends BasicGLSLangProgram implements iProcessesMesh {
+		public static Vector4 lightGrain = new Vector4(0, 0, 0.1f, 0);
 
-		static public Vector4 heavyGrain = new Vector4(0, 0, 0.5f, 0);
+		public static Vector4 heavyGrain = new Vector4(0, 0, 0.5f, 0);
 
-		static public Vector4 grainWhite = new Vector4(0.5f, 0, 0f, 0);
+		public static Vector4 grainWhite = new Vector4(0.5f, 0, 0f, 0);
 
 		private ByteBuffer saltOneDTextureBuffer;
 
@@ -56,7 +57,8 @@ public class Processors {
 
 	}
 
-	static public class Combine2Lighting extends BasicGLSLangProgram
+	public static
+    class Combine2Lighting extends BasicGLSLangProgram
 	{
 		public Combine2Lighting()
 		{
@@ -67,7 +69,8 @@ public class Processors {
 		}
 	}
 
-	static public class Grainer {
+	public static
+    class Grainer {
 		private final ByteBuffer saltOneDTextureBuffer;
 
 		private final OneDTexture saltColorRemap;
@@ -123,12 +126,13 @@ public class Processors {
 		}
 	}
 
-	static public class Simple7Kernel extends SimpleKernel {
+	public static
+    class Simple7Kernel extends SimpleKernel {
 
-		static public final Vector3[] vert7 = { new Vector3(0, -3.75, 0.05f), new Vector3(0, -2.5, 0.1f), new Vector3(0, -1.25, 0.2f), new Vector3(0, 1.25, 0.2f), new Vector3(0, 2.5, 0.1f), new Vector3(0, 3.75, 0.05f)};
-		static public final float vert7_center = 1f;
-		static public final Vector3[] horiz7= { new Vector3(-3.75, 0, 0.05f), new Vector3(-2.5, 0, 0.1f), new Vector3(-1.25, 0, 0.2f), new Vector3(1.25, 0, 0.2f), new Vector3(2.5, 0, 0.1f), new Vector3(3.75, 0, 0.05f)};
-		static public final float horiz7_center = 1f;
+		public static final Vector3[] vert7 = { new Vector3(0, -3.75, 0.05f), new Vector3(0, -2.5, 0.1f), new Vector3(0, -1.25, 0.2f), new Vector3(0, 1.25, 0.2f), new Vector3(0, 2.5, 0.1f), new Vector3(0, 3.75, 0.05f)};
+		public static final float vert7_center = 1f;
+		public static final Vector3[] horiz7= { new Vector3(-3.75, 0, 0.05f), new Vector3(-2.5, 0, 0.1f), new Vector3(-1.25, 0, 0.2f), new Vector3(1.25, 0, 0.2f), new Vector3(2.5, 0, 0.1f), new Vector3(3.75, 0, 0.05f)};
+		public static final float horiz7_center = 1f;
 
 		private float cw;
 		public Simple7Kernel(iFloatProvider scale, Vector3[] offsets, final float centerWeight) {
@@ -163,7 +167,8 @@ public class Processors {
 
 	}
 
-	static public class SimpleCrossfader extends BasicGLSLangProgram {
+	public static
+    class SimpleCrossfader extends BasicGLSLangProgram {
 		private final iFloatProvider oneToTwo;
 
 		public SimpleCrossfader(final iFloatProvider oneToTwo, final float power) {
@@ -201,16 +206,17 @@ public class Processors {
 		}
 	}
 
-	static public class SimpleFeedbackDOFKernel extends SimpleKernel {
-		static public final Vector4 onlyNewMaterial = new Vector4(0, 0, 1, 0);
+	public static
+    class SimpleFeedbackDOFKernel extends SimpleKernel {
+		public static final Vector4 onlyNewMaterial = new Vector4(0, 0, 1, 0);
 
-		static public final Vector4 mediumFeedback = new Vector4(0.5, 1.9f, 1, 0);
+		public static final Vector4 mediumFeedback = new Vector4(0.5, 1.9f, 1, 0);
 
-		static public final Vector4 largeFeedback = new Vector4(0.95, 1.05f, 1, 0);
+		public static final Vector4 largeFeedback = new Vector4(0.95, 1.05f, 1, 0);
 
-		static public final Vector4 trickle = new Vector4(0.95f, 1, 1, 0);
+		public static final Vector4 trickle = new Vector4(0.95f, 1, 1, 0);
 
-		static public final Vector4 halfAndHalf = new Vector4(0.75f, 1, 1, 0);
+		public static final Vector4 halfAndHalf = new Vector4(0.75f, 1, 1, 0);
 
 		Vector4 feedbackParameters = new Vector4();
 
@@ -249,16 +255,17 @@ public class Processors {
 		}
 	}
 
-	static public class SimpleFeedbackKernel extends SimpleKernel {
-		static public final Vector4 onlyNewMaterial = new Vector4(0, 0, 1, 0);
+	public static
+    class SimpleFeedbackKernel extends SimpleKernel {
+		public static final Vector4 onlyNewMaterial = new Vector4(0, 0, 1, 0);
 
-		static public final Vector4 mediumFeedback = new Vector4(0.5, 1.9f, 1, 0);
+		public static final Vector4 mediumFeedback = new Vector4(0.5, 1.9f, 1, 0);
 
-		static public final Vector4 largeFeedback = new Vector4(0.95, 1.05f, 1, 0);
+		public static final Vector4 largeFeedback = new Vector4(0.95, 1.05f, 1, 0);
 
-		static public final Vector4 trickle = new Vector4(0.95f, 1, 1, 0);
+		public static final Vector4 trickle = new Vector4(0.95f, 1, 1, 0);
 
-		static public final Vector4 halfAndHalf = new Vector4(0.75f, 1, 1, 0);
+		public static final Vector4 halfAndHalf = new Vector4(0.75f, 1, 1, 0);
 
 		Vector4 feedbackParameters = new Vector4();
 
@@ -273,26 +280,27 @@ public class Processors {
 		}
 	}
 
-	static public class SimpleKernel extends BasicGLSLangProgram implements iProcessesMesh {
-		static public final Vector3[] vertical = { new Vector3(0, -1.5, 0.1f), new Vector3(0, -0.75, 0.2f), new Vector3(0, -0, 0.4f), new Vector3(0, 0.75, 0.2f), new Vector3(0, 1.5, 0.1f)};
+	public static
+    class SimpleKernel extends BasicGLSLangProgram implements iProcessesMesh {
+		public static final Vector3[] vertical = { new Vector3(0, -1.5, 0.1f), new Vector3(0, -0.75, 0.2f), new Vector3(0, -0, 0.4f), new Vector3(0, 0.75, 0.2f), new Vector3(0, 1.5, 0.1f)};
 
-		static public final Vector3[] horizontal = { new Vector3(-1.5, 0, 0.1f), new Vector3(-0.75, 0, 0.2f), new Vector3(0, 0, 0.4f), new Vector3(0.75, 0, 0.2f), new Vector3(1.5, 0, 0.1f)};
+		public static final Vector3[] horizontal = { new Vector3(-1.5, 0, 0.1f), new Vector3(-0.75, 0, 0.2f), new Vector3(0, 0, 0.4f), new Vector3(0.75, 0, 0.2f), new Vector3(1.5, 0, 0.1f)};
 
-		static public final Vector3[] vertical2 = { new Vector3(0, -2, 0.2f), new Vector3(0, -1, 0.2f), new Vector3(0, 0, 0.2f), new Vector3(0, 1, 0.2f), new Vector3(0, 2, 0.2f)};
+		public static final Vector3[] vertical2 = { new Vector3(0, -2, 0.2f), new Vector3(0, -1, 0.2f), new Vector3(0, 0, 0.2f), new Vector3(0, 1, 0.2f), new Vector3(0, 2, 0.2f)};
 
-		static public final Vector3[] horizontal2 = { new Vector3(-2, 0, 0.2f), new Vector3(-1, 0, 0.2f), new Vector3(0, 0, 0.2f), new Vector3(1, 0, 0.2f), new Vector3(2, 0, 0.2f)};
+		public static final Vector3[] horizontal2 = { new Vector3(-2, 0, 0.2f), new Vector3(-1, 0, 0.2f), new Vector3(0, 0, 0.2f), new Vector3(1, 0, 0.2f), new Vector3(2, 0, 0.2f)};
 
-		static public final Vector3[] laplacian = { new Vector3(-1, -1, -1), new Vector3(1, -1, -1), new Vector3(0, 0, 4), new Vector3(1, 1, -1), new Vector3(-1, 1, -1)};
+		public static final Vector3[] laplacian = { new Vector3(-1, -1, -1), new Vector3(1, -1, -1), new Vector3(0, 0, 4), new Vector3(1, 1, -1), new Vector3(-1, 1, -1)};
 
-		static public final Vector3[] omni = { new Vector3(-1, -1, 0.2f), new Vector3(1, -1, 0.2f), new Vector3(0, 0, 0.2f), new Vector3(1, 1, 0.2f), new Vector3(-1, 1, 0.2f)};
+		public static final Vector3[] omni = { new Vector3(-1, -1, 0.2f), new Vector3(1, -1, 0.2f), new Vector3(0, 0, 0.2f), new Vector3(1, 1, 0.2f), new Vector3(-1, 1, 0.2f)};
 
-		static public final Vector3[] omni2 = { new Vector3(-1, -1, 0.1f), new Vector3(1, -1, 0.1f), new Vector3(0, 0, 0.6f), new Vector3(1, 1, 0.1f), new Vector3(-1, 1, 0.1f)};
+		public static final Vector3[] omni2 = { new Vector3(-1, -1, 0.1f), new Vector3(1, -1, 0.1f), new Vector3(0, 0, 0.6f), new Vector3(1, 1, 0.1f), new Vector3(-1, 1, 0.1f)};
 
-		static public final Vector4 alpha_noBlending = new Vector4(0, 1, 1, 0);
+		public static final Vector4 alpha_noBlending = new Vector4(0, 1, 1, 0);
 
-		static public final Vector4 longLPF = new Vector4(0, 0.05f, 1, 0);
+		public static final Vector4 longLPF = new Vector4(0, 0.05f, 1, 0);
 
-		static public final Vector4 longLPF2 = new Vector4(0.05f, 0.01f, 0.1f, 0);
+		public static final Vector4 longLPF2 = new Vector4(0.05f, 0.01f, 0.1f, 0);
 
 		private boolean attachNoBlending;
 
@@ -374,7 +382,8 @@ public class Processors {
 	}
 
 
-	static public class SimpleKernel_randomOffset extends SimpleKernel {
+	public static
+    class SimpleKernel_randomOffset extends SimpleKernel {
 
 		public SimpleKernel_randomOffset(iFloatProvider scale, Vector3[] offsets) {
 			super(scale, offsets);

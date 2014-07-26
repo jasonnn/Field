@@ -7,7 +7,8 @@ package field.math.abstraction;
 public interface iFloatProvider {
 	public float evaluate();
 
-	static public class Constant implements iFloatProvider {
+	public static
+    class Constant implements iFloatProvider {
 
 		private float constant;
 
@@ -25,7 +26,8 @@ public interface iFloatProvider {
 		}
 	}
 
-	static public class HasChanged  implements iFloatProvider {
+	public static
+    class HasChanged  implements iFloatProvider {
 		private final iFloatProvider to;
 
 		public HasChanged(iFloatProvider to) {

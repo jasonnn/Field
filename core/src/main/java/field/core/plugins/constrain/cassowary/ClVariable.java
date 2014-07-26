@@ -69,7 +69,7 @@ public class ClVariable extends ClAbstractVariable {
 
 	@Override
 	public String toString() {
-		return "[" + name() + ":" + _value + "]";
+		return '[' + name() + ':' + _value + ']';
 	}
 
 	// change the value held -- should *not* use this if the variable is

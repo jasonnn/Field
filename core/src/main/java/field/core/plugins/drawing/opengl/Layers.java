@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Layers implements iHandlesAttributes {
 
-	private SplineComputingOverride o;
+	private final SplineComputingOverride o;
 
 	Map<String, OnCanvasLines> known = new HashMap<String, OnCanvasLines>();
 

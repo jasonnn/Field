@@ -10,6 +10,7 @@ import field.namespace.generic.Bind.iFunction;
 import field.namespace.generic.Bind.iFunction2;
 import field.util.Dict;
 import field.util.Dict.Prop;
+import org.jetbrains.annotations.NotNull;
 import org.python.core.Py;
 import org.python.core.PyFunction;
 import org.python.core.PyObject;
@@ -35,13 +36,14 @@ public class Context {
 		public void visit(Cobj c);
 	}
 
-	static public Object _ = new Object();
+	public static Object _ = new Object();
 
-	static public class Cobj implements iHandlesAttributes, iHandlesDeletionOfAttributes, iCallable_keywords {
+	public static
+    class Cobj implements iHandlesAttributes, iHandlesDeletionOfAttributes, iCallable_keywords {
 		private Cobj parent;
 		protected List<Cobj> children = null;
 
-		private Dict properties = new Dict();
+		private final Dict properties = new Dict();
 
 		/**
 		 * if a property 'x' is missing, check to see if compute_x
@@ -434,7 +436,7 @@ public class Context {
 			return null;
 		}
 
-		private Map<Class, Object> proxyMap = new HashMap<Class, Object>();
+		private final Map<Class, Object> proxyMap = new HashMap<Class, Object>();
 
 		/**
 		 * returns a proxy for the Java interface 't' that calls any
@@ -551,7 +553,7 @@ public class Context {
 				public void visit(Cobj c) {
 					Object x = predicate.f(c);
 					if (x != null) {
-						if (x instanceof Boolean && ((Boolean) x).booleanValue())
+						if ((Boolean) x)
 							tt.add(c);
 						if (x instanceof Number && ((Number) x).intValue() > 0)
 							tt.add(c);
@@ -679,7 +681,8 @@ public class Context {
 			return getProperty(name).isEmpty();
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public Iterator<E> iterator() {
 			return getProperty(name).iterator();
 		}
@@ -689,12 +692,14 @@ public class Context {
 			return getProperty(name).lastIndexOf(o);
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public ListIterator<E> listIterator() {
 			return getProperty(name).listIterator();
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public ListIterator<E> listIterator(int index) {
 			return getProperty(name).listIterator(index);
 		}
@@ -729,17 +734,20 @@ public class Context {
 			return getProperty(name).size();
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public List<E> subList(int fromIndex, int toIndex) {
 			return getProperty(name).subList(fromIndex, toIndex);
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public Object[] toArray() {
 			return getProperty(name).toArray();
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public <T> T[] toArray(T[] a) {
 			return getProperty(name).toArray(a);
 		}
@@ -774,7 +782,7 @@ public class Context {
 	// helper for Jython
 	static public class UpdatableCobjAsFunction extends UpdatableCobj {
 
-		private iFunction<Object, UpdatableCobj> u;
+		private final iFunction<Object, UpdatableCobj> u;
 
 		public UpdatableCobjAsFunction(iFunction<Object, UpdatableCobj> u) {
 			this.u = u;

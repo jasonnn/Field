@@ -7,7 +7,8 @@ public class Versionings {
 
 	public static final String NoProperty = "(no property)";
 
-	static public class Path
+	public static
+    class Path
 	{
 		public final String sheet;
 		public final String uid;
@@ -22,7 +23,7 @@ public class Versionings {
 	
 		@Override
 		public String toString() {
-			return "path:<"+sheet+"/"+uid+"/"+propertyName+">";
+			return "path:<"+sheet+ '/' +uid+ '/' +propertyName+ '>';
 		}
 		
 		@Override
@@ -41,7 +42,7 @@ public class Versionings {
 		}
 
 		public String getPath() {
-			return sheet+"/"+uid+(propertyName == NoProperty ? "" : ("/"+propertyName+".property"));
+			return sheet+ '/' +uid+(propertyName.equals(NoProperty) ? "" : ("/"+propertyName+".property"));
 		}
 		
 		public File getFile()
@@ -57,28 +58,33 @@ public class Versionings {
 	// we can't do this in a plug-in, because it relates to the actual storage of things inside iVisualElements.
 	// we might even consider doing this inside VisualElement
 	
-	static public interface iOperation
+	public static
+    interface iOperation
 	{
 	}
 	
-	static public class CopyElementOp implements iOperation
+	public static
+    class CopyElementOp implements iOperation
 	{
 		Path oldElement;
 		Path newElement;
 	}
 	
-	static public class DeleteElementOp implements iOperation
+	public static
+    class DeleteElementOp implements iOperation
 	{
 		Path oldElement;
 	}
 	
-	static public class CopyPropertyOp implements iOperation
+	public static
+    class CopyPropertyOp implements iOperation
 	{
 		Path oldProperty;
 		Path newProperty;
 	}
 	
-	static public class DeletePropertyOp implements iOperation
+	public static
+    class DeletePropertyOp implements iOperation
 	{
 		Path oldProperty;
 	}

@@ -4,7 +4,7 @@ import org.eclipse.swt.widgets.Canvas;
 
 public class MacOSXCanvasInterface implements iCanvasInterface{
 
-	private GLCanvas_field canvas;
+	private final GLCanvas_field canvas;
 
 	public MacOSXCanvasInterface(Canvas c)
 	{

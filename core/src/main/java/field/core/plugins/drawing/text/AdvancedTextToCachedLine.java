@@ -16,7 +16,7 @@ import java.awt.geom.Rectangle2D;
 
 public class AdvancedTextToCachedLine {
 
-	static public final AdvancedTextToCachedLineCache cache = new AdvancedTextToCachedLineCache();
+	public static final AdvancedTextToCachedLineCache cache = new AdvancedTextToCachedLineCache();
 
 	public float alignment = 0;
 
@@ -57,7 +57,8 @@ public class AdvancedTextToCachedLine {
 		GeneralPath p = new LineUtils().lineToGeneralPath(lastCachedLine, true);
 		float f = 0.2f;
 		Area a = new Area(p);
-		Rectangle2D.Double def = new Rectangle2D.Double(upperRect.x, upperRect.y + upperRect.h * (1 - f), upperRect.w, upperRect.h * f);
+		Rectangle2D.Double def = new Rectangle2D.Double(upperRect.x,
+                                                        upperRect.y + (upperRect.h * (1 - f)), upperRect.w, upperRect.h * f);
 		a.intersect(new Area(def));
 
 		Rectangle2D bounds = a.getBounds2D();
@@ -73,7 +74,10 @@ public class AdvancedTextToCachedLine {
 		GeneralPath p = new LineUtils().lineToGeneralPath(lastCachedLine, true);
 		float f = 0.1f;
 		Area a = new Area(p);
-		Rectangle2D.Double def = new Rectangle2D.Double(fullRect.x, upperRect.y + upperRect.h * (1 - f), upperRect.w, fullRect.y + fullRect.h - (upperRect.y + upperRect.h * (1 - f)));
+		Rectangle2D.Double def = new Rectangle2D.Double(fullRect.x,
+                                                        upperRect.y + (upperRect.h * (1 - f)), upperRect.w,
+                                                        (fullRect.y + fullRect.h) - (upperRect.y + (upperRect.h * (1
+                                                                                                                   - f))));
 		a.intersect(new Area(def));
 		Rectangle2D bounds = a.getBounds2D();
 		if (a.isEmpty()) {
@@ -102,7 +106,7 @@ public class AdvancedTextToCachedLine {
 	public CachedLine getLine(String text, final float ox, final float oy, float wrap) {
 		if (wrap == 0) {
 			CacheRecord found = cache.find(fontName, text, fontSize);
-			if (found != null) { return lastCachedLine = cache.convert(this, ox, oy, found); }
+			if (found != null) { return lastCachedLine = AdvancedTextToCachedLineCache.convert(this, ox, oy, found); }
 		}
 		if (wrap<0) wrap = 0;
 		CachedLine cl = new CachedLine();
@@ -184,7 +188,7 @@ public class AdvancedTextToCachedLine {
 		};
 		if (wrap==0)
 			at.acceptString(text, vv);
-		else AdvancedText.acceptStringWrap(text, vv, wrap * 200f / fontSize, alignment, justification);
+		else AdvancedText.acceptStringWrap(text, vv, (wrap * 200f) / fontSize, alignment, justification);
 
 		lastCachedLine = cl;
 
@@ -208,7 +212,8 @@ public class AdvancedTextToCachedLine {
 		float f1 = 0.45f;
 		float f2 = 0.1f;
 		Area a = new Area(p);
-		Rectangle2D.Double def = new Rectangle2D.Double(upperRect.x, upperRect.y + upperRect.h * f1, upperRect.w, upperRect.h * f2);
+		Rectangle2D.Double def = new Rectangle2D.Double(upperRect.x,
+                                                        upperRect.y + (upperRect.h * f1), upperRect.w, upperRect.h * f2);
 		a.intersect(new Area(def));
 		Rectangle2D bounds = a.getBounds2D();
 		if (a.isEmpty()) {

@@ -32,11 +32,12 @@ public class MainSelectionGroup implements SelectionGroup<iComponent> {
 			public void update() {
 				
 				if (!lastSelection.equals(selected)) {
-					if (!lastSelectionWasPopped) {
-						pushSelection(lastSelection);
-						forwardStack.clear();
-					} else {
-					}
+                    if (lastSelectionWasPopped) {
+                    }
+                    else {
+                        pushSelection(lastSelection);
+                        forwardStack.clear();
+                    }
 					lastSelectionWasPopped = false;
 
 					lastSelection.clear();
@@ -57,12 +58,12 @@ public class MainSelectionGroup implements SelectionGroup<iComponent> {
 
 	public boolean canGoBack()
 	{
-		return selectionStack.size()>0;
+		return !selectionStack.isEmpty();
 	}
 
 	public boolean canGoForward()
 	{
-		return forwardStack.size()>0;
+		return !forwardStack.isEmpty();
 	}
 
 	public void deselectAll() {
@@ -76,7 +77,7 @@ public class MainSelectionGroup implements SelectionGroup<iComponent> {
 		return selected;
 	}
 	public void moveForwardSelection() {
-		if (forwardStack.size() > 0) {
+		if (!forwardStack.isEmpty()) {
 			pushSelection(new HashSet<iComponent>(selected));
 
 			Set<iComponent> a = forwardStack.remove(forwardStack.size() - 1);
@@ -92,7 +93,7 @@ public class MainSelectionGroup implements SelectionGroup<iComponent> {
 	}
 
 	public void popSelection() {
-		if (selectionStack.size() > 0) {
+		if (!selectionStack.isEmpty()) {
 			forwardStack.add(new HashSet<iComponent>(selected));
 			Set<iComponent> a = selectionStack.remove(selectionStack.size() - 1);
 			if (a != null) {

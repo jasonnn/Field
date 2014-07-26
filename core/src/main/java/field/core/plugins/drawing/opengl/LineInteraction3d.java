@@ -28,7 +28,7 @@ public class LineInteraction3d extends LineInteraction {
 		super.setAllCachedLines(c);
 		Projector projector = camera.getState().getProjector();
 		
-		if (this.projector==null || !this.projector.equals(projector))
+		if ((this.projector == null) || !this.projector.equals(projector))
 			intersectionCache.clear();
 		
 		this.projector = projector;

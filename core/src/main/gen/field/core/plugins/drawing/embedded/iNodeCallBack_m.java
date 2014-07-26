@@ -9,8 +9,8 @@ import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.Method;
 public class iNodeCallBack_m {
-static public final Method mouseDown_m = ReflectionTools.methodOf("mouseDown", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]> mouseDown_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "mouseDown", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
+public static final Method mouseDown_m = ReflectionTools.methodOf("mouseDown", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]> mouseDown_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "mouseDown", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
 
 public interface mouseDown_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -19,8 +19,8 @@ public interface mouseDown_interface extends iAcceptor<Object[]>, iFunction<Obje
 
 public final mouseDown_interface mouseDown;
 
-static public final Method mouseDragged_m = ReflectionTools.methodOf("mouseDragged", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]> mouseDragged_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "mouseDragged", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
+public static final Method mouseDragged_m = ReflectionTools.methodOf("mouseDragged", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]> mouseDragged_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "mouseDragged", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
 
 public interface mouseDragged_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -29,8 +29,8 @@ public interface mouseDragged_interface extends iAcceptor<Object[]>, iFunction<O
 
 public final mouseDragged_interface mouseDragged;
 
-static public final Method mouseUp_m = ReflectionTools.methodOf("mouseUp", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]> mouseUp_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "mouseUp", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
+public static final Method mouseUp_m = ReflectionTools.methodOf("mouseUp", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]> mouseUp_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "mouseUp", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
 
 public interface mouseUp_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -39,8 +39,8 @@ public interface mouseUp_interface extends iAcceptor<Object[]>, iFunction<Object
 
 public final mouseUp_interface mouseUp;
 
-static public final Method mouseClicked_m = ReflectionTools.methodOf("mouseClicked", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]> mouseClicked_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "mouseClicked", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
+public static final Method mouseClicked_m = ReflectionTools.methodOf("mouseClicked", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]> mouseClicked_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.embedded.iNodeCallBack, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "mouseClicked", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
 
 public interface mouseClicked_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -49,8 +49,8 @@ public interface mouseClicked_interface extends iAcceptor<Object[]>, iFunction<O
 
 public final mouseClicked_interface mouseClicked;
 
-static public final Method menu_m = ReflectionTools.methodOf("menu", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
-static public final Mirroring.MirrorMethod<field.core.plugins.drawing.embedded.iNodeCallBack, java.util.Map, Object[]> menu_s = new Mirroring.MirrorMethod<field.core.plugins.drawing.embedded.iNodeCallBack, java.util.Map, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "menu", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
+public static final Method menu_m = ReflectionTools.methodOf("menu", field.core.plugins.drawing.embedded.iNodeCallBack.class, field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class);
+public static final Mirroring.MirrorMethod<field.core.plugins.drawing.embedded.iNodeCallBack, java.util.Map, Object[]> menu_s = new Mirroring.MirrorMethod<field.core.plugins.drawing.embedded.iNodeCallBack, java.util.Map, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class, "menu", new Class[]{field.core.plugins.drawing.opengl.CachedLine.class, field.core.plugins.drawing.opengl.CachedLine.Event.class, field.math.linalg.Vector2.class, java.awt.event.MouseEvent.class});
 
 public interface menu_interface extends iAcceptor<Object[]>, iFunction<java.util.Map ,Object[] >
 	{

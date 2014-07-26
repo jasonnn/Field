@@ -5,7 +5,7 @@ import java.applet.Applet;
 
 public class AppletLauncher extends Applet {
 
-	static public final Applet mainApplet = new Applet();
+	public static final Applet mainApplet = new Applet();
 	
 	@Override
 	public void init() {

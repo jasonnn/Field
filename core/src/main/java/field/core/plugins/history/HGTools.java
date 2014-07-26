@@ -25,7 +25,8 @@ import java.util.regex.Pattern;
 @Woven
 public class HGTools {
 
-	static public class HGLog {
+	public static
+    class HGLog {
 		private String filename;
 
 		// {copies} template doesn't work?
@@ -89,7 +90,7 @@ public class HGTools {
 				e1.printStackTrace();
 			}
 
-			String shortname = filenameInRepository.replaceAll(vd + "/", "");
+			String shortname = filenameInRepository.replaceAll(vd + '/', "");
             //System.out.println(" shortname is <" + shortname + ">");
             // ;//System.out.println("vd<" + vd + "> <" +
 			// filenameInRepository + "> <" + shortname);
@@ -116,7 +117,7 @@ public class HGTools {
 					// if we're not mentioned in the
 					// files, the it doesn't effect
 					// us
-					if (found.indexOf(shortname) == -1) {
+					if (!found.contains(shortname)) {
 						// unless we are being
 						// copied
 						copies_matcher.find();
@@ -130,7 +131,7 @@ public class HGTools {
 							// ;//System.out.println(" we've been copied to <"
 							// + m.group(1) +
 							// ">, building that history ");
-							List<VersionNode> copyTargetHistory = new HGLog(vd + "/" + m.group(1), allText).getVersionNodes(foundSoFar);
+							List<VersionNode> copyTargetHistory = new HGLog(vd + '/' + m.group(1), allText).getVersionNodes(foundSoFar);
 							VersionNode prev = null;
 							for (VersionNode q : copyTargetHistory) {
 
@@ -179,11 +180,11 @@ public class HGTools {
 
 							boolean f3 = desc_matcher.find();
 							n.logEntry = desc_matcher.group(1);
-							if (n.logEntry.equals("\"\""))
+							if ("\"\"".equals(n.logEntry))
 								n.logEntry = null;
 
 							n.type = HistoryExplorerHG.VersionNodeType.copySource;
-							n.copyToFilename = vd + "/" + m.group(1);
+							n.copyToFilename = vd + '/' + m.group(1);
 
 							n.path = filename;
 
@@ -230,7 +231,7 @@ public class HGTools {
 						boolean f3 = desc_matcher.find();
 						assert f3;
 						n.logEntry = desc_matcher.group(1);
-						if (n.logEntry.equals("\"\""))
+						if ("\"\"".equals(n.logEntry))
 							n.logEntry = null;
 
 						// // copies template doesn't
@@ -257,8 +258,8 @@ public class HGTools {
 						Matcher m = weAreACopy.matcher(c);
 						if (m.find()) {
 							n.type = HistoryExplorerHG.VersionNodeType.copyTarget;
-							n.copiedFromFilename = vd + "/" + m.group(1);
-							filename = vd + "/" + m.group(1);
+							n.copiedFromFilename = vd + '/' + m.group(1);
+							filename = vd + '/' + m.group(1);
 							shortname = m.group(1);
 						} else {
 						}
@@ -282,11 +283,12 @@ public class HGTools {
 
 	public HGTools(String fullPathToRepositoryDirectory, String sheetsub, String xmlFilename) {
 		this.fullPathToRepositoryDirectory = fullPathToRepositoryDirectory;
-		this.fullPathToSheetDir = fullPathToRepositoryDirectory + "/" + sheetsub;
+		this.fullPathToSheetDir = fullPathToRepositoryDirectory + '/' + sheetsub;
 
 	}
 
-	static public String versioningDirAccountingForForest(String rootVersioningDir, String filenameInRepository) throws IOException {
+	public static
+    String versioningDirAccountingForForest(String rootVersioningDir, String filenameInRepository) throws IOException {
 		String root = new File(rootVersioningDir).getCanonicalPath();
 		String name = new File(filenameInRepository).getCanonicalPath();
 		if (new File(name).isDirectory()) {
@@ -296,7 +298,7 @@ public class HGTools {
 		}
 		if (name.equals(root))
 			return root;
-		if (name.equals("/")) {
+		if ("/".equals(name)) {
 			assert false;
 			return root;
 		}
@@ -309,14 +311,15 @@ public class HGTools {
 	}
 
 	public Object getOriginatingCopyFor(String file) {
-		String fn = fullPathToSheetDir + "/" + file;
+		String fn = fullPathToSheetDir + '/' + file;
 		HGLog o = new HGLog(fn);
 		List<VersionNode> m = o.getVersionNodes();
 		if (m.size() == 0)
 			return null;
 		long r = m.get(m.size() - 1).revision;
 
-		ExecuteCommand command = new ExecuteCommand(fullPathToSheetDir, HGVersioningSystem.hgCommand + " cat -r " + r + " " + fn);
+		ExecuteCommand command = new ExecuteCommand(fullPathToSheetDir, HGVersioningSystem.hgCommand + " cat -r " + r + ' '
+                                                                        + fn);
 		command.waitFor(true);
 		String out = command.getOutput();
 		return VersioningSystem.objectRepresentationFor(out);
@@ -327,7 +330,9 @@ public class HGTools {
 
 		if (path.endsWith(".xml")) return null;
 		
-		ExecuteCommand command = new ExecuteCommand(fullPathToSheetDir, HGVersioningSystem.hgCommand + " cat -r " + version + " " + path + (name == null ? "" : "/" + name.getName() + ".property"));
+		ExecuteCommand command = new ExecuteCommand(fullPathToSheetDir, HGVersioningSystem.hgCommand + " cat -r " + version + ' '
+                                                                        + path + (name == null ? "" : '/'
+                                                                                                      + name.getName() + ".property"));
 		command.waitFor(true);
 		String out = command.getOutput();
 		Object o = VersioningSystem.objectRepresentationFor(out);

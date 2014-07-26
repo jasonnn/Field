@@ -163,7 +163,7 @@ public class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDi
 	}
 
 	public void copyToVBO(final TriangleMesh mesh, final int aux) {
-		sceneList.add(StandardPass.preDisplay).register("__copyToVbo__" + System.identityHashCode(mesh) + " " + aux, new iUpdateable() {
+		sceneList.add(StandardPass.preDisplay).register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux, new iUpdateable() {
 			@Override
 			public void update() {
                 // System.out.println(" copying to aux buffer ");

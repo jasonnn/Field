@@ -8,9 +8,10 @@ import field.namespace.key.OKey;
 
 public class StringAdaptations {
 
-	static public final OKey<Promise> stringAdaptation_promise = new OKey<Promise>("stringAdaptation_promise").rootSet(null);
+	public static final OKey<Promise> stringAdaptation_promise = new OKey<Promise>("stringAdaptation_promise").rootSet(null);
 	
-	static public void register(Adaptation adaptation) {
+	public static
+    void register(Adaptation adaptation) {
 
 		adaptation.declare(String.class, Double.class, new Adaptation.iAdaptor<String, Double>(){
 

@@ -52,13 +52,12 @@ public class AdvancedTextToCachedLineCache {
 		}
 	}
 
-	static public final int maxCacheSize = 500;
+	public static final int maxCacheSize = 500;
 	LinkedHashMap<CacheRecord, CacheRecord> cache = new LinkedHashMap<CacheRecord, CacheRecord>(){
 		@Override
 		protected boolean removeEldestEntry(Map.Entry<CacheRecord, CacheRecord> eldest) {
-			if (this.size() > maxCacheSize) { return true; }
-			return false;
-		}
+            return this.size() > maxCacheSize;
+        }
 	};
 
 	CacheRecord t = new CacheRecord();
@@ -82,9 +81,10 @@ public class AdvancedTextToCachedLineCache {
 		cache.put(r, r);
 	}
 
-	public CachedLine convert(AdvancedTextToCachedLine c, float ox, float oy, CacheRecord r)
+	public static
+    CachedLine convert(AdvancedTextToCachedLine c, float ox, float oy, CacheRecord r)
 	{
-		CachedLine ret = new LineUtils().transformLine(r.c, new Vector2(ox-r.at.x, oy-r.at.y), null, null, null);
+		CachedLine ret =  LineUtils.transformLine(r.c, new Vector2(ox-r.at.x, oy-r.at.y), null, null, null);
 		
 //		c.upperRect = new Rect(0,0,0,0).setValue(r.upperRect);
 //		c.fullRect = new Rect(0,0,0,0).setValue(r.fullRect);

@@ -112,7 +112,7 @@ public class CoreImageCanvasUtils {
 		IntBuffer ii = ByteBuffer.allocateDirect(4*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 		
 		public void moveCIImageToHere(Image c, int width, int height) {
-			if (drawn != null && drawn.coreimage == c.coreimage)
+			if ((drawn != null) && (drawn.coreimage == c.coreimage))
 				return;
 
 			// GL gl = BasicContextManager.getGl();
@@ -121,7 +121,7 @@ public class CoreImageCanvasUtils {
 			drawn = c;
 			fbo.enter();
 
-			int ff[] = new int[4];
+			int[] ff = new int[4];
 			ii.rewind();
 			GL11.glGetInteger(GL11.GL_VIEWPORT, ii);
 			ii.get(ff);
@@ -162,7 +162,7 @@ public class CoreImageCanvasUtils {
 		}
 
 		public void moveCIImageToHere(Image c, int x, int y, int width, int height) {
-			if (drawn != null && drawn.coreimage == c.coreimage)
+			if ((drawn != null) && (drawn.coreimage == c.coreimage))
 				return;
 
 			// GL gl = BasicContextManager.getGl();
@@ -254,7 +254,7 @@ public class CoreImageCanvasUtils {
 			List<String> r = new ArrayList<String>();
 			for (String ss : x) {
 				ss = ss.trim();
-				if (ss.length() > 0)
+				if (!ss.isEmpty())
 					r.add(ss);
 			}
 
@@ -268,7 +268,7 @@ public class CoreImageCanvasUtils {
 			List<String> r = new ArrayList<String>();
 			for (String ss : x) {
 				ss = ss.trim();
-				if (ss.length() > 0)
+				if (!ss.isEmpty())
 					r.add(ss);
 			}
 			return r;
@@ -281,7 +281,7 @@ public class CoreImageCanvasUtils {
 
 		public void set(String key, Image value) {
 			if (value.coreimage == 0) {
-				throw new IllegalArgumentException("No image for '" + key + "'");
+				throw new IllegalArgumentException("No image for '" + key + '\'');
 			}
 			if (checkInput(key))
 				new CoreImage().filter_setValueImage(filter, key, value.coreimage);
@@ -314,7 +314,7 @@ public class CoreImageCanvasUtils {
 			else if (value instanceof Rect)
 				set(name, ((Rect) value));
 			else
-				throw new ClassCastException(" can't handle type <" + value.getClass() + ">");
+				throw new ClassCastException(" can't handle type <" + value.getClass() + '>');
 		}
 
 		private boolean checkInput(String key) {
@@ -504,10 +504,8 @@ public class CoreImageCanvasUtils {
 			// glMatrixMode(GL_MODELVIEW);
 			// glPushMatrix();
 			// glLoadIdentity();
-			if (!blending)
-				glBlendFunc(GL_ONE, GL_ZERO);
-			else
-				glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            if (blending) glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            else glBlendFunc(GL_ONE, GL_ZERO);
 			glEnable(GL_BLEND);
 
 			// glClearColor(1, 1, 1, 1);
@@ -631,10 +629,8 @@ public class CoreImageCanvasUtils {
                 return;
 			}
 
-			if (!blending)
-				glBlendFunc(GL_ONE, GL_ZERO);
-			else
-				glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            if (blending) glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            else glBlendFunc(GL_ONE, GL_ZERO);
 			glEnable(GL_BLEND);
 
 			GL20.glUseProgram(0);
@@ -674,8 +670,8 @@ public class CoreImageCanvasUtils {
 	public Filter customFilter(String text, List<String> args) {
 		String a = "";
 		for (String s : args) {
-			if (a.length() > 0)
-				a = a + "#";
+			if (!a.isEmpty())
+				a = a + '#';
 			a += s;
 		}
 		long f = new CoreImage().filter_createGenericWithText(text, a);

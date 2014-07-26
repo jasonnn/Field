@@ -12,9 +12,9 @@ import org.lwjgl.opengl.GL42;
 
 public class BasicGLSLangImage extends OnePassElement {
 
-	private int unit;
-	private iHasTexture from;
-	private int format;
+	private final int unit;
+	private final iHasTexture from;
+	private final int format;
 	private TextureUnit unitWrapper;
 
 	public BasicGLSLangImage(int unit, iHasTexture from, int format) {

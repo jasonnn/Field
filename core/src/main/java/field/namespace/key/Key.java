@@ -33,8 +33,8 @@ import java.util.WeakHashMap;
  */
 public class Key implements Serializable
 {
-	static public Map internedKeys = new WeakHashMap();
-	static public Map internedKeys_byTree = new WeakHashMap();
+	public static Map internedKeys = new WeakHashMap();
+	public static Map internedKeys_byTree = new WeakHashMap();
 	
 	protected String rep;
 
@@ -49,7 +49,7 @@ public class Key implements Serializable
 	
 		generateAllocationStackTrace();
 		
-		assert(!internedKeys.containsKey(rep)): "can't have two keys with the same string... <"+s+">";
+		assert(!internedKeys.containsKey(rep)): "can't have two keys with the same string... <"+s+ '>';
 		
 		if (!internedKeys.containsKey(s)) internedKeys.put(s, new WeakReference(this));
 	}
@@ -93,12 +93,13 @@ public class Key implements Serializable
 	 * throws IllegalArgumentException if the key cannot be found in the map. This call is (and should only be) used for 
 	 * persisting objects that mention keys
 	 */
-	static public Key internKey(Key k)
+    public static
+    Key internKey(Key k)
 	{
 		Reference r = (Reference)internedKeys.get(k.rep);
-		if (r==null) throw new IllegalArgumentException(" couldn't find already interned key called <"+k.rep+">");
+		if (r==null) throw new IllegalArgumentException(" couldn't find already interned key called <"+k.rep+ '>');
 		Key found = (Key)(r.get());
-		if (found==null) throw new IllegalArgumentException(" couldn't find already interned key called <"+k.rep+">");
+		if (found==null) throw new IllegalArgumentException(" couldn't find already interned key called <"+k.rep+ '>');
 		return found;
 	}
 	
@@ -106,8 +107,8 @@ public class Key implements Serializable
 	/**
 	 * proof of concept - zero cost (at non-debug time) allocation stack trace ----------------------------------
 	 */
-	
-	transient protected StackTraceElement[] allocationStackTrace = null;
+
+    protected transient StackTraceElement[] allocationStackTrace = null;
 	protected boolean generateAllocationStackTrace()
 	{
 		allocationStackTrace = new Exception().getStackTrace();

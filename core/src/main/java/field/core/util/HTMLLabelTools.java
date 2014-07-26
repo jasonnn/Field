@@ -25,11 +25,11 @@ public class HTMLLabelTools {
 	Pattern SEP_PATTERN = Pattern.compile("_____________________________");
 
 	Pattern CLEAN_PATTERN = Pattern.compile("(<.*?>)");
-	private Font boldFont;
-	private Font boldItalicFont;
-	private Font smallerFont;
-	private Font italicFont;
-	private Font normalFont;
+	private final Font boldFont;
+	private final Font boldItalicFont;
+	private final Font smallerFont;
+	private final Font italicFont;
+	private final Font normalFont;
 
 	int indent = 0;
 	int vertSpace = 10;

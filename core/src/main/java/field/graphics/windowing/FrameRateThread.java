@@ -28,7 +28,10 @@ public class FrameRateThread {
 					}
 					int frameOut = canvas.getFrameNumber();
 					long out = System.currentTimeMillis();
-					System.err.println("fps:" + 1000 * (frameOut - frameIn) / (float) (out - in) + "       " + new Date());
+					System.err.println("fps:"
+                                       + ((1000 * (frameOut - frameIn)) / (float) (out - in))
+                                       + "       "
+                                       + new Date());
 				}
 			}
 

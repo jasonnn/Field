@@ -87,9 +87,12 @@ public class TextSystem {
 
 			int edge = 0;
 
-			float x, y, hw, hh;
+			float x;
+            float y;
+            float hw;
+            float hh;
 
-			x = ox;
+            x = ox;
 			y = by;
 
 			hw = bounds != null ? bounds.width : w;
@@ -137,9 +140,12 @@ public class TextSystem {
 
 			int edge = 0;
 
-			float x, y, hw, hh;
+			float x;
+            float y;
+            float hw;
+            float hh;
 
-			x = ox;
+            x = ox;
 			y = by;
 
 			hw = bounds != null ? bounds.width : w;
@@ -340,9 +346,12 @@ public class TextSystem {
 
 			int edge = 0;
 
-			int x, y, hw, hh;
+			int x;
+            int y;
+            int hw;
+            int hh;
 
-			if (j == Justification.center) {
+            if (j == Justification.center) {
 				x = (int) (ox - (stringBounds.getWidth() / 2) / scaling);
 				y = (int) (by - ascent / scaling);
 
@@ -606,9 +615,12 @@ public class TextSystem {
 
 			int edge = 0;
 
-			float x, y, hw, hh;
+			float x;
+            float y;
+            float hw;
+            float hh;
 
-			if (j == Justification.center) {
+            if (j == Justification.center) {
 				x = (int) (ox - (stringBounds.getWidth() / 2) / scaling);
 				y = (int) (by - ascent / scaling);
 
@@ -680,9 +692,12 @@ public class TextSystem {
 			int edge = 0;
 			float scaling = scale;
 
-			float x, y, hw, hh;
+			float x;
+            float y;
+            float hw;
+            float hh;
 
-			x = (ox - ascent / scaling);
+            x = (ox - ascent / scaling);
 			y = (by - ascent / 2 / scaling);
 
 			hw = (((float) stringBounds.getHeight() / scaling) + descent);
@@ -730,9 +745,12 @@ public class TextSystem {
 
 			int edge = 0;
 
-			float x, y, hw, hh;
+			float x;
+            float y;
+            float hw;
+            float hh;
 
-			x = ox;
+            x = ox;
 			y = by;
 
 			hw = w;
@@ -793,9 +811,12 @@ public class TextSystem {
 
 			int edge = 0;
 
-			float x, y, hw, hh;
+			float x;
+            float y;
+            float hw;
+            float hh;
 
-			float scaling = scale;
+            float scaling = scale;
 
 			ascent = (float) (stringBounds.getHeight() / 2);
 			descent = 0;
@@ -878,9 +899,12 @@ public class TextSystem {
 
 			int edge = 0;
 
-			float x, y, hw, hh;
+			float x;
+            float y;
+            float hw;
+            float hh;
 
-			float scaling = scale;
+            float scaling = scale;
 
 			ascent = (float) (stringBounds.getHeight() / 2);
 			descent = 0;
@@ -1176,9 +1200,12 @@ public class TextSystem {
 				int rawBlue = (rawBuffer[i] >> xb) & 255;
 				int rawAlpha = (rawBuffer[i] >> xa) & 255;
 
-				int or, og, ob, oa;
+				int or;
+                int og;
+                int ob;
+                int oa;
 
-				// if (rawGreen > blurGreen) {
+                // if (rawGreen > blurGreen) {
 				// or = rawRed;
 				// og = rawGreen;
 				// ob = rawBlue;
@@ -1228,15 +1255,15 @@ public class TextSystem {
 		}
 	}
 
-	static public TextSystem textSystem;
+	public static TextSystem textSystem;
 
-	static public boolean textFlipped = false;
+	public static boolean textFlipped = false;
 
 	private Object gl;
 
 	private Object glu;
 
-	private GraphicsDevice dev;
+	private final GraphicsDevice dev;
 
 	TaskQueue atRenderTime = new TaskQueue();
 

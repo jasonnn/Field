@@ -22,7 +22,7 @@ public class Protected {
 
 			Method[] m = TrampolineReflection.getAllMethods(c);
 			for (Method method : m) {
-				if (method.getName().equals("loadSerialized"))
+				if ("loadSerialized".equals(method.getName()))
 				{
 					Object inst = c.newInstance();
                     return method.invoke(inst, filename);
@@ -52,7 +52,7 @@ public class Protected {
 
 			Method[] m = TrampolineReflection.getAllMethods(c);
 			for (Method method : m) {
-				if (method.getName().equals("run"))
+				if ("run".equals(method.getName()))
 				{
 					Object inst = c.newInstance();
                     return method.invoke(inst, r);

@@ -14,14 +14,15 @@ import java.util.Map;
 
 public class ContextAnnotationTools {
 
-	static public ThreadLocal<HashMap<Class, ArrayList<Pair<Field, FromContext>>>> cachedParameters = new ThreadLocal<HashMap<Class, ArrayList<Pair<Field, FromContext>>>>() {
+	public static ThreadLocal<HashMap<Class, ArrayList<Pair<Field, FromContext>>>> cachedParameters = new ThreadLocal<HashMap<Class, ArrayList<Pair<Field, FromContext>>>>() {
 		@Override
 		protected HashMap<Class, ArrayList<Pair<Field, FromContext>>> initialValue() {
 			return new HashMap<Class, ArrayList<Pair<Field, FromContext>>>();
 		}
 	};
 
-	static public void begin(ContextTopology<?, ?> topology, Object value) {
+	public static
+    void begin(ContextTopology<?, ?> topology, Object value) {
 		if (value == null)
 			throw new Error(" null value for context_begin ");
 		if (topology == null)
@@ -31,13 +32,15 @@ public class ContextAnnotationTools {
 		iSupportsBeginEnd<Object> s = (iSupportsBeginEnd<Object>) topology;
 		Class<Object> supportedClass = s.getBeginEndSupportedClass();
 		if (!supportedClass.isAssignableFrom(value.getClass())) {
-			throw new Error(" value is of wrong type <" + value + " / " + value.getClass() + "> not assignable from <" + supportedClass + ">, loaders are <" + value.getClass().getClassLoader() + " " + supportedClass.getClass().getClassLoader() + ">");
+			throw new Error(" value is of wrong type <" + value + " / " + value.getClass() + "> not assignable from <" + supportedClass + ">, loaders are <" + value.getClass().getClassLoader() + ' '
+                            + supportedClass.getClass().getClassLoader() + '>');
 		}
 
 		s.begin(value);
 	}
 
-	static public ContextTopology<?, ?> contextFor(Object fromThis, Map<String, Object> annotationParameters, Map<Integer, Pair<String, String>> markedArguments, Object[] arguments) throws ClassNotFoundException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	public static
+    ContextTopology<?, ?> contextFor(Object fromThis, Map<String, Object> annotationParameters, Map<Integer, Pair<String, String>> markedArguments, Object[] arguments) throws ClassNotFoundException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		Object type = getParameter("topology", annotationParameters, markedArguments, arguments);
 		if (type instanceof Type) {
 			Class<?> cloaded = fromThis.getClass().getClassLoader().loadClass(((Type) type).getClassName());
@@ -58,16 +61,18 @@ public class ContextAnnotationTools {
 		return null;
 	}
 
-	static public void end(ContextTopology<?, ?> topology, Object value) {
+	public static
+    void end(ContextTopology<?, ?> topology, Object value) {
 		iSupportsBeginEnd<Object> s = (iSupportsBeginEnd<Object>) topology;
 		s.end(value);
 	}
 
-	static public Object getParameter(String name, Map<String, Object> annotationParameters, Map<Integer, Pair<String, String>> markedArguments, Object[] arguments) {
+	public static
+    Object getParameter(String name, Map<String, Object> annotationParameters, Map<Integer, Pair<String, String>> markedArguments, Object[] arguments) {
 		Object n = annotationParameters.get(name);
-		if (n == null || (n instanceof String && n.equals(""))) {
+		if ((n == null) || ((n instanceof String) && "".equals(n))) {
 			for (Map.Entry<Integer, Pair<String, String>> e : markedArguments.entrySet()) {
-				if (e.getValue().left.toLowerCase().endsWith(name.toLowerCase() + ";")) {
+				if (e.getValue().left.toLowerCase().endsWith(name.toLowerCase() + ';')) {
 					return arguments[e.getKey()];
 				}
 			}
@@ -75,7 +80,8 @@ public class ContextAnnotationTools {
 		return n;
 	}
 
-	static public void populateContexted(ContextTopology topology, Object inside) {
+	public static
+    void populateContexted(ContextTopology topology, Object inside) {
         Class<?> c = inside.getClass();
 
 		ArrayList<Pair<Field, FromContext>> parameters = cachedParameters.get().get(c);
@@ -98,7 +104,7 @@ public class ContextAnnotationTools {
 
 		for (Pair<Field, FromContext> p : parameters) {
 			String name = p.right.name();
-			if (p.right.name() == null || p.right.name().equals(""))
+			if ((p.right.name() == null) || "".equals(p.right.name()))
 				name = p.left.getName();
 
 			BaseRef<Object> res = new BaseRef<Object>(null);
@@ -114,7 +120,8 @@ public class ContextAnnotationTools {
 		}
 	}
 
-	static public Object valueFor(Object fromThis, Map<String, Object> annotationParameters, Map<Integer, Pair<String, String>> markedArguments, Object[] arguments) {
+	public static
+    Object valueFor(Object fromThis, Map<String, Object> annotationParameters, Map<Integer, Pair<String, String>> markedArguments, Object[] arguments) {
 		Object value = getParameter("value", annotationParameters, markedArguments, arguments);
 		return value;
 	}

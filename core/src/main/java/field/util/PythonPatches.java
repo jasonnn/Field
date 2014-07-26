@@ -7,7 +7,8 @@ import org.python.core.PyObject;
 
 public class PythonPatches {
 
-	static public class Filter<T> implements iFunction<T, T> {
+	public static
+    class Filter<T> implements iFunction<T, T> {
 
 		public PyObject callable;
 

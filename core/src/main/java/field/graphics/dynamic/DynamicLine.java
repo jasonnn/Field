@@ -76,8 +76,10 @@ public class DynamicLine extends DynamicMesh implements iLineOutput {
 	}
 
 	public void curveTo(Vector3 to, Vector3 cp1, Vector3 cp2, int samples) {
-		before.set(lastPosition.x - (cp1.x - lastPosition.x) * 6, lastPosition.y - (cp1.y - lastPosition.y) * 6, lastPosition.z - (cp1.z - lastPosition.z) * 6);
-		after.set(to.x + (to.x - cp2.x) * 6, to.y + (to.y - cp2.y) * 6, to.z + (to.z - cp2.z) * 6);
+		before.set(lastPosition.x - ((cp1.x - lastPosition.x) * 6),
+                   lastPosition.y - ((cp1.y - lastPosition.y) * 6),
+                   lastPosition.z - ((cp1.z - lastPosition.z) * 6));
+		after.set(to.x + ((to.x - cp2.x) * 6), to.y + ((to.y - cp2.y) * 6), to.z + ((to.z - cp2.z) * 6));
 		for (int i = 0; i < samples; i++) {
 			float a = i / (float) (samples - 1);
 			CubicTools.cubic(a, before, lastPosition, to, after, splineTmp);
@@ -105,7 +107,7 @@ public class DynamicLine extends DynamicMesh implements iLineOutput {
 			System.err.println(ANSIColorUtils.red(" -- \n"));
 		} else {
 			checkTriangleStorage(triangleCursor, vertexCursor - lineStartAt);
-			for (int i = 0; i < vertexCursor - lineStartAt - 1; i++) {
+			for (int i = 0; i < (vertexCursor - lineStartAt - 1); i++) {
 				int triangleCursor2 = 2 * triangleCursor;
 				cachedTriangleBuffer.put(triangleCursor2, (short) (i + lineStartAt));
 				cachedTriangleBuffer.put(triangleCursor2 + 1, (short) (i + lineStartAt + 1));
@@ -131,16 +133,16 @@ public class DynamicLine extends DynamicMesh implements iLineOutput {
 			System.err.println(ANSIColorUtils.red(" -- \n"));
 		} else {
 			checkTriangleStorage(triangleCursor, (vertexCursor - lineStartAt) * 2);
-			for (int i = 0; i < vertexCursor - lineStartAt - 1; i++) {
+			for (int i = 0; i < (vertexCursor - lineStartAt - 1); i++) {
 				int triangleCursor2 = 2 * triangleCursor;
 
-				short a1 = (short) ((i > 0 ? i - 1 : i) + lineStartAt);
+				short a1 = (short) (((i > 0) ? (i - 1) : i) + lineStartAt);
 				cachedTriangleBuffer.put(triangleCursor2, a1);
 				short a2 = (short) (i + lineStartAt);
 				cachedTriangleBuffer.put(triangleCursor2 + 1, a2);
 				short a3 = (short) (i + lineStartAt + 1);
 				cachedTriangleBuffer.put(triangleCursor2 + 2, a3);
-				short a4 = (short) ((i < (vertexCursor - lineStartAt - 2) ? i + 1 : i) + lineStartAt + 1);
+				short a4 = (short) (((i < (vertexCursor - lineStartAt - 2)) ? (i + 1) : i) + lineStartAt + 1);
 				cachedTriangleBuffer.put(triangleCursor2 + 3, a4);
 
 				// ;//System.out.println(" wrote <"+triangleCursor2+"> <"+a1+" "+a2+" "+a3+" "+a4+">");
@@ -295,7 +297,7 @@ public class DynamicLine extends DynamicMesh implements iLineOutput {
 			float alpha = (n - auxSplineCursors[id]) / (vertexCursor - auxSplineCursors[id] - 1f);
 			if (alpha != alpha)
 				alpha = 1;
-			float becomes = from[0] * (1 - alpha) + alpha * a1;
+			float becomes = (from[0] * (1 - alpha)) + (alpha * a1);
 
 			setAux(n, id, becomes);
 		}
@@ -313,8 +315,8 @@ public class DynamicLine extends DynamicMesh implements iLineOutput {
 			float alpha = (n - auxSplineCursors[id]) / (vertexCursor - auxSplineCursors[id] - 1f);
 			if (alpha != alpha)
 				alpha = 1;
-			float becomes0 = from[0] * (1 - alpha) + alpha * a1;
-			float becomes1 = from[1] * (1 - alpha) + alpha * a2;
+			float becomes0 = (from[0] * (1 - alpha)) + (alpha * a1);
+			float becomes1 = (from[1] * (1 - alpha)) + (alpha * a2);
 
 			setAux(n, id, becomes0, becomes1);
 		}
@@ -333,9 +335,9 @@ public class DynamicLine extends DynamicMesh implements iLineOutput {
 			float alpha = (n - auxSplineCursors[id]) / (vertexCursor - auxSplineCursors[id] - 1f);
 			if (alpha != alpha)
 				alpha = 1;
-			float becomes0 = from[0] * (1 - alpha) + alpha * a1;
-			float becomes1 = from[1] * (1 - alpha) + alpha * a2;
-			float becomes2 = from[2] * (1 - alpha) + alpha * a3;
+			float becomes0 = (from[0] * (1 - alpha)) + (alpha * a1);
+			float becomes1 = (from[1] * (1 - alpha)) + (alpha * a2);
+			float becomes2 = (from[2] * (1 - alpha)) + (alpha * a3);
 
 			setAux(n, id, becomes0, becomes1, becomes2);
 		}
@@ -359,10 +361,10 @@ public class DynamicLine extends DynamicMesh implements iLineOutput {
 			float alpha = (n - auxSplineCursors[id]) / (vertexCursor - auxSplineCursors[id] - 1f);
 			if (alpha != alpha)
 				alpha = 1;
-			float becomes0 = from[0] * (1 - alpha) + alpha * a1;
-			float becomes1 = from[1] * (1 - alpha) + alpha * a2;
-			float becomes2 = from[2] * (1 - alpha) + alpha * a3;
-			float becomes3 = from[3] * (1 - alpha) + alpha * a4;
+			float becomes0 = (from[0] * (1 - alpha)) + (alpha * a1);
+			float becomes1 = (from[1] * (1 - alpha)) + (alpha * a2);
+			float becomes2 = (from[2] * (1 - alpha)) + (alpha * a3);
+			float becomes3 = (from[3] * (1 - alpha)) + (alpha * a4);
 
 			setAux(n, id, becomes0, becomes1, becomes2, becomes3);
 		}

@@ -39,7 +39,8 @@ public class Logging {
 
 	}
 
-	static public class LoggingEventModel extends NodeImpl<LoggingEventModel> implements iMutableContainer<Object, LoggingEventModel>, iProvidesSearchTerms {
+	public static
+    class LoggingEventModel extends NodeImpl<LoggingEventModel> implements iMutableContainer<Object, LoggingEventModel>, iProvidesSearchTerms {
 		LoggingEventType type;
 
 		iLoggingEvent node;
@@ -86,7 +87,8 @@ public class Logging {
         informative, replayable, errorWarn, errorFatal
     }
 
-	static public class UpdateCycle implements iLoggingEvent {
+	public static
+    class UpdateCycle implements iLoggingEvent {
 		public final long num;
 
 		public final long time;
@@ -128,7 +130,7 @@ public class Logging {
         internal, external
     }
 
-	private static ThreadLocal<Integer> context = new ThreadLocal<Integer>() {
+	private static final ThreadLocal<Integer> context = new ThreadLocal<Integer>() {
 		protected Integer initialValue() {
 			return 0;
 		}

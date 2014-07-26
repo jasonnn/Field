@@ -10,8 +10,8 @@ import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.Method;
 public class iVisualElementOverrides_m {
-static public final Method added_m = ReflectionTools.methodOf("added", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement> added_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>(field.core.dispatch.iVisualElementOverrides.class, "added", new Class[]{field.core.dispatch.iVisualElement.class});
+public static final Method added_m = ReflectionTools.methodOf("added", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement> added_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>(field.core.dispatch.iVisualElementOverrides.class, "added", new Class[]{field.core.dispatch.iVisualElement.class});
 
 public interface added_interface extends iAcceptor<field.core.dispatch.iVisualElement>, iFunction<GraphNodeSearching.VisitCode ,field.core.dispatch.iVisualElement >
 	{
@@ -22,8 +22,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final added_interface added;
 
-static public final Method beginExecution_m = ReflectionTools.methodOf("beginExecution", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement> beginExecution_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>(field.core.dispatch.iVisualElementOverrides.class, "beginExecution", new Class[]{field.core.dispatch.iVisualElement.class});
+public static final Method beginExecution_m = ReflectionTools.methodOf("beginExecution", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement> beginExecution_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>(field.core.dispatch.iVisualElementOverrides.class, "beginExecution", new Class[]{field.core.dispatch.iVisualElement.class});
 
 public interface beginExecution_interface extends iAcceptor<field.core.dispatch.iVisualElement>, iFunction<GraphNodeSearching.VisitCode ,field.core.dispatch.iVisualElement >
 	{
@@ -34,8 +34,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final beginExecution_interface beginExecution;
 
-static public final Method deleted_m = ReflectionTools.methodOf("deleted", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement> deleted_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>(field.core.dispatch.iVisualElementOverrides.class, "deleted", new Class[]{field.core.dispatch.iVisualElement.class});
+public static final Method deleted_m = ReflectionTools.methodOf("deleted", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement> deleted_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>(field.core.dispatch.iVisualElementOverrides.class, "deleted", new Class[]{field.core.dispatch.iVisualElement.class});
 
 public interface deleted_interface extends iAcceptor<field.core.dispatch.iVisualElement>, iFunction<GraphNodeSearching.VisitCode ,field.core.dispatch.iVisualElement >
 	{
@@ -46,8 +46,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final deleted_interface deleted;
 
-static public final Method deleteProperty_m = ReflectionTools.methodOf("deleteProperty", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> deleteProperty_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "deleteProperty", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class});
+public static final Method deleteProperty_m = ReflectionTools.methodOf("deleteProperty", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> deleteProperty_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "deleteProperty", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class});
 
 public interface deleteProperty_interface extends iAcceptor<Object[]>, iFunction<GraphNodeSearching.VisitCode ,Object[] >
 	{
@@ -58,8 +58,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final deleteProperty_interface deleteProperty;
 
-static public final Method endExecution_m = ReflectionTools.methodOf("endExecution", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement> endExecution_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>(field.core.dispatch.iVisualElementOverrides.class, "endExecution", new Class[]{field.core.dispatch.iVisualElement.class});
+public static final Method endExecution_m = ReflectionTools.methodOf("endExecution", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement> endExecution_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>(field.core.dispatch.iVisualElementOverrides.class, "endExecution", new Class[]{field.core.dispatch.iVisualElement.class});
 
 public interface endExecution_interface extends iAcceptor<field.core.dispatch.iVisualElement>, iFunction<GraphNodeSearching.VisitCode ,field.core.dispatch.iVisualElement >
 	{
@@ -70,8 +70,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final endExecution_interface endExecution;
 
-static public final Method getProperty_m = ReflectionTools.methodOf("getProperty", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class, field.core.dispatch.iVisualElementOverrides.Ref.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> getProperty_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "getProperty", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class, field.core.dispatch.iVisualElementOverrides.Ref.class});
+public static final Method getProperty_m = ReflectionTools.methodOf("getProperty", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class, field.core.dispatch.iVisualElementOverrides.Ref.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> getProperty_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "getProperty", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class, field.core.dispatch.iVisualElementOverrides.Ref.class});
 
 public interface getProperty_interface extends iAcceptor<Object[]>, iFunction<GraphNodeSearching.VisitCode ,Object[] >
 	{
@@ -82,8 +82,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final getProperty_interface getProperty;
 
-static public final Method handleKeyboardEvent_m = ReflectionTools.methodOf("handleKeyboardEvent", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> handleKeyboardEvent_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "handleKeyboardEvent", new Class[]{field.core.dispatch.iVisualElement.class, org.eclipse.swt.widgets.Event.class});
+public static final Method handleKeyboardEvent_m = ReflectionTools.methodOf("handleKeyboardEvent", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> handleKeyboardEvent_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "handleKeyboardEvent", new Class[]{field.core.dispatch.iVisualElement.class, org.eclipse.swt.widgets.Event.class});
 
 public interface handleKeyboardEvent_interface extends iAcceptor<Object[]>, iFunction<GraphNodeSearching.VisitCode ,Object[] >
 	{
@@ -94,8 +94,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final handleKeyboardEvent_interface handleKeyboardEvent;
 
-static public final Method inspectablePropertiesFor_m = ReflectionTools.methodOf("inspectablePropertiesFor", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, java.util.List.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> inspectablePropertiesFor_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "inspectablePropertiesFor", new Class[]{field.core.dispatch.iVisualElement.class, java.util.List.class});
+public static final Method inspectablePropertiesFor_m = ReflectionTools.methodOf("inspectablePropertiesFor", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, java.util.List.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> inspectablePropertiesFor_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "inspectablePropertiesFor", new Class[]{field.core.dispatch.iVisualElement.class, java.util.List.class});
 
 public interface inspectablePropertiesFor_interface extends iAcceptor<Object[]>, iFunction<GraphNodeSearching.VisitCode ,Object[] >
 	{
@@ -106,8 +106,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final inspectablePropertiesFor_interface inspectablePropertiesFor;
 
-static public final Method isHit_m = ReflectionTools.methodOf("isHit", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, org.eclipse.swt.widgets.Event.class, field.core.dispatch.iVisualElementOverrides.Ref.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> isHit_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "isHit", new Class[]{field.core.dispatch.iVisualElement.class, org.eclipse.swt.widgets.Event.class, field.core.dispatch.iVisualElementOverrides.Ref.class});
+public static final Method isHit_m = ReflectionTools.methodOf("isHit", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, org.eclipse.swt.widgets.Event.class, field.core.dispatch.iVisualElementOverrides.Ref.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> isHit_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "isHit", new Class[]{field.core.dispatch.iVisualElement.class, org.eclipse.swt.widgets.Event.class, field.core.dispatch.iVisualElementOverrides.Ref.class});
 
 public interface isHit_interface extends iAcceptor<Object[]>, iFunction<GraphNodeSearching.VisitCode ,Object[] >
 	{
@@ -118,8 +118,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final isHit_interface isHit;
 
-static public final Method menuItemsFor_m = ReflectionTools.methodOf("menuItemsFor", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, java.util.Map.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> menuItemsFor_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "menuItemsFor", new Class[]{field.core.dispatch.iVisualElement.class, java.util.Map.class});
+public static final Method menuItemsFor_m = ReflectionTools.methodOf("menuItemsFor", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, java.util.Map.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> menuItemsFor_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "menuItemsFor", new Class[]{field.core.dispatch.iVisualElement.class, java.util.Map.class});
 
 public interface menuItemsFor_interface extends iAcceptor<Object[]>, iFunction<GraphNodeSearching.VisitCode ,Object[] >
 	{
@@ -130,8 +130,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final menuItemsFor_interface menuItemsFor;
 
-static public final Method paintNow_m = ReflectionTools.methodOf("paintNow", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.Rect.class, boolean.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> paintNow_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "paintNow", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.Rect.class, boolean.class});
+public static final Method paintNow_m = ReflectionTools.methodOf("paintNow", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.Rect.class, boolean.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> paintNow_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "paintNow", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.Rect.class, boolean.class});
 
 public interface paintNow_interface extends iAcceptor<Object[]>, iFunction<GraphNodeSearching.VisitCode ,Object[] >
 	{
@@ -142,12 +142,12 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final paintNow_interface paintNow;
 
-static public final Method prepareForSave_m = ReflectionTools.methodOf("prepareForSave", field.core.dispatch.iVisualElementOverrides.class);
-static public final Mirroring.MirrorNoArgsMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode> prepareForSave_s = new Mirroring.MirrorNoArgsMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode>(field.core.dispatch.iVisualElementOverrides.class, "prepareForSave");
+public static final Method prepareForSave_m = ReflectionTools.methodOf("prepareForSave", field.core.dispatch.iVisualElementOverrides.class);
+public static final Mirroring.MirrorNoArgsMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode> prepareForSave_s = new Mirroring.MirrorNoArgsMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode>(field.core.dispatch.iVisualElementOverrides.class, "prepareForSave");
 
 public final Mirroring.iBoundNoArgsMethod<GraphNodeSearching.VisitCode> prepareForSave;
-static public final Method setProperty_m = ReflectionTools.methodOf("setProperty", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class, field.core.dispatch.iVisualElementOverrides.Ref.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> setProperty_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "setProperty", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class, field.core.dispatch.iVisualElementOverrides.Ref.class});
+public static final Method setProperty_m = ReflectionTools.methodOf("setProperty", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class, field.core.dispatch.iVisualElementOverrides.Ref.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> setProperty_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "setProperty", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.VisualElementProperty.class, field.core.dispatch.iVisualElementOverrides.Ref.class});
 
 public interface setProperty_interface extends iAcceptor<Object[]>, iFunction<GraphNodeSearching.VisitCode ,Object[] >
 	{
@@ -158,8 +158,8 @@ public iProvider<GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iV
 
 public final setProperty_interface setProperty;
 
-static public final Method shouldChangeFrame_m = ReflectionTools.methodOf("shouldChangeFrame", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.Rect.class, field.core.dispatch.iVisualElement.Rect.class, boolean.class);
-static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> shouldChangeFrame_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "shouldChangeFrame", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.Rect.class, field.core.dispatch.iVisualElement.Rect.class, boolean.class});
+public static final Method shouldChangeFrame_m = ReflectionTools.methodOf("shouldChangeFrame", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.Rect.class, field.core.dispatch.iVisualElement.Rect.class, boolean.class);
+public static final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]> shouldChangeFrame_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, GraphNodeSearching.VisitCode, Object[]>(field.core.dispatch.iVisualElementOverrides.class, "shouldChangeFrame", new Class[]{field.core.dispatch.iVisualElement.class, field.core.dispatch.iVisualElement.Rect.class, field.core.dispatch.iVisualElement.Rect.class, boolean.class});
 
 public interface shouldChangeFrame_interface extends iAcceptor<Object[]>, iFunction<GraphNodeSearching.VisitCode ,Object[] >
 	{

@@ -24,7 +24,7 @@ public class PredicateReference<T> extends UpdateableMarkerRef<T> {
 			@Override
 			public void markerAdded(iMarker<T> added) {
 				PredicateReturn b = PredicateReference.this.predicate.is(added, ref.get());
-				if ((ref.get() == null && b == PredicateReturn.is) || (b == PredicateReturn.better)) {
+				if (((ref.get() == null) && (b == PredicateReturn.is)) || (b == PredicateReturn.better)) {
 					newMarkerShouldBe = added;
 				}
 			}
@@ -74,7 +74,7 @@ public class PredicateReference<T> extends UpdateableMarkerRef<T> {
 		iMarker<T> c = null;
 		for (iMarker<T> marker : m) {
 			PredicateReturn r = predicate.is(marker, c);
-			if (c == null && r == PredicateReturn.is)
+			if ((c == null) && (r == PredicateReturn.is))
 				c = marker;
 			else if (r == PredicateReturn.better) c = marker;
 		}

@@ -45,7 +45,7 @@ public abstract class TopologyVisitor_breadthFirst<T> {
         fringe.addAll(c);
 
         visitFringe(fringe);
-        while (fringe.size() > 0) {
+        while (!fringe.isEmpty()) {
             for (T t : maybeWrap(fringe)) {
                 if (!avoidLoops || !seen.contains(t)) {
                     GraphNodeSearching.VisitCode vc = visit(t);
@@ -74,7 +74,8 @@ public abstract class TopologyVisitor_breadthFirst<T> {
         return f;
     }
 
-    abstract protected GraphNodeSearching.VisitCode visit(T root);
+    protected abstract
+    GraphNodeSearching.VisitCode visit(T root);
 
     protected void visitFringe(Collection<T> fringe) {
     }

@@ -32,16 +32,20 @@ public class NewInspector {
         valid, unset, mixed
     }
 
-	static public abstract class Inspected<T, C extends JComponent> {
+	public abstract static
+    class Inspected<T, C extends JComponent> {
 		public String name;
 
 		public C editor;
 
-		abstract public T getValue();
+		public abstract
+        T getValue();
 
-		abstract public void setValue(T s);
+		public abstract
+        void setValue(T s);
 
-		abstract public Status getStatus();
+		public abstract
+        Status getStatus();
 
 	}
 
@@ -193,9 +197,10 @@ public class NewInspector {
 		return i;
 	}
 
-	static public class TextControl extends JComponent implements ActionListener, SetValueForControl<String, TextControl> {
+	public static
+    class TextControl extends JComponent implements ActionListener, SetValueForControl<String, TextControl> {
 
-		private JTextField textField;
+		private final JTextField textField;
 		private Inspected<String, TextControl> i;
 
 		public TextControl(Inspected<String, TextControl> i) {
@@ -221,10 +226,10 @@ public class NewInspector {
 					textField.setText(i.getValue());
 				}
 			} else if (i.getStatus() == Status.mixed) {
-				if (!textField.getText().equals("\u2014"))
+				if (!"\u2014".equals(textField.getText()))
 					textField.setText("\u2014");
 			} else if (i.getStatus() == Status.unset)
-				if (!textField.getText().equals(" "))
+				if (!" ".equals(textField.getText()))
 					textField.setText(" ");
 		}
 
@@ -241,7 +246,7 @@ public class NewInspector {
 
 	static public class BooleanControl extends JComponent implements ActionListener, SetValueForControl<Boolean, BooleanControl> {
 
-		private TristateCheckBox textField;
+		private final TristateCheckBox textField;
 		private Inspected<Boolean, BooleanControl> i;
 
 		public BooleanControl(Inspected<Boolean, BooleanControl> i) {
@@ -287,7 +292,7 @@ public class NewInspector {
 	static public class ActionControl extends JComponent implements ActionListener, SetValueForControl<Action, ActionControl> {
 
 		private Inspected<Action, ActionControl> i;
-		private JButton textField;
+		private final JButton textField;
 
 		public ActionControl(Inspected<Action, ActionControl> i) {
 			this.i = i;
@@ -325,7 +330,7 @@ public class NewInspector {
 
 	static public class InfoControl extends JComponent {
 
-		private JLabel textField;
+		private final JLabel textField;
 
 		public InfoControl(Inspected<String, InfoControl> i) {
 			setLayout(new BorderLayout(0, 0));
@@ -340,7 +345,7 @@ public class NewInspector {
 
 	static public class ColorControl extends JComponent implements ActionListener {
 
-		private JComponent textField;
+		private final JComponent textField;
 		private final Inspected i;
 
 		public ColorControl(final Inspected<Vector4, ColorControl> i) {
@@ -450,7 +455,7 @@ public class NewInspector {
 
 	static public class IntControl extends JComponent implements ChangeListener, SetValueForControl<Integer, IntControl> {
 
-		private DraggableNumber textField;
+		private final DraggableNumber textField;
 		private Inspected<Integer, IntControl> i;
 
 		public IntControl(Inspected<Integer, IntControl> i) {
@@ -536,7 +541,7 @@ public class NewInspector {
 	static int rowHeight = 30;
 
 	static public class Row extends JComponent {
-		private JLabel label;
+		private final JLabel label;
 		public Inspected i;
 
 		int labelWidth = NewInspector.labelWidth;
@@ -549,7 +554,7 @@ public class NewInspector {
 			this.i = i;
 			this.labelWidth = lw;
 			setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-			label = new JLabel(i.editor instanceof InfoControl ? "" : i.name) {
+			label = new JLabel((i.editor instanceof InfoControl) ? "" : i.name) {
 				public void paint(java.awt.Graphics g) {
 					Graphics2D g2 = (Graphics2D) g;
 					g2.setColor(new Color(0, 0, 0, 0.8f));

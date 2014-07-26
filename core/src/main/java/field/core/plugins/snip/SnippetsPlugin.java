@@ -40,9 +40,10 @@ import java.util.Set;
 @Woven
 public class SnippetsPlugin extends BaseSimplePlugin {
 
-	static public final VisualElementProperty<SnippetsPlugin> snippets = new VisualElementProperty<SnippetsPlugin>("snippets");
+	public static final VisualElementProperty<SnippetsPlugin> snippets = new VisualElementProperty<SnippetsPlugin>("snippets");
 
-	static public class Snippet extends NodeImpl<Snippet> implements iProvidesSearchTerms, field.math.graph.iMutableContainer<String, Snippet> {
+	public static
+    class Snippet extends NodeImpl<Snippet> implements iProvidesSearchTerms, field.math.graph.iMutableContainer<String, Snippet> {
 
 		protected String text;
 		protected boolean multiline;
@@ -64,7 +65,7 @@ public class SnippetsPlugin extends BaseSimplePlugin {
 		}
 
 		public iMutable duplicate() {
-			if (annotation.equals(""))
+			if (annotation != null && annotation.isEmpty())
 				return new Snippet(text);
 			return new Snippet(text, annotation, subgroupname);
 		}
@@ -90,7 +91,7 @@ public class SnippetsPlugin extends BaseSimplePlugin {
 		}
 
 		public String getSelectionText() {
-			if (annotation.equals(""))
+			if (annotation != null && annotation.isEmpty())
 				return text;
 			else
 				return text.split("\n")[0];
@@ -110,14 +111,11 @@ public class SnippetsPlugin extends BaseSimplePlugin {
 		public String toString() {
 			String[] ss = text.split("\n");
             return (multiline
-                    ? ("<b>" + ss[0] + "</b>" + " " + annotation + " " + smaller("and "
+                    ? ("<b>" + ss[0] + "</b>" + ' ' + annotation + ' ' + smaller("and "
                                                                                  + (ss.length - 1)
-                                                                                 + " "
+                                                                                 + ' '
                                                                                  + subgroupname
-                                                                                 + ""
-                                                                                 + (ss.length == 2
-                                                                                    ? ""
-                                                                                    : "s")))
+                                                                                 + (ss.length == 2 ? "" : "s")))
                     : "<b>" + text + "</b>" + " " + annotation);
         }
 	}
@@ -128,9 +126,10 @@ public class SnippetsPlugin extends BaseSimplePlugin {
 
 	private SelectionGroup<iComponent> group;
 
-	static public final List<iFunction<Boolean, Pair<URL, SnippetsPlugin>>> urlHandlers = new ArrayList<iFunction<Boolean, Pair<URL, SnippetsPlugin>>>();
+	public static final List<iFunction<Boolean, Pair<URL, SnippetsPlugin>>> urlHandlers = new ArrayList<iFunction<Boolean, Pair<URL, SnippetsPlugin>>>();
 
-	static public void addURLHandler(iFunction<Boolean, Pair<URL, SnippetsPlugin>> f) {
+	public static
+    void addURLHandler(iFunction<Boolean, Pair<URL, SnippetsPlugin>> f) {
 		urlHandlers.add(f);
 	}
 
@@ -229,7 +228,8 @@ public class SnippetsPlugin extends BaseSimplePlugin {
 		rebuild();
 	}
 
-	static protected String smaller(String text) {
+	protected static
+    String smaller(String text) {
 		return "<font size=-3 color='#" + Constants.defaultTreeColorDim + "'>" + text + "</font>";
 	}
 
@@ -338,35 +338,39 @@ public class SnippetsPlugin extends BaseSimplePlugin {
 		return "snip";
 	}
 
-	static public void addText(iVisualElement context, String text) {
+	public static
+    void addText(iVisualElement context, String text) {
 		SnippetsPlugin plugin = snippets.get(context);
 		if (plugin != null) {
 			plugin.addText(text);
 		}
 	}
 
-	static public void addText(iVisualElement context, String text, String annotation, String groupname) {
+	public static
+    void addText(iVisualElement context, String text, String annotation, String groupname) {
 		SnippetsPlugin plugin = snippets.get(context);
 		if (plugin != null) {
 			plugin.addText(text, annotation, groupname);
 		}
 	}
 
-	static public void addText(iVisualElement context, String text, String annotation, String[] subannotation, String groupname) {
+	public static
+    void addText(iVisualElement context, String text, String annotation, String[] subannotation, String groupname) {
 		SnippetsPlugin plugin = snippets.get(context);
 		if (plugin != null) {
 			plugin.addText(text, annotation, subannotation, groupname);
 		}
 	}
 
-	static public final List<SnippetsPlugin> allPlugins = new ArrayList<SnippetsPlugin>();
+	public static final List<SnippetsPlugin> allPlugins = new ArrayList<SnippetsPlugin>();
 
 	@Override
 	public void close() {
 		allPlugins.remove(this);
 	}
 
-	static public void addPasteboardText(String text) {
+	public static
+    void addPasteboardText(String text) {
 		for (SnippetsPlugin s : allPlugins) {
 			s.addText(text);
 		}

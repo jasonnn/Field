@@ -38,7 +38,7 @@ public class SelectionTags implements iHandlesAttributes, iHandlesFindItem {
 		this.root = root;
 	}
 
-	static public final VisualElementProperty<String> selectionTag = new VisualElementProperty<String>("selectionTag");
+	public static final VisualElementProperty<String> selectionTag = new VisualElementProperty<String>("selectionTag");
 
 	public Object getAttribute(String name) {
 		return null;

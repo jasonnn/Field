@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 class TypesNode {
-    final static int REGULAR = 0;
+    static final int REGULAR = 0;
 
-    final static int EXCEPTION = 1;
+    static final int EXCEPTION = 1;
 
     private final ArrayList<TypesInstruction> mInstructions = new ArrayList<TypesInstruction>();
 

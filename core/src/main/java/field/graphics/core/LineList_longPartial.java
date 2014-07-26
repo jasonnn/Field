@@ -16,7 +16,7 @@ public class LineList_longPartial extends BasicGeometry.LineList_long {
 		super(new BasicUtilities.Position());
 	}
 
-	static public int vertexPerFrame = 5000;
+	public static int vertexPerFrame = 5000;
 
 	int uploadedVertex = 0;
 	int uploadedTriangle = 0;
@@ -110,7 +110,7 @@ public class LineList_longPartial extends BasicGeometry.LineList_long {
 		uploadedVertex = Math.min(vertexLimit, uploadedVertex + vertexPerFrame);
 		uploadedTriangle = Math.min(triangleLimit, uploadedTriangle + vertexPerFrame);
 
-		if (uploadedVertex == vertexLimit && uploadedTriangle == triangleLimit)
+		if ((uploadedVertex == vertexLimit) && (uploadedTriangle == triangleLimit))
 			uploadComplete = true;
 
 	}

@@ -11,7 +11,8 @@ public class YieldSupport {
 	/**
 	 * note, yields are stored per method, not per instance (globally, that is)
 	 */
-	static public YieldInfo findYieldInfoFor(Object o)
+    public static
+    YieldInfo findYieldInfoFor(Object o)
 	{
 		return globalYieldInfo.get(o);
 	}
@@ -67,7 +68,7 @@ public class YieldSupport {
 		
 		@Override
 		public String toString() {
-			return "yi:"+next+"-> "+lastReturn+" ("+Arrays.asList(localStack)+")";
+			return "yi:"+next+"-> "+lastReturn+" ("+Arrays.asList(localStack)+ ')';
 		}
 	}
 

@@ -37,7 +37,7 @@ public class FastVisualElementOverridesPropertyCombiner<U, T> {
 		
 		Ref<U> ref = new Ref<U>(null);
 		
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);

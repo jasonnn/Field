@@ -32,11 +32,11 @@ public class ApplyTool implements iCoordTransformation {
 
 	Constructor foundConstructor;
 
-	private boolean maskp;
+	private final boolean maskp;
 
-	private boolean maskn;
+	private final boolean maskn;
 
-	private boolean maska;
+	private final boolean maska;
 
 	public ApplyTool(String toolname, boolean maskp, boolean maskn, boolean maska) {
 		this.args = new Object[0];
@@ -60,7 +60,7 @@ public class ApplyTool implements iCoordTransformation {
 			}
 
 			if (this.found == null)
-				System.err.println(ANSIColorUtils.red(" can't find class <" + toolname + ">"));
+				System.err.println(ANSIColorUtils.red(" can't find class <" + toolname + '>'));
 			else {
 				found = this.found;
 				foundClasses.put(toolname, found);
@@ -73,7 +73,7 @@ public class ApplyTool implements iCoordTransformation {
 				if (c[i].getParameterTypes().length == args.length) {
 					foundConstructor = c[i];
 				}
-			if (foundConstructor == null) System.err.println(ANSIColorUtils.red(" can't find constructor from <" + Arrays.asList(c) + "> / <" + args.length + ">"));
+			if (foundConstructor == null) System.err.println(ANSIColorUtils.red(" can't find constructor from <" + Arrays.asList(c) + "> / <" + args.length + '>'));
 		}
 	}
 
@@ -99,7 +99,7 @@ public class ApplyTool implements iCoordTransformation {
 			}
 
 			if (this.found == null)
-				System.err.println(ANSIColorUtils.red(" can't find class <" + toolname + ">"));
+				System.err.println(ANSIColorUtils.red(" can't find class <" + toolname + '>'));
 			else {
 				found = this.found;
 				foundClasses.put(toolname, found);
@@ -112,7 +112,7 @@ public class ApplyTool implements iCoordTransformation {
 				if (c[i].getParameterTypes().length == args.length) {
 					foundConstructor = c[i];
 				}
-			if (foundConstructor == null) System.err.println(ANSIColorUtils.red(" can't find constructor from <" + Arrays.asList(c) + "> / <" + args.length + ">"));
+			if (foundConstructor == null) System.err.println(ANSIColorUtils.red(" can't find constructor from <" + Arrays.asList(c) + "> / <" + args.length + '>'));
 		}
 	}
 
@@ -139,21 +139,21 @@ public class ApplyTool implements iCoordTransformation {
 								return new WritingReturn(){
 
 									public Vector2 setRightTangent(Vector2 out, CachedLineCursor now) {
-										System.err.println(" srt :" + out + " " + now);
+										System.err.println(" srt :" + out + ' ' + now);
 										Vector2 o = maska ? wr.setRightTangent(out, now) : out;
 										System.err.println("    -->" + o);
 										return o;
 									}
 
 									public Vector2 setPosition(Vector2 out, CachedLineCursor now) {
-										System.err.println(" sp :" + out + " " + now);
+										System.err.println(" sp :" + out + ' ' + now);
 										Vector2 o = maskn ? wr.setPosition(out, now) : out;
 										System.err.println("    -->" + o);
 										return o;
 									}
 
 									public Vector2 setLeftTangent(Vector2 out, CachedLineCursor now) {
-										System.err.println(" slt :" + out + " " + now);
+										System.err.println(" slt :" + out + ' ' + now);
 										Vector2 o = maskp ? wr.setLeftTangent(out, now) : out;
 										System.err.println("    -->" + o);
 										return o;
@@ -174,7 +174,7 @@ public class ApplyTool implements iCoordTransformation {
 								};
 							}
 
-							System.err.println(" not applying the tool :" + now + " " + vertex + " " + vertex.vertex);
+							System.err.println(" not applying the tool :" + now + ' ' + vertex + ' ' + vertex.vertex);
 							return null;
 						}
 					});

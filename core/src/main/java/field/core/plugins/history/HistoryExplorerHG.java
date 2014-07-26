@@ -53,7 +53,8 @@ public class HistoryExplorerHG {
 
 	}
 
-	static public class VersionNode extends field.math.graph.NodeImpl<VersionNode> {
+	public static
+    class VersionNode extends field.math.graph.NodeImpl<VersionNode> {
 		public VersionNodeType type;
 
 		public long revision;
@@ -92,7 +93,10 @@ public class HistoryExplorerHG {
 
 		@Override
 		public String toString() {
-			return type + " " + path + " '" + logEntry + "'" + revision+" "+(copyToFilename==null ? "" : "copied to "+copyToFilename)+" "+(copiedFromFilename==null ? "" : "copied from "+copiedFromFilename);
+			return type + " " + path + " '" + logEntry + '\''
+                   + revision+ ' '
+                   +(copyToFilename==null ? "" : "copied to "+copyToFilename)+ ' '
+                   +(copiedFromFilename==null ? "" : "copied from "+copiedFromFilename);
 		}
 	}
 
@@ -111,7 +115,7 @@ public class HistoryExplorerHG {
 	public HistoryExplorerHG(String repositoryRoot, String sheetName) {
 		this.sheetName = sheetName;
 		this.repositoryRoot = repositoryRoot;
-		this.prefix = repositoryRoot + "/";
+		this.prefix = repositoryRoot + '/';
 		tools = new HGTools(repositoryRoot, sheetName, null);
 	}
 
@@ -173,7 +177,7 @@ public class HistoryExplorerHG {
 
     public static
     Set<VersionNode> buildHistoryGraph(String string) {
-        System.err.println(" building history graph for file <" + string + ">");
+        System.err.println(" building history graph for file <" + string + '>');
 		HGLog log = new HGLog(string);
 		List<VersionNode> vn = log.getVersionNodes();
 
@@ -197,7 +201,7 @@ public class HistoryExplorerHG {
 	}
 
 	public String getSheetPrefix() {
-		return prefix + "/" + sheetName + "/";
+		return prefix + '/' + sheetName + '/';
 	}
 
 	public Object getVersionProperty(long revision, String path, VisualElementProperty property) {

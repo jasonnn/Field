@@ -50,10 +50,6 @@
     </inspection_tool>
     <inspection_tool class="CastToIncompatibleInterface" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ChainedEquality" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ChainedMethodCall" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="m_ignoreFieldInitializations" value="true" />
-      <option name="m_ignoreThisSuperCalls" value="true" />
-    </inspection_tool>
     <inspection_tool class="Change to a builtin, read-only shell variable" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ChannelResource" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="insideTryAllowed" value="false" />
@@ -381,9 +377,6 @@
     </inspection_tool>
     <inspection_tool class="ObjectNotify" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ObjectToString" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ObsoleteCollection" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="ignoreRequiredObsoleteCollectionTypes" value="false" />
-    </inspection_tool>
     <inspection_tool class="OctalAndDecimalIntegersMixed" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="OneButtonGroup" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="OverlyComplexArithmeticExpression" enabled="true" level="WARNING" enabled_by_default="true">
@@ -478,7 +471,6 @@
     </inspection_tool>
     <inspection_tool class="SubstringZero" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SubtractionInCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="SuppressionAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SuspiciousArrayCast" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SuspiciousIndentAfterControlStatement" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SynchronizationOnStaticField" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -490,7 +482,6 @@
     </inspection_tool>
     <inspection_tool class="SynchronizedOnLiteralObject" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SystemGC" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="SystemOutErr" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SystemRunFinalizersOnExit" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="TailRecursion" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="TextLabelInSwitchStatement" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -503,8 +494,6 @@
     <inspection_tool class="ThreadStopSuspendResume" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ThreadWithDefaultRunMethod" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ThreadYield" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ThrowablePrintStackTrace" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="TodoComment" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="TooBroadScope" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_allowConstructorAsInitializer" value="false" />
       <option name="m_onlyLookAtBlocks" value="false" />

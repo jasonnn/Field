@@ -12,7 +12,8 @@ public class HyperlinkedErrorMessage {
 	public HyperlinkedErrorMessage() {
 	}
 
-	static public String error(String uidDesc, int lineNo) {
+	public static
+    String error(String uidDesc, int lineNo) {
 		return "";
 		//return "###errorLink###" + uidDesc + "###" + lineNo + "###";
 	}

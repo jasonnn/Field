@@ -14,21 +14,22 @@ public class SimpleGraphDrawing {
 
 	// static public final Prop<iFunction
 
-	static public final Prop<iFunction<Number, Cobj>> extract = new Prop<iFunction<Number, Cobj>>("extract");
-	static public final Prop<iFunction<Number, Double>> filter = new Prop<iFunction<Number, Double>>("filter");
-	static public final Prop<Boolean> clampToZero = new Prop<Boolean>("clampToZero");
+	public static final Prop<iFunction<Number, Cobj>> extract = new Prop<iFunction<Number, Cobj>>("extract");
+	public static final Prop<iFunction<Number, Double>> filter = new Prop<iFunction<Number, Double>>("filter");
+	public static final Prop<Boolean> clampToZero = new Prop<Boolean>("clampToZero");
 
-	static public final Prop<Number> max = new Prop<Number>("max");
-	static public final Prop<Number> min = new Prop<Number>("min");
+	public static final Prop<Number> max = new Prop<Number>("max");
+	public static final Prop<Number> min = new Prop<Number>("min");
 
-	static public final Prop<Number> length = new Prop<Number>("length");
-	static public final Prop<Number> offset = new Prop<Number>("offset");
+	public static final Prop<Number> length = new Prop<Number>("length");
+	public static final Prop<Number> offset = new Prop<Number>("offset");
 
-	static public final Prop<Vector2> dimensions = new Prop<Vector2>("dimensions");
+	public static final Prop<Vector2> dimensions = new Prop<Vector2>("dimensions");
 
-	static public final Prop<iAxis> axis = new Prop<iAxis>("axis");
+	public static final Prop<iAxis> axis = new Prop<iAxis>("axis");
 
-	static public class Datum extends Cobj {
+	public static
+    class Datum extends Cobj {
 		public Datum() {
 			init();
 		}
@@ -44,11 +45,12 @@ public class SimpleGraphDrawing {
 
 	}
 
-	static public class SimpleAxis extends Cobj implements iAxis, iLayout {
+	public static
+    class SimpleAxis extends Cobj implements iAxis, iLayout {
 
 		protected Prop<Number> dimension;
-		private iFunction<Number, Cobj> defaultExtract;
-		private iFunction<Number, Double> defaultFilter;
+		private final iFunction<Number, Cobj> defaultExtract;
+		private final iFunction<Number, Double> defaultFilter;
 
 		public SimpleAxis(String dimension) {
 			this.dimension = new Prop<Number>(dimension);
@@ -121,7 +123,7 @@ public class SimpleGraphDrawing {
 			if (o == null)
 				return b;
 			if (o instanceof Boolean)
-				return ((Boolean) o).booleanValue() ? 1f : 0f;
+				return (Boolean) o ? 1f : 0f;
 			if (o instanceof Number)
 				return ((Number) o).floatValue();
 			throw new ClassCastException("cannot convert " + (o.getClass()) + " to number");

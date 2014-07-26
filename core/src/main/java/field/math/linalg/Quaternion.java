@@ -25,11 +25,11 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	// Combatible with 1.1
 	static final long serialVersionUID = 2675933778405442383L;
 
-	final static double EPS = 0.000001;
+	static final double EPS = 0.000001;
 
-	final static double EPS2 = 1.0e-30;
+	static final double EPS2 = 1.0e-30;
 
-	final static double PIO2 = 1.57079632679;
+	static final double PIO2 = 1.57079632679;
 
 	/**
 	 * Constructs a (counter-clockwise) rotation around z of "angle".
@@ -65,7 +65,7 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	 */
 	public Quaternion(float x, float y, float z, float w) {
 		float mag;
-		mag = (float) (1.0 / Math.sqrt(x * x + y * y + z * z + w * w));
+		mag = (float) (1.0 / Math.sqrt((x * x) + (y * y) + (z * z) + (w * w)));
 		this.x = x * mag;
 		this.y = y * mag;
 		this.z = z * mag;
@@ -81,7 +81,7 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	 */
 	public Quaternion(float[] q) {
 		float mag;
-		mag = (float) (1.0 / Math.sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]));
+		mag = (float) (1.0 / Math.sqrt((q[0] * q[0]) + (q[1] * q[1]) + (q[2] * q[2]) + (q[3] * q[3])));
 		x = q[0] * mag;
 		y = q[1] * mag;
 		z = q[2] * mag;
@@ -145,7 +145,7 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	 */
 	public Quaternion(Tuple4 t1) {
 		float mag;
-		mag = (float) (1.0 / Math.sqrt(t1.x * t1.x + t1.y * t1.y + t1.z * t1.z + t1.w * t1.w));
+		mag = (float) (1.0 / Math.sqrt((t1.x * t1.x) + (t1.y * t1.y) + (t1.z * t1.z) + (t1.w * t1.w)));
 		x = t1.x * mag;
 		y = t1.y * mag;
 		z = t1.z * mag;
@@ -207,15 +207,17 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	 * 
 	 */
 	public final Quaternion mul(Quaternion q1, Quaternion q2) {
-		if (this != q1 && this != q2) {
+		if ((this != q1) && (this != q2)) {
 			this.w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
 			this.x = q1.w * q2.x + q2.w * q1.x + q1.y * q2.z - q1.z * q2.y;
 			this.y = q1.w * q2.y + q2.w * q1.y - q1.x * q2.z + q1.z * q2.x;
 			this.z = q1.w * q2.z + q2.w * q1.z + q1.x * q2.y - q1.y * q2.x;
 		} else {
-			float x, y, w;
+			float x;
+            float y;
+            float w;
 
-			w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
+            w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
 			x = q1.w * q2.x + q2.w * q1.x + q1.y * q2.z - q1.z * q2.y;
 			y = q1.w * q2.y + q2.w * q1.y - q1.x * q2.z + q1.z * q2.x;
 			this.z = q1.w * q2.z + q2.w * q1.z + q1.x * q2.y - q1.y * q2.x;
@@ -234,9 +236,11 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	 * @return this (mutated)
 	 */
 	public final Quaternion mul(Quaternion q1) {
-		float x, y, w;
+		float x;
+        float y;
+        float w;
 
-		w = this.w * q1.w - this.x * q1.x - this.y * q1.y - this.z * q1.z;
+        w = this.w * q1.w - this.x * q1.x - this.y * q1.y - this.z * q1.z;
 		x = this.w * q1.x + q1.w * this.x + this.y * q1.z - this.z * q1.y;
 		y = this.w * q1.y + q1.w * this.y - this.x * q1.z + this.z * q1.x;
 		this.z = this.w * q1.z + q1.w * this.z + this.x * q1.y - this.y * q1.x;
@@ -488,8 +492,9 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	 * @return this (mutated)
 	 */
 	public final Quaternion set(AxisAngle a) {
-		float mag, amag;
-		// Quat = cos(theta/2) + sin(theta/2)(roation_axis)
+		float mag;
+        float amag;
+        // Quat = cos(theta/2) + sin(theta/2)(roation_axis)
 		amag = (float) Math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
 		if (amag < EPS) {
 			w = 0.0f;
@@ -524,9 +529,13 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 		// Fixed function to negate the first quaternion in the case that the
 		// dot product of q1 and this is negative. Second case was not needed.
 
-		double dot, s1, s2, om, sinom;
+		double dot;
+        double s1;
+        double s2;
+        double om;
+        double sinom;
 
-		dot = x * q1.x + y * q1.y + z * q1.z + w * q1.w;
+        dot = x * q1.x + y * q1.y + z * q1.z + w * q1.w;
 
 		if (dot < 0) {
 			// negate quaternion
@@ -557,9 +566,13 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	
 	public final Quaternion interpolateToUnity(float alpha)
 	{
-		double dot, s1, s2, om, sinom;
+		double dot;
+        double s1;
+        double s2;
+        double om;
+        double sinom;
 
-		double one = 1;
+        double one = 1;
 		
 		dot = w;
 		
@@ -606,9 +619,13 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 		// Fixed function to negate the first quaternion in the case that the
 		// dot product of q1 and this is negative. Second case was not needed.
 
-		double dot, s1, s2, om, sinom;
+		double dot;
+        double s1;
+        double s2;
+        double om;
+        double sinom;
 
-		dot = q2.x * q1.x + q2.y * q1.y + q2.z * q1.z + q2.w * q1.w;
+        dot = q2.x * q1.x + q2.y * q1.y + q2.z * q1.z + q2.w * q1.w;
 
 		if (dot < 0) {
 			// negate quaternion
@@ -683,13 +700,15 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	 * @return the String representation
 	 */
 	public String toString() {
-		return "{" + this.w + ", " + this.x + ", " + this.y + ", " + this.z + "}";
+		return "{" + this.w + ", " + this.x + ", " + this.y + ", " + this.z + '}';
 	}
 
 	final void mul(Tuple4 q1, Tuple4 out) {
-		float x, y, w;
+		float x;
+        float y;
+        float w;
 
-		w = this.w * q1.w - this.x * q1.x - this.y * q1.y - this.z * q1.z;
+        w = this.w * q1.w - this.x * q1.x - this.y * q1.y - this.z * q1.z;
 		x = this.w * q1.x + q1.w * this.x + this.y * q1.z - this.z * q1.y;
 		y = this.w * q1.y + q1.w * this.y - this.x * q1.z + this.z * q1.x;
 		out.z = this.w * q1.z + q1.w * this.z + this.x * q1.y - this.y * q1.x;
@@ -699,9 +718,11 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	}
 
 	final void mul(Vector3 q1, Tuple4 out) {
-		float x, y, w;
+		float x;
+        float y;
+        float w;
 
-		w = this.w * 0 - this.x * q1.x - this.y * q1.y - this.z * q1.z;
+        w = this.w * 0 - this.x * q1.x - this.y * q1.y - this.z * q1.z;
 		x = this.w * q1.x + 0 * this.x + this.y * q1.z - this.z * q1.y;
 		y = this.w * q1.y + 0 * this.y - this.x * q1.z + this.z * q1.x;
 		out.z = this.w * q1.z + 0 * this.z + this.x * q1.y - this.y * q1.x;
@@ -711,9 +732,10 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 	}
 
 	final void mul(Tuple4 q1, Vector3 out) {
-		float x, y;
+		float x;
+        float y;
 
-		x = this.w * q1.x + q1.w * this.x + this.y * q1.z - this.z * q1.y;
+        x = this.w * q1.x + q1.w * this.x + this.y * q1.z - this.z * q1.y;
 		y = this.w * q1.y + q1.w * this.y - this.x * q1.z + this.z * q1.x;
 		out.z = this.w * q1.z + q1.w * this.z + this.x * q1.y - this.y * q1.x;
 		out.x = x;
@@ -913,7 +935,8 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 		powerSlerp(qtemp1, qtemp2, 2.0 * alpha * (1.0 - alpha), qout);
 	}
 	
-	static public void computeA(Quaternion before, Quaternion value, Quaternion after, Quaternion a, Quaternion scratch1, Quaternion scratch2, Quaternion scratch3)
+	public static
+    void computeA(Quaternion before, Quaternion value, Quaternion after, Quaternion a, Quaternion scratch1, Quaternion scratch2, Quaternion scratch3)
 	{
 
 		value.conjugate();
@@ -946,7 +969,8 @@ public class Quaternion extends Tuple4 implements java.io.Serializable {
 		this.w += leftRotation.w*leftD;
 	}
 	
-	static public Quaternion blend(List<Quaternion> q, List<? extends Number> w)
+	public static
+    Quaternion blend(List<Quaternion> q, List<? extends Number> w)
 	{
 		if (q.size()==0) return new Quaternion();
 		if (q.size()==1) return new Quaternion(q.get(0));

@@ -38,7 +38,8 @@ import java.util.Map.Entry;
 
 public class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcceptor<Object>, iAcceptsInsertRenderingContext {
 
-	static public class Component_transformBlockEnd extends ProvidedComponent {
+	public static
+    class Component_transformBlockEnd extends ProvidedComponent {
 		protected String valueString = "";
 
 		@Override
@@ -103,7 +104,7 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 
 		@Override
 		public String getCurrentRepresentedString() {
-			return "\"\"\", globals())\n#--{\\" + valueString + "}";
+			return "\"\"\", globals())\n#--{\\" + valueString + '}';
 		}
 
 		public String name() {
@@ -114,9 +115,9 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 			if (m.length() == 0)
 				return "unititled";
 			if (!Character.isJavaIdentifierStart(m.charAt(0))) {
-				m = "_" + m;
+				m = '_' + m;
 			}
-			StringBuffer cm = new StringBuffer(m);
+			StringBuilder cm = new StringBuilder(m);
 			for (int i = 0; i < m.length(); i++) {
 				if (!Character.isJavaIdentifierPart(m.charAt(i)) && m.charAt(i) != '(' && m.charAt(i) != ')') {
 					cm.setCharAt(i, '_');
@@ -135,7 +136,8 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 		}
 	}
 
-	static public class Component_transformBlockStart extends ProvidedComponent {
+	public static
+    class Component_transformBlockStart extends ProvidedComponent {
 		protected String valueString = "";
 
 		String name;
@@ -277,7 +279,8 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 
 	}
 
-	static public String name(String valueString) {
+	public static
+    String name(String valueString) {
 		String[] q = valueString.split("[ \\.]");
 		if (q.length == 0)
 			return "untitled";
@@ -285,9 +288,9 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 		if (m.length() == 0)
 			return "unititled";
 		if (!Character.isJavaIdentifierStart(m.charAt(0))) {
-			m = "_" + m;
+			m = '_' + m;
 		}
-		StringBuffer cm = new StringBuffer(m);
+		StringBuilder cm = new StringBuilder(m);
 		for (int i = 0; i < m.length(); i++) {
 			if (!Character.isJavaIdentifierPart(m.charAt(i)) && m.charAt(i) != '(' && m.charAt(i) != ')') {
 				cm.setCharAt(i, '_');
@@ -298,7 +301,8 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 		return cm.toString();
 	}
 
-	static public class MinimalTextFieldReference implements Serializable, iExtensible {
+	public static
+    class MinimalTextFieldReference implements Serializable, iExtensible {
 		transient MinimalTextField_blockMenu reference;
 		Dict dict;
 
@@ -309,7 +313,7 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 		}
 	}
 
-	static public List<Pair<String, String>> knownTextTransforms = new ArrayList<Pair<String, String>>();
+	public static List<Pair<String, String>> knownTextTransforms = new ArrayList<Pair<String, String>>();
 
 	String[] options;
 
@@ -339,7 +343,7 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 		for (int i = 0; i < c.length; i++) {
 			try {
 				int n = Integer.parseInt(c[i]);
-				return "" + n + ". ";
+				return n + ". ";
 			} catch (NumberFormatException e) {
 			}
 		}
@@ -403,7 +407,7 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 		g2.draw(d3);
 		g2.draw(d2);
 
-		g2.setFont(new Font(Constants.defaultFont, Font.PLAIN | Font.BOLD, 16));
+		g2.setFont(new Font(Constants.defaultFont, Font.BOLD, 16));
 
 		if (label.length() > 0) {
 			int width = g2.getFontMetrics().bytesWidth(label.getBytes(), 0, label.length());
@@ -508,7 +512,7 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 	protected void processMouseEvent(MouseEvent e) {
 		super.processMouseEvent(e);
 
-		if (e.getClickCount() == 1 && !Platform.isPopupTrigger(e)) {
+		if ((e.getClickCount() == 1) && !Platform.isPopupTrigger(e)) {
 			Point loc = Launcher.display.getCursorLocation();
 
 			final Nub inside = CustomInsertDrawing.currentNub;
@@ -580,8 +584,8 @@ public class MinimalTextField_blockMenu extends MinimalTextField implements iPha
 						PyObject doc = (PyObject) PythonInterface.getPythonInterface().eval("TextTransforms." + name);
 						String d = (String) doc.__getattr__("__doc__").__tojava__(String.class);
 
-						if (d.length() > 0)
-							d = "" + PythonTextEditor.limitDocumentation(d);
+						if (!d.isEmpty())
+							d = PythonTextEditor.limitDocumentation(d);
 
                         // System.out.println(name+" <"+d+">");
 

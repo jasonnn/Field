@@ -105,7 +105,7 @@ public class ExternalContextTopology<K> extends ContextTopology<K, ExternalConte
 	@Override
 	public void delete(K child) {
 		WeakReference<Context> p = contextFor(null, getAt()).parent;
-		if (p!=null && p.get()!=null)
+		if ((p != null) && (p.get() != null))
 		{
 			p.get().children.remove(child);
 		}
@@ -153,7 +153,7 @@ public class ExternalContextTopology<K> extends ContextTopology<K, ExternalConte
 		HashSet<K> seen = new HashSet<K>();
 		K aa = getAt();
 		String p = "";
-		while (!seen.contains(aa) && aa != null) {
+		while (!seen.contains(aa) && (aa != null)) {
 			seen.add(aa);
 			p = aa + "/" + p;
 			aa = contextFor(null, aa).parent.get().name == null ? null : contextFor(null, aa).parent.get().name.get();

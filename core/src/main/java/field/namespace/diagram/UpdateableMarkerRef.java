@@ -62,7 +62,7 @@ public class UpdateableMarkerRef<T> implements iMarkerRef<T>, iUpdateable {
 		if (insideCheck) return;
 		insideCheck = true;
 		try {
-			if (valid && ref.get() != null) {
+			if (valid && (ref.get() != null)) {
 				iMarker<T> newMarker = markerPresent();
 				if (newMarker != ref.get()) {
 					iMarker<T> was = ref.get();
@@ -71,7 +71,7 @@ public class UpdateableMarkerRef<T> implements iMarkerRef<T>, iUpdateable {
 					newMarker.addNotify(no = newNotify());
 					fireDifferent(was);
 				}
-			} else if ((valid && ref.get() == null) || (!valid && wasValid)) {
+			} else if ((valid && (ref.get() == null)) || (!valid && wasValid)) {
 				if (wasValid) {
 					wasValid = false;
 					iMarker<T> newMarker = markerMissing();
@@ -87,7 +87,7 @@ public class UpdateableMarkerRef<T> implements iMarkerRef<T>, iUpdateable {
 						fireLost();
 					}
 				}
-			} else if (ref.get()==null && wasValid == false)
+			} else if ((ref.get() == null) && (wasValid == false))
 			{
 				iMarker<T> newMarker = markerStillMissing();
 				if (newMarker!=null)

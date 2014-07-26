@@ -6,7 +6,8 @@ public class UnitTestHelper {
 
 	private static final String prefix = "#->";
 
-	static public String expectedOutputForExpression(String expression) {
+	public static
+    String expectedOutputForExpression(String expression) {
 		String[] lines = expression.split("\n");
 		for (String ll : lines) {
 			if (ll.startsWith(prefix)) {
@@ -21,8 +22,7 @@ public class UnitTestHelper {
 		if (oldOutput == null) {
 			int expressionStartsAt = ed.getText().indexOf(expression, p1)
 					+ expression.length();
-				ed.getContent().replaceTextRange(expressionStartsAt, 0,
-						"\n" + (prefix + newOutput));
+				ed.getContent().replaceTextRange(expressionStartsAt, 0, '\n' + (prefix + newOutput));
 
 		} else {
 			int expressionStartsAt = ed.getText().indexOf(prefix + oldOutput,

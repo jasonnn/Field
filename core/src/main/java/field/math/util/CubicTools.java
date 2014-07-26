@@ -35,13 +35,13 @@ public class CubicTools {
 		afterNext = afterNext == 0 ? 1 : afterNext;
 		nextNow = nextNow == 0 ? 1 : nextNow;
 
-		double t1x = 0.5 * ((next - now) / (nextNow) + (after - next) / (afterNext)) * (nextNow);
-		double t2x = 0.5 * ((now - before) / (nowBefore) + (next - now) / (nextNow)) * (nextNow);
+		double t1x = 0.5 * (((next - now) / (nextNow)) + ((after - next) / (afterNext))) * (nextNow);
+		double t2x = 0.5 * (((now - before) / (nowBefore)) + ((next - now) / (nextNow))) * (nextNow);
 
 		H((float) a, tmp2);
 		// return tmp2[0] * now + tmp2[1] * next + tmp2[2] * t2 +
 		// tmp2[3] * t1;
-		return (tmp2[0] * now + tmp2[1] * next + tmp2[2] * t2x + tmp2[3] * t1x);
+		return ((tmp2[0] * now) + (tmp2[1] * next) + (tmp2[2] * t2x) + (tmp2[3] * t1x));
 	}
 
 	/**
@@ -61,7 +61,8 @@ public class CubicTools {
 	 * @param after
 	 *                The fourth local sample.
 	 */
-	static public float cubic(float alpha, float before, float now, float next, float after) {
+    public static
+    float cubic(float alpha, float before, float now, float next, float after) {
 		// float[] tmp= (float[]) CubicTools.tmp.get();
 		H(alpha, tmp2);
 		float t1 = 1 * (next - before) / 2;
@@ -128,7 +129,8 @@ public class CubicTools {
 	 * 
 	 * @return
 	 */
-	static public Vector3 cubic(float alpha, Vector3 before, Vector3 now, Vector3 next, Vector3 after, Vector3 out) {
+    public static
+    Vector3 cubic(float alpha, Vector3 before, Vector3 now, Vector3 next, Vector3 after, Vector3 out) {
 		if (out == null)
 			out = new Vector3();
 		out.x = (cubic(alpha, before.x, now.x, next.x, after.x));
@@ -137,7 +139,8 @@ public class CubicTools {
 		return out;
 	}
 
-	static public void cubic(float alpha, Vector3 before, Vector3 now, Vector3 next, Vector3 after, Vector3 out, float tmul) {
+	public static
+    void cubic(float alpha, Vector3 before, Vector3 now, Vector3 next, Vector3 after, Vector3 out, float tmul) {
 		out.x = (straightCubic(alpha, before.x, now.x, next.x, after.x, tmul));
 		out.y = (straightCubic(alpha, before.y, now.y, next.y, after.y, tmul));
 		out.z = (straightCubic(alpha, before.z, now.z, next.z, after.z, tmul));
@@ -176,7 +179,8 @@ public class CubicTools {
 		out.w = (tmp2[0] * now.w + tmp2[1] * next.w + tmp2[2] * t2w + tmp2[3] * t1w);
 	}
 
-	static public float cubicTCB(float before, float now, float next, float after, float alpha, Vector4 tcbm1, Vector4 tcbm2) {
+	public static
+    float cubicTCB(float before, float now, float next, float after, float alpha, Vector4 tcbm1, Vector4 tcbm2) {
 		float t1 = (float) (0.5 * ((1 - tcbm2.x) * (1 - tcbm2.y) * (1 + tcbm2.z) * (next - now) + (1 - tcbm2.x) * (1 + tcbm2.y) * (1 - tcbm2.z) * (after - next)) * tcbm2.w);
 		float t2 = (float) (0.5 * ((1 - tcbm1.x) * (1 + tcbm1.y) * (1 + tcbm1.z) * (now - before) + (1 - tcbm1.x) * (1 - tcbm1.y) * (1 - tcbm1.z) * (next - now)) * tcbm1.w);
 
@@ -189,7 +193,8 @@ public class CubicTools {
 	 * cubic-interpolated value for a given alpha is given by:<br>
 	 * <code>out[0]*1st_sample + out[1]*2nd_sample + out[2]*3rd_sample + out[3]*4th_sample</code>
 	 */
-	static public void H(float alpha, float[] out) {
+    public static
+    void H(float alpha, float[] out) {
 		/*
 		 * float a2 = a*a; float a3 = a2*a;
 		 * 
@@ -211,7 +216,8 @@ public class CubicTools {
 	/**
 	 * Calculates the interpolation coefficient for the first sample.
 	 */
-	static public float H0(float alpha) {
+    public static
+    float H0(float alpha) {
 		float alpha2 = alpha * alpha;
 		float alpha3 = alpha * alpha2;
 		return 2 * alpha3 - 3 * alpha2 + 1;
@@ -220,7 +226,8 @@ public class CubicTools {
 	/**
 	 * Calculates the interpolation coefficient for the second sample.
 	 */
-	static public float H1(float alpha) {
+    public static
+    float H1(float alpha) {
 		float alpha2 = alpha * alpha;
 		float alpha3 = alpha * alpha2;
 		return -2 * alpha3 + 3 * alpha2;
@@ -229,7 +236,8 @@ public class CubicTools {
 	/**
 	 * Calculates the interpolation coefficient for the third sample.
 	 */
-	static public float H2(float alpha) {
+    public static
+    float H2(float alpha) {
 		float alpha2 = alpha * alpha;
 		float alpha3 = alpha * alpha2;
 		return alpha3 - 2 * alpha2 + alpha;
@@ -238,7 +246,8 @@ public class CubicTools {
 	/**
 	 * Calculates the interpolation coefficient for the fourth sample.
 	 */
-	static public float H3(float alpha) {
+    public static
+    float H3(float alpha) {
 		float alpha2 = alpha * alpha;
 		float alpha3 = alpha * alpha2;
 		return alpha3 - alpha2;
@@ -247,7 +256,8 @@ public class CubicTools {
 	/**
 	 * Test drive method.
 	 */
-	static public void main(String[] s) {
+    public static
+    void main(String[] s) {
 		for (int i = 0; i < 11; i++) {
 		}
 	}
@@ -272,7 +282,8 @@ public class CubicTools {
 		}
 	}
 
-	static public float straightCubic(float alpha, float before, float now, float next, float after, float tmul) {
+	public static
+    float straightCubic(float alpha, float before, float now, float next, float after, float tmul) {
 		// float[] tmp= (float[]) CubicTools.tmp.get();
 		H(alpha, tmp2);
 		float t1 = tmul * (next - before) / 2;

@@ -26,10 +26,10 @@ public class SystemProperties {
 		{
 			insertOo3Properties(o);
 		}
-		for(int i=0;i<Launcher.args.length-1;i++)
+		for(int i=0; i < (Launcher.args.length - 1);i++)
 		{
 			String a = Launcher.args[i];
-			if (a.startsWith("-") && a.length()>1)
+			if (a.startsWith("-") && (a.length() > 1))
 			{
 				String n = Launcher.args[i+1];
 				additionalProperties.put(a.substring(1), n);
@@ -38,18 +38,20 @@ public class SystemProperties {
         //System.out.println("ap :"+additionalProperties);
     }
 
-	static public boolean getBooleanProperty(String s, boolean def)
+	public static
+    boolean getBooleanProperty(String s, boolean def)
 	{
 		String p= getProperty(s);
 		if (p == null)
 			return def;
-		return p.equalsIgnoreCase("true");
+		return "true".equalsIgnoreCase(p);
 	}
 	/**
 	    exactly the same as getProperty except this makes sure that the property it
 	    returns has a trailing '/'. great for directory names, hence the name */
 
-	static public String getDirProperty(String s)
+    public static
+    String getDirProperty(String s)
 	{
 		String p= getProperty(s);
 
@@ -57,7 +59,7 @@ public class SystemProperties {
 			return null;
 
 		if (!p.endsWith("/"))
-			return p + "/";
+			return p + '/';
 		return p;
 	}
 	
@@ -65,18 +67,20 @@ public class SystemProperties {
 	 	when items separated by ":".
 	 */
 
-	static public String[] getDirProperties(String s) {
+    public static
+    String[] getDirProperties(String s) {
 		String[] ps = getProperties(s);
 		
 		for (int i = 0; i < ps.length; i++) {
-			if (!ps[i].endsWith("/")) { ps[i] = ps[i] + "/"; }
+			if (!ps[i].endsWith("/")) { ps[i] = ps[i] + '/'; }
 		}
 		
 		return ps;
 	}
 
 
-	static public String getDirProperty(String s, String def)
+	public static
+    String getDirProperty(String s, String def)
 	{
 		String p= getProperty(s,def);
 
@@ -84,10 +88,11 @@ public class SystemProperties {
 			return null;
 
 		if (!p.endsWith("/"))
-			return p + "/";
+			return p + '/';
 		return p;
 	}
-	static public double getDoubleProperty(String s, double def)
+	public static
+    double getDoubleProperty(String s, double def)
 	{
         String p = getProperty(s, String.valueOf(def));
 
@@ -102,7 +107,8 @@ public class SystemProperties {
 		return ret;
 	}
 
-	static public int getIntProperty(String s, int def)
+	public static
+    int getIntProperty(String s, int def)
 	{
         String p = getProperty(s, String.valueOf(def));
 
@@ -116,7 +122,8 @@ public class SystemProperties {
 		}
 		return ret;
 	}
-	static public String[] getMaybeArrayProperty(String s, String def)
+	public static
+    String[] getMaybeArrayProperty(String s, String def)
 	{
 		String d = getProperty(s, def);
 		String[] x = d.split(";");
@@ -128,7 +135,8 @@ public class SystemProperties {
 		return x;
 	}
 
-	static public List<String> getMaybeListProperty(String s, String def)
+	public static
+    List<String> getMaybeListProperty(String s, String def)
 	{
 		String d = getProperty(s, def);
 		String[] x = d.split(";");
@@ -140,19 +148,21 @@ public class SystemProperties {
 		return r;
 	}
 
-	static public String getProperty(String key)
+	public static
+    String getProperty(String key)
 	{
 		if (debug)
 		{
 			StackTraceElement[] st = new Exception().getStackTrace();
-			System.err.println(" property <"+key+"> from <"+st[st.length-2]+">");
+			System.err.println(" property <"+key+"> from <"+st[st.length-2]+ '>');
 		}
 		return getProperty(key, "");
 	}
 	
 	/**	Get multiple values from a property when separated by ":". */
 
-	static public String[] getProperties(String key) {
+    public static
+    String[] getProperties(String key) {
 		String s = getProperty(key);
 
 		if ("".equals(s)) {
@@ -167,7 +177,8 @@ public class SystemProperties {
 	    that the properties file has been accessed then this results in a
 	    the properties file being loaded
 	    */
-	static public String getProperty(String key, String def)
+    public static
+    String getProperty(String key, String def)
 	{
 		String ap = additionalProperties.get(key);
 
@@ -194,7 +205,8 @@ public class SystemProperties {
 		return null;
 	}
 
-	static public void insertOo3Properties(String file)
+	public static
+    void insertOo3Properties(String file)
 	{
 		Omnioutliner3 oo3 = new Omnioutliner3();
 		oo3.read(new File(file));
@@ -211,12 +223,14 @@ public class SystemProperties {
 		}
 	}
 	
-	static public void setProperty(String key, String value)
+	public static
+    void setProperty(String key, String value)
 	{
 		System.setProperty(key, value);
 	}
 	
-	static public HashMap<String, Object> getProperties()
+	public static
+    HashMap<String, Object> getProperties()
 	{
 		HashMap<String, Object> a = new HashMap<String, Object>(additionalProperties);
 

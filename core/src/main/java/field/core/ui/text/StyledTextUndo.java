@@ -11,7 +11,8 @@ import java.util.List;
 
 public class StyledTextUndo {
 
-	static public class Change {
+	public static
+    class Change {
 		int start, length;
 		String replacedBy;
 		int selectionStart, selectionLength;
@@ -27,7 +28,7 @@ public class StyledTextUndo {
 
 		@Override
 		public String toString() {
-			return "Change [start=" + start + ", length=" + length + ", replacedBy=" + replacedBy + ", selectionStart=" + selectionStart + ", selectionLength=" + selectionLength + "]";
+			return "Change [start=" + start + ", length=" + length + ", replacedBy=" + replacedBy + ", selectionStart=" + selectionStart + ", selectionLength=" + selectionLength + ']';
 		}
 
 	}
@@ -113,7 +114,8 @@ public class StyledTextUndo {
 		}
 	}
 
-	static public class Memo 
+	public static
+    class Memo
 	{
 		List<Change> changes = new ArrayList<Change>();
 		List<Change> redo = new ArrayList<Change>();

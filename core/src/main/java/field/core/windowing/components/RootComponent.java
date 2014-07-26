@@ -91,8 +91,8 @@ public class RootComponent implements iComponent {
 
 			Vector2 mv = GLComponentWindow.mousePositionForEvent(arg0);
 
-			float dx = (mv.x) - (lastX - 0 * lx);
-			float dy = (mv.y) - (lastY - 0 * ly);
+			float dx = (mv.x) - (lastX - (0 * lx));
+			float dy = (mv.y) - (lastY - (0 * ly));
 
 			boolean handled = false;
 			for (SelectionGroup<iComponent> s : selectionGroups) {
@@ -114,7 +114,7 @@ public class RootComponent implements iComponent {
 				}
 			}
 
-			if (handled && arg0.button != 2)
+			if (handled && (arg0.button != 2))
 				return;
 
 			// GLComponentWindow.getCurrentWindow(RootComponent.this).transformMouseEvent(arg0);
@@ -159,13 +159,13 @@ public class RootComponent implements iComponent {
 			currentResize.clear();
 			if (arg0.x < zone)
 				currentResize.add(Resize.left);
-			if (arg0.x > RootComponent.this.getWidth() - zone)
+			if (arg0.x > (RootComponent.this.getWidth() - zone))
 				currentResize.add(Resize.right);
 			if (arg0.y < zone)
 				currentResize.add(Resize.up);
-			if (arg0.y > RootComponent.this.getHeight() - zone - 50)
+			if (arg0.y > (RootComponent.this.getHeight() - zone - 50))
 				currentResize.add(Resize.down);
-			if (currentResize.size() == 0)
+			if (currentResize.isEmpty())
 				currentResize.add(Resize.translate);
 
 			if (inside != null) {
@@ -228,13 +228,13 @@ public class RootComponent implements iComponent {
 
 				if (arg0.x < zone)
 					currentResize.add(Resize.left);
-				if (arg0.x > RootComponent.this.getWidth() - zone)
+				if (arg0.x > (RootComponent.this.getWidth() - zone))
 					currentResize.add(Resize.right);
 				if (arg0.y < zone)
 					currentResize.add(Resize.up);
-				if (arg0.y > RootComponent.this.getHeight() - zone - 100)
+				if (arg0.y > (RootComponent.this.getHeight() - zone - 100))
 					currentResize.add(Resize.down);
-				if (currentResize.size() == 0)
+				if (currentResize.isEmpty())
 					currentResize.add(Resize.translate);
 			}
 			float lx = RootComponent.this.getX();
@@ -310,7 +310,7 @@ public class RootComponent implements iComponent {
 	public void addMousePeer(iMousePeer peer, boolean allEvents) {
 		if (!mousePeers.contains(peer))
 			mousePeers.add(peer);
-		if (inside != null && allEvents)
+		if ((inside != null) && allEvents)
 			inside.addAsAllEventHandler(this);
 		if (!allEvents)
 			rootOnlyMousePeers.add(peer);
@@ -375,7 +375,8 @@ public class RootComponent implements iComponent {
 		}
 		if (currentResize.contains(Resize.innerTranslate)) {
 
-			System.err.println(" inner translated <" + dx + " " + GLComponentWindow.getCurrentWindow(this).getXScale() + ">");
+			System.err.println(" inner translated <" + dx + ' '
+                               + GLComponentWindow.getCurrentWindow(this).getXScale() + '>');
             GLComponentWindow.getCurrentWindow(this).setXTranslation(GLComponentWindow.getCurrentWindow(this).getXTranslation() - dx);
             GLComponentWindow.getCurrentWindow(this).setYTranslation(GLComponentWindow.getCurrentWindow(this).getYTranslation() - dy);
             inside.requestRedisplay();
@@ -408,8 +409,16 @@ public class RootComponent implements iComponent {
 			// the center of the window in
 			// transformed coords is:
 
-			float transformedCenterX = GLComponentWindow.getCurrentWindow(this).getXTranslation() + windowWidth * GLComponentWindow.getCurrentWindow(this).getXScale() / 2;
-			float transformedCenterY = GLComponentWindow.getCurrentWindow(this).getYTranslation() + windowHeight * GLComponentWindow.getCurrentWindow(this).getXScale() / 2;
+			float transformedCenterX = GLComponentWindow.getCurrentWindow(this).getXTranslation() + ((windowWidth
+                                                                                                      * GLComponentWindow
+                                                                                                                .getCurrentWindow(this)
+                                                                                                                .getXScale())
+                                                                                                     / 2);
+			float transformedCenterY = GLComponentWindow.getCurrentWindow(this).getYTranslation() + ((windowHeight
+                                                                                                      * GLComponentWindow
+                                                                                                                .getCurrentWindow(this)
+                                                                                                                .getXScale())
+                                                                                                     / 2);
 
 			// and we want this to remain
 			// constant dispite the
@@ -420,8 +429,16 @@ public class RootComponent implements iComponent {
 			GLComponentWindow.getCurrentWindow(this).setXScale(Math.min(3, Math.max(0.2f, GLComponentWindow.getCurrentWindow(this).getXScale() * sy)));
 			GLComponentWindow.getCurrentWindow(this).setYScale(Math.min(3, Math.max(0.2f, GLComponentWindow.getCurrentWindow(this).getYScale() * sy)));
 
-			float ntransformedCenterX = GLComponentWindow.getCurrentWindow(this).getXTranslation() + windowWidth * GLComponentWindow.getCurrentWindow(this).getXScale() / 2;
-			float ntransformedCenterY = GLComponentWindow.getCurrentWindow(this).getYTranslation() + windowHeight * GLComponentWindow.getCurrentWindow(this).getXScale() / 2;
+			float ntransformedCenterX = GLComponentWindow.getCurrentWindow(this).getXTranslation() + ((windowWidth
+                                                                                                       * GLComponentWindow
+                                                                                                                 .getCurrentWindow(this)
+                                                                                                                 .getXScale())
+                                                                                                      / 2);
+			float ntransformedCenterY = GLComponentWindow.getCurrentWindow(this).getYTranslation() + ((windowHeight
+                                                                                                       * GLComponentWindow
+                                                                                                                 .getCurrentWindow(this)
+                                                                                                                 .getXScale())
+                                                                                                      / 2);
 
 			float deltaX = transformedCenterX - ntransformedCenterX;
 			float deltaY = transformedCenterY - ntransformedCenterY;
@@ -441,24 +458,53 @@ public class RootComponent implements iComponent {
 		currentResize.remove(Resize.up);
 
 		if (currentResize.contains(Resize.translate))
-			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x + dx * GLComponentWindow.getCurrentWindow(this).getXScale(), (float) RootComponent.this.bounds.y + dy * GLComponentWindow.getCurrentWindow(this).getXScale(), RootComponent.this.getWidth(), RootComponent.this.getHeight());
+			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x + (dx
+                                                                                    * GLComponentWindow.getCurrentWindow(this)
+                                                                                                       .getXScale()),
+                                             (float) RootComponent.this.bounds.y + (dy
+                                                                                    * GLComponentWindow.getCurrentWindow(this)
+                                                                                                       .getXScale()), RootComponent.this.getWidth(), RootComponent.this.getHeight());
 		if (currentResize.contains(Resize.left)) {
-			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x + dx * GLComponentWindow.getCurrentWindow(this).getXScale(), (float) RootComponent.this.bounds.y, (float) RootComponent.this.bounds.w - dx, (float) RootComponent.this.bounds.h);
+			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x + (dx
+                                                                                    * GLComponentWindow.getCurrentWindow(this)
+                                                                                                       .getXScale()), (float) RootComponent.this.bounds.y, (float) RootComponent.this.bounds.w - dx, (float) RootComponent.this.bounds.h);
 		}
 		if (currentResize.contains(Resize.right)) {
-			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x, (float) RootComponent.this.bounds.y, (float) RootComponent.this.bounds.w + dx * GLComponentWindow.getCurrentWindow(this).getXScale(), (float) RootComponent.this.bounds.h);
+			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x, (float) RootComponent.this.bounds.y,
+                                             (float) RootComponent.this.bounds.w + (dx
+                                                                                    * GLComponentWindow.getCurrentWindow(this)
+                                                                                                       .getXScale()), (float) RootComponent.this.bounds.h);
 		}
 		if (currentResize.contains(Resize.up)) {
-			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x, (float) RootComponent.this.bounds.y + dy * GLComponentWindow.getCurrentWindow(this).getXScale(), (float) RootComponent.this.bounds.w, (float) RootComponent.this.bounds.h - dy * GLComponentWindow.getCurrentWindow(this).getXScale());
+			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x,
+                                             (float) RootComponent.this.bounds.y + (dy
+                                                                                    * GLComponentWindow.getCurrentWindow(this)
+                                                                                                       .getXScale()), (float) RootComponent.this.bounds.w,
+                                             (float) RootComponent.this.bounds.h - (dy
+                                                                                    * GLComponentWindow.getCurrentWindow(this)
+                                                                                                       .getXScale()));
 		}
 		if (currentResize.contains(Resize.down)) {
-			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x, (float) RootComponent.this.bounds.y, (float) RootComponent.this.bounds.w, (float) RootComponent.this.bounds.h + dy * GLComponentWindow.getCurrentWindow(this).getXScale());
+			RootComponent.this.shouldSetSize((float) RootComponent.this.bounds.x, (float) RootComponent.this.bounds.y, (float) RootComponent.this.bounds.w,
+                                             (float) RootComponent.this.bounds.h + (dy
+                                                                                    * GLComponentWindow.getCurrentWindow(this)
+                                                                                                       .getXScale()));
 		}
 		if (currentResize.contains(Resize.innerTranslate)) {
 
-			System.err.println(" inner translated <" + dx + " " + atX + " " + GLComponentWindow.getCurrentWindow(this).getXScale() + ">");
-			GLComponentWindow.getCurrentWindow(this).setXTranslation(GLComponentWindow.getCurrentWindow(this).getXTranslation() - dx * GLComponentWindow.getCurrentWindow(this).getXScale());
-			GLComponentWindow.getCurrentWindow(this).setYTranslation(GLComponentWindow.getCurrentWindow(this).getYTranslation() - dy * GLComponentWindow.getCurrentWindow(this).getYScale());
+			System.err.println(" inner translated <" + dx + ' '
+                               + atX + ' '
+                               + GLComponentWindow.getCurrentWindow(this).getXScale() + '>');
+			GLComponentWindow.getCurrentWindow(this).setXTranslation(GLComponentWindow.getCurrentWindow(this)
+                                                                                      .getXTranslation() - (dx
+                                                                                                            * GLComponentWindow
+                                                                                                                      .getCurrentWindow(this)
+                                                                                                                      .getXScale()));
+			GLComponentWindow.getCurrentWindow(this).setYTranslation(GLComponentWindow.getCurrentWindow(this)
+                                                                                      .getYTranslation() - (dy
+                                                                                                            * GLComponentWindow
+                                                                                                                      .getCurrentWindow(this)
+                                                                                                                      .getYScale()));
 
             // System.out.println(" requesting redisplay ");
 
@@ -492,8 +538,14 @@ public class RootComponent implements iComponent {
 			// the center of the window in
 			// transformed coords is:
 
-			float transformedCenterX = GLComponentWindow.getCurrentWindow(this).getXTranslation() + atX * GLComponentWindow.getCurrentWindow(this).getXScale();
-			float transformedCenterY = GLComponentWindow.getCurrentWindow(this).getYTranslation() + atY * GLComponentWindow.getCurrentWindow(this).getXScale();
+			float transformedCenterX = GLComponentWindow.getCurrentWindow(this).getXTranslation() + (atX
+                                                                                                     * GLComponentWindow
+                                                                                                               .getCurrentWindow(this)
+                                                                                                               .getXScale());
+			float transformedCenterY = GLComponentWindow.getCurrentWindow(this).getYTranslation() + (atY
+                                                                                                     * GLComponentWindow
+                                                                                                               .getCurrentWindow(this)
+                                                                                                               .getXScale());
 
 			// and we want this to remain
 			// constant dispite the
@@ -504,8 +556,14 @@ public class RootComponent implements iComponent {
 			GLComponentWindow.getCurrentWindow(this).setXScale(Math.min(100, Math.max(0.01f, GLComponentWindow.getCurrentWindow(this).getXScale() * sy)));
 			GLComponentWindow.getCurrentWindow(this).setYScale(Math.min(100, Math.max(0.01f, GLComponentWindow.getCurrentWindow(this).getYScale() * sy)));
 
-			float ntransformedCenterX = GLComponentWindow.getCurrentWindow(this).getXTranslation() + atX * GLComponentWindow.getCurrentWindow(this).getXScale();
-			float ntransformedCenterY = GLComponentWindow.getCurrentWindow(this).getYTranslation() + atY * GLComponentWindow.getCurrentWindow(this).getXScale();
+			float ntransformedCenterX = GLComponentWindow.getCurrentWindow(this).getXTranslation() + (atX
+                                                                                                      * GLComponentWindow
+                                                                                                                .getCurrentWindow(this)
+                                                                                                                .getXScale());
+			float ntransformedCenterY = GLComponentWindow.getCurrentWindow(this).getYTranslation() + (atY
+                                                                                                      * GLComponentWindow
+                                                                                                                .getCurrentWindow(this)
+                                                                                                                .getXScale());
 
 			float deltaX = transformedCenterX - ntransformedCenterX;
 			float deltaY = transformedCenterY - ntransformedCenterY;
@@ -532,7 +590,7 @@ public class RootComponent implements iComponent {
 	public void keyPressed(ComponentContainer inside, Event arg0) {
 		this.inside = inside;
 		mousePeers_list.keyPressed(inside, arg0);
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			// inside.requestRedisplay();
 			if (!arg0.doit)
 				return;
@@ -542,7 +600,7 @@ public class RootComponent implements iComponent {
 	public void keyReleased(ComponentContainer inside, Event arg0) {
 		this.inside = inside;
 		mousePeers_list.keyReleased(inside, arg0);
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			inside.requestRedisplay();
 			if (!arg0.doit)
 				return;
@@ -552,7 +610,7 @@ public class RootComponent implements iComponent {
 	public void keyTyped(ComponentContainer inside, Event arg0) {
 		this.inside = inside;
 		mousePeers_list.keyTyped(inside, arg0);
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			// inside.requestRedisplay();
 			if (!arg0.doit)
 				return;
@@ -563,13 +621,13 @@ public class RootComponent implements iComponent {
 		this.inside = inside;
 		mousePeers_list.mouseClicked(inside, arg0);
 
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			inside.requestRedisplay();
 		}
 		if (!arg0.doit)
 			return;
 		GLComponentWindow.getCurrentWindow(this).untransformMouseEvent(arg0);
-		if (arg0.count == 2 && mousePeers.size() == 1) // just the
+		if ((arg0.count == 2) && (mousePeers.size() == 1)) // just the
 								// hierarchy
 								// plugin
 			GLComponentWindow.getCurrentWindow(this).togglePanelVisiblity();
@@ -581,7 +639,7 @@ public class RootComponent implements iComponent {
 
 		this.inside = inside;
 		mousePeers_list.mouseDragged(inside, arg0);
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			inside.requestRedisplay();
 		}
 
@@ -599,7 +657,7 @@ public class RootComponent implements iComponent {
 	public void mouseEntered(ComponentContainer inside, Event arg0) {
 		this.inside = inside;
 		mousePeers_list.mouseEntered(inside, arg0);
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			inside.requestRedisplay();
 		}
 		if (!arg0.doit)
@@ -614,7 +672,7 @@ public class RootComponent implements iComponent {
 	public void mouseExited(ComponentContainer inside, Event arg0) {
 		this.inside = inside;
 		mousePeers_list.mouseExited(inside, arg0);
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			inside.requestRedisplay();
 		}
 		if (!arg0.doit)
@@ -629,7 +687,7 @@ public class RootComponent implements iComponent {
 	public void mouseMoved(ComponentContainer inside, Event arg0) {
 		this.inside = inside;
 		mousePeers_list.mouseMoved(inside, arg0);
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			// inside.requestRedisplay();
 		}
 		if (!arg0.doit)
@@ -646,7 +704,7 @@ public class RootComponent implements iComponent {
 	public void mousePressed(ComponentContainer inside, Event arg0) {
 		this.inside = inside;
 		mousePeers_list.mousePressed(inside, arg0);
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			inside.requestRedisplay();
 		}
 
@@ -672,13 +730,13 @@ public class RootComponent implements iComponent {
 				Ref<GLComponentWindow> ref = new Ref<GLComponentWindow>(null);
 				overrides.getProperty(null, iVisualElement.enclosingFrame, ref);
 
-				if (ref.get() != null && hasFocus) {
+				if ((ref.get() != null) && hasFocus) {
 					menu.show(Launcher.display.map(GLComponentWindow.getCurrentWindow(this).getCanvas(), GLComponentWindow.getCurrentWindow(this).getCanvas().getShell(), new Point(arg0.x, arg0.y)));
 
 				} else {
 				}
 
-			} else if (arg0.button == 1 && (arg0.stateMask & SWT.ALT) != 0) {
+			} else if ((arg0.button == 1) && ((arg0.stateMask & SWT.ALT) != 0)) {
 
                 // System.out.println(" beginning execution gesture ");
 
@@ -691,7 +749,7 @@ public class RootComponent implements iComponent {
 				oy = arg0.y;
 
 				if (!selected && hasFocus) {
-					if ((arg0.stateMask & SWT.SHIFT) == 0 && arg0.button == 1)
+					if (((arg0.stateMask & SWT.SHIFT) == 0) && (arg0.button == 1))
 						for (SelectionGroup<iComponent> d : selectionGroups)
 							d.deselectAll();
 					for (SelectionGroup<iComponent> d : selectionGroups)
@@ -711,7 +769,7 @@ public class RootComponent implements iComponent {
 		this.inside = inside;
 
 		mousePeers_list.mouseReleased(inside, arg0);
-		if (mousePeers.size() > 0) {
+		if (!mousePeers.isEmpty()) {
 			inside.requestRedisplay();
 		}
 
@@ -722,7 +780,7 @@ public class RootComponent implements iComponent {
 		GLComponentWindow.getCurrentWindow(this).untransformMouseEvent(arg0);
 		updateBounds();
 		this.inside = inside;
-		if (arg0.x == ox && arg0.y == oy) {
+		if ((arg0.x == ox) && (arg0.y == oy)) {
 			if (selected) {
 				if ((arg0.stateMask & SWT.SHIFT) != 0) {
 					if (!justSelected) {
@@ -760,7 +818,7 @@ public class RootComponent implements iComponent {
 		ArrayList<iMousePeer> mp = new ArrayList<iMousePeer>(mousePeers);
 		mp.removeAll(rootOnlyMousePeers);
 
-		if (mp.size() == 0) {
+		if (mp.isEmpty()) {
 			if (inside != null)
 				inside.removeAsAllEventHandler(this);
 		}

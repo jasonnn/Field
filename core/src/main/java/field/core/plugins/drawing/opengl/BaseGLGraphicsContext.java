@@ -35,7 +35,8 @@ import static org.lwjgl.opengl.GL11.*;
 @GenerateMethods
 public class BaseGLGraphicsContext extends iLinearGraphicsContext {
 
-	static public class DrawingResult {
+	public static
+    class DrawingResult {
 		DrawingResultCode code;
 
 		List<iDynamicMesh> ret;
@@ -217,10 +218,8 @@ public class BaseGLGraphicsContext extends iLinearGraphicsContext {
 		Pattern on = Pattern.compile(layersOn);
 		Pattern off = Pattern.compile(layersOff);
 
-		if (on.matcher(layer).matches() && !off.matcher(layer).matches())
-			return true;
-		return false;
-	}
+        return on.matcher(layer).matches() && !off.matcher(layer).matches();
+    }
 
 	@Override
 	public void resubmitLine(CachedLine line, Dict properties) {

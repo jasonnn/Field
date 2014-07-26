@@ -14,11 +14,12 @@ import java.util.ArrayList;
 
 public class SimpleExtendedAssignment extends InvocationLogging {
 
-	static public interface iHandleAssignment {
+	public static
+    interface iHandleAssignment {
 		public boolean handle(Class fieldType, Class assignmentType, Field f, Object in, Object value) throws IllegalArgumentException, IllegalAccessException;
 	}
 
-	static public final ArrayList<iHandleAssignment> handlers = new ArrayList<iHandleAssignment>();
+	public static final ArrayList<iHandleAssignment> handlers = new ArrayList<iHandleAssignment>();
 
 	static {
 		handlers.add(new iHandleAssignment() {
@@ -209,7 +210,8 @@ public class SimpleExtendedAssignment extends InvocationLogging {
 
 	}
 
-	static public float lookupCurve(float a, PyObject curve) {
+	public static
+    float lookupCurve(float a, PyObject curve) {
 		PyObject q = curve.__call__(new PyFloat(a));
 		return ((Number) q.__tojava__(Number.class)).floatValue();
 	}
@@ -264,7 +266,7 @@ public class SimpleExtendedAssignment extends InvocationLogging {
 				cause = e;
 			}
 
-			throw (PyException) (new PyException(Py.None, "cannot assign type <" + setToBe.getClass() + "> to <" + fieldType + ">").initCause(cause));
+			throw (PyException) (new PyException(Py.None, "cannot assign type <" + setToBe.getClass() + "> to <" + fieldType + '>').initCause(cause));
 		}
 	};
 

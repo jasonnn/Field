@@ -35,7 +35,7 @@ public class ExecutionGesture {
 		CachedLine c = new CachedLine();
 		iLine ii = c.getInput();
 		for (Vector2 v : gesture) {
-			if (c.events.size() == 0)
+			if (c.events.isEmpty())
 				ii.moveTo(v.x, v.y);
 			else
 				ii.lineTo(v.x, v.y);
@@ -51,7 +51,8 @@ public class ExecutionGesture {
 		{
 			CachedLine d = new CachedLine();
 			
-			Vector2 n = new Vector2(0.5f + gesture.get(0).y-gesture.get(gesture.size()-1).y, 0.25f -gesture.get(0).x+gesture.get(gesture.size()-1).x ).normalize().scale(15);
+			Vector2 n = new Vector2((0.5f + gesture.get(0).y) - gesture.get(gesture.size() - 1).y,
+                                    (0.25f - gesture.get(0).x) + gesture.get(gesture.size() - 1).x).normalize().scale(15);
 //			;//System.out.println(" label should be here <" + n + ">");
 
 			d.getInput().moveTo(gesture.get(0).x-n.x, gesture.get(0).y-n.y);
@@ -69,7 +70,7 @@ public class ExecutionGesture {
 		for (Triple<iVisualElement, Vector2, Vector2> gt : ordering) {
 			{
 				CachedLine d = new CachedLine();
-				d.getInput().moveTo((gt.middle.x*3 + gt.right.x) / 4, (gt.middle.y*3 + gt.right.y) / 4);
+				d.getInput().moveTo(((gt.middle.x * 3) + gt.right.x) / 4, ((gt.middle.y * 3) + gt.right.y) / 4);
 				d.getProperties().put(iLinearGraphicsContext.pointed, true);
 				d.getProperties().put(iLinearGraphicsContext.pointColor, new Vector4(Constants.execution_color.x, Constants.execution_color.y, Constants.execution_color.z, 0.5));
 				d.getInput().setPointAttribute(iLinearGraphicsContext.pointSize_v, 10f);
@@ -96,9 +97,10 @@ public class ExecutionGesture {
 			{
 				CachedLine d = new CachedLine();
 
-				Vector2 n = new Vector2(0.5f + gt.middle.y - gt.right.y, 0.25f + gt.right.x - gt.middle.x).normalize().scale(15);
+				Vector2 n = new Vector2((0.5f + gt.middle.y) - gt.right.y, (0.25f + gt.right.x) - gt.middle.x).normalize().scale(15);
 
-				d.getInput().moveTo(n.x+(gt.middle.x*3 + gt.right.x) / 4, n.y+(gt.middle.y*3 + gt.right.y) / 4);
+				d.getInput().moveTo(n.x + (((gt.middle.x * 3) + gt.right.x) / 4),
+                                    n.y + (((gt.middle.y * 3) + gt.right.y) / 4));
 				d.getProperties().put(iLinearGraphicsContext.containsText, true);
 				d.getProperties().put(iLinearGraphicsContext.color, new Vector4(Constants.execution_color.x, Constants.execution_color.y, Constants.execution_color.z, 0.5));
 				d.getProperties().put(iLinearGraphicsContext.fillColor, new Vector4(Constants.execution_color.x, Constants.execution_color.y, Constants.execution_color.z, 0.5));
@@ -154,7 +156,7 @@ public class ExecutionGesture {
 
         //System.out.println(" -------- drag :"+arg0);
 
-        if (gesture.size()>0)
+        if (!gesture.isEmpty())
 		{
 			Vector2 g1 = gesture.get(0);
 			gesture.clear();
@@ -169,7 +171,7 @@ public class ExecutionGesture {
 		if (!going)
 			return;
 
-		while (gesture.size() != 0 && gesture.get(gesture.size() - 1).distanceFrom(new Vector2(arg0.x, arg0.y)) > 3) {
+		while (!gesture.isEmpty() && (gesture.get(gesture.size() - 1).distanceFrom(new Vector2(arg0.x, arg0.y)) > 3)) {
 			drag(new Vector2().lerp(gesture.get(gesture.size() - 1), arg0, 0.5f));
 		}
 
@@ -184,7 +186,7 @@ public class ExecutionGesture {
 		if (h != null) {
 			iVisualElement vv = h.getVisualElement();
 			if (vv != null) {
-				if (ordering.size() == 0 || ordering.get(ordering.size() - 1).left != vv) {
+				if (ordering.isEmpty() || (ordering.get(ordering.size() - 1).left != vv)) {
 					ordering.add(new Triple<iVisualElement, Vector2, Vector2>(vv, new Vector2(arg0.x, arg0.y), new Vector2(arg0.x, arg0.y)));
 				} else {
 					ordering.get(ordering.size() - 1).right = new Vector2(arg0.x, arg0.y);

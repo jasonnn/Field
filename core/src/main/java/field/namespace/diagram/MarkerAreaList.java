@@ -10,17 +10,18 @@ import java.util.List;
 
 public class MarkerAreaList<T> {
 
-	static public final Method method_extendForward = ReflectionTools.methodOf("extendForward", MarkerAreaList.class);
-	static public final Method method_extendBackward = ReflectionTools.methodOf("extendBackward", MarkerAreaList.class);
-	static public final Method method_rollForward = ReflectionTools.methodOf("rollForward", MarkerAreaList.class);
-	static public final Method method_rollBackward = ReflectionTools.methodOf("rollBackward", MarkerAreaList.class);
+	public static final Method method_extendForward = ReflectionTools.methodOf("extendForward", MarkerAreaList.class);
+	public static final Method method_extendBackward = ReflectionTools.methodOf("extendBackward", MarkerAreaList.class);
+	public static final Method method_rollForward = ReflectionTools.methodOf("rollForward", MarkerAreaList.class);
+	public static final Method method_rollBackward = ReflectionTools.methodOf("rollBackward", MarkerAreaList.class);
 	
-	static public final Method method_extendAreaForward = ReflectionTools.methodOf("extendAreaForward", MarkerAreaList.class, MarkerArea.class);
-	static public final Method method_extendAreaBackward = ReflectionTools.methodOf("extendAreaBackward", MarkerAreaList.class, MarkerArea.class);
+	public static final Method method_extendAreaForward = ReflectionTools.methodOf("extendAreaForward", MarkerAreaList.class, MarkerArea.class);
+	public static final Method method_extendAreaBackward = ReflectionTools.methodOf("extendAreaBackward", MarkerAreaList.class, MarkerArea.class);
 	
 	
 	
-	static public class MarkerArea<X> {
+	public static
+    class MarkerArea<X> {
 		List<Cursor<X>> cursors = new ArrayList<Cursor<X>>();
 
 		public double startsAt() {
@@ -249,7 +250,7 @@ public class MarkerAreaList<T> {
 	public String detailedToString() {
 		String r = "markerAreaList has <" + areas.size() + "> areas\n";
 		for (MarkerArea a : areas) {
-			r += "   " + a.startsAt() + " -> " + a.endsAt() + " " + a.cursors + " \n";
+			r += "   " + a.startsAt() + " -> " + a.endsAt() + ' ' + a.cursors + " \n";
 		}
 		return r;
 	}

@@ -46,7 +46,7 @@ public class CustomInsertDrawing {
 		public void setInsertRenderingContext(iInsertRenderingContext context);
 	}
 
-	static public Nub currentNub;
+	public static Nub currentNub;
 
 	public class Nub implements iInsertRenderingContext {
 		JComponent component;
@@ -101,7 +101,7 @@ public class CustomInsertDrawing {
 						if (ly==Nub.this.target.getTopPixel())
 							e.gc.drawImage(output, 0, 0);
 						else
-							System.out.println(" hidden control <"+ly+" "+Nub.this.target.getTopPixel());
+							System.out.println(" hidden control <"+ly+ ' ' +Nub.this.target.getTopPixel());
 					}
 				}
 			});
@@ -110,7 +110,8 @@ public class CustomInsertDrawing {
 
 				boolean down;
 
-				@Override
+				@SuppressWarnings("MagicConstant")
+                @Override
 				public void handleEvent(Event event) {
 
 //					;//System.out.println(" event in component <" + event + ">");
@@ -219,7 +220,7 @@ public class CustomInsertDrawing {
 		}
 
 		public void setDimensions(int w, int h) {
-			if (w != width || h != height) {
+			if ((w != width) || (h != height)) {
 				width = w;
 				height = h;
 				input = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
@@ -275,7 +276,7 @@ public class CustomInsertDrawing {
 
 //					;//System.out.println(" nub is at <"+v.start+" "+v.start+v.length+">");
 					
-					if (start < v.start + v.length && end > v.start) {
+					if ((start < (v.start + v.length)) && (end > v.start)) {
                         //System.out.println(" removing nub <" + v + ">");
                         i.remove();
 						v.destroy();
@@ -316,7 +317,7 @@ public class CustomInsertDrawing {
 								found = true;
 						}
 					}
-					if (nub == null || !found) {
+					if ((nub == null) || !found) {
 						nub = new Nub(((JComponent) event.style.data), target, width, height);
 						nub.canvas.setBounds(event.x, event.y, width, height);
 
@@ -347,7 +348,8 @@ public class CustomInsertDrawing {
 		
 	}
 
-	static public ImageData convertToSWT(BufferedImage bufferedImage, int background) {
+	public static
+    ImageData convertToSWT(BufferedImage bufferedImage, int background) {
 		DirectColorModel colorModel = (DirectColorModel) bufferedImage.getColorModel();
 		PaletteData palette = new PaletteData(colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask());
 		ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(), colorModel.getPixelSize(), palette);
@@ -375,7 +377,8 @@ public class CustomInsertDrawing {
 		return data;
 	}
 
-	static public ImageData convertToSWT(BufferedImage bufferedImage, ImageData data, int background) {
+	public static
+    ImageData convertToSWT(BufferedImage bufferedImage, ImageData data, int background) {
 		DirectColorModel colorModel = (DirectColorModel) bufferedImage.getColorModel();
 		PaletteData palette = new PaletteData(colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask());
 

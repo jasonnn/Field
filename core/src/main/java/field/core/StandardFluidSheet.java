@@ -87,7 +87,7 @@ import java.util.regex.Pattern;
 @Woven
 public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVisualElementRoot {
 
-	static public final VisualElementProperty<String> keyboardShortcut = new VisualElementProperty<String>("keyboardShortcut");
+	public static final VisualElementProperty<String> keyboardShortcut = new VisualElementProperty<String>("keyboardShortcut");
 
 	public class RootSheetElement extends NodeImpl<iVisualElement> implements iVisualElement {
 
@@ -134,20 +134,21 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 		@Override
 		public String toString() {
-			return "root <" + System.identityHashCode(this) + ">";
+			return "root <" + System.identityHashCode(this) + '>';
 		}
 
 	}
 
-	static public final SimpleContextTopology context =  SimpleContextTopology.newInstance();
+	public static final SimpleContextTopology context =  SimpleContextTopology.newInstance();
 
-	static public final VisualElementProperty<VersioningSystem> versioningSystem = new VisualElementProperty<VersioningSystem>("versioningSystem_");
+	public static final VisualElementProperty<VersioningSystem> versioningSystem = new VisualElementProperty<VersioningSystem>("versioningSystem_");
 
 	public static String rootSheetElement_uid = "//rootSheetElement";
 
-	static protected int uniq = 0;
+	protected static int uniq = 0;
 
-	static public List<iVisualElement> allVisualElements(iVisualElement root) {
+	public static
+    List<iVisualElement> allVisualElements(iVisualElement root) {
 		final List<iVisualElement> ret = new ArrayList<iVisualElement>();
 		new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 			@Override
@@ -160,7 +161,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		return ret;
 	}
 
-	static public iVisualElement findVisualElement(iVisualElement root, final String s) {
+	public static
+    iVisualElement findVisualElement(iVisualElement root, final String s) {
 		final iVisualElement[] ans = new iVisualElement[1];
 
 		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
@@ -179,7 +181,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		return ans[0];
 	}
 
-	static public iVisualElement findVisualElementWithName(iVisualElement root, final String pattern) {
+	public static
+    iVisualElement findVisualElementWithName(iVisualElement root, final String pattern) {
 
 		final Pattern p = Pattern.compile(pattern);
 
@@ -189,7 +192,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			@Override
 			protected VisitCode visit(iVisualElement n) {
 				String name = n.getProperty(iVisualElement.name);
-				if (name != null && p.matcher(name).matches()) {
+				if ((name != null) && p.matcher(name).matches()) {
 					ans[0] = n;
 					return VisitCode.stop;
 				}
@@ -202,7 +205,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		return ans[0];
 	}
 
-	static public List<iVisualElement> findVisualElementWithNameExpression(iVisualElement root, final String pattern) {
+	public static
+    List<iVisualElement> findVisualElementWithNameExpression(iVisualElement root, final String pattern) {
 
 		final Pattern p = Pattern.compile(pattern);
 
@@ -212,7 +216,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			@Override
 			protected VisitCode visit(iVisualElement n) {
 				String name = n.getProperty(iVisualElement.name);
-				if (name != null && p.matcher(name).matches()) {
+				if ((name != null) && p.matcher(name).matches()) {
 					ans.add(n);
 				}
 				return VisitCode.cont;
@@ -224,11 +228,13 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		return ans;
 	}
 
-	static public StandardFluidSheet scratchBegin(VersioningSystem system) {
+	public static
+    StandardFluidSheet scratchBegin(VersioningSystem system) {
 		return scratchBegin(system, SystemProperties.getProperty("fluid.scratch", SystemProperties.getProperty("main.class") + ".xml"));
 	}
 
-	static public StandardFluidSheet scratchBegin(VersioningSystem system, String filename) {
+	public static
+    StandardFluidSheet scratchBegin(VersioningSystem system, String filename) {
 		final StandardFluidSheet sheet = new StandardFluidSheet(filename, system);
 		sheet.setFilename(filename);
 
@@ -282,7 +288,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		return sheet;
 	}
 
-	static public void scratchEnd(final StandardFluidSheet sheet, VersioningSystem system) {
+	public static
+    void scratchEnd(final StandardFluidSheet sheet, VersioningSystem system) {
 
 		String filename = SystemProperties.getDirProperty("versioning.dir") + sheet.getFilename() + "/sheet.xml";
 		try {
@@ -314,7 +321,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		window.requestRepaint();
 	}
 
-	static public StandardFluidSheet versionedScratch(String filenameInWorkspace) {
+	public static
+    StandardFluidSheet versionedScratch(String filenameInWorkspace) {
 		VersioningSystem vs = VersioningSystem.newDefault(filenameInWorkspace);
 		StandardFluidSheet sheet = StandardFluidSheet.scratchBegin(vs, filenameInWorkspace);
 		StandardFluidSheet.scratchEnd(sheet, vs);
@@ -385,9 +393,9 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 	List<iPlugin> plugins = new ArrayList<iPlugin>();
 
-	private BasicRunner multiThreadedRunner;
+	private final BasicRunner multiThreadedRunner;
 
-	private DragDuplicator dragDuplicator;
+	private final DragDuplicator dragDuplicator;
 
 	public StandardFluidSheet() {
 		this("sheet:" + (uniq++), null);
@@ -444,10 +452,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 						if (s != null) {
 							if (s.equals(match)) {
-								if ((state & SWT.SHIFT) != 0)
-									endExecution(ee);
-								else
-									beginExecution(ee);
+                                if ((state & SWT.SHIFT) == 0) beginExecution(ee);
+                                else endExecution(ee);
 								return true;
 							}
 						}
@@ -508,7 +514,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 					Promise nn = (Promise) n.next();
 					iVisualElement elem = (iVisualElement) pss.keyForPromise(nn);
 					Boolean m = elem.getProperty(WindowSpaceBox.isWindowSpace);
-					if (m != null && m) {
+					if ((m != null) && m) {
 						n.remove();
 					}
 				}
@@ -611,7 +617,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		if (inprogress.get().contains(source))
 			return VisitCode.stop;
 
-		System.out.println(" inprogress <" + inprogress.get() + ">");
+		System.out.println(" inprogress <" + inprogress.get() + '>');
 		inprogress.get().add(source);
 
 		try {
@@ -625,7 +631,11 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			PythonPlugin p = PythonPlugin.python_plugin.get(source);
 			if (p instanceof PythonPluginEditor)
 				try {
-					((PythonPluginEditor) p).getEditor().getInput().append("Running '" + source.getProperty(iVisualElement.name) + "'");
+					((PythonPluginEditor) p).getEditor()
+                                            .getInput()
+                                            .append("Running '")
+                                            .append(source.getProperty(iVisualElement.name))
+                                            .append('\'');
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -778,7 +788,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		if (!event.doit)
 			return VisitCode.cont;
 
-		if (tick && event.type == SWT.KeyDown && event.character == 'n') {
+		if (tick && (event.type == SWT.KeyDown) && (event.character == 'n')) {
 
 			tick = false;
 			List<iVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
@@ -786,9 +796,9 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			boolean exclusive = false;
 			for (iVisualElement a : all) {
 				Boolean f = a.getProperty(PythonPluginEditor.python_isDefaultGroup);
-				if (f != null && f) {
+				if ((f != null) && f) {
 					Boolean ex = a.getProperty(PythonPluginEditor.python_isDefaultGroupExclusive);
-					if (ex != null && ex)
+					if ((ex != null) && ex)
 						exclusive = true;
 					ee = a;
 					break;
@@ -806,27 +816,27 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 			Triple<VisualElement, DraggableComponent, DefaultOverride> created = VisualElement.createAddAndName(bounds, ee, "untitled", VisualElement.class, DraggableComponent.class, DefaultOverride.class, null);
 
-			if (ee != getRoot() && !exclusive) {
+			if ((ee != getRoot()) && !exclusive) {
 				created.left.addChild(getRoot());
 			}
 		}
-		if (tick && event.type == SWT.KeyDown && event.keyCode == 13) {
+		if (tick && (event.type == SWT.KeyDown) && (event.keyCode == 13)) {
 
 			tick = false;
 
 			boolean success = ((PythonPluginEditor) PythonPluginEditor.python_plugin.get(rootSheetElement)).getEditor().getInputEditor().forceFocus();
             // System.out.println(" forcing focus " + success);
 
-		} else if (tick && event.type == SWT.KeyDown && event.character == 'p') {
+		} else if (tick && (event.type == SWT.KeyDown) && (event.character == 'p')) {
 			tick = false;
 			List<iVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
 			iVisualElement ee = getRoot();
 			boolean exclusive = false;
 			for (iVisualElement a : all) {
 				Boolean f = a.getProperty(PythonPluginEditor.python_isDefaultGroup);
-				if (f != null && f) {
+				if ((f != null) && f) {
 					Boolean ex = a.getProperty(PythonPluginEditor.python_isDefaultGroupExclusive);
-					if (ex != null && ex)
+					if ((ex != null) && ex)
 						exclusive = true;
 					ee = a;
 					break;
@@ -843,15 +853,16 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 			Triple<VisualElement, PlainDraggableComponent, SplineComputingOverride> created = VisualElement.createAddAndName(bounds, ee, "untitled", VisualElement.class, PlainDraggableComponent.class, SplineComputingOverride.class, null);
 
-			if (ee != getRoot() && !exclusive) {
+			if ((ee != getRoot()) && !exclusive) {
 				created.left.addChild(getRoot());
 			}
 		} else
 
-		if (tick && event.type == SWT.KeyDown && event.keyCode == 'c' && (event.stateMask & Platform.getCommandModifier()) != 0) {
+		if (tick && (event.type == SWT.KeyDown) && (event.keyCode == 'c') && ((event.stateMask
+                                                                               & Platform.getCommandModifier()) != 0)) {
             // System.out.println(" copying file reference to clipboard ");
             tick = false;
-			File tmp = new PackageTools().newTempFileWithSelected(rootSheetElement, "copied");
+			File tmp = PackageTools.newTempFileWithSelected(rootSheetElement, "copied");
             PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
 
 			OverlayAnimationManager.notifyAsText(getRoot(), "Copied to clipboard", null);
@@ -863,7 +874,9 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			// m.no
 			// }
 
-		} else if (tick && event.type == SWT.KeyDown && event.keyCode == 'v' && (event.stateMask & Platform.getCommandModifier()) != 0) {
+		} else if (tick && (event.type == SWT.KeyDown) && (event.keyCode == 'v') && ((event.stateMask
+                                                                                      & Platform.getCommandModifier())
+                                                                                     != 0)) {
 			try {
 				tick = false;
 
@@ -882,9 +895,14 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (tick && event.type == SWT.KeyDown && event.character == 's' && (event.stateMask & Platform.getCommandModifier()) != 0) {
+		} else if (tick && (event.type == SWT.KeyDown) && (event.character == 's') && ((event.stateMask
+                                                                                        & Platform.getCommandModifier())
+                                                                                       != 0)) {
 			saveNow();
-		} else if (tick && event.type == SWT.KeyDown && (event.character == SWT.BS || event.character == SWT.DEL) && (event.stateMask & Platform.getCommandModifier()) != 0) {
+		} else if (tick
+                   && (event.type == SWT.KeyDown)
+                   && ((event.character == SWT.BS) || (event.character == SWT.DEL))
+                   && ((event.stateMask & Platform.getCommandModifier()) != 0)) {
 			Set<iComponent> c = group.getSelection();
 			HashSet<iVisualElement> toDelete = new HashSet<iVisualElement>();
 			for (iComponent cc : c) {
@@ -895,13 +913,13 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			for (iVisualElement v : toDelete) {
 				VisualElement.delete(this.getRoot(), v);
 			}
-		} else if (event.type == SWT.KeyDown && event.character == ' ' && tick) {
+		} else if ((event.type == SWT.KeyDown) && (event.character == ' ') && tick) {
 
             // System.out.println(" opening space menu ...");
 
 			HashSet<iVisualElement> sel = selectionOrOver();
 
-			if (sel.size() == 0)
+			if (sel.isEmpty())
 				return VisitCode.cont;
 
 			iComponent c = iVisualElement.localView.get(sel.iterator().next());
@@ -987,30 +1005,30 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 					}
 				}
 			}
-		} else if (event.type == SWT.KeyDown && event.character == 'y' && tick) {
+		} else if ((event.type == SWT.KeyDown) && (event.character == 'y') && tick) {
 			tick = false;
 			createFromTemplate();
-		} else if (event.type == SWT.KeyDown && event.keyCode == SWT.PAGE_UP && tick) {
+		} else if ((event.type == SWT.KeyDown) && (event.keyCode == SWT.PAGE_UP) && tick) {
 			tick = false;
 			HashSet<iVisualElement> s = selectionOrOver();
 
             // System.out.println(" selection or over is <" + s +
             // ">");
 
-			if (s.size() > 0) {
+			if (!s.isEmpty()) {
 				for (iVisualElement ss : s) {
 					Beginner beginner = PseudoPropertiesPlugin.begin.get(ss);
 					beginner.call(new Object[] {});
 				}
 			}
-		} else if (event.type == SWT.KeyDown && event.keyCode == SWT.PAGE_DOWN && tick) {
+		} else if ((event.type == SWT.KeyDown) && (event.keyCode == SWT.PAGE_DOWN) && tick) {
 			tick = false;
 			HashSet<iVisualElement> s = selectionOrOver();
 
             // System.out.println(" selection or over is <" + s +
             // ">");
 
-			if (s.size() > 0) {
+			if (!s.isEmpty()) {
 				for (iVisualElement ss : s) {
 					Ender beginner = PseudoPropertiesPlugin.end.get(ss);
 					beginner.call(new Object[] {});
@@ -1018,17 +1036,15 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			}
 		} else if (tick) {
 
-			if ((event.stateMask & Platform.getCommandModifier()) != 0 && event.type == SWT.KeyDown) {
+			if (((event.stateMask & Platform.getCommandModifier()) != 0) && (event.type == SWT.KeyDown)) {
 				{
                     String match = String.valueOf(Character.toLowerCase(event.character));
                     String s = keyboardShortcut.get(newSource);
 					if (s != null) {
 						if (s.equals(match)) {
 							tick = false;
-							if ((event.stateMask & SWT.SHIFT) != 0)
-								endExecution(newSource);
-							else
-								beginExecution(newSource);
+                            if ((event.stateMask & SWT.SHIFT) == 0) beginExecution(newSource);
+                            else endExecution(newSource);
 						}
 					}
 				}
@@ -1037,10 +1053,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 				if (s != null) {
 					if (s.equals(match)) {
 						tick = false;
-						if ((event.stateMask & SWT.SHIFT) != 0)
-							endExecution(newSource);
-						else
-							beginExecution(newSource);
+                        if ((event.stateMask & SWT.SHIFT) == 0) beginExecution(newSource);
+                        else endExecution(newSource);
 					}
 				}
 
@@ -1058,10 +1072,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			if (s != null) {
 				if (s.equals(match)) {
 					tick = false;
-					if ((event.stateMask & SWT.SHIFT) != 0)
-						endExecution(newSource);
-					else
-						beginExecution(newSource);
+                    if ((event.stateMask & SWT.SHIFT) == 0) beginExecution(newSource);
+                    else endExecution(newSource);
 				}
 			}
 		}
@@ -1113,7 +1125,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 				sel2.add(v);
 		}
 
-		if (sel.size() == 0)
+		if (sel.isEmpty())
 			return sel2;
 		if (sel2.containsAll(sel))
 			return sel2;
@@ -1157,9 +1169,9 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 				ObjectInputStream objectInputStream = getPersistence(defaultVersion).getObjectInputStream(reader, created);
 				String version = (String) objectInputStream.readObject();
 				int versionToLoad = 0;
-				if (version.equals("version_1")) {
+				if ("version_1".equals(version)) {
 					versionToLoad = 0;
-				} else if (version.equals("version_2")) {
+				} else if ("version_2".equals(version)) {
 					versionToLoad = 1;
 				} else
 					assert false : version;
@@ -1227,7 +1239,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		}
 	}
 
-	static public boolean canPaste() {
+	public static
+    boolean canPaste() {
 
 		// TODO sometimes Ubuntu just deadlocks during this call. We
 		// need to do this with SWT instead
@@ -1255,11 +1268,11 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		insertCopyPasteMenuItems(rootSheetElement, group, items);
 
 		final HashSet<iVisualElement> o = selectionOrOver();
-		if (o.size() > 0) {
+		if (!o.isEmpty()) {
 			items.put("Templating", null);
             // System.out.println(" selection or over is <" + o +
             // ">");
-			items.put("\u1d40 <b>Make element" + (o.size() > 1 ? "s" : "") + " into template</b>", new iUpdateable() {
+			items.put("\u1d40 <b>Make element" + ((o.size() > 1) ? "s" : "") + " into template</b>", new iUpdateable() {
 
 				public void update() {
 					final NewTemplates templates = new NewTemplates(rootSheetElement);
@@ -1296,7 +1309,9 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 										// ">");
 									tmp.renameTo(new File(ff));
 
-									OverlayAnimationManager.notifyAsText(getRoot(), "Element" + (o.size() > 1 ? "s are" : " is") + " now '" + to + "'", null);
+									OverlayAnimationManager.notifyAsText(getRoot(), "Element" + ((o.size() > 1)
+                                                                                                 ? "s are"
+                                                                                                 : " is") + " now '" + to + "'", null);
 
 									return this;
 								}
@@ -1338,9 +1353,10 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		});
 	}
 
-	static public void insertCopyPasteMenuItems(final iVisualElement rootSheetElement, MainSelectionGroup group, Map<String, iUpdateable> items) {
+	public static
+    void insertCopyPasteMenuItems(final iVisualElement rootSheetElement, MainSelectionGroup group, Map<String, iUpdateable> items) {
 		boolean header = false;
-		if (group.getSelection().size() > 0) {
+		if (!group.getSelection().isEmpty()) {
 			if (!header) {
 				items.put("Clipboard", null);
 				header = true;
@@ -1348,7 +1364,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			items.put(" \u2397 <b>Copy</b> elements ///meta C///", new iUpdateable() {
 
 				public void update() {
-					File tmp = new PackageTools().newTempFileWithSelected(rootSheetElement, "copied");
+					File tmp = PackageTools.newTempFileWithSelected(rootSheetElement, "copied");
                     PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
                     OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(rootSheetElement), "Copied to clipboard", null, 1, new Vector4(1, 1, 1, 0.15f));
 				}
@@ -1388,7 +1404,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 	}
 
 	public VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
-		if (getRoot().getParents().size() <= 1 && drawTick) {
+		if ((getRoot().getParents().size() <= 1) && drawTick) {
 			drawTick = false;
 
 			{
@@ -1493,7 +1509,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			}
 
 			List<String> w = pp.getWarnings();
-			if (w.size() > 0) {
+			if (!w.isEmpty()) {
 				System.err.println(" warning while saving :" + w);
 			}
 
@@ -1562,7 +1578,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 			}
 
 			List<String> w = pp.getWarnings();
-			if (w.size() > 0) {
+			if (!w.isEmpty()) {
 				System.err.println(" warning while saving :" + w);
 			}
 
@@ -1651,14 +1667,15 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		drawTick = true;
 	}
 
-	static public void _debugPrintGraph(iVisualElement newCopy, String indent, HashSet<iVisualElement> seen) {
+	public static
+    void _debugPrintGraph(iVisualElement newCopy, String indent, HashSet<iVisualElement> seen) {
         // System.out.println(indent + "<" + newCopy + " / " +
         // newCopy.hashCode() + ">");
 		if (seen.contains(newCopy))
 			return;
 		seen.add(newCopy);
 		List<iVisualElement> cc = newCopy.getChildren();
-		if (cc.size() > 0) {
+		if (!cc.isEmpty()) {
             // System.out.println(indent + "  children:");
             for (iVisualElement c : cc) {
 				_debugPrintGraph(c, indent + "     ", seen);
@@ -1666,7 +1683,7 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		}
 
 		List<iVisualElement> pp = (List<iVisualElement>) newCopy.getParents();
-		if (pp.size() > 0) {
+		if (!pp.isEmpty()) {
             // System.out.println(indent + "  parents:");
             for (iVisualElement c : pp) {
 				_debugPrintGraph(c, indent + "     ", seen);
@@ -1674,7 +1691,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		}
 	}
 
-	static public void debugPrintGraph(iVisualElement newCopy) {
+	public static
+    void debugPrintGraph(iVisualElement newCopy) {
 
 		HashSet<iVisualElement> seen = new HashSet<iVisualElement>();
 		_debugPrintGraph(newCopy, "  ", seen);
@@ -1727,13 +1745,13 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 
 			// OverlayAnimationManager.notifyAsText(getRoot(),
 			// "Saved Sheet, revision '" + v + "'", null);
-			if (warnings != null && warnings.size() > 0)
+			if ((warnings != null) && !warnings.isEmpty())
 				for (String w : warnings)
 					OverlayAnimationManager.warnAsText(getRoot(), w, null);
 		} else {
 			// OverlayAnimationManager.notifyAsText(getRoot(),
 			// "Saved Sheet", null);
-			if (warnings != null && warnings.size() > 0)
+			if ((warnings != null) && !warnings.isEmpty())
 				for (String w : warnings)
 					OverlayAnimationManager.warnAsText(getRoot(), w, null);
 		}
@@ -1807,7 +1825,8 @@ public class StandardFluidSheet implements iVisualElementOverrides, iUpdateable,
 		});
 	}
 
-	static synchronized protected void singleThreadedSave(final StandardFluidSheet sheet) {
+	protected static synchronized
+    void singleThreadedSave(final StandardFluidSheet sheet) {
 
         // System.out.println(" inside shutdown save ");
 

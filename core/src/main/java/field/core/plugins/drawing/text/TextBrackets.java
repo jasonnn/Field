@@ -8,11 +8,13 @@ import java.util.List;
 
 public class TextBrackets {
 
-	static public enum BracketElementType {
+	public static
+    enum BracketElementType {
         line, foot, corner, fixedExternalPosition
     }
 
-	static public class BracketElement {
+	public static
+    class BracketElement {
 		BracketElementType type;
 
 		Vector2 start;
@@ -20,7 +22,8 @@ public class TextBrackets {
 		Vector2 end;
 	}
 
-	static public class BracketConnection {
+	public static
+    class BracketConnection {
 		BracketElementType from;
 
 		float alphaFrom;
@@ -30,22 +33,26 @@ public class TextBrackets {
 		float alphaTo;
 	}
 
-	static public interface iBracketFactory {
+	public static
+    interface iBracketFactory {
 		public List<BracketElement> getBracketFor(AdvancedTextToCachedLine layout);
 
 		public Vector2 getPositionForLink(AdvancedTextToCachedLine layout);
 
 	}
 
-	static public interface iBracketConnectionFactory {
+	public static
+    interface iBracketConnectionFactory {
 		public BracketConnection getConnectionFor(AdvancedTextToCachedLine leftLayout, List<BracketElement> left, AdvancedTextToCachedLine rightLayout, List<BracketElement> right);
 	}
 
-	static public interface iBracketConnectionEvaluation {
+	public static
+    interface iBracketConnectionEvaluation {
 		public float score(AdvancedTextToCachedLine leftLayout, List<BracketElement> left, AdvancedTextToCachedLine rightLayout, List<BracketElement> right, BracketConnection connection);
 	}
 
-	static public CachedLine drawBracketElements(List<BracketElement> elements) {
+	public static
+    CachedLine drawBracketElements(List<BracketElement> elements) {
 		CachedLine cl = new CachedLine();
 
 		boolean f = true;
@@ -61,7 +68,8 @@ public class TextBrackets {
 		return cl;
 	}
 
-	static public CachedLine drawBracketElementsNoFeet(List<BracketElement> elements) {
+	public static
+    CachedLine drawBracketElementsNoFeet(List<BracketElement> elements) {
 		CachedLine cl = new CachedLine();
 
 		boolean f = true;

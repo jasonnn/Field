@@ -181,7 +181,7 @@ public class UDPNIOListener implements iUpdateable, Runnable {
 				}
 			}
 			synchronized (syncData) {
-				if (!flushData || (syncData.receivingInto + 1) % numBuffers != syncData.lastProcessed) {
+				if (!flushData || (((syncData.receivingInto + 1) % numBuffers) != syncData.lastProcessed)) {
 					//only do this if we're not flushing data, so its ok to stall,
 					//OR if we are flushing data and doing this won't make us stall.
 					syncData.receivingInto = (syncData.receivingInto + 1) % numBuffers;
@@ -214,7 +214,7 @@ public class UDPNIOListener implements iUpdateable, Runnable {
 			buffers[i].clear();
 		}
 		synchronized (syncData) {
-			syncData.lastProcessed = (ri + numBuffers - 1) % numBuffers;
+			syncData.lastProcessed = ((ri + numBuffers) - 1) % numBuffers;
 			syncData.notify();
 		}
 	}

@@ -80,8 +80,10 @@ public abstract class SimpleTess_starConvex {
 		
 	}
 
-	abstract protected int nextVertex(Vector3 a, Map<Integer, Object> center);
-	abstract protected void nextFace(int a, int b, int c);
+	protected abstract
+    int nextVertex(Vector3 a, Map<Integer, Object> center);
+	protected abstract
+    void nextFace(int a, int b, int c);
 
     private static
     Object div(Object v, Integer c) {

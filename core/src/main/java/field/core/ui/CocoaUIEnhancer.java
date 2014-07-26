@@ -43,7 +43,7 @@ public class CocoaUIEnhancer {
     static long sel_aboutMenuItemSelected_;
     static Callback proc3Args;
 
-    final private String appName;
+    private final String appName;
 
     /**
      * Class invoked via the Callback object to run the about and preferences actions.
@@ -217,7 +217,8 @@ public class CocoaUIEnhancer {
                 new Object[] { wrapPointer( sel_aboutMenuItemSelected_ ) } );
     }
 
-    private long registerName( Class<?> osCls, String name )
+    private static
+    long registerName(Class<?> osCls, String name)
             throws IllegalArgumentException, SecurityException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
         Object object = invoke( osCls, "sel_registerName", new Object[] { name } );
@@ -232,17 +233,17 @@ public class CocoaUIEnhancer {
         }
         if ( object instanceof Long ) {
             Long l = (Long) object;
-            return l.longValue();
+            return l;
         }
         return 0;
     }
 
     private static Object wrapPointer( long value ) {
-        Class<?> PTR_CLASS = C.PTR_SIZEOF == 8 ? long.class : int.class;
+        Class<?> PTR_CLASS = (C.PTR_SIZEOF == 8) ? long.class : int.class;
         if ( PTR_CLASS == long.class ) {
-            return new Long( value );
+            return value;
         } else {
-            return new Integer( (int) value );
+            return (int) value;
         }
     }
 
@@ -283,7 +284,8 @@ public class CocoaUIEnhancer {
         }
     }
 
-    private Object invoke( Class<?> cls, String methodName ) {
+    private static
+    Object invoke(Class<?> cls, String methodName) {
         return invoke( cls, methodName, (Class<?>[]) null, (Object[]) null );
     }
 
@@ -297,7 +299,8 @@ public class CocoaUIEnhancer {
         }
     }
 
-    private Object invoke( Object obj, String methodName ) {
+    private static
+    Object invoke(Object obj, String methodName) {
         return invoke(obj, methodName, null, (Object[]) null);
     }
 

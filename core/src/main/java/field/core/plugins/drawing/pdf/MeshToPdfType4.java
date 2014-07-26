@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MeshToPdfType4 {
 
-	private CompleteEdgeRep2 rep;
+	private final CompleteEdgeRep2 rep;
 
 	private final TriangleMesh mesh;
 
@@ -227,7 +227,7 @@ public class MeshToPdfType4 {
 			if (vb != va2 && vb != vb2 && vb != vc2) newVertex = vb;
 			if (vc != va2 && vc != vb2 && vc != vc2) newVertex = vc;
 
-			assert newVertex != -1 : va+" "+vb+" "+vc+" "+va2+" "+vb2+" "+vc2;
+			assert newVertex != -1 : va+" "+vb+ ' ' +vc+ ' ' +va2+ ' ' +vb2+ ' ' +vc2;
 
 			bos.write(code);
 			bos.write(toByte(xmin, xmax, mesh.vertex().get(3 * newVertex + 0)));
@@ -295,7 +295,9 @@ public class MeshToPdfType4 {
 					if ((start.nextSharedEdge.start.vertexNumber == vc2 || start.nextSharedEdge.start.vertexNumber == newVertex) && (start.nextSharedEdge.end.vertexNumber == vc2 || start.nextSharedEdge.end.vertexNumber == newVertex)) {
 						chase(all, start.next, bos, xmin, xmax, ymin, ymax, 1, newVertex, va, vc);
 					} else {
-						assert ((start.nextSharedEdge.start.vertexNumber == va2 || start.nextSharedEdge.start.vertexNumber == newVertex) && (start.nextSharedEdge.end.vertexNumber == va2 || start.nextSharedEdge.end.vertexNumber == newVertex)) : start.nextSharedEdge + " " + va2 + " " + newVertex + "      "+ vb2 + " " + vc2;
+						assert ((start.nextSharedEdge.start.vertexNumber == va2 || start.nextSharedEdge.start.vertexNumber == newVertex) && (start.nextSharedEdge.end.vertexNumber == va2 || start.nextSharedEdge.end.vertexNumber == newVertex)) : start.nextSharedEdge + " " + va2 + ' '
+                                                                                                                                                                                                                                                    + newVertex + "      "+ vb2 + ' '
+                                                                                                                                                                                                                                                    + vc2;
 						chase(all, start.next, bos, xmin, xmax, ymin, ymax, 2, va, vc, newVertex);
 					}
 				}
@@ -303,12 +305,14 @@ public class MeshToPdfType4 {
 		}
 	}
 
-	private Vector3 getColorFor(FloatBuffer buffer, int va) {
+	private static
+    Vector3 getColorFor(FloatBuffer buffer, int va) {
 		Vector3 q = new Vector3(buffer.get(4 * va + 0), buffer.get(4 * va + 1), buffer.get(4 * va + 2));
 		return q;
 	}
 
-	protected int toByte(float xmin, float xmax, float f) {
+	protected static
+    int toByte(float xmin, float xmax, float f) {
 
 		float x = 255 * (f - xmin) / (xmax - xmin);
 		if (x < 0) x = 0;

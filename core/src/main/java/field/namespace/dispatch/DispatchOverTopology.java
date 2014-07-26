@@ -58,13 +58,13 @@ public class DispatchOverTopology<T> {
 				return VisitCode.cont;
 
 			if (retint == ReturnInterpretation.untilNotNull)
-				return invoke != null ? VisitCode.stop : VisitCode.cont;
+				return (invoke != null) ? VisitCode.stop : VisitCode.cont;
 			if (retint == ReturnInterpretation.untilNull)
-				return invoke != null ? VisitCode.cont : VisitCode.stop;
+				return (invoke != null) ? VisitCode.cont : VisitCode.stop;
 			if (retint == ReturnInterpretation.skipNotNull)
-				return invoke != null ? VisitCode.skip : VisitCode.cont;
+				return (invoke != null) ? VisitCode.skip : VisitCode.cont;
 			if (retint == ReturnInterpretation.skipNull)
-				return invoke != null ? VisitCode.cont : VisitCode.skip;
+				return (invoke != null) ? VisitCode.cont : VisitCode.skip;
 
 			return VisitCode.cont;
 		}
@@ -228,7 +228,7 @@ public class DispatchOverTopology<T> {
 		}
 
 		public R dispatch(Method m, T on, Object... args) {
-			if (m.getName().equals("added"))
+			if ("added".equals(m.getName()))
 			{
 				trace = true;
 			}
@@ -236,7 +236,7 @@ public class DispatchOverTopology<T> {
 			this.args = args;
 			apply(topology, on);
 
-			if (m.getName().equals("added"))
+			if ("added".equals(m.getName()))
 			{
 				trace = false;
 			}

@@ -37,7 +37,7 @@ public class SimplePDFImageDrawing {
 				return null;
 
 			DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
-				private Vector4 black = new Vector4(1, 1, 1, 1f);
+				private final Vector4 black = new Vector4(1, 1, 1, 1f);
 
 				public void update() {
 

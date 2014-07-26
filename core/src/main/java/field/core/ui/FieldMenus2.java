@@ -25,9 +25,10 @@ import java.util.List;
 
 public class FieldMenus2 {
 
-    static public FieldMenus2 fieldMenus = new FieldMenus2();
+    public static FieldMenus2 fieldMenus = new FieldMenus2();
 
-    static public class Sheet {
+    public static
+    class Sheet {
         public PhantomFluidSheet sheet;
         public Shell setup;
         public String filename = "";
@@ -68,7 +69,7 @@ public class FieldMenus2 {
 
             @Override
             public void handleEvent(Event arg0) {
-                System.out.println(" -- open document handler --  <" + arg0.text + ">");
+                System.out.println(" -- open document handler --  <" + arg0.text + '>');
                 openAnyFile(arg0.text, hiddenWindow);
             }
         });
@@ -179,7 +180,7 @@ public class FieldMenus2 {
 
         makeMenuForSheet(s);
 
-        s.sheet.getUI().getWindow().getFrame().setText("Field (" + filename + ")");
+        s.sheet.getUI().getWindow().getFrame().setText("Field (" + filename + ')');
 
         return s.sheet;
     }
@@ -393,13 +394,14 @@ public class FieldMenus2 {
 
     }
 
-    static public String fieldDir = System.getProperty("user.home") + "/Library/Application Support/Field";
+    public static String fieldDir = System.getProperty("user.home") + "/Library/Application Support/Field";
 
     static {
         getFieldDir();
     }
 
-    static public String getFieldDir() {
+    public static
+    String getFieldDir() {
         if (!new File(fieldDir).exists())
             new File(fieldDir).mkdirs();
         return fieldDir;
@@ -407,7 +409,7 @@ public class FieldMenus2 {
 
     public static String getCanonicalVersioningDir() {
         try {
-            return new File(SystemProperties.getDirProperty("versioning.dir")).getCanonicalPath() + "/";
+            return new File(SystemProperties.getDirProperty("versioning.dir")).getCanonicalPath() + '/';
         } catch (IOException e) {
             e.printStackTrace();
         }

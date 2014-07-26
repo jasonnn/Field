@@ -153,7 +153,7 @@ public class Globals {
 					Logging.logging.addEvent(new ElementInvocationLogging.DidSetLocalVariable(name, to, was));
 				if (name.startsWith("_"))
 					return to;
-				if ((was == null || was == Py.None) && (to != null && to != Py.None)) {
+				if (((was == null) || (was == Py.None)) && ((to != null) && (to != Py.None))) {
 					trapDeclareInside(e, name, to);
 				}
 				return to;
@@ -277,7 +277,7 @@ public class Globals {
 	protected void trapDeclareInside(iVisualElement e, String name, Object to) {
 		if (!knownMultipleDeclarations.contains(name)) {
 			iVisualElement x = potentialDeclarations.put(name, e);
-			if (x != e && x != null) {
+			if ((x != e) && (x != null)) {
 				potentialDeclarations.remove(name);
 				knownMultipleDeclarations.add(name);
 			}

@@ -16,13 +16,13 @@ import org.eclipse.swt.widgets.Sash;
 @Woven
 public class BetterSash {
 
-	static public final boolean lockSashes = SystemProperties.getIntProperty("lockSashes", 0)==1;
+	public static final boolean lockSashes = SystemProperties.getIntProperty("lockSashes", 0)==1;
 	
 	private Sash sash;
 
 	boolean hidden = false;
 
-	private SashForm f;
+	private final SashForm f;
 
 	private int[] were;
 

@@ -29,7 +29,7 @@ public class OKey<T> extends CKey implements iProvider<T> {
 		if (o == nothing)
 			throw new IllegalArgumentException(" ran OKey <" + this
 					+ ">, no default, found nothing in context <"
-					+ localContextTree.pwd() + ">");
+					+ localContextTree.pwd() + '>');
 		return (T) o;
 	}
 
@@ -41,8 +41,8 @@ public class OKey<T> extends CKey implements iProvider<T> {
 		if (o == failure)
 			throw new IllegalArgumentException(" ran OKey <" + this
 					+ ">, with default <"+def+">got failure <"
-					+ localContextTree.pwd() + ">");
-		return (T) (o==nothing ? null : o);
+					+ localContextTree.pwd() + '>');
+		return (T) ((o == nothing) ? null : o);
 	}
 
 	public OKey<T> rootSet(T f)

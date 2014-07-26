@@ -6,7 +6,7 @@ import java.io.File;
 
 public class GitVersioningSystem extends VersioningSystem {
 
-	static public String gitCommand = "/usr/bin/git";
+	public static String gitCommand = "/usr/bin/git";
 	
 	static
 	{
@@ -53,12 +53,12 @@ public class GitVersioningSystem extends VersioningSystem {
 
 	@Override
 	protected void scmCommitDirectory(File path) {
-		executeCommand(fullPathToRepositoryDirectory, gitCommand, "commit", "-a", "-m", "\"" + currentLogMessage + "\"");
+		executeCommand(fullPathToRepositoryDirectory, gitCommand, "commit", "-a", "-m", '"' + currentLogMessage + '"');
 	}
 
 	@Override
 	protected void scmCommitFile(File path) {
-		executeCommand(fullPathToRepositoryDirectory, gitCommand, "commit", "-a", "-m", "\"" + currentLogMessage + "\"");
+		executeCommand(fullPathToRepositoryDirectory, gitCommand, "commit", "-a", "-m", '"' + currentLogMessage + '"');
 	}
 
 	@Override

@@ -54,14 +54,17 @@ public abstract class WhiteBlock implements iUpdateable {
 
 		float min = values[0].rawValue;
 		float max = values[values.length - 1].rawValue;
-		float median = values.length % 2 == 1 ? values[values.length / 2].rawValue : (values[values.length / 2].rawValue + values[values.length / 2 - 1].rawValue) / 2;
+		float median = ((values.length % 2) == 1)
+                       ? values[values.length / 2].rawValue
+                       : ((values[values.length / 2].rawValue + values[values.length / 2 - 1].rawValue) / 2);
 
 		for (int i = 0; i < values.length; i++) {
 			filter(values[i], i, values.length, max, min, median);
 		}
 	}
 
-	abstract protected void filter(MappedProvider provider, int i, int length, float max, float min, float median);
+	protected abstract
+    void filter(MappedProvider provider, int i, int length, float max, float min, float median);
 
 	public class MappedProvider implements iFloatProvider, Comparable<MappedProvider> {
 		float value;
@@ -78,7 +81,8 @@ public abstract class WhiteBlock implements iUpdateable {
 		}
 	}
 
-	static public class StandardWhite extends WhiteBlock {
+	public static
+    class StandardWhite extends WhiteBlock {
 		private final iFloatProvider robustAmount;
 
 		private final iFloatProvider robustPower;
@@ -121,10 +125,10 @@ public abstract class WhiteBlock implements iUpdateable {
 	public void debugToString(PrintStream out) {
 		Iterator<Entry<MappedProvider, iFloatProvider>> i = map.entrySet().iterator();
 		int n = 0;
-		out.println(" white block <"+this.getClass()+"> has <"+map.size()+">");
+		out.println(" white block <"+this.getClass()+"> has <"+map.size()+ '>');
 		while (i.hasNext()) {
 			Entry<MappedProvider, iFloatProvider> e = i.next();
-			out.println(e.getKey().rawValue+" -> "+e.getKey().value+" ("+e.getValue()+")");
+			out.println(e.getKey().rawValue+" -> "+e.getKey().value+" ("+e.getValue()+ ')');
 		}
 	}
 

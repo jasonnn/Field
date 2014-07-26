@@ -88,7 +88,7 @@ public class HashMapOfLists<K, V> extends HashMap<K, Collection<V>> {
 		Collection<V> c = getCollection(key);
 		if (c != null) {
 			c.remove(value);
-			if (c.size() == 0)
+			if (c.isEmpty())
 				this.remove(key);
 		}
 	}
@@ -102,7 +102,7 @@ public class HashMapOfLists<K, V> extends HashMap<K, Collection<V>> {
 		i = this.entrySet().iterator();
 		while (i.hasNext()) {
 			Map.Entry e = (Entry) i.next();
-			if (((Collection) e.getValue()).size() == 0)
+			if (((Collection) e.getValue()).isEmpty())
 				i.remove();
 		}
 	}

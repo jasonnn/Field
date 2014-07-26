@@ -50,13 +50,13 @@ class ClEditInfo {
 		prevEditConstant = prevEditConstant_;
 	}
 
-	private ClConstraint cn;
+	private final ClConstraint cn;
 
-	private ClSlackVariable clvEditPlus;
+	private final ClSlackVariable clvEditPlus;
 
-	private ClSlackVariable clvEditMinus;
+	private final ClSlackVariable clvEditMinus;
 
 	private double prevEditConstant;
 
-	private int i;
+	private final int i;
 }

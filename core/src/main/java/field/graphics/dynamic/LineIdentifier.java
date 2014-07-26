@@ -22,7 +22,7 @@ public class LineIdentifier implements iLineIdentifier {
 
 	public LineIdentifier append(String unit) {
 		LineIdentifier i = new LineIdentifier();
-		i.path = this.path + "/" + unit;
+		i.path = this.path + '/' + unit;
 		if (this.parts != null) {
 			i.parts = new String[this.parts.length + 1];
 			System.arraycopy(this.parts, 0, i.parts, 0, this.parts.length);
@@ -33,7 +33,7 @@ public class LineIdentifier implements iLineIdentifier {
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof iLineIdentifier ? ((iLineIdentifier) obj).getName().equals(this.path) : false;
+		return (obj instanceof iLineIdentifier) ? ((iLineIdentifier) obj).getName().equals(this.path) : false;
 	}
 
 	public String getName() {
@@ -66,7 +66,7 @@ public class LineIdentifier implements iLineIdentifier {
 
 	public LineIdentifier prepend(String unit) {
 		LineIdentifier i = new LineIdentifier();
-		i.path = unit + "/" + this.path;
+		i.path = unit + '/' + this.path;
 		if (this.parts != null) {
 			i.parts = new String[this.parts.length + 1];
 			System.arraycopy(this.parts, 0, i.parts, 1, this.parts.length);
@@ -93,7 +93,7 @@ public class LineIdentifier implements iLineIdentifier {
 
 	@Override
 	public String toString() {
-		return "line:<" + path + ">";
+		return "line:<" + path + '>';
 	}
 
 }

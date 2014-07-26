@@ -10,7 +10,8 @@ package field.bytecode.protect.analysis;
 import field.bytecode.protect.asm.EmptyVisitors;
 import org.objectweb.asm.*;
 
-abstract public class TypesClassVisitor extends ClassVisitor {
+public abstract
+class TypesClassVisitor extends ClassVisitor {
 	// private MetricsClassVisitor mMetrics = null;
 
 	private String mClassName = null;
@@ -65,7 +66,8 @@ abstract public class TypesClassVisitor extends ClassVisitor {
 		return null;
 	}
 
-	abstract protected boolean isYieldCall(String owner_classname, String name, String desc);
+	protected abstract
+    boolean isYieldCall(String owner_classname, String name, String desc);
 
 	public void visitInnerClass(String name, String outerName, String innerName, int access) {
 	}

@@ -48,7 +48,7 @@ public class Soften implements iNodeSelection {
 	public List<Pair<SelectedVertex, Float>> selectFrom(List<CachedLine> here) {
 		List<Pair<SelectedVertex, Float>> all = s.selectFrom(here);
 
-		if (all.size() == 0) return all;
+		if (all.isEmpty()) return all;
 		if (all.size() == 1) return all;
 		float total = 0;
 		Vector2 center = new Vector2();
@@ -106,7 +106,7 @@ public class Soften implements iNodeSelection {
 	}
 
 	private float dFor(float d, float max) {
-		float q = (float) Math.exp(-sharp*d / max);
+		float q = (float) Math.exp((-sharp * d) / max);
 		return q;
 	}
 }

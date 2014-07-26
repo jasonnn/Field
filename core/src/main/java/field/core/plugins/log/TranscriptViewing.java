@@ -24,7 +24,8 @@ import java.util.*;
 public class TranscriptViewing {
 
 	@Woven
-	static public class FilterEventsWithNoDirectEffect implements iProvidesQueue, iTranscriptViewTransformation {
+    public static
+    class FilterEventsWithNoDirectEffect implements iProvidesQueue, iTranscriptViewTransformation {
 		TaskQueue q = new TaskQueue();
 
 		public void filterView(LoggingEventModel root) {
@@ -79,7 +80,8 @@ public class TranscriptViewing {
 	}
 
 	@Woven
-	static public class FilterPotentiallyRedundantCalls implements iProvidesQueue, iTranscriptViewTransformation {
+    public static
+    class FilterPotentiallyRedundantCalls implements iProvidesQueue, iTranscriptViewTransformation {
 
 		TaskQueue q = new TaskQueue();
 
@@ -144,7 +146,8 @@ public class TranscriptViewing {
 	}
 
 	@Woven
-	static public class GroupByElementWithin implements iProvidesQueue, iTranscriptViewTransformation {
+    public static
+    class GroupByElementWithin implements iProvidesQueue, iTranscriptViewTransformation {
 
 		TaskQueue q = new TaskQueue();
 
@@ -196,7 +199,8 @@ public class TranscriptViewing {
 								if (newFocus == null) {
 									currentIntermediate = null;
 								} else
-									currentIntermediate = new LoggingEventModel(LoggingEventType.informative, null, "<HTML><font color='#" + Constants.defaultTreeColor + "'> execution inside <" + ElementInvocationLogging.describeElementLink(newFocus) + " " + (isFragment ? "(fragment)" : ""));
+									currentIntermediate = new LoggingEventModel(LoggingEventType.informative, null, "<HTML><font color='#" + Constants.defaultTreeColor + "'> execution inside <" + ElementInvocationLogging.describeElementLink(newFocus) + ' '
+                                                                                                                    + (isFragment ? "(fragment)" : ""));
 							}
 							insertParent(n, currentIntermediate, c);
 						} else {
@@ -240,7 +244,8 @@ public class TranscriptViewing {
 		}
 	}
 
-	static public class Join implements iTranscriptViewGeneration {
+	public static
+    class Join implements iTranscriptViewGeneration {
 		private final iTranscriptViewGeneration gen;
 
 		private final iTranscriptViewTransformation[] trans;
@@ -265,8 +270,9 @@ public class TranscriptViewing {
 	}
 
 	// suitible for a "hard bake"
-	@Woven
-	static public class OnlyLastEffect implements iProvidesQueue, iTranscriptViewTransformation {
+    @Woven
+    public static
+    class OnlyLastEffect implements iProvidesQueue, iTranscriptViewTransformation {
 		TaskQueue q = new TaskQueue();
 
 		public void filterView(LoggingEventModel root) {
@@ -331,7 +337,8 @@ public class TranscriptViewing {
 	// groups by update cycle, except for the most recent update
 	// cycle
 	// further groups by box execution ?
-	static public class Overview implements iTranscriptViewGeneration {
+    public static
+    class Overview implements iTranscriptViewGeneration {
 		public boolean generateView(ArrayList<iLoggingEvent> transcript, LoggingEventModel root) {
 			ArrayList<LoggingEventModel> a = new ArrayList<LoggingEventModel>(root.getChildren());
 			for (LoggingEventModel m : a)
@@ -383,7 +390,8 @@ public class TranscriptViewing {
 		
 	}
 
-	static public class PivotToCommonTarget implements iTranscriptViewTransformation {
+	public static
+    class PivotToCommonTarget implements iTranscriptViewTransformation {
 
 		public void filterView(LoggingEventModel root) {
 			final LoggingEventModel tmpRoot = new LoggingEventModel(LoggingEventType.informative, null, "tmpRoot");
@@ -462,7 +470,8 @@ public class TranscriptViewing {
 		
 	}
 
-	static public class PivotToCommonClass implements iTranscriptViewTransformation {
+	public static
+    class PivotToCommonClass implements iTranscriptViewTransformation {
 
 		public void filterView(LoggingEventModel root) {
 			final LoggingEventModel tmpRoot = new LoggingEventModel(LoggingEventType.informative, null, "tmpRoot");
@@ -535,7 +544,8 @@ public class TranscriptViewing {
 
 	}
 
-	static public class PivotToElement implements iTranscriptViewTransformation {
+	public static
+    class PivotToElement implements iTranscriptViewTransformation {
 
 		public void filterView(LoggingEventModel root) {
 			final LoggingEventModel tmpRoot = new LoggingEventModel(LoggingEventType.informative, null, "tmpRoot");
@@ -636,7 +646,8 @@ public class TranscriptViewing {
 
 	}
 
-	static public class SimpleStringEvent implements Logging.iLoggingEvent, iUndoable {
+	public static
+    class SimpleStringEvent implements Logging.iLoggingEvent, iUndoable {
 		private final Object target;
 
 		private final Object value;
@@ -666,7 +677,7 @@ public class TranscriptViewing {
 		}
 
 		public String getLongDescription() {
-			return "on target <" + target + " / " + path + ">\n set value <" + value + ">\n fowards <" + forwardExpression + ">\n backwards <" + backwardsExpression + ">";
+			return "on target <" + target + " / " + path + ">\n set value <" + value + ">\n fowards <" + forwardExpression + ">\n backwards <" + backwardsExpression + '>';
 		}
 
 		public String getReplayExpression() {

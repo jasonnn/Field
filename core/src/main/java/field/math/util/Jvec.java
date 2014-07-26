@@ -37,7 +37,7 @@ public class Jvec
 		{
 			if (element == 0)
 				return 0;
-			if (element == size - 1)
+			if (element == (size - 1))
 				return 1;
 			return element + 1;
 		}
@@ -55,15 +55,16 @@ public class Jvec
 	static {
 		MiscNative.load();
 	}
-	static public void main(String[] s)
+	public static
+    void main(String[] s)
 	{
 		Jvec j= new Jvec();
 
 		int l2= 8;
 		int len= 1 << l2;
 
-		FloatBuffer f1= j.newFloatBuffer(len);
-		FloatBuffer f2= j.newFloatBuffer(len);
+		FloatBuffer f1= Jvec.newFloatBuffer(len);
+		FloatBuffer f2= Jvec.newFloatBuffer(len);
 		for (int i= 0; i < f1.capacity(); i++)
 		{
 			f1.put(i, 1000 * (float) Math.cos(2 * Math.PI * 3 * i / f1.capacity()));
@@ -83,24 +84,26 @@ public class Jvec
 		}
 
 	}
-	static public void main0(String[] s)
+	public static
+    void main0(String[] s)
 	{
 		Jvec t= new Jvec();
 
-		FloatBuffer f1= t.newFloatBuffer(1000000);
-		FloatBuffer f2= t.newFloatBuffer(1000000);
+		FloatBuffer f1= Jvec.newFloatBuffer(1000000);
+		FloatBuffer f2= Jvec.newFloatBuffer(1000000);
 		for (int i= 0; i < f1.capacity(); i++)
 		{
 			f1.put(i, i + 1);
 			f2.put(i, 1 / (float) (i + 1));
 		}
-		FloatBuffer f3= t.newFloatBuffer(1000000);
+		FloatBuffer f3= Jvec.newFloatBuffer(1000000);
 		//		t.vadd(f1,f2,f3);
 
 
 	}
 
-	static public String printAddress(Object i)
+	public static
+    String printAddress(Object i)
 	{
 		try
 		{
@@ -130,7 +133,8 @@ public class Jvec
 
 	// one vector, one scalar -> one vector
 
-	static public String toString(FloatBuffer f)
+	public static
+    String toString(FloatBuffer f)
 	{
 		String s= "";
 		for (int i= 0; i < f.capacity(); i++)
@@ -162,7 +166,8 @@ public class Jvec
 	public void convertARGBToFloat(ByteBuffer inBuffer,FloatBuffer outBuffer){
 		nativeConvertARGBToFloat(inBuffer,outBuffer,outBuffer.capacity());
 	}
-	native public void fastNDCBoundingBox(FloatBuffer model, FloatBuffer projection, FloatBuffer data, int numVertex, FloatBuffer output);
+	public native
+    void fastNDCBoundingBox(FloatBuffer model, FloatBuffer projection, FloatBuffer data, int numVertex, FloatBuffer output);
 
 	public int findMaxMag(FloatBuffer buffer){
 		return nativeFindMaxMag(buffer,buffer.capacity());
@@ -180,24 +185,31 @@ public class Jvec
 		return i;
 	}
 
-	public int log2Of(int s)
+	public static
+    int log2Of(int s)
 	{
 		return (int)Math.floor(Math.log(s)/Math.log(2));
 	}
-	native public void nativeConvertARGBToFloat(ByteBuffer byteBuffer,FloatBuffer floatBuffer, int length);
+	public native
+    void nativeConvertARGBToFloat(ByteBuffer byteBuffer,FloatBuffer floatBuffer, int length);
 
-	native public int nativeFindMaxMag(FloatBuffer fButter, int length);
-	native public int nativeFindMinAbs(FloatBuffer fBuffer, int length);
+	public native
+    int nativeFindMaxMag(FloatBuffer fButter, int length);
+	public native
+    int nativeFindMinAbs(FloatBuffer fBuffer, int length);
 
 	// three vectors -> one vector
 
-	native public int nativeInitializeFFT(int l);
+	public native
+    int nativeInitializeFFT(int l);
 	//ie native method z eQuals a X plus Y
-	native public void nativeZeQaXpY(FloatBuffer x,float alpha,FloatBuffer y, FloatBuffer z, int length);
+    public native
+    void nativeZeQaXpY(FloatBuffer x,float alpha,FloatBuffer y, FloatBuffer z, int length);
 
 	public native ByteBuffer newAlignedStorage(int i);
 
-	public FloatBuffer newFloatBuffer(int i)
+	public static
+    FloatBuffer newFloatBuffer(int i)
 	{
 //		FloatBuffer f =  newAlignedStorage(i * 4).asFloatBuffer();
 //		vzero(f);
@@ -220,7 +232,8 @@ public class Jvec
 		performComplexFFT(init.ref, realInplace, imagInplace, init.tempI, init.tempO, init.log2Size, forward ? 1 : 0);
 	}
 
-	native public void performComplexFFT(int i, FloatBuffer inR, FloatBuffer outI, FloatBuffer temp1, FloatBuffer temp2, int l2, int com);
+	public native
+    void performComplexFFT(int i, FloatBuffer inR, FloatBuffer outI, FloatBuffer temp1, FloatBuffer temp2, int l2, int com);
 	//j.vmul(f1, 1/(float)Math.sqrt(len), f1);
 	//j.vmul(f2, 1/(float)Math.sqrt(len), f2);
 	// might be what you are looking for if you want a round trip to not scale by len
@@ -235,7 +248,8 @@ public class Jvec
 		performComplexFFTOutOfPlace(init.ref, realIn, imagIn, realOut, imagOut, init.tempI, init.tempO, init.log2Size, forward ? 1 : 0);
 	}
 
-	native public void performComplexFFTOutOfPlace(
+	public native
+    void performComplexFFTOutOfPlace(
 		int i,
 		FloatBuffer inR,
 		FloatBuffer inI,
@@ -274,7 +288,8 @@ public class Jvec
 	}
 
 
-	native public float performEMD(
+	public native
+    float performEMD(
 		FloatBuffer features1In,
 		int i,
 		FloatBuffer weights1In,
@@ -300,9 +315,11 @@ public class Jvec
 		performRealFFT(init.ref, realInplace, imagOut, init.tempI, init.tempO, init.log2Size);
 	}
 
-	native public void performRealFFT(int i, FloatBuffer inR, FloatBuffer outI, FloatBuffer temp1, FloatBuffer temp2, int l2);
+	public native
+    void performRealFFT(int i, FloatBuffer inR, FloatBuffer outI, FloatBuffer temp1, FloatBuffer temp2, int l2);
 
-	public String toString(FloatBuffer[] f)
+	public static
+    String toString(FloatBuffer[] f)
 	{
 		String s= "";
 		for (int i= 0; i < f[0].capacity(); i++)
@@ -329,7 +346,8 @@ public class Jvec
 	// this doesn't seem to scale things at all (despite docs)
 	// so...
 
-	native public void v5x5Convolve(Buffer image, int width, int height, FloatBuffer kernel, FloatBuffer output);
+	public native
+    void v5x5Convolve(Buffer image, int width, int height, FloatBuffer kernel, FloatBuffer output);
 
 	public void vadd(FloatBuffer one, float scalar, FloatBuffer result)
 	{
@@ -343,9 +361,11 @@ public class Jvec
 		vadd(one, two, result, one.capacity());
 	}
 
-	native public void vadd(FloatBuffer one, FloatBuffer two, FloatBuffer result, int length);
+	public native
+    void vadd(FloatBuffer one, FloatBuffer two, FloatBuffer result, int length);
 
-	native public void vaddS(FloatBuffer one, float scalar, FloatBuffer result, int i);
+	public native
+    void vaddS(FloatBuffer one, float scalar, FloatBuffer result, int i);
 
 	// no docs for which way around this is....
 	public void vam(FloatBuffer one, FloatBuffer two, FloatBuffer three, FloatBuffer out)
@@ -353,7 +373,8 @@ public class Jvec
 		vam(one, two, three, out, out.capacity());
 	}
 
-	native public void vam(FloatBuffer one, FloatBuffer two, FloatBuffer three, FloatBuffer out, int i);
+	public native
+    void vam(FloatBuffer one, FloatBuffer two, FloatBuffer three, FloatBuffer out, int i);
 
 	public void vcascadelowpass(FloatBuffer input, int startAt, float alpha) {
 		vcascadelowpass(input, alpha, startAt, input.capacity());
@@ -364,7 +385,8 @@ public class Jvec
 		assert to.capacity() == (from.capacity()/4)*(from.capacity()/4)*4;
 		vdistancematrix(from, to, from.capacity());
 	}
-	native public void vdistancematrix(FloatBuffer fomr, FloatBuffer to, int length);
+	public native
+    void vdistancematrix(FloatBuffer fomr, FloatBuffer to, int length);
 
 
 	public void vdistancematrixToScalar(FloatBuffer from, FloatBuffer to)
@@ -373,7 +395,8 @@ public class Jvec
 		vdistancematrixToScalar(from, to, from.capacity());
 	}
 
-	native public void vdistancematrixToScalar(FloatBuffer fomr, FloatBuffer to, int length);
+	public native
+    void vdistancematrixToScalar(FloatBuffer fomr, FloatBuffer to, int length);
 	public void vdiv(FloatBuffer one, FloatBuffer two, FloatBuffer result)
 	{
 		// coded out underneath
@@ -384,9 +407,11 @@ public class Jvec
 
 	// note, long's are not accelerated it appears, this code, despite the name, isn't accelerated.
 
-	native public void vdiv(FloatBuffer one, FloatBuffer two, FloatBuffer result, int length);
+	public native
+    void vdiv(FloatBuffer one, FloatBuffer two, FloatBuffer result, int length);
 
-	native public void vDivergence(ByteBuffer input, int width, int height, ByteBuffer output);
+	public native
+    void vDivergence(ByteBuffer input, int width, int height, ByteBuffer output);
 
 	// like vrnd0v2 but insteady of outputing r1,r2,r3,r4 .... it does r1,r2,r1,r2,r3,r4,r3,r4 ....
 
@@ -396,18 +421,22 @@ public class Jvec
 		return vdot(one, two, one.capacity());
 	}
 
-	native public float vdot(FloatBuffer one, FloatBuffer two, int i);
+	public native
+    float vdot(FloatBuffer one, FloatBuffer two, int i);
 
-	native public void vForwardWaveletTransform(IntBuffer rgb8in, LongBuffer rgb16Out, LongBuffer temp, int width, int height);
+	public native
+    void vForwardWaveletTransform(IntBuffer rgb8in, LongBuffer rgb16Out, LongBuffer temp, int width, int height);
 
 	public void vinterleave(FloatBuffer one, FloatBuffer two, FloatBuffer out)
 	{
 		vinterleave(one, two, out, one.capacity());
 	}
 
-	native public float vinterleave(FloatBuffer o, FloatBuffer t, FloatBuffer oo, int i);
+	public native
+    float vinterleave(FloatBuffer o, FloatBuffer t, FloatBuffer oo, int i);
 
-	native public void vInverseWaveletTransform(LongBuffer rgb16in, IntBuffer rgb8Out, LongBuffer temp, int width, int height);
+	public native
+    void vInverseWaveletTransform(LongBuffer rgb16in, IntBuffer rgb8Out, LongBuffer temp, int width, int height);
 	public float vlpf(FloatBuffer outFilter, FloatBuffer inFilter, float filterConstant) {
 		assert outFilter.capacity()==inFilter.capacity();
 		return vlpf(outFilter, inFilter, filterConstant, outFilter.capacity());
@@ -431,7 +460,8 @@ public class Jvec
 	{
 		vmadd(temp2, f, temp1, temp12, temp2.capacity());
 	}
-	native public int vmadd(FloatBuffer temp2, float f, FloatBuffer temp1, FloatBuffer temp12, int length);
+	public native
+    int vmadd(FloatBuffer temp2, float f, FloatBuffer temp1, FloatBuffer temp12, int length);
 
 	public int vmin4Distance(float x,float y,float z,float w, FloatBuffer to)
 	{
@@ -440,7 +470,8 @@ public class Jvec
 		vmin4Distance_tmp.rewind();
 		return vmin4Distance(to, (to.limit()-to.position())/4, vmin4Distance_tmp);
 	}
-	native public int vmin4Distance(FloatBuffer to, int toLength, FloatBuffer fourVec);
+	public native
+    int vmin4Distance(FloatBuffer to, int toLength, FloatBuffer fourVec);
 
 	public void vmul(FloatBuffer one, float scalar, FloatBuffer result)
 	{
@@ -451,8 +482,10 @@ public class Jvec
 		vmul(one, two, result, one.capacity());
 	}
 
-	native public void vmul(FloatBuffer one, FloatBuffer two, FloatBuffer result, int length);
-	native public void vmulS(FloatBuffer one, float scalar, FloatBuffer result, int i);
+	public native
+    void vmul(FloatBuffer one, FloatBuffer two, FloatBuffer result, int length);
+	public native
+    void vmulS(FloatBuffer one, float scalar, FloatBuffer result, int i);
 	public void vmulscalaraddvec(FloatBuffer one,float mulOne,FloatBuffer addScaledOne,FloatBuffer result){
 		nativeZeQaXpY(one,mulOne,addScaledOne,result,result.capacity());
 	}
@@ -496,20 +529,24 @@ public class Jvec
 		vrefreshdistancematrix(input,distances,cursor, input.capacity());
 	}
 
-	native public void  vrnd0(LongBuffer seed, FloatBuffer buffer, int length);
+	public native
+    void  vrnd0(LongBuffer seed, FloatBuffer buffer, int length);
 
 	// altivec implementation of the mersenne twister algorithm. 5 times faster than carefully optimized scalar
 	// rnd0 it seems.... (and some 60 times faster than calling Math.random() a lot)
 	// seed is ignored
-	native public void vrnd0v(IntBuffer seed, FloatBuffer output, int length);
+    public native
+    void vrnd0v(IntBuffer seed, FloatBuffer output, int length);
 
-	native public void vrnd0v2(Object object, FloatBuffer aux6, int i);
+	public native
+    void vrnd0v2(Object object, FloatBuffer aux6, int i);
 	public void vsub(FloatBuffer one, FloatBuffer two, FloatBuffer result)
 	{
 		vsub(one, two, result, one.capacity());
 	}
 
-	native public void vsub(FloatBuffer one, FloatBuffer two, FloatBuffer result, int length);
+	public native
+    void vsub(FloatBuffer one, FloatBuffer two, FloatBuffer result, int length);
 	/**
 	 * could be faster
 	 * @param temp1
@@ -519,15 +556,20 @@ public class Jvec
 		vzero(temp1, temp1.capacity());
 	}
 
-	native private void vcascadelowpass(FloatBuffer input, float alpha, int startAt, int i);
+	private native
+    void vcascadelowpass(FloatBuffer input, float alpha, int startAt, int i);
 
-	native private float vlpf(FloatBuffer outFilter, FloatBuffer inFilter, float filterConstant, int i);
+	private native
+    float vlpf(FloatBuffer outFilter, FloatBuffer inFilter, float filterConstant, int i);
 
-	native private float vlpfabs(FloatBuffer outFilter, FloatBuffer inFilter, float filterUp, float filterDown, int num);
+	private native
+    float vlpfabs(FloatBuffer outFilter, FloatBuffer inFilter, float filterUp, float filterDown, int num);
 
-	native private float vlpfabsdiff(FloatBuffer outFilter, FloatBuffer inFilterA, FloatBuffer inFilterB, float filterUp, float filterDown, int num);
+	private native
+    float vlpfabsdiff(FloatBuffer outFilter, FloatBuffer inFilterA, FloatBuffer inFilterB, float filterUp, float filterDown, int num);
 
-	native private void vrefreshdistancematrix(FloatBuffer input, FloatBuffer distances, int cursor, int i) ;
+	private native
+    void vrefreshdistancematrix(FloatBuffer input, FloatBuffer distances, int cursor, int i) ;
 
 	native void vzero(FloatBuffer t1, int l);
 

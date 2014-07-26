@@ -103,7 +103,8 @@ public abstract class SimpleTess {
 		contourFirst = false;
 	}
 
-	protected List<Object> interpolateProperites(Object[] data, float[] weight) {
+	protected static
+    List<Object> interpolateProperites(Object[] data, float[] weight) {
 		List<Object> o = new ArrayList<Object>();
 
 		int l = (((VInfo) data[0]).properties).size();
@@ -215,6 +216,7 @@ public abstract class SimpleTess {
 
 	protected abstract void decorateVertex(int vertex, List<Object> properties);
 
-	abstract protected int nextVertex(Vector3 position);
+	protected abstract
+    int nextVertex(Vector3 position);
 
 }

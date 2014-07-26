@@ -102,7 +102,7 @@ public class ReferencePlugin implements iPlugin {
 		}
 	}
 
-	static public boolean debug = false;
+	public static boolean debug = false;
 
 	private iVisualElement root;
 
@@ -112,7 +112,7 @@ public class ReferencePlugin implements iPlugin {
 
 	private SelectionGroup<iComponent> group;
 
-    static final protected String pluginId = "//reference_plugin";
+    protected static final String pluginId = "//reference_plugin";
 
 	Set<iVisualElement> currentSelection = new HashSet<iVisualElement>();
 
@@ -190,7 +190,7 @@ public class ReferencePlugin implements iPlugin {
 			ConnectiveThickArc2 con = new ConnectiveThickArc2(created.left, new iProvider.Constant<Vector4>(new Vector4(0.0f, 0.0f, 0.0f, 0.15f)), new iProvider.Constant<Vector4>(new Vector4(0, 0, 0, 0.5f)), source, new iFloatProvider.Constant(10), v, new iFloatProvider.Constant(0));
 			con.addGate(new iFloatProvider() {
 				public float evaluate() {
-					return currentSelection.contains(v) || currentSelection.contains(source) ? 1 : 0;
+					return (currentSelection.contains(v) || currentSelection.contains(source)) ? 1 : 0;
 				}
 			});
 		}
@@ -199,9 +199,10 @@ public class ReferencePlugin implements iPlugin {
 		created.left.setProperty(iVisualElement.doNotSave, true);
 	}
 
-	private int indexOf(List<String> text, String name) {
+	private static
+    int indexOf(List<String> text, String name) {
 		for (String q : text) {
-			if (text.indexOf(name) != -1)
+			if (text.contains(name))
 				return text.indexOf(name);
 		}
 		return -1;

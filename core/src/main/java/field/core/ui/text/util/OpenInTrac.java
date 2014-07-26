@@ -7,7 +7,8 @@ import java.net.URLEncoder;
 
 public class OpenInTrac {
 
-	static public void searchFor(String text)
+	public static
+    void searchFor(String text)
 	{
 	
 		String t = URLEncoder.encode(text);

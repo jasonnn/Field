@@ -14,11 +14,11 @@ public class HorizontalBottomToBottomConstraint extends HorizontalTopToTopConstr
 
 	@Override
 	protected Vector3 point1(VariablesForRect vLeft) {
-		return new Vector3(vLeft.variableX.value()+vLeft.variableW.value()/2, vLeft.variableY.value()+vLeft.variableH.value(),0);
+		return new Vector3(vLeft.variableX.value() + (vLeft.variableW.value() / 2), vLeft.variableY.value()+vLeft.variableH.value(),0);
 	}
 
 	@Override
 	protected Vector3 point2(VariablesForRect vRight) {
-		return new Vector3(vRight.variableX.value()+vRight.variableW.value()/2, vRight.variableY.value()+vRight.variableH.value(),0);
+		return new Vector3(vRight.variableX.value() + (vRight.variableW.value() / 2), vRight.variableY.value()+vRight.variableH.value(),0);
 	}
 }

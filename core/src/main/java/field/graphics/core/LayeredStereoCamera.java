@@ -49,7 +49,7 @@ public class LayeredStereoCamera extends BasicCamera {
 		return io_lookat;
 	}
 
-	static float flipped = (SystemProperties.getIntProperty("stereoEyeFlipped", 0) == 1 ? -1 : 1);
+	static float flipped = ((SystemProperties.getIntProperty("stereoEyeFlipped", 0) == 1) ? -1 : 1);
 	static boolean passive = (SystemProperties.getIntProperty("passiveStereo", 0) == 1);
 
 	double disparityPerDistance = SystemProperties.getDoubleProperty("defaultDisparityPerDistance", 0);
@@ -70,8 +70,8 @@ public class LayeredStereoCamera extends BasicCamera {
 		boolean wasDirty = projectionDirty || modelViewDirty;
 		{
 			glViewport(oX, oY, width, height);
-			float right = (float) (near * Math.tan((Math.PI * fov / 180f) / 2) * aspect) * frustrumMul*multiplyFust;
-			float top = (float) (near * Math.tan((Math.PI * fov / 180f) / 2)) * frustrumMul*multiplyFust;
+			float right = (float) (near * Math.tan(((Math.PI * fov) / 180f) / 2) * aspect) * frustrumMul*multiplyFust;
+			float top = (float) (near * Math.tan(((Math.PI * fov) / 180f) / 2)) * frustrumMul*multiplyFust;
 			
 			float x = flipped * io_frustra ;
 			
@@ -80,17 +80,32 @@ public class LayeredStereoCamera extends BasicCamera {
 			
 			CoreHelpers.glMatrixMode(CoreHelpers.PROJECTION_0);
 			CoreHelpers.glLoadIdentity();
-			CoreHelpers.glFrustum(-right + (right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount + x)), right + right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount + x), -top + top * tshift, top + top * tshift, near, far);
+			CoreHelpers.glFrustum(-right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                               * extraAmount) + x)),
+                                  right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                              * extraAmount) + x)),
+                                  -top + (top * tshift),
+                                  top + (top * tshift), near, far);
 			
 			x *= -1;
 			CoreHelpers.glMatrixMode(CoreHelpers.PROJECTION_1);
 			CoreHelpers.glLoadIdentity();
-			CoreHelpers.glFrustum(-right + (right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount + x)), right + right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount + x), -top + top * tshift, top + top * tshift, near, far);
+			CoreHelpers.glFrustum(-right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                               * extraAmount) + x)),
+                                  right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                              * extraAmount) + x)),
+                                  -top + (top * tshift),
+                                  top + (top * tshift), near, far);
 
 			x *= 0;
 			CoreHelpers.glMatrixMode(GL11.GL_PROJECTION);
 			CoreHelpers.glLoadIdentity();
-			CoreHelpers.glFrustum(-right + (right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount + x)), right + right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount + x), -top + top * tshift, top + top * tshift, near, far);
+			CoreHelpers.glFrustum(-right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                               * extraAmount) + x)),
+                                  right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                              * extraAmount) + x)),
+                                  -top + (top * tshift),
+                                  top + (top * tshift), near, far);
 
 			CoreHelpers.glMatrixMode(GL_MODELVIEW);
 
@@ -110,17 +125,32 @@ public class LayeredStereoCamera extends BasicCamera {
 
 			CoreHelpers.glMatrixMode(CoreHelpers.MODELVIEW_0);
 			CoreHelpers.glLoadIdentity();
-			CoreHelpers.gluLookAt(position.x + flipped * (io_position.x) * x * left.x, position.y + flipped * io_position.y * x * left.y, position.z + flipped * io_position.z * x * left.z, lookAt.x + flipped * io_lookat * x * left.x, lookAt.y + flipped * io_lookat * x * left.y, lookAt.z + flipped * io_lookat * x * left.z, up.x, up.y, up.z);
+			CoreHelpers.gluLookAt(position.x + (flipped * (io_position.x) * x * left.x),
+                                  position.y + (flipped * io_position.y * x * left.y),
+                                  position.z + (flipped * io_position.z * x * left.z),
+                                  lookAt.x + (flipped * io_lookat * x * left.x),
+                                  lookAt.y + (flipped * io_lookat * x * left.y),
+                                  lookAt.z + (flipped * io_lookat * x * left.z), up.x, up.y, up.z);
 
 			x *= -1;
 			CoreHelpers.glMatrixMode(CoreHelpers.MODELVIEW_1);
 			CoreHelpers.glLoadIdentity();
-			CoreHelpers.gluLookAt(position.x + flipped * (io_position.x) * x * left.x, position.y + flipped * io_position.y * x * left.y, position.z + flipped * io_position.z * x * left.z, lookAt.x + flipped * io_lookat * x * left.x, lookAt.y + flipped * io_lookat * x * left.y, lookAt.z + flipped * io_lookat * x * left.z, up.x, up.y, up.z);
+			CoreHelpers.gluLookAt(position.x + (flipped * (io_position.x) * x * left.x),
+                                  position.y + (flipped * io_position.y * x * left.y),
+                                  position.z + (flipped * io_position.z * x * left.z),
+                                  lookAt.x + (flipped * io_lookat * x * left.x),
+                                  lookAt.y + (flipped * io_lookat * x * left.y),
+                                  lookAt.z + (flipped * io_lookat * x * left.z), up.x, up.y, up.z);
 
 			x *= 0;
 			CoreHelpers.glMatrixMode(GL11.GL_MODELVIEW);
 			CoreHelpers.glLoadIdentity();
-			CoreHelpers.gluLookAt(position.x + flipped * (io_position.x) * x * left.x, position.y + flipped * io_position.y * x * left.y, position.z + flipped * io_position.z * x * left.z, lookAt.x + flipped * io_lookat * x * left.x, lookAt.y + flipped * io_lookat * x * left.y, lookAt.z + flipped * io_lookat * x * left.z, up.x, up.y, up.z);
+			CoreHelpers.gluLookAt(position.x + (flipped * (io_position.x) * x * left.x),
+                                  position.y + (flipped * io_position.y * x * left.y),
+                                  position.z + (flipped * io_position.z * x * left.z),
+                                  lookAt.x + (flipped * io_lookat * x * left.x),
+                                  lookAt.y + (flipped * io_lookat * x * left.y),
+                                  lookAt.z + (flipped * io_lookat * x * left.z), up.x, up.y, up.z);
 
 			modelViewDirty = false;
 		}

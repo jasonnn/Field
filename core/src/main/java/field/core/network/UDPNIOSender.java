@@ -125,7 +125,7 @@ public class UDPNIOSender {
 	}
 
 	public String toString(){
-		return "<UDPNIOSender local:"+channel.socket().getLocalSocketAddress().toString()+" remote:"+ip.toString()+">";
+		return "<UDPNIOSender local:"+channel.socket().getLocalSocketAddress().toString()+" remote:"+ip.toString()+ '>';
 	}
 
 

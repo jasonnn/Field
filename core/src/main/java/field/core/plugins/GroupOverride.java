@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class GroupOverride extends iVisualElementOverrides.DefaultOverride{
 
-	static public final VisualElementProperty<Integer> groupOutset = new VisualElementProperty<Integer>("groupOutset_i");
+	public static final VisualElementProperty<Integer> groupOutset = new VisualElementProperty<Integer>("groupOutset_i");
 
 	boolean inside = false;
 
@@ -60,7 +60,7 @@ public class GroupOverride extends iVisualElementOverrides.DefaultOverride{
 			final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
 			new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source).getProperty(source, iVisualElement.selectionGroup, group);
 
-			items.put("Groups (" + forElement.getProperty(iVisualElement.name) + ")", null);
+			items.put("Groups (" + forElement.getProperty(iVisualElement.name) + ')', null);
 
 			items.put("   \u21e3  unpack selection from this group", new iUpdateable(){
 
@@ -72,7 +72,7 @@ public class GroupOverride extends iVisualElementOverrides.DefaultOverride{
 					for (iComponent c : selection) {
 						iVisualElement ve = c.getVisualElement();
 						if (ve != null) {
-							if (parents.contains(ve) && parents.size() > 1) {
+							if (parents.contains(ve) && (parents.size() > 1)) {
 								ve.removeChild(forElement);
 							}
 						}
@@ -93,7 +93,7 @@ public class GroupOverride extends iVisualElementOverrides.DefaultOverride{
 					for (iComponent c : selection) {
 						iVisualElement ve = c.getVisualElement();
 						if (ve != null) {
-							if (!parents.contains(ve) && ve != forElement) {
+							if (!parents.contains(ve) && (ve != forElement)) {
 								ve.addChild(forElement);
 							}
 						}
@@ -148,8 +148,8 @@ public class GroupOverride extends iVisualElementOverrides.DefaultOverride{
 
 		double x1 = (oldChildFrame.x - oldParentFrame.x) / oldParentFrame.w;
 		double y1 = (oldChildFrame.y - oldParentFrame.y) / oldParentFrame.h;
-		double x2 = (oldChildFrame.x + oldChildFrame.w - oldParentFrame.x) / oldParentFrame.w;
-		double y2 = (oldChildFrame.y + oldChildFrame.h - oldParentFrame.y) / oldParentFrame.h;
+		double x2 = ((oldChildFrame.x + oldChildFrame.w) - oldParentFrame.x) / oldParentFrame.w;
+		double y2 = ((oldChildFrame.y + oldChildFrame.h) - oldParentFrame.y) / oldParentFrame.h;
 
 		x1 = newParentFrame.x + x1 * newParentFrame.w;
 		y1 = newParentFrame.y + y1 * newParentFrame.h;
@@ -166,7 +166,7 @@ public class GroupOverride extends iVisualElementOverrides.DefaultOverride{
                                  Rect oldSourceFrame,
                                  Rect oldParentFrame,
                                  int out) {
-        if (c.size() == 0) return oldParentFrame;
+        if (c.isEmpty()) return oldParentFrame;
 		float mx = Float.POSITIVE_INFINITY;
 		float my = Float.POSITIVE_INFINITY;
 		float xx = Float.NEGATIVE_INFINITY;
@@ -177,11 +177,11 @@ public class GroupOverride extends iVisualElementOverrides.DefaultOverride{
 			ve.getFrame(t);
 			if (t.x < mx) mx =(float) t.x;
 			if (t.y < my) my = (float)t.y;
-			if (t.x + t.w > xx) xx = (float)(t.x + t.w);
-			if (t.y + t.h > yy) yy =(float)( t.y + t.h);
+			if ((t.x + t.w) > xx) xx = (float)(t.x + t.w);
+			if ((t.y + t.h) > yy) yy =(float)( t.y + t.h);
 		}
 
-		return new Rect(mx - out, my - out, out * 2 + xx - mx, out * 2 + yy - my);
+		return new Rect(mx - out, my - out, ((out * 2) + xx) - mx, ((out * 2) + yy) - my);
 	}
 
 	protected int getOutset() {

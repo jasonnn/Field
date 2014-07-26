@@ -7,6 +7,7 @@ import ca.odell.glazedlists.matchers.Matcher;
 import field.launch.Launcher;
 import field.launch.iUpdateable;
 import field.namespace.generic.Bind.iFunction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -26,10 +27,11 @@ public class Generator {
 		public void unregister(iChanged c);
 	}
 
-	static public class Channel<X> implements List<X>, iTimeFor<X> {
+	public static
+    class Channel<X> implements List<X>, iTimeFor<X> {
 
 		EventList<X> e;
-		private iTimeFor<? super X> t;
+		private final iTimeFor<? super X> t;
 
 		List<EventList> needingDisposal = new ArrayList<EventList>();
 
@@ -141,7 +143,8 @@ public class Generator {
 			return e.isEmpty();
 		}
 
-		public Iterator<X> iterator() {
+		@NotNull
+        public Iterator<X> iterator() {
 			return e.iterator();
 		}
 
@@ -149,11 +152,13 @@ public class Generator {
 			return e.lastIndexOf(arg0);
 		}
 
-		public ListIterator<X> listIterator() {
+		@NotNull
+        public ListIterator<X> listIterator() {
 			return e.listIterator();
 		}
 
-		public ListIterator<X> listIterator(int arg0) {
+		@NotNull
+        public ListIterator<X> listIterator(int arg0) {
 			return e.listIterator(arg0);
 		}
 
@@ -181,15 +186,18 @@ public class Generator {
 			return e.size();
 		}
 
-		public List<X> subList(int arg0, int arg1) {
+		@NotNull
+        public List<X> subList(int arg0, int arg1) {
 			return e.subList(arg0, arg1);
 		}
 
-		public Object[] toArray() {
+		@NotNull
+        public Object[] toArray() {
 			return e.toArray();
 		}
 
-		public <T> T[] toArray(T[] arg0) {
+		@NotNull
+        public <T> T[] toArray(T[] arg0) {
 			return e.toArray(arg0);
 		}
 

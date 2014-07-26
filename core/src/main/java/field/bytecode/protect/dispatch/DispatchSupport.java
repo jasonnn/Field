@@ -30,14 +30,14 @@ class DispatchSupport {
                Map<String, Object> parameters,
                Object[] argArray,
                String className) {
-        log.fine(" ---- enter <" + uniq + ">");
+        log.fine(" ---- enter <" + uniq + '>');
         // is this level already running?
         Stack<Level> stack = ongoing.get();
         String name = (String) parameters.get("id");
         if (name == null) name = "";
-        if (stack.size() == 0 || (!(stack.peek().name.equals(name)) || name.equals(""))) {
+        if (stack.isEmpty() || (!(stack.peek().name.equals(name)) || name != null && name.isEmpty())) {
             try {
-                log.log(java.util.logging.Level.FINE, " paramemters <" + parameters + ">");
+                log.log(java.util.logging.Level.FINE, " paramemters <" + parameters + '>');
                 DispatchProvider c;
                 if (parameters.containsKey("topology_cached")) {
                     c = (DispatchProvider) parameters.get("topology_cached");
@@ -87,9 +87,9 @@ class DispatchSupport {
         Stack<Level> stack = ongoing.get();
         String name = (String) parameterName.get("id");
         if (name == null) name = "";
-        if (stack.size() == 0) assert false : "stack size reached zero and we are exiting";
-        if (!stack.peek().name.equals(name) && !stack.peek().name.equals(""))
-            assert false : "expected name <" + stack.peek().name + "> got <" + name + "> stack is <" + stack + ">";
+        if (stack.isEmpty()) assert false : "stack size reached zero and we are exiting";
+        if (!stack.peek().name.equals(name) && stack.peek().name != null && !stack.peek().name.isEmpty())
+            assert false : "expected name <" + stack.peek().name + "> got <" + name + "> stack is <" + stack + '>';
 
         Level l = stack.peek();
 

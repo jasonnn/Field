@@ -21,7 +21,8 @@ public class LateExecutingDrawing {
     HashMap<Pair<iVisualElement, Object>, CachedLine> knownLines = new HashMap<Pair<iVisualElement, Object>, CachedLine>();
     HashMap<Pair<iVisualElement, Object>, CachedLine.Event> knownEvents = new HashMap<Pair<iVisualElement, Object>, CachedLine.Event>();
 
-	static public class WrappedObject {
+	public static
+    class WrappedObject {
 		public WrappedObject(Object to, CapturedEnvironment variable) {
 			this.o = to;
 			this.env = variable;
@@ -104,7 +105,7 @@ public class LateExecutingDrawing {
 			Object r = ((iInterpretLine) code).execute(line, e, this);
 			return interpretResult(r, line, code, e);
 		} else {
-			throw new IllegalArgumentException(" don't know what to do with <" + code + ">");
+			throw new IllegalArgumentException(" don't know what to do with <" + code + '>');
 		}
 	}
 
@@ -132,7 +133,8 @@ public class LateExecutingDrawing {
 		public Object execute(CachedLine line, CachedLine.Event event, LateExecutingDrawing context);
 	}
 
-	static public void addCode(CachedLine.Event e, Object to) {
+	public static
+    void addCode(CachedLine.Event e, Object to) {
 
 		to = new WrappedObject(to, (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment"));
 
@@ -152,7 +154,8 @@ public class LateExecutingDrawing {
         //System.out.println("code now is :" + e.getAttributes().get(iLinearGraphicsContext.code_v));
     }
 
-	static public Object nameEvent(CachedLine.Event e, Object key) {
+	public static
+    Object nameEvent(CachedLine.Event e, Object key) {
 		e.container.getProperties().put(iLinearGraphicsContext.containsCode, true);
 		Object name = e.getAttributes().get(iLinearGraphicsContext.name_v);
 		if (name == null) {
@@ -163,7 +166,8 @@ public class LateExecutingDrawing {
 
 	}
 
-	static public class Relativize implements iInterpretLine {
+	public static
+    class Relativize implements iInterpretLine {
 		private Vector2 atSet;
 		private Vector2 atSetSource;
 		private Object name;

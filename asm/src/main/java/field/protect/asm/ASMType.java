@@ -231,7 +231,7 @@ class ASMType {
     public static
     ASMType getObjectType(@NotNull final String internalName) {
         char[] buf = internalName.toCharArray();
-        return new ASMType(buf[0] == '[' ? ARRAY : OBJECT, buf, 0, buf.length);
+        return new ASMType((buf[0] == '[') ? ARRAY : OBJECT, buf, 0, buf.length);
     }
 
     /**
@@ -362,7 +362,7 @@ class ASMType {
         size = 0;
         while (buf[off] != ')') {
             args[size] = getType(buf, off);
-            off += args[size].len + (args[size].sort == OBJECT ? 2 : 0);
+            off += args[size].len + ((args[size].sort == OBJECT) ? 2 : 0);
             size += 1;
         }
         return args;
@@ -434,7 +434,7 @@ class ASMType {
             char car = desc.charAt(c++);
             if (car == ')') {
                 car = desc.charAt(c);
-                return n << 2 | (car == 'V' ? 0 : (car == 'D' || car == 'J' ? 2 : 1));
+                return (n << 2) | ((car == 'V') ? 0 : (((car == 'D') || (car == 'J')) ? 2 : 1));
             }
             else if (car == 'L') {
                 while (desc.charAt(c++) != ';') {
@@ -445,11 +445,11 @@ class ASMType {
                 while ((car = desc.charAt(c)) == '[') {
                     ++c;
                 }
-                if (car == 'D' || car == 'J') {
+                if ((car == 'D') || (car == 'J')) {
                     n -= 1;
                 }
             }
-            else if (car == 'D' || car == 'J') {
+            else if ((car == 'D') || (car == 'J')) {
                 n += 2;
             }
             else {
@@ -844,7 +844,7 @@ class ASMType {
                 int len = name.length();
                 for (int i = 0; i < len; ++i) {
                     char car = name.charAt(i);
-                    buf.append(car == '.' ? '/' : car);
+                    buf.append((car == '.') ? '/' : car);
                 }
                 buf.append(';');
                 return;
@@ -866,7 +866,7 @@ class ASMType {
     public
     int getSize() {
         // the size is in byte 0 of 'off' for primitive types (buf == null)
-        return buf == null ? (off & 0xFF) : 1;
+        return (buf == null) ? (off & 0xFF) : 1;
     }
 
     /**
@@ -882,15 +882,15 @@ class ASMType {
      */
     public
     int getOpcode(final int opcode) {
-        if (opcode == Opcodes.IALOAD || opcode == Opcodes.IASTORE) {
+        if ((opcode == Opcodes.IALOAD) || (opcode == Opcodes.IASTORE)) {
             // the offset for IALOAD or IASTORE is in byte 1 of 'off' for
             // primitive types (buf == null)
-            return opcode + (buf == null ? (off & 0xFF00) >> 8 : 4);
+            return opcode + ((buf == null) ? ((off & 0xFF00) >> 8) : 4);
         }
         else {
             // the offset for other instructions is in byte 2 of 'off' for
             // primitive types (buf == null)
-            return opcode + (buf == null ? (off & 0xFF0000) >> 16 : 4);
+            return opcode + ((buf == null) ? ((off & 0xFF0000) >> 16) : 4);
         }
     }
 

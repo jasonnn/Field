@@ -35,9 +35,9 @@ public class OutputInserts {
 		public boolean handle(Object toPrint, OutputInserts o, iVisualElement inside);
 	}
 
-	static public VisualElementProperty<OutputInserts> outputInserts = new VisualElementProperty<OutputInserts>("outputInserts_");
+	public static VisualElementProperty<OutputInserts> outputInserts = new VisualElementProperty<OutputInserts>("outputInserts_");
 
-	static public final List<iHandlePrintClass> handlers = new ArrayList<iHandlePrintClass>();
+	public static final List<iHandlePrintClass> handlers = new ArrayList<iHandlePrintClass>();
 
 	static {
 
@@ -58,7 +58,7 @@ public class OutputInserts {
 					PyObject next = ((PyGenerator) toPrint).__iternext__();
 					int num = 0;
 					println("[ generator ...", o);
-					while (next != null && num < 50) {
+					while ((next != null) && (num < 50)) {
 						println(num + ": " + next, o);
 						next = ((PyGenerator) toPrint).__iternext__();
 						num++;
@@ -79,10 +79,10 @@ public class OutputInserts {
 			public boolean handle(Object toPrint, OutputInserts o, iVisualElement inside) {
 				if (toPrint instanceof List) {
 					List l = ((List) toPrint);
-					if (l.size() == 0) {
+					if (l.isEmpty()) {
 						println("[--empy list of type " + l.getClass() + "--]", o);
 					} else if (l.size() == 1) {
-						println("[" + l.get(0) + "]", o);
+						println("[" + l.get(0) + ']', o);
 					} else {
 						println("[--" + l.size() + " elements in list of type " + l.getClass() + "...", o);
 						for (int i = 0; i < Math.min(50, l.size()); i++) {
@@ -105,10 +105,10 @@ public class OutputInserts {
 			public boolean handle(Object toPrint, OutputInserts o, iVisualElement inside) {
 				if (toPrint instanceof Map) {
 					Map l = ((Map) toPrint);
-					if (l.size() == 0) {
+					if (l.isEmpty()) {
 						println("{--empy map of type " + l.getClass() + "--}", o);
 					} else if (l.size() == 1) {
-						println("{" + l.entrySet().iterator().next() + "}", o);
+						println("{" + l.entrySet().iterator().next() + '}', o);
 					} else {
 						println("{--" + l.size() + " elements in map of type " + l.getClass() + "...", o);
 
@@ -131,7 +131,8 @@ public class OutputInserts {
 		});
 	}
 
-	static public void addPrintHandler(iHandlePrintClass c) {
+	public static
+    void addPrintHandler(iHandlePrintClass c) {
 		handlers.add(c);
 
 	}
@@ -141,8 +142,8 @@ public class OutputInserts {
 
 		try {
 			String text = oi.document.getText(0, oi.document.getLength());
-			String n1 = oi.styleNameForName(name + ":start");
-			String n2 = oi.styleNameForName(name + ":end");
+			String n1 = OutputInserts.styleNameForName(name + ":start");
+			String n2 = OutputInserts.styleNameForName(name + ":end");
 			int start = text.indexOf(n1) + n1.length();
 			int end = text.indexOf(n2, start);
 			final UndoableEdit[] ee = { null };
@@ -166,7 +167,8 @@ public class OutputInserts {
 		return null;
 	}
 
-	static public void printButton(String name, iVisualElement inside, int width, final PyObject call) {
+	public static
+    void printButton(String name, iVisualElement inside, int width, final PyObject call) {
 		OutputInserts oi = outputInserts.get(inside);
 
 		PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
@@ -191,7 +193,8 @@ public class OutputInserts {
 	}
 
 
-	static public void printButton(String name, iVisualElement inside, final PyObject call) {
+	public static
+    void printButton(String name, iVisualElement inside, final PyObject call) {
 		OutputInserts oi = outputInserts.get(inside);
 
 		PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
@@ -215,7 +218,8 @@ public class OutputInserts {
 		});
 	}
 
-	static public void printFold(String name, iVisualElement inside, final String text) {
+	public static
+    void printFold(String name, iVisualElement inside, final String text) {
 		OutputInserts oi = outputInserts.get(inside);
 
 		PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
@@ -241,7 +245,8 @@ public class OutputInserts {
 		});
 	}
 
-	static public void printHistogram(String text, String name, iVisualElement inside, field.math.util.Histogram<Number> n) {
+	public static
+    void printHistogram(String text, String name, iVisualElement inside, field.math.util.Histogram<Number> n) {
 		OutputInserts oi = outputInserts.get(inside);
 
 		PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
@@ -257,7 +262,8 @@ public class OutputInserts {
 		oi.printComponent(mi);
 	}
 
-	static public void specialPrint(Object o, iVisualElement inside) {
+	public static
+    void specialPrint(Object o, iVisualElement inside) {
 		PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
 		OutputInserts oi = outputInserts.get(inside);
 		if (ed == null || oi == null || (!(ed instanceof PythonPluginEditor)))
@@ -318,11 +324,13 @@ public class OutputInserts {
 		}
 	}
 
-	private String styleNameForName(String name) {
+	private static
+    String styleNameForName(String name) {
 		return "((printed_" + name + "_component))";
 	}
 
-	private AttributeSet getAttributeSetForComponent(JComponent component) {
+	private static
+    AttributeSet getAttributeSetForComponent(JComponent component) {
 		Style style = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 		StyleConstants.setComponent(style, component);
 		return style;

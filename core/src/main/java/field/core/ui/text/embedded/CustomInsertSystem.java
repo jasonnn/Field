@@ -42,7 +42,8 @@ public class CustomInsertSystem implements iCustomInsertSystem {
 		public int getWidthNow();
 	}
 
-	static public class iPossibleComponent {
+	public static
+    class iPossibleComponent {
 		public String name;
 
 		public Class<? extends ProvidedComponent> clazz;
@@ -57,7 +58,8 @@ public class CustomInsertSystem implements iCustomInsertSystem {
 		}
 	}
 
-	static public abstract class ProvidedComponent {
+	public abstract static
+    class ProvidedComponent {
 		public transient JComponent component;
 		public transient Control swt_control;
 
@@ -176,7 +178,8 @@ public class CustomInsertSystem implements iCustomInsertSystem {
 		// }
 		// }
 
-		abstract public String getCurrentRepresentedString();
+		public abstract
+        String getCurrentRepresentedString();
 
 		public void makeNew() {
 		}
@@ -277,14 +280,15 @@ public class CustomInsertSystem implements iCustomInsertSystem {
 
 	}
 
-	static public List<iPossibleComponent> possibleComponents = new ArrayList<iPossibleComponent>();
+	public static List<iPossibleComponent> possibleComponents = new ArrayList<iPossibleComponent>();
 
-	static public List<Triple<String, iPossibleComponent, iPossibleComponent>> possibleWrappers = new ArrayList<Triple<String, iPossibleComponent, iPossibleComponent>>();
+	public static List<Triple<String, iPossibleComponent, iPossibleComponent>> possibleWrappers = new ArrayList<Triple<String, iPossibleComponent, iPossibleComponent>>();
 
 	// static Pattern findText = Pattern.compile("XXX(.)XXX");
 	static Pattern findText = Pattern.compile("([\uf800-\uff00])");
 
-	static public void defaultPossibleInserts() {
+	public static
+    void defaultPossibleInserts() {
 		possibleComponents.add(new iPossibleComponent(" \u25a5\t<b>Label</b> (commented section with keyboard shortcut)", MinimalTextField.Component.class));
 		// way too undocumented right now
 		// possibleComponents.add(new
@@ -474,7 +478,8 @@ public class CustomInsertSystem implements iCustomInsertSystem {
 		return input;
 	}
 
-	public String getStringForComponent(ProvidedComponent component) {
+	public static
+    String getStringForComponent(ProvidedComponent component) {
 		return stringForTag(component.tagNumber);
 	}
 
@@ -691,7 +696,8 @@ public class CustomInsertSystem implements iCustomInsertSystem {
 		return cp2;
 	}
 
-	private boolean foundIn(List<Replace> replacements, int tagnumber) {
+	private static
+    boolean foundIn(List<Replace> replacements, int tagnumber) {
 		for (Replace r : replacements) {
 			if (r.comp != null && r.comp.tagNumber == tagnumber)
 				return true;
@@ -699,7 +705,8 @@ public class CustomInsertSystem implements iCustomInsertSystem {
 		return false;
 	}
 
-	private int parseTagNumber(String group) {
+	private static
+    int parseTagNumber(String group) {
 		char c = group.charAt(0);
 		// return (c - '0');
 		return c - 0xf800;

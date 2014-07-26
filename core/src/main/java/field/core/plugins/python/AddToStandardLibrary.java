@@ -1,5 +1,6 @@
 package field.core.plugins.python;
 
+import com.google.common.io.Closer;
 import field.core.dispatch.iVisualElement;
 import field.core.windowing.overlay.OverlayAnimationManager;
 import field.launch.SystemProperties;
@@ -31,9 +32,9 @@ public class AddToStandardLibrary {
 				return;
 			}
 		}
-
+            final Closer closer = Closer.create();
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(newFile));
+			BufferedWriter out = closer.register(new BufferedWriter(new FileWriter(newFile)));
 			if (plainText)
 				out.write("#field-library\n");
 			out.write(text);
@@ -44,6 +45,13 @@ public class AddToStandardLibrary {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+        }
+        finally {
+            try {
+                closer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

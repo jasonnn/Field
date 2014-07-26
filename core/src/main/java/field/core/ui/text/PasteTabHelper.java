@@ -5,7 +5,8 @@ import java.util.TreeSet;
 
 public class PasteTabHelper {
 
-	static public String entab(String text) {
+	public static
+    String entab(String text) {
 		if (text.trim().length() == 0)
 			return text;
 		
@@ -47,12 +48,12 @@ public class PasteTabHelper {
 
 		StringBuilder b = new StringBuilder(unit);
 		for (int i = 0; i < unit; i++)
-			b.append(" ");
+			b.append(' ');
 
 		StringBuilder o = new StringBuilder(text.length());
 
 		for (String s : lines) {
-			o.append(s.replaceAll(b.toString(), "\t") + "\n");
+			o.append(s.replaceAll(b.toString(), "\t")).append('\n');
 		}
 
 		return o.toString();
@@ -66,7 +67,8 @@ public class PasteTabHelper {
 		return index;
 	}
 
-	static protected int gcd(int x, int y) {
+	protected static
+    int gcd(int x, int y) {
 		if (y == 0)
 			return x;
 		return gcd(y, x % y);

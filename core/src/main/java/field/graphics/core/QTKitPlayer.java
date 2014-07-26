@@ -4,7 +4,7 @@ import field.graphics.qt.QTKitVideo;
 
 public class QTKitPlayer extends BasicUtilities.TwoPassElement {
 
-	private QTKitVideo video;
+	private final QTKitVideo video;
 
 	public QTKitPlayer(String file, int w, int height) {
 		super("qtkit", Base.StandardPass.preRender, Base.StandardPass.postRender);

@@ -43,8 +43,11 @@ public abstract class FilterStack<T> implements iUpdateable, iProvider<T>, iHand
 
 	public void add(Unit<T> unit, iSelectPosition<T> s) {
 		for (int i = -1; i < stack.size(); i++) {
-			Unit<T> a = i >= 0 ? stack.get(i) : null;
-			Position selection = s.select(a, i == -1 ? Position.start : (i == stack.size() - 1 ? Position.end : Position.anywhere));
+			Unit<T> a = (i >= 0) ? stack.get(i) : null;
+			Position selection = s.select(a,
+                                          (i == -1)
+                                          ? Position.start
+                                          : ((i == (stack.size() - 1)) ? Position.end : Position.anywhere));
 			if (selection == Position.after) {
 				stack.add(i + 1, unit);
 				lookupStack.put(unit.name, unit);
@@ -61,7 +64,7 @@ public abstract class FilterStack<T> implements iUpdateable, iProvider<T>, iHand
 				stack.add(0, unit);
 				lookupStack.put(unit.name, unit);
 				return;
-			} else if (i == stack.size() - 1) {
+			} else if (i == (stack.size() - 1)) {
 				stack.add(0, unit);
 				lookupStack.put(unit.name, unit);
 				return;
@@ -74,7 +77,8 @@ public abstract class FilterStack<T> implements iUpdateable, iProvider<T>, iHand
 		lookupStack.put(unit.name, unit);
 	}
 
-	abstract public T addImpl(T a, double w, T to);
+	public abstract
+    T addImpl(T a, double w, T to);
 
 	public void addLast(Unit<T> unit) {
 		stack.add(unit);
@@ -146,7 +150,8 @@ public abstract class FilterStack<T> implements iUpdateable, iProvider<T>, iHand
 
 	}
 
-	abstract protected T blendImpl(T a, T b, double ea);
+	protected abstract
+    T blendImpl(T a, T b, double ea);
 
 	public Object getAttribute(String name) {
 		for (Unit u : stack) {

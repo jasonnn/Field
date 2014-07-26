@@ -64,7 +64,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
         parameters.put("method", onMethod);
     }
 
-    abstract public
+    public abstract
     Object handleExit(Object returningThis,
                       String fromName,
                       Object fromThis,
@@ -72,7 +72,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
                       Map<String, Object> parameterName,
                       String methodReturnName);
 
-    abstract public
+    public abstract
     void handleEntry(String fromName,
                      Object fromThis,
                      String methodName,
@@ -85,7 +85,7 @@ class CallOnEntryAndExit_exceptionAware extends FieldASMGeneratorAdapter impleme
 
         super.visitCode();
 
-        if (onMethod.getName().equals("<init>")) {
+        if ("<init>".equals(onMethod.getName())) {
 
             // we have to leave this until after the first
             // invoke special

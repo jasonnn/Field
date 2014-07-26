@@ -153,7 +153,7 @@ public abstract class TypesMethodVisitor extends MethodVisitor implements Opcode
 				}
 
 				// store the return type of the method
-				if (!("<init>".equals(name) && INVOKESPECIAL == opcode)) {
+				if (!("<init>".equals(name) && (INVOKESPECIAL == opcode))) {
 					Type type = Type.getReturnType(desc);
 					switch (type.getSort()) {
 					case Type.OBJECT:
@@ -202,7 +202,8 @@ public abstract class TypesMethodVisitor extends MethodVisitor implements Opcode
 		}
 	}
 
-	abstract protected boolean isYieldCall(String owner_classname, String name, String desc);
+	protected abstract
+    boolean isYieldCall(String owner_classname, String name, String desc);
 
 	/**
 	 * Visits a type instruction. A type instruction is an instruction that takes a type descriptor as parameter.
@@ -224,9 +225,9 @@ public abstract class TypesMethodVisitor extends MethodVisitor implements Opcode
 				// multi dims new arrays without final dimension specification
 				// end up here as an array of arrays
 				if (desc.startsWith("[")) {
-					mCurrentNode.addInstruction(new TypesInstruction(TypesOpcode.PUSH, "[" + desc));
+					mCurrentNode.addInstruction(new TypesInstruction(TypesOpcode.PUSH, '[' + desc));
 				} else {
-					mCurrentNode.addInstruction(new TypesInstruction(TypesOpcode.PUSH, "[L" + desc + ";"));
+					mCurrentNode.addInstruction(new TypesInstruction(TypesOpcode.PUSH, "[L" + desc + ';'));
 				}
 				break;
 			case CHECKCAST:
@@ -888,7 +889,7 @@ public abstract class TypesMethodVisitor extends MethodVisitor implements Opcode
 				String current_var_type = context.getVar(instruction.getArgument());
 				if (node.getPreceeder() != null
 						&& context.getVars() == node.getPreceeder().getContext().getVars()
-						&& (null == current_var_type || (current_var_type != TypesContext.NULL && !current_var_type.equals(type)))) {
+						&& (null == current_var_type || (!current_var_type.equals(TypesContext.NULL) && !current_var_type.equals(type)))) {
 					context.cloneVars();
 				}
 

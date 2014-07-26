@@ -8,7 +8,7 @@ public class TextOnlyProgressBar {
 
 	private final int width;
 	private final String prefix;
-	private long start;
+	private final long start;
 	private long lastnow;
 
 	float lastf = 0;
@@ -24,7 +24,7 @@ public class TextOnlyProgressBar {
     String num(int w, String string) {
         if (w<0) return "";
 		
-		StringBuffer f = new StringBuffer(w);
+		StringBuilder f = new StringBuilder(w);
 		for (int i = 0; i < w; i++) {
 			f.append(string);
 		}
@@ -66,10 +66,10 @@ public class TextOnlyProgressBar {
 			else
 			if (f!=1)
 				left += " remaining";
-			else left = "("+left+")";
+			else left = '(' +left+ ')';
 			
 			try {
-				System.out.print(ANSIColorUtils.eraseLine() + prefix + " |" + num(n, "*") + num(width - n, " ") + "| " + format.valueToString(f * 100) + "% " + left + "\r");
+				System.out.print(ANSIColorUtils.eraseLine() + prefix + " |" + num(n, "*") + num(width - n, " ") + "| " + format.valueToString(f * 100) + "% " + left + '\r');
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

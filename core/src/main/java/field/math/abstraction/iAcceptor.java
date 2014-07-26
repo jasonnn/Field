@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 public interface iAcceptor<T> {
 
-	static public final Method method_set = ReflectionTools.methodOf("set", iAcceptor.class, Object.class);
+	public static final Method method_set = ReflectionTools.methodOf("set", iAcceptor.class, Object.class);
 	
 	public iAcceptor<T> set(T to);
 }

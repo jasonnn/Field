@@ -33,13 +33,13 @@ public class DrawTopology implements iPaintPeer {
 	public static enum Compass {
 		left(0, 0.5f, -1, 0, 0, -1), right(1, 0.5f, 1, 0, 0, -1), up(0.5f, 0, 0, -1, 1, 0), down(0.5f, 1, 0, 1, 1, 0);
 
-		final public float x;
+		public final float x;
 
-		final public float y;
+		public final float y;
 
-		final public float dx;
+		public final float dx;
 
-		final public float dy;
+		public final float dy;
 
 		public Vector3 point;
 
@@ -58,7 +58,8 @@ public class DrawTopology implements iPaintPeer {
 		}
 	}
 
-	static public class DefaultDrawer implements iTopologyDrawer {
+	public static
+    class DefaultDrawer implements iTopologyDrawer {
 		SimpleArrows a;
 		int arrowSize = 10;
 		Vector4 color = new Vector4(0, 0, 0, 0.25f);
@@ -90,7 +91,7 @@ public class DrawTopology implements iPaintPeer {
 			c.getInput().lineTo(p2.x, p2.y);
 
 			CachedLine a1 = a.arrowForMiddle(c, arrowSize, 0.5f);
-			CachedLine a2 = a.circleFor(c, 0, arrowSize / 5f);
+			CachedLine a2 = SimpleArrows.circleFor(c, 0, arrowSize / 5f);
 			if (isParent) {
 				CachedLine cc = new LineUtils().lineAsStroked(c, new BasicStroke(1, 0, 0, 1, new float[] { 1, 3 }, 0), false);
 				c = cc;
@@ -123,17 +124,20 @@ public class DrawTopology implements iPaintPeer {
 		}
 	}
 
-	static public void addTopologyAsSelectionAxis(final String name, final iVisualElement root, final iTopology<iVisualElement> t, iTopologyDrawer drawer) {
+	public static
+    void addTopologyAsSelectionAxis(final String name, final iVisualElement root, final iTopology<iVisualElement> t, iTopologyDrawer drawer) {
 		addTopologyAsSelectionAxis(name, root, t, drawer, "children", "parents", "\u21e2 child \u2014", "\u21e4 next \u2014");
 	}
 
-	static public void addTopologyAsSelectionAxis(String name, iVisualElement root, iTopology<iVisualElement> top, iTopologyDrawer drawer, String cng, String png, String cn, String pn) {
+	public static
+    void addTopologyAsSelectionAxis(String name, iVisualElement root, iTopology<iVisualElement> top, iTopologyDrawer drawer, String cng, String png, String cn, String pn) {
 		BasicDrawingPlugin plugin = BasicDrawingPlugin.simpleConstraints_plugin.get(root);
 		SelectionSetDriver driver = plugin.getSelectionSetDriver();
 		addTopologyAsSelectionAxis(driver, name, root, top, drawer, cng, png, cn, pn);
 	}
 
-	static public void addTopologyAsSelectionAxis(SelectionSetDriver driver, final String name, final iVisualElement root, final iTopology<iVisualElement> t, iTopologyDrawer drawer, final String childrenNameGroup, final String parentsNameGroup, final String childName, final String parentName) {
+	public static
+    void addTopologyAsSelectionAxis(SelectionSetDriver driver, final String name, final iVisualElement root, final iTopology<iVisualElement> t, iTopologyDrawer drawer, final String childrenNameGroup, final String parentsNameGroup, final String childName, final String parentName) {
 		final DrawTopology d = new DrawTopology(root);
 		d.add(t, drawer);
 		d.setSelectedOnly(true);
@@ -214,7 +218,8 @@ public class DrawTopology implements iPaintPeer {
 
 	}
 
-	static public Pair<Compass, Compass> findMinimumRectangleConnection(final Rect start, final Rect end) {
+	public static
+    Pair<Compass, Compass> findMinimumRectangleConnection(final Rect start, final Rect end) {
 
 		Pair<Compass, Compass> option = ReflectionTools.argMin(options, new Object() {
 			public float distance(Pair<Compass, Compass> option) {
@@ -225,7 +230,8 @@ public class DrawTopology implements iPaintPeer {
 		return option;
 	}
 
-	static public Compass findMinimumRectangleConnection(final Rect start, final Vector2 point) {
+	public static
+    Compass findMinimumRectangleConnection(final Rect start, final Vector2 point) {
 
 		Pair<Compass, Compass> option = ReflectionTools.argMin(options, new Object() {
 			public float distance(Pair<Compass, Compass> option) {
@@ -236,7 +242,8 @@ public class DrawTopology implements iPaintPeer {
 		return option.left;
 	}
 
-	static public <T> iTopology<T> topoologyFromList(final List<T> t) {
+	public static
+    <T> iTopology<T> topoologyFromList(final List<T> t) {
 		return new iTopology<T>() {
 			public java.util.List<T> getChildrenOf(T of) {
 				int a = t.indexOf(of);

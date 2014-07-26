@@ -13,7 +13,8 @@ import field.math.linalg.Vector3;
  */
 public class Visitors3 {
 
-	static public class BaseFilter3 {
+	public static
+    class BaseFilter3 {
 		CachedLineCursor currentInput;
 
 		CachedLineCursor currentOutput;

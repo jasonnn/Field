@@ -2,6 +2,7 @@ package field.util;
 
 import field.launch.Launcher;
 import field.launch.iUpdateable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class FieldExecutorService extends AbstractExecutorService {
 
-	static public final FieldExecutorService service = new FieldExecutorService();
+	public static final FieldExecutorService service = new FieldExecutorService();
 
 	@Override
 	public boolean awaitTermination(long arg0, TimeUnit arg1) throws InterruptedException {
@@ -36,7 +37,8 @@ public class FieldExecutorService extends AbstractExecutorService {
 	public void shutdown() {
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public List<Runnable> shutdownNow() {
 		return null;
 	}

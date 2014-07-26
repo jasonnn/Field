@@ -32,13 +32,13 @@ import java.util.Map.Entry;
 
 public class PlainDraggableComponent implements iComponent, iDraggableComponent {
 
-	static public final VisualElementProperty<Boolean> hasMouseFocus = new VisualElementProperty<Boolean>("hasMouseFocus");
+	public static final VisualElementProperty<Boolean> hasMouseFocus = new VisualElementProperty<Boolean>("hasMouseFocus");
 
 	protected Rect bounds = new Rect(0, 0, 0, 0);
 
 	private boolean dirty;
 
-	private CoordinateFrame coordSys;
+	private final CoordinateFrame coordSys;
 
 	protected ComponentContainer inside;
 

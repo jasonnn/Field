@@ -91,7 +91,10 @@ public class NewInspectorPlugin implements iPlugin {
 
 		@Override
 		public <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
-			if (source == currentInspection && !prop.equals(PythonPlugin.python_areas) && !prop.equals(PythonPlugin.python_source) && !prop.equals(PythonPluginEditor.python_customInsertPersistanceInfo)) {
+			if ((source == currentInspection)
+                && !prop.equals(PythonPlugin.python_areas)
+                && !prop.equals(PythonPlugin.python_source)
+                && !prop.equals(PythonPluginEditor.python_customInsertPersistanceInfo)) {
 				needsInspection = 30;
 				// live update is commented out right now for
 				// performance reasons
@@ -108,9 +111,10 @@ public class NewInspectorPlugin implements iPlugin {
 
 	public static HashMap<String, String> inspectableProperties = new HashMap<String, String>();
 
-	static public final VisualElementProperty<NewInspectorPlugin> inspectorPlugin = new VisualElementProperty<NewInspectorPlugin>("inspectorPlugin_");
+	public static final VisualElementProperty<NewInspectorPlugin> inspectorPlugin = new VisualElementProperty<NewInspectorPlugin>("inspectorPlugin_");
 
-	static public void addInspectableProperty(String propertyName, String displayName) {
+	public static
+    void addInspectableProperty(String propertyName, String displayName) {
 		inspectableProperties.put(propertyName, displayName);
 	}
 
@@ -121,7 +125,7 @@ public class NewInspectorPlugin implements iPlugin {
 
 	private iVisualElement currentInspection;
 
-    static final protected String pluginId = "//inspector_python";
+    protected static final String pluginId = "//inspector_python";
 
 	protected LocalVisualElement lve;
 
@@ -158,7 +162,8 @@ public class NewInspectorPlugin implements iPlugin {
 	public void close() {
 	}
 
-	public String formatName(String name) {
+	public static
+    String formatName(String name) {
 
 		if (inspectableProperties.containsKey(name))
 			return inspectableProperties.get(name);

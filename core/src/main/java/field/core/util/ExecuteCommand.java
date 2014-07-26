@@ -16,7 +16,7 @@ public class ExecuteCommand {
 
 	private List<String> command;
 
-	static public boolean defaultEcho = true;
+	public static boolean defaultEcho = true;
 	public boolean echo = defaultEcho;
 	
 	StringBuffer allOut = new StringBuffer();
@@ -88,7 +88,7 @@ public class ExecuteCommand {
 	}
 
 	public boolean isFinished() {
-		return t.getState().equals(Thread.State.TERMINATED);
+		return t.getState() == Thread.State.TERMINATED;
 	}
 
 	public class Runner extends Thread {
@@ -121,7 +121,7 @@ public class ExecuteCommand {
 
 	private void go(String directory, boolean redirectError, String[] s) {
 
-		if (echo) System.out.println(":::::::::::::::::::::::::::::::::::: " + Arrays.asList(s) + " " + redirectError);
+		if (echo) System.out.println(":::::::::::::::::::::::::::::::::::: " + Arrays.asList(s) + ' ' + redirectError);
 
 		command = Arrays.asList(s);
 		pb = new ProcessBuilder(s);

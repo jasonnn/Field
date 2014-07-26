@@ -19,13 +19,13 @@ class Cont implements DispatchProvider {
     public static WeakHashMap<Object, HashMap<Method, List<Run>>> instance_links =
             new WeakHashMap<Object, HashMap<Method, List<Run>>>();
 
-    static public
+    public static
     void linkWith(Object o, Method m, Run r) {
 
         Method om = m;
         // Method m might refer to a superclass, so we have to do a little work here
         m = ReflectionTools.findMethodWithParametersUpwards(m.getName(), m.getParameterTypes(), o.getClass());
-        assert m != null : "couldn't really find <" + om + "> on <" + o + "> <" + o.getClass() + ">";
+        assert m != null : "couldn't really find <" + om + "> on <" + o + "> <" + o.getClass() + '>';
         HashMap<Method, List<Run>> name = instance_links.get(o);
         if (name != null) {
             List<Run> n = name.get(m);
@@ -47,13 +47,13 @@ class Cont implements DispatchProvider {
 
     }
 
-    static public
+    public static
     void linkWith_static(Method m, Class c, Run r) {
 
         Method om = m;
         // Method m might refer to a superclass, so we have to do a little work here
         m = ReflectionTools.findMethodWithParametersUpwards(m.getName(), m.getParameterTypes(), c);
-        assert m != null : "couldn't really find <" + om + ">  on <" + c + ">";
+        assert m != null : "couldn't really find <" + om + ">  on <" + c + '>';
 
 
         List<Run> name = class_links.get(m);
@@ -65,7 +65,7 @@ class Cont implements DispatchProvider {
         }
     }
 
-    static public
+    public static
     void linkWith_static(Method m, Run r) {
         List<Run> name = class_links.get(m);
         if (name != null) name.add(r);
@@ -76,21 +76,21 @@ class Cont implements DispatchProvider {
         }
     }
 
-    static public
+    public static
     void unlinkWith(Object o, Method m, Run r) {
         Method om = m;
         // Method m might refer to a superclass, so we have to do a little work here
         m = ReflectionTools.findMethodWithParametersUpwards(m.getName(), m.getParameterTypes(), o.getClass());
-        assert m != null : "couldn't really find <" + om + ">  on <" + o + "> <" + o.getClass() + ">";
+        assert m != null : "couldn't really find <" + om + ">  on <" + o + "> <" + o.getClass() + '>';
 
         HashMap<Method, List<Run>> name = instance_links.get(o);
         if (name != null) {
             List<Run> n = name.get(m);
             if (n != null) {
                 n.remove(r);
-                if (n.size() == 0) {
+                if (n.isEmpty()) {
                     name.remove(m);
-                    if (name.size() == 0) instance_links.remove(name);
+                    if (name.isEmpty()) instance_links.remove(name);
                 }
             }
             else {
@@ -103,13 +103,13 @@ class Cont implements DispatchProvider {
     }
 
 
-    static public
+    public static
     void unlinkWith_static(Method m, Class c, Run r) {
 
         Method om = m;
         // Method m might refer to a superclass, so we have to do a little work here
         m = ReflectionTools.findMethodWithParametersUpwards(m.getName(), m.getParameterTypes(), c);
-        assert m != null : "couldn't really find <" + om + "> on <" + c + ">";
+        assert m != null : "couldn't really find <" + om + "> on <" + c + '>';
 
         List<Run> name = class_links.get(m);
         if (name != null) name.remove(r);
@@ -119,7 +119,7 @@ class Cont implements DispatchProvider {
     }
 
 
-    static public
+    public static
     void unlinkWith_static(Method m, Run r) {
         List<Run> name = class_links.get(m);
         if (name != null) name.remove(r);
@@ -153,7 +153,7 @@ class Cont implements DispatchProvider {
             if (mm != null) rr2 = mm.get(m);
             final List<Run> r2 = rr2;
 
-            if (r1 != null || r2 != null) {
+            if ((r1 != null) || (r2 != null)) {
                 alreadyDone.add(root);
                 return new Apply() {
 
@@ -200,7 +200,7 @@ class Cont implements DispatchProvider {
             if (mm != null) rr2 = mm.get(m);
             final List<Run> r2 = rr2;
 
-            if (r1 != null || r2 != null) return new Apply() {
+            if ((r1 != null) || (r2 != null)) return new Apply() {
 
                 public
                 void head(Object[] args) {

@@ -8,8 +8,8 @@ import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.Method;
 public class ComplexConstraints_m {
-static public final Method addEditFor_m = ReflectionTools.methodOf("addEditFor", field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]> addEditFor_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class, "addEditFor", new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class});
+public static final Method addEditFor_m = ReflectionTools.methodOf("addEditFor", field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]> addEditFor_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class, "addEditFor", new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class});
 
 public interface addEditFor_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -18,8 +18,8 @@ public interface addEditFor_interface extends iAcceptor<Object[]>, iFunction<Obj
 
 public final addEditFor_interface addEditFor;
 
-static public final Method addSuggestionFor_m = ReflectionTools.methodOf("addSuggestionFor", field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]> addSuggestionFor_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class, "addSuggestionFor", new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class});
+public static final Method addSuggestionFor_m = ReflectionTools.methodOf("addSuggestionFor", field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]> addSuggestionFor_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class, "addSuggestionFor", new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class});
 
 public interface addSuggestionFor_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -28,8 +28,8 @@ public interface addSuggestionFor_interface extends iAcceptor<Object[]>, iFuncti
 
 public final addSuggestionFor_interface addSuggestionFor;
 
-static public final Method updateFrameFromVariables_m = ReflectionTools.methodOf("updateFrameFromVariables", field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, field.core.plugins.constrain.ComplexConstraints.VariablesForRect> updateFrameFromVariables_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, field.core.plugins.constrain.ComplexConstraints.VariablesForRect>(field.core.plugins.constrain.ComplexConstraints.class, "updateFrameFromVariables", new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class});
+public static final Method updateFrameFromVariables_m = ReflectionTools.methodOf("updateFrameFromVariables", field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, field.core.plugins.constrain.ComplexConstraints.VariablesForRect> updateFrameFromVariables_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, field.core.plugins.constrain.ComplexConstraints.VariablesForRect>(field.core.plugins.constrain.ComplexConstraints.class, "updateFrameFromVariables", new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class});
 
 public interface updateFrameFromVariables_interface extends iAcceptor<field.core.plugins.constrain.ComplexConstraints.VariablesForRect>, iFunction<Object ,field.core.plugins.constrain.ComplexConstraints.VariablesForRect >
 	{
@@ -38,8 +38,8 @@ public interface updateFrameFromVariables_interface extends iAcceptor<field.core
 
 public final updateFrameFromVariables_interface updateFrameFromVariables;
 
-static public final Method updateVariablesFromFrame_m = ReflectionTools.methodOf("updateVariablesFromFrame", field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]> updateVariablesFromFrame_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class, "updateVariablesFromFrame", new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class});
+public static final Method updateVariablesFromFrame_m = ReflectionTools.methodOf("updateVariablesFromFrame", field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]> updateVariablesFromFrame_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class, "updateVariablesFromFrame", new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.iVisualElement.Rect.class});
 
 public interface updateVariablesFromFrame_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{

@@ -11,7 +11,8 @@ import java.util.Deque;
 
 
 public interface iProvider<T> {
-	static public class BufferedOne<T> implements iProvider<T> {
+	public static
+    class BufferedOne<T> implements iProvider<T> {
 		private final iProvider<T> in;
 
 		T last = null;
@@ -34,7 +35,8 @@ public interface iProvider<T> {
 		}
 	}
 
-	static public class BufferedOneUpdate<T> implements iProvider<T>, iUpdateable {
+	public static
+    class BufferedOneUpdate<T> implements iProvider<T>, iUpdateable {
 		private final iProvider<T> in;
 
 		T last = null;
@@ -115,7 +117,7 @@ public interface iProvider<T> {
 		Deque<T> dec = new ArrayDeque<T>();
 		int first = 0;
 
-		private int n;
+		private final int n;
 
 		public BufferedN(iProvider<T> in, int n) {
 			this.in = in;
@@ -157,14 +159,14 @@ public interface iProvider<T> {
 		
 		@Override
 		public String toString() {
-			return "iProvider.Constant("+t+")";
+			return "iProvider.Constant("+t+ ')';
 		}
 	}
 
 	static public class FieldProvider<T> implements iProvider<T> {
-		private java.lang.reflect.Field field;
+		private final java.lang.reflect.Field field;
 
-		private Object from;
+		private final Object from;
 
 		public FieldProvider(Object from, String field) {
 			java.lang.reflect.Field[] allFields = ReflectionTools.getAllFields(from.getClass());
@@ -175,7 +177,7 @@ public interface iProvider<T> {
 					return;
 				}
 			}
-			throw new IllegalStateException(" no field called <" + field + "> in <" + from + "> <" + from.getClass() + ">");
+			throw new IllegalStateException(" no field called <" + field + "> in <" + from + "> <" + from.getClass() + '>');
 		}
 
 		public T get() {
@@ -248,7 +250,8 @@ public interface iProvider<T> {
 
 	// this can be used to make a provider look like what it provides (see also the caching "Up"
 
-	static public class SerializationBarrier<T> implements iProvider<T> {
+	public static
+    class SerializationBarrier<T> implements iProvider<T> {
 		public T last;
 
 		transient private final iProvider<T> through;

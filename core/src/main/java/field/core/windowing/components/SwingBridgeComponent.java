@@ -40,7 +40,8 @@ import static org.lwjgl.opengl.GL13.*;
  */
 public abstract class SwingBridgeComponent extends PlainDraggableComponent {
 
-	static public class NamedComponent extends SwingBridgeComponent {
+	public static
+    class NamedComponent extends SwingBridgeComponent {
 
 		public String className;
 
@@ -91,7 +92,7 @@ public abstract class SwingBridgeComponent extends PlainDraggableComponent {
 		}
 	}
 
-	static public int defaultMaxComponentDimension = 512;
+	public static int defaultMaxComponentDimension = 512;
 
 	public transient JComponent componentToRender;
 
@@ -473,7 +474,8 @@ public abstract class SwingBridgeComponent extends PlainDraggableComponent {
 			CachedLine c = new CachedLine();
 			c.getInput().moveTo((float) (this.getBounds().x + this.getBounds().w + 4), (float) (this.getBounds().y + this.getBounds().h - 6));
 			c.getProperties().put(iLinearGraphicsContext.containsText, true);
-			c.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "(" + this.element.getProperty(iVisualElement.name) + ")");
+			c.getInput().setPointAttribute(iLinearGraphicsContext.text_v,
+                                           '(' + this.element.getProperty(iVisualElement.name) + ')');
 			c.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new Font("Gill Sans", 0, 10));
 			cc.submitLine(c, c.getProperties());
 		}
@@ -582,7 +584,7 @@ public abstract class SwingBridgeComponent extends PlainDraggableComponent {
 		
 		List<iVisualElement> parents = StandardFluidSheet.allVisualElements(element.getChildren().get(0));
 		
-		System.out.println(" parents are <"+parents+">");
+		System.out.println(" parents are <"+parents+ '>');
 		new CascadedResize(parents).cascadedResize(element, oldBounds, bounds, 10);
 		
 	}

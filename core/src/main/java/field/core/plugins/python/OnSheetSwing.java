@@ -24,7 +24,8 @@ import java.awt.*;
 public class OnSheetSwing {
 
 	@Woven
-	static public class Wrap extends SwingBridgeComponent {
+    public static
+    class Wrap extends SwingBridgeComponent {
 		public JPanel panel = new JPanel();
 
 		boolean heavy = false;
@@ -157,7 +158,8 @@ public class OnSheetSwing {
 		}
 	}
 
-	static public void upgrade(iVisualElement e) {
+	public static
+    void upgrade(iVisualElement e) {
 
 		iComponent c = iVisualElement.localView.get(e);
         //System.out.println(" upgrading a <" + e + "> from <" + c + ">");

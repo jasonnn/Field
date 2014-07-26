@@ -1,5 +1,7 @@
 package field.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.ref.WeakReference;
 import java.util.*;
 
@@ -19,7 +21,7 @@ public class WeakArrayList<T> implements List<T> {
 		Iterator< ? extends T> i = c.iterator();
 		while (i.hasNext())
 			add(i.next());
-		return c.size() > 0;
+		return !c.isEmpty();
 	}
 
 	public boolean addAll(int index, Collection c) {
@@ -28,7 +30,7 @@ public class WeakArrayList<T> implements List<T> {
 			add(index, i.next());
 			index++;
 		}
-		return c.size() > 0;
+		return !c.isEmpty();
 	}
 
 	public void clear() {
@@ -64,7 +66,8 @@ public class WeakArrayList<T> implements List<T> {
 		return list.isEmpty();
 	}
 
-	public Iterator<T> iterator() {
+	@NotNull
+    public Iterator<T> iterator() {
 		final Iterator<WeakReference<T>> ii = list.iterator();
 		return new Iterator<T>(){
 			public boolean hasNext() {
@@ -85,11 +88,13 @@ public class WeakArrayList<T> implements List<T> {
 		return list.lastIndexOf(o);
 	}
 
-	public ListIterator listIterator() {
+	@NotNull
+    public ListIterator listIterator() {
 		return list.listIterator();
 	}
 
-	public ListIterator listIterator(int index) {
+	@NotNull
+    public ListIterator listIterator(int index) {
 		return list.listIterator(index);
 	}
 
@@ -126,17 +131,20 @@ public class WeakArrayList<T> implements List<T> {
 		return list.size();
 	}
 
-	public List<T> subList(int fromIndex, int toIndex) {
+	@NotNull
+    public List<T> subList(int fromIndex, int toIndex) {
 		WeakArrayList nn = new WeakArrayList<T>();
 		nn.list = this.list.subList(fromIndex, toIndex);
 		return nn;
 	}
 
-	public Object[] toArray() {
+	@NotNull
+    public Object[] toArray() {
 		return list.toArray();
 	}
 
-	public <T> T[] toArray(T [] a) {
+	@NotNull
+    public <T> T[] toArray(T [] a) {
         WeakReference[] r = list.toArray(new WeakReference[list.size()]);
         if (a.length != r.length)
 		{
@@ -153,7 +161,7 @@ public class WeakArrayList<T> implements List<T> {
 		Iterator<WeakReference<T>> i = list.iterator();
 		while(i.hasNext()) {
 			WeakReference<T> nn = i.next();
-			if (nn==null || nn.get()==null) i.remove();
+			if ((nn == null) || (nn.get() == null)) i.remove();
 		}
 	}
 

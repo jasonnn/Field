@@ -66,7 +66,7 @@ public class CachedLineCompression {
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(cachedLineToCCL(source));
 			oos.close();
-			return new Base64().encode(bos.toByteArray());
+			return  Base64.encode(bos.toByteArray());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -134,20 +134,17 @@ public class CachedLineCompression {
 			if (q.getValue() instanceof iVisualElement)
 				continue;
 
-			if (!(q.getValue() instanceof Serializable)) {
-			} else if (q.getValue() instanceof PyObject) {
-			} else {
-				if (q.getValue() instanceof Collection) {
-					Iterator mm = ((Collection) q.getValue()).iterator();
-					while (mm.hasNext())
-						if (!(mm.next() instanceof Serializable)) {
-							continue outer;
-						}
-				}
+            if ((q.getValue() instanceof Serializable) && !(q.getValue() instanceof PyObject)) {
+                if (q.getValue() instanceof Collection) {
+                    for (Object o : ((Collection) q.getValue()))
+                        if (!(o instanceof Serializable)) {
+                            continue outer;
+                        }
+                }
 
-				r.put(q.getKey(), q.getValue());
-			}
-		}
+                r.put(q.getKey(), q.getValue());
+            }
+        }
 		return r;
 	}
 

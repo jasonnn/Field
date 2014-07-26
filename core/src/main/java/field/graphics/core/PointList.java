@@ -31,7 +31,7 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
 
-	static public final boolean useATIPointSpriteWorkaround = SystemProperties.getIntProperty("useATIPointSpriteWorkaround", 0) == 1;
+	public static final boolean useATIPointSpriteWorkaround = SystemProperties.getIntProperty("useATIPointSpriteWorkaround", 0) == 1;
 
 	boolean doDynamicFrameRateCulling = false;
 
@@ -70,7 +70,7 @@ public class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
 		assert (glGetError() == 0);
 		assert (glGetError() == 0);
 
-		if (triangleLimit * 3 > triangleBuffer.sBuffer.capacity()) {
+		if ((triangleLimit * 3) > triangleBuffer.sBuffer.capacity()) {
 			triangleLimit = triangleBuffer.sBuffer.capacity() / 3;
 		} else if (triangleLimit < 0) {
 			triangleLimit = 0;
@@ -80,7 +80,7 @@ public class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
 		clean();
 		CoreHelpers.doCameraState();
 
-		if (GLComponentWindow.rendererInfo != null && GLComponentWindow.rendererInfo.startsWith("intel")) {
+		if ((GLComponentWindow.rendererInfo != null) && GLComponentWindow.rendererInfo.startsWith("intel")) {
 
 			int p = BasicGLSLangProgram.currentProgram.getShader();
 			glUseProgramObjectARB(0);
@@ -92,14 +92,19 @@ public class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
             // "> points the slow way");
 
 			glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
-			glPointSize(ps == null ? size : ps.get());
+			glPointSize((ps == null) ? size : ps.get());
 			glBegin(GL_POINTS);
-			while (v.position() < numVertex() * 3) {
-				float x = v.get(), y = v.get(), z = v.get();
-				glVertex3f(x, y, z);
+			while (v.position() < (numVertex() * 3)) {
+				float x = v.get();
+                float y = v.get();
+                float z = v.get();
+                glVertex3f(x, y, z);
 				if (a != null) {
-					float r = a.get(), g = a.get(), b = a.get(), alpha = a.get();
-					// ;//System.out.println(x+" "+y+" "+z+"   "+r+" "+g+" "+b+" "+alpha);
+					float r = a.get();
+                    float g = a.get();
+                    float b = a.get();
+                    float alpha = a.get();
+                    // ;//System.out.println(x+" "+y+" "+z+"   "+r+" "+g+" "+b+" "+alpha);
 					glColor4f(r, g, b, alpha);
 				}
 			}
@@ -107,11 +112,16 @@ public class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
 			if (a != null)
 				a.rewind();
 			while (v.position() < numVertex() * 3) {
-				float x = v.get(), y = v.get(), z = v.get();
-				glVertex3f(x, y, z);
+				float x = v.get();
+                float y = v.get();
+                float z = v.get();
+                glVertex3f(x, y, z);
 				if (a != null) {
-					float r = a.get(), g = a.get(), b = a.get(), alpha = a.get();
-					// ;//System.out.println(x+" "+y+" "+z+"   "+r+" "+g+" "+b+" "+alpha);
+					float r = a.get();
+                    float g = a.get();
+                    float b = a.get();
+                    float alpha = a.get();
+                    // ;//System.out.println(x+" "+y+" "+z+"   "+r+" "+g+" "+b+" "+alpha);
 					glColor4f(r, g, b, alpha);
 				}
 			}

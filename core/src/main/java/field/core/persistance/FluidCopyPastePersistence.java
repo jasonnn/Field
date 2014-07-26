@@ -43,7 +43,8 @@ public class FluidCopyPastePersistence {
 		public void endCopy(iVisualElement newCopy, iVisualElement old);
 	}
 
-	static public HashSet<iVisualElement> copyFromNonloadedPredicate(iFunction<Boolean, iVisualElement> shouldCopy, String sheetXMLname, iVisualElement graphRoot, FluidCopyPastePersistence ultimatePaster) {
+	public static
+    HashSet<iVisualElement> copyFromNonloadedPredicate(iFunction<Boolean, iVisualElement> shouldCopy, String sheetXMLname, iVisualElement graphRoot, FluidCopyPastePersistence ultimatePaster) {
 		System.err.println(" inside copySource from nonloaded");
 		try {
 
@@ -108,7 +109,7 @@ public class FluidCopyPastePersistence {
 			oos.writeObject(sub);
 			oos.close();
 
-			System.err.println(" saved <" + sub + "> / <" + saved + ">");
+			System.err.println(" saved <" + sub + "> / <" + saved + '>');
 
 			created = new HashSet<iVisualElement>();
 			createdElements = new HashSet<iVisualElement>();
@@ -118,7 +119,7 @@ public class FluidCopyPastePersistence {
 			HashSet<iVisualElement> root2 = (HashSet<iVisualElement>) in2.readObject();
 			in2.close();
 
-			System.err.println(" final load <" + created + "> <" + createdElements + "> / <" + root2 + ">");
+			System.err.println(" final load <" + created + "> <" + createdElements + "> / <" + root2 + '>');
 
 			return created;
 
@@ -134,7 +135,8 @@ public class FluidCopyPastePersistence {
 		return null;
 	}
 
-	static public HashSet<iVisualElement> copyFromNonloaded(final Set<String> uidSubset, String sheetXMLname, iVisualElement graphRoot, FluidCopyPastePersistence ultimatePaster) {
+	public static
+    HashSet<iVisualElement> copyFromNonloaded(final Set<String> uidSubset, String sheetXMLname, iVisualElement graphRoot, FluidCopyPastePersistence ultimatePaster) {
 		return copyFromNonloadedPredicate(uidSubset == null ? null : new iFunction<Boolean, iVisualElement>() {
 			public Boolean f(iVisualElement in) {
 				return uidSubset.contains(in.getUniqueID());
@@ -279,7 +281,7 @@ public class FluidCopyPastePersistence {
 			public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 				FluidCopyPastePersistence.this.context = context;
 				reader.moveDown();
-				assert reader.getNodeName().equals("uid");
+				assert "uid".equals(reader.getNodeName());
 				String uid = reader.getValue();
 
 				try {
@@ -313,12 +315,12 @@ public class FluidCopyPastePersistence {
 
 					try {
 						reader.moveDown();
-						if (reader.getNodeName().equals("aborted")) {
+						if ("aborted".equals(reader.getNodeName())) {
 							reader.moveUp();
 							return null;
 						}
 
-						if (reader.getNodeName().equals("fringe")) {
+						if ("fringe".equals(reader.getNodeName())) {
 							reader.moveUp();
 							iVisualElement existing = FluidCopyPastePersistence.this.existing.get(uid);
 							return existing;
@@ -537,7 +539,7 @@ public class FluidCopyPastePersistence {
 
 				} else {
 					Reference<Key> o = (Reference<Key>) Key.internedKeys.get(value);
-					assert o != null : "no key for <" + value + ">";
+					assert o != null : "no key for <" + value + '>';
 					return o.get();
 				}
 			}

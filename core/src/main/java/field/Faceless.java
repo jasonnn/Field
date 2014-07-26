@@ -34,7 +34,7 @@ public class Faceless implements iLaunchable {
 		}
 
 		String a = SystemProperties.getProperty("auto", "");
-		if (!a.equals("")) {
+		if (a != null && !a.isEmpty()) {
 			AutoEngage auto = new AutoEngage(phantom.getRoot());
 			auto.start(a);
 		}

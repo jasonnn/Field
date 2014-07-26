@@ -115,8 +115,8 @@ public abstract class Horizon implements iUpdateable {
 
 			clockUpdateEstimation = clockUpdateEstimation * alpha + (1 - alpha) * currentClockUpdate;
 
-			double updateFrom = now + clockUpdateEstimation * standoff;
-			double updateTo = now + clockUpdateEstimation * (standoff + 1);
+			double updateFrom = now + (clockUpdateEstimation * standoff);
+			double updateTo = now + (clockUpdateEstimation * (standoff + 1));
 
 			updateFrom = lastSliceEndsAt;
 			if (updateTo < lastSliceEndsAt)
@@ -135,6 +135,7 @@ public abstract class Horizon implements iUpdateable {
 		updateWithList(now, l);
 	}
 
-	abstract protected void updateWithList(double now, List l);
+	protected abstract
+    void updateWithList(double now, List l);
 
 }

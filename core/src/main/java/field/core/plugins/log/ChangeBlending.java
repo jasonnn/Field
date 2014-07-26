@@ -10,7 +10,8 @@ import java.util.LinkedHashMap;
 
 public class ChangeBlending {
 
-	public void undoChangeSet(ArrayList<SimpleChange> set) {
+	public static
+    void undoChangeSet(ArrayList<SimpleChange> set) {
 		for (int i = set.size() - 1; i >= 0; i--) {
 			SimpleChange s = set.get(i);
 			s.writeChange(s.previousValue);
@@ -25,7 +26,8 @@ public class ChangeBlending {
 		}
 	}
 
-	public void applyChangeSet(ArrayList<SimpleChange> set, float amount) {
+	public static
+    void applyChangeSet(ArrayList<SimpleChange> set, float amount) {
 		for (int i = 0; i < set.size(); i++) {
 			SimpleChange s = set.get(i);
 			s.writeChange(s.value);
@@ -137,7 +139,7 @@ public class ChangeBlending {
 			}
 
 			public Number blend(Number a, Number b, float alpha) {
-				return new Double(a.doubleValue() * (1 - alpha) + b.doubleValue() * alpha);
+				return new Double((a.doubleValue() * (1 - alpha)) + (b.doubleValue() * alpha));
 			}
 		});
 

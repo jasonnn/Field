@@ -47,7 +47,8 @@ public class FitBox {
 		Vector3 at = new Vector3(center);
 
 		for (int z = 0; z < a.length; z++) {
-			Vector3.add(a[z].direction, xyz.get(z) * (a[z].positiveLength - a[z].negativeLength) + a[z].negativeLength, at, at);
+			Vector3.add(a[z].direction,
+                        (xyz.get(z) * (a[z].positiveLength - a[z].negativeLength)) + a[z].negativeLength, at, at);
 		}
 		return at;
 	}
@@ -56,12 +57,13 @@ public class FitBox {
 		Vector3 at = new Vector3(center);
 
 		for (int z = 0; z < a.length; z++) {
-			Vector3.add(a[z].direction, xyz.get(z) * (2) + -1, at, at);
+			Vector3.add(a[z].direction, (xyz.get(z) * (2)) + -1, at, at);
 		}
 		return at;
 	}
 
-	public Vector3 getCloseDirection(Vector3 xyz, Axis[] a) {
+	public static
+    Vector3 getCloseDirection(Vector3 xyz, Axis[] a) {
 		Vector3 at = new Vector3();
 
 		for (int z = 0; z < a.length; z++) {

@@ -10,11 +10,11 @@ import field.math.linalg.Vector3;
  */
 public interface iDynamicMesh extends iInside, iRemoveable
 {
-	static public final int hint_kill= -1;
+	public static final int hint_kill= -1;
 
-	static public final int hint_plane= 0;
-	static public final int hint_line = 1;
-	static public final int hint_point = 2;
+	public static final int hint_plane= 0;
+	public static final int hint_line = 1;
+	public static final int hint_point = 2;
 
 	
 	public void hintPrimitiveType(int primType);

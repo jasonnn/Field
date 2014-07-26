@@ -15,7 +15,8 @@ public class TopologySearching {
 		public double distance(T from, T to);
 	}
 
-	static public abstract class PathCache<T> {
+	public abstract static
+    class PathCache<T> {
 		public class KnownPath {
 			List<T> path;
 
@@ -27,7 +28,7 @@ public class TopologySearching {
 		Pair<T, T> tmp = new Pair<T, T>(null, null);
 
 		public void declarePath(T from, T to, List<T> isPath, float totalDistance) {
-			if (isPath.size() == 0) {
+			if (isPath.isEmpty()) {
 				isPath = new ArrayList<T>();
 				isPath.add(from);
 				isPath.add(to);
@@ -41,11 +42,11 @@ public class TopologySearching {
 			}
 
 			float d = totalDistance;
-			for (int i = 0; i < isPath.size() - 1; i++) {
+			for (int i = 0; i < (isPath.size() - 1); i++) {
 				from = isPath.get(i);
 				Pair<T, T> q = new Pair<T, T>(from, to);
 				KnownPath qd = cache.get(q);
-				if (qd == null || qd.distance > d) {
+				if ((qd == null) || (qd.distance > d)) {
 					KnownPath kp = new KnownPath();
 					kp.path = isPath.subList(i, isPath.size());
 					kp.distance = d;
@@ -63,11 +64,13 @@ public class TopologySearching {
 			return ll;
 		}
 
-		abstract protected float distance(T t, T t2);
+		protected abstract
+        float distance(T t, T t2);
 
 	}
 
-	static public class TopologyAStarSearch<T> {
+	public static
+    class TopologyAStarSearch<T> {
 		private final iTopology<T> topology;
 
 		private final AStarMetric<T> metric;
@@ -128,10 +131,10 @@ public class TopologySearching {
 
 			TreeMap<MutableFloat, T> open = new TreeMap<MutableFloat, T>(new Comparator<MutableFloat>() {
 				public int compare(MutableFloat o1, MutableFloat o2) {
-					if (o1 == o2)
+					if (o1.equals(o2))
 						return 0;
 					int c = Float.compare(o1.floatValue(), o2.floatValue());
-					return c == 0 ? (System.identityHashCode(o1) < System.identityHashCode(o2) ? -1 : 1) : c;
+					return (c == 0) ? ((System.identityHashCode(o1) < System.identityHashCode(o2)) ? -1 : 1) : c;
 				}
 			});
 			HashMap<T, MutableFloat> openBackwards = new HashMap<T, MutableFloat>();
@@ -147,7 +150,7 @@ public class TopologySearching {
 
 			visited.add(from);
 			T N = null;
-			while (open.size() != 0) {
+			while (!open.isEmpty()) {
 				N = open.get(open.firstKey());
 				openBackwards.remove(open.remove(open.firstKey())); // hmm...
 
@@ -158,40 +161,41 @@ public class TopologySearching {
 				for (T Nprime : topology.getChildrenOf(N)) {
 					if (!avoid.contains(Nprime)) {
 
-						if (!visited.contains(Nprime)) {
-							treeElements.put(Nprime, new TreeElement<T>(Nprime, treeElements.get(N)));
+                        if (visited.contains(Nprime)) {
+                            double gOfNprime = calcG(Nprime);
+                            double gOfN = calcG(N);
+                            double kOfNNprime = calcK(N, Nprime);
 
-							int oldLength = open.size();
+                            if (gOfNprime > (gOfN + kOfNNprime)) {
+                                TreeElement<T> te = treeElements.get(Nprime);
+                                te.parent = treeElements.get(N);
 
-							f = calcF(Nprime, metric);
-							BaseMath.MutableFloat FNprime = new BaseMath.MutableFloat((float) f);
-							Object o = open.put(FNprime, Nprime);
-							openBackwards.put(Nprime, FNprime);
+                                if (openBackwards.containsKey(Nprime)) {
+                                    Object value = openBackwards.remove(Nprime);
+                                    open.remove(value);
+                                }
+                                double fNprime = calcF(Nprime, metric);
+                                MutableFloat FNprime = new MutableFloat((float) fNprime);
+                                open.put(FNprime, Nprime);
+                                openBackwards.put(Nprime, FNprime);
+                            }
+                        }
+                        else {
+                            treeElements.put(Nprime, new TreeElement<T>(Nprime, treeElements.get(N)));
 
-							int newLength = open.size();
+                            int oldLength = open.size();
 
-							assert newLength > oldLength;
+                            f = calcF(Nprime, metric);
+                            MutableFloat FNprime = new MutableFloat((float) f);
+                            Object o = open.put(FNprime, Nprime);
+                            openBackwards.put(Nprime, FNprime);
 
-							visited.add(Nprime);
-						} else {
-							double gOfNprime = calcG(Nprime);
-							double gOfN = calcG(N);
-							double kOfNNprime = calcK(N, Nprime);
+                            int newLength = open.size();
 
-							if (gOfNprime > (gOfN + kOfNNprime)) {
-								TreeElement<T> te = treeElements.get(Nprime);
-								te.parent = treeElements.get(N);
+                            assert newLength > oldLength;
 
-								if (openBackwards.containsKey(Nprime)) {
-									Object value = openBackwards.remove(Nprime);
-									open.remove(value);
-								}
-								double fNprime = calcF(Nprime, metric);
-								BaseMath.MutableFloat FNprime = new BaseMath.MutableFloat((float) fNprime);
-								open.put(FNprime, Nprime);
-								openBackwards.put(Nprime, FNprime);
-							}
-						}
+                            visited.add(Nprime);
+                        }
 					}
 				}
 			}
@@ -253,7 +257,8 @@ public class TopologySearching {
 
 	}
 
-    static public abstract class TopologyVisitor_directedBreadthFirst<T> implements Comparator<T> {
+    public abstract static
+    class TopologyVisitor_directedBreadthFirst<T> implements Comparator<T> {
 		private final boolean avoidLoops;
 
 		HashSet<T> seen = new HashSet<T>();
@@ -271,7 +276,8 @@ public class TopologySearching {
 			_apply(top, root, fringe, fringe2);
 		}
 
-		abstract public int compare(T o1, T o2);
+		public abstract
+        int compare(T o1, T o2);
 
 		public void preSee(Collection<T> a) {
 			seen.addAll(a);
@@ -290,7 +296,7 @@ public class TopologySearching {
 
 			epoch();
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				for (T t : fringe) {
 					if (!avoidLoops || !seen.contains(t)) {
 						VisitCode vc = visit(t);
@@ -326,10 +332,12 @@ public class TopologySearching {
 			Collections.sort(aa, this);
 		}
 
-		abstract protected VisitCode visit(T root);
+		protected abstract
+        VisitCode visit(T root);
 	}
 
-	static public abstract class TopologyVisitor_directedDepthFirst<T> implements Comparator<T> {
+	public abstract static
+    class TopologyVisitor_directedDepthFirst<T> implements Comparator<T> {
 		public HashSet<T> seen = new HashSet<T>();
 
 		private final boolean avoidLoops;
@@ -358,7 +366,8 @@ public class TopologySearching {
 			seen.clear();
 		}
 
-		abstract public int compare(T o1, T o2);
+		public abstract
+        int compare(T o1, T o2);
 
 		public void preSee(Set<T> s) {
 			seen.addAll(s);
@@ -391,16 +400,18 @@ public class TopologySearching {
 
         protected static
         String spaces(int n) {
-            StringBuffer buf = new StringBuffer(n);
+            StringBuilder buf = new StringBuilder(n);
 			for (int i = 0; i < n; i++)
 				buf.append(' ');
 			return buf.toString();
 		}
 
-		abstract protected VisitCode visit(T n);
+		protected abstract
+        VisitCode visit(T n);
 	}
 
-	static public abstract class TopologyVisitor_longDirectedBreadthFirst<T> {
+	public abstract static
+    class TopologyVisitor_longDirectedBreadthFirst<T> {
 
 		public class Key implements Comparable<Key> {
 			public List<T> path;
@@ -478,7 +489,7 @@ public class TopologySearching {
 				} else
 					fringe.add(rootK);
 			}
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				Key k = fringe.remove(fringe.size() - 1);
 
 				T r = k.path.get(k.path.size() - 1);
@@ -491,7 +502,7 @@ public class TopologySearching {
 						float ad = doShortPath.distance;
 						T end = doShortPath.path.get(doShortPath.path.size() - 1);
 						Float q = seen.get(end);
-						if (q == null || ad + k.accumulatedDistance < q) {
+						if ((q == null) || ((ad + k.accumulatedDistance) < q)) {
 							Key k2 = new Key();
 							k2.path = new ArrayList<T>(k.path.size() + doShortPath.path.size());
 							k2.path.addAll(k.path);
@@ -511,7 +522,7 @@ public class TopologySearching {
 				for (T t : c) {
 					float d = distance(r, t);
 					Float q = seen.get(t);
-					if (q == null || d + k.accumulatedDistance < q) {
+					if ((q == null) || ((d + k.accumulatedDistance) < q)) {
 						Key k2 = new Key();
 						k2.path = new ArrayList<T>(k.path.size() + 1);
 						k2.path.addAll(k.path);
@@ -547,12 +558,15 @@ public class TopologySearching {
 			return true;
 		}
 
-		abstract protected float distance(T root, T t);
+		protected abstract
+        float distance(T root, T t);
 
-		abstract protected VisitCode visit(Key k);
+		protected abstract
+        VisitCode visit(Key k);
 	}
 
-	static public abstract class TopologyVisitor_treeBreadthFirst<T> {
+	public abstract static
+    class TopologyVisitor_treeBreadthFirst<T> {
 		protected final iTopology<T> t;
 
 		protected HashMap<T, T> parented = new HashMap<T, T>();
@@ -656,17 +670,19 @@ public class TopologySearching {
 
 				visitFringe(currentFringe);
 
-			} while (currentFringe.size() > 0 && (maxDepth == -1 || m < maxDepth));
+			} while (!currentFringe.isEmpty() && ((maxDepth == -1) || (m < maxDepth)));
             //System.out.println(" exhaused fringe ");
         }
 
-		abstract protected VisitCode visit(T c);
+		protected abstract
+        VisitCode visit(T c);
 
 		protected void visitFringe(HashSet<T> nextFringe) {
 		}
 	}
 
-	static public abstract class TopologyVisitory_depthFirst<T> {
+	public abstract static
+    class TopologyVisitory_depthFirst<T> {
 		private final boolean avoidLoops;
 
 		private final iTopology<T> topology;
@@ -731,16 +747,18 @@ public class TopologySearching {
 		}
 
 		protected String spaces(int n) {
-			StringBuffer buf = new StringBuffer(n);
+			StringBuilder buf = new StringBuilder(n);
 			for (int i = 0; i < n; i++)
 				buf.append(' ');
 			return buf.toString();
 		}
 
-		abstract protected VisitCode visit(T n);
+		protected abstract
+        VisitCode visit(T n);
 	}
 
-	static public class TreeElement<T> {
+	public static
+    class TreeElement<T> {
 		public T pointer;
 
 		public TreeElement<T> parent;
@@ -756,7 +774,8 @@ public class TopologySearching {
 		}
 	}
 
-	static public <T> List<T> allBelow(T root, iTopology<T> topology) {
+	public static
+    <T> List<T> allBelow(T root, iTopology<T> topology) {
 		final ArrayList<T> r = new ArrayList<T>();
 		new TopologyVisitory_depthFirst<T>(true, topology) {
 			@Override

@@ -35,9 +35,9 @@ import java.util.List;
 
 @Woven
 public class LineDrawingOverride extends DefaultOverride {
-	static public final VisualElementProperty<VisualElementReference> lineDrawing_from = new VisualElementProperty<VisualElementReference>("lineDrawing_from");
+	public static final VisualElementProperty<VisualElementReference> lineDrawing_from = new VisualElementProperty<VisualElementReference>("lineDrawing_from");
 
-	static public final VisualElementProperty<VisualElementReference> lineDrawing_to = new VisualElementProperty<VisualElementReference>("lineDrawing_to");
+	public static final VisualElementProperty<VisualElementReference> lineDrawing_to = new VisualElementProperty<VisualElementReference>("lineDrawing_to");
 
 	@Override
 	public DefaultOverride setVisualElement(iVisualElement ve) {
@@ -47,7 +47,7 @@ public class LineDrawingOverride extends DefaultOverride {
 
 	public VisitCode deleted(iVisualElement source) {
 
-		if (source == from() || source == to()) {
+		if ((source == from()) || (source == to())) {
 			new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).deleted(forElement);
 			for (iVisualElement ve : new ArrayList<iVisualElement>((Collection<iVisualElement>) forElement.getParents())) {
 				ve.removeChild(forElement);
@@ -56,7 +56,7 @@ public class LineDrawingOverride extends DefaultOverride {
 			iVisualElement f = from();
 			iVisualElement t = to();
 
-			if (f != null && t != null) {
+			if ((f != null) && (t != null)) {
 				Subelements s = (Subelements) PseudoPropertiesPlugin.subelements.get(f);
 				s.remove(t);
 			}
@@ -86,7 +86,7 @@ public class LineDrawingOverride extends DefaultOverride {
 		if (source == forElement) {
 			iVisualElement f = from();
 			iVisualElement t = to();
-			if (f == null || t == null) {
+			if ((f == null) || (t == null)) {
 				needsDeletion();
 				return VisitCode.cont;
 			}
@@ -94,7 +94,7 @@ public class LineDrawingOverride extends DefaultOverride {
 			Rect fr = f.getFrame(null);
 			Rect tr = t.getFrame(null);
 
-			if (fr == null || tr == null) {
+			if ((fr == null) || (tr == null)) {
 				needsDeletion();
 				return VisitCode.cont;
 			}
@@ -103,7 +103,7 @@ public class LineDrawingOverride extends DefaultOverride {
 
 			int o = 3;
 
-			Vector2[] fPositions = new Vector2[] { new Vector2(fr.x - o, fr.y + fr.h/2), new Vector2(fr.x +fr.w+ o, fr.y + fr.h/2), new Vector2(fr.x + fr.w/2, fr.y-o), new Vector2(fr.x+fr.w/2, fr.y+fr.h+o)};
+			Vector2[] fPositions = { new Vector2(fr.x - o, fr.y + fr.h/2), new Vector2(fr.x +fr.w+ o, fr.y + fr.h/2), new Vector2(fr.x + fr.w/2, fr.y-o), new Vector2(fr.x+fr.w/2, fr.y+fr.h+o)};
 
 			Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new iFunction<Double, Vector2>() {
 
@@ -164,7 +164,9 @@ public class LineDrawingOverride extends DefaultOverride {
 
 			int o = 0;
 
-			Vector2[] fPositions = new Vector2[] { new Vector2(fr.x - o, fr.y + fr.h/2), new Vector2(fr.x +fr.w+ o, fr.y + fr.h/2), new Vector2(fr.x + fr.w/2, fr.y-o), new Vector2(fr.x+fr.w/2, fr.y+fr.h+o)};
+			Vector2[] fPositions = { new Vector2(fr.x - o, fr.y + fr.h/2), new Vector2(fr.x +fr.w+ o, fr.y + fr.h/2), new Vector2(fr.x
+                                                                                                                                  + (fr.w
+                                                                                                                                     / 2), fr.y-o), new Vector2(fr.x+fr.w/2, fr.y+fr.h+o)};
 
 			Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new iFunction<Double, Vector2>() {
 

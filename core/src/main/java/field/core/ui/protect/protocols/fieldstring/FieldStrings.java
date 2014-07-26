@@ -5,6 +5,6 @@ import java.util.Map;
 
 public class FieldStrings {
 
-	static public final Map<String, String> known = new LinkedHashMap<String, String>();
+	public static final Map<String, String> known = new LinkedHashMap<String, String>();
 	
 }

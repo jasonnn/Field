@@ -14,8 +14,8 @@ import java.util.Map;
 
 public class WindowSpaceBox {
 
-	static public final VisualElementProperty<Boolean> isWindowSpace = new VisualElementProperty<Boolean>("isWindowSpace");
-	private GLComponentWindow window;
+	public static final VisualElementProperty<Boolean> isWindowSpace = new VisualElementProperty<Boolean>("isWindowSpace");
+	private final GLComponentWindow window;
 
 	public WindowSpaceBox(GLComponentWindow window) {
 		this.window = window;
@@ -48,7 +48,8 @@ public class WindowSpaceBox {
 		window.requestRepaint();
 	}
 
-	private Rect transform(Rect was, Vector4 from, Vector4 to) {
+	private static
+    Rect transform(Rect was, Vector4 from, Vector4 to) {
 		
 		Vector2 p1 = new Vector2(was.x, was.y);
 		Vector2 p2 = new Vector2(was.x+was.w, was.y+was.h);

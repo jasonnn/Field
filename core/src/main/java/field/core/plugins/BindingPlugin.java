@@ -54,15 +54,15 @@ public class BindingPlugin extends BaseSimplePlugin {
     protected static
     void added(iVisualElement e) {
         String b = e.getProperty(iVisualElement.boundTo);
-		if (b != null && b.trim().length() > 0) {
+		if ((b != null) && !b.trim().isEmpty()) {
 
             //System.out.println(" initializing boundto with <" + b + "> for <" + e + ">");
 
 			PythonPluginEditor.makeBoxLocalEverywhere(b.trim());
 			List<iVisualElement> c = e.getChildren();
 			for (iVisualElement ee : c)
-				ee.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + "_"), e);
-			e.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + "_"), e);
+				ee.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + '_'), e);
+			e.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + '_'), e);
 		}
 	}
 
@@ -74,22 +74,22 @@ public class BindingPlugin extends BaseSimplePlugin {
 				if (prop.equals(iVisualElement.boundTo)) {
 					String was = source.getProperty(iVisualElement.boundTo);
 
-					if (was == null || was.trim().length() == 0) {
-						if (to.get() == null || ((String) to.get()).trim().length() == 0) {
+					if ((was == null) || was.trim().isEmpty()) {
+						if ((to.get() == null) || ((String) to.get()).trim().isEmpty()) {
 						} else {
 							PythonPluginEditor.makeBoxLocalEverywhere(((String) to.get()).trim());
 							List<iVisualElement> c = source.getChildren();
 							for (iVisualElement ee : c)
-								ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + "_"), source);
-							source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + "_"), source);
+								ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + '_'), source);
+							source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + '_'), source);
 						}
 					} else {
-						if (to.get() == null || ((String) to.get()).trim().length() == 0) {
+						if ((to.get() == null) || ((String) to.get()).trim().isEmpty()) {
 							PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
 							List<iVisualElement> c = source.getChildren();
 							for (iVisualElement ee : c)
-								ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + "_"));
-							source.deleteProperty(new VisualElementProperty<iVisualElement>(was + "_"));
+								ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+							source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
 
 							addAllNext();
 
@@ -97,13 +97,13 @@ public class BindingPlugin extends BaseSimplePlugin {
 							PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
 							List<iVisualElement> c = source.getChildren();
 							for (iVisualElement ee : c)
-								ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + "_"));
-							source.deleteProperty(new VisualElementProperty<iVisualElement>(was + "_"));
+								ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+							source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
 
 							PythonPluginEditor.makeBoxLocalEverywhere(((String) to.get()).trim());
 							for (iVisualElement ee : c)
-								ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + "_"), source);
-							source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + "_"), source);
+								ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + '_'), source);
+							source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim() + '_'), source);
 
 						}
 
@@ -118,15 +118,15 @@ public class BindingPlugin extends BaseSimplePlugin {
 				String was = source.getProperty(iVisualElement.boundTo);
                 //System.out.println(" handling deleted for <" + source + " -> " + was);
 
-				if (was == null || was.trim().length() == 0) {
+				if ((was == null) || was.trim().isEmpty()) {
 				} else {
 
                     //System.out.println(" children are <" + source.getChildren() + ">");
                     PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
 					List<iVisualElement> c = source.getChildren();
 					for (iVisualElement ee : c)
-						ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + "_"));
-					source.deleteProperty(new VisualElementProperty<iVisualElement>(was + "_"));
+						ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+					source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
 				}
 
 				addAllNext();

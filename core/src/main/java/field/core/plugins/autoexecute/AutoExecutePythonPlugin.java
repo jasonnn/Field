@@ -81,11 +81,11 @@ public class AutoExecutePythonPlugin implements iPlugin {
 
 	}
 
-	static public final VisualElementProperty<String> python_autoExec = new VisualElementProperty<String>("python_autoExec_v");
-	static public final VisualElementProperty<Integer> autoExecuteDelay = new VisualElementProperty<Integer>("autoExecuteDelay");
-	static public final VisualElementProperty<Integer> autoExecuteDelayedFor = new VisualElementProperty<Integer>("autoExecuteDelayedFor_");
+	public static final VisualElementProperty<String> python_autoExec = new VisualElementProperty<String>("python_autoExec_v");
+	public static final VisualElementProperty<Integer> autoExecuteDelay = new VisualElementProperty<Integer>("autoExecuteDelay");
+	public static final VisualElementProperty<Integer> autoExecuteDelayedFor = new VisualElementProperty<Integer>("autoExecuteDelayedFor_");
 
-	static public final String pluginId = "//AudoExecutePython";
+	public static final String pluginId = "//AudoExecutePython";
 
 	private iVisualElement root;
 
@@ -116,7 +116,7 @@ public class AutoExecutePythonPlugin implements iPlugin {
 			Rect r1 = o1.getFrame(new Rect());
 			Rect r2 = o2.getFrame(new Rect());
 			int c = Double.compare(r1.x, r2.x);
-			return c == 0 ? Double.compare(System.identityHashCode(o1), System.identityHashCode(o2)) : c;
+			return (c == 0) ? Double.compare(System.identityHashCode(o1), System.identityHashCode(o2)) : c;
 		}
 	});
 
@@ -179,7 +179,7 @@ public class AutoExecutePythonPlugin implements iPlugin {
 		if (noAuto)
 			elements.clear();
 
-		if (elements.size() > 0) {
+		if (!elements.isEmpty()) {
 			ArrayList<iVisualElement> a1 = new ArrayList<iVisualElement>(elements);
 			ArrayList<iVisualElement> readd = new ArrayList<iVisualElement>();
 
@@ -190,7 +190,7 @@ public class AutoExecutePythonPlugin implements iPlugin {
 					Rect f2 = o2.getFrame(null);
 					
 					int c = Double.compare(f1.x, f2.x);
-					return c == 0 ? Double.compare(f1.y, f2.y) : c;
+					return (c == 0) ? Double.compare(f1.y, f2.y) : c;
 				}
 			});
 
@@ -198,7 +198,7 @@ public class AutoExecutePythonPlugin implements iPlugin {
 
 			for (iVisualElement e : a1) {
 				Number m = e.getProperty(autoExecuteDelay);
-				if (m != null && m.intValue() > 0) {
+				if ((m != null) && (m.intValue() > 0)) {
 					Integer soFar = e.getProperty(autoExecuteDelayedFor);
 					if (soFar == null)
 						soFar = 0;

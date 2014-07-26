@@ -12,7 +12,8 @@ public abstract class GraphNodesForTopologyView<T> implements iTopology.iMutable
 
 	LinkedHashSet<iMutableTopology< ? super T>> notes = new LinkedHashSet<iMutableTopology< ? super T>>();
 
-	abstract protected iMutable newGraphNode(T from);
+	protected abstract
+    iMutable newGraphNode(T from);
 	abstract boolean removeGraphNode(iMutable fromP, T from);
 
 	public Set<iMutable> getAllNodes()

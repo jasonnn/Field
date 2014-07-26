@@ -97,7 +97,7 @@ public class BasicSceneList extends NodeImpl<iSceneListElement> implements iScen
 			throw new IllegalArgumentException(" ( couldn't find pass <" + pass + "> ) ");
 		float above;
 		float below;
-		if (index == passList.size() - 1)
+		if (index == (passList.size() - 1))
             above = 1 + (below = passList.get(passList.size() - 1).getValue());
         else {
             above = passList.get(index).getValue();
@@ -124,7 +124,7 @@ public class BasicSceneList extends NodeImpl<iSceneListElement> implements iScen
 		float above;
 		float below;
 
-		if (index == passList.size() - 1)
+		if (index == (passList.size() - 1))
             above = 1 + (below = passList.get(passList.size() - 1).getValue());
         else {
             above = passList.get(index).getValue();

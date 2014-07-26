@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class DirectPoint {
 
-	static public int fixedCurveSampling = 50;
+	public static int fixedCurveSampling = 50;
 
 	public class LineCache extends BasicUtilities.OnePassElement {
 
@@ -77,7 +77,7 @@ public class DirectPoint {
 
 		SubMesh cache;
 		int mod = -1;
-		private CachedLine from;
+		private final CachedLine from;
 
 		public LineAdaptor(CachedLine from) {
 			this.from = from;
@@ -289,7 +289,7 @@ public class DirectPoint {
 			else
 				cache.setAux(cache.getVertexCursor() - 1, value, ((Vector4) a).x, ((Vector4) a).y, ((Vector4) a).z, ((Vector4) a).w);
 		else
-			System.err.println(" can't setAux for <" + a + "> <" + a.getClass() + ">");
+			System.err.println(" can't setAux for <" + a + "> <" + a.getClass() + '>');
 	}
 
 	public void wire(DynamicPointlist inside, CachedLine target) {

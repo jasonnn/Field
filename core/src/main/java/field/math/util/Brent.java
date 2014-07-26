@@ -39,7 +39,7 @@ public class Brent {
 		
 		int stalled = 0;
 		
-		while (Math.abs(x - xm) > (t2 - .5 * (b - a))) {
+		while (Math.abs(x - xm) > (t2 - (.5 * (b - a)))) {
 
 			p = q = r = 0.0;
 
@@ -64,7 +64,7 @@ public class Brent {
 				// brace below corresponds to statement 50
 			}
 
-			if ((Math.abs(p) < Math.abs(.5 * q * r)) && (p > q * (a - x)) && (p < q * (b - x))) {
+			if ((Math.abs(p) < Math.abs(.5 * q * r)) && (p > (q * (a - x))) && (p < (q * (b - x)))) {
 
 				// a parabolic interpolation step
 

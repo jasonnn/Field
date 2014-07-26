@@ -14,7 +14,8 @@ public class DotUtil {
 
 	static Pattern p = Pattern.compile("(.*?)\\[.*?pos=\"(.*?)\"");
 
-	static public HashMap<String, Vector2> readDot(String file) throws IOException {
+	public static
+    HashMap<String, Vector2> readDot(String file) throws IOException {
 
 		HashMap<String, Vector2> r = new HashMap<String, Vector2>();
 
@@ -43,7 +44,8 @@ public class DotUtil {
 		return r;
 	}
 
-	static public void writeDot(String file, Collection nodes, iFunction<Collection<Object>, Object> connected, iFunction<String, Object> names) throws IOException {
+	public static
+    void writeDot(String file, Collection nodes, iFunction<Collection<Object>, Object> connected, iFunction<String, Object> names) throws IOException {
 
 		BufferedWriter w = new BufferedWriter(new FileWriter(new File(file)));
 
@@ -55,7 +57,7 @@ public class DotUtil {
 			for (Object m : connected.f(n)) {
 				String mm = names.f(m);
 
-				w.append(nn + " -- " + mm + ";\n");
+				w.append(nn).append(" -- ").append(mm).append(";\n");
 			}
 		}
 
@@ -63,7 +65,8 @@ public class DotUtil {
 		w.close();
 	}
 
-	static public HashMap<String, Vector2> dot(String executable, Collection nodes, iFunction<Collection<Object>, Object> connected, iFunction<String, Object> names) throws IOException {
+	public static
+    HashMap<String, Vector2> dot(String executable, Collection nodes, iFunction<Collection<Object>, Object> connected, iFunction<String, Object> names) throws IOException {
 		String fn = File.createTempFile("field", ".dot").getAbsolutePath();
 		String fnOut = File.createTempFile("field", "_out.dot").getAbsolutePath();
 

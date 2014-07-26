@@ -209,7 +209,8 @@ public class Bind {
 
 	// util
 
-	static public <T> T argMax(Collection<T> t, iFunction<? extends Number, T> f) {
+	public static
+    <T> T argMax(Collection<T> t, iFunction<? extends Number, T> f) {
 		double v = Double.NEGATIVE_INFINITY;
 		T best = null;
 
@@ -224,7 +225,8 @@ public class Bind {
 		return best;
 	}
 
-	static public <T> T argMin(Collection<T> t, iFunction<? extends Number, T> f) {
+	public static
+    <T> T argMin(Collection<T> t, iFunction<? extends Number, T> f) {
 		double v = Double.POSITIVE_INFINITY;
 		T best = null;
 
@@ -239,7 +241,8 @@ public class Bind {
 		return best;
 	}
 
-	static public <T> Number  max(Collection<T> t, iFunction<? extends Number, T> f) {
+	public static
+    <T> Number  max(Collection<T> t, iFunction<? extends Number, T> f) {
 		double v = Double.NEGATIVE_INFINITY;
 		Number best = null;
 
@@ -254,7 +257,8 @@ public class Bind {
 		return best;
 	}
 
-	static public <T> Number min(Collection<T> t, iFunction<? extends Number, T> f) {
+	public static
+    <T> Number min(Collection<T> t, iFunction<? extends Number, T> f) {
 		double v = Double.POSITIVE_INFINITY;
 		Number best = null;
 

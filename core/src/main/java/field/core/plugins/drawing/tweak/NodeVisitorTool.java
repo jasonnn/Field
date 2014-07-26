@@ -21,7 +21,7 @@ public class NodeVisitorTool extends BaseTool{
 
 	public class ApplyToolCoordinateChange implements iCoordDesc {
 		public iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
-			if (claimed.size()==0) return null;
+			if (claimed.isEmpty()) return null;
 			
 			final SelectedVertex c = claimed.remove(0);
 		
@@ -35,11 +35,13 @@ public class NodeVisitorTool extends BaseTool{
 			if (c.whatSelected.contains(SubSelection.postion)){
 				fmask[1] = 1;
 			}
-			if (c.whatSelected.contains(SubSelection.nextControl) || (c.vertexIndex==c.onLine.events.size()-1 || !c.onLine.events.get(c.vertexIndex+1).method.equals(iLine_m.cubicTo_m))){
+			if (c.whatSelected.contains(SubSelection.nextControl) || ((c.vertexIndex == (c.onLine.events.size() - 1))
+                                                                      || !c.onLine.events.get(c.vertexIndex
+                                                                                              + 1).method.equals(iLine_m.cubicTo_m))){
 				fmask[2] = 1;
 			}
 
-			if (fmask[0] == 1 && fmask[1] == 1 && fmask[2] == 1)
+			if ((fmask[0] == 1) && (fmask[1] == 1) && (fmask[2] == 1))
 				fmask = null;
 			
 			final int[] mask = fmask;
@@ -50,7 +52,9 @@ public class NodeVisitorTool extends BaseTool{
 				}
 
 				public String toExpression() {
-					return "ApplyTool(\"" + name+"\""+(mask == null ? ")" : ", "+mask[0]+", "+mask[1]+", "+mask[2]+")");
+					return "ApplyTool(\"" + name+ '"' +((mask == null)
+                                                       ? ")"
+                                                       : (", " + mask[0] + ", " + mask[1] + ", " + mask[2] + ')'));
 				}
 
 				public void toProperties(iVisualElement e, Map<String, Object> soFar) {

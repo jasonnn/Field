@@ -133,7 +133,8 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
     LinkedHashSet<String> knownPackages = new LinkedHashSet<String>();
 
     @Override
-    synchronized protected Class<?> loadClass(String class_name, boolean resolve) throws ClassNotFoundException {
+    protected synchronized
+    Class<?> loadClass(String class_name, boolean resolve) throws ClassNotFoundException {
 
 
         if (alreadyFailed.contains(class_name))
@@ -213,7 +214,7 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
 
                 if (classNotFound != null) {
 
-                    log.log(Level.WARNING, "exception (" + classNotFound.getClass() + "): while trying to load <" + class_name + " / <" + loading + ">");
+                    log.log(Level.WARNING, "exception (" + classNotFound.getClass() + "): while trying to load <" + class_name + " / <" + loading + '>');
 
                     alreadyFailed.add(class_name);
 
@@ -223,7 +224,7 @@ public class TrampolineClassLoader extends BaseTrampolineClassLoader {
                 already.put(class_name, loaded);
 
                 if (loaded.isAnnotationPresent(Notable.class)) {
-                    log.info(" CLASS IS NOTABLE :" + loaded + " " + Trampoline2.notifications);
+                    log.info(" CLASS IS NOTABLE :" + loaded + ' ' + Trampoline2.notifications);
                     // System.out.println(" CLASS IS NOTABLE :"+loaded+" "+notifications);
 
                     for (ClassLoadedNotification n : Trampoline2.notifications) {

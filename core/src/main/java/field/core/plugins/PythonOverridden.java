@@ -20,7 +20,8 @@ import java.util.*;
 
 public class PythonOverridden extends DefaultOverride {
 
-	static public abstract class Callable {
+	public abstract static
+    class Callable {
 		public final Object source;
 		public String name;
 		Dict info;
@@ -30,7 +31,8 @@ public class PythonOverridden extends DefaultOverride {
 			this.name = name;
 		}
 
-		abstract public Object call(Method m, Object[] args);
+		public abstract
+        Object call(Method m, Object[] args);
 
 		@Override
 		public int hashCode() {
@@ -57,7 +59,7 @@ public class PythonOverridden extends DefaultOverride {
 
 		@Override
 		public String toString() {
-			return name + "//" + System.identityHashCode(this) + ":" + source;
+			return name + "//" + System.identityHashCode(this) + ':' + source;
 		}
 
 		public Dict getInfo() {
@@ -68,7 +70,7 @@ public class PythonOverridden extends DefaultOverride {
 
 	}
 
-	static public Object removeMe = new Object();
+	public static Object removeMe = new Object();
 
 	transient HashMapOfLists<String, Callable> methods = new HashMapOfLists<String, Callable>() {
 		@Override
@@ -235,7 +237,8 @@ public class PythonOverridden extends DefaultOverride {
 		return VisitCode.cont;
 	}
 
-	static public Callable callableForFunction(final PyFunction call) {
+	public static
+    Callable callableForFunction(final PyFunction call) {
 		return new Callable(call, call.__name__) {
 			@Override
 			public Object call(Method arg0, Object[] arg1) {
@@ -257,7 +260,8 @@ public class PythonOverridden extends DefaultOverride {
 		};
 	}
 
-	static public Callable callableForFunction(final PyObject call, final CapturedEnvironment e) {
+	public static
+    Callable callableForFunction(final PyObject call, final CapturedEnvironment e) {
         return new Callable(call,
                             call instanceof PyFunction
                             ? ((PyFunction) call).__name__
@@ -289,7 +293,8 @@ public class PythonOverridden extends DefaultOverride {
 		};
 	}
 
-	static public Callable callableForUpdatable(String name, final iUpdateable up) {
+	public static
+    Callable callableForUpdatable(String name, final iUpdateable up) {
 		return new Callable(null, name) {
 			@Override
 			public Object call(Method arg0, Object[] arg1) {

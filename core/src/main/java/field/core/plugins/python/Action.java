@@ -24,7 +24,7 @@ public class Action extends DynamicExtensionPoint<iUpdateable>{
 	}
 	
 	public Object call(Object[] args) {
-		if (args==null || args.length==0)
+		if ((args == null) || (args.length == 0))
 		{
 			update();
 			return null;

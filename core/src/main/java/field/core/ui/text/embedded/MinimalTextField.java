@@ -31,7 +31,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class MinimalTextField extends JTextField implements iOutOfBandDrawing, iAcceptsInsertRenderingContext {
-	static public class Component extends ProvidedComponent {
+	public static
+    class Component extends ProvidedComponent {
 		protected String valueString = "";
 
 		@Override
@@ -60,7 +61,7 @@ public class MinimalTextField extends JTextField implements iOutOfBandDrawing, i
 
 		@Override
 		public String getCurrentRepresentedString() {
-			return "#--{" + valueString + "}";
+			return "#--{" + valueString + '}';
 		}
 
 		@Override
@@ -71,7 +72,8 @@ public class MinimalTextField extends JTextField implements iOutOfBandDrawing, i
 		}
 	}
 
-	static public class Component_blockStart extends ProvidedComponent {
+	public static
+    class Component_blockStart extends ProvidedComponent {
 		protected String valueString = "";
 
 		@Override
@@ -101,7 +103,11 @@ public class MinimalTextField extends JTextField implements iOutOfBandDrawing, i
 			// return "#--{" + valueString +
 			// "}";
 
-			return "\n" + "if (not _a.__localFreeze_):\n" + "	_a.__localFreeze_ = FreezeProperties()\n" + "	FreezeProperties.standardCloneHelpers(_a.__localFreeze_)\n" + "\n" + "_a.__localFreeze_" + name() + " = Freeze(_a.__localFreeze_).freeze(_self)\n" + "\n" + "#--{" + valueString + "}\n" + "\n" + "_a.__localFreeze_" + name() + ".thaw(_self)";
+			return '\n'
+                   + "if (not _a.__localFreeze_):\n" + "	_a.__localFreeze_ = FreezeProperties()\n" + "	FreezeProperties.standardCloneHelpers(_a.__localFreeze_)\n" + '\n'
+                   + "_a.__localFreeze_" + name() + " = Freeze(_a.__localFreeze_).freeze(_self)\n" + '\n'
+                   + "#--{" + valueString + "}\n" + '\n'
+                   + "_a.__localFreeze_" + name() + ".thaw(_self)";
 
 		}
 
@@ -113,9 +119,9 @@ public class MinimalTextField extends JTextField implements iOutOfBandDrawing, i
 			if (m.length() == 0)
 				return "unititled";
 			if (!Character.isJavaIdentifierStart(m.charAt(0))) {
-				m = "_" + m;
+				m = '_' + m;
 			}
-			StringBuffer cm = new StringBuffer(m);
+			StringBuilder cm = new StringBuilder(m);
 			for (int i = 0; i < m.length(); i++) {
 				if (!Character.isJavaIdentifierPart(m.charAt(i))) {
 					cm.setCharAt(i, '_');
@@ -438,26 +444,40 @@ public class MinimalTextField extends JTextField implements iOutOfBandDrawing, i
 		
 		if (arm) {
 			g2.setColor(new Color(0.22f, 0.22f, 0.2f, 0.1f));
-			if (!isBottom())
-				g2.setPaint(new GradientPaint(0, 0, new Color(0.22f, 0.22f, 0.22f, 0.1f), 0, bounds.height - 1, new Color(0.22f, 0.22f, 0.22f, 0f)));
-			else
-				g2.setPaint(new GradientPaint(0, 0, new Color(0.22f, 0.22f, 0.22f, 0.0f), 0, bounds.height - 1, new Color(0.22f, 0.22f, 0.22f, 0.1f)));
+            if (isBottom()) g2.setPaint(new GradientPaint(0,
+                                                          0,
+                                                          new Color(0.22f, 0.22f, 0.22f, 0.0f),
+                                                          0,
+                                                          bounds.height - 1,
+                                                          new Color(0.22f, 0.22f, 0.22f, 0.1f)));
+            else g2.setPaint(new GradientPaint(0,
+                                               0,
+                                               new Color(0.22f, 0.22f, 0.22f, 0.1f),
+                                               0,
+                                               bounds.height - 1,
+                                               new Color(0.22f, 0.22f, 0.22f, 0f)));
 			g2.fill(path);
 		} else {
 			g2.setColor(new Color(0.62f, 0.62f, 0.62f, 0.5f));
-			if (!isBottom())
-				g2.setPaint(new GradientPaint(0, 0, new Color(0.62f, 0.62f, 0.62f, 0.1f), 0, bounds.height - 1, new Color(0.62f, 0.62f, 0.62f, 0f)));
-			else
-				g2.setPaint(new GradientPaint(0, 0, new Color(0.62f, 0.62f, 0.62f, 0.0f), 0, bounds.height - 1, new Color(0.62f, 0.62f, 0.62f, 0.1f)));
+            if (isBottom()) g2.setPaint(new GradientPaint(0,
+                                                          0,
+                                                          new Color(0.62f, 0.62f, 0.62f, 0.0f),
+                                                          0,
+                                                          bounds.height - 1,
+                                                          new Color(0.62f, 0.62f, 0.62f, 0.1f)));
+            else g2.setPaint(new GradientPaint(0,
+                                               0,
+                                               new Color(0.62f, 0.62f, 0.62f, 0.1f),
+                                               0,
+                                               bounds.height - 1,
+                                               new Color(0.62f, 0.62f, 0.62f, 0f)));
 
 			g2.fill(path);
 		}
 		// g2.setColor(new Color(0.22f, 0.22f, 0.2f, 0.4f));
-		if (!isBottom())
-			g2.setPaint(new GradientPaint(0, 0, new Color(1,1,1,0.1f), 0, bounds.height, new Color(0,0,0,0.1f)));
-//			g2.setPaint(new GradientPaint(0, 0, new Color(0.22f, 0.22f, 0.2f, 0.4f), 0, bounds.height - 1, new Color(0.22f, 0.22f, 0.2f, 0.4f)));
-		else
-			g2.setPaint(new GradientPaint(0, 0, new Color(1,1,1,0.1f), 0, bounds.height, new Color(0,0,0,0.1f)));
+        if (isBottom())
+            g2.setPaint(new GradientPaint(0, 0, new Color(1, 1, 1, 0.1f), 0, bounds.height, new Color(0, 0, 0, 0.1f)));
+        else g2.setPaint(new GradientPaint(0, 0, new Color(1, 1, 1, 0.1f), 0, bounds.height, new Color(0, 0, 0, 0.1f)));
 //			g2.setPaint(new GradientPaint(0, 0, new Color(0.22f, 0.22f, 0.2f, 0.4f), 0, bounds.height - 1, new Color(0.22f, 0.22f, 0.2f, 0.4f)));
 		
 

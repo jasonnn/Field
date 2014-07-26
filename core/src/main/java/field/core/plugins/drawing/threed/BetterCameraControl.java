@@ -194,7 +194,7 @@ public class BetterCameraControl implements iUpdateable {
 
                 //System.out.println(" at :" + at + " " + f + " " + o);
 
-				float aMin = at - (float) (o / Math.tan( (2*Math.PI*f/360.0)/2));
+				float aMin = at - (float) (o / Math.tan( ((2 * Math.PI * f) / 360.0)/2));
 
 				if (aMin < dMin) {
 					dMin = aMin;
@@ -284,7 +284,7 @@ public class BetterCameraControl implements iUpdateable {
 					continue;
 				Vector3 pixel = p.toPixel(vv, 1, 1);
 				ff.transformPosition(vv);
-				if (pixel.x >= 0 && pixel.x <= 1 && pixel.y >= 0 && pixel.y <= 1 && pixel.z > 0) {
+				if ((pixel.x >= 0) && (pixel.x <= 1) && (pixel.y >= 0) && (pixel.y <= 1) && (pixel.z > 0)) {
 
 					min.min(vv);
 					max.max(vv);
@@ -323,7 +323,7 @@ public class BetterCameraControl implements iUpdateable {
 					continue;
 				Vector3 pixel = p.toPixel(vv, 1, 1);
 				ff.transformPosition(vv);
-				if (pixel.x >= 0 && pixel.x <= 1 && pixel.y >= 0 && pixel.y <= 1 && pixel.z > 0) {
+				if ((pixel.x >= 0) && (pixel.x <= 1) && (pixel.y >= 0) && (pixel.y <= 1) && (pixel.z > 0)) {
 
 					c.add(vv);
 					num++;

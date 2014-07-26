@@ -40,7 +40,8 @@ public abstract class CallOnReturn extends FieldASMGeneratorAdapter implements E
         FieldBytecodeAdapter.exitHandlers.put(name, this);
     }
 
-    abstract public Object handleExit(Object returningThis,
+    public abstract
+    Object handleExit(Object returningThis,
                                       String fromName,
                                       Object fromThis,
                                       String methodName,

@@ -14,7 +14,7 @@ public class Messaging {
 
 	public static VisualElementProperty<Messaging> messaging = new VisualElementProperty<Messaging>("messaging");
 	public static VisualElementProperty<PyFile> feedback = new VisualElementProperty<PyFile>("feedback");
-	private PyFile file;
+	private final PyFile file;
 
 	public Messaging()
 	{

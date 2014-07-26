@@ -60,7 +60,7 @@ public class HorizontalTopToTopConstraint extends BaseConstraintOverrides {
 
 		assert left != null : property;
 		assert right != null : property;
-		if (left == null || right == null)
+		if ((left == null) || (right == null))
 			return null;
 		VariablesForRect vLeft = cc.getVariablesFor(left);
 		VariablesForRect vRight = cc.getVariablesFor(right);
@@ -89,7 +89,7 @@ public class HorizontalTopToTopConstraint extends BaseConstraintOverrides {
 		assert left != null : parameters;
 		assert right != null : parameters;
 
-		if (left == null || right == null)
+		if ((left == null) || (right == null))
 			return;
 		VariablesForRect vLeft = cc.getVariablesFor(left);
 		VariablesForRect vRight = cc.getVariablesFor(right);
@@ -98,11 +98,11 @@ public class HorizontalTopToTopConstraint extends BaseConstraintOverrides {
 		Vector3 p2 = point2(vRight);
 
 		line.moveTo(p1.x, p1.y);
-		line.lineTo(p1.x+(p2.x-p1.x)*0.1f, p1.y+5);
-		line.lineTo(p1.x+(p2.x-p1.x)*0.9f, p1.y+5);
+		line.lineTo(p1.x + ((p2.x - p1.x) * 0.1f), p1.y+5);
+		line.lineTo(p1.x + ((p2.x - p1.x) * 0.9f), p1.y+5);
 		line.lineTo(p2.x, p2.y);
-		line.lineTo(p1.x+(p2.x-p1.x)*0.9f, p1.y-5);
-		line.lineTo(p1.x+(p2.x-p1.x)*0.1f, p1.y-5);
+		line.lineTo(p1.x + ((p2.x - p1.x) * 0.9f), p1.y-5);
+		line.lineTo(p1.x + ((p2.x - p1.x) * 0.1f), p1.y-5);
 		line.lineTo(p1.x, p1.y);
 
 
@@ -120,11 +120,11 @@ public class HorizontalTopToTopConstraint extends BaseConstraintOverrides {
 	}
 
 	protected Vector3 point1(VariablesForRect vLeft) {
-		return new Vector3(vLeft.variableX.value()+vLeft.variableH.value()/2, vLeft.variableY.value(), 0);
+		return new Vector3(vLeft.variableX.value() + (vLeft.variableH.value() / 2), vLeft.variableY.value(), 0);
 	}
 
 	protected Vector3 point2(VariablesForRect vRight) {
-		return new Vector3(vRight.variableX.value()+vRight.variableH.value()/2, vRight.variableY.value(), 0);
+		return new Vector3(vRight.variableX.value() + (vRight.variableH.value() / 2), vRight.variableY.value(), 0);
 	}
 
 }

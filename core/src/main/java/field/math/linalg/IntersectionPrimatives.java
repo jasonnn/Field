@@ -13,7 +13,8 @@ import java.util.List;
  */
 public class IntersectionPrimatives {
 
-	static public class LinePointIntersectionInfo {
+	public static
+    class LinePointIntersectionInfo {
 		public Vector3 closestPoint = new Vector3();
 
 		public Vector3 otherClosestPoint = new Vector3();
@@ -32,7 +33,8 @@ public class IntersectionPrimatives {
 		}
 	}
 
-	static public LinePointIntersectionInfo lineSegmentToPoint(Vector3 lineStart, Vector3 lineEnd, Vector3 point) {
+	public static
+    LinePointIntersectionInfo lineSegmentToPoint(Vector3 lineStart, Vector3 lineEnd, Vector3 point) {
 		LinePointIntersectionInfo info = new LinePointIntersectionInfo();
 
 		Vector3 to = new Vector3();
@@ -55,7 +57,8 @@ public class IntersectionPrimatives {
 		return info;
 	}
 
-	static public LinePointIntersectionInfo lineToLine(Vector3 lineOrigin, Vector3 lineTangent, Vector3 lineFrom, Vector3 lineFromTangent) {
+	public static
+    LinePointIntersectionInfo lineToLine(Vector3 lineOrigin, Vector3 lineTangent, Vector3 lineFrom, Vector3 lineFromTangent) {
 		LinePointIntersectionInfo info = new LinePointIntersectionInfo();
 
 		Vector3 r1 = new Vector3(lineOrigin);
@@ -90,7 +93,8 @@ public class IntersectionPrimatives {
 		return info;
 	}
 
-	static public LinePointIntersectionInfo lineToLineSegment(Vector3 lineOrigin, Vector3 lineTangent, Vector3 lineSegmentFrom, Vector3 lineSegmentFromTangent) {
+	public static
+    LinePointIntersectionInfo lineToLineSegment(Vector3 lineOrigin, Vector3 lineTangent, Vector3 lineSegmentFrom, Vector3 lineSegmentFromTangent) {
 		LinePointIntersectionInfo info = new LinePointIntersectionInfo();
 
 		Vector3 r1 = new Vector3(lineOrigin);
@@ -132,7 +136,8 @@ public class IntersectionPrimatives {
 		return info;
 	}
 
-	static public LinePointIntersectionInfo lineToLineSegment(Vector2 lineOrigin, Vector2 lineTangent, Vector2 lineSegmentFrom, Vector2 lineSegmentFromTangent) {
+	public static
+    LinePointIntersectionInfo lineToLineSegment(Vector2 lineOrigin, Vector2 lineTangent, Vector2 lineSegmentFrom, Vector2 lineSegmentFromTangent) {
 		LinePointIntersectionInfo info = new LinePointIntersectionInfo();
 
 		Vector2 r1 = new Vector2(lineOrigin);
@@ -178,7 +183,8 @@ public class IntersectionPrimatives {
 		return info;
 	}
 
-	static public LinePointIntersectionInfo lineToPlane(Vector3 lineOrigin, Vector3 lineTangent, Vector3 planeOrigin, Vector3 planeLeft, Vector3 planeUp) {
+	public static
+    LinePointIntersectionInfo lineToPlane(Vector3 lineOrigin, Vector3 lineTangent, Vector3 planeOrigin, Vector3 planeLeft, Vector3 planeUp) {
 		Vector3 up = new Vector3(planeUp).sub(planeOrigin);
 		Vector3 left = new Vector3(planeLeft).sub(planeOrigin);
 		Vector3 normal = new Vector3().cross(left, up);
@@ -196,7 +202,8 @@ public class IntersectionPrimatives {
 		return info;
 	}
 
-	static public LinePointIntersectionInfo lineToPlane(Vector3 lineOrigin, Vector3 lineTangent, Vector3 planeOrigin, Vector3 normal) {
+	public static
+    LinePointIntersectionInfo lineToPlane(Vector3 lineOrigin, Vector3 lineTangent, Vector3 planeOrigin, Vector3 normal) {
 
 		normal.normalize();
 
@@ -211,7 +218,8 @@ public class IntersectionPrimatives {
 		return info;
 	}
 
-	static public LinePointIntersectionInfo lineToPoint(Vector3 lineOrigin, Vector3 lineTangent, Vector3 point) {
+	public static
+    LinePointIntersectionInfo lineToPoint(Vector3 lineOrigin, Vector3 lineTangent, Vector3 point) {
 		LinePointIntersectionInfo info = new LinePointIntersectionInfo();
 
 		Vector3 to = new Vector3();
@@ -226,7 +234,8 @@ public class IntersectionPrimatives {
 		return info;
 	}
 
-	static public Pair<Vector3, Vector3> triangleToTriangleToLineSegment(Vector3 v0, Vector3 v1, Vector3 v2, Vector3 u0, Vector3 u1, Vector3 u2) {
+	public static
+    Pair<Vector3, Vector3> triangleToTriangleToLineSegment(Vector3 v0, Vector3 v1, Vector3 v2, Vector3 u0, Vector3 u1, Vector3 u2) {
 		Vector3 isectpt1 = new Vector3();
 		Vector3 isectpt2 = new Vector3();
 
@@ -503,13 +512,13 @@ public class IntersectionPrimatives {
 							fTmpS0 = -(fA01 * fS1 + fB0);
 							if (fTmpS0 < -pkSegment0_Extent) {
 								fS0 = -pkSegment0_Extent;
-								fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+								fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 							} else if (fTmpS0 <= pkSegment0_Extent) {
 								fS0 = fTmpS0;
 								fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 							} else {
 								fS0 = pkSegment0_Extent;
-								fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+								fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 							}
 						}
 					} else // region 7 (side)
@@ -518,13 +527,13 @@ public class IntersectionPrimatives {
 						fTmpS0 = -(fA01 * fS1 + fB0);
 						if (fTmpS0 < -pkSegment0_Extent) {
 							fS0 = -pkSegment0_Extent;
-							fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+							fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						} else if (fTmpS0 <= pkSegment0_Extent) {
 							fS0 = fTmpS0;
 							fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						} else {
 							fS0 = pkSegment0_Extent;
-							fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+							fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						}
 					}
 				} else {
@@ -536,13 +545,13 @@ public class IntersectionPrimatives {
 							fTmpS1 = -(fA01 * fS0 + fB1);
 							if (fTmpS1 < -pkSegment1_Extent) {
 								fS1 = -pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else if (fTmpS1 <= pkSegment1_Extent) {
 								fS1 = fTmpS1;
 								fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else {
 								fS1 = pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							}
 						} else // region 2 (corner)
 						{
@@ -550,7 +559,7 @@ public class IntersectionPrimatives {
 							fTmpS0 = -(fA01 * fS1 + fB0);
 							if (fTmpS0 < -pkSegment0_Extent) {
 								fS0 = -pkSegment0_Extent;
-								fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+								fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 							} else if (fTmpS0 <= pkSegment0_Extent) {
 								fS0 = fTmpS0;
 								fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
@@ -559,13 +568,13 @@ public class IntersectionPrimatives {
 								fTmpS1 = -(fA01 * fS0 + fB1);
 								if (fTmpS1 < -pkSegment1_Extent) {
 									fS1 = -pkSegment1_Extent;
-									fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+									fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 								} else if (fTmpS1 <= pkSegment1_Extent) {
 									fS1 = fTmpS1;
 									fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 								} else {
 									fS1 = pkSegment1_Extent;
-									fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+									fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 								}
 							}
 						}
@@ -575,7 +584,7 @@ public class IntersectionPrimatives {
 						fTmpS0 = -(fA01 * fS1 + fB0);
 						if (fTmpS0 < -pkSegment0_Extent) {
 							fS0 = -pkSegment0_Extent;
-							fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+							fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						} else if (fTmpS0 <= pkSegment0_Extent) {
 							fS0 = fTmpS0;
 							fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
@@ -584,13 +593,13 @@ public class IntersectionPrimatives {
 							fTmpS1 = -(fA01 * fS0 + fB1);
 							if (fTmpS1 > pkSegment1_Extent) {
 								fS1 = pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else if (fTmpS1 >= -pkSegment1_Extent) {
 								fS1 = fTmpS1;
 								fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else {
 								fS1 = -pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							}
 						}
 					}
@@ -603,13 +612,13 @@ public class IntersectionPrimatives {
 						fTmpS1 = -(fA01 * fS0 + fB1);
 						if (fTmpS1 < -pkSegment1_Extent) {
 							fS1 = -pkSegment1_Extent;
-							fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+							fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						} else if (fTmpS1 <= pkSegment1_Extent) {
 							fS1 = fTmpS1;
 							fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						} else {
 							fS1 = pkSegment1_Extent;
-							fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+							fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						}
 					} else // region 4 (corner)
 					{
@@ -617,7 +626,7 @@ public class IntersectionPrimatives {
 						fTmpS0 = -(fA01 * fS1 + fB0);
 						if (fTmpS0 > pkSegment0_Extent) {
 							fS0 = pkSegment0_Extent;
-							fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+							fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						} else if (fTmpS0 >= -pkSegment0_Extent) {
 							fS0 = fTmpS0;
 							fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
@@ -626,13 +635,13 @@ public class IntersectionPrimatives {
 							fTmpS1 = -(fA01 * fS0 + fB1);
 							if (fTmpS1 < -pkSegment1_Extent) {
 								fS1 = -pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else if (fTmpS1 <= pkSegment1_Extent) {
 								fS1 = fTmpS1;
 								fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else {
 								fS1 = pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							}
 						}
 					}
@@ -642,7 +651,7 @@ public class IntersectionPrimatives {
 					fTmpS0 = -(fA01 * fS1 + fB0);
 					if (fTmpS0 > pkSegment0_Extent) {
 						fS0 = pkSegment0_Extent;
-						fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+						fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 					} else if (fTmpS0 >= -pkSegment0_Extent) {
 						fS0 = fTmpS0;
 						fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
@@ -651,13 +660,13 @@ public class IntersectionPrimatives {
 						fTmpS1 = -(fA01 * fS0 + fB1);
 						if (fTmpS1 < -pkSegment1_Extent) {
 							fS1 = -pkSegment1_Extent;
-							fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+							fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						} else if (fTmpS1 <= pkSegment1_Extent) {
 							fS1 = fTmpS1;
 							fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						} else {
 							fS1 = pkSegment1_Extent;
-							fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+							fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						}
 					}
 				}
@@ -728,13 +737,13 @@ public class IntersectionPrimatives {
 							fTmpS0 = -(fA01 * fS1 + fB0);
 							if (fTmpS0 < -pkSegment0_Extent) {
 								fS0 = -pkSegment0_Extent;
-								fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+								fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 							} else if (fTmpS0 <= pkSegment0_Extent) {
 								fS0 = fTmpS0;
 								fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 							} else {
 								fS0 = pkSegment0_Extent;
-								fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+								fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 							}
 						}
 					} else // region 7 (side)
@@ -743,13 +752,13 @@ public class IntersectionPrimatives {
 						fTmpS0 = -(fA01 * fS1 + fB0);
 						if (fTmpS0 < -pkSegment0_Extent) {
 							fS0 = -pkSegment0_Extent;
-							fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+							fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						} else if (fTmpS0 <= pkSegment0_Extent) {
 							fS0 = fTmpS0;
 							fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						} else {
 							fS0 = pkSegment0_Extent;
-							fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+							fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						}
 					}
 				} else {
@@ -761,13 +770,13 @@ public class IntersectionPrimatives {
 							fTmpS1 = -(fA01 * fS0 + fB1);
 							if (fTmpS1 < -pkSegment1_Extent) {
 								fS1 = -pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else if (fTmpS1 <= pkSegment1_Extent) {
 								fS1 = fTmpS1;
 								fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else {
 								fS1 = pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							}
 						} else // region 2 (corner)
 						{
@@ -775,7 +784,7 @@ public class IntersectionPrimatives {
 							fTmpS0 = -(fA01 * fS1 + fB0);
 							if (fTmpS0 < -pkSegment0_Extent) {
 								fS0 = -pkSegment0_Extent;
-								fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+								fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 							} else if (fTmpS0 <= pkSegment0_Extent) {
 								fS0 = fTmpS0;
 								fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
@@ -784,13 +793,13 @@ public class IntersectionPrimatives {
 								fTmpS1 = -(fA01 * fS0 + fB1);
 								if (fTmpS1 < -pkSegment1_Extent) {
 									fS1 = -pkSegment1_Extent;
-									fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+									fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 								} else if (fTmpS1 <= pkSegment1_Extent) {
 									fS1 = fTmpS1;
 									fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 								} else {
 									fS1 = pkSegment1_Extent;
-									fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+									fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 								}
 							}
 						}
@@ -800,7 +809,7 @@ public class IntersectionPrimatives {
 						fTmpS0 = -(fA01 * fS1 + fB0);
 						if (fTmpS0 < -pkSegment0_Extent) {
 							fS0 = -pkSegment0_Extent;
-							fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+							fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						} else if (fTmpS0 <= pkSegment0_Extent) {
 							fS0 = fTmpS0;
 							fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
@@ -809,13 +818,13 @@ public class IntersectionPrimatives {
 							fTmpS1 = -(fA01 * fS0 + fB1);
 							if (fTmpS1 > pkSegment1_Extent) {
 								fS1 = pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else if (fTmpS1 >= -pkSegment1_Extent) {
 								fS1 = fTmpS1;
 								fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else {
 								fS1 = -pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							}
 						}
 					}
@@ -828,13 +837,13 @@ public class IntersectionPrimatives {
 						fTmpS1 = -(fA01 * fS0 + fB1);
 						if (fTmpS1 < -pkSegment1_Extent) {
 							fS1 = -pkSegment1_Extent;
-							fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+							fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						} else if (fTmpS1 <= pkSegment1_Extent) {
 							fS1 = fTmpS1;
 							fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						} else {
 							fS1 = pkSegment1_Extent;
-							fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+							fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						}
 					} else // region 4 (corner)
 					{
@@ -842,7 +851,7 @@ public class IntersectionPrimatives {
 						fTmpS0 = -(fA01 * fS1 + fB0);
 						if (fTmpS0 > pkSegment0_Extent) {
 							fS0 = pkSegment0_Extent;
-							fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+							fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 						} else if (fTmpS0 >= -pkSegment0_Extent) {
 							fS0 = fTmpS0;
 							fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
@@ -851,13 +860,13 @@ public class IntersectionPrimatives {
 							fTmpS1 = -(fA01 * fS0 + fB1);
 							if (fTmpS1 < -pkSegment1_Extent) {
 								fS1 = -pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else if (fTmpS1 <= pkSegment1_Extent) {
 								fS1 = fTmpS1;
 								fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							} else {
 								fS1 = pkSegment1_Extent;
-								fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+								fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 							}
 						}
 					}
@@ -867,7 +876,7 @@ public class IntersectionPrimatives {
 					fTmpS0 = -(fA01 * fS1 + fB0);
 					if (fTmpS0 > pkSegment0_Extent) {
 						fS0 = pkSegment0_Extent;
-						fSqrDist = fS0 * (fS0 - ((float) 2.0) * fTmpS0) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
+						fSqrDist = fS0 * (fS0 - (((float) 2.0) * fTmpS0)) + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
 					} else if (fTmpS0 >= -pkSegment0_Extent) {
 						fS0 = fTmpS0;
 						fSqrDist = -fS0 * fS0 + fS1 * (fS1 + ((float) 2.0) * fB1) + fC;
@@ -876,13 +885,13 @@ public class IntersectionPrimatives {
 						fTmpS1 = -(fA01 * fS0 + fB1);
 						if (fTmpS1 < -pkSegment1_Extent) {
 							fS1 = -pkSegment1_Extent;
-							fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+							fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						} else if (fTmpS1 <= pkSegment1_Extent) {
 							fS1 = fTmpS1;
 							fSqrDist = -fS1 * fS1 + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						} else {
 							fS1 = pkSegment1_Extent;
-							fSqrDist = fS1 * (fS1 - ((float) 2.0) * fTmpS1) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
+							fSqrDist = fS1 * (fS1 - (((float) 2.0) * fTmpS1)) + fS0 * (fS0 + ((float) 2.0) * fB0) + fC;
 						}
 					}
 				}
@@ -1062,7 +1071,8 @@ public class IntersectionPrimatives {
 		o.add(normal, c - c2);
 	}
 
-	static public Vector4 toQuadBarycentric(Vector3 v0, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v, Vector3 normal) {
+	public static
+    Vector4 toQuadBarycentric(Vector3 v0, Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v, Vector3 normal) {
 		Vector3 s0 = new Vector3().sub(v0, v);
 		Vector3 s1 = new Vector3().sub(v1, v);
 		Vector3 s2 = new Vector3().sub(v2, v);
@@ -1118,7 +1128,8 @@ public class IntersectionPrimatives {
 		return new Vector4(m0 / s, m1 / s, m2 / s, m3 / s);
 	}
 
-	static private boolean SAME_SIGNS(double a, double b) {
+	private static
+    boolean SAME_SIGNS(double a, double b) {
 		return Math.signum(a) == Math.signum(b);
 	}
 
@@ -1155,7 +1166,8 @@ public class IntersectionPrimatives {
 
 	}
 
-	static public Vector2 lines_intersect(double x1, double y1, /*
+	public static
+    Vector2 lines_intersect(double x1, double y1, /*
 								 * First line
 								 * segment
 								 */

@@ -34,7 +34,7 @@ public class NoWriteSecurityManager extends
 		 * 	but "/okpath/foo.txt/ will also pass." 
 		 */
 
-        fd = fd + "/";
+        fd = fd + '/';
 
         final String prop = "writeableDirPrefixes";
 

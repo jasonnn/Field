@@ -36,7 +36,8 @@ public class PopupMarkingArea {
 	public enum Position {
 		N(0, -1), S(0, 1), E(1, 0), W(-1, 0), NE(0.5, -0.5), NW(-0.5, -0.5), SE(0.5, 0.5), SW(-0.5, 0.5), Z(0, 0), NW2(-1, -1), NE2(1, -1), SE2(1, 1), SW2(-1, 1), NH(0, -0.5), SH(0, 0.5), EH(0.5, 0), WH(-0.5, 0), N2(0, -1.5), W2(-1.5, 0);
 
-		final double x, y;
+		final double x;
+        final double y;
 
 		Position(double x, double y) {
 			this.x = x;
@@ -60,7 +61,7 @@ public class PopupMarkingArea {
 	public class MenuArea {
 		Vector2 labelAt = new Vector2();
 		private final String label;
-		private LinkedHashMap menu;
+		private final LinkedHashMap menu;
 
 		public MenuArea(String label, LinkedHashMap<String, iUpdateable> menu, Vector2 labelAt, iUpdateable mainCallback) {
 			this.label = label;
@@ -257,7 +258,7 @@ public class PopupMarkingArea {
 	}
 
 	private Point mouseAt;
-	private iUpdateable timer;
+	private final iUpdateable timer;
 
 	MenuArea hoverToOpen = null;
 	boolean hoverFast = false;
@@ -268,7 +269,7 @@ public class PopupMarkingArea {
 	private Pnt centerSite;
 	private Region centerArea;
 
-	private int realLocation;
+	private final int realLocation;
 
 	static public class PopMenuSpec {
 		public Position position;

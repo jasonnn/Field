@@ -28,7 +28,8 @@ import field.math.linalg.MatrixN.DimensionMismatchException;
  * @author Michael Patrick Johnson <aries@media.mit.edu>
  */
 public class SVD {
-	static public class SVDException extends RuntimeException {
+	public static
+    class SVDException extends RuntimeException {
 		public SVDException(String s) {
 			super(s);
 		}
@@ -40,7 +41,7 @@ public class SVD {
 	// NRIC uses 30 always, probably good enough.
 	private int max_iters = 30;
 
-	private static double EPSILON = 1.0e-11;
+	private static final double EPSILON = 1.0e-11;
 
 	private double singular_threshold = 1.0e-6;
 
@@ -57,16 +58,16 @@ public class SVD {
 	final public static double SINGULAR_VALUE_TOLERANCE = 1.0e-6;
 
 	// this is U
-	private MatrixN rangeBasis;
+	private final MatrixN rangeBasis;
 
 	// this is W
-	private VectorN singularValues;
+	private final VectorN singularValues;
 
 	// the threshholded singular values
-	private VectorN threshSingularValues;
+	private final VectorN threshSingularValues;
 
 	// this is V'
-	private MatrixN nullspaceBasis;
+	private final MatrixN nullspaceBasis;
 
 	/**
 	 * Creates an SVD object that can hold an mxn decomposiiton.
@@ -129,7 +130,9 @@ public class SVD {
 		try {
 			range.set(rangeBasis);
 		} catch (DimensionMismatchException e) {
-			throw new DimensionMismatchException("SVD.getRangeBasisMatrixN: required " + numRows() + "x" + numColumns() + " matrix and got " + range.numRows() + "x" + range.numColumns());
+			throw new DimensionMismatchException("SVD.getRangeBasisMatrixN: required " + numRows() + 'x'
+                                                 + numColumns() + " matrix and got " + range.numRows() + 'x'
+                                                 + range.numColumns());
 		}
 	}
 
@@ -145,7 +148,7 @@ public class SVD {
 	 */
 	public void getSingularValues(VectorN w) throws DimensionMismatchException {
 		if (w.size() < numColumns()) {
-			throw new DimensionMismatchException("SVD.getSingularValues: expected Vec(" + numColumns() + ") and got Vec(" + w.size() + ")");
+			throw new DimensionMismatchException("SVD.getSingularValues: expected Vec(" + numColumns() + ") and got Vec(" + w.size() + ')');
 		}
 		w.set(singularValues);
 	}
@@ -175,7 +178,9 @@ public class SVD {
 			nullspace.set(nullspaceBasis);
 		} catch (DimensionMismatchException e) {
 			int n = rangeBasis.numColumns();
-			throw new DimensionMismatchException("SVD.getNullspaceValues(): expected " + n + "x" + n + " and got " + nullspace.numRows() + "x" + nullspace.numColumns());
+			throw new DimensionMismatchException("SVD.getNullspaceValues(): expected " + n + 'x'
+                                                 + n + " and got " + nullspace.numRows() + 'x'
+                                                 + nullspace.numColumns());
 
 		}
 	}

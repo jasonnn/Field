@@ -18,7 +18,7 @@ class Cc {
     static WeakHashMap<Object, Map<String, ContextFor>> contextMemories =
             new WeakHashMap<Object, Map<String, ContextFor>>();
 
-    static public
+    public static
     void handle_entry(Object fromThis,
                       String name,
                       Map<String, Object> params,
@@ -31,8 +31,8 @@ class Cc {
         }
         String n2 = (String) params.get("group");
 
-        if (n2 == null || n2.equals("--object--")) n2 = "for:" + System.identityHashCode(fromThis);
-        else if (n2.equals("--method--")) n2 = ((org.objectweb.asm.commons.Method) params.get("method")).getName();
+        if ((n2 == null) || "--object--".equals(n2)) n2 = "for:" + System.identityHashCode(fromThis);
+        else if ("--method--".equals(n2)) n2 = ((org.objectweb.asm.commons.Method) params.get("method")).getName();
 
 
         ContextFor context = cf.get(n2);
@@ -73,15 +73,15 @@ class Cc {
         context.enter();
     }
 
-    static public
+    public static
     void handle_exit(Object fromThis, String name, Map<String, Object> parameterName) {
         Map<String, ContextFor> cf = contextMemories.get(fromThis);
         if (cf == null) {
             contextMemories.put(fromThis, cf = new HashMap<String, ContextFor>());
         }
         String n2 = (String) parameterName.get("group");
-        if (n2 == null || n2.equals("--object--")) n2 = "for:" + System.identityHashCode(fromThis);
-        else if (n2.equals("--method--"))
+        if ((n2 == null) || "--object--".equals(n2)) n2 = "for:" + System.identityHashCode(fromThis);
+        else if ("--method--".equals(n2))
             n2 = ((org.objectweb.asm.commons.Method) parameterName.get("method")).getName();
 
         ContextFor context = cf.get(n2);
@@ -90,7 +90,7 @@ class Cc {
         context.exit();
     }
 
-    static public
+    public static
     void setContextFor(Object fromThis, Method m, Object target) {
         m = ReflectionTools.findMethodWithParametersUpwards(m.getName(), m.getParameterTypes(), fromThis.getClass());
         assert m != null;
@@ -98,7 +98,7 @@ class Cc {
         ConstantContext c = m.getAnnotation(ConstantContext.class);
 
         String n2 = c.group();
-        if (n2.equals("--method--")) n2 = m.getName();
+        if ("--method--".equals(n2)) n2 = m.getName();
 
         Map<String, ContextFor> cf = contextMemories.get(fromThis);
         if (cf == null) {

@@ -7,9 +7,9 @@ public class AutoPersist {
     public static
     <T> T persist(final String name, T defaultValue) {
         T t = defaultValue;
-		final String filename = FieldMenus2.fieldDir + "/" + name + ".xml";
+		final String filename = FieldMenus2.fieldDir + '/' + name + ".xml";
 		try {
-			t = (T) new PythonUtils().loadAsXML(filename);
+			t = (T) PythonUtils.loadAsXML(filename);
 		} catch (Throwable x) {
 			x.printStackTrace();
 			t = defaultValue;

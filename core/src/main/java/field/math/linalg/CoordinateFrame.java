@@ -191,8 +191,8 @@ public class CoordinateFrame implements iCoordinateFrame.iMutable, iInplaceProvi
 		
 		
 		
-		if (left instanceof CoordinateFrame && right instanceof CoordinateFrame) {
-			if (left != this && right != this) {
+		if ((left instanceof CoordinateFrame) && (right instanceof CoordinateFrame)) {
+			if ((left != this) && (right != this)) {
 				if (((CoordinateFrame) left).isUnityScale && ((CoordinateFrame) right).isUnityScale) {
 
 					((CoordinateFrame) left).cleanTRS();
@@ -276,7 +276,9 @@ public class CoordinateFrame implements iCoordinateFrame.iMutable, iInplaceProvi
 	@Override
 	public String toString() {
 		cleanTRS();
-		return "[cf: r" + rotation + " t" + translation + (((scale.x == 1) && (scale.y == 1) && (scale.z == 1)) ? "" : " s" + scale) + "]";
+		return "[cf: r" + rotation + " t" + translation + (((scale.x == 1) && (scale.y == 1) && (scale.z == 1))
+                                                           ? ""
+                                                           : (" s" + scale)) + ']';
 	}
 
 	public Vector3 transformDirection(Vector3 position) {
@@ -309,7 +311,8 @@ public class CoordinateFrame implements iCoordinateFrame.iMutable, iInplaceProvi
 		}
 	}
 	
-	static public CoordinateFrame blend(List<CoordinateFrame> c, List<? extends Number> w)
+	public static
+    CoordinateFrame blend(List<CoordinateFrame> c, List<? extends Number> w)
 	{
 		List<Quaternion> q = new ArrayList<Quaternion>();
 		List<Vector3> t = new ArrayList<Vector3>();

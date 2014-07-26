@@ -64,7 +64,7 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
                 if (javamethod != null)
                     break;
             }
-            assert javamethod != null : " couldn't find method to inherit from in <" + name + "> with parameters <" + Arrays.asList(parameterClasses) + ">";
+            assert javamethod != null : " couldn't find method to inherit from in <" + name + "> with parameters <" + Arrays.asList(parameterClasses) + '>';
         }
 
 
@@ -93,13 +93,13 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
     }
 
     public Class getClassFor(String className) throws ClassNotFoundException, IOException {
-        if (className.equals("int")) {
+        if ("int".equals(className)) {
             return Integer.TYPE;
         }
-        if (className.equals("float")) {
+        if ("float".equals(className)) {
             return Float.TYPE;
         }
-        if (className.equals("double")) {
+        if ("double".equals(className)) {
             return Double.TYPE;
         } else {
 
@@ -128,7 +128,7 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
         // URLClassPath path = (URLClassPath) ReflectionTools.illegalGetObject(deferTo, "ucp");
         // Resource resource = path.getResource(className.replace('.', '/').concat(".class"), false);
 
-        InputStream stream = loader.getResourceAsStream(className.replace('.', '/').concat(".class"));
+        InputStream stream = loader.getResourceAsStream(className.replace('.', '/') + ".class");
 
 
         byte[] data = Utils.readFully(stream);
@@ -517,7 +517,7 @@ public class StandardTrampoline extends Trampoline2 implements InheritWovenHelpe
                         h += 2;
                     }
                 } catch (ArrayIndexOutOfBoundsException a) {
-                    System.out.println(" -- skipping interface description for <" + type + ">");
+                    System.out.println(" -- skipping interface description for <" + type + '>');
                     ClassInfo.this.superClass = null;
                     ClassInfo.this.interfaces = new String[0];
                 }

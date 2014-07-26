@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CascadedResize {
 
-	private List<iVisualElement> e;
+	private final List<iVisualElement> e;
 
 	public CascadedResize(List<iVisualElement> e)
 	{

@@ -50,7 +50,7 @@ public class VertMarqueeTool implements iSimpleSelectionTool {
 
 
 	private void doSelectionNow() {
-		if (downAt == null || upAt == null)
+		if ((downAt == null) || (upAt == null))
 			return;
 
 		// inside.selection.clear();
@@ -64,11 +64,12 @@ public class VertMarqueeTool implements iSimpleSelectionTool {
 
 		for (Entry<Vector2, Selectable> s : es) {
 			Vector2 v = s.getKey();
-			if (v.x > x1 && v.x < x2) {
+			if ((v.x > x1) && (v.x < x2)) {
 				Selectable sel = s.getValue();
 				if (!inside.selection.contains(sel.current)) {
 					inside.addToSelection(sel);
-					if (sel.current.onLine.events.size() > (sel.current.vertexIndex + 1) && sel.current.onLine.events.get(sel.current.vertexIndex + 1).method.equals(iLine_m.cubicTo_m))
+					if ((sel.current.onLine.events.size() > (sel.current.vertexIndex + 1))
+                        && sel.current.onLine.events.get(sel.current.vertexIndex + 1).method.equals(iLine_m.cubicTo_m))
 						sel.current.whatSelected.add(SubSelection.nextControl);
 					sel.current.whatSelected.add(SubSelection.postion);
 					if (sel.current.vertex.method.equals(iLine_m.cubicTo_m))
@@ -82,7 +83,7 @@ public class VertMarqueeTool implements iSimpleSelectionTool {
 
 	public void paint() {
 
-		if (downAt == null || upAt == null)
+		if ((downAt == null) || (upAt == null))
 			return;
 
 		CachedLine marqueLine = new CachedLine();

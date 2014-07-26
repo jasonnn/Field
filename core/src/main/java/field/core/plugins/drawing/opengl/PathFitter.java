@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PathFitter {
 
-	private List<Vector2> points;
+	private final List<Vector2> points;
 	private final float error;
 
 	public PathFitter(List<Vector2> points, float error) {
@@ -114,7 +114,7 @@ public class PathFitter {
 		int index = (int) Math.floor((last - first + 1) / 2);
 		float maxDist = 0;
 		for (int i = first + 1; i < last; i++) {
-			Vector2 P = this.evaluate(3, curve.toList(), u[i - first]);
+			Vector2 P = PathFitter.evaluate(3, curve.toList(), u[i - first]);
 
             //System.out.println(" evaluate <"+curve.toList()+" @ :"+u[i-first]+" => "+P);
 
@@ -158,9 +158,9 @@ public class PathFitter {
 			curve2.add(new Vector2(curve.get(i + 1)).sub(curve.get(i)).scale(2));
 		}
 
-		Vector2 pt = this.evaluate(3, curve.toList(), u);
-		Vector2 pt1 = this.evaluate(2, curve1, u);
-		Vector2 pt2 = this.evaluate(1, curve2, u);
+		Vector2 pt = PathFitter.evaluate(3, curve.toList(), u);
+		Vector2 pt1 = PathFitter.evaluate(2, curve1, u);
+		Vector2 pt2 = PathFitter.evaluate(1, curve2, u);
 
 		Vector2 diff = new Vector2(pt).sub(point);
 		float df = pt1.dot(pt1) + diff.dot(pt2);
@@ -169,7 +169,8 @@ public class PathFitter {
 		return u - diff.dot(pt1) / df;
 	}
 
-	private Vector2 evaluate(int degree, List<Vector2> list, float t) {
+	private static
+    Vector2 evaluate(int degree, List<Vector2> list, float t) {
 		ArrayList<Vector2> tmp = new ArrayList<Vector2>(list);
 		for (int i = 1; i <= degree; i++) {
 			for (int j = 0; j <= degree - 1; j++) {

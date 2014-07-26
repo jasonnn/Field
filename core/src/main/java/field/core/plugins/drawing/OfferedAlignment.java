@@ -29,7 +29,7 @@ import java.util.*;
 
 public class OfferedAlignment implements iDragParticipant, iPaintPeer {
 
-	static public VisualElementProperty<DynamicAlignment> guides = new VisualElementProperty<DynamicAlignment>(
+	public static VisualElementProperty<DynamicAlignment> guides = new VisualElementProperty<DynamicAlignment>(
 			"guides_");
 
 	public enum ConstraintOrigin {
@@ -367,8 +367,7 @@ public class OfferedAlignment implements iDragParticipant, iPaintPeer {
 							bestScore = sc;
 							bestOffer.clear();
 							bestOffer.add(o);
-						} else if (sc == bestScore
-								&& bestScore > Float.NEGATIVE_INFINITY) {
+						} else if ((sc == bestScore) && (bestScore > Float.NEGATIVE_INFINITY)) {
 							bestDrawable.add(s);
 							bestOffer.add(o);
 						}
@@ -377,7 +376,7 @@ public class OfferedAlignment implements iDragParticipant, iPaintPeer {
 
 			Rect ore = new Rect(0, 0, 0, 0).setValue(originalRect);
 
-			if (bestDrawable.size() != 0) {
+			if (!bestDrawable.isEmpty()) {
 				for (iDrawable d : bestDrawable) {
 					String tok = d.getToken();
 					touch.add(tok);
@@ -451,7 +450,7 @@ public class OfferedAlignment implements iDragParticipant, iPaintPeer {
 	}
 
 	public boolean needsRepainting() {
-		return drawQueue.size() > 0;
+		return !drawQueue.isEmpty();
 	}
 
 	public void paint(RootComponent inside) {
@@ -503,7 +502,7 @@ public class OfferedAlignment implements iDragParticipant, iPaintPeer {
 			if (n.isStopping() && n.hasStopped())
 				i.remove();
 		}
-		if (drawQueue.size() > 0)
+		if (!drawQueue.isEmpty())
 			inside.repaint();
 		// leftArrows.close();
 		// upArrows.close();

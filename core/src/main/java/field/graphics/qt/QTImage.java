@@ -36,7 +36,7 @@ public class QTImage {
 	}
 
 	public int getDVFrame() {
-		return dvHandle == 0 ? 0 : getDVFrame(dvHandle);
+		return (dvHandle == 0) ? 0 : getDVFrame(dvHandle);
 	}
 
 	public ByteBuffer getImage() {

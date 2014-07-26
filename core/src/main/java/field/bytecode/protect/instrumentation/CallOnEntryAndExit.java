@@ -43,14 +43,16 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
         FieldBytecodeAdapter.exitHandlers.put(name, this);
     }
 
-    abstract public Object handleExit(Object returningThis,
+    public abstract
+    Object handleExit(Object returningThis,
                                       String fromName,
                                       Object fromThis,
                                       String methodName,
                                       Map<String, Object> parameterName,
                                       String methodReturnName);
 
-    abstract public void handleEntry(String fromName,
+    public abstract
+    void handleEntry(String fromName,
                                      Object fromThis,
                                      String methodName,
                                      Map<String, Object> parameterName,
@@ -59,7 +61,7 @@ public abstract class CallOnEntryAndExit extends FieldASMGeneratorAdapter implem
     @Override
     public void visitCode() {
 
-        if (onMethod.getName().equals("<init>")) {
+        if ("<init>".equals(onMethod.getName())) {
 
             // we have to leave this until after the first
             // invoke special

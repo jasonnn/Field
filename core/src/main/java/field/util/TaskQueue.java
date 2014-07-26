@@ -24,7 +24,8 @@ import java.util.*;
 
 public class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCallable {
 
-	static public class Gate extends Task {
+	public static
+    class Gate extends Task {
 		private final iUpdateable up;
 
 		private final boolean touch;
@@ -58,7 +59,8 @@ public class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer,
 
 	}
 
-	abstract public class Task {
+	public abstract
+    class Task {
 
 		StackTraceElement[] alloc;
 
@@ -323,7 +325,7 @@ public class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer,
 		if (up != null)
 			up.remove();
 		else {
-			assert false : "no <" + view + "> in <" + upMap + ">";
+			assert false : "no <" + view + "> in <" + upMap + '>';
 		}
 	}
 
@@ -454,7 +456,7 @@ public class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer,
 		}
 	}
 
-	Object[] pythonInvocationArgs = new Object[]{};
+	Object[] pythonInvocationArgs = {};
 	HashMap<String, Task> knownPythonTasks = new HashMap<String, TaskQueue.Task>();
 	
 	public TaskQueue setPythonInvocationArgs(Object[] pythonInvocationArgs) {

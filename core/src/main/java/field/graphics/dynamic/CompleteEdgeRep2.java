@@ -29,7 +29,8 @@ public class CompleteEdgeRep2 implements Serializable {
 
 	static int static_biface_uniqNumber = 0;
 
-	static public class Vertex implements Serializable {
+	public static
+    class Vertex implements Serializable {
 
 		public List<Edge> edges = new ArrayList();
 
@@ -52,11 +53,12 @@ public class CompleteEdgeRep2 implements Serializable {
 		}
 
 		public String toString() {
-			return "v:" + vertexNumber + "(" + System.identityHashCode(this) + ")";
+			return "v:" + vertexNumber + '(' + System.identityHashCode(this) + ')';
 		}
 	}
 
-	static public class Edge implements Serializable {
+	public static
+    class Edge implements Serializable {
 
 		public Vertex end;
 
@@ -83,11 +85,12 @@ public class CompleteEdgeRep2 implements Serializable {
 		}
 
 		public String toString() {
-			return "e:[" + start + "," + end + "]";
+			return "e:[" + start + ',' + end + ']';
 		}
 	}
 
-	static public class Face implements Serializable {
+	public static
+    class Face implements Serializable {
 
 		public Edge[] edges = new Edge[3];
 
@@ -96,7 +99,7 @@ public class CompleteEdgeRep2 implements Serializable {
 		public int faceNumber;
 
 		public String toString() {
-			return "f:[" + vertex[0] + "," + vertex[1] + "," + vertex[2] + "]";
+			return "f:[" + vertex[0] + ',' + vertex[1] + ',' + vertex[2] + ']';
 		}
 
 		List bifaces = new ArrayList(0);
@@ -115,7 +118,8 @@ public class CompleteEdgeRep2 implements Serializable {
 
 	}
 
-	static public class BiFace implements Serializable {
+	public static
+    class BiFace implements Serializable {
 
 		public Face face1;
 
@@ -159,7 +163,8 @@ public class CompleteEdgeRep2 implements Serializable {
 		public void biFaceRemoved(BiFace v);
 	}
 
-	static public abstract class aNotification implements iNotification {
+	public abstract static
+    class aNotification implements iNotification {
 
 		public void beginOperation() {
 		}
@@ -207,7 +212,8 @@ public class CompleteEdgeRep2 implements Serializable {
 		protected Opcode() {
 		}
 
-		abstract public void fire();
+		public abstract
+        void fire();
 	}
 
 	Vector3 _t1 = new Vector3();
@@ -324,7 +330,7 @@ public class CompleteEdgeRep2 implements Serializable {
 		}
 	};
 
-	transient protected Comparator opcodeComparator;
+	protected transient Comparator opcodeComparator;
 
 	protected List opcodeList = new ArrayList();
 
@@ -335,7 +341,7 @@ public class CompleteEdgeRep2 implements Serializable {
 	protected List operandList = new ArrayList();
 
 	
-	transient private FloatBuffer vertex2;
+	private transient FloatBuffer vertex2;
 
 	public CompleteEdgeRep2() {
 		opcodeComparator = new Comparator(){
@@ -783,7 +789,7 @@ public class CompleteEdgeRep2 implements Serializable {
 		int found = -1;
 		int x = 0;
 		while (found != edgeNumber) {
-			assert x < f.edges.length : "couldn't find edge number <" + edgeNumber + "> that isn't <" + biface.hiddenEdge + "> in <" + Arrays.asList(f.edges) + ">";
+			assert x < f.edges.length : "couldn't find edge number <" + edgeNumber + "> that isn't <" + biface.hiddenEdge + "> in <" + Arrays.asList(f.edges) + '>';
 			if (f.edges[x] != biface.hiddenEdge) {
 				found++;
 				e = f.edges[x];
@@ -954,7 +960,7 @@ public class CompleteEdgeRep2 implements Serializable {
 
 				nbf.hiddenEdge = commonEdge(face1, face2);
 
-				assert nbf.hiddenEdge != null : face1 + " " + face2 + " " + Arrays.asList(face1.edges) + " " + Arrays.asList(face2.edges);
+				assert nbf.hiddenEdge != null : face1 + " " + face2 + ' ' + Arrays.asList(face1.edges) + ' ' + Arrays.asList(face2.edges);
 
 				allBiFace.add(nbf);
 
@@ -1045,7 +1051,7 @@ public class CompleteEdgeRep2 implements Serializable {
 			if (edges[i].start != start && edges[i].start != end) return edges[i].start;
 			if (edges[i].end != end && edges[i].end != end) return edges[i].end;
 		}
-		assert false : start + " " + end + " " + Arrays.asList(edges);
+		assert false : start + " " + end + ' ' + Arrays.asList(edges);
 		return null;
 	}
 
@@ -1053,7 +1059,8 @@ public class CompleteEdgeRep2 implements Serializable {
 	 * older and newer share an edge and two vertices. The question here is of the two other vertices of newer which order should they go in in order to be in the same order as the shared two we return a vertex[4] old1, new1, old2, new2
 	 */
 
-	public Vertex[] sortNewVerticesFromExtendedBiFaceEdge(BiFace older, BiFace newer) {
+	public static
+    Vertex[] sortNewVerticesFromExtendedBiFaceEdge(BiFace older, BiFace newer) {
 		Vertex[] r = new Vertex[4];
 
 		Set vertexOlder = new HashSet(4);
@@ -1134,7 +1141,8 @@ public class CompleteEdgeRep2 implements Serializable {
 		return false;
 	}
 
-	public List getAdjecentBiFaces(BiFace b) {
+	public static
+    List getAdjecentBiFaces(BiFace b) {
 		ArrayList ret = new ArrayList();
 		for (int i = 0; i < b.face1.edges.length; i++) {
 			Edge e = b.face1.edges[i];
@@ -1827,7 +1835,8 @@ public class CompleteEdgeRep2 implements Serializable {
 		return null;
 	}
 
-	public Edge findEdge(Vertex v2, Vertex v3) {
+	public static
+    Edge findEdge(Vertex v2, Vertex v3) {
         return findEdge(v2.edges.toArray(new Edge[v2.edges.size()]), v2, v3);
     }
 
@@ -1843,7 +1852,8 @@ public class CompleteEdgeRep2 implements Serializable {
 		return null;
 	}
 
-	static public int indexOf(Object e, Object[] edges) {
+	public static
+    int indexOf(Object e, Object[] edges) {
 		for (int i = 0; i < edges.length; i++)
 			if (edges[i] == e) return i;
 		// assert false :
@@ -1958,7 +1968,7 @@ public class CompleteEdgeRep2 implements Serializable {
 		// now we have to find three tri
 		// from these 9 edges
 		boolean[] allocated = new boolean[9];
-		Edge[] edges = new Edge[] { e11, e12, e21, e22, e31, e32, e01, e02, e012};
+		Edge[] edges = { e11, e12, e21, e22, e31, e32, e01, e02, e012};
 
 		int num = 0;
 		while (num < 3) {

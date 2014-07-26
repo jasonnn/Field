@@ -5,8 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(value={ElementType.CONSTRUCTOR, ElementType.METHOD})
-@Retention(value=RetentionPolicy.RUNTIME)
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Aliasing {
 	public String key() default "";
 	public String value() default "";

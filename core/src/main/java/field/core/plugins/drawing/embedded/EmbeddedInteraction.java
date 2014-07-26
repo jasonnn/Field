@@ -22,7 +22,8 @@ import java.util.Set;
  */
 public class EmbeddedInteraction {
 
-	static public class MousePeer implements iMousePeer {
+	public static
+    class MousePeer implements iMousePeer {
 
 		private final BaseGLGraphicsContext context;
 
@@ -84,7 +85,8 @@ public class EmbeddedInteraction {
 		public List<iNodeCallBack> node();
 	}
 
-	static public class NodeTriggerAdaptor implements NodeTrigger {
+	public static
+    class NodeTriggerAdaptor implements NodeTrigger {
 		public List<iNodeCallBack> edgeAfter() {
 			return null;
 		}
@@ -103,7 +105,7 @@ public class EmbeddedInteraction {
 
 	}
 
-	static public final Prop<NodeTrigger> nodeTrigger_v = new Prop<NodeTrigger>("nodeTrigger_v");
+	public static final Prop<NodeTrigger> nodeTrigger_v = new Prop<NodeTrigger>("nodeTrigger_v");
 
 	public static List<Triple<iNodeCallBack, CachedLine, CachedLine.Event>> perform(Set<CachedLine> al, MirrorNoReturnMethod<iNodeCallBack, Object[]> mirrorNoReturnMethod, Vector2 vector2, Event arg0, boolean doPerLine) {
 
@@ -124,7 +126,7 @@ public class EmbeddedInteraction {
 						{
 							List<iNodeCallBack> n1 = nt.node();
 							if (n1 != null && n1.size() > 0) {
-								Vector2 is = b.current.getAt(-1, null);
+								Vector2 is = b.current.getAt(-1);
 								if (is.distanceFrom(vector2) < scale) {
 									for (iNodeCallBack c : n1) {
 										if (doNotCall.contains(c))
@@ -156,7 +158,7 @@ public class EmbeddedInteraction {
 						{
 							List<iNodeCallBack> n1 = nt.node();
 							if (n1 != null && n1.size() > 0) {
-								Vector2 is = b.current.getAt(-1, null);
+								Vector2 is = b.current.getAt(-1);
 								if (is.distanceFrom(vector2) < scale) {
 									for (iNodeCallBack c : n1) {
 										if (doNotCall.contains(c))

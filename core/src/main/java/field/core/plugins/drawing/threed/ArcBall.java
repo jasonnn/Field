@@ -39,7 +39,7 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 	List<State> forward = new ArrayList<State>();
 
 	private void pushBookmark() {
-		if (back.size() == 0 || !back.get(back.size() - 1).equals(on.getState()))
+		if (back.isEmpty() || !back.get(back.size() - 1).equals(on.getState()))
 			back.add(on.getState());
 		forward.clear();
 	}
@@ -48,7 +48,7 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 
 		State in = on.getState();
 
-		while (on.getState().equals(in) && back.size() > 0) {
+		while (on.getState().equals(in) && !back.isEmpty()) {
 			State n = back.remove(back.size() - 1);
 			forward.add(on.getState());
 			on.setState(n);
@@ -75,7 +75,7 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 
 	public void forward() {
 		State in = on.getState();
-		if (forward.size() > 0) {
+		if (!forward.isEmpty()) {
 			State n = forward.remove(forward.size() - 1);
 			back.add(on.getState());
 			on.setState(n);
@@ -134,11 +134,19 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 		float scale = 40;
 		for (int xx = -grid; xx < grid; xx++) {
 
-			Vector3 a1 = new Vector3(left.x * xx + in.x * -grid, left.y * xx + in.y * -grid, left.z * xx + in.z * -grid).scale(scale).add(origin);
-			Vector3 a2 = new Vector3(left.x * xx + in.x * grid, left.y * xx + in.y * grid, left.z * xx + in.z * grid).scale(scale).add(origin);
+			Vector3 a1 = new Vector3((left.x * xx) + (in.x * -grid),
+                                     (left.y * xx) + (in.y * -grid),
+                                     (left.z * xx) + (in.z * -grid)).scale(scale).add(origin);
+			Vector3 a2 = new Vector3((left.x * xx) + (in.x * grid),
+                                     (left.y * xx) + (in.y * grid),
+                                     (left.z * xx) + (in.z * grid)).scale(scale).add(origin);
 
-			Vector3 b1 = new Vector3(left.x * -grid + in.x * xx, left.y * -grid + in.y * xx, left.z * -grid + in.z * xx).scale(scale).add(origin);
-			Vector3 b2 = new Vector3(left.x * grid + in.x * xx, left.y * grid + in.y * xx, left.z * grid + in.z * xx).scale(scale).add(origin);
+			Vector3 b1 = new Vector3((left.x * -grid) + (in.x * xx),
+                                     (left.y * -grid) + (in.y * xx),
+                                     (left.z * -grid) + (in.z * xx)).scale(scale).add(origin);
+			Vector3 b2 = new Vector3((left.x * grid) + (in.x * xx),
+                                     (left.y * grid) + (in.y * xx),
+                                     (left.z * grid) + (in.z * xx)).scale(scale).add(origin);
 
             //System.out.println(" grid <" + a1 + " " + a2 + " " + b1 + " " + b2 + ">");
 
@@ -279,7 +287,7 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 			modifiersChanged = true;
 		}
 
-		if (arg0.keyCode == ' ' || arg0.keyCode == Platform.getCommandModifier()) {
+		if ((arg0.keyCode == ' ') || (arg0.keyCode == Platform.getCommandModifier())) {
 			if (!spaceDown) {
 				if (repaintt != null)
 					repaintt.requestRepaint();
@@ -324,7 +332,7 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 			modifiersChanged = true;
 		}
 
-		if (arg0.keyCode == ' ' || arg0.keyCode == Platform.getCommandModifier()) {
+		if ((arg0.keyCode == ' ') || (arg0.keyCode == Platform.getCommandModifier())) {
 			spaceDown = false;
 			modifiersChanged = true;
 			if (repaintt != null)
@@ -352,28 +360,28 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 
 			down.add(arg0.character);
 
-			if (down.size() > 0 && repaintt != null)
+			if (!down.isEmpty() && (repaintt != null))
 				repaintt.requestRepaint();
 
 		}
 
         //System.out.println(" TYPE : " + arg0.type + " " + SWT.KeyDown + " " + SWT.KeyUp);
 
-		if (arg0.keyCode == SWT.ARROW_RIGHT && arg0.type == SWT.KeyUp) {
+		if ((arg0.keyCode == SWT.ARROW_RIGHT) && (arg0.type == SWT.KeyUp)) {
             //System.out.println(" FORWARD ");
             forward();
 		}
 
-		if (arg0.keyCode == SWT.ARROW_LEFT && arg0.type == SWT.KeyUp) {
+		if ((arg0.keyCode == SWT.ARROW_LEFT) && (arg0.type == SWT.KeyUp)) {
             //System.out.println(" BACKWARD ");
             backward();
 		}
 
-		if (arg0.keyCode == 'o'  && (arg0.stateMask & SWT.SHIFT)==0) {
+		if ((arg0.keyCode == 'o') && ((arg0.stateMask & SWT.SHIFT) == 0)) {
 			orthogonalize();
 		}
 
-		if (arg0.keyCode == 'o' && (arg0.stateMask & SWT.SHIFT)!=0) {
+		if ((arg0.keyCode == 'o') && ((arg0.stateMask & SWT.SHIFT) != 0)) {
 			orthogonalize2();
 		}
 
@@ -479,20 +487,20 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 		if (mouseAt == null)
 			return;
 
-		if (altDown && arg0.button == 1) {
+		if (altDown && (arg0.button == 1)) {
 			Vector2 nextMouseAt = rectMap(arg0.x, arg0.y);
 			arg0.doit = false;
 			ball(mouseAt, nextMouseAt);
 			// mouseAt = nextMouseAt;
 			if (repaintt != null)
 				repaintt.requestRepaint();
-		} else if (altDown && arg0.button == 2) {
+		} else if (altDown && (arg0.button == 2)) {
 			Vector2 nextMouseAt = rectMap(arg0.x, arg0.y);
 			arg0.doit = false;
 			pan(mouseAt, nextMouseAt);
 			if (repaintt != null)
 				repaintt.requestRepaint();
-		} else if (altDown && arg0.button == 3) {
+		} else if (altDown && (arg0.button == 3)) {
 			Vector2 nextMouseAt = rectMap(arg0.x, arg0.y);
 			arg0.doit = false;
 			scale(mouseAt, nextMouseAt);
@@ -503,7 +511,7 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 
 	public void paint(RootComponent inside) {
 		paintNow(GLComponentWindow.currentContext);
-		if (down.size() > 0 && repaintt != null && spaceDown)
+		if (!down.isEmpty() && (repaintt != null) && spaceDown)
 			repaintt.requestRepaint();
 		//
 		// if (down.size() > 0) {
@@ -585,8 +593,8 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 		if (!spaceDown)
 			return;
 
-		float cx = (float) (rect.x + rect.w - width) - width / 2;
-		float cy = (float) (rect.y + rect.h - width) - width / 2;
+		float cx = (float) (rect.x + rect.w - width) - (width / 2);
+		float cy = (float) (rect.y + rect.h - width) - (width / 2);
 
 		float[] mm = new float[16];
 		on.getCurrentModelViewMatrix(mm);
@@ -598,19 +606,19 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 
 		CachedLine xl = new CachedLine();
 		xl.getInput().moveTo(cx, cy);
-		xl.getInput().lineTo(cx + x.x * width, cy + x.y * width);
+		xl.getInput().lineTo(cx + (x.x * width), cy + (x.y * width));
 		xl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0.5, 0, 0, 0.5));
 		context.submitLine(xl, xl.getProperties());
 
 		CachedLine x2 = new CachedLine();
 		x2.getInput().moveTo(cx, cy);
-		x2.getInput().lineTo(cx + y.x * width, cy + y.y * width);
+		x2.getInput().lineTo(cx + (y.x * width), cy + (y.y * width));
 		x2.getProperties().put(iLinearGraphicsContext.color, new Vector4(0, 0.5, 0, 0.5));
 		context.submitLine(x2, x2.getProperties());
 
 		CachedLine x3 = new CachedLine();
 		x3.getInput().moveTo(cx, cy);
-		x3.getInput().lineTo(cx + z.x * width, cy + z.y * width);
+		x3.getInput().lineTo(cx + (z.x * width), cy + (z.y * width));
 		x3.getProperties().put(iLinearGraphicsContext.color, new Vector4(0, 0, 0.5, 0.5));
 		context.submitLine(x3, x3.getProperties());
 
@@ -618,33 +626,33 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 		CachedLine outline = new CachedLine();
 		outline.getInput().moveTo((float) rect.x, (float) rect.y);
 		outline.getInput().lineTo((float) rect.x - inset, (float) rect.y + inset);
-		outline.getInput().lineTo((float) rect.x - inset, (float) rect.y - inset + (float) rect.h);
+		outline.getInput().lineTo((float) rect.x - inset, ((float) rect.y - inset) + (float) rect.h);
 		outline.getInput().lineTo((float) rect.x, (float) rect.y + (float) rect.h);
-		outline.getInput().lineTo((float) rect.x + inset, (float) rect.y + (float) rect.h - inset);
+		outline.getInput().lineTo((float) rect.x + inset, ((float) rect.y + (float) rect.h) - inset);
 		outline.getInput().lineTo((float) rect.x + inset, (float) rect.y - inset);
 		outline.getInput().lineTo((float) rect.x, (float) rect.y);
 
 		outline.getInput().moveTo((float) rect.x, (float) rect.y);
 		outline.getInput().lineTo((float) rect.x + inset + 1, (float) rect.y - inset);
-		outline.getInput().lineTo((float) rect.x - inset + (float) rect.w, (float) rect.y - inset);
+		outline.getInput().lineTo(((float) rect.x - inset) + (float) rect.w, (float) rect.y - inset);
 		outline.getInput().lineTo((float) rect.x + (float) rect.w, (float) rect.y);
-		outline.getInput().lineTo((float) rect.x - inset + (float) rect.w, (float) rect.y + inset);
+		outline.getInput().lineTo(((float) rect.x - inset) + (float) rect.w, (float) rect.y + inset);
 		outline.getInput().lineTo((float) rect.x + inset, (float) rect.y + inset);
 		outline.getInput().lineTo((float) rect.x, (float) rect.y);
 
 		outline.getInput().moveTo((float) rect.w + (float) rect.x, (float) rect.y);
-		outline.getInput().lineTo((float) rect.w + (float) rect.x - inset, (float) rect.y + inset);
-		outline.getInput().lineTo((float) rect.w + (float) rect.x - inset, (float) rect.y - inset + (float) rect.h);
+		outline.getInput().lineTo(((float) rect.w + (float) rect.x) - inset, (float) rect.y + inset);
+		outline.getInput().lineTo(((float) rect.w + (float) rect.x) - inset, ((float) rect.y - inset) + (float) rect.h);
 		outline.getInput().lineTo((float) rect.w + (float) rect.x, (float) rect.y + (float) rect.h);
-		outline.getInput().lineTo((float) rect.w + (float) rect.x + inset, (float) rect.y + (float) rect.h - inset);
+		outline.getInput().lineTo((float) rect.w + (float) rect.x + inset, ((float) rect.y + (float) rect.h) - inset);
 		outline.getInput().lineTo((float) rect.w + (float) rect.x + inset, (float) rect.y + inset);
 		outline.getInput().lineTo((float) rect.w + (float) rect.x, (float) rect.y);
 
 		outline.getInput().moveTo((float) rect.x, (float) rect.h + (float) rect.y);
-		outline.getInput().lineTo((float) rect.x + inset, (float) rect.h + (float) rect.y - inset);
-		outline.getInput().lineTo((float) rect.x - inset + (float) rect.w, (float) rect.h + (float) rect.y - inset);
+		outline.getInput().lineTo((float) rect.x + inset, ((float) rect.h + (float) rect.y) - inset);
+		outline.getInput().lineTo(((float) rect.x - inset) + (float) rect.w, ((float) rect.h + (float) rect.y) - inset);
 		outline.getInput().lineTo((float) rect.x + (float) rect.w, (float) rect.h + (float) rect.y);
-		outline.getInput().lineTo((float) rect.x - inset + (float) rect.w, (float) rect.h + (float) rect.y + inset);
+		outline.getInput().lineTo(((float) rect.x - inset) + (float) rect.w, (float) rect.h + (float) rect.y + inset);
 		outline.getInput().lineTo((float) rect.x + inset, (float) rect.h + (float) rect.y + inset);
 		outline.getInput().lineTo((float) rect.x, (float) rect.h + (float) rect.y);
 
@@ -670,7 +678,7 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 
 			}
 		}
-		if (bcc != null && bcc.needsUpdate()) {
+		if ((bcc != null) && bcc.needsUpdate()) {
 			bcc.update();
 			repaintt.requestRepaint();
 		}
@@ -705,7 +713,7 @@ public class ArcBall implements iMousePeer, iPaintPeer {
 
 		state = on.getState();
 
-		if (mouseAt.x >= -1 && mouseAt.x <= 1 && mouseAt.y >= -1 && mouseAt.y <= 1) {
+		if ((mouseAt.x >= -1) && (mouseAt.x <= 1) && (mouseAt.y >= -1) && (mouseAt.y <= 1)) {
 			arg0.doit = false;
 		} else
 			mouseAt = null;

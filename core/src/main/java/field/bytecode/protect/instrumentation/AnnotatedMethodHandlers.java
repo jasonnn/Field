@@ -39,9 +39,12 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
     DISPATCH(DispatchOverTopology.class) {
         @Override
         public MethodVisitor handleEnd(int access, String methodName, String methodDesc, String signature, ClassVisitor classDelegate, MethodVisitor delegate, HashMap<String, Object> paramters, byte[] originalByteCode, final String className) {
-            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + "+" + methodDesc + "+" + signature + "+" + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
+            return new CallOnEntryAndExit_exceptionAware("dispatchOverTopology+" + methodName + '+'
+                                                         + methodDesc + '+'
+                                                         + signature + '+'
+                                                         + counter.getAndIncrement(), access, new ASMMethod(methodName, methodDesc), delegate, paramters) {
 
-                DispatchSupport support = new DispatchSupport();
+               // DispatchSupport support = new DispatchSupport();
 
                 @Override
                 public Object handleExit(Object returningThis,
@@ -248,7 +251,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                                          String methodName,
                                          Map<String, Object> parameterName,
                                          String methodReturnName) {
-                    if (stack.size() > 0) {
+                    if (!stack.isEmpty()) {
                         Pair<ContextTopology, Object> q = stack.pop();
                         ContextAnnotationTools.end(q.left, q.right);
                     }
@@ -270,7 +273,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                         throw er;
                     }
                     Object value = ContextAnnotationTools.valueFor(fromThis, parameterName, this.aliasedParameterSet, argArray);
-                    if (value == null || (value instanceof String && value.equals("")))
+                    if ((value == null) || ((value instanceof String) && "".equals(value)))
                         value = fromThis;
 
                     ContextAnnotationTools.begin(context, value);
@@ -314,7 +317,7 @@ public enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                         throw er;
                     }
                     Object value = ContextAnnotationTools.valueFor(fromThis, parameterName, this.aliasedParameterSet, argArray);
-                    if (value == null || (value instanceof String && value.equals("")))
+                    if ((value == null) || ((value instanceof String) && "".equals(value)))
                         value = fromThis;
 
                     String name = (String) parameterName.get("name");

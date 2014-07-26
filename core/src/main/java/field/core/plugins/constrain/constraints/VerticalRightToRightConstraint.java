@@ -14,11 +14,13 @@ public class VerticalRightToRightConstraint extends VerticalLeftToLeftConstraint
 	
 	@Override
 	protected Vector3 point1(VariablesForRect vLeft) {
-		return new Vector3(vLeft.variableX.value()+vLeft.variableW.value(), vLeft.variableY.value()+vLeft.variableH.value()/2,0);
+		return new Vector3(vLeft.variableX.value()+vLeft.variableW.value(),
+                           vLeft.variableY.value() + (vLeft.variableH.value() / 2),0);
 	}
 
 	@Override
 	protected Vector3 point2(VariablesForRect vRight) {
-		return new Vector3(vRight.variableX.value()+vRight.variableW.value(), vRight.variableY.value()+vRight.variableH.value()/2,0);
+		return new Vector3(vRight.variableX.value()+vRight.variableW.value(),
+                           vRight.variableY.value() + (vRight.variableH.value() / 2),0);
 	}
 }

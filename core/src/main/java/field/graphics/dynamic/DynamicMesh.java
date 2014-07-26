@@ -56,7 +56,8 @@ public class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.gr
 		return ret;
 	}
 
-	static public DynamicPointlist unshadedPoints(iAcceptsSceneListElement acceptsSceneListElement) {
+	public static
+    DynamicPointlist unshadedPoints(iAcceptsSceneListElement acceptsSceneListElement) {
 		BasicGeometry.TriangleMesh lines = new PointList(new CoordinateFrame());
 		lines.rebuildTriangle(0);
 		lines.rebuildVertex(0);
@@ -451,7 +452,9 @@ public class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.gr
 		checkVertexStorage(n, 3);
 		int vertexCursor3 = 3 * n;
 
-		assert vertexCursor3 < cachedVertexBuffer.capacity() : n + " " + vertexCursor3 + " " + cachedVertexBuffer.capacity() + " " + cachedVertexBuffer.limit();
+		assert vertexCursor3 < cachedVertexBuffer.capacity() : n + " " + vertexCursor3 + ' '
+                                                               + cachedVertexBuffer.capacity() + ' '
+                                                               + cachedVertexBuffer.limit();
 
 		cachedVertexBuffer.put(vertexCursor3, v1.get(0));
 		cachedVertexBuffer.put(vertexCursor3 + 1, v1.get(1));

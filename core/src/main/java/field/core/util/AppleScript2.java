@@ -10,7 +10,7 @@ import javax.script.ScriptException;
 
 public class AppleScript2 {
 
-	static public ScriptEngine e;
+	public static ScriptEngine e;
 	static
 	{
 		if (Platform.isMac())

@@ -33,7 +33,7 @@ public class ScaleAroundCenterNI implements iWholeCoordTransform {
 
 	public void setNodes(List<Pair<SelectedVertex, Float>> all) {
 		int n = 0;
-		if (all.size() == 0) return;
+		if (all.isEmpty()) return;
 
 		float total = 0;
 		center.scale(0);
@@ -56,9 +56,9 @@ public class ScaleAroundCenterNI implements iWholeCoordTransform {
 		}
 
 		float d1x = Math.abs(ox - center.x);
-		float d2x = Math.abs(ox + dx - center.x);
+		float d2x = Math.abs((ox + dx) - center.x);
 		float d1y = Math.abs(oy - center.y);
-		float d2y = Math.abs(oy + dy - center.y);
+		float d2y = Math.abs((oy + dy) - center.y);
 		scaleXBy = d2x / d1x;
 		scaleYBy = d2y / d1y;
 

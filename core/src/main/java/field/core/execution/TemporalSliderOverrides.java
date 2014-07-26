@@ -41,22 +41,25 @@ import java.util.*;
  * 
  */
 public class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
-	static public final VisualElementProperty<TimeSystem> currentTimeSystem = new VisualElementProperty<TimeSystem>("currentTimeSystem_");
+	public static final VisualElementProperty<TimeSystem> currentTimeSystem = new VisualElementProperty<TimeSystem>("currentTimeSystem_");
 
-	static public final VisualElementProperty<Float> maximumTime = new VisualElementProperty<Float>("maximumX_");
-	static public final VisualElementProperty<Float> minimumTime = new VisualElementProperty<Float>("minimumX_");
+	public static final VisualElementProperty<Float> maximumTime = new VisualElementProperty<Float>("maximumX_");
+	public static final VisualElementProperty<Float> minimumTime = new VisualElementProperty<Float>("minimumX_");
 
-	static public Pair<VisualElement, BasicRunner> newLocalTemporalSlider(String token, iVisualElement root, float x, PyFunction function) {
+	public static
+    Pair<VisualElement, BasicRunner> newLocalTemporalSlider(String token, iVisualElement root, float x, PyFunction function) {
 		return newLocalTemporalSlider(token, root, x, (iProvider) new PythonUtils().providerObject(function, (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment")));
 	}
 
-	static public Pair<VisualElement, BasicRunner> newLocalTemporalSliderFromFunction(String token, iVisualElement root, float x, PyFunction function) {
+	public static
+    Pair<VisualElement, BasicRunner> newLocalTemporalSliderFromFunction(String token, iVisualElement root, float x, PyFunction function) {
 		return newLocalTemporalSlider(token, root, x, (iProvider) new PythonUtils().providerObject(function, (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment")));
 	}
 
-	transient protected iProvider<Collection<iVisualElement>> subsets;
+	protected transient iProvider<Collection<iVisualElement>> subsets;
 
-	static public Pair<VisualElement, BasicRunner> newLocalTemporalSlider(String token, iVisualElement root, float x, final iProvider<Collection<iVisualElement>> include) {
+	public static
+    Pair<VisualElement, BasicRunner> newLocalTemporalSlider(String token, iVisualElement root, float x, final iProvider<Collection<iVisualElement>> include) {
         //System.out.println(" new local temporal slider <" + include + " " + Arrays.asList(include.getClass().getInterfaces()) + ">");
         new Exception().printStackTrace();
 
@@ -113,7 +116,8 @@ public class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOver
 		return created;
 	}
 
-	static public Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> newTemporalSlider(String token, StandardFluidSheet sheet) {
+	public static
+    Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> newTemporalSlider(String token, StandardFluidSheet sheet) {
 		final Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created = VisualElement.createWithToken(token, sheet.getRoot(), new Rect(10, 0, 0, 0), VisualElement.class, PlainDraggableComponent.class, TemporalSliderOverrides.class);
 		created.left.setFrame(new Rect(1, 0, 0, 0));
 		final BasicRunner runner = new BasicRunner(sheet.getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem), 1);
@@ -261,7 +265,7 @@ public class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOver
 				NumberFormatter ff = new NumberFormatter(f);
 
 				try {
-					text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "  t=" + ff.valueToString(bounds.x) + (subsets != null ? ("  (" + forElement.getProperty(iVisualElement.name) + ")") : ""));
+					text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "  t=" + ff.valueToString(bounds.x) + (subsets != null ? ("  (" + forElement.getProperty(iVisualElement.name) + ')') : ""));
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}

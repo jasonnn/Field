@@ -48,7 +48,7 @@ public class DragDuplicator {
 				v.add(vv);
 		}
 
-		isDragging = v.size() > 0;
+		isDragging = !v.isEmpty();
 
         //System.out.println(" begin drag <"+isDragging+">");
 
@@ -81,7 +81,7 @@ public class DragDuplicator {
 		at.x = event.x;
 		at.y = event.y;
 
-		out.println(" output <"+ongoing+">");
+		out.println(" output <"+ongoing+ '>');
 	}
 
 	public void drag(Event event) {
@@ -92,7 +92,7 @@ public class DragDuplicator {
 		float deltaX = event.x - at.x;
 		float deltaY = event.y - at.y;
 
-		out.println(" delta <"+deltaX+", "+deltaY+"> ongoing <"+ongoing+">");
+		out.println(" delta <"+deltaX+", "+deltaY+"> ongoing <"+ongoing+ '>');
 
 		at.x = event.x;
 		at.y = event.y;

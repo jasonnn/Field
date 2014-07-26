@@ -10,7 +10,8 @@ import java.util.Set;
 
 public class HorizontalBottomToTopAlign extends VerticalLeftToLeftAlign {
 
-	static public class Resize extends HorizontalBottomToTopAlign
+	public static
+    class Resize extends HorizontalBottomToTopAlign
 	{
 		public Resize(float baseScore) {
 			super(baseScore);

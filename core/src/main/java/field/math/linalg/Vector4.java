@@ -110,7 +110,7 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	}
 
 	public Vector4(FloatBuffer color, int i) {
-		super(color.get(i * 4 + 0), color.get(i * 4 + 1), color.get(i * 4 + 2), color.get(i * 4 + 3));
+		super(color.get((i * 4) + 0), color.get((i * 4) + 1), color.get((i * 4) + 2), color.get((i * 4) + 3));
 	}
 
 	public Vector4(FloatBuffer peek) {
@@ -136,9 +136,9 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 		if (key instanceof PyInteger) {
 			return __finditem__(((PyInteger) key).getValue());
 		}
-		int start = ((PySlice) key).start instanceof PyNone ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
-		int stop = ((PySlice) key).start instanceof PyNone ? 4 : ((PyInteger) ((PySlice) key).stop).getValue();
-		int step = ((PySlice) key).start instanceof PyNone ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
+		int start = (((PySlice) key).start instanceof PyNone) ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
+		int stop = (((PySlice) key).start instanceof PyNone) ? 4 : ((PyInteger) ((PySlice) key).stop).getValue();
+		int step = (((PySlice) key).start instanceof PyNone) ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
 		List<Float> r = new ArrayList<Float>();
 		for (int i = start; i < stop; i += step) {
 			r.add(getIndex(i));
@@ -150,9 +150,10 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 		if (key instanceof PyInteger) {
 			return __finditem__(((PyInteger) key).getValue());
 		}
-		int start = ((PySlice) key).start instanceof PyNone ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
-		int stop = ((PySlice) key).start instanceof PyNone ? __len__() : ((PyInteger) ((PySlice) key).stop).getValue();
-		int step = ((PySlice) key).start instanceof PyNone ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
+		int start = (((PySlice) key).start instanceof PyNone) ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
+		int stop =
+                (((PySlice) key).start instanceof PyNone) ? __len__() : ((PyInteger) ((PySlice) key).stop).getValue();
+		int step = (((PySlice) key).start instanceof PyNone) ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
 		List<Float> r = new ArrayList<Float>();
 		for (int i = start; i < stop; i += step) {
 			r.add(getIndex(i));
@@ -187,9 +188,11 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 		if (key instanceof PyInteger) {
 			__setitem__(((PyInteger) key).getValue(), value);
 		} else if (key instanceof PySlice) {
-			int start = ((PySlice) key).start instanceof PyNone ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
-			int stop = ((PySlice) key).start instanceof PyNone ? __len__() : ((PyInteger) ((PySlice) key).stop).getValue();
-			int step = ((PySlice) key).start instanceof PyNone ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
+			int start = (((PySlice) key).start instanceof PyNone) ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
+			int stop = (((PySlice) key).start instanceof PyNone)
+                       ? __len__()
+                       : ((PyInteger) ((PySlice) key).stop).getValue();
+			int step = (((PySlice) key).start instanceof PyNone) ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
 			for (int i = start; i < stop; i += step) {
 				PyObject v = null;
 				if (value instanceof PySequence)
@@ -303,7 +306,11 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	}
 
 	public float distanceFrom(Vector4 value) {
-		return (float) Math.sqrt((value.x - x) * (value.x - x) + (value.y - y) * (value.y - y) + (value.z - z) * (value.z - z) + (value.w - w) * (value.w - w));
+		return (float) Math.sqrt(((value.x - x) * (value.x - x))
+                                 + ((value.y - y) * (value.y - y))
+                                 + ((value.z - z)
+                                    * (value.z - z))
+                                 + ((value.w - w) * (value.w - w)));
 	}
 
 	/**
@@ -314,7 +321,7 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	 * @return the dot product of this vector and v1
 	 */
 	public final float dot(Vector4 v1) {
-		return (this.x * v1.x + this.y * v1.y + this.z * v1.z + this.w * v1.w);
+		return ((this.x * v1.x) + (this.y * v1.y) + (this.z * v1.z) + (this.w * v1.w));
 	}
 
 	public float[] get() {
@@ -359,7 +366,8 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	}
 
 	public int hashcodeFor() {
-		return Float.floatToIntBits(x) + 31 * (Float.floatToIntBits(y) + 31 * (Float.floatToIntBits(z) + 31 * Float.floatToIntBits(w)));
+		return Float.floatToIntBits(x) + (31 * (Float.floatToIntBits(y) + (31 * (Float.floatToIntBits(z) + (31
+                                                                                                            * Float.floatToIntBits(w))))));
 	}
 
 	@Override
@@ -378,7 +386,7 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	 * @return the length of this vector as a float
 	 */
 	public final float length() {
-		return (float) Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
+		return (float) Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z) + (this.w * this.w));
 	}
 
 	/**
@@ -387,7 +395,7 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	 * @return the squared length of this vector as a float
 	 */
 	public final float lengthSquared() {
-		return (this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
+		return ((this.x * this.x) + (this.y * this.y) + (this.z * this.z) + (this.w * this.w));
 	}
 
 	public Vector4 lerp(Vector4 c0, Vector4 c1, float c) {
@@ -411,7 +419,7 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	}
 
 	public float mag() {
-		return (float) Math.sqrt(x * x + y * y + z * z + w * w);
+		return (float) Math.sqrt((x * x) + (y * y) + (z * z) + (w * w));
 	}
 
 	@Override
@@ -432,7 +440,7 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	public final Vector4 normalize() {
 		float norm;
 
-		norm = (float) (1.0 / Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w));
+		norm = (float) (1.0 / Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z) + (this.w * this.w)));
 		this.x *= norm;
 		this.y *= norm;
 		this.z *= norm;
@@ -449,7 +457,7 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	public final Vector4 normalize(Vector4 v1) {
 		float norm;
 
-		norm = (float) (1.0 / Math.sqrt(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z + v1.w * v1.w));
+		norm = (float) (1.0 / Math.sqrt((v1.x * v1.x) + (v1.y * v1.y) + (v1.z * v1.z) + (v1.w * v1.w)));
 		this.x = v1.x * norm;
 		this.y = v1.y * norm;
 		this.z = v1.z * norm;
@@ -545,7 +553,10 @@ public class Vector4 extends Tuple4 implements java.io.Serializable, iToFloatArr
 	}
 
 	public Color toColor() {
-		return new Color(x < 0 ? 0 : (x > 1 ? 1 : x), y < 0 ? 0 : (y > 1 ? 1 : y), z < 0 ? 0 : (z > 1 ? 1 : z), w < 0 ? 0 : (w > 1 ? 1 : w));
+		return new Color((x < 0) ? 0 : ((x > 1) ? 1 : x),
+                         (y < 0) ? 0 : ((y > 1) ? 1 : y),
+                         (z < 0) ? 0 : ((z > 1) ? 1 : z),
+                         (w < 0) ? 0 : ((w > 1) ? 1 : w));
 	}
 
 	private float getIndex(int key) {

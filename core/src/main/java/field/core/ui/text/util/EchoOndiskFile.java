@@ -26,7 +26,8 @@ public class EchoOndiskFile {
 		PythonPluginEditor.knownPythonProperties.put("<html><b>Contents</b> \u2014 <font size=-3>( fileOnDisk<i>_v</i> )</font>", fileOnDisk);
 	}
 
-	static public void echoShaderFiles(iVisualElement root, String prefix, final BasicGLSLangProgram program, int startat) {
+	public static
+    void echoShaderFiles(iVisualElement root, String prefix, final BasicGLSLangProgram program, int startat) {
 		List<BasicGLSLangElement> p = program.getPrograms();
 		int n = startat;
 		for (BasicGLSLangElement pp : p) {
@@ -34,7 +35,7 @@ public class EchoOndiskFile {
 
             //System.out.println(" files for program are <"+Arrays.asList(f)+">");
 
-			if (f != null && f.length != 0) {
+			if ((f != null) && (f.length != 0)) {
 				final EchoOndiskFile [] ee = {null};
 				EchoOndiskFile e = new EchoOndiskFile(root, f[0].getAbsolutePath(), n, new iUpdateable() {
 					public void update() {
@@ -43,7 +44,7 @@ public class EchoOndiskFile {
 					}
 				});
 				ee[0] = e;
-				iVisualElement.name.set(e.created.left, e.created.left, prefix+"("+pp.isFragment+") :"+f[0].getName());
+				iVisualElement.name.set(e.created.left, e.created.left, prefix+ '(' +pp.isFragment+") :"+f[0].getName());
 			}
 			n++;
 		}
@@ -55,7 +56,7 @@ public class EchoOndiskFile {
 		try {
 			reader = new BufferedReader(new FileReader(code));
 			while (reader.ready()) {
-				s += reader.readLine() + "\n";
+				s += reader.readLine() + '\n';
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -76,7 +77,7 @@ public class EchoOndiskFile {
 		this.root = root;
 		this.filename = filename;
 
-		created = VisualElement.createWithToken(filename, root, new Rect(30, 100 + n * 40, 30, 30), VisualElement.class, DraggableComponent.class, iVisualElementOverrides.DefaultOverride.class);
+		created = VisualElement.createWithToken(filename, root, new Rect(30, 100 + (n * 40), 30, 30), VisualElement.class, DraggableComponent.class, iVisualElementOverrides.DefaultOverride.class);
 		VisualElement.name.set(created.left, created.left, filename);
 		PythonPluginEditor.python_customToolbar.addToList(ArrayList.class, created.left, new Pair<String, iUpdateable>("sync from filesystem", new iUpdateable() {
 			public void update() {

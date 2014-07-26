@@ -22,7 +22,7 @@ public class TimingSupport {
 		List<Long> m = starts.get(name).getList(fromThis);
 		Long startedAt = m.remove(m.size()-1);
 		long time = System.currentTimeMillis()-startedAt;
-		System.err.println(ANSIColorUtils.blue(time+"ms inside <"+name+">"));
+		System.err.println(ANSIColorUtils.blue(time+"ms inside <"+name+ '>'));
 	}
 
 }

@@ -53,14 +53,16 @@ import java.util.*;
 @Woven
 public class SelectionSetDriver {
     
-	static public class TravelTo implements iUpdateable {
+	public static
+    class TravelTo implements iUpdateable {
 		private final GLComponentWindow window;
 		private final Vector2 center;
 		private final Vector2 scale;
 		long start = System.currentTimeMillis();
 		float tx;
 		float ty;
-		float sx, sy;
+		float sx;
+        float sy;
         
 		public TravelTo(GLComponentWindow window, Vector2 center) {
 			this.window = window;
@@ -112,8 +114,12 @@ public class SelectionSetDriver {
 		}
 	}
     
-	static public class SavedView {
-		float sx, sy, tx, ty;
+	public static
+    class SavedView {
+		float sx;
+        float sy;
+        float tx;
+        float ty;
 		protected String name;
 	}
     
@@ -137,7 +143,8 @@ public class SelectionSetDriver {
 		public boolean is(iVisualElement e);
 	}
     
-	static public class SelectionSet {
+	public static
+    class SelectionSet {
 		private transient Set<iVisualElement> cached;
         
 		Set<String> cachedUID = new HashSet<String>();
@@ -180,7 +187,8 @@ public class SelectionSetDriver {
         or, and, orNot
     }
     
-	static public class SelectionSetNode extends field.math.graph.NodeImpl<SelectionSetNode> implements field.math.graph.iMutableContainer<SelectionSet, SelectionSetNode> {
+	public static
+    class SelectionSetNode extends field.math.graph.NodeImpl<SelectionSetNode> implements field.math.graph.iMutableContainer<SelectionSet, SelectionSetNode> {
 		public SelectionSetModifer modifier = SelectionSetModifer.or;
         
 		private SelectionSet set;
@@ -222,19 +230,20 @@ public class SelectionSetDriver {
 			if (type == SelectionSetNodeType.ruler)
 				return "_____________________________";
 			if (type == SelectionSetNodeType.label)
-				return getLabel() + " " + smaller("(" + this.getChildren().size() + " " + getContentsDescription() + (this.getChildren().size() == 1 ? "" : "s") + ")");
+				return getLabel() + ' ' + smaller("(" + this.getChildren().size() + ' '
+                                                  + getContentsDescription() + (this.getChildren().size() == 1 ? "" : "s") + ')');
 			if (type == SelectionSetNodeType.computed)
-                return (getLabel() != null ? (getLabel()) : (String.valueOf(payload()))) + " " + smaller("("
+                return (getLabel() != null ? (getLabel()) : (String.valueOf(payload()))) + ' ' + smaller("("
                                                                                                          + this.getChildren()
                                                                                                                .size()
-                                                                                                         + " "
+                                                                                                         + ' '
                                                                                                          + getContentsDescription()
                                                                                                          + (this.getChildren()
                                                                                                                 .size()
                                                                                                             == 1
                                                                                                             ? ""
                                                                                                             : "s")
-                                                                                                         + ")");
+                                                                                                         + ')');
 
             return (modifier != SelectionSetModifer.or ? ("(" + modifier + ") ") : "") + (getLabel() != null
                                                                                           ? (getLabel())
@@ -246,9 +255,10 @@ public class SelectionSetDriver {
 		}
 	}
     
-	static public class SelectionSetNodeView extends SelectionSetNode {
+	public static
+    class SelectionSetNodeView extends SelectionSetNode {
         
-		private SavedView view;
+		private final SavedView view;
         
 		public SelectionSetNodeView(SelectionSet set, String label, SavedView view) {
 			super(set, label, SelectionSetNodeType.view);
@@ -279,9 +289,9 @@ public class SelectionSetDriver {
 				List m = ((iMixinProxy) overrides).getCallList();
 				overname = "";
 				for (Object mm : m) {
-					overname += mm.getClass().getSimpleName() + " ";
+					overname += mm.getClass().getSimpleName() + ' ';
 				}
-				overname = "[ " + overname + "]";
+				overname = "[ " + overname + ']';
 			} else
 				overname = overrides.getClass().getSimpleName();
             
@@ -289,10 +299,10 @@ public class SelectionSetDriver {
 			if (view == null) {
 			} else if (view.getClass().equals(DraggableComponent.class) || view.getClass().equals(PlainDraggableComponent.class)) {
 			} else {
-				overname = "[" + overname + " : " + view.getClass().getSimpleName() + "]";
+				overname = '[' + overname + " : " + view.getClass().getSimpleName() + ']';
 			}
             
-			return (name == null ? "unnamed" : "<b>" + name + "</b>") + " " + smaller(overname);
+			return (name == null ? "unnamed" : "<b>" + name + "</b>") + ' ' + smaller(overname);
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 			return "(npe thrown in nameFor)";
@@ -555,7 +565,7 @@ public class SelectionSetDriver {
                             
 							iVisualElement element = currentSelectionSet.iterator().next();
 							String name = element.getProperty(iVisualElement.name);
-							File tmp = new PackageTools().newTempFileWithSelected(root, name);
+							File tmp = PackageTools.newTempFileWithSelected(root, name);
                             PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
                             
 							// TODO set flash window
@@ -816,7 +826,7 @@ public class SelectionSetDriver {
 		};
 		button.combo.setBackground(button.combo.getParent().getBackground());
         
-		button.combo.setLayoutData(new RowData(150, Platform.getOS() == OS.mac ? 20 : 25));
+		button.combo.setLayoutData(new RowData(150, (Platform.getOS() == OS.mac) ? 20 : 25));
         
 		selectionAxesButton = button;
         
@@ -834,7 +844,7 @@ public class SelectionSetDriver {
 		});
         
 		left.setBackground(button.combo.getParent().getBackground());
-		left.setLayoutData(new RowData(20, Platform.getOS() == OS.mac ? 20 : 25));
+		left.setLayoutData(new RowData(20, (Platform.getOS() == OS.mac) ? 20 : 25));
         
 		left.addPaintListener(new PaintListener() {
             
@@ -1159,7 +1169,8 @@ public class SelectionSetDriver {
 		}
 	}
     
-	private String describeSelection(Set<iComponent> selected) {
+	private static
+    String describeSelection(Set<iComponent> selected) {
 		try {
 			if (selected.size() == 0) {
 				return "nothing selected";
@@ -1182,7 +1193,7 @@ public class SelectionSetDriver {
 					iVisualElement v = c.getVisualElement();
 					if (v != null) {
 						String name = v.getProperty(iVisualElement.name);
-						if (name != null && !name.equals("untitled"))
+						if (name != null && !"untitled".equals(name))
 							names.add(name);
 					} else {
 						c.setSelected(false);

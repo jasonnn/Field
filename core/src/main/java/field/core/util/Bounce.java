@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Bounce {
 
-	private ArrayList args;
+	private final ArrayList args;
 
 	public Bounce(boolean b) {
 		

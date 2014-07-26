@@ -32,14 +32,14 @@ public class ColorDialog extends JDialog implements ChangeListener {
 		RED, GREEN, BLUE, ALPHA, HUE, SATURATION, BRIGHTNESS
 	}
 
-	private OKAction okAction = new OKAction();
-	private CancelAction cancelAction = new CancelAction();
-	private Preferences preferences;
+	private final OKAction okAction = new OKAction();
+	private final CancelAction cancelAction = new CancelAction();
+	private final Preferences preferences;
 
 	private Color color;
 	private Color newColor;
-	private ColorField colorField;
-	private ColorPanel[] panels;
+	private final ColorField colorField;
+	private final ColorPanel[] panels;
 	private ColorRange colorRange;
 	private DraggableNumber hueDraggable, saturationDraggable, brightnessDraggable;
 	private DraggableNumber redDraggable, blueDraggable, greenDraggable;
@@ -232,7 +232,7 @@ public class ColorDialog extends JDialog implements ChangeListener {
 			q = v * (1 - s * f);
 			t = v * (1 - s * (1 - f));
 
-			float rgb[];
+			float[] rgb;
 			if (i == 0)
 				rgb = new float[] { v, t, p };
 			else if (i == 1)
@@ -460,9 +460,9 @@ public class ColorDialog extends JDialog implements ChangeListener {
 
 	public class ColorPanel extends JPanel implements ChangeListener {
 
-		private ColorComponent colorComponent;
-		private ColorSlider slider;
-		private DraggableNumber draggableNumber;
+		private final ColorComponent colorComponent;
+		private final ColorSlider slider;
+		private final DraggableNumber draggableNumber;
 
 		public ColorPanel(String colorComponent) {
 			this(ColorComponent.valueOf(colorComponent.toUpperCase()));
@@ -595,9 +595,9 @@ public class ColorDialog extends JDialog implements ChangeListener {
 	}
 
 	public class ColorSlider extends JComponent {
-		private ColorPanel panel;
+		private final ColorPanel panel;
         private static final int WIDTH_OFFSET = 8;
-        private final int HALF_WIDTH_OFFSET = WIDTH_OFFSET / 2;
+        private static final int HALF_WIDTH_OFFSET = WIDTH_OFFSET / 2;
         private static final int HEIGHT_OFFSET = 10;
         private static final int ARROW_HEIGHT = 6;
 

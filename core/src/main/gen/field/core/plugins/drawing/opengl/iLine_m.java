@@ -8,8 +8,8 @@ import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.Method;
 public class iLine_m {
-static public final Method moveTo_m = ReflectionTools.methodOf("moveTo", field.core.plugins.drawing.opengl.iLine.class, float.class, float.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> moveTo_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class, "moveTo", new Class[]{float.class, float.class});
+public static final Method moveTo_m = ReflectionTools.methodOf("moveTo", field.core.plugins.drawing.opengl.iLine.class, float.class, float.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> moveTo_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class, "moveTo", new Class[]{float.class, float.class});
 
 public interface moveTo_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -18,8 +18,8 @@ public interface moveTo_interface extends iAcceptor<Object[]>, iFunction<Object 
 
 public final moveTo_interface moveTo;
 
-static public final Method lineTo_m = ReflectionTools.methodOf("lineTo", field.core.plugins.drawing.opengl.iLine.class, float.class, float.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> lineTo_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class, "lineTo", new Class[]{float.class, float.class});
+public static final Method lineTo_m = ReflectionTools.methodOf("lineTo", field.core.plugins.drawing.opengl.iLine.class, float.class, float.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> lineTo_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class, "lineTo", new Class[]{float.class, float.class});
 
 public interface lineTo_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -28,8 +28,8 @@ public interface lineTo_interface extends iAcceptor<Object[]>, iFunction<Object 
 
 public final lineTo_interface lineTo;
 
-static public final Method cubicTo_m = ReflectionTools.methodOf("cubicTo", field.core.plugins.drawing.opengl.iLine.class, float.class, float.class, float.class, float.class, float.class, float.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> cubicTo_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class, "cubicTo", new Class[]{float.class, float.class, float.class, float.class, float.class, float.class});
+public static final Method cubicTo_m = ReflectionTools.methodOf("cubicTo", field.core.plugins.drawing.opengl.iLine.class, float.class, float.class, float.class, float.class, float.class, float.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> cubicTo_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class, "cubicTo", new Class[]{float.class, float.class, float.class, float.class, float.class, float.class});
 
 public interface cubicTo_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -38,8 +38,8 @@ public interface cubicTo_interface extends iAcceptor<Object[]>, iFunction<Object
 
 public final cubicTo_interface cubicTo;
 
-static public final Method setPointAttribute_m = ReflectionTools.methodOf("setPointAttribute", field.core.plugins.drawing.opengl.iLine.class, field.util.Dict.Prop.class, Object.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> setPointAttribute_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class, "setPointAttribute", new Class[]{field.util.Dict.Prop.class, Object.class});
+public static final Method setPointAttribute_m = ReflectionTools.methodOf("setPointAttribute", field.core.plugins.drawing.opengl.iLine.class, field.util.Dict.Prop.class, Object.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> setPointAttribute_s = new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class, "setPointAttribute", new Class[]{field.util.Dict.Prop.class, Object.class});
 
 public interface setPointAttribute_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -48,8 +48,8 @@ public interface setPointAttribute_interface extends iAcceptor<Object[]>, iFunct
 
 public final setPointAttribute_interface setPointAttribute;
 
-static public final Method close_m = ReflectionTools.methodOf("close", field.core.plugins.drawing.opengl.iLine.class);
-static public final Mirroring.MirrorNoReturnNoArgsMethod<field.core.plugins.drawing.opengl.iLine> close_s = new Mirroring.MirrorNoReturnNoArgsMethod<field.core.plugins.drawing.opengl.iLine>(field.core.plugins.drawing.opengl.iLine.class, "close");
+public static final Method close_m = ReflectionTools.methodOf("close", field.core.plugins.drawing.opengl.iLine.class);
+public static final Mirroring.MirrorNoReturnNoArgsMethod<field.core.plugins.drawing.opengl.iLine> close_s = new Mirroring.MirrorNoReturnNoArgsMethod<field.core.plugins.drawing.opengl.iLine>(field.core.plugins.drawing.opengl.iLine.class, "close");
 
 public final iUpdateable close;
 public iLine_m(final iLine x) {

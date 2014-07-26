@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DynamicMesh_tessSupport {
 
-	private SimpleTess t;
+	private final SimpleTess t;
 
 	public DynamicMesh_tessSupport(final DynamicMesh_long into) {
 		t = new SimpleTess() {

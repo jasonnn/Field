@@ -110,19 +110,19 @@ public class MinimalButton extends JComponent {
 		int width = g2.getFontMetrics().charsWidth(caption.toCharArray(), 0, caption.toCharArray().length);
 		g2.setColor(new Color(0.02f, 0.02f, 0.1f, 0.4f));
 
-		g2.drawString(caption, (bounds.width / 2 - width / 2), 12);
+		g2.drawString(caption, ((bounds.width / 2) - (width / 2)), 12);
 
 	}
 
 	@Override
 	protected void processMouseEvent(MouseEvent e) {
 		super.processMouseEvent(e);
-		if ((e.getModifiers() & Event.ALT_MASK) == 0 && e.getID() == MouseEvent.MOUSE_RELEASED) {
+		if (((e.getModifiers() & Event.ALT_MASK) == 0) && (e.getID() == MouseEvent.MOUSE_RELEASED)) {
 			arm = false;
 			repaint();
 			execute();
 
-		} else if ((e.getModifiers() & Event.ALT_MASK) == 0 && e.getID() == MouseEvent.MOUSE_PRESSED) {
+		} else if (((e.getModifiers() & Event.ALT_MASK) == 0) && (e.getID() == MouseEvent.MOUSE_PRESSED)) {
 			arm = true;
 			repaint();
 		}

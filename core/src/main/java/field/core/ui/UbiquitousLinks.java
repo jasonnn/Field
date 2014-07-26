@@ -41,9 +41,9 @@ import java.util.List;
 
 public class UbiquitousLinks {
 
-	static public final UbiquitousLinks links = new UbiquitousLinks();
-	static public final List<StandardFluidSheet> sheets = new ArrayList<StandardFluidSheet>();
-	static public final HashMap<String, Object> shortTermObjectStore = new HashMap<String, Object>();
+	public static final UbiquitousLinks links = new UbiquitousLinks();
+	public static final List<StandardFluidSheet> sheets = new ArrayList<StandardFluidSheet>();
+	public static final HashMap<String, Object> shortTermObjectStore = new HashMap<String, Object>();
 
 	UbiquitousLinks() {
 //		StyleSheet styleSheet = new HTMLEditorKit().getStyleSheet();
@@ -87,7 +87,8 @@ public class UbiquitousLinks {
 		return code;
 	}
 
-	public String code_openInBrowser(String name, Object value) {
+	public static
+    String code_openInBrowser(String name, Object value) {
 		String v = reference(value);
 		String code = "_l.popupMenu( {'open in new Browser' : lambda : _l.openInBrowser('" + name + "', _l.dereference('" + v + "'))}, _component, _event.getPoint())";
 		return code;
@@ -121,7 +122,8 @@ public class UbiquitousLinks {
 	}
 	
 	
-	static public boolean showPathInFinder(String path) {
+	public static
+    boolean showPathInFinder(String path) {
 
 		String c = "\n" + "tell application \"Finder\"\n" + "	activate\n" + "	reveal (POSIX file \"" + path + "\")\n" + "end tell";
 
@@ -358,7 +360,8 @@ public class UbiquitousLinks {
 
 	
 
-	public void install(final JEditorPane infoText) {
+	public static
+    void install(final JEditorPane infoText) {
 		final MouseEvent[] event = { null };
 		infoText.addMouseListener(new MouseAdapter() {
 			@Override
@@ -388,7 +391,7 @@ public class UbiquitousLinks {
 					Object element = names.nextElement();
                     //System.out.println(" element :" + element + " " + element.getClass() + " " + HTML.getAttributeKey("HREF"));
                 }
-				if (href != null && !href.equals("'http://")) {
+				if (href != null && !"'http://".equals(href)) {
 
                     //System.out.println(" href ? :" + href);
                     showPathInSafari(href);
@@ -491,7 +494,8 @@ public class UbiquitousLinks {
         new OpenInEclipse(name, line);
 	}
 
-	public String link(String linkText, String perform) {
+	public static
+    String link(String linkText, String perform) {
 		return link(linkText, perform, perform);
 	}
 

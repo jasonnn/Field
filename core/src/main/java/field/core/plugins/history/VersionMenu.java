@@ -23,7 +23,7 @@ import java.util.List;
 public class VersionMenu {
 
 	GitVersioningQueries q = new GitVersioningQueries(FieldMenus2.getCanonicalVersioningDir());
-	private BetterComboBox box;
+	private final BetterComboBox box;
 
 	List<iUpdateable> actions = new ArrayList<iUpdateable>();
 	private ArrayList<DiffSet> diffs;
@@ -76,7 +76,9 @@ public class VersionMenu {
 
 			String sf = PseudoPropertiesPlugin.sheetFolder.get(element);
 			String now = prop.get(element);
-			final List<VersionsOfFile> v = q.versionsForFile(now, sf + "/" + element.getUniqueID() + "/" + prop.getName() + ".property");
+			final List<VersionsOfFile> v = q.versionsForFile(now, sf + '/'
+                                                                  + element.getUniqueID() + '/'
+                                                                  + prop.getName() + ".property");
 			String[] s = new String[v.size()];
 			actions.clear();
 			actions.add(new iUpdateable() {
@@ -156,7 +158,9 @@ public class VersionMenu {
 			String now = prop.get(element);
 			List<String> titles = new ArrayList<String>();
 			final List<iUpdateable> actions = new ArrayList<iUpdateable>();
-			final List<VersionsOfFile> v = q.versionsForFile(now, sf + "/" + element.getUniqueID() + "/" + prop.getName() + ".property");
+			final List<VersionsOfFile> v = q.versionsForFile(now, sf + '/'
+                                                                  + element.getUniqueID() + '/'
+                                                                  + prop.getName() + ".property");
 			String ls = "";
 			for (int ii = 0; ii < v.size() - 1; ii++) {
 				DiffSet ds = q.new DiffSet(v.get(ii).getContents().split("\n"), v.get(ii + 1).getContents().split("\n"));

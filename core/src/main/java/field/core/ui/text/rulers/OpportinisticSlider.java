@@ -51,9 +51,7 @@ public class OpportinisticSlider {
 				PyTuple w = (PyTuple) was.get(i);
 				PyTuple n = (PyTuple) is.get(i);
 
-                if (Py.py2int(w.__getitem__(0)) == Py
-                        .py2int(n.__getitem__(0))
-                        && Py.py2int(n.__getitem__(0)) == 2) {
+                if ((Py.py2int(w.__getitem__(0)) == Py.py2int(n.__getitem__(0))) && (Py.py2int(n.__getitem__(0)) == 2)) {
                     String sw = Py.tojava(w.__getitem__(1),
                             String.class);
                     String sn = Py.tojava(n.__getitem__(1),
@@ -112,7 +110,7 @@ public class OpportinisticSlider {
 		int row = 0;
 		int offset = 0;
 		for (int i = 0; i < mm.length; i++) {
-			if (mm[i].length() > 0) {
+			if (!mm[i].isEmpty()) {
 				row++;
 				if (row == nrstart) {
 					break;
@@ -176,7 +174,8 @@ public class OpportinisticSlider {
 		return n;
 	}
 
-	private String roundLike(double nn, String like) {
+	private static
+    String roundLike(double nn, String like) {
 
 		int mm = 0;
 		if (like.indexOf('.') == -1) {

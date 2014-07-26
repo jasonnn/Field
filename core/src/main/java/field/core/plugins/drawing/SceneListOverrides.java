@@ -36,7 +36,7 @@ public class SceneListOverrides extends DefaultOverride {
 
 	public VisualElementProperty<Number> orthoDisparity = new VisualElementProperty<Number>("orthoDisparity");
 
-	static public float globalDisparity = 1f;
+	public static float globalDisparity = 1f;
 
 	@Override
 	public VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {

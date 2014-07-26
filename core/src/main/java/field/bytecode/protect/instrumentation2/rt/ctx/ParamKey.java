@@ -28,7 +28,7 @@ class ParamKey<T> {
     @Nullable
     public
     T get(@Nullable Map<ParamKey, ?> map) {
-        return map == null ? null : (T) map.get(this);
+        return (map == null) ? null : (T) map.get(this);
     }
 
 
@@ -36,7 +36,7 @@ class ParamKey<T> {
     public
     T get(Map<ParamKey, ?> map, T defaultVal) {
         T val = get(map);
-        return val == null ? defaultVal : val;
+        return (val == null) ? defaultVal : val;
     }
 
 
@@ -44,7 +44,7 @@ class ParamKey<T> {
     public
     boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if ((o == null) || (getClass() != o.getClass())) return false;
 
         ParamKey paramKey = (ParamKey) o;
 

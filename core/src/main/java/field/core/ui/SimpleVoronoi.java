@@ -5,6 +5,7 @@ import field.math.linalg.Vector2;
 import field.namespace.generic.Bind.iFunction;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.Region;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.geom.GeneralPath;
 import java.util.*;
@@ -84,7 +85,7 @@ public class SimpleVoronoi {
 					if (tri==null) break outer;
 					vertices[i++] = tri.getCircumcenter();
 				}
-				if (filter == null || filter.f(vertices).intValue() > 0)
+				if ((filter == null) || (filter.f(vertices).intValue() > 0))
 					p.add(vertices);
 			}
 		Collections.sort(p, new Comparator<Pnt[]>() {
@@ -112,7 +113,9 @@ public class SimpleVoronoi {
 		double y = 0;
 		double aa = 0;
 		for (int i = 0; i < A.length; i++) {
-			double a = A[i].coordinates[0] * A[(i+1)%A.length].coordinates[1] - A[(i+1)%A.length].coordinates[0] * A[i].coordinates[1];
+			double a =
+                    (A[i].coordinates[0] * A[(i + 1) % A.length].coordinates[1]) - (A[(i + 1) % A.length].coordinates[0]
+                                                                                    * A[i].coordinates[1]);
 			aa += a;
 			x += (A[i].coordinates[0] + A[(i+1)%A.length].coordinates[0]) * a;
 			y += (A[i].coordinates[1] + A[(i+1)%A.length].coordinates[1]) * a;
@@ -142,8 +145,8 @@ public class SimpleVoronoi {
 		int[] pp = new int[2 * p.length];
 
 		for (int i = 0; i < p.length; i++) {
-			pp[2 * i + 0] = (int) p[i].coord(0);
-			pp[2 * i + 1] = (int) p[i].coord(1);
+			pp[((2 * i) + 0)] = (int) p[i].coord(0);
+			pp[((2 * i) + 1)] = (int) p[i].coord(1);
 
 		}
 		path.add(pp);
@@ -164,9 +167,10 @@ public class SimpleVoronoi {
 		return path;
 	}
 
-	static public class ArraySet<E> extends AbstractSet<E> {
+	public static
+    class ArraySet<E> extends AbstractSet<E> {
 
-		private ArrayList<E> items; // Items of the set
+		private final ArrayList<E> items; // Items of the set
 
 		/**
 		 * Create an empty set (default initial capacity is 3).
@@ -235,7 +239,8 @@ public class SimpleVoronoi {
 			return items.add(item);
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public Iterator<E> iterator() {
 			return items.iterator();
 		}
@@ -250,9 +255,9 @@ public class SimpleVoronoi {
     public static
     class Graph<N> {
 
-		private Map<N, Set<N>> theNeighbors = // Node -> adjacent nodes
+		private final Map<N, Set<N>> theNeighbors = // Node -> adjacent nodes
 		new HashMap<N, Set<N>>();
-		private Set<N> theNodeSet = // Set view of all nodes
+		private final Set<N> theNodeSet = // Set view of all nodes
 		Collections.unmodifiableSet(theNeighbors.keySet());
 
 		/**
@@ -342,9 +347,10 @@ public class SimpleVoronoi {
 
 	}
 
-	static public class Pnt {
+	public static
+    class Pnt {
 
-		private double[] coordinates; // The point's coordinates
+		private final double[] coordinates; // The point's coordinates
 
 		/**
 		 * Constructor.
@@ -589,7 +595,7 @@ public class SimpleVoronoi {
 			int[] result = new int[dim + 1];
 			for (int i = 0; i < result.length; i++) {
 				double value = vector.coordinates[i + 1];
-				if (Math.abs(value) <= 1.0e-6 * Math.abs(content))
+				if (Math.abs(value) <= (1.0e-6 * Math.abs(content)))
 					result[i] = 0;
 				else if (value < 0)
 					result[i] = -1;
@@ -814,7 +820,7 @@ public class SimpleVoronoi {
 
 	public static Pnt circumcenter(Pnt[] simplex) {
 		int dim = simplex[0].dimension();
-		if (simplex.length - 1 != dim)
+		if ((simplex.length - 1) != dim)
 			throw new IllegalArgumentException("Dimension mismatch");
 		Pnt[] matrix = new Pnt[dim];
 		for (int i = 0; i < dim; i++)
@@ -828,9 +834,10 @@ public class SimpleVoronoi {
 		return new Pnt(result);
 	}
 
-	static public class Triangle extends ArraySet<Pnt> {
+	public static
+    class Triangle extends ArraySet<Pnt> {
 
-		private int idNumber; // The id number
+		private final int idNumber; // The id number
 		private Pnt circumcenter = null; // The triangle's circumcenter
 
 		private static int idGenerator = 0; // Used to create id numbers
@@ -934,10 +941,11 @@ public class SimpleVoronoi {
 			throw new UnsupportedOperationException();
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public Iterator<Pnt> iterator() {
 			return new Iterator<Pnt>() {
-				private Iterator<Pnt> it = Triangle.super.iterator();
+				private final Iterator<Pnt> it = Triangle.super.iterator();
 
 				public boolean hasNext() {
 					return it.hasNext();
@@ -960,7 +968,7 @@ public class SimpleVoronoi {
 
 		@Override
 		public int hashCode() {
-            return idNumber ^ (idNumber >>> 32);
+            return idNumber ^ (idNumber >>> 0);
         }
 
 		@Override
@@ -970,11 +978,12 @@ public class SimpleVoronoi {
 
 	}
 
-	public class Triangulation extends AbstractSet<Triangle> {
+	public static
+    class Triangulation extends AbstractSet<Triangle> {
 
 		private Triangle mostRecent = null; // Most recently "active"
 		// triangle
-		private Graph<Triangle> triGraph; // Holds triangles for
+		private final Graph<Triangle> triGraph; // Holds triangles for
 		private Set<Triangle> lastCavity;
 
 		// navigation
@@ -993,7 +1002,8 @@ public class SimpleVoronoi {
 
 		/* The following two methods are required by AbstractSet */
 
-		@Override
+		@NotNull
+        @Override
 		public Iterator<Triangle> iterator() {
 			return triGraph.nodeSet().iterator();
 		}

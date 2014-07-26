@@ -18,7 +18,8 @@ import java.util.List;
  */
 public class Polar {
 
-	static public class PolarMove {
+	public static
+    class PolarMove {
 		public float alpha;
 
 		public float beta1;
@@ -49,7 +50,7 @@ public class Polar {
 
 		@Override
 		public String toString() {
-			return "pm : " + alpha + " (" + beta1 + ", " + beta2 + ") @ " + rMain + " (" + r1 + ", " + r2 + ")";
+			return "pm : " + alpha + " (" + beta1 + ", " + beta2 + ") @ " + rMain + " (" + r1 + ", " + r2 + ')';
 		}
 
 		public PolarMove copy() {
@@ -64,7 +65,8 @@ public class Polar {
 		}
 	}
 
-	static public class PolarOutput {
+	public static
+    class PolarOutput {
 		private final CachedLine on;
 
 		boolean first = true;
@@ -75,7 +77,7 @@ public class Polar {
 
 		PolarMove lastMove = null;
 
-		private iLine onInput;
+		private final iLine onInput;
 
 		public PolarOutput(CachedLine on, Vector2 at, Vector2 heading) {
 			this.on = on;
@@ -254,9 +256,9 @@ public class Polar {
 				Vector2 c1 = c.getCurrent().method.equals(iLine_m.cubicTo_m) ? c.getCurrent().getAt(0).sub(previous) : new Vector2(pos).sub(previous).scale(1 / 3f);
 				Vector2 c2 = c.getCurrent().method.equals(iLine_m.cubicTo_m) ? c.getCurrent().getAt(1).sub(pos) : new Vector2(previous).sub(pos).scale(1 / 3f);
 
-				Vector2 nextHeading = (c.getAfter() != null && c.getAfter().hasDestination()) ? c.getAfter().getDestination(null).sub(pos) : new Vector2(nowHeading);
+				Vector2 nextHeading = (c.getAfter() != null && c.getAfter().hasDestination()) ? c.getAfter().getDestination().sub(pos) : new Vector2(nowHeading);
 
-				float nextAlpha = angleFor(nowHeading, nextHeading);
+				//float nextAlpha = angleFor(nowHeading, nextHeading);
 
 				float beta1 = angleFor(oldHeading, c1);
 				float beta2 = angleFor(nowHeading, new Vector2(c2).scale(-1));

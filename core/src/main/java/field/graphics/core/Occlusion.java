@@ -20,19 +20,20 @@ import static org.lwjgl.opengl.GL15.*;
 
 public class Occlusion {
 
-	static public class Histogram {
-		private float[] bins;
-		private BaseTexture source;
-		private SingleFrameBuffer dest;
+	public static
+    class Histogram {
+		private final float[] bins;
+		private final BaseTexture source;
+		private final SingleFrameBuffer dest;
 
 		TaskQueue queue = new TaskQueue();
 
 		int binNum = 0;
-		private BasicGLSLangProgram shader;
-		private TriangleMesh_long quad;
+		private final BasicGLSLangProgram shader;
+		private final TriangleMesh_long quad;
 
 		Vector2 range = new Vector2(0, 1);
-		private ArrayList<AsynchronousQuery> aq;
+		private final ArrayList<AsynchronousQuery> aq;
 
 		Set<AsynchronousQuery> inited = new HashSet<AsynchronousQuery>();
 
@@ -58,8 +59,21 @@ public class Occlusion {
 			
 			
 			shader = new BasicGLSLangProgram();
-			shader.new BasicGLSLangElement("#version 150\n" + "\n" + "in vec3 position;\n" + "\n" + "uniform mat4 _projMatrix;\n" + "uniform mat4 _viewMatrix;\n" + "\n" + "out vec2 tc;\n" + "\n" + "void main()\n" + "{\n" + "	gl_Position =vec4(position, 1.0);\n" + "\n" + "	tc.xy = (position.xy+vec2(1,1))*0.5;\n" + "\n" + "}", ElementType.vertex);
-			shader.new BasicGLSLangElement("#version 150\n" + "\n" + "in vec2 tc;\n" + "out vec4 _output;\n" + "\n" + "uniform sampler2D"+(isRect ? "Rect" : "")+" inp;\n" + "uniform vec2 range;\n" + "\n" + "void main()\n" + "{\n" + "	vec4 x =texture(inp, tc.xy*vec2("+sx+","+sy+"));\n" + "\n" + "	float luma = dot(x.xyz, vec3(1,1,1)/3);\n" + "\n" + "	if (luma<range.x || luma>range.y) discard;\n" + "\n" + "	_output  = vec4(1,0,1,1);\n" + "}\n", ElementType.fragment);
+			shader.new BasicGLSLangElement("#version 150\n" + '\n'
+                                           + "in vec3 position;\n" + '\n'
+                                           + "uniform mat4 _projMatrix;\n" + "uniform mat4 _viewMatrix;\n" + '\n'
+                                           + "out vec2 tc;\n" + '\n'
+                                           + "void main()\n" + "{\n" + "	gl_Position =vec4(position, 1.0);\n" + '\n'
+                                           + "	tc.xy = (position.xy+vec2(1,1))*0.5;\n" + '\n'
+                                           + '}', ElementType.vertex);
+			shader.new BasicGLSLangElement("#version 150\n" + '\n'
+                                           + "in vec2 tc;\n" + "out vec4 _output;\n" + '\n'
+                                           + "uniform sampler2D"+(isRect ? "Rect" : "")+" inp;\n" + "uniform vec2 range;\n" + '\n'
+                                           + "void main()\n" + "{\n" + "	vec4 x =texture(inp, tc.xy*vec2("+sx+ ','
+                                           +sy+"));\n" + '\n'
+                                           + "	float luma = dot(x.xyz, vec3(1,1,1)/3);\n" + '\n'
+                                           + "	if (luma<range.x || luma>range.y) discard;\n" + '\n'
+                                           + "	_output  = vec4(1,0,1,1);\n" + "}\n", ElementType.fragment);
 			shader.new SetUniform("range", range);
 
 			quad = new TriangleMesh_long(StandardPass.render);

@@ -1,10 +1,12 @@
 package field.core.ui.text.protect;
 
 public class ClassDocumentationProtect {
-	static public class Divider {
+	public static
+    class Divider {
 	}
 
-	static public class Comp {
+	public static
+    class Comp {
 		public String completes;
 		public String shortDocumentation;
 		public String longDocumentation;
@@ -25,7 +27,8 @@ public class ClassDocumentationProtect {
 		}
 	}
 
-	static public class CompProxy extends Comp {
+	public static
+    class CompProxy extends Comp {
 		public final Object proxyTo;
 
 		public CompProxy(Object proxyTo) {

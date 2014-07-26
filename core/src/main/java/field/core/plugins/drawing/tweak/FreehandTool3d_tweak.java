@@ -33,9 +33,10 @@ import java.util.*;
 
 public class FreehandTool3d_tweak implements iSimpleSelectionTool {
 
-	static public final VisualElementProperty<List<RawSplineData>> rawSplineData = new VisualElementProperty<List<RawSplineData>>("rawSplineData");
+	public static final VisualElementProperty<List<RawSplineData>> rawSplineData = new VisualElementProperty<List<RawSplineData>>("rawSplineData");
 
-	static public class RawSplineData implements iExtensible {
+	public static
+    class RawSplineData implements iExtensible {
 		public List<Vector2> points = new ArrayList<Vector2>();
 		public List<Vector3> pressureData = new ArrayList<Vector3>();
 		public List<Long> timestamps = new ArrayList<Long>();

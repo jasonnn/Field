@@ -27,7 +27,8 @@ public class ModCountCache<T, V> {
 		this.defaultOr = defaultOr;
 	}
 
-	static public <T extends iGetModCount<T>> iGetModCount<T> askKey(Class<T> f) {
+	public static
+    <T extends iGetModCount<T>> iGetModCount<T> askKey(Class<T> f) {
 		return new iGetModCount<T>(){
 			public int countFor(T t) {
 				return t.countFor(t);
@@ -35,7 +36,8 @@ public class ModCountCache<T, V> {
 		};
 	}
 	
-	static public <T extends iGetModCount<T>> iGetModCount<List<T>> askListKey(Class<T> f) {
+	public static
+    <T extends iGetModCount<T>> iGetModCount<List<T>> askListKey(Class<T> f) {
 		return new iGetModCount<List<T>>(){
 			public int countFor(List<T> t) {
 				int z = 0;

@@ -18,14 +18,14 @@ import java.util.Map;
 public class SpringUtilCobj {
 
 	protected double diameter = 10;
-	private double length_factor = 0.9;
-	private double disconnected_multiplier = 0.5;
+	private static final double length_factor = 0.9;
+	private static final double disconnected_multiplier = 0.5;
 
 	int currentIteration = 0;
 
 	double EPSILON = 0.0001d;
 
-	private iMetric<Cobj, Cobj> distance;
+	private final iMetric<Cobj, Cobj> distance;
 	private final ArrayList<Cobj> vertex;
 	// private double[][] dm;
 	private double L;

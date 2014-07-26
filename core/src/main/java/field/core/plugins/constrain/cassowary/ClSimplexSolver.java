@@ -11,10 +11,7 @@
 // 
 package field.core.plugins.constrain.cassowary;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Stack;
-import java.util.Vector;
+import java.util.*;
 
 public class ClSimplexSolver extends ClTableau {
 	// Ctr initializes the fields, and creates the objective row
@@ -37,7 +34,7 @@ public class ClSimplexSolver extends ClTableau {
 		ClLinearExpression e = new ClLinearExpression();
 		_rows.put(_objective, e);
 		_stkCedcns = new Stack<Integer>();
-		_stkCedcns.push(new Integer(0));
+		_stkCedcns.push(0);
 		if (fTraceOn)
 			traceprint("objective expr == " + rowExpression(_objective));
 	}
@@ -140,18 +137,18 @@ public class ClSimplexSolver extends ClTableau {
 	// beginEdit() should be called before sending
 	// resolve() messages, after adding the appropriate edit variables
 	public final ClSimplexSolver beginEdit() throws ExCLInternalError {
-		_assert(_editVarMap.size() > 0, "_editVarMap.size() > 0");
+		_assert(!_editVarMap.isEmpty(), "_editVarMap.size() > 0");
 		// may later want to do more in here
 		_infeasibleRows.clear();
 		resetStayConstants();
-		_stkCedcns.addElement(new Integer(_editVarMap.size()));
+		_stkCedcns.addElement(_editVarMap.size());
 		return this;
 	}
 
 	// endEdit should be called after editing has finished
 	// for now, it just removes all edit variables
 	public final ClSimplexSolver endEdit() throws ExCLInternalError {
-		_assert(_editVarMap.size() > 0, "_editVarMap.size() > 0");
+		_assert(!_editVarMap.isEmpty(), "_editVarMap.size() > 0");
 		resolve();
 		_stkCedcns.pop();
 		int n = _stkCedcns.peek().intValue();
@@ -311,7 +308,7 @@ public class ClSimplexSolver extends ClTableau {
 			}
 			if (exitVar == null) {
 				// exitVar is still null
-				if (col.size() == 0) {
+				if (col.isEmpty()) {
 					removeColumn(marker);
 				} else {
 					exitVar = (ClAbstractVariable) col.elements().nextElement();
@@ -426,7 +423,7 @@ public class ClSimplexSolver extends ClTableau {
 	// after resolve() has been called
 	public final ClSimplexSolver suggestValue(ClVariable v, double x) throws ExCLError {
 		if (fTraceOn)
-			fnenterprint("suggestValue(" + v + ", " + x + ")");
+			fnenterprint("suggestValue(" + v + ", " + x + ')');
 		ClEditInfo cei = _editVarMap.get(v);
 		if (cei == null) {
 			System.err.println("suggestValue for variable " + v + ", but var is not an edit variable\n");
@@ -514,32 +511,32 @@ public class ClSimplexSolver extends ClTableau {
 	// Originally from Michael Noth <noth@cs>
 	@Override
 	public final String getInternalInfo() {
-		StringBuffer retstr = new StringBuffer(super.getInternalInfo());
+		StringBuilder retstr = new StringBuilder(super.getInternalInfo());
 		retstr.append("\nSolver info:\n");
 		retstr.append("Stay Error Variables: ");
 		retstr.append(_stayPlusErrorVars.size() + _stayMinusErrorVars.size());
-		retstr.append(" (" + _stayPlusErrorVars.size() + " +, ");
-		retstr.append(_stayMinusErrorVars.size() + " -)\n");
-		retstr.append("Edit Variables: " + _editVarMap.size());
-		retstr.append("\n");
+		retstr.append(" (").append(_stayPlusErrorVars.size()).append(" +, ");
+		retstr.append(_stayMinusErrorVars.size()).append(" -)\n");
+		retstr.append("Edit Variables: ").append(_editVarMap.size());
+		retstr.append('\n');
 		return retstr.toString();
 	}
 
 	public final String getDebugInfo() {
-		StringBuffer bstr = new StringBuffer(toString());
+		StringBuilder bstr = new StringBuilder(toString());
 		bstr.append(getInternalInfo());
-		bstr.append("\n");
+		bstr.append('\n');
 		return bstr.toString();
 	}
 
 	@Override
 	public final String toString() {
-		StringBuffer bstr = new StringBuffer(super.toString());
+		StringBuilder bstr = new StringBuilder(super.toString());
 		bstr.append("\n_stayPlusErrorVars: ");
 		bstr.append(_stayPlusErrorVars);
 		bstr.append("\n_stayMinusErrorVars: ");
 		bstr.append(_stayMinusErrorVars);
-		bstr.append("\n");
+		bstr.append('\n');
 		return bstr.toString();
 	}
 
@@ -641,9 +638,8 @@ public class ClSimplexSolver extends ClTableau {
 		ClAbstractVariable subject = null; // the current best subject, if any
 		boolean foundUnrestricted = false;
 		boolean foundNewRestricted = false;
-		final Hashtable<ClAbstractVariable, ClDouble> terms = expr.terms();
-		for (Enumeration<ClAbstractVariable> e = terms.keys(); e.hasMoreElements();) {
-			final ClAbstractVariable v = e.nextElement();
+		final Map<ClAbstractVariable, ClDouble> terms = expr.terms();
+		for (ClAbstractVariable v: terms.keySet()) {
 			final double c = terms.get(v).doubleValue();
 			if (foundUnrestricted) {
 				if (!v.isRestricted()) {
@@ -669,8 +665,7 @@ public class ClSimplexSolver extends ClTableau {
 		if (subject != null)
 			return subject;
 		double coeff = 0.0;
-		for (Enumeration<ClAbstractVariable> e = terms.keys(); e.hasMoreElements();) {
-			final ClAbstractVariable v = e.nextElement();
+		for (ClAbstractVariable v:  terms.keySet()) {
 			final double c = terms.get(v).doubleValue();
 			if (!v.isDummy())
 				return null; // nope, no luck
@@ -751,9 +746,8 @@ public class ClSimplexSolver extends ClTableau {
 				if (expr.constant() < 0.0) {
 					double ratio = Double.MAX_VALUE;
 					double r;
-					Hashtable<ClAbstractVariable, ClDouble> terms = expr.terms();
-					for (Enumeration<ClAbstractVariable> e = terms.keys(); e.hasMoreElements();) {
-						ClAbstractVariable v = e.nextElement();
+					Map<ClAbstractVariable, ClDouble> terms = expr.terms();
+					for (ClAbstractVariable v:  terms.keySet()) {
 						double c = terms.get(v).doubleValue();
 						if (c > 0.0 && v.isPivotable()) {
 							double zc = zRow.coefficientFor(v);
@@ -791,13 +785,12 @@ public class ClSimplexSolver extends ClTableau {
 		ClDummyVariable dummyVar = new ClDummyVariable();
 		ClSlackVariable eminus = new ClSlackVariable();
 		ClSlackVariable eplus = new ClSlackVariable();
-		final Hashtable<ClAbstractVariable, ClDouble> cnTerms = cnExpr.terms();
-		for (Enumeration<ClAbstractVariable> en = cnTerms.keys(); en.hasMoreElements();) {
-			final ClAbstractVariable v = en.nextElement();
-			double c = cnTerms.get(v).doubleValue();
-			final ClLinearExpression e = rowExpression(v);
+		final Map<ClAbstractVariable, ClDouble> cnTerms = cnExpr.terms();
+		for (Map.Entry<ClAbstractVariable, ClDouble> clAbstractVariableClDoubleEntry : cnTerms.entrySet()) {
+			double c = clAbstractVariableClDoubleEntry.getValue().doubleValue();
+			final ClLinearExpression e = rowExpression(clAbstractVariableClDoubleEntry.getKey());
 			if (e == null)
-				expr.addVariable(v, c);
+				expr.addVariable(clAbstractVariableClDoubleEntry.getKey(), c);
 			else
 				expr.addExpression(e, c);
 		}
@@ -879,9 +872,8 @@ public class ClSimplexSolver extends ClTableau {
 		ClAbstractVariable exitVar = null;
 		while (true) {
 			double objectiveCoeff = 0;
-			Hashtable<ClAbstractVariable, ClDouble> terms = zRow.terms();
-			for (Enumeration<ClAbstractVariable> e = terms.keys(); e.hasMoreElements();) {
-				ClAbstractVariable v = e.nextElement();
+			Map<ClAbstractVariable, ClDouble> terms = zRow.terms();
+			for (ClAbstractVariable v:  terms.keySet()) {
 				double c = terms.get(v).doubleValue();
 				if (v.isPivotable() && c < objectiveCoeff) {
 					objectiveCoeff = c;
@@ -1015,26 +1007,26 @@ public class ClSimplexSolver extends ClTableau {
 	//// BEGIN PRIVATE INSTANCE FIELDS
 	// the arrays of positive and negative error vars for the stay constraints
 	// (need both positive and negative since they have only non-negative values)
-	private Vector<ClSlackVariable> _stayMinusErrorVars;
+	private final Vector<ClSlackVariable> _stayMinusErrorVars;
 
-	private Vector<ClSlackVariable> _stayPlusErrorVars;
+	private final Vector<ClSlackVariable> _stayPlusErrorVars;
 
 	// give error variables for a non required constraint,
 	// maps to ClSlackVariable-s
-	private Hashtable<ClConstraint, Set> _errorVars; // map ClConstraint to Set (of ClVariable)
+	private final Hashtable<ClConstraint, Set> _errorVars; // map ClConstraint to Set (of ClVariable)
 
 	// Return a lookup table giving the marker variable for each
 	// constraint (used when deleting a constraint).
-	private Hashtable<ClConstraint, ClAbstractVariable> _markerVars; // map ClConstraint to ClVariable
+	private final Hashtable<ClConstraint, ClAbstractVariable> _markerVars; // map ClConstraint to ClVariable
 
-	private ClObjectiveVariable _objective;
+	private final ClObjectiveVariable _objective;
 
 	// Map edit variables to ClEditInfo-s. 
 	// ClEditInfo instances contain all the information for an
 	// edit constraint (the edit plus/minus vars, the index [for old-style
 	// resolve(Vector...) interface], and the previous value.
 	// (ClEditInfo replaces the parallel vectors from the Smalltalk impl.)
-	private Hashtable<ClVariable, ClEditInfo> _editVarMap; // map ClVariable to a ClEditInfo
+	private final Hashtable<ClVariable, ClEditInfo> _editVarMap; // map ClVariable to a ClEditInfo
 
 	private long _slackCounter;
 
@@ -1042,13 +1034,13 @@ public class ClSimplexSolver extends ClTableau {
 
 	private long _dummyCounter;
 
-	private Vector<ClDouble> _resolve_pair;
+	private final Vector<ClDouble> _resolve_pair;
 
-	private double _epsilon;
+	private final double _epsilon;
 
 	private boolean _fOptimizeAutomatically;
 
 	private boolean _fNeedsSolving;
 
-	private Stack<Integer> _stkCedcns;
+	private final Stack<Integer> _stkCedcns;
 }

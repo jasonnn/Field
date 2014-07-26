@@ -40,13 +40,13 @@ import static org.lwjgl.opengl.GL13.*;
  */
 public class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 
-	static public final VisualElementProperty<String> keyboardShortcut = new VisualElementProperty<String>("keyboardShortcut_i");
+	public static final VisualElementProperty<String> keyboardShortcut = new VisualElementProperty<String>("keyboardShortcut_i");
 
-	static public final VisualElementProperty<Object> transitionDuration = new VisualElementProperty<Object>("transitionDuration_i");
+	public static final VisualElementProperty<Object> transitionDuration = new VisualElementProperty<Object>("transitionDuration_i");
 
-	static public final VisualElementProperty<Integer> isRealtime = new VisualElementProperty<Integer>("isRealtime_i");
+	public static final VisualElementProperty<Integer> isRealtime = new VisualElementProperty<Integer>("isRealtime_i");
 
-	static public HashMap<iVisualElement, iUpdateable> ongoing = new HashMap<iVisualElement, iUpdateable>();
+	public static HashMap<iVisualElement, iUpdateable> ongoing = new HashMap<iVisualElement, iUpdateable>();
 
 	private RectangularLabel label;
 
@@ -112,7 +112,7 @@ public class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 	public VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
 		if (source == forElement) {
 			Rect frame = forElement.getFrame(null);
-			if (frame.x - 5 <= event.x && frame.x + frame.w + 5 >= event.x)
+			if (((frame.x - 5) <= event.x) && ((frame.x + frame.w + 5) >= event.x))
 				is.set(true);
 		}
 		return VisitCode.cont;
@@ -149,11 +149,14 @@ public class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 			assert kb != null : " huh?";
 			String printName = source.getProperty(iVisualElement.name) + " : " + kb;
 
-			printName = "<html><i><font size=+0 face='" + Constants.defaultFont + "'>" + source.getProperty(iVisualElement.name) + "</font></i> <font face='" + Constants.defaultFont + "' size=" + (kb.length() == 1 ? "+1" : "-2") + ">(" + kb + ")</font>";
+			printName = "<html><i><font size=+0 face='" + Constants.defaultFont + "'>" + source.getProperty(iVisualElement.name) + "</font></i> <font face='" + Constants.defaultFont + "' size=" + ((kb.length()
+                                                                                                                                                                                                      == 1)
+                                                                                                                                                                                                     ? "+1"
+                                                                                                                                                                                                     : "-2") + ">(" + kb + ")</font>";
 
 			// printName = "peach";
 
-			if (label == null || scaleHasChanged()) {
+			if ((label == null) || scaleHasChanged()) {
 				if (label != null)
 					label.dispose();
 				label = TextSystem.textSystem.new RectangularLabel(printName, new Font(Constants.defaultFont, Font.PLAIN, 1).deriveFont(15f), (float) (Math.PI / 2));
@@ -177,7 +180,8 @@ public class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 			}
 			labelTriangle.open();
 			
-			(label).drawIntoMeshRotated(labelTriangle, 1, 1, 1, 1, (float) bounds.x + (float) bounds.w / 2, (float) (bounds.y + 40), previousViewParameters.z);
+			(label).drawIntoMeshRotated(labelTriangle, 1, 1, 1, 1,
+                                        (float) bounds.x + ((float) bounds.w / 2), (float) (bounds.y + 40), previousViewParameters.z);
 			labelTriangle.close();
 
 			// ((RectangularLabel)
@@ -278,7 +282,7 @@ public class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 
 						float alpha = t / fover;
 
-						float to = (float) (startAt * (1 - alpha) + alpha * forElement.getFrame(null).x);
+						float to = (float) ((startAt * (1 - alpha)) + (alpha * forElement.getFrame(null).x));
 
 						Rect localRect = new Rect(0, 0, 0, 0);
 
@@ -309,7 +313,7 @@ public class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 
 						float alpha = t / fover;
 
-						float to = (float) (startAt * (1 - alpha) + alpha * forElement.getFrame(null).x);
+						float to = (float) ((startAt * (1 - alpha)) + (alpha * forElement.getFrame(null).x));
 
 						Rect localRect = new Rect(0, 0, 0, 0);
 
@@ -354,7 +358,8 @@ public class TimeMarker extends iVisualElementOverrides.DefaultOverride {
     protected static
     float getOngoingSpeedNow() {
         try {
-			boolean on = field.core.Platform.getOS()==OS.mac && Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+			boolean on = (field.core.Platform.getOS() == OS.mac) && Toolkit.getDefaultToolkit()
+                                                                           .getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
 			return on ? 0.3333f : 1;
 		} catch (UnsupportedOperationException e) {
 			// this happens on 10.4

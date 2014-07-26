@@ -47,7 +47,8 @@ import java.util.regex.Pattern;
  */
 public class PythonUtils {
 
-    static public class FKeyByName implements iFloatProvider {
+    public static
+    class FKeyByName implements iFloatProvider {
         private final String name;
 
         private final float def;
@@ -65,7 +66,8 @@ public class PythonUtils {
         }
     }
 
-    static public class OKeyByName<T> implements iProvider<T> {
+    public static
+    class OKeyByName<T> implements iProvider<T> {
         private final String name;
 
         private final T def;
@@ -90,7 +92,7 @@ public class PythonUtils {
         }
 
         public PyObject __call__(PyObject[] args, String[] keywords) {
-            System.err.println(" inside call for okeyby name <" + get() + "> <" + def + ">");
+            System.err.println(" inside call for okeyby name <" + get() + "> <" + def + '>');
             return Py.java2py(get());
         }
 
@@ -117,7 +119,8 @@ public class PythonUtils {
         }
     }
 
-    static public iFloatProvider floatFor(final Object in, String name) {
+    public static
+    iFloatProvider floatFor(final Object in, String name) {
         try {
 
             final Field declaredField = ReflectionTools.getFirstFIeldCalled(in.getClass(), name);
@@ -174,7 +177,8 @@ public class PythonUtils {
         contMap.put(name, new Triple<aRun, Method, Class>(r, m, c));
     }
 
-    public iFilter<Float, Float> asFilter(final float mul, final CubicInterpolatorDynamic<ComplexCubicFloat> blender) {
+    public static
+    iFilter<Float, Float> asFilter(final float mul, final CubicInterpolatorDynamic<ComplexCubicFloat> blender) {
         return new iFilter<Float, Float>() {
             public Float filter(Float value) {
                 return blender.get(value).value * mul;
@@ -182,7 +186,8 @@ public class PythonUtils {
         };
     }
 
-    public iFunction<?, ?> asFunction(final PyObject o) {
+    public static
+    iFunction<?, ?> asFunction(final PyObject o) {
         return new iFunction<Object, Object>() {
 
             public Object f(Object in) {
@@ -216,7 +221,8 @@ public class PythonUtils {
         return null;
     }
 
-    public Object call(iVisualElement forElement, Object function, Object arg) {
+    public static
+    Object call(iVisualElement forElement, Object function, Object arg) {
 
         PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(forElement);
         Promise p = pss.promiseForKey(forElement);
@@ -239,7 +245,8 @@ public class PythonUtils {
         }
     }
 
-    public byte castByte(int a) {
+    public static
+    byte castByte(int a) {
         return (byte) a;
     }
 
@@ -270,7 +277,8 @@ public class PythonUtils {
         contMap.put(name, new Triple<aRun, Method, Class>(r, m, c));
     }
 
-    public Map executeMaybeGenerator(PyFunction function, Map map) {
+    public static
+    Map executeMaybeGenerator(PyFunction function, Map map) {
         if (map == null)
             map = new HashMap();
 
@@ -295,12 +303,14 @@ public class PythonUtils {
         return map;
     }
 
-    public Object fromXML(String s) {
+    public static
+    Object fromXML(String s) {
         XStream stream = XStreamUtil.newDefaultXStream();
         return stream.fromXML(s);
     }
 
-    public iFunction function(final PyFunction f) {
+    public static
+    iFunction function(final PyFunction f) {
         return new iFunction() {
             public Object f(Object in) {
                 PyObject ins = Py.java2py(in);
@@ -319,7 +329,7 @@ public class PythonUtils {
     // return o.__tojava__(Object.class);
     // }
 
-    static public PythonUtils installed = null;
+    public static PythonUtils installed = null;
 
     public void install() {
         if (installed != null)
@@ -343,7 +353,8 @@ public class PythonUtils {
         installed = this;
     }
 
-    public Object loadAsSerialization(String filename) {
+    public static
+    Object loadAsSerialization(String filename) {
         //System.out.println(" reading from <" + filename + ">");
         try {
             ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File(filename)))) {
@@ -373,7 +384,8 @@ public class PythonUtils {
         return null;
     }
 
-    public Object loadAsXML(String filename) {
+    public static
+    Object loadAsXML(String filename) {
         XStream stream = XStreamUtil.newDefaultXStream();
 
         try {
@@ -389,8 +401,9 @@ public class PythonUtils {
         return null;
     }
 
-    public String pad(int n, int with) {
-        String s = "" + n;
+    public static
+    String pad(int n, int with) {
+        String s = String.valueOf(n);
         while (s.length() < with)
             s = "0" + s;
         return s;
@@ -622,7 +635,7 @@ public class PythonUtils {
 
     public String split(String pattern, String match) {
         String[] s = match.split(pattern);
-        return Arrays.asList(s) + "";
+        return String.valueOf(Arrays.asList(s));
     }
 
     public void stack(final PyGenerator f, final CapturedEnvironment env) {
@@ -991,7 +1004,7 @@ public class PythonUtils {
     public String whatIs(Object o) {
         String r = o + " " + o.getClass();
         if (o instanceof PyInstance) {
-            if (((PyInstance) o).instclass.__name__.equals("ct")) {
+            if ("ct".equals(((PyInstance) o).instclass.__name__)) {
                 r += " is context ";
             }
             r += ((PyInstance) o).__getattr__("where");
@@ -1000,7 +1013,8 @@ public class PythonUtils {
     }
 
     // beta1
-    static public Object maybeToJava(Object instance) {
+    public static
+    Object maybeToJava(Object instance) {
         if (instance instanceof PyObject)
             try {
                 Object o = ((PyObject) instance).__tojava__(Object.class);
@@ -1017,7 +1031,8 @@ public class PythonUtils {
         return instance;
     }
 
-    static public String info(Object o) {
+    public static
+    String info(Object o) {
         if (o == null)
             return "null reference";
         if (o instanceof Class)
@@ -1029,7 +1044,8 @@ public class PythonUtils {
         return x;
     }
 
-    static public Class getCallerClass() {
+    public static
+    Class getCallerClass() {
         try {
             Method m = System.class.getDeclaredMethod("getCallerClass");
             m.setAccessible(true);
@@ -1050,7 +1066,8 @@ public class PythonUtils {
         return null;
     }
 
-    static public void printStackTraceNow() {
+    public static
+    void printStackTraceNow() {
         new Exception().printStackTrace();
     }
 

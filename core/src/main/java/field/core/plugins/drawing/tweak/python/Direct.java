@@ -15,7 +15,7 @@ public class Direct implements iNodeSelection {
 
 	private final int nodeNumber;
 
-	private String elements;
+	private final String elements;
 
 	public Direct(int pathNumber, int nodeNumber) {
 		this.pathNumber = pathNumber;

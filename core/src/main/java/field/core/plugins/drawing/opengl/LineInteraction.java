@@ -29,7 +29,8 @@ import java.util.Set;
 
 public class LineInteraction implements iMousePeer {
 
-	static public abstract class EventHandler {
+	public abstract static
+    class EventHandler {
 		public void begin() {
 		}
 

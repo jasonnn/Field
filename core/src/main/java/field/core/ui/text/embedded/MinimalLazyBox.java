@@ -35,9 +35,10 @@ public class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
 
 	// for now, we deliberately introduce a small leak per lazy box created
 	// to workaround #127
-	static protected LinkedHashSet<OKey> nogc = new LinkedHashSet<OKey>();
+    protected static LinkedHashSet<OKey> nogc = new LinkedHashSet<OKey>();
 
-	static public class Component extends ProvidedComponent implements ProvidesWidth {
+	public static
+    class Component extends ProvidedComponent implements ProvidesWidth {
 		protected String valueString = "";
 		String name = "Component:" + new UID().toString() + ".transient";
 		OKey localKey;
@@ -115,7 +116,7 @@ public class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
 			String val = "OKeyByName(\"" + name + "\", \'" + valueString + "\').get()";
 			nogc.add(localKey);
 
-			return "eval(" + val + ")";
+			return "eval(" + val + ')';
 		}
 
 		@Override
@@ -220,7 +221,7 @@ public class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
 		float d = Float.POSITIVE_INFINITY;
 		for (int i = 0; i < r.size(); i++) {
 			if (r.get(i) != this) {
-				if (r.get(i).getText().equals("\\" + this.getText())) {
+				if (r.get(i).getText().equals('\\' + this.getText())) {
 					return r.get(i).realBounds();
 				}
 			}

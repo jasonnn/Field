@@ -42,7 +42,7 @@ public class SimpleTextDrawing {
 				return null;
 
 			DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
-				private Vector4 black = new Vector4(0, 0, 0, 1f);
+				private final Vector4 black = new Vector4(0, 0, 0, 1f);
 
 				float scale = 1;
 
@@ -216,7 +216,7 @@ public class SimpleTextDrawing {
 				return null;
 
 			DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
-				private Vector4 black = new Vector4(0, 0, 0, 1f);
+				private final Vector4 black = new Vector4(0, 0, 0, 1f);
 
 				float scale = 1;
 
@@ -359,7 +359,7 @@ public class SimpleTextDrawing {
 		int cacheSize = 50;
 	}
 
-	private boolean useRect;
+	private final boolean useRect;
 
 	public SimpleTextDrawing(boolean useRect) {
 		this.useRect = useRect;

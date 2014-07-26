@@ -12,8 +12,9 @@ public class OSCOutput {
 		public void write(OSCOutput into);
 	}
 
-	static public class OscInteger implements OSCElement {
-		private int i;
+	public static
+    class OscInteger implements OSCElement {
+		private final int i;
 
 		public OscInteger(int i) {
 			this.i = i;
@@ -29,7 +30,7 @@ public class OSCOutput {
 	}
 
 	static public class OscFloat implements OSCElement {
-		private float i;
+		private final float i;
 
 		public OscFloat(float i) {
 			this.i = i;
@@ -45,7 +46,7 @@ public class OSCOutput {
 	}
 
 	static public class OscString implements OSCElement {
-		private String i;
+		private final String i;
 
 		public OscString(String i) {
 			this.i = i;
@@ -109,11 +110,11 @@ public class OSCOutput {
 	}
 
 	public void writeInt(int i) {
-		buffer.put((byte) ((i >> 24) & 255)).put((byte) ((i >> 16) & 255)).put((byte) ((i >> 8) & 255)).put((byte) ((i >> 0) & 255));
+		buffer.put((byte) ((i >> 24) & 255)).put((byte) ((i >> 16) & 255)).put((byte) ((i >> 8) & 255)).put((byte) ((i) & 255));
 	}
 
 	public void writeLong(long i) {
-		buffer.put((byte) ((i >> 56) & 255)).put((byte) ((i >> 48) & 255)).put((byte) ((i >> 40) & 255)).put((byte) ((i >> 32) & 255)).put((byte) ((i >> 24) & 255)).put((byte) ((i >> 16) & 255)).put((byte) ((i >> 8) & 255)).put((byte) ((i >> 0) & 255));
+		buffer.put((byte) ((i >> 56) & 255)).put((byte) ((i >> 48) & 255)).put((byte) ((i >> 40) & 255)).put((byte) ((i >> 32) & 255)).put((byte) ((i >> 24) & 255)).put((byte) ((i >> 16) & 255)).put((byte) ((i >> 8) & 255)).put((byte) ((i) & 255));
 	}
 
 	public void writeFloat(float d) {
@@ -131,7 +132,7 @@ public class OSCOutput {
 			else if (o instanceof String)
 				e[x] = new OscString((String) o);
 			else
-				throw new IllegalArgumentException(" couldn't transform <" + o + "> of class <" + (o == null ? null : o.getClass()) + ">");
+				throw new IllegalArgumentException(" couldn't transform <" + o + "> of class <" + (o == null ? null : o.getClass()) + '>');
 			x++;
 		}
 

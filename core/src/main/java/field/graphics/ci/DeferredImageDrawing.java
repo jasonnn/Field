@@ -43,7 +43,7 @@ public class DeferredImageDrawing {
 	public enum Thumbnail {
 		notLoaded(0), full(1), half(0.5f), quarter(0.25f), eighth(0.125f);
 
-		private float scale;
+		private final float scale;
 
 		Thumbnail(float scale) {
 			this.scale = scale;
@@ -82,7 +82,7 @@ public class DeferredImageDrawing {
 
 		@Override
 		public String toString() {
-			return "IR:" + filename + "(" + master + ")";
+			return "IR:" + filename + '(' + master + ')';
 		}
 
 		public Image getMasterImage(final CoreImageCanvasUtils utils) {
@@ -506,7 +506,7 @@ public class DeferredImageDrawing {
 				return null;
 
 			DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
-				private Vector4 black = new Vector4(1, 1, 1, 1f);
+				private final Vector4 black = new Vector4(1, 1, 1, 1f);
 
 				public void update() {
 

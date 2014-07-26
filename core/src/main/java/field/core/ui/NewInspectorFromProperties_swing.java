@@ -21,10 +21,10 @@ public class NewInspectorFromProperties_swing {
 	public NewInspectorFromProperties_swing() {
 	}
 
-	static public LinkedHashMap<String, Class<? extends JComponent>> knownProperties = new LinkedHashMap<String, Class<? extends JComponent>>();
-	static public LinkedHashMap<String, String> knownAliases = new LinkedHashMap<String, String>();
+	public static LinkedHashMap<String, Class<? extends JComponent>> knownProperties = new LinkedHashMap<String, Class<? extends JComponent>>();
+	public static LinkedHashMap<String, String> knownAliases = new LinkedHashMap<String, String>();
 
-	static public List<Triple<String, LinkedHashMap<String, Class<? extends JComponent>>, Boolean>> activeSets = new ArrayList<Triple<String, LinkedHashMap<String, Class<? extends JComponent>>, Boolean>>();
+	public static List<Triple<String, LinkedHashMap<String, Class<? extends JComponent>>, Boolean>> activeSets = new ArrayList<Triple<String, LinkedHashMap<String, Class<? extends JComponent>>, Boolean>>();
 
 	LinkedHashMap<String, Inspected> build = new LinkedHashMap<String, Inspected>();
 
@@ -86,7 +86,7 @@ public class NewInspectorFromProperties_swing {
 
 	public List<Inspected> rebuild(List<iVisualElement> sel) {
 
-		if (sel.size()==0)
+		if (sel.isEmpty())
 		{
 			begin();
 			return complete();
@@ -342,7 +342,9 @@ public class NewInspectorFromProperties_swing {
 			first = true;
 			Map<Object, Object> m = e.payload();
 			for (Entry<Object, Object> o : m.entrySet()) {
-				if (o.getKey() instanceof VisualElementProperty && o.getValue() != null && ((VisualElementProperty) o.getKey()).containsSuffix("i")) {
+				if ((o.getKey() instanceof VisualElementProperty)
+                    && (o.getValue() != null)
+                    && ((VisualElementProperty) o.getKey()).containsSuffix("i")) {
 
 					final VisualElementProperty p = ((VisualElementProperty) o.getKey());
 
@@ -425,7 +427,7 @@ public class NewInspectorFromProperties_swing {
 
 						@Override
 						public Status getStatus() {
-							return p.get(e)!=null ? Status.valid : Status.unset;
+							return (p.get(e) != null) ? Status.valid : Status.unset;
 						}
 					};
 					k.name = p.getName();
@@ -508,7 +510,8 @@ public class NewInspectorFromProperties_swing {
 		return heading;
 	}
 
-	static public final  Class<? extends JComponent> componentForValue(Object value) {
+	public static final
+    Class<? extends JComponent> componentForValue(Object value) {
 		if (value instanceof String)
 			return TextControl.class;
 		if (value instanceof Integer)

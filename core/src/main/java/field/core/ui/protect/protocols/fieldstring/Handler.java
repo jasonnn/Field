@@ -17,13 +17,13 @@ public class Handler extends URLStreamHandler {
 			@Override
 			public void connect() throws IOException {
 				if (p == null)
-					throw new IOException(" no string for '" + u.getPath() + "'");
+					throw new IOException(" no string for '" + u.getPath() + '\'');
 			}
 
 			@Override
 			public InputStream getInputStream() throws IOException {
 				if (p == null)
-					throw new IOException(" no string for '" + u.getPath() + "', strings are <"+FieldStrings.known.keySet()+">");
+					throw new IOException(" no string for '" + u.getPath() + "', strings are <"+FieldStrings.known.keySet()+ '>');
 				return new ByteArrayInputStream(p.getBytes());
 			}
 		};

@@ -15,17 +15,19 @@ import java.util.Map;
 
 public class ContextualUniform {
 
-	static public final ThreadLocal<BiMap<String, String>> tags = new ThreadLocal<BiMap<String, String>>() {
+	public static final ThreadLocal<BiMap<String, String>> tags = new ThreadLocal<BiMap<String, String>>() {
 		protected BiMap<String, String> initialValue() {
 			return HashBiMap.create();//return new BiMap<String, String>();
         }
     };
 
-	static public void setTag(String key, String value) {
+	public static
+    void setTag(String key, String value) {
 		tags.get().put(key, value);
 	}
 
-	static public class TagGroup {
+	public static
+    class TagGroup {
 		Map<String, String> tags = new LinkedHashMap<String, String>();
 
 		Map<String, String> pushed = null;
@@ -72,7 +74,8 @@ public class ContextualUniform {
 		}
 	}
 
-	static public class Matches<T> implements iHandlesAttributes {
+	public static
+    class Matches<T> implements iHandlesAttributes {
 		List<Pair<String, String>> m = new ArrayList<Pair<String, String>>();
 
 		T value;
@@ -121,7 +124,8 @@ public class ContextualUniform {
 
 	}
 
-	static public class Multivalue<T> implements iProvider<T> {
+	public static
+    class Multivalue<T> implements iProvider<T> {
 		List<Matches<T>> matchers = new ArrayList<Matches<T>>();
 
 		T defaultValue;
@@ -147,7 +151,8 @@ public class ContextualUniform {
 		}
 	}
 
-	static public class FlatContextualValue implements iProvider<Object> {
+	public static
+    class FlatContextualValue implements iProvider<Object> {
 		LinkedHashMap<String, Object> values = new LinkedHashMap<String, Object>();
 
 		Object defaultValue = null;

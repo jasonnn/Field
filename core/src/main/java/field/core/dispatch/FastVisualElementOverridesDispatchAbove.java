@@ -36,7 +36,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -67,7 +67,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -98,7 +98,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -129,7 +129,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -160,7 +160,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -192,7 +192,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -223,7 +223,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -254,7 +254,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -286,7 +286,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -317,7 +317,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -348,7 +348,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -379,7 +379,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -410,7 +410,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {
@@ -441,7 +441,7 @@ public class FastVisualElementOverridesDispatchAbove implements iVisualElementOv
 			List<iVisualElement> fringe = new LinkedList<iVisualElement>();
 			fringe.add(start);
 
-			while (fringe.size() > 0) {
+			while (!fringe.isEmpty()) {
 				iVisualElement next = fringe.remove(0);
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
 				if (over != null) {

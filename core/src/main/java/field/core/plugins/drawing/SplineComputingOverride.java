@@ -73,7 +73,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 
 			for (Object c : this) {
 				Object n = ((CachedLine) c).getProperties().get(iLinearGraphicsContext.internalName);
-				if (n != null && n.equals(name)) {
+				if ((n != null) && n.equals(name)) {
 					this.set(x, element);
 					return;
 				}
@@ -87,7 +87,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 			int x = 0;
 			for (Object c : this) {
 				Object n = ((CachedLine) c).getProperties().get(iLinearGraphicsContext.internalName);
-				if (n != null && n.equals(name)) {
+				if ((n != null) && n.equals(name)) {
 					return c;
 				}
 				x++;
@@ -156,32 +156,32 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 		}
 	}
 
-	static public final VisualElementProperty<List<CachedLine>> computed_linesToDraw = new VisualElementProperty<List<CachedLine>>("lines").setFreezable();
+	public static final VisualElementProperty<List<CachedLine>> computed_linesToDraw = new VisualElementProperty<List<CachedLine>>("lines").setFreezable();
 
-	static public final VisualElementProperty<VEList> computed_elaborates = new VisualElementProperty<VEList>("elaborates");
-	static public final VisualElementProperty<VEList> computed_elaboratedBy = new VisualElementProperty<VEList>("elaboratedBy");
+	public static final VisualElementProperty<VEList> computed_elaborates = new VisualElementProperty<VEList>("elaborates");
+	public static final VisualElementProperty<VEList> computed_elaboratedBy = new VisualElementProperty<VEList>("elaboratedBy");
 
-	static public final VisualElementProperty<Integer> computed_computeWhen = new VisualElementProperty<Integer>("lineWhen");
+	public static final VisualElementProperty<Integer> computed_computeWhen = new VisualElementProperty<Integer>("lineWhen");
 
-	static public final VisualElementProperty<String> onChange = new VisualElementProperty<String>("onChange_v");
+	public static final VisualElementProperty<String> onChange = new VisualElementProperty<String>("onChange_v");
 
-	static public final VisualElementProperty<String> onFrameChange = new VisualElementProperty<String>("onFrameChange_v");
+	public static final VisualElementProperty<String> onFrameChange = new VisualElementProperty<String>("onFrameChange_v");
 
-	static public final VisualElementProperty<String> onSelection = new VisualElementProperty<String>("onSelection_v");
+	public static final VisualElementProperty<String> onSelection = new VisualElementProperty<String>("onSelection_v");
 
-	static public final VisualElementProperty<String> tweak = new VisualElementProperty<String>("tweak_v");
+	public static final VisualElementProperty<String> tweak = new VisualElementProperty<String>("tweak_v");
 
-	static public final VisualElementProperty<Rect> computed_rect = new VisualElementProperty<Rect>("outRect_");
+	public static final VisualElementProperty<Rect> computed_rect = new VisualElementProperty<Rect>("outRect_");
 
-	static public final VisualElementProperty<Boolean> shouldAutoComputeRect = new VisualElementProperty<Boolean>("shouldAutoComputeRect");
+	public static final VisualElementProperty<Boolean> shouldAutoComputeRect = new VisualElementProperty<Boolean>("shouldAutoComputeRect");
 
-	static public final VisualElementProperty<Number> global_opacity = new VisualElementProperty<Number>("globalOpacity");
+	public static final VisualElementProperty<Number> global_opacity = new VisualElementProperty<Number>("globalOpacity");
 
-	static public final VisualElementProperty<Boolean> noFrame = new VisualElementProperty<Boolean>("noFrame");
+	public static final VisualElementProperty<Boolean> noFrame = new VisualElementProperty<Boolean>("noFrame");
 
-	static public final VisualElementProperty<DirectLayer> direct = new VisualElementProperty<DirectLayer>("direct_");
+	public static final VisualElementProperty<DirectLayer> direct = new VisualElementProperty<DirectLayer>("direct_");
 
-	static public final VisualElementProperty<List<iUpdateable>> computed_drawingInstructions = new VisualElementProperty<List<iUpdateable>>("computed_drawingInstructions");
+	public static final VisualElementProperty<List<iUpdateable>> computed_drawingInstructions = new VisualElementProperty<List<iUpdateable>>("computed_drawingInstructions");
 
 	static {
 		PythonPluginEditor.knownPythonProperties.put("Spline tweaks", SplineComputingOverride.tweak);
@@ -220,17 +220,19 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 
 	int frame;
 
-	static public void executeMain(iVisualElement e) {
+	public static
+    void executeMain(iVisualElement e) {
 		executePropertyOfElement(PythonPlugin.python_source, e);
 	}
 
-	static public void executePropertyOfElement(VisualElementProperty<String> property, iVisualElement source) {
-		System.err.println(" execute property <" + property + "> of <" + source + ">");
+	public static
+    void executePropertyOfElement(VisualElementProperty<String> property, iVisualElement source) {
+		System.err.println(" execute property <" + property + "> of <" + source + '>');
 		try {
 			String e = property.get(source);
 			if (e == null)
 				return;
-			if (e.equals(""))
+			if (e != null && e.isEmpty())
 				return;
 
 			Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
@@ -252,7 +254,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 			promise.beginExecute();
 			String text = promise.getText();
 
-			System.err.println(" about to execute <" + text + "> inside <" + promise + ">");
+			System.err.println(" about to execute <" + text + "> inside <" + promise + '>');
 			if (eei != null)
 				eei.executeFragment(text);
 			else
@@ -283,7 +285,8 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 		return super.getProperty(source, prop, ref);
 	}
 
-	static public void executeStringInElement(VisualElementProperty<String> property, iVisualElement source, String s) {
+	public static
+    void executeStringInElement(VisualElementProperty<String> property, iVisualElement source, String s) {
 		try {
 			String e = property.get(source);
 			if (e == null)
@@ -316,7 +319,8 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 		}
 	}
 
-	static public void executeTweaks(iVisualElement e) {
+	public static
+    void executeTweaks(iVisualElement e) {
 		executePropertyOfElement(tweak, e);
 
 		PLineList lines = (PLineList) computed_linesToDraw.get(e);
@@ -324,16 +328,18 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 		computed_linesToDraw.set(e, e, lines);
 	}
 
-	static public void executueTweaks(iVisualElement e) {
+	public static
+    void executueTweaks(iVisualElement e) {
 		executePropertyOfElement(tweak, e);
 	}
 
-	static public void fireChange(final iVisualElement e) {
+	public static
+    void fireChange(final iVisualElement e) {
 
 		new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 			@Override
 			protected VisitCode visit(iVisualElement root) {
-				System.err.println(" fire change on <" + root + "> from <" + e + ">");
+				System.err.println(" fire change on <" + root + "> from <" + e + '>');
 				iVisualElementOverrides ov = root.getProperty(iVisualElement.overrides);
 				if (root == e)
 					return VisitCode.cont;
@@ -342,7 +348,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 					long was = ((iChangeParticipant) ov).getHash();
 					executePropertyOfElement(onChange, root);
 					long now = ((iChangeParticipant) ov).getHash();
-					System.err.println(" change ? " + was + " " + now);
+					System.err.println(" change ? " + was + ' ' + now);
 
 					if (ov instanceof SplineComputingOverride)
 
@@ -371,7 +377,8 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 		}, e);
 	}
 
-	static public void mixin(iVisualElement e) {
+	public static
+    void mixin(iVisualElement e) {
 		new Mixins().mixInOverride(SplineComputingOverride.class, e);
 	}
 
@@ -511,10 +518,10 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 				}
 			}
 
-			if (tweaking != null && tweaking.somethingSelected())
+			if ((tweaking != null) && tweaking.somethingSelected())
 				is.set(true);
 
-			if (forbidDrag || (tweaking != null && tweaking.somethingSelected())) {
+			if (forbidDrag || ((tweaking != null) && tweaking.somethingSelected())) {
 				iComponent c = source.getProperty(iVisualElement.localView);
 				if (c instanceof PlainDraggableComponent)
 					((PlainDraggableComponent) c).canDrag(false);
@@ -552,7 +559,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 			final Ref<SelectionGroup<iComponent>> markingGroup = new Ref<SelectionGroup<iComponent>>(null);
 			new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).getProperty(forElement, iVisualElement.markingGroup, group);
 			final SelectionGroup<iComponent> mg = group.get();
-			items.put("Spline Operations (" + forElement.getProperty(iVisualElement.name) + ")", null);
+			items.put("Spline Operations (" + forElement.getProperty(iVisualElement.name) + ')', null);
 
 			// items.put("   \u276f  Make <b>new elaboration</b> of ",
 			// new iUpdateable() {
@@ -611,7 +618,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 				public void update() {
 					PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(forElement), "filename : ", "", new iAcceptor<String>() {
 						public iAcceptor<String> set(String to) {
-							if (to.trim().length() > 0) {
+							if (!to.trim().isEmpty()) {
 								// saveAsSVG(to);
 							}
 							return this;
@@ -876,7 +883,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 				getLinesToDraw(ref);
 
 				Boolean bfocused = PlainDraggableComponent.hasMouseFocus.get(source);
-				boolean focused = bfocused == null ? false : bfocused;
+				boolean focused = (bfocused == null) ? false : bfocused;
 				focused = focused & !isSelected;
 
 				if (isSelected && !previousWasSelected) {
@@ -899,7 +906,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 				}
 				previousWasSelected = isSelected;
 
-				if (tweaking != null && tweaking.needsRecomputation()) {
+				if ((tweaking != null) && tweaking.needsRecomputation()) {
 					executePropertyOfElement(PythonPlugin.python_source, forElement);
                     //System.out.println(" post line ...");
                     TweakSplineUI.postProcessLineHook(forElement, (PLineList) ref.get());
@@ -911,7 +918,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 					List<CachedLine> instructions = ref.get();
 					if (longSplineHash(instructions) != previousHashSplineHash) {
 
-						if (isSelected && instructions != null) {
+						if (isSelected && (instructions != null)) {
 							if (tweaking != null)
 								tweaking.deinstallMousePeer(forElement);
 							tweaking = new TweakSplineUI(instructions).copyFrom(tweaking);
@@ -941,7 +948,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 						Number g = forElement.getProperty(global_opacity);
 						if (g == null)
 							g = 1f;
-                        if (offsetCachedAt == null || !offsetCachedAt.equals(bounds) || !g.equals(offsetOpacityAt)) {
+                        if ((offsetCachedAt == null) || !offsetCachedAt.equals(bounds) || !g.equals(offsetOpacityAt)) {
                             offsetCachedAt = new Rect(bounds);
 							offsetOpacityAt = g.floatValue();
 							offsetCache = new HashMap<CachedLine, CachedLine>();
@@ -970,7 +977,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 
 								if (offset != null) {
 									CachedLine previous = offsetCache.get(c);
-									if (previous == null || fn) {
+									if ((previous == null) || fn) {
 										CachedLine c2 = LineUtils.transformLineOffsetFrom(c, source.getFrame(null), offset);
 										offsetCache.put(c, c2);
 										c = c2;
@@ -980,7 +987,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 
 								}
 
-								if (fn || forceNew || (previousWasFocused != focused && n < 100))
+								if (fn || forceNew || ((previousWasFocused != focused) && (n < 100)))
 									context.resubmitLine(c, c.getProperties());
 								else
 									context.submitLine(c, c.getProperties());
@@ -1041,8 +1048,10 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 
 							Rect toFrame = ve.getFrame(null);
 
-							elByLine.moveTo((float) (currentFrame.x + currentFrame.w / 2), (float) (currentFrame.y + currentFrame.h / 2));
-							elByLine.lineTo((float) (toFrame.x + toFrame.w / 2), (float) (toFrame.y + toFrame.h / 2));
+							elByLine.moveTo((float) (currentFrame.x + (currentFrame.w / 2)), (float) (currentFrame.y
+                                                                                                      + (currentFrame.h
+                                                                                                         / 2)));
+							elByLine.lineTo((float) (toFrame.x + (toFrame.w / 2)), (float) (toFrame.y + (toFrame.h / 2)));
 							elByLine.close();
 							injectOpacity(elBy);
 							elBy.getProperties().put(iLinearGraphicsContext.thickness, 1f);
@@ -1092,7 +1101,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 						selectedLine.getProperties().put(iLinearGraphicsContext.filled, !isNoFrame);
 						selectedLine.getProperties().put(iLinearGraphicsContext.fillColor, new Vector4(0.67, 0.67, 0.67, 0.15f));
 						selectedLine.getProperties().put(iLinearGraphicsContext.notForExport, true);
-						in.moveTo((float) (currentFrame.x + currentFrame.w / 2), (float) (currentFrame.y + currentFrame.h + 5));
+						in.moveTo((float) (currentFrame.x + (currentFrame.w / 2)), (float) (currentFrame.y + currentFrame.h + 5));
 						selectedLine.getProperties().put(iLinearGraphicsContext.containsText, !isNoFrame);
 						in.setPointAttribute(iLinearGraphicsContext.text_v, source.getProperty(iVisualElement.name));
 						// in.setPointAttribute(iLinearGraphicsContext.font_v,
@@ -1101,7 +1110,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 						// 0, 8));
 						in.setPointAttribute(iLinearGraphicsContext.fillColor_v, new Vector4(0, 0, 0, 1f));
 						in.setPointAttribute(iLinearGraphicsContext.alignment_v, 0f);
-						if (GLComponentWindow.currentContext != null && !isNoFrame)
+						if ((GLComponentWindow.currentContext != null) && !isNoFrame)
 							GLComponentWindow.currentContext.submitLine(selectedLine, selectedLine.getProperties());
 					}
 				}
@@ -1173,13 +1182,13 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 		if (r != null)
 			return r;
 
-		return touched ? new Rect(minx - 10, miny - 10, maxx - minx + 20, maxy - miny + 20) : currentFrame;
+		return touched ? new Rect(minx - 10, miny - 10, (maxx - minx) + 20, (maxy - miny) + 20) : currentFrame;
 	}
 
 	public void saveAsPDF(String to) {
 		PythonInterface.getPythonInterface().setVariable("__s", Py.java2py(forElement));
 		PythonInterface.getPythonInterface().execString("makePDF(geometry=__s.lines, filename=\"" + to + "\")");
-		OverlayAnimationManager.notifyAsText(forElement, "saved '" + forElement.getProperty(iVisualElement.name) + "' to '" + to + "'", null);
+		OverlayAnimationManager.notifyAsText(forElement, "saved '" + forElement.getProperty(iVisualElement.name) + "' to '" + to + '\'', null);
 
 		// List<CachedLine> g = computed_linesToDraw.get(forElement);
 		//
@@ -1221,14 +1230,14 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 
 	@Override
 	public <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
-		if (source == forElement && prop.equals(computed_rect)) {
+		if ((source == forElement) && prop.equals(computed_rect)) {
 			Rect r = (Rect) to.get();
 			if (r != null) {
 				source.setFrame(r);
 			}
-		} else if (source == forElement && prop.equals(global_opacity)) {
+		} else if ((source == forElement) && prop.equals(global_opacity)) {
 			previousHashSplineHash = -1;
-		} else if (source == forElement && prop.equals(PlainDraggableComponent.hasMouseFocus)) {
+		} else if ((source == forElement) && prop.equals(PlainDraggableComponent.hasMouseFocus)) {
 			delayedRepaint();
 		}
 		return super.setProperty(source, prop, to);
@@ -1258,7 +1267,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 		Iterator<CachedLine> i = instructions.iterator();
 		while (i.hasNext()) {
 			CachedLine obj = (CachedLine) filter(i.next());
-			hashCode = 31 * hashCode + (obj == null ? 0 : System.identityHashCode(obj));
+			hashCode = 31 * hashCode + ((obj == null) ? 0 : System.identityHashCode(obj));
 		}
 		return hashCode;
 	}
@@ -1315,7 +1324,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 				Object cl = ll.__tojava__(CachedLine.class);
 				return cl;
 			} else {
-				System.err.println(" bad entry into line list <" + o + ">");
+				System.err.println(" bad entry into line list <" + o + '>');
 				return null;
 			}
 		} else
@@ -1409,7 +1418,7 @@ public class SplineComputingOverride extends DefaultOverride implements iVisualE
 
 			Promise promise = refPss.get().promiseForKey(source);
 
-			String string = new ExecutableAreaFinder().findExecutableSubstring(promise.getText(), label);
+			String string = ExecutableAreaFinder.findExecutableSubstring(promise.getText(), label);
 
             //System.out.println(" found and about to execute <" + string + ">");
 

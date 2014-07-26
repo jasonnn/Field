@@ -27,7 +27,7 @@ class ClDummyVariable extends ClAbstractVariable {
 
 	@Override
 	public String toString() {
-		return "[" + name() + ":dummy]";
+		return '[' + name() + ":dummy]";
 	}
 
 	@Override

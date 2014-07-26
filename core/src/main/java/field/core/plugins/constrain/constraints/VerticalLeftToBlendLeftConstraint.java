@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class VerticalLeftToBlendLeftConstraint extends BaseConstraintOverrides {
 
-	static public final VisualElementProperty<Float> verticalLeftToBlendLeftConstraint_constraintBlend = new VisualElementProperty<Float>("verticalLeftToBlendLeftConstraint_constraintBlend");
+	public static final VisualElementProperty<Float> verticalLeftToBlendLeftConstraint_constraintBlend = new VisualElementProperty<Float>("verticalLeftToBlendLeftConstraint_constraintBlend");
 
 	private Boolean isSelected() {
 		iComponent v = forElement.getProperty(iVisualElement.localView);
@@ -44,7 +44,7 @@ public class VerticalLeftToBlendLeftConstraint extends BaseConstraintOverrides {
 		assert left != null : property;
 		assert rightA != null : property;
 
-		if (left == null || rightA == null || rightB == null) return null;
+		if ((left == null) || (rightA == null) || (rightB == null)) return null;
 
 		Float f = verticalLeftToBlendLeftConstraint_constraintBlend.get(forElement);
 		if (f == null) f = 0f;
@@ -81,7 +81,7 @@ public class VerticalLeftToBlendLeftConstraint extends BaseConstraintOverrides {
 		assert left != null : parameters;
 		assert rightA != null : parameters;
 
-		if (left == null || rightA == null || rightB == null) return;
+		if ((left == null) || (rightA == null) || (rightB == null)) return;
 		VariablesForRect vLeft = cc.getVariablesFor(left);
 		VariablesForRect vRightA = cc.getVariablesFor(rightA);
 		VariablesForRect vRightB = cc.getVariablesFor(rightB);
@@ -90,11 +90,11 @@ public class VerticalLeftToBlendLeftConstraint extends BaseConstraintOverrides {
 		Vector3 p2 = point2(vRightA, vRightB);
 
 		line.moveTo(p1.x, p1.y);
-		line.lineTo(p1.x-5, p1.y+(p2.y-p1.y)*0.1f);
-		line.lineTo(p1.x-5, p1.y+(p2.y-p1.y)*0.9f);
+		line.lineTo(p1.x-5, p1.y + ((p2.y - p1.y) * 0.1f));
+		line.lineTo(p1.x-5, p1.y + ((p2.y - p1.y) * 0.9f));
 		line.lineTo(p2.x, p2.y);
-		line.lineTo(p1.x+5, p1.y+(p2.y-p1.y)*0.9f);
-		line.lineTo(p1.x+5, p1.y+(p2.y-p1.y)*0.1f);
+		line.lineTo(p1.x+5, p1.y + ((p2.y - p1.y) * 0.9f));
+		line.lineTo(p1.x+5, p1.y + ((p2.y - p1.y) * 0.1f));
 		line.lineTo(p1.x, p1.y);
 
 		cl.getProperties().put(iLinearGraphicsContext.color, new Vector4(0.25, 0, 0, 0.15f));
@@ -108,12 +108,12 @@ public class VerticalLeftToBlendLeftConstraint extends BaseConstraintOverrides {
 	}
 
 	protected Vector3 point1(VariablesForRect vLeft) {
-		return new Vector3(vLeft.variableX.value(), vLeft.variableY.value() + vLeft.variableH.value() / 2, 0);
+		return new Vector3(vLeft.variableX.value(), vLeft.variableY.value() + (vLeft.variableH.value() / 2), 0);
 	}
 
 	protected Vector3 point2(VariablesForRect vRight, VariablesForRect rightB) {
-		Vector3 v1 = new Vector3(vRight.variableX.value(), vRight.variableY.value() + vRight.variableH.value() / 2, 0);
-		Vector3 v2 = new Vector3(rightB.variableX.value(), rightB.variableY.value() + rightB.variableH.value() / 2, 0);
+		Vector3 v1 = new Vector3(vRight.variableX.value(), vRight.variableY.value() + (vRight.variableH.value() / 2), 0);
+		Vector3 v2 = new Vector3(rightB.variableX.value(), rightB.variableY.value() + (rightB.variableH.value() / 2), 0);
 		Float f = verticalLeftToBlendLeftConstraint_constraintBlend.get(forElement);
 		if (f == null) f = 0f;
 		return v1.lerp(v1, v2, f);

@@ -32,17 +32,17 @@ public abstract class Process<X> implements iUpdateable {
         //System.out.println(" process :" + window + " " + now);
 
 		try {
-			while (window.size() == 0) {
+			while (window.isEmpty()) {
 				if (!pull(now))
 					return;
 			}
 
-			if (window.size() > 0) {
+			if (!window.isEmpty()) {
 				double next = window.timeFor(window.tail());
 
                 //System.out.println(" first event is <" + next + ">");
 
-				while (next < now + lookahead) {
+				while (next < (now + lookahead)) {
 					if (!pull(next))
 						return;
 					next = window.timeFor(window.tail());
@@ -55,9 +55,11 @@ public abstract class Process<X> implements iUpdateable {
 
 	}
 
-	abstract protected boolean pull(double now);
+	protected abstract
+    boolean pull(double now);
 
-	static public class ProviderProcess<X> extends Process<X> {
+	public static
+    class ProviderProcess<X> extends Process<X> {
 
 		private iProvider p;
 		public double now;

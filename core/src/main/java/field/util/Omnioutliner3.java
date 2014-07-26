@@ -20,7 +20,8 @@ import java.util.regex.Pattern;
 
 public class Omnioutliner3 {
 
-	static public Map<String, String> stringToProperties(String s) {
+	public static
+    Map<String, String> stringToProperties(String s) {
 
 		// controversial
 		s.replace(" ", "");
@@ -85,7 +86,8 @@ public class Omnioutliner3 {
 		items.add(newItem);
 	}
 
-	public List<Node> findAllNodesCalled(Node doc, String called) {
+	public static
+    List<Node> findAllNodesCalled(Node doc, String called) {
 		List<Node> ret = new ArrayList<Node>();
 		NodeList childNodes = doc.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++) {
@@ -133,7 +135,7 @@ public class Omnioutliner3 {
 	}
 
 	public List<String> getValuesForNode(Node node) {
-		assert node.getNodeName().equals("item");
+		assert "item".equals(node.getNodeName());
 		List<Node> values = getChildrenNodesCalled(node, Pattern.compile("values"));
 		assert values.size() == 1;
 		List<Node> texts = getChildrenNodesCalled(values.get(0), Pattern.compile("(text)|(null)"));
@@ -178,7 +180,7 @@ public class Omnioutliner3 {
 		List<Node> texts = getChildrenNodesCalled(values.get(0), Pattern.compile("(text)|(null)"));
 		assert texts.size() > column;
 		Node n = texts.get(column);
-		if (n.getNodeName() == "null") {
+		if (n.getNodeName().equals("null")) {
 			Element newText = doc.createElement("text");
 			Element newP = doc.createElement("p");
 			Element newRun = doc.createElement("run");

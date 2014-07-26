@@ -25,9 +25,9 @@ public class TreeBrowser {
     
 	Tree tree;
 	private Object root;
-	private Composite toolbar;
+	private final Composite toolbar;
 	ToolBarFolder open;
-	private Link label;
+	private final Link label;
     
 	static public final ObjectTransfer transfer = new ObjectTransfer();
 	static public TreeItem[] lastInternalDragSelection;
@@ -125,7 +125,7 @@ public class TreeBrowser {
 		Collection<Object> f = childrenOf(root);
 		if (f == null)
 			return;
-		if (f.size() == 0)
+		if (f.isEmpty())
 			return;
         
 		if (f != null) {

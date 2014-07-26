@@ -27,7 +27,8 @@ public class SavedMeshSet {
 		this.rootFilename = rootFilename;
 	}
 
-	static public class Frame implements iExtensible, Serializable {
+	public static
+    class Frame implements iExtensible, Serializable {
 
 		Dict info = new Dict();
 
@@ -241,7 +242,7 @@ public class SavedMeshSet {
 	public void save() throws IOException {
 		new PythonUtils().persistAsXML(frame, rootFilename + ".index");
 		for (int i = 0; i < frame.get(0).numMesh; i++) {
-			MeshBlast blast = new MeshBlast(rootFilename + "." + i + ".mesh");
+			MeshBlast blast = new MeshBlast(rootFilename + '.' + i + ".mesh");
 
 			int numVertex = 0;
 			int numTriangle = 0;
@@ -286,7 +287,7 @@ public class SavedMeshSet {
 	public void saveWithAux() throws IOException {
 		new PythonUtils().persistAsXML(frame, rootFilename + ".index");
 		for (int i = 0; i < frame.get(0).numMesh; i++) {
-			MeshBlast blast = new MeshBlast(rootFilename + "." + i + ".mesh");
+			MeshBlast blast = new MeshBlast(rootFilename + '.' + i + ".mesh");
 
 			int numVertex = 0;
 			int numTriangle = 0;
@@ -337,7 +338,7 @@ public class SavedMeshSet {
 	public void saveWithAuxNoTopology() throws IOException {
 		new PythonUtils().persistAsXML(frame, rootFilename + ".index");
 		for (int i = 0; i < frame.get(0).numMesh; i++) {
-			MeshBlast blast = new MeshBlast(rootFilename + "." + i + ".mesh");
+			MeshBlast blast = new MeshBlast(rootFilename + '.' + i + ".mesh");
 
 			int numVertex = 0;
 
@@ -380,7 +381,8 @@ public class SavedMeshSet {
 		}
 	}
 
-	static public class Mesh {
+	public static
+    class Mesh {
 		int numVertex, numTriangle, primativeSize;
 		ByteBuffer vertex;
 		ByteBuffer triangle;

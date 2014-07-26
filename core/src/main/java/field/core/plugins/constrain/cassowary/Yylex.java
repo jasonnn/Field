@@ -42,7 +42,7 @@ public class Yylex implements Scanner {
 
 	private int yy_buffer_end;
 
-	private char yy_buffer[];
+	private char[] yy_buffer;
 
 	private boolean yy_at_bol;
 
@@ -75,11 +75,11 @@ public class Yylex implements Scanner {
 		// code to go into constructor
 	}
 
-	private boolean yy_eof_done = false;
+	private static final boolean yy_eof_done = false;
 
     private static final int YYINITIAL = 0;
 
-	private final int yy_state_dtrans[] = { 0 };
+	private final int[] yy_state_dtrans = { 0 };
 
 	private void yybegin(int state) {
 		yy_lexical_state = state;
@@ -124,13 +124,13 @@ public class Yylex implements Scanner {
 	}
 
 	private void yy_move_end() {
-		if (yy_buffer_end > yy_buffer_start && '\n' == yy_buffer[yy_buffer_end - 1])
+		if ((yy_buffer_end > yy_buffer_start) && ('\n' == yy_buffer[yy_buffer_end - 1]))
 			yy_buffer_end--;
-		if (yy_buffer_end > yy_buffer_start && '\r' == yy_buffer[yy_buffer_end - 1])
+		if ((yy_buffer_end > yy_buffer_start) && ('\r' == yy_buffer[yy_buffer_end - 1]))
 			yy_buffer_end--;
 	}
 
-	private boolean yy_last_was_cr = false;
+	private static final boolean yy_last_was_cr = false;
 
 	private void yy_mark_start() {
 		yy_buffer_start = yy_buffer_index;
@@ -142,7 +142,11 @@ public class Yylex implements Scanner {
 
 	private void yy_to_mark() {
 		yy_buffer_index = yy_buffer_end;
-		yy_at_bol = (yy_buffer_end > yy_buffer_start) && ('\r' == yy_buffer[yy_buffer_end - 1] || '\n' == yy_buffer[yy_buffer_end - 1] || 2028/*LS*/== yy_buffer[yy_buffer_end - 1] || 2029/*PS*/== yy_buffer[yy_buffer_end - 1]);
+		yy_at_bol = (yy_buffer_end > yy_buffer_start) && (('\r' == yy_buffer[yy_buffer_end - 1])
+                                                          || ('\n' == yy_buffer[yy_buffer_end
+                                                                                - 1])
+                                                          || (2028 == yy_buffer[yy_buffer_end - 1])
+                                                          || (2029 == yy_buffer[yy_buffer_end - 1]));
 	}
 
 	private java.lang.String yytext() {
@@ -153,9 +157,9 @@ public class Yylex implements Scanner {
 		return yy_buffer_end - yy_buffer_start;
 	}
 
-	private char[] yy_double(char buf[]) {
+	private char[] yy_double(char[] buf) {
 		int i;
-		char newbuf[];
+		char[] newbuf;
 		newbuf = new char[2 * buf.length];
 		for (i = 0; i < buf.length; ++i) {
 			newbuf[i] = buf[i];
@@ -167,7 +171,7 @@ public class Yylex implements Scanner {
 
     private static final int YY_E_MATCH = 1;
 
-	private java.lang.String yy_error_string[] = { "Error: Internal error.\n", "Error: Unmatched input.\n" };
+	private final java.lang.String[] yy_error_string = { "Error: Internal error.\n", "Error: Unmatched input.\n" };
 
 	private void yy_error(int code, boolean fatal) {
 		java.lang.System.out.print(yy_error_string[code]);
@@ -184,7 +188,7 @@ public class Yylex implements Scanner {
 		int sequenceInteger = 0;
 		int commaIndex;
 		String workString;
-		int res[][] = new int[size1][size2];
+		int[][] res = new int[size1][size2];
 		for (int i = 0; i < size1; i++) {
 			for (int j = 0; j < size2; j++) {
 				if (sequenceLength != 0) {
@@ -211,7 +215,7 @@ public class Yylex implements Scanner {
 		return res;
 	}
 
-	private int yy_acpt[] = {
+	private final int[] yy_acpt = {
 	/* 0 */YY_NOT_ACCEPT,
 	/* 1 */YY_NO_ANCHOR,
 	/* 2 */YY_NO_ANCHOR,
@@ -232,11 +236,11 @@ public class Yylex implements Scanner {
 	/* 17 */YY_NO_ANCHOR,
 	/* 18 */YY_NO_ANCHOR };
 
-	private int yy_cmap[] = unpackFromString(1, 130, "14:9,1:2,14,1:2,14:18,1,14:7,9,10,7,5,14,6,12,8,11:10,14:2,4,3,2,14:2,13:26" + ",14:6,13:26,14:5,0:2")[0];
+	private final int[] yy_cmap = unpackFromString(1, 130, "14:9,1:2,14,1:2,14:18,1,14:7,9,10,7,5,14,6,12,8,11:10,14:2,4,3,2,14:2,13:26" + ",14:6,13:26,14:5,0:2")[0];
 
-	private int yy_rmap[] = unpackFromString(1, 19, "0,1,2,3,1:7,4,5,1:2,6,7:2,1")[0];
+	private final int[] yy_rmap = unpackFromString(1, 19, "0,1,2,3,1:7,4,5,1:2,6,7:2,1")[0];
 
-	private int yy_nxt[][] = unpackFromString(8, 15, "1,2,3,4,15,5,6,7,8,9,10,11,17,12,18,-1:16,2,-1:16,13,-1:22,11,16,-1:13,12,-" + "1,12,-1:4,14,-1:22,16,-1:3");
+	private final int[][] yy_nxt = unpackFromString(8, 15, "1,2,3,4,15,5,6,7,8,9,10,11,17,12,18,-1:16,2,-1:16,13,-1:22,11,16,-1:13,12,-" + "1,12,-1:4,14,-1:22,16,-1:3");
 
 	public Symbol next_token() throws java.io.IOException {
 		int yy_lookahead;
@@ -259,156 +263,160 @@ public class Yylex implements Scanner {
 				yy_lookahead = yy_advance();
 			yy_next_state = YY_F;
 			yy_next_state = yy_nxt[yy_rmap[yy_state]][yy_cmap[yy_lookahead]];
-			if (YY_EOF == yy_lookahead && true == yy_initial) {
+			if ((YY_EOF == yy_lookahead) && (true == yy_initial)) {
 				return null;
 			}
-			if (YY_F != yy_next_state) {
-				yy_state = yy_next_state;
-				yy_initial = false;
-				yy_this_accept = yy_acpt[yy_state];
-				if (YY_NOT_ACCEPT != yy_this_accept) {
-					yy_last_accept_state = yy_state;
-					yy_mark_end();
-				}
-			} else {
-				if (YY_NO_STATE == yy_last_accept_state) {
-					throw (new Error("Lexical Error: Unmatched Input."));
-				} else {
-					yy_anchor = yy_acpt[yy_last_accept_state];
-					if (0 != (YY_END & yy_anchor)) {
-						yy_move_end();
-					}
-					yy_to_mark();
-					switch (yy_last_accept_state) {
-					case 1:
-					case -2:
-						break;
-					case 2: { /* skip white space */
-					}
-					case -3:
-						break;
-					case 3: {
-						System.err.println("Illegal character: " + yytext());
-					}
-					case -4:
-						break;
-					case 4: {
-						return new Symbol(sym.EQ);
-					}
-					case -5:
-						break;
-					case 5: {
-						return new Symbol(sym.PLUS);
-					}
-					case -6:
-						break;
-					case 6: {
-						return new Symbol(sym.MINUS);
-					}
-					case -7:
-						break;
-					case 7: {
-						return new Symbol(sym.TIMES);
-					}
-					case -8:
-						break;
-					case 8: {
-						return new Symbol(sym.DIVIDE);
-					}
-					case -9:
-						break;
-					case 9: {
-						return new Symbol(sym.LPAREN);
-					}
-					case -10:
-						break;
-					case 10: {
-						return new Symbol(sym.RPAREN);
-					}
-					case -11:
-						break;
-					case 11: {
-						return new Symbol(sym.NUMBER, new Double(yytext()));
-					}
-					case -12:
-						break;
-					case 12: {
-						String variable_name = new String(yytext());
-						if (m_debug_lex) {
-                            //System.out.println("Lexical analysis found <" + variable_name + ">");
+            if (YY_F == yy_next_state) {
+                if (YY_NO_STATE == yy_last_accept_state) {
+                    throw (new Error("Lexical Error: Unmatched Input."));
+                }
+                else {
+                    yy_anchor = yy_acpt[yy_last_accept_state];
+                    if (0 != (YY_END & yy_anchor)) {
+                        yy_move_end();
+                    }
+                    yy_to_mark();
+                    switch (yy_last_accept_state) {
+                        case 1:
+                        case -2:
+                            break;
+                        case 2: { /* skip white space */
                         }
-						if (!m_variable_name_object_hash.containsKey(variable_name)) {
-							if (m_debug_lex) {
-                                //System.out.println("	Putting it in hash for the first time.");
+                        case -3:
+                            break;
+                        case 3: {
+                            System.err.println("Illegal character: " + yytext());
+                        }
+                        case -4:
+                            break;
+                        case 4: {
+                            return new Symbol(sym.EQ);
+                        }
+                        case -5:
+                            break;
+                        case 5: {
+                            return new Symbol(sym.PLUS);
+                        }
+                        case -6:
+                            break;
+                        case 6: {
+                            return new Symbol(sym.MINUS);
+                        }
+                        case -7:
+                            break;
+                        case 7: {
+                            return new Symbol(sym.TIMES);
+                        }
+                        case -8:
+                            break;
+                        case 8: {
+                            return new Symbol(sym.DIVIDE);
+                        }
+                        case -9:
+                            break;
+                        case 9: {
+                            return new Symbol(sym.LPAREN);
+                        }
+                        case -10:
+                            break;
+                        case 10: {
+                            return new Symbol(sym.RPAREN);
+                        }
+                        case -11:
+                            break;
+                        case 11: {
+                            return new Symbol(sym.NUMBER, new Double(yytext()));
+                        }
+                        case -12:
+                            break;
+                        case 12: {
+                            String variable_name = new String(yytext());
+                            if (m_debug_lex) {
+                                //System.out.println("Lexical analysis found <" + variable_name + ">");
                             }
-							ClVariable variable = new ClVariable();
-							Object return_value = m_variable_name_object_hash.put(variable_name, variable);
-							if (return_value != null) {
-								System.err.println("Variable was already in hash!!!!!");
-							}
-							if (m_debug_lex) {
-								if (m_variable_name_object_hash.containsKey(variable_name)) {
-                                    //System.out.println("	Hash table now contains object.");
-                                } else {
-                                    //System.out.println("	Hash table does not contain object.");
+                            if (!m_variable_name_object_hash.containsKey(variable_name)) {
+                                if (m_debug_lex) {
+                                    //System.out.println("	Putting it in hash for the first time.");
                                 }
-							}
-							if (m_variable_name_object_hash.isEmpty()) {
-								System.err.println("	How can the hashtable be empty after inserting something?");
-							}
-						} else {
-							System.err.println("	Already in Hash.");
-						}
-						return new Symbol(sym.VARIABLE, variable_name);
-					}
-					case -13:
-						break;
-					case 13: {
-						return new Symbol(sym.GEQ);
-					}
-					case -14:
-						break;
-					case 14: {
-						return new Symbol(sym.LEQ);
-					}
-					case -15:
-						break;
-					case 15: {
-						System.err.println("Illegal character: " + yytext());
-					}
-					case -16:
-						break;
-					case 16: {
-						return new Symbol(sym.NUMBER, new Double(yytext()));
-					}
-					case -17:
-						break;
-					case 17: {
-						System.err.println("Illegal character: " + yytext());
-					}
-					case -18:
-						break;
-					case 18: {
-						System.err.println("Illegal character: " + yytext());
-					}
-					case -19:
-						break;
-					default:
-						yy_error(YY_E_INTERNAL, false);
-					case -1:
-					}
-					yy_initial = true;
-					yy_state = yy_state_dtrans[yy_lexical_state];
-					yy_next_state = YY_NO_STATE;
-					yy_last_accept_state = YY_NO_STATE;
-					yy_mark_start();
-					yy_this_accept = yy_acpt[yy_state];
-					if (YY_NOT_ACCEPT != yy_this_accept) {
-						yy_last_accept_state = yy_state;
-						yy_mark_end();
-					}
-				}
-			}
+                                ClVariable variable = new ClVariable();
+                                Object return_value = m_variable_name_object_hash.put(variable_name, variable);
+                                if (return_value != null) {
+                                    System.err.println("Variable was already in hash!!!!!");
+                                }
+                                if (m_debug_lex) {
+                                    if (m_variable_name_object_hash.containsKey(variable_name)) {
+                                        //System.out.println("	Hash table now contains object.");
+                                    }
+                                    else {
+                                        //System.out.println("	Hash table does not contain object.");
+                                    }
+                                }
+                                if (m_variable_name_object_hash.isEmpty()) {
+                                    System.err.println("	How can the hashtable be empty after inserting something?");
+                                }
+                            }
+                            else {
+                                System.err.println("	Already in Hash.");
+                            }
+                            return new Symbol(sym.VARIABLE, variable_name);
+                        }
+                        case -13:
+                            break;
+                        case 13: {
+                            return new Symbol(sym.GEQ);
+                        }
+                        case -14:
+                            break;
+                        case 14: {
+                            return new Symbol(sym.LEQ);
+                        }
+                        case -15:
+                            break;
+                        case 15: {
+                            System.err.println("Illegal character: " + yytext());
+                        }
+                        case -16:
+                            break;
+                        case 16: {
+                            return new Symbol(sym.NUMBER, new Double(yytext()));
+                        }
+                        case -17:
+                            break;
+                        case 17: {
+                            System.err.println("Illegal character: " + yytext());
+                        }
+                        case -18:
+                            break;
+                        case 18: {
+                            System.err.println("Illegal character: " + yytext());
+                        }
+                        case -19:
+                            break;
+                        default:
+                            yy_error(YY_E_INTERNAL, false);
+                        case -1:
+                    }
+                    yy_initial = true;
+                    yy_state = yy_state_dtrans[yy_lexical_state];
+                    yy_next_state = YY_NO_STATE;
+                    yy_last_accept_state = YY_NO_STATE;
+                    yy_mark_start();
+                    yy_this_accept = yy_acpt[yy_state];
+                    if (YY_NOT_ACCEPT != yy_this_accept) {
+                        yy_last_accept_state = yy_state;
+                        yy_mark_end();
+                    }
+                }
+            }
+            else {
+                yy_state = yy_next_state;
+                yy_initial = false;
+                yy_this_accept = yy_acpt[yy_state];
+                if (YY_NOT_ACCEPT != yy_this_accept) {
+                    yy_last_accept_state = yy_state;
+                    yy_mark_end();
+                }
+            }
 		}
 	}
 }

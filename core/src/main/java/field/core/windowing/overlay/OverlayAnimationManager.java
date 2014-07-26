@@ -23,7 +23,8 @@ import java.util.List;
 
 public class OverlayAnimationManager {
 
-	static public void notifyAsText(final iVisualElement root, String to, Rect rect) {
+	public static
+    void notifyAsText(final iVisualElement root, String to, Rect rect) {
 		final GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
 		if (frame != null) {
 				OverlayAnimationManager.notifyTextOnWindow(frame, to,rect, 1, new Vector4(1,1,1,0.15f));
@@ -102,7 +103,8 @@ public class OverlayAnimationManager {
 		};
 	}
 
-	static public void fadeUpAndDownOnWindow(final GLComponentWindow window, final List<CachedLine> draw, final int fadeInOver, final int remainFor, final int fadeOutOver) {
+	public static
+    void fadeUpAndDownOnWindow(final GLComponentWindow window, final List<CachedLine> draw, final int fadeInOver, final int remainFor, final int fadeOutOver) {
 
 		final iProvider<Object> p = new iProvider<Object>() {
 			@Woven

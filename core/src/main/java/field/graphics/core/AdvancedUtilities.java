@@ -109,7 +109,8 @@ public class AdvancedUtilities {
 //	}
 	
 
-	static public class DeProjectionMatrixFast extends BasicUtilities.OnePassElement {
+	public static
+    class DeProjectionMatrixFast extends BasicUtilities.OnePassElement {
 		BasicCamera realCamera;
 
 		BasicCamera textureCamera;
@@ -273,7 +274,8 @@ public class AdvancedUtilities {
 
 	// matrix "inversion"
 
-	static public void transposeNegate(float[] src, float[] dst) {
+	public static
+    void transposeNegate(float[] src, float[] dst) {
 
 		dst[0 * 4 + 0] = src[0 * 4 + 0];
 		dst[1 * 4 + 0] = src[0 * 4 + 1];
@@ -296,11 +298,13 @@ public class AdvancedUtilities {
 		dst[3 * 4 + 3] = 1;
 	}
 
-	static public float dot(float[] src, int i, float[] src2, int j) {
+	public static
+    float dot(float[] src, int i, float[] src2, int j) {
 		return src[i] * src2[j] + src[i + 1] * src2[j + 1] + src[i + 2] * src2[j + 2];
 	}
 
-	static public class TextureBarrier extends OnePassElement
+	public static
+    class TextureBarrier extends OnePassElement
 	{
 
 		public TextureBarrier() {

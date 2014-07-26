@@ -67,7 +67,7 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
 			
 		} else {
 			faceless = new FacelessFluidSheet();
-			faceless.standard(SystemProperties.getDirProperty("versioning.dir") + "/" + filename + "/sheet.xml");
+			faceless.standard(SystemProperties.getDirProperty("versioning.dir") + '/' + filename + "/sheet.xml");
 			runner = new BasicRunner(faceless.getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem), 1);
 		}
 
@@ -91,7 +91,8 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
 		} else if (faceless != null) {
 			try {
 				if (!isNosave())
-					faceless.save(new BufferedWriter(new FileWriter(new File(SystemProperties.getDirProperty("versioning.dir") + "/" + filename + "/sheet.xml"))));
+					faceless.save(new BufferedWriter(new FileWriter(new File(SystemProperties.getDirProperty("versioning.dir") + '/'
+                                                                             + filename + "/sheet.xml"))));
 			} catch (FileNotFoundException e) {
 			} catch (IOException e) {
 			}
@@ -190,19 +191,24 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
 					assert refPss.get() != null;
 
 					Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-					if (!local) {
-						new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running).getProperty(running, iExecutesPromise.promiseExecution, refRunner);
-						assert refRunner.get() != null;
-						//System.err.println(" runner is <" + refRunner.get().getClass() + ">");
-					} else {
-						refRunner.set(new BasicRunner(getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem), 1));
-					}
+                    if (local) {
+                        refRunner.set(new BasicRunner(getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem),
+                                                      1));
+                    }
+                    else {
+                        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running)
+                                                                       .getProperty(running,
+                                                                                    iExecutesPromise.promiseExecution,
+                                                                                    refRunner);
+                        assert refRunner.get() != null;
+                        //System.err.println(" runner is <" + refRunner.get().getClass() + ">");
+                    }
 
 					first = true;
 
 					runner = refRunner.get();
 				} else {
-					System.err.println(" no element for <" + description + "> in sheet <" + filename + ">");
+					System.err.println(" no element for <" + description + "> in sheet <" + filename + '>');
 				}
 
 			}
@@ -210,7 +216,7 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
 			public void update() {
 
 				if (first) {
-					System.err.println(" pss is <" + refPss.get() + ">");
+					System.err.println(" pss is <" + refPss.get() + '>');
 					Promise promise = refPss.get().promiseForKey(running);
 
 					if (promise != null) {
@@ -218,7 +224,7 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
 
 						started = true;
 					} else
-						System.err.println(" no promis for <" + running + ">");
+						System.err.println(" no promis for <" + running + '>');
 					first = false;
 				}
 
@@ -236,7 +242,7 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
 	public void saveFacefull() throws IOException
 	{
 //		facefull.save(new BufferedWriter(new FileWriter(SystemProperties.getDirProperty("versioning.dir") + "/" + filename + "/sheet.xml"), 1024 * 16 * 1024));
-		facefull.saveTwoPart(SystemProperties.getDirProperty("versioning.dir") + "/" + filename + "/sheet.xml");
+		facefull.saveTwoPart(SystemProperties.getDirProperty("versioning.dir") + '/' + filename + "/sheet.xml");
 	}
 
 	public void setFilename(String f) {
@@ -288,37 +294,37 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
 		if (facefull != null)
 			return;
 
-		if (!useTimeSystem) {
-			lastT = time;
+        if (useTimeSystem) {
+            ts.update();
+            // if faceless
+            double e = ts.evaluate();
 
-		//	System.err.println(" updating at time <"+time+">");
+            slider.left.setFrame(new Rect((float) e, 0, 10, 0));
+            runner.update((float) e);
 
-			runner.update(time);
-			if (faceless != null)
-				faceless.update();
-		} else {
-			ts.update();
-			// if faceless
-			double e = ts.evaluate();
+            if (faceless != null) faceless.update();
+        }
+        else {
+            lastT = time;
 
-			slider.left.setFrame(new Rect((float) e, 0, 10, 0));
-			runner.update((float) e);
+            //	System.err.println(" updating at time <"+time+">");
 
-			if (faceless != null)
-				faceless.update();
-		}
+            runner.update(time);
+            if (faceless != null) faceless.update();
+        }
 	}
 
 	protected void fromVisual() {
 		try {
 			if (!isNosave())
-				facefull.save(new BufferedWriter(new FileWriter(SystemProperties.getDirProperty("versioning.dir") + "/" + filename + "/sheet.xml"), 1024 * 16 * 1024));
+				facefull.save(new BufferedWriter(new FileWriter(SystemProperties.getDirProperty("versioning.dir") + '/'
+                                                                + filename + "/sheet.xml"), 1024 * 16 * 1024));
 			facefull.close();
 			facefull = null;
 
 
 			faceless = new FacelessFluidSheet();
-			faceless.standard(SystemProperties.getDirProperty("versioning.dir") + "/" + filename + "/sheet.xml");
+			faceless.standard(SystemProperties.getDirProperty("versioning.dir") + '/' + filename + "/sheet.xml");
 
 			if (runner != null) {
 				runner.stopAll(lastT);
@@ -345,7 +351,8 @@ public class PhantomFluidSheet implements iHasVisualElementRoot {
 			if (faceless != null)
 				try {
 					if (!isNosave())
-						faceless.save(new BufferedWriter(new FileWriter(new File(SystemProperties.getDirProperty("versioning.dir") + "/" + filename + "/sheet.xml"))));
+						faceless.save(new BufferedWriter(new FileWriter(new File(SystemProperties.getDirProperty("versioning.dir") + '/'
+                                                                                 + filename + "/sheet.xml"))));
 				} catch (FileNotFoundException e) {
 				}
 			faceless = null;

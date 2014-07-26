@@ -33,7 +33,7 @@ public class NSEWMarkingMenu {
 	{
 		List<CachedLine>c = new ArrayList<CachedLine>();
 		
-		if (menus.size()==0)
+		if (menus.isEmpty())
 			return c;
 		
 		for(Map.Entry<Direction, String> e : menus.entrySet())
@@ -45,8 +45,8 @@ public class NSEWMarkingMenu {
 			float shim = 1;
 			float size = 100;
 			
-			Vector2[] shape = new Vector2[]{new Vector2(0,0), new Vector2(size, -size/3), new Vector2(size, size+size/3), new Vector2(0, size), new Vector2(0,0)};
-			Vector4[] color = new Vector4[]{armed.contains(d) ? new Vector4(0.5, 0, 0, 0.25f) :new  Vector4(1,1,1,0.1f), armed.contains(d) ? new Vector4(0.5, 0, 0, 0.25f) :  new Vector4(1,1,1,0.1f), new Vector4(), new Vector4(), new Vector4(0,0,0,0.25f)};
+			Vector2[] shape = {new Vector2(0,0), new Vector2(size, -size/3), new Vector2(size, size+size/3), new Vector2(0, size), new Vector2(0,0)};
+			Vector4[] color = {armed.contains(d) ? new Vector4(0.5, 0, 0, 0.25f) :new  Vector4(1,1,1,0.1f), armed.contains(d) ? new Vector4(0.5, 0, 0, 0.25f) :  new Vector4(1,1,1,0.1f), new Vector4(), new Vector4(), new Vector4(0,0,0,0.25f)};
 			
 			Quaternion q = new Quaternion(d.r*Math.PI*2);
 			int i = 0;
@@ -73,7 +73,7 @@ public class NSEWMarkingMenu {
 			text.getInput().moveTo(cc.x, cc.y);
 			
 			text.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new Font("Gill Sans", Font.ITALIC, 10));
-			text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "banana <"+d+">");
+			text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "banana <"+d+ '>');
 			text.getInput().setPointAttribute(iLinearGraphicsContext.alignment_v,d.textAlignment);
 			
 			text.getProperties().put(iLinearGraphicsContext.containsText, true);

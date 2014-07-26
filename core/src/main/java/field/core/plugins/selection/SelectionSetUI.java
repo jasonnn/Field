@@ -28,7 +28,7 @@ public class SelectionSetUI {
 	Composite toolbar;
 	protected Tree tree;
 	Composite container;
-	private String frameName;
+	private final String frameName;
 	private Button gearButton;
 
 

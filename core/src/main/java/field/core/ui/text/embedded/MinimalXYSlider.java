@@ -25,7 +25,8 @@ import java.rmi.server.UID;
 import java.util.LinkedHashMap;
 
 public class MinimalXYSlider extends MinimalExpandable {
-	static public class Component_tuple extends ProvidedComponent {
+	public static
+    class Component_tuple extends ProvidedComponent {
 
 		public transient iUpdateable notify;
 
@@ -84,23 +85,26 @@ public class MinimalXYSlider extends MinimalExpandable {
 		}
 	}
 
-	static public class Component_vector2 extends Component_tuple {
+	public static
+    class Component_vector2 extends Component_tuple {
 
 		@Override
 		public String getCurrentRepresentedString() {
-			return "Vector2(" + value + "," + valueY + ")";
+			return "Vector2(" + value + ',' + valueY + ')';
 		}
 	}
 
-	static public class Component_vector3 extends Component_tuple {
+	public static
+    class Component_vector3 extends Component_tuple {
 
 		@Override
 		public String getCurrentRepresentedString() {
-			return "Vector3(" + value + "," + valueY + ",0)";
+			return "Vector3(" + value + ',' + valueY + ",0)";
 		}
 	}
 
-	static public class Component_vector3_provider extends Component_tuple {
+	public static
+    class Component_vector3_provider extends Component_tuple {
 
 		String name = "Component_vector3_provider:" + new UID().toString() + ".transient";
 
@@ -110,7 +114,7 @@ public class MinimalXYSlider extends MinimalExpandable {
 		public String getCurrentRepresentedString() {
 			if (localKey == null)
 				localKey = new OKey<Vector3>(name).rootSet(new Vector3(value, valueY, 0));
-			return "trans(OKeyByName(\"" + name + "\", Vector3(" + value + "," + valueY + ",0)))";
+			return "trans(OKeyByName(\"" + name + "\", Vector3(" + value + ',' + valueY + ",0)))";
 		}
 
 		@Override
@@ -284,7 +288,7 @@ public class MinimalXYSlider extends MinimalExpandable {
 		if (font == null) {
 			font = new Font(Constants.defaultFont, Font.PLAIN, 8);
 		}
-		String label = BaseMath.toDP(value, 3) + "," + BaseMath.toDP(valueY, 3);
+		String label = BaseMath.toDP(value, 3) + ',' + BaseMath.toDP(valueY, 3);
 		g2.setFont(font);
 		g2.setColor(new Color(1, 1, 1, on ? 1f : 0.75f));
 		int w = g2.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class Called extends BaseReferenceAlgorithm implements Comparator<iVisualElement> {
 
-	private Pattern pattern;
+	private final Pattern pattern;
 
 	private Vector2 center;
 

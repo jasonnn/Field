@@ -117,7 +117,7 @@ class FieldASMAdviceAdapter extends FieldASMGeneratorAdapter implements Opcodes 
     public
     void visitLabel(final Label label) {
         mv.visitLabel(label);
-        if (constructor && branches != null) {
+        if (constructor && (branches != null)) {
             List<Object> frame = branches.get(label);
             if (frame != null) {
                 stackFrame = frame;
@@ -326,7 +326,7 @@ class FieldASMAdviceAdapter extends FieldASMGeneratorAdapter implements Opcodes 
                     pushValue(OTHER);
                     break;
                 case ALOAD:
-                    pushValue(var == 0 ? THIS : OTHER);
+                    pushValue((var == 0) ? THIS : OTHER);
                     break;
                 case ASTORE:
                 case ISTORE:
@@ -348,7 +348,7 @@ class FieldASMAdviceAdapter extends FieldASMGeneratorAdapter implements Opcodes 
         mv.visitFieldInsn(opcode, owner, name, desc);
         if (constructor) {
             char c = desc.charAt(0);
-            boolean longOrDouble = c == 'J' || c == 'D';
+            boolean longOrDouble = (c == 'J') || (c == 'D');
             switch (opcode) {
                 case GETSTATIC:
                     pushValue(OTHER);
@@ -382,7 +382,7 @@ class FieldASMAdviceAdapter extends FieldASMGeneratorAdapter implements Opcodes 
     public
     void visitIntInsn(final int opcode, final int operand) {
         mv.visitIntInsn(opcode, operand);
-        if (constructor && opcode != NEWARRAY) {
+        if (constructor && (opcode != NEWARRAY)) {
             pushValue(OTHER);
         }
     }
@@ -393,7 +393,7 @@ class FieldASMAdviceAdapter extends FieldASMGeneratorAdapter implements Opcodes 
         mv.visitLdcInsn(cst);
         if (constructor) {
             pushValue(OTHER);
-            if (cst instanceof Double || cst instanceof Long) {
+            if ((cst instanceof Double) || (cst instanceof Long)) {
                 pushValue(OTHER);
             }
         }
@@ -416,7 +416,7 @@ class FieldASMAdviceAdapter extends FieldASMGeneratorAdapter implements Opcodes 
     void visitTypeInsn(final int opcode, final String type) {
         mv.visitTypeInsn(opcode, type);
         // ANEWARRAY, CHECKCAST or INSTANCEOF don't change stack
-        if (constructor && opcode == NEW) {
+        if (constructor && (opcode == NEW)) {
             pushValue(OTHER);
         }
     }
@@ -466,7 +466,7 @@ class FieldASMAdviceAdapter extends FieldASMGeneratorAdapter implements Opcodes 
                     break;
                 case INVOKESPECIAL:
                     Object type = popValue(); // objectref
-                    if (type == THIS && !superInitialized) {
+                    if ((type == THIS) && !superInitialized) {
                         onMethodEnter();
                         superInitialized = true;
                         // once super has been initialized it is no longer

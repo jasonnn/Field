@@ -56,17 +56,23 @@ public class QTKitVideo {
 	native void setPosition(long handle, float position);
 	native float getPosition(long handle);
 
-	native private long nativeHandle();
+	private native
+    long nativeHandle();
 
-	native public void openMovie(long handle, String path);
+	public native
+    void openMovie(long handle, String path);
 
-	native public int bind(long handle);
+	public native
+    int bind(long handle);
 
-	native public int bindInto(long handle, Buffer memory, int width, int height);
+	public native
+    int bindInto(long handle, Buffer memory, int width, int height);
 
-	native public void unbind(long handle);
+	public native
+    void unbind(long handle);
 
-	native public void cleanUp(long handle);
+	public native
+    void cleanUp(long handle);
 
 	public class Element extends BasicUtilities.TwoPassElement {
 		public Element(String name) {
@@ -93,12 +99,14 @@ public class QTKitVideo {
 		return getHeight(handle);
 	}
 
-	native private int getHeight(long handle);
+	private native
+    int getHeight(long handle);
 
 	public int getWidth() {
 		return getWidth(handle);
 	}
 
-	native private int getWidth(long handle);
+	private native
+    int getWidth(long handle);
 
 }

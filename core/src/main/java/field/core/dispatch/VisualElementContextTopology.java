@@ -13,7 +13,7 @@ import java.util.Stack;
 
 public class VisualElementContextTopology extends ContextTopology<iVisualElement, iVisualElementOverrides> {
 
-	private iVisualElement rootElement;
+	private final iVisualElement rootElement;
 
 	public VisualElementContextTopology(iVisualElement root) {
 		super(iVisualElement.class, iVisualElementOverrides.class);

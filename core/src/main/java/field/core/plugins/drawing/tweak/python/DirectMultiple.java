@@ -21,10 +21,10 @@ public class DirectMultiple implements iNodeSelection {
 
 		List<Pair<SelectedVertex, Float>> r = new ArrayList<Pair<SelectedVertex, Float>>();
 
-		for (int i = 0; i < pathNodeNumber.length / 3; i++) {
+		for (int i = 0; i < (pathNodeNumber.length / 3); i++) {
 			int pathNumber = pathNodeNumber[i * 3];
-			int nodeNumber = pathNodeNumber[i * 3 + 1];
-			int code = pathNodeNumber[i * 3 + 2];
+			int nodeNumber = pathNodeNumber[((i * 3) + 1)];
+			int code = pathNodeNumber[((i * 3) + 2)];
 
 			if (here.size() <= pathNumber) return null;
 			if (here.get(pathNumber) == null) return null;

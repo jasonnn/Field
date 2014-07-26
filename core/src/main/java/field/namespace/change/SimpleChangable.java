@@ -64,7 +64,7 @@ public class SimpleChangable implements iChangable, Serializable {
 
 		@Override
 		public String toString() {
-			return "child of <" + SimpleChangable.this.toString() + ">";
+			return "child of <" + SimpleChangable.this.toString() + '>';
 		}
 
 		private boolean checkLocalChain(iModCount[] localChain2) {
@@ -99,7 +99,7 @@ public class SimpleChangable implements iChangable, Serializable {
 		if (count == null) {
 			map.put(withRespectTo, count = new ModCount());
 		}
-		if (map.size() == 0) throw new IllegalArgumentException();
+		if (map.isEmpty()) throw new IllegalArgumentException();
 
 		return count;
 	}

@@ -66,7 +66,8 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
         typeAnalysis = new TypesClassVisitor(className, onMethod.getName() + onMethod.getDescriptor()) {
             @Override
             protected boolean isYieldCall(String owner_classname, String name, String desc) {
-                if (owner_classname.equalsIgnoreCase("field.bytecode.protect.yield.YieldUtilities") && name.equals("yield")) {
+                if ("field.bytecode.protect.yield.YieldUtilities".equalsIgnoreCase(owner_classname)
+                    && "yield".equals(name)) {
                     return true;
                 }
                 return false;
@@ -130,7 +131,7 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
         // call it
         super.visitMethodInsn(opcode, owner, name, desc);
 
-        if (owner.equals("field/bytecode/protect/yield/YieldUtilities") && name.equals("yield")) {
+        if ("field/bytecode/protect/yield/YieldUtilities".equals(owner) && "yield".equals(name)) {
 
             // duplicate _valid_ locals
 
@@ -163,14 +164,14 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
 
             for (Map.Entry<Integer, String> localsToSave : ((Map<Integer, String>) mm).entrySet()) {
                 dup();
-                push(localsToSave.getKey().intValue() - 1);
+                push(localsToSave.getKey() - 1);
                 String typeName = localsToSave.getValue();
 
-                ASMType t = ASMType.getType(typeName.contains("/") ? "L" + typeName + ";" : typeName.substring(1));
+                ASMType t = ASMType.getType(typeName.contains("/") ? ('L' + typeName + ';') : typeName.substring(1));
 
                 //if (StandardTrampoline.debug)
                 //System.out.println(" loading <" + localsToSave.getKey() + ">");
-                this.loadLocal(localsToSave.getKey().intValue(), t);
+                this.loadLocal(localsToSave.getKey(), t);
                 if (!typeName.contains("/"))
                     box(t);
 
@@ -225,10 +226,10 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
 
             for (Map.Entry<Integer, String> localsToSave : ((Map<Integer, String>) mm).entrySet()) {
                 dup();
-                push(localsToSave.getKey().intValue() - 1);
+                push(localsToSave.getKey() - 1);
                 String typeName = localsToSave.getValue();
 
-                ASMType t = ASMType.getType(typeName.contains("/") ? "L" + typeName + ";" : typeName.substring(1));
+                ASMType t = ASMType.getType(typeName.contains("/") ? ('L' + typeName + ';') : typeName.substring(1));
                 mv.visitInsn(Opcodes.AALOAD);
                 // this.arrayLoad(t);
 
@@ -237,7 +238,7 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
                 }
                 if (!typeName.contains("/"))
                     unbox(t);
-                this.storeLocal(localsToSave.getKey().intValue(), t);
+                this.storeLocal(localsToSave.getKey(), t);
             }
 
             // if (StandardTrampoline.debug)
@@ -258,13 +259,13 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
 
         if (var != 0) {
             if (!validLocals.contains(var)) {
-                if (opcode == Opcodes.ASTORE || opcode == Opcodes.ALOAD) {
+                if ((opcode == Opcodes.ASTORE) || (opcode == Opcodes.ALOAD)) {
                     validLocals.add(var);
                     validLocalTypes.add(null);
-                } else if (opcode == Opcodes.ISTORE || opcode == Opcodes.ILOAD) {
+                } else if ((opcode == Opcodes.ISTORE) || (opcode == Opcodes.ILOAD)) {
                     validLocals.add(var);
                     validLocalTypes.add(Type.INT_TYPE);
-                } else if (opcode == Opcodes.FSTORE || opcode == Opcodes.FLOAD) {
+                } else if ((opcode == Opcodes.FSTORE) || (opcode == Opcodes.FLOAD)) {
                     validLocals.add(var);
                     validLocalTypes.add(Type.FLOAT_TYPE);
                 } else {
@@ -279,9 +280,12 @@ public abstract class Yield extends FieldASMGeneratorAdapter implements YieldHan
         }
     }
 
-    abstract public int yieldIndexFor(String fromName, Object fromThis, String methodName);
+    public abstract
+    int yieldIndexFor(String fromName, Object fromThis, String methodName);
 
-    abstract public Object[] yieldLoad(String fromName, Object fromThis, String methodName);
+    public abstract
+    Object[] yieldLoad(String fromName, Object fromThis, String methodName);
 
-    abstract public Object yieldStore(Object wasReturn, Object[] localStorage, String fromName, Object fromThis, String methodName, int resumeLabel);
+    public abstract
+    Object yieldStore(Object wasReturn, Object[] localStorage, String fromName, Object fromThis, String methodName, int resumeLabel);
 }

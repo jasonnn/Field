@@ -24,13 +24,13 @@ public class ConnectiveThickArc2 implements iUpdateable {
 	public static enum Compass {
 		left(0, 0.5f, -1, 0, 0, -1), right(1, 0.5f, 1, 0, 0, -1), up(0.5f, 0, 0, -1, 1, 0), down(0.5f, 1, 0, 1, 1, 0);
 
-		final public float x;
+		public final float x;
 
-		final public float y;
+		public final float y;
 
-		final public float dx;
+		public final float dx;
 
-		final public float dy;
+		public final float dy;
 
 		public Vector3 point;
 
@@ -60,7 +60,8 @@ public class ConnectiveThickArc2 implements iUpdateable {
 		}
 	}
 
-	static public Pair<Compass, Compass> findMinimumRectangleConnection(final Rect start, final Rect end) {
+	public static
+    Pair<Compass, Compass> findMinimumRectangleConnection(final Rect start, final Rect end) {
 
 		Pair<Compass, Compass> option = ReflectionTools.argMin(options, new Object() {
 			public float distance(Pair<Compass, Compass> option) {

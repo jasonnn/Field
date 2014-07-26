@@ -154,11 +154,11 @@ public class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable{
 		Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
 		new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source).getProperty(source, iExecutesPromise.promiseExecution, refRunner);
 		assert refRunner.get() != null;
-		System.err.println(" runner in faceless is is <" + refRunner.get() + ">");
+		System.err.println(" runner in faceless is is <" + refRunner.get() + '>');
 
 		Promise promise = refPss.get().promiseForKey(source);
 		if (promise != null) {
-			System.err.println(" promise isn't null <" +promise+  ">");
+			System.err.println(" promise isn't null <" +promise+ '>');
 			refRunner.get().addActive(new iFloatProvider() {
 
 				public float evaluate() {
@@ -350,7 +350,7 @@ public class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable{
 	}
 
 	public <T> VisitCode setProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> property, Ref<T> to) {
-		if (rootProperties.containsKey(property) || source == getRoot())
+		if (rootProperties.containsKey(property) || (source == getRoot()))
 		{
 			VisualElementProperty<T> a = property.getAliasedTo();
 			while (a != null) {

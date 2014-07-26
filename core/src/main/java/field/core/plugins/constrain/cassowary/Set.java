@@ -37,11 +37,11 @@ class Set {
 	}
 
 	public boolean insert(Object o) {
-		return hash.put(o, o) == null ? true : false;
+		return (hash.put(o, o) == null) ? true : false;
 	}
 
 	public boolean remove(Object o) {
-		return hash.remove(o) == null ? true : false;
+		return (hash.remove(o) == null) ? true : false;
 	}
 
 	public void clear() {
@@ -67,16 +67,16 @@ class Set {
 
 	@Override
 	public String toString() {
-		StringBuffer bstr = new StringBuffer("{ ");
+		StringBuilder bstr = new StringBuilder("{ ");
 		Enumeration<Object> e = hash.keys();
 		if (e.hasMoreElements())
 			bstr.append(e.nextElement().toString());
 		while (e.hasMoreElements()) {
-			bstr.append(", " + e.nextElement());
+			bstr.append(", ").append(e.nextElement());
 		}
 		bstr.append(" }\n");
 		return bstr.toString();
 	}
 
-	private Hashtable<Object, Object> hash;
+	private final Hashtable<Object, Object> hash;
 }

@@ -23,7 +23,8 @@ public class SimpleModelBuilder {
         return modelBuilder.getModel();
     }
 
-    static abstract class AbstractModelSpec<T extends AbstractSimpleModel> {
+    abstract static
+    class AbstractModelSpec<T extends AbstractSimpleModel> {
         public int access;
 
         public String name;
@@ -154,7 +155,7 @@ public class SimpleModelBuilder {
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
             MethodVisitor mv;
-            if (name.equals("<init>") || name.equals("<clinit>")) {
+            if ("<init>".equals(name) || "<clinit>".equals(name)) {
                 mv = super.visitMethod(access, name, desc, signature, exceptions);
             } else {
                 MethodModelSpec spec = method(access, name, desc, signature, exceptions);

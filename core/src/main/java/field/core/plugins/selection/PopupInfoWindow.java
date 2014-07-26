@@ -16,12 +16,14 @@ import java.awt.event.WindowFocusListener;
 
 public class PopupInfoWindow {
 
-	static public String content(String s) {
+	public static
+    String content(String s) {
 		String errorText = "<p class='wellspacedIndentedWhite'><i>" + s.replace("\n", "<BR>") + "</i></p>";
 		return errorText;
 	}
 
-	static public String stackTrace(StackTraceElement[] cause) {
+	public static
+    String stackTrace(StackTraceElement[] cause) {
 		StackTraceElement[] stack = cause;
 		String s = "<p class='wellspacedIndentedWhite'>";
 		for (StackTraceElement e : stack) {
@@ -41,11 +43,13 @@ public class PopupInfoWindow {
 		return s;
 	}
 
-	static public String stackTrace(Throwable cause) {
+	public static
+    String stackTrace(Throwable cause) {
 		return stackTrace(cause.getStackTrace());
 	}
 
-	static public String title(String s) {
+	public static
+    String title(String s) {
 		String errorText = "<p class='invertedheading'><font bgcolor='#888888' color='#000000'>" + s + "</font></p>";
 		return errorText;
 	}
@@ -114,7 +118,7 @@ public class PopupInfoWindow {
 				}
 			});
 
-			UbiquitousLinks.links.install(infoText);
+			UbiquitousLinks.install(infoText);
 		}
 		return infoText;
 	}

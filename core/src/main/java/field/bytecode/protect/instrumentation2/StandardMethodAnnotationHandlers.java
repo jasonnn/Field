@@ -57,10 +57,10 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
         @Override
         public MethodVisitor handleMethod(ASMAnnotatedMethodCtx ctx) {
             String name = "dispatchOverTopology" +
-                    "+" + ctx.name +
-                    "+" + ctx.desc +
-                    "+" + ctx.signature +
-                    "+" + counter.getAndIncrement();
+                          '+' + ctx.name +
+                          '+' + ctx.desc +
+                          '+' + ctx.signature +
+                          '+' + counter.getAndIncrement();
             return new CallOnEntryAndExit_exceptionAware(name, ctx.access, new ASMMethod(ctx.name, ctx.desc), ctx.delegate, ctx.params) {
 
                 @Override
@@ -221,7 +221,7 @@ public enum StandardMethodAnnotationHandlers implements AnnotatedMethodHandler2 
             return NOOP(ctx);
         }
     };
-    private static AtomicInteger counter = new AtomicInteger(0);
+    private static final AtomicInteger counter = new AtomicInteger(0);
 
     public final String desc;
 

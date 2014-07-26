@@ -7,12 +7,13 @@ import java.util.*;
 
 public class GraphNodeSearching {
 
-	static public class VisitCode {
-		static public final VisitCode cont = new VisitCode("CONTINUE");
+	public static
+    class VisitCode {
+		public static final VisitCode cont = new VisitCode("CONTINUE");
 
-		static public final VisitCode stop = new VisitCode("STOP");
+		public static final VisitCode stop = new VisitCode("STOP");
 
-		static public final VisitCode skip = new VisitCode("skip");
+		public static final VisitCode skip = new VisitCode("skip");
 
 		private final String string;
 
@@ -26,7 +27,8 @@ public class GraphNodeSearching {
 		}
 	}
 
-	static public class SkipMultiple extends VisitCode {
+	public static
+    class SkipMultiple extends VisitCode {
 		public Collection c;
 
 		public SkipMultiple(Collection c) {
@@ -35,7 +37,8 @@ public class GraphNodeSearching {
 		}
 	}
 
-	static public class SkipMultipleBut extends VisitCode {
+	public static
+    class SkipMultipleBut extends VisitCode {
 		public Collection c;
 
 		public Object o;
@@ -47,7 +50,8 @@ public class GraphNodeSearching {
 		}
 	}
 
-	static public abstract class GraphNodeVisitor_depthFirst<T extends iGraphNode> {
+	public abstract static
+    class GraphNodeVisitor_depthFirst<T extends iGraphNode> {
 		private boolean avoidLoops;
 
 		protected HashSet<T> seen = new HashSet<T>();
@@ -152,18 +156,20 @@ public class GraphNodeSearching {
 			return VisitCode.cont;
 		}
 
-		abstract protected VisitCode visit(T n);
+		protected abstract
+        VisitCode visit(T n);
 
         protected static
         String spaces(int n) {
-            StringBuffer buf = new StringBuffer(n);
+            StringBuilder buf = new StringBuilder(n);
 			for (int i = 0; i < n; i++)
 				buf.append(' ');
 			return buf.toString();
 		}
 	}
 
-	static public SimpleNode<String> makeRandomTree(int numNodes, final float factor) {
+	public static
+    SimpleNode<String> makeRandomTree(int numNodes, final float factor) {
 		SimpleNode<String> root = new SimpleNode<String>().setPayload("root");
 		ArrayList<SimpleNode<String>> nodes = new ArrayList<SimpleNode<String>>();
 		nodes.add(root);
@@ -194,7 +200,8 @@ public class GraphNodeSearching {
 		return root;
 	}
 
-	static public <T extends iGraphNode<T>> List<T> findPath_avoidingLoops(T from, final T to) {
+	public static
+    <T extends iGraphNode<T>> List<T> findPath_avoidingLoops(T from, final T to) {
 		final ArrayList<T> path = new ArrayList<T>();
 		if (from == to) {
 			path.add(from);

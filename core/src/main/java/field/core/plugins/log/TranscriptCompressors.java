@@ -12,7 +12,8 @@ import java.util.Stack;
 
 public class TranscriptCompressors {
 
-	static public class MergeSuspendedContext implements Logging.iTranscriptCompression {
+	public static
+    class MergeSuspendedContext implements Logging.iTranscriptCompression {
 		public ArrayList<iLoggingEvent> compress(ArrayList<iLoggingEvent> events) {
 
 			int q = 0;
@@ -56,7 +57,7 @@ public class TranscriptCompressors {
 							events.remove(i);
 							i--;
 
-							assert found : "no beginign for end in transcript" + s + " " + currentContext + " " + foundIs;
+							assert found : "no beginign for end in transcript" + s + ' ' + currentContext + ' ' + foundIs;
 						}
 					} else {
 						Class endMatching = s.getMatchingEnd();
@@ -75,7 +76,8 @@ public class TranscriptCompressors {
 		}
 	}
 
-	static public class EventlessUpdates implements Logging.iTranscriptCompression {
+	public static
+    class EventlessUpdates implements Logging.iTranscriptCompression {
 		public ArrayList<iLoggingEvent> compress(ArrayList<iLoggingEvent> events) {
 
 			int q = 0;
@@ -93,7 +95,8 @@ public class TranscriptCompressors {
 		}
 	}
 
-	static public class Join implements Logging.iTranscriptCompression {
+	public static
+    class Join implements Logging.iTranscriptCompression {
 		iTranscriptCompression[] compression;
 
 		public Join(iTranscriptCompression[] compression) {
@@ -110,7 +113,8 @@ public class TranscriptCompressors {
 
 	}
 
-	static public class LastNumberOfCycles implements Logging.iTranscriptCompression {
+	public static
+    class LastNumberOfCycles implements Logging.iTranscriptCompression {
 		private final int maxCycle;
 
 		public LastNumberOfCycles(int maxCycle) {
@@ -131,7 +135,8 @@ public class TranscriptCompressors {
 		}
 	}
 
-	static public class MaxNumEvents implements Logging.iTranscriptCompression {
+	public static
+    class MaxNumEvents implements Logging.iTranscriptCompression {
 		private final int maxEvents;
 
 		public MaxNumEvents(int maxEvents) {

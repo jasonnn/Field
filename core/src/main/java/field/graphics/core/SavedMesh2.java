@@ -27,7 +27,8 @@ import java.util.Set;
  */
 public class SavedMesh2 {
 
-	static public void save(iLongGeometry mesh, String name) throws IOException {
+	public static
+    void save(iLongGeometry mesh, String name) throws IOException {
 		MeshBlast b = new MeshBlast(name);
 		b.configureChannel(mesh, mesh.numVertex(), mesh.numTriangle(), mesh instanceof LineList_long ? 2 : 3);
 		if (mesh instanceof LineList_long)
@@ -37,14 +38,16 @@ public class SavedMesh2 {
 		b.close();
 	}
 
-	static public void save(PointList mesh, String name) throws IOException {
+	public static
+    void save(PointList mesh, String name) throws IOException {
 		MeshBlast b = new MeshBlast(name);
 		b.configureChannel(mesh, mesh.numVertex());
 		b.addGeometry(mesh);
 		b.close();
 	}
 
-	static public TriangleMesh_long loadTriangle(String filename) throws IOException {
+	public static
+    TriangleMesh_long loadTriangle(String filename) throws IOException {
 		try {
 			return loadTriangle(filename, TriangleMesh_long.class);
 		} catch (InstantiationException e) {
@@ -56,8 +59,9 @@ public class SavedMesh2 {
 		}
 	}
 
-	static public TriangleMesh_long loadTriangle(String filename, Class<? extends TriangleMesh_long> meshClass) throws IOException, InstantiationException, IllegalAccessException {
-		Header header = (Header) new PythonUtils().loadAsXML(filename + ".xmlHeader");
+	public static
+    TriangleMesh_long loadTriangle(String filename, Class<? extends TriangleMesh_long> meshClass) throws IOException, InstantiationException, IllegalAccessException {
+		Header header = (Header) PythonUtils.loadAsXML(filename + ".xmlHeader");
 
 		RandomAccessFile file = new RandomAccessFile(filename, "r");
 		MappedByteBuffer source = file.getChannel().map(MapMode.READ_ONLY, 0, file.length());
@@ -107,8 +111,9 @@ public class SavedMesh2 {
 		return mesh;
 	}
 
-	static public LineList_long loadLine(String filename) throws IOException {
-		Header header = (Header) new PythonUtils().loadAsXML(filename + ".xmlHeader");
+	public static
+    LineList_long loadLine(String filename) throws IOException {
+		Header header = (Header) PythonUtils.loadAsXML(filename + ".xmlHeader");
 
 		RandomAccessFile file = new RandomAccessFile(filename, "r");
 		MappedByteBuffer source = file.getChannel().map(MapMode.READ_ONLY, 0, file.length());
@@ -156,7 +161,8 @@ public class SavedMesh2 {
 		return mesh;
 	}
 
-	static public PointList loadPoint(String filename) throws IOException {
+	public static
+    PointList loadPoint(String filename) throws IOException {
 		try {
 			return loadPoint(filename, PointList.class);
 		} catch (InstantiationException e) {
@@ -168,8 +174,9 @@ public class SavedMesh2 {
 		}
 	}
 
-	static public PointList loadPoint(String filename, Class<? extends PointList> meshClass) throws IOException, InstantiationException, IllegalAccessException {
-		Header header = (Header) new PythonUtils().loadAsXML(filename + ".xmlHeader");
+	public static
+    PointList loadPoint(String filename, Class<? extends PointList> meshClass) throws IOException, InstantiationException, IllegalAccessException {
+		Header header = (Header) PythonUtils.loadAsXML(filename + ".xmlHeader");
 
 		RandomAccessFile file = new RandomAccessFile(filename, "r");
 		MappedByteBuffer source = file.getChannel().map(MapMode.READ_ONLY, 0, file.length());

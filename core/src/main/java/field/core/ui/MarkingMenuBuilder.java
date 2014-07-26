@@ -48,9 +48,9 @@ public class MarkingMenuBuilder {
 		}
 
 		for (PopupMarkingArea.PopMenuSpec s : spec.values()) {
-			if (s.menu != null && s.menu.size() == 0)
+			if ((s.menu != null) && s.menu.isEmpty())
 				s.menu = null;
-			else if (s.menu != null && s.menu.size() == 1 && s.mainCallback == null) {
+			else if ((s.menu != null) && (s.menu.size() == 1) && (s.mainCallback == null)) {
 				s.mainCallback = s.menu.entrySet().iterator().next().getValue();
 				s.mainLabel = s.menu.entrySet().iterator().next().getKey();
 				s.menu = null;
@@ -100,7 +100,7 @@ public class MarkingMenuBuilder {
 	private Position nextUnalloc(String defaultPosition) {
 		Position s = Position.valueOf(defaultPosition);
 		int i = 1;
-		while (spec.containsKey(s) && i < Position.values().length) {
+		while (spec.containsKey(s) && (i < Position.values().length)) {
 			s = Position.values()[(s.ordinal() + i) % Position.values().length];
 			i++;
 		}
@@ -139,7 +139,7 @@ public class MarkingMenuBuilder {
 		if (currentlyBuilding == null)
 			defaultMenu();
 
-		currentlyBuilding.menu.put(" " + icon + " " + text, u);
+		currentlyBuilding.menu.put(' ' + icon + ' ' + text, u);
 
 		return this;
 	}

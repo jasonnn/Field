@@ -34,8 +34,8 @@ public class DynamicExtensionPoint<T> implements iHandlesAttributes, iCallable {
 
 	transient boolean isInited = false;
 
-	transient private T proxyInstance;
-	transient private PythonCallableMap defaultExtension;
+	private transient T proxyInstance;
+	private transient PythonCallableMap defaultExtension;
 
 	transient HashMap<String, Method> aliases = new HashMap<String, Method>();
 
@@ -94,7 +94,7 @@ public class DynamicExtensionPoint<T> implements iHandlesAttributes, iCallable {
 	public PythonCallableMap getExtensionPoint(String name) {
 
 		init(forClass);
-		if (name.equals("unhandled"))
+		if ("unhandled".equals(name))
 			return unhandled;
 
 		Method m = aliases.get(name);

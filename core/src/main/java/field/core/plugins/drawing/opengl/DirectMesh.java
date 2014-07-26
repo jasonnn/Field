@@ -14,7 +14,7 @@ import java.util.*;
 
 public class DirectMesh {
 
-	static public int fixedCurveSampling = 50;
+	public static int fixedCurveSampling = 50;
 
 	public class MeshCache extends BasicUtilities.OnePassElement {
 
@@ -128,7 +128,7 @@ public class DirectMesh {
 
 		SubMesh_long cache;
 		int mod = -1;
-		private CachedLine from;
+		private final CachedLine from;
 
 		public LineAdaptor(CachedLine from) {
 			this.from = from;
@@ -641,7 +641,7 @@ public class DirectMesh {
 			return;
 
 		if (a instanceof Number)
-			cache.setAux(cache.getVertexCursor() - 1, value, ((Float) a).floatValue());
+			cache.setAux(cache.getVertexCursor() - 1, value, ((Number) a).floatValue());
 		else if (a instanceof Vector2)
 			cache.setAux(cache.getVertexCursor() - 1, value, ((Vector2) a).x, ((Vector2) a).y);
 		else if (a instanceof Vector3)

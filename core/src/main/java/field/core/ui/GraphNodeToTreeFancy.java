@@ -44,7 +44,7 @@ public class GraphNodeToTreeFancy {
     private static
     void populate(iMutable m, Widget i) {
 
-		TreeItem item = i instanceof TreeItem ? new TreeItem(((TreeItem) i), 0) : new TreeItem((Tree) i, 0);
+		TreeItem item = (i instanceof TreeItem) ? new TreeItem(((TreeItem) i), 0) : new TreeItem((Tree) i, 0);
         item.setText((String.valueOf(m)));
         item.setData(m);
 
@@ -55,17 +55,18 @@ public class GraphNodeToTreeFancy {
 
 	}
 
-	static public class Pretty {
+	public static
+    class Pretty {
 
 		Pattern SMALLER_PATTERN = Pattern.compile("(<font size=-3 color='#" + Constants.defaultTreeColorDim + "'>)(?=\\S)(.+?)(?<=\\S)(</font>)");
 		Pattern BOLD_PATTERN = Pattern.compile("(<b>)(?=\\S)(.+?[*_]*)(?<=\\S)(</b>)");
 		Pattern ITALIC_PATTERN = Pattern.compile("(<i>)(.+?)(</i>)");
 		Pattern SEP_PATTERN = Pattern.compile("_____________________________");
 
-		private Font boldFont;
-		private Font smallerFont;
-		private Font italicFont;
-		private Font normalFont;
+		private final Font boldFont;
+		private final Font smallerFont;
+		private final Font italicFont;
+		private final Font normalFont;
 
 		int indent = 5;
 		int vertSpace = Platform.isMac() ? 3 : 3;

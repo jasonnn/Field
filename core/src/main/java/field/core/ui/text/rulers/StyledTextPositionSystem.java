@@ -11,7 +11,7 @@ import java.util.WeakHashMap;
 
 public class StyledTextPositionSystem {
 
-	static public final WeakHashMap<StyledText, StyledTextPositionSystem> systems = new WeakHashMap<StyledText, StyledTextPositionSystem>();
+	public static final WeakHashMap<StyledText, StyledTextPositionSystem> systems = new WeakHashMap<StyledText, StyledTextPositionSystem>();
 
 	private final StyledText on;
 	boolean installed = false;
@@ -21,7 +21,8 @@ public class StyledTextPositionSystem {
 		this.on = on;
 	}
 
-	static public class Position {
+	public static
+    class Position {
 		public int at;
 		public int was;
 		boolean valid = true;
@@ -84,7 +85,8 @@ public class StyledTextPositionSystem {
 		positions.clear();
 	}
 
-	static public StyledTextPositionSystem get(StyledText t) {
+	public static
+    StyledTextPositionSystem get(StyledText t) {
 		StyledTextPositionSystem m = systems.get(t);
 		if (m == null)
 			systems.put(t, m = new StyledTextPositionSystem(t));

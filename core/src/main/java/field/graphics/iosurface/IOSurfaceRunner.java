@@ -12,12 +12,12 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
 public class IOSurfaceRunner {
 
-	static public final String iosurfacer_executable = SystemProperties.getProperty("iosurfacer", "./iosurfacer");
-	private Process process;
-	private BufferedReader in;
+	public static final String iosurfacer_executable = SystemProperties.getProperty("iosurfacer", "./iosurfacer");
+	private final Process process;
+	private final BufferedReader in;
 	private final String filename;
-	private IOSurfaceElement element;
-	private OutputStreamWriter out;
+	private final IOSurfaceElement element;
+	private final OutputStreamWriter out;
 
 	public IOSurfaceRunner(String filename) throws IOException {
 
@@ -77,7 +77,7 @@ public class IOSurfaceRunner {
 
 	public void setTime(double seconds) {
 		try {
-			out.append("setposition#" + seconds + "\n");
+			out.append("setposition#").append(Double.toString(seconds)).append('\n');
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -86,7 +86,7 @@ public class IOSurfaceRunner {
 
 	public void setRate(double fractionOfRealtime) {
 		try {
-			out.append("setrate#" + fractionOfRealtime + "\n");
+			out.append("setrate#").append(Double.toString(fractionOfRealtime)).append('\n');
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

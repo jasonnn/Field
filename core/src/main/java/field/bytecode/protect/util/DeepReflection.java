@@ -19,7 +19,7 @@ public class DeepReflection {
     static class MyDeque extends ArrayDeque<Class> {
 
         public void pushAll(Class[] classes) {
-            if (classes == null || classes.length == 0) return;
+            if ((classes == null) || (classes.length == 0)) return;
             for (int i = classes.length - 1; i > -1; i--) {
                 push(classes[i]);
             }
@@ -35,7 +35,7 @@ public class DeepReflection {
 
 
     private static Class[] notNull(Class[] arr) {
-        return arr == null ? EMPTY_ARRAY : arr;
+        return (arr == null) ? EMPTY_ARRAY : arr;
     }
 
     public static Set<Class> getInterfacesDF(Class base) {
@@ -76,7 +76,7 @@ public class DeepReflection {
     static void addDirectParents(Class c, MyDeque deq, boolean depthFirst) {
         Class sup = c.getSuperclass();
         Class[] inter = c.getInterfaces();
-        if (sup != null && sup != Object.class) {
+        if ((sup != null) && (sup != Object.class)) {
             if (depthFirst) {
                 deq.pushAll(inter);
                 deq.push(sup);
@@ -94,7 +94,7 @@ public class DeepReflection {
     static Collection<Class> getDirectParents(Class c) {
         Class sup = c.getSuperclass();
         Class[] inter = c.getInterfaces();
-        if (sup != null && sup != Object.class) {
+        if ((sup != null) && (sup != Object.class)) {
             if (inter.length > 0) {
                 LinkedHashSet<Class> accum = new LinkedHashSet<Class>(inter.length + 1);
                 accum.add(sup);
@@ -136,7 +136,7 @@ public class DeepReflection {
 
     public static Set<Class> getSuperClasses(Class base, Set<Class> accum, boolean includeSelf) {
         Class parent = includeSelf ? base : base.getSuperclass();
-        for (; parent != null && parent != Object.class; parent = parent.getSuperclass()) {
+        for (; (parent != null) && (parent != Object.class); parent = parent.getSuperclass()) {
             accum.add(parent);
         }
         return accum;

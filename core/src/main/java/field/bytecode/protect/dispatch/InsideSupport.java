@@ -14,7 +14,8 @@ public class InsideSupport {
 
 	static Map<String, Map<Object, Integer>> inside = new HashMap<String, Map<Object, Integer>>();
 
-	static public void enter(Object instance, String group) {
+	public static
+    void enter(Object instance, String group) {
 		if (group == null) group = "";
 		Map<Object, Integer> insideGroup = inside.get(group);
 		if (insideGroup == null) {
@@ -63,7 +64,8 @@ public class InsideSupport {
 		return ret;
 	}
 
-	static public void exit(Object instance, String group) {
+	public static
+    void exit(Object instance, String group) {
 		if (group == null) group = "";
 		Map<Object, Integer> insideGroup = inside.get(group);
 		assert insideGroup != null : "exit without any kind of group entry";

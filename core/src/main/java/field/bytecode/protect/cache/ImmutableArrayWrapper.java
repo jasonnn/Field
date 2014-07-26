@@ -6,11 +6,11 @@ public class ImmutableArrayWrapper implements iImmutableContainer {
 
 	public Object[] a;
 
-	private int hash;
+	private final int hash;
 
 	private String bigBase;
 
-	private boolean doBigBase;
+	private final boolean doBigBase;
 
 	public ImmutableArrayWrapper(Object[] a) {
 		this.a = a;
@@ -47,6 +47,6 @@ public class ImmutableArrayWrapper implements iImmutableContainer {
 	
 	@Override
 	public String toString() {
-		return "iaw:"+Arrays.asList(a)+" (hash+"+hashCode()+")";
+		return "iaw:"+Arrays.asList(a)+" (hash+"+hashCode()+ ')';
 	}
 }

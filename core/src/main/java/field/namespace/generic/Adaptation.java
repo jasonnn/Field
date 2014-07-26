@@ -118,7 +118,7 @@ public class Adaptation {
                 }
             }
 
-            if (startingPlaces.size() == 0) {
+            if (startingPlaces.isEmpty()) {
                 return null;
             }
 

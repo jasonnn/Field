@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 
 public class Launcher {
-    static public final Object lock = new Object();
+    public static final Object lock = new Object();
 
     static {
         try {
@@ -28,8 +28,8 @@ public class Launcher {
     public static String resourcesDirectory;
     public static iLaunchable mainInstance;
     public static String[] args = {};
-    static public Display display;
-    volatile static public boolean shuttingDown = false;
+    public static Display display;
+    public static volatile boolean shuttingDown = false;
     protected static Launcher launcher = null;
     static List<iOpenFileHandler> openFileHandlers = new ArrayList<iOpenFileHandler>();
     public Thread mainThread = null;
@@ -85,14 +85,15 @@ public class Launcher {
             }
 
             // swing utilities?
-            if (!isTrampoline) {
-
-                mainThread = Thread.currentThread();
-                (mainInstance = (iLaunchable) c.newInstance()).launch();
-            } else {
+            if (isTrampoline) {
                 //StandardTrampoline is created here
                 (mainInstance = (iLaunchable) c.newInstance()).launch();
                 constructMainTimer();
+            }
+            else {
+
+                mainThread = Thread.currentThread();
+                (mainInstance = (iLaunchable) c.newInstance()).launch();
             }
 
         } catch (Throwable e) {
@@ -128,7 +129,7 @@ public class Launcher {
                 launcher = new Launcher(args);
                 MiscNative.doSplash();
 
-                if (Platform.getOS() == Platform.OS.mac && SystemProperties.getIntProperty("above", 0) == 1)
+                if ((Platform.getOS() == Platform.OS.mac) && (SystemProperties.getIntProperty("above", 0) == 1))
                     new AppleScript("tell application \"Field\"\n activate\nend tell", false);
 
             }
@@ -149,7 +150,8 @@ public class Launcher {
         Launcher.getLauncher().runRegisteredShutdownHooks();
     }
 
-    static public void registerOpenHandler(iOpenFileHandler h) {
+    public static
+    void registerOpenHandler(iOpenFileHandler h) {
         // if (openFileHandlers.size() == 0) {
         // for (ApplicationEvent a : openEvents) {
         // h.open(a.getFilename());
@@ -267,7 +269,7 @@ public class Launcher {
                                             }
 
                                         } catch (Throwable tr) {
-                                            log.log(Level.WARNING,"Launcher reporting an exception while updating <" + up + ">",tr);
+                                            log.log(Level.WARNING,"Launcher reporting an exception while updating <" + up + '>',tr);
                                             tr.printStackTrace();
                                             handle(tr);
                                             if (SystemProperties.getIntProperty("exitOnException", 0) == 1)

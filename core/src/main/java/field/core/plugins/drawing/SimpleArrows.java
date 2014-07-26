@@ -15,12 +15,13 @@ import field.math.linalg.Vector2;
  */
 public class SimpleArrows {
 
-	public CachedLine triangleAt(Vector2 v, Vector2 backward, float width) {
+	public static
+    CachedLine triangleAt(Vector2 v, Vector2 backward, float width) {
 		CachedLine c = new CachedLine();
 		c.getInput().moveTo(v.x, v.y);
 
-		c.getInput().lineTo(v.x - backward.x - backward.y * width, v.y - backward.y + backward.x * width);
-		c.getInput().lineTo(v.x - backward.x + backward.y * width, v.y - backward.y - backward.x * width);
+		c.getInput().lineTo(v.x - backward.x - (backward.y * width), (v.y - backward.y) + (backward.x * width));
+		c.getInput().lineTo((v.x - backward.x) + (backward.y * width), v.y - backward.y - (backward.x * width));
 		c.getInput().lineTo(v.x, v.y);
 
 		c.getProperties().put(iLinearGraphicsContext.derived, 1f);
@@ -40,7 +41,7 @@ public class SimpleArrows {
 		Vector2 p = cc.position();
 		Vector2 t = cc.tangentForward();
 
-		if (t == null || t.mag() == 0 || t.isNaN() || along == 1)
+		if ((t == null) || (t.mag() == 0) || t.isNaN() || (along == 1))
 			t = cc.tangentBackward();
 
 		Vector2 n = t.normalize();
@@ -56,7 +57,7 @@ public class SimpleArrows {
 		Vector2 p = cc.position();
 		Vector2 t = cc.tangentForward();
 
-		if (t == null || t.mag() == 0 || t.isNaN())
+		if ((t == null) || (t.mag() == 0) || t.isNaN())
 			t = cc.tangentBackward();
 
 		Vector2 n = t.normalize();
@@ -65,7 +66,8 @@ public class SimpleArrows {
 		return triangleAt(p, n, width);
 	}
 
-	public CachedLine circleFor(CachedLine c, float along, float size) {
+	public static
+    CachedLine circleFor(CachedLine c, float along, float size) {
 		Cursor cc = new Cursor(c);
 		float len = cc.length();
 		cc.forwardD(len * along);
@@ -77,7 +79,7 @@ public class SimpleArrows {
 
     public static
     CachedLine circleAt(Vector2 center, float r) {
-        float k = (float) (4 * (Math.sqrt(2) - 1) / 3);
+        float k = (float) ((4 * (Math.sqrt(2) - 1)) / 3);
 
 		CachedLine c = new CachedLine();
 		c.getInput().moveTo(0, 1);

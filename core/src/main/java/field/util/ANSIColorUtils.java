@@ -9,27 +9,31 @@ import field.core.Platform;
  */
 public class ANSIColorUtils {
 
-	static public final char esc = (char) 0x1b;
+	public static final char esc = (char) 0x1b;
 
-	static public String red(String s) {
+	public static
+    String red(String s) {
 		if (Platform.getOS() != Platform.OS.mac)
 			return s;
 		return esc + "[31m" + s + esc + "[0m";
 	}
 
-	static public String blue(String s) {
+	public static
+    String blue(String s) {
 		if (Platform.getOS() != Platform.OS.mac)
 			return s;
 		return esc + "[34m" + s + esc + "[0m";
 	}
 
-	static public String green(String s) {
+	public static
+    String green(String s) {
 		if (Platform.getOS() != Platform.OS.mac)
 			return s;
 		return esc + "[32m" + s + esc + "[0m";
 	}
 
-	static public String yellow(String s) {
+	public static
+    String yellow(String s) {
 		if (Platform.getOS() != Platform.OS.mac)
 			return s;
 		return esc + "[33m" + s + esc + "[0m";
@@ -41,13 +45,15 @@ public class ANSIColorUtils {
 	 * 
 	 * @return
 	 */
-	static public String eraseLine() {
+    public static
+    String eraseLine() {
 		if (Platform.getOS() != Platform.OS.mac)
 			return "\n";
 		return esc + "[K";
 	}
 
-	static public String eraseScreen() {
+	public static
+    String eraseScreen() {
 		if (Platform.getOS() != Platform.OS.mac)
 			return "\n";
 		return esc + "[2J";

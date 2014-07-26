@@ -20,10 +20,11 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class CoreHelpers {
 
-	static public boolean isCore = SystemProperties.getIntProperty("opengl32", 0) == 1;
-	static public boolean isCoreCompat = SystemProperties.getIntProperty("opengl32_compat", 0) == 1;
+	public static boolean isCore = SystemProperties.getIntProperty("opengl32", 0) == 1;
+	public static boolean isCoreCompat = SystemProperties.getIntProperty("opengl32_compat", 0) == 1;
 
-	static public class GLMatrix {
+	public static
+    class GLMatrix {
 		float[] head = new float[16];
 		List<float[]> stack = new ArrayList<float[]>();
 
@@ -43,37 +44,56 @@ public class CoreHelpers {
 
 		@Override
 		public String toString() {
-			return "\n" + head[0] + " " + head[1] + " " + head[2] + " " + head[3] + "\n" + "\n" + head[4] + " " + head[5] + " " + head[6] + " " + head[7] + "\n" + "\n" + head[8] + " " + head[9] + " " + head[10] + " " + head[11] + "\n" + "\n" + head[12] + " " + head[13] + " " + head[14] + " " + head[15] + "\n";
+			return "\n" + head[0] + ' '
+                   + head[1] + ' '
+                   + head[2] + ' '
+                   + head[3] + '\n'
+                   + '\n'
+                   + head[4] + ' '
+                   + head[5] + ' '
+                   + head[6] + ' '
+                   + head[7] + '\n'
+                   + '\n'
+                   + head[8] + ' '
+                   + head[9] + ' '
+                   + head[10] + ' '
+                   + head[11] + '\n'
+                   + '\n'
+                   + head[12] + ' '
+                   + head[13] + ' '
+                   + head[14] + ' '
+                   + head[15] + '\n';
 		}
 
 	}
 
-	static public GLMatrix modelview = new GLMatrix();
-	static public GLMatrix projection = new GLMatrix();
-	static public GLMatrix texture0 = new GLMatrix();
-	static public GLMatrix texture1 = new GLMatrix();
-	static public GLMatrix texture2 = new GLMatrix();
-	static public GLMatrix texture3 = new GLMatrix();
-	static public GLMatrix texture4 = new GLMatrix();
-	static public GLMatrix texture5 = new GLMatrix();
+	public static GLMatrix modelview = new GLMatrix();
+	public static GLMatrix projection = new GLMatrix();
+	public static GLMatrix texture0 = new GLMatrix();
+	public static GLMatrix texture1 = new GLMatrix();
+	public static GLMatrix texture2 = new GLMatrix();
+	public static GLMatrix texture3 = new GLMatrix();
+	public static GLMatrix texture4 = new GLMatrix();
+	public static GLMatrix texture5 = new GLMatrix();
 
-	static public GLMatrix _modelView0 = new GLMatrix();
-	static public GLMatrix _projection0 = new GLMatrix();
+	public static GLMatrix _modelView0 = new GLMatrix();
+	public static GLMatrix _projection0 = new GLMatrix();
 
-	static public GLMatrix _modelView1 = new GLMatrix();
-	static public GLMatrix _projection1 = new GLMatrix();
+	public static GLMatrix _modelView1 = new GLMatrix();
+	public static GLMatrix _projection1 = new GLMatrix();
 
 
-	static public GLMatrix texture = texture0;
+	public static GLMatrix texture = texture0;
 
 	static int mode;
 
-	static public final int MODELVIEW_0 = 1;
-	static public final int PROJECTION_0 = 2;
-	static public final int MODELVIEW_1 = 3;
-	static public final int PROJECTION_1 = 4;
+	public static final int MODELVIEW_0 = 1;
+	public static final int PROJECTION_0 = 2;
+	public static final int MODELVIEW_1 = 3;
+	public static final int PROJECTION_1 = 4;
 
-	static public class Attrib {
+	public static
+    class Attrib {
 		GLMatrix modelview = new GLMatrix(CoreHelpers.modelview);
 		GLMatrix projection = new GLMatrix(CoreHelpers.projection);
 		GLMatrix texture0 = new GLMatrix(CoreHelpers.texture0);
@@ -112,13 +132,15 @@ public class CoreHelpers {
 
 	}
 
-	static public void glMatrixMode(int mode) {
+	public static
+    void glMatrixMode(int mode) {
 		CoreHelpers.mode = mode;
 		if (!isCore || isCoreCompat)
 			GL11.glMatrixMode(mode);
 	}
 
-	static public void glActiveTexture(int tex) {
+	public static
+    void glActiveTexture(int tex) {
 		GL13.glActiveTexture(tex);
 		switch (tex) {
 		case GL13.GL_TEXTURE0:
@@ -144,7 +166,8 @@ public class CoreHelpers {
 		}
 	}
 
-	static public void glLoadIdentity() {
+	public static
+    void glLoadIdentity() {
 		if (!isCore || isCoreCompat)
 			GL11.glLoadIdentity();
 
@@ -183,11 +206,13 @@ public class CoreHelpers {
 		m[1] = m[2] = m[3] = m[4] = m[6] = m[7] = m[8] = m[9] = m[11] = m[12] = m[13] = m[14] = 0;
 	}
 
-	static public void gluOrtho2D(double left, double right, double bottom, double top) {
+	public static
+    void gluOrtho2D(double left, double right, double bottom, double top) {
 		glOrtho(left, right, bottom, top, -1, 1);
 	}
 
-	static public void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar) {
+	public static
+    void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar) {
 		// ;//System.out.println(" ortho :" + left + " " + right + " " +
 		// bottom + " " + top + " " + zNear + " " + zFar);
 		if (!isCore || isCoreCompat)
@@ -210,7 +235,8 @@ public class CoreHelpers {
 		glMultiply(m);
 	}
 
-	static private void glMultiply(float[] m) {
+	private static
+    void glMultiply(float[] m) {
 		switch (mode) {
 		case GL11.GL_PROJECTION:
 			System.arraycopy(glMultiply(projection.head, m), 0, projection.head, 0, 16);
@@ -603,8 +629,8 @@ public class CoreHelpers {
         
 		float[] ret = new float[16];
         
-		ret[0 * 4 + 0] = side.get(0);
-		ret[1 * 4 + 0] = side.get(1);
+		ret[((0 * 4) + 0)] = side.get(0);
+		ret[((1 * 4) + 0)] = side.get(1);
 		ret[2 * 4 + 0] = side.get(2);
         
 		ret[0 * 4 + 1] = up.get(0);

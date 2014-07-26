@@ -48,8 +48,8 @@ import java.util.Map.Entry;
 public class ElementFileSystemTree {
 
 	Tree tree;
-	private File root;
-	private Composite toolbar;
+	private final File root;
+	private final Composite toolbar;
 	ToolBarFolder open;
 
 	static public class ObjectTransfer extends ByteArrayTransfer {
@@ -83,7 +83,7 @@ public class ElementFileSystemTree {
 		protected Object nativeToJava(TransferData transferData) {
             //System.out.println(" native to java " + transferData);
             if (isSupportedType(transferData)) {
-				return new PythonUtils().fromXML(new String((byte[]) super.nativeToJava(transferData)));
+				return PythonUtils.fromXML(new String((byte[]) super.nativeToJava(transferData)));
 			}
 			return super.nativeToJava(transferData);
 		}
@@ -315,7 +315,7 @@ public class ElementFileSystemTree {
 	}
 
 	static public class SheetDropSupport {
-		private DropTarget target;
+		private final DropTarget target;
 
 		public SheetDropSupport(final Canvas canvas, final iVisualElement root) {
 			target = new DropTarget(canvas, DND.DROP_COPY | DND.DROP_DEFAULT);
@@ -510,10 +510,11 @@ public class ElementFileSystemTree {
 		}
 	}
 
-	protected void expandElement(Pair<File, Pair<String, HashMap<String, Object>>> p, TreeItem item) {
+	protected static
+    void expandElement(Pair<File, Pair<String, HashMap<String, Object>>> p, TreeItem item) {
 		TreeMap<String, Object> m = new TreeMap<String, Object>(p.right.right);
 		for (Entry<String, Object> ee : m.entrySet()) {
-			if (ee.getKey().equals("name"))
+			if ("name".equals(ee.getKey()))
 				continue;
 			if (ee.getValue() != null) {
 				String f = safePrint(ee.getValue());
@@ -590,7 +591,7 @@ public class ElementFileSystemTree {
 				TreeItem[] items = item.getItems();
 
 				for (Entry<String, HashMap<String, Object>> ee : properties.entrySet()) {
-					if (ee.getValue().get("name") != null && !ee.getValue().get("name").equals("timeSlider") && !ee.getValue().containsKey("lineDrawing_from")) {
+					if (ee.getValue().get("name") != null && !"timeSlider".equals(ee.getValue().get("name")) && !ee.getValue().containsKey("lineDrawing_from")) {
 						TreeItem i = new TreeItem(item, 0);
 						i.setText("<i> " + ee.getValue().get("name") + " </i>");
 						i.setData(new Pair<File, Pair<String, HashMap<String, Object>>>(fx, new Pair(ee.getKey(), ee.getValue())));

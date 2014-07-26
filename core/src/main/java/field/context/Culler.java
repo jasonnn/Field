@@ -7,9 +7,9 @@ import field.math.abstraction.iDoubleProvider;
 public class Culler<X> implements iUpdateable{
 
 	
-	private Channel<X> c;
-	private iDoubleProvider time;
-	private double history;
+	private final Channel<X> c;
+	private final iDoubleProvider time;
+	private final double history;
 
 	public Culler(Channel<X> c, iDoubleProvider time, double historyLength)
 	{

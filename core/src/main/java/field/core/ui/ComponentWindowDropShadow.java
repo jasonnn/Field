@@ -29,11 +29,11 @@ public class ComponentWindowDropShadow {
 	private Font font;
 	private int[] data;
 	private IntBuffer intBuffer;
-	private TriangleMesh labelTriangles;
-	private DynamicMesh labelTriangle;
+	private final TriangleMesh labelTriangles;
+	private final DynamicMesh labelTriangle;
 	private final GLComponentWindow inside;
 	private AribitraryComponent component;
-	private BasicGLSLangProgram dcvertex;
+	private final BasicGLSLangProgram dcvertex;
 
 	public ComponentWindowDropShadow(final GLComponentWindow inside, TextSystem text) {
 		this.inside = inside;

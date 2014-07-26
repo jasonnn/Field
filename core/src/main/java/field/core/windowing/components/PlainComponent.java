@@ -77,16 +77,15 @@ public class PlainComponent implements iComponent {
 		if (event.button == 2)
 			return Float.NEGATIVE_INFINITY;
 
-		if (event.x > bounds.x && event.y > bounds.y
-				&& event.x < (bounds.x + bounds.w)
-				&& event.y < (bounds.y + bounds.h)) {
+		if ((event.x > bounds.x) && (event.y > bounds.y) && (event.x < (bounds.x + bounds.w)) && (event.y < (bounds.y
+                                                                                                             + bounds.h))) {
 			Ref<Boolean> is = new Ref<Boolean>(false);
 			override.isHit(this.visualElement, event, is);
-			return is.get() ? 1 - bounds.size() : Float.NEGATIVE_INFINITY;
+			return is.get() ? (1 - bounds.size()) : Float.NEGATIVE_INFINITY;
 		} else {
 			Ref<Boolean> is = new Ref<Boolean>(false);
 			override.isHit(this.visualElement, event, is);
-			return is.get() ? 1 - bounds.size() : Float.NEGATIVE_INFINITY;
+			return is.get() ? (1 - bounds.size()) : Float.NEGATIVE_INFINITY;
 		}
 	}
 
@@ -152,7 +151,7 @@ public class PlainComponent implements iComponent {
 			}
 		} else {
 
-			if ((arg0.stateMask & SWT.ALT) != 0 && arg0.button == 1) {
+			if (((arg0.stateMask & SWT.ALT) != 0) && (arg0.button == 1)) {
 				override.beginExecution(getVisualElement());
 			} else {
 
@@ -180,7 +179,7 @@ public class PlainComponent implements iComponent {
 		} else {
 
 			this.inside = inside;
-			if (arg0.x == ox && arg0.y == oy) {
+			if ((arg0.x == ox) && (arg0.y == oy)) {
 				if (selected) {
 					if ((arg0.stateMask & SWT.SHIFT) != 0) {
 						if (!justSelected && isSelctedable) {

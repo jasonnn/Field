@@ -23,7 +23,8 @@ public class DynamicMeshTools {
 
 	// an aux copier that can cope with changing amounts of vertex and triangle data
 
-	static public class AuxCopier {
+	public static
+    class AuxCopier {
 
 		Base.iGeometry target;
 
@@ -65,7 +66,8 @@ public class DynamicMeshTools {
 		}
 	}
 
-	static public class ShapedNoiseBuffer {
+	public static
+    class ShapedNoiseBuffer {
 
 		FloatBuffer[] buffers;
 
@@ -134,21 +136,23 @@ public class DynamicMeshTools {
 		}
 	}
 
-	static protected Vector3 t1 = new Vector3();
+	protected static Vector3 t1 = new Vector3();
 
-	static protected Vector3 t2 = new Vector3();
+	protected static Vector3 t2 = new Vector3();
 
-	static protected Vector3 t3 = new Vector3();
+	protected static Vector3 t3 = new Vector3();
 
-	static protected Vector3 t4 = new Vector3();
+	protected static Vector3 t4 = new Vector3();
 
 	static float noise = 0.4f;
 
-	static public void drawRightXYLine(Vector3 from, Vector3 to, float r, float g, float b, float a, DynamicLine line, String splineName, int samples) {
+	public static
+    void drawRightXYLine(Vector3 from, Vector3 to, float r, float g, float b, float a, DynamicLine line, String splineName, int samples) {
 		drawRightXYLine(from, to, r, g, b, a, line, splineName, samples, 0, 1);
 	}
 
-	static public void drawRightXYLine(Vector3 from, Vector3 to, float r, float g, float b, float a, DynamicLine line, String splineName, int samples, float noise, float fractionDrawn) {
+	public static
+    void drawRightXYLine(Vector3 from, Vector3 to, float r, float g, float b, float a, DynamicLine line, String splineName, int samples, float noise, float fractionDrawn) {
 		DynamicMeshTools.noise = noise;
 
 		t1.set((from.y - to.y + from.x), -(from.x - to.x) + from.y, (from.z + to.z) / 2);
@@ -174,7 +178,8 @@ public class DynamicMeshTools {
 		line.endSpline();
 	}
 
-	static public void drawSquareXY(Rect rect, float fr, float fg, float fb, float fa, float or, float og, float ob, float oa, iDynamicMesh mesh, DynamicLine line) {
+	public static
+    void drawSquareXY(Rect rect, float fr, float fg, float fb, float fa, float or, float og, float ob, float oa, iDynamicMesh mesh, DynamicLine line) {
 		drawSquareXY(new Vector3(rect.x, rect.y, 0), new Vector3(rect.x + rect.w, rect.y + rect.h, 0), fr, fg, fb, fa, or, og, ob, oa, mesh, line, 0);
 	}
 
@@ -288,11 +293,13 @@ public class DynamicMeshTools {
 		}
 	}
 
-	static public void drawSquareXY(Vector3 p1, Vector3 p2, float fr, float fg, float fb, float fa, float or, float og, float ob, float oa, iDynamicMesh mesh, DynamicLine line) {
+	public static
+    void drawSquareXY(Vector3 p1, Vector3 p2, float fr, float fg, float fb, float fa, float or, float og, float ob, float oa, iDynamicMesh mesh, DynamicLine line) {
 		drawSquareXY(p1, p2, fr, fg, fb, fa, or, og, ob, oa, mesh, line, 0);
 	}
 
-	static public void drawSquareXY(Vector3 p1, Vector3 p2, float fr, float fg, float fb, float fa, float or, float og, float ob, float oa, iDynamicMesh mesh, DynamicLine line, float noise) {
+	public static
+    void drawSquareXY(Vector3 p1, Vector3 p2, float fr, float fg, float fb, float fa, float or, float og, float ob, float oa, iDynamicMesh mesh, DynamicLine line, float noise) {
 		DynamicMeshTools.noise = noise;
 
 		if (mesh != null) {
@@ -331,7 +338,8 @@ public class DynamicMeshTools {
 		}
 	}
 
-	static public void setAll(iDynamicMesh mesh, int fromVertex, int numVertex, int attribute, Vector4 to) {
+	public static
+    void setAll(iDynamicMesh mesh, int fromVertex, int numVertex, int attribute, Vector4 to) {
 		float[] zz = { to.x, to.y, to.z, to.w};
 		FloatBuffer buffer = mesh.getUnderlyingGeometry().aux(attribute, 4);
 		buffer.position(4 * fromVertex);
@@ -340,11 +348,13 @@ public class DynamicMeshTools {
 		}
 	}
 
-	static public void setAll(iDynamicMesh mesh, int attribute, Vector4 to) {
+	public static
+    void setAll(iDynamicMesh mesh, int attribute, Vector4 to) {
 		setAll(mesh.getUnderlyingGeometry(), attribute, to);
 	}
 
-	static public void setAll(iGeometry geometry, int attribute, Vector4 to) {
+	public static
+    void setAll(iGeometry geometry, int attribute, Vector4 to) {
 		float[] zz = { to.x, to.y, to.z, to.w};
 		FloatBuffer buffer = geometry.aux(attribute, 4);
 		for (int z = 0; z < buffer.limit() / 4; z++) {

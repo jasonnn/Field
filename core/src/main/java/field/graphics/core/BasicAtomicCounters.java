@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL30.*;
  */
 public class BasicAtomicCounters extends TwoPassElement {
 
-	private int num;
+	private final int num;
 	private int buffer;
 	private ByteBuffer mapped;
 	int[] current;

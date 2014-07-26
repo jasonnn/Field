@@ -326,7 +326,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
     /**
      * Used to create proper font metrics
      */
-    private Graphics2D fmg;
+    private final Graphics2D fmg;
 
     {
         BufferedImage bi

@@ -38,10 +38,10 @@ public class Mixins {
 			m.getCallList().addAll(Arrays.asList(over));
 		Object o = Proxy.newProxyInstance(t.getClassLoader(), new Class[] { t, iDefaultOverride.class,  iMixinProxy.class }, new InvocationHandler() {
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				if (method.getName().equals("getCallList")) {
+				if ("getCallList".equals(method.getName())) {
 					return method.invoke(m, args);
 				}
-				if (method.getName().equals("getMixinInterface")) {
+				if ("getMixinInterface".equals(method.getName())) {
 					return method.invoke(m, args);
 				} else {
 					List<T> l = m.getCallList();
@@ -54,7 +54,7 @@ public class Mixins {
 					if (combine != null) {
 						ret = combine.f(r);
 					} else {
-						ret = r.size() > 0 ? r.get(0) : null;
+						ret = !r.isEmpty() ? r.get(0) : null;
 					}
 					return ret;
 				}
@@ -66,7 +66,7 @@ public class Mixins {
 	public static iFunction<Object, List<Object>> visitCodeCombiner = new iFunction<Object, List<Object>>() {
 
 		public Object f(List<Object> in) {
-			if (in.size() == 0)
+			if (in.isEmpty())
 				return null;
 			if (in.size() == 1)
 				return in.get(0);
@@ -83,7 +83,8 @@ public class Mixins {
 		}
 	};
 
-	public iMixinProxy<iVisualElementOverrides> upgradeOverrides(iVisualElement e) {
+	public static
+    iMixinProxy<iVisualElementOverrides> upgradeOverrides(iVisualElement e) {
 		iVisualElementOverrides o = e.getProperty(iVisualElement.overrides);
 		if (o instanceof iMixinProxy)
 			return (iMixinProxy<iVisualElementOverrides>) o;

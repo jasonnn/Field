@@ -6,7 +6,8 @@ import field.math.abstraction.iProvider;
 
 public interface iToFloatArray extends iProvider<float[]> {
 
-	static public class Provided implements iToFloatArray {
+	public static
+    class Provided implements iToFloatArray {
 		private final iProvider< ? extends iToFloatArray> p;
 
 		public Provided(iProvider< ? extends iToFloatArray> p) {
@@ -20,7 +21,8 @@ public interface iToFloatArray extends iProvider<float[]> {
 		}
 	}
 
-	static public class ProvidedMul implements iToFloatArray {
+	public static
+    class ProvidedMul implements iToFloatArray {
 		private final iProvider< ? extends iToFloatArray> p;
 
 		private final iFloatProvider by;
@@ -44,8 +46,9 @@ public interface iToFloatArray extends iProvider<float[]> {
 		}
 	}
 
-	static public class SingleFloat implements iToFloatArray {
-		private float[] f;
+	public static
+    class SingleFloat implements iToFloatArray {
+		private final float[] f;
 
 		private MutableFloat mf;
 
@@ -71,8 +74,8 @@ public interface iToFloatArray extends iProvider<float[]> {
 
 	static public class MulVec4 implements iToFloatArray
 	{
-		private Vector4 a;
-		private Vector4 b;
+		private final Vector4 a;
+		private final Vector4 b;
 		public MulVec4(Vector4 a, Vector4 b)
 		{
 			this.a = a;

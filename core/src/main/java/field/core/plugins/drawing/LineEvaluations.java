@@ -15,7 +15,7 @@ import java.util.List;
 public class LineEvaluations {
 
 	private CachedLine on;
-	private Vector2[] bounds;
+	private final Vector2[] bounds;
 
 	public LineEvaluations(CachedLine on) {
 		this.on = on;

@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 
 public class OpportunisticSlider2 {
 
-	private BaseTextEditor2 inside;
+	private final BaseTextEditor2 inside;
 
 	public OpportunisticSlider2(BaseTextEditor2 b) {
 		this.inside = b;

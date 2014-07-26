@@ -26,8 +26,8 @@ import java.util.*;
 
 public class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverride {
 
-	static public final VisualElementProperty<Number> playDuration = new VisualElementProperty<Number>("playDuration");
-	static public final VisualElementProperty<Number> skipbackDuration = new VisualElementProperty<Number>("skipbackDuration");
+	public static final VisualElementProperty<Number> playDuration = new VisualElementProperty<Number>("playDuration");
+	public static final VisualElementProperty<Number> skipbackDuration = new VisualElementProperty<Number>("skipbackDuration");
 
 	List<iVisualElement> on = new ArrayList<iVisualElement>();
 
@@ -46,7 +46,7 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 			Set<iComponent> selection = iVisualElement.selectionGroup.get(source).getSelection();
 			for (iComponent s : selection) {
 				iVisualElement e = s.getVisualElement();
-				if (e != null && e.equals(source))
+				if ((e != null) && e.equals(source))
 					selected = true;
 			}
 			if (selected) {
@@ -65,7 +65,7 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 	public VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
 		if (source == forElement) {
 			Rect frame = forElement.getFrame(null);
-			if (frame.x - 5 <= event.x && frame.x + frame.w + 5 >= event.x)
+			if (((frame.x - 5) <= event.x) && ((frame.x + frame.w + 5) >= event.x))
 				is.set(true);
 		}
 		return VisitCode.cont;
@@ -143,7 +143,8 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 
 	static int uniq = 0;
 
-	static public iVisualElement createDTSO(List<iVisualElement> on, iVisualElement root, float initialx) {
+	public static
+    iVisualElement createDTSO(List<iVisualElement> on, iVisualElement root, float initialx) {
 		final Triple<VisualElement, PlainDraggableComponent, DisposableTimeSliderOverrides> created = VisualElement.createWithToken("dtso+" + (uniq++), root, new Rect(10, 0, 0, 0), VisualElement.class, PlainDraggableComponent.class, DisposableTimeSliderOverrides.class);
 
 		iVisualElement.name.set(created.left, created.left, "transient time slider");
@@ -203,7 +204,8 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 
 	}
 
-	static public iVisualElement createDTSO2(List<iVisualElement> on, iVisualElement root, float initialx) {
+	public static
+    iVisualElement createDTSO2(List<iVisualElement> on, iVisualElement root, float initialx) {
 		final Triple<VisualElement, PlainDraggableComponent, DisposableTimeSliderOverrides> created = VisualElement.createWithToken("dtso+" + (uniq++), root, new Rect(10, 0, 0, 0), VisualElement.class, PlainDraggableComponent.class, DisposableTimeSliderOverrides.class);
 
 		iVisualElement.name.set(created.left, created.left, "transient time slider");
@@ -272,7 +274,7 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 		return playDuration;
 	}
 
-	static public float defaultPlayDuration = 60f;
+	public static float defaultPlayDuration = 60f;
 
 	boolean playing = false;
 
@@ -417,7 +419,8 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 		Launcher.getLauncher().registerUpdateable(player);
 	}
 
-	static public void playFromBeginning(iVisualElement e, iVisualElement root) {
+	public static
+    void playFromBeginning(iVisualElement e, iVisualElement root) {
 		final iVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
 
 		final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
@@ -432,7 +435,8 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 		});
 	}
 
-	static public DisposableTimeSliderOverrides playFromBeginning(List<iVisualElement> e, iVisualElement root) {
+	public static
+    DisposableTimeSliderOverrides playFromBeginning(List<iVisualElement> e, iVisualElement root) {
 		if (e.size() == 0)
 			return null;
 
@@ -452,7 +456,8 @@ public class DisposableTimeSliderOverrides extends iVisualElementOverrides.Defau
 		return o;
 	}
 
-	static public DisposableTimeSliderOverrides loopFromBeginning(iVisualElement e, iVisualElement root) {
+	public static
+    DisposableTimeSliderOverrides loopFromBeginning(iVisualElement e, iVisualElement root) {
 		final iVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
 
 		final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);

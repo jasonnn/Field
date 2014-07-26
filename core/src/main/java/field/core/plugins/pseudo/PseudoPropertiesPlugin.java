@@ -21,6 +21,7 @@ import field.core.util.FieldPyObjectAdaptor.iHandlesFindItem;
 import field.math.graph.iMutable;
 import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 import field.util.WorkspaceDirectory;
+import org.jetbrains.annotations.NotNull;
 import org.python.core.Py;
 import org.python.core.PyObject;
 
@@ -53,7 +54,7 @@ public class PseudoPropertiesPlugin extends BaseSimplePlugin {
 
             //System.out.println(" get item in finder called <" + object + ">");
             
-			if (object == null || object == Py.None)
+			if ((object == null) || (object == Py.None))
 				return all;
 			String r = object.toString();
 			List<iVisualElement> found = StandardFluidSheet.findVisualElementWithNameExpression(root, r);
@@ -189,7 +190,8 @@ public class PseudoPropertiesPlugin extends BaseSimplePlugin {
         
 	}
     
-	static public VisitCode getDataFolder(iVisualElement source, Ref<String> r) {
+	public static
+    VisitCode getDataFolder(iVisualElement source, Ref<String> r) {
         
 		String w = WorkspaceDirectory.dir[0];
 		String d = w + "/data";
@@ -218,7 +220,8 @@ public class PseudoPropertiesPlugin extends BaseSimplePlugin {
 		return VisitCode.stop;
 	}
     
-	static public VisitCode getSheetFolder(iVisualElement source, Ref<String> r) {
+	public static
+    VisitCode getSheetFolder(iVisualElement source, Ref<String> r) {
 		VersioningSystem vs = StandardFluidSheet.versioningSystem.get(source);
 		if (vs != null) {
 			r.set(vs.getSheetPathName().replace("sheet.xml", "") + "/");
@@ -226,7 +229,8 @@ public class PseudoPropertiesPlugin extends BaseSimplePlugin {
 		return VisitCode.stop;
 	}
     
-	static public VisitCode getSheetDataFolder(iVisualElement source, Ref<String> r) {
+	public static
+    VisitCode getSheetDataFolder(iVisualElement source, Ref<String> r) {
 		getSheetFolder(source, r);
 		String w = r.get();
 		String d = w + "/data";
@@ -302,7 +306,8 @@ public class PseudoPropertiesPlugin extends BaseSimplePlugin {
 		}
 	}
 	
-	static public class Collector implements iHandlesAttributes {
+	public static
+    class Collector implements iHandlesAttributes {
         
 		private final iVisualElement from;
 		FastVisualElementOverridesPropertyCombiner<Object, List<Object>> combine = new FastVisualElementOverridesPropertyCombiner<Object, List<Object>>(false) {
@@ -537,6 +542,7 @@ return "\u2014\u2014 Doesn't return the property, returns the visual element tha
         return current.isEmpty();
     }
     
+    @NotNull
     public Iterator<iVisualElement> iterator() {
         return current.iterator();
     }
@@ -545,10 +551,12 @@ return "\u2014\u2014 Doesn't return the property, returns the visual element tha
         return current.lastIndexOf(o);
     }
     
+    @NotNull
     public ListIterator<iVisualElement> listIterator() {
         return current.listIterator();
     }
     
+    @NotNull
     public ListIterator<iVisualElement> listIterator(int index) {
         return current.listIterator(index);
     }
@@ -587,14 +595,17 @@ return "\u2014\u2014 Doesn't return the property, returns the visual element tha
         return current.size();
     }
     
+    @NotNull
     public List<iVisualElement> subList(int fromIndex, int toIndex) {
         return current.subList(fromIndex, toIndex);
     }
     
+    @NotNull
     public Object[] toArray() {
         return current.toArray();
     }
     
+    @NotNull
     public <T> T[] toArray(T[] a) {
         return current.toArray(a);
     }
@@ -707,26 +718,26 @@ public class Superelements extends Subelements {
     }
 }
 
-static public final VisualElementProperty<Rect> frame = new VisualElementProperty<Rect>("frame");
-static public final VisualElementProperty<Map<String, iVisualElement>> subelements = new VisualElementProperty<Map<String, iVisualElement>>("subelements");
-static public final VisualElementProperty<Map<String, iVisualElement>> superelements = new VisualElementProperty<Map<String, iVisualElement>>("superelements");
-static public final VisualElementProperty<iVisualElement> root_ = new VisualElementProperty<iVisualElement>("root");
-static public final VisualElementProperty<iVisualElement> all = new VisualElementProperty<iVisualElement>("all");
-static public final VisualElementProperty<Object> find = new VisualElementProperty<Object>("find");
-static public final VisualElementProperty<List> collect = new VisualElementProperty<List>("collect");
-static public final VisualElementProperty<Wherer> where = new VisualElementProperty<Wherer>("where");
-static public final VisualElementProperty<Object> superproperties = new VisualElementProperty<Object>("superproperties");
-static public final VisualElementProperty<Beginner> begin = new VisualElementProperty<Beginner>("begin");
-static public final VisualElementProperty<Ender> end = new VisualElementProperty<Ender>("end");
+public static final VisualElementProperty<Rect> frame = new VisualElementProperty<Rect>("frame");
+public static final VisualElementProperty<Map<String, iVisualElement>> subelements = new VisualElementProperty<Map<String, iVisualElement>>("subelements");
+public static final VisualElementProperty<Map<String, iVisualElement>> superelements = new VisualElementProperty<Map<String, iVisualElement>>("superelements");
+public static final VisualElementProperty<iVisualElement> root_ = new VisualElementProperty<iVisualElement>("root");
+public static final VisualElementProperty<iVisualElement> all = new VisualElementProperty<iVisualElement>("all");
+public static final VisualElementProperty<Object> find = new VisualElementProperty<Object>("find");
+public static final VisualElementProperty<List> collect = new VisualElementProperty<List>("collect");
+public static final VisualElementProperty<Wherer> where = new VisualElementProperty<Wherer>("where");
+public static final VisualElementProperty<Object> superproperties = new VisualElementProperty<Object>("superproperties");
+public static final VisualElementProperty<Beginner> begin = new VisualElementProperty<Beginner>("begin");
+public static final VisualElementProperty<Ender> end = new VisualElementProperty<Ender>("end");
 
-static public final VisualElementProperty<Actioner> action = new VisualElementProperty<Actioner>("action");
+public static final VisualElementProperty<Actioner> action = new VisualElementProperty<Actioner>("action");
 
-static public final VisualElementProperty<String> dataFolder = new VisualElementProperty<String>("dataFolder");
-static public final VisualElementProperty<String> workspaceFolder = new VisualElementProperty<String>("workspaceFolder");
-static public final VisualElementProperty<String> sheetDataFolder = new VisualElementProperty<String>("sheetDataFolder");
-static public final VisualElementProperty<String> sheetFolder = new VisualElementProperty<String>("sheetFolder");
+public static final VisualElementProperty<String> dataFolder = new VisualElementProperty<String>("dataFolder");
+public static final VisualElementProperty<String> workspaceFolder = new VisualElementProperty<String>("workspaceFolder");
+public static final VisualElementProperty<String> sheetDataFolder = new VisualElementProperty<String>("sheetDataFolder");
+public static final VisualElementProperty<String> sheetFolder = new VisualElementProperty<String>("sheetFolder");
 
-static public final LinkedHashSet<VisualElementProperty> properties = new LinkedHashSet<VisualElementProperty>(Arrays.asList(new VisualElementProperty[] { frame, subelements, superelements, root_, all, find, where, superproperties, begin, end, dataFolder, workspaceFolder, sheetDataFolder, sheetFolder, action, collect }));
+public static final LinkedHashSet<VisualElementProperty> properties = new LinkedHashSet<VisualElementProperty>(Arrays.asList(new VisualElementProperty[] { frame, subelements, superelements, root_, all, find, where, superproperties, begin, end, dataFolder, workspaceFolder, sheetDataFolder, sheetFolder, action, collect }));
 
 public VisitCode getAll(iVisualElement source, Ref t) {
 t.set(StandardFluidSheet.allVisualElements(root));
@@ -743,7 +754,8 @@ t.set(new Framer(source, source.getFrame(null)));
 return VisitCode.stop;
 }
 
-static public VisitCode getCollector(iVisualElement source, Ref t) {
+public static
+VisitCode getCollector(iVisualElement source, Ref t) {
 t.set(new Collector(source));
 return VisitCode.stop;
 }

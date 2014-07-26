@@ -26,7 +26,7 @@ public class ExecutableAreaFinder {
 			int startAt = before.length() - m.end();
 			Matcher m2 = Pattern.compile("#--\\{[^\\{]*\\\\" + key + "\\.").matcher(string.substring(caretPosition, string.length()));
 			if (m2.find()) {
-				int endAt = m2.start() - 1 + caretPosition;
+				int endAt = (m2.start() - 1) + caretPosition;
 				lastSubstring_start = startAt;
 				lastSubstring_end = endAt;
 				
@@ -41,7 +41,8 @@ public class ExecutableAreaFinder {
     }
 
 
-	public String findExecutableSubstring(String string, String key) {
+	public static
+    String findExecutableSubstring(String string, String key) {
 		// we search outwards until we come to a comment
 		// that matches the key
 
@@ -79,7 +80,7 @@ public class ExecutableAreaFinder {
 			int startAt = before.length() - m.end();
 			Matcher m2 = Pattern.compile("#--\\{[^\\{]*\\\\" + key + "\\.").matcher(string.substring(caretPosition, string.length()));
 			if (m2.find()) {
-				int endAt = m2.start() - 1 + caretPosition;
+				int endAt = (m2.start() - 1) + caretPosition;
 				lastSubstring_start = startAt;
 				lastSubstring_end = endAt;
 				return string.substring(startAt, endAt);

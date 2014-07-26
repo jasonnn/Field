@@ -9,7 +9,8 @@ import java.util.List;
 
 public class PathMapper {
 
-	static public class Mapping {
+	public static
+    class Mapping {
 		String prefix;
 		String becomes;
 

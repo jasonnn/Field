@@ -74,7 +74,7 @@ public class QuaquaDecoratedFrameResizeFix implements MouseListener, MouseMotion
 		Container container = component;
 		Rectangle b = container.getBounds();
 
-		if (componentPoint.x > b.width - 15 && componentPoint.y > b.height - 15) {
+		if ((componentPoint.x > (b.width - 15)) && (componentPoint.y > (b.height - 15))) {
 			Point rootPanePoint = SwingUtilities.convertPoint(component, componentPoint, frame.getRootPane());
 
 			Method processMouseevent = ReflectionTools.findFirstMethodCalled(JFrame.class, "processMouseEvent");

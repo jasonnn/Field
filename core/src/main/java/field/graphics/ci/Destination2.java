@@ -47,7 +47,7 @@ public class Destination2 implements iDisplayable {
 	}
 
 	protected void clean() {
-		if (drawn == null || !isDirty)
+		if ((drawn == null) || !isDirty)
 			return;
 
 		fbo.enter();
@@ -85,7 +85,7 @@ public class Destination2 implements iDisplayable {
 	}
 
 	protected void cleanAccumulator() {
-		if (drawnAccumulator == null || !isDirty)
+		if ((drawnAccumulator == null) || !isDirty)
 			return;
 
         //System.out.println(" cleaning acumulator ");

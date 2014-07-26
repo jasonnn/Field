@@ -31,37 +31,42 @@ public class PathNotInWorkspaceHelperMenu2 {
 
         //System.out.println(" filename is <" + filename + "> and versioning dir is <" + FieldMenus2.getCanonicalVersioningDir() + "> therefore <" + filename.startsWith(FieldMenus2.getCanonicalVersioningDir()) + ">");
 
-		if (!filename.startsWith(FieldMenus2.getCanonicalVersioningDir())) {
-			File f = new File(filename);
-			if (!f.exists()) {
-				MessageBox mb = new MessageBox(fc, SWT.ICON_ERROR);
-				mb.setMessage("Can't open file (doesn't exist ?)");
-				mb.open();
+        if (filename.startsWith(FieldMenus2.getCanonicalVersioningDir())) {
+            File f = new File(filename);
+            if (f.exists()) {
+                manager.open(f.getAbsolutePath().substring(FieldMenus2.getCanonicalVersioningDir().length()));
+            }
+            else {
+                MessageBox mb = new MessageBox(fc, SWT.ICON_ERROR);
+                mb.setMessage("Can't open file (doesn't exist ?)");
+                mb.open();
+            }
+        }
+        else {
+            File f = new File(filename);
+            if (!f.exists()) {
+                MessageBox mb = new MessageBox(fc, SWT.ICON_ERROR);
+                mb.setMessage("Can't open file (doesn't exist ?)");
+                mb.open();
 
-				return;
-			}
+                return;
+            }
 
-			MessageBox mb = new MessageBox(fc, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-			mb.setMessage("You have selected a sheet that isn't in the repository\n(at '" + FieldMenus2.getCanonicalVersioningDir() + "'\nCopy sheet into repository?");
-			int o = mb.open();
+            MessageBox mb = new MessageBox(fc, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+            mb.setMessage("You have selected a sheet that isn't in the repository\n(at '"
+                          + FieldMenus2.getCanonicalVersioningDir()
+                          + "'\nCopy sheet into repository?");
+            int o = mb.open();
 
-			if (o == SWT.NO) {
-				return;
-			} else if (o == SWT.YES) {
-				File d = uniqName(fc, filename, PathNotInWorkspaceHelperMenu2_m.move_s.acceptor(this));
-				if (d != null)
-					manager.open(d.getAbsolutePath().substring(FieldMenus2.getCanonicalVersioningDir().length()));
-			}
-		} else {
-			File f = new File(filename);
-			if (f.exists()) {
-				manager.open(f.getAbsolutePath().substring(FieldMenus2.getCanonicalVersioningDir().length()));
-			} else {
-				MessageBox mb = new MessageBox(fc, SWT.ICON_ERROR);
-				mb.setMessage("Can't open file (doesn't exist ?)");
-				mb.open();
-			}
-		}
+            if (o == SWT.NO) {
+                return;
+            }
+            else if (o == SWT.YES) {
+                File d = uniqName(fc, filename, PathNotInWorkspaceHelperMenu2_m.move_s.acceptor(this));
+                if (d != null)
+                    manager.open(d.getAbsolutePath().substring(FieldMenus2.getCanonicalVersioningDir().length()));
+            }
+        }
 
 	}
 
@@ -87,7 +92,8 @@ public class PathNotInWorkspaceHelperMenu2 {
 		if (destination.exists()) {
 			int n = 1;
 			while (destination.exists()) {
-				destination = new File(FieldMenus2.getCanonicalVersioningDir() + "/" + name.substring(0, name.length() - ".field".length()) + n + ".field");
+				destination = new File(FieldMenus2.getCanonicalVersioningDir() + '/'
+                                       + name.substring(0, name.length() - ".field".length()) + n + ".field");
 				n++;
 			}
 

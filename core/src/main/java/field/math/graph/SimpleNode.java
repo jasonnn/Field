@@ -136,6 +136,6 @@ public class SimpleNode<T> implements iMutableContainer<T, SimpleNode<T>>, Seria
 	
 	@Override
 	public String toString() {
-		return "n:{"+payload()+"}";
+		return "n:{"+payload()+ '}';
 	}
 }

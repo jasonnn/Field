@@ -24,9 +24,10 @@ import java.nio.FloatBuffer;
 import java.rmi.server.UID;
 
 public class MinimalImageHistogram extends JComponent {
-	static public class Component extends ProvidedComponent {
+	public static
+    class Component extends ProvidedComponent {
 
-		transient public iUpdateable notify;
+		public transient iUpdateable notify;
 
 		ImageHistogramState state;
 
@@ -81,7 +82,8 @@ public class MinimalImageHistogram extends JComponent {
 		}
 	}
 
-	static public class ImageHistogramState implements Serializable, iFilter<Float, Float> {
+	public static
+    class ImageHistogramState implements Serializable, iFilter<Float, Float> {
 		private static final long serialVersionUID = 1L;
 		float blackIn = 0;
 		float greyIn = 0.5f;
@@ -133,11 +135,13 @@ public class MinimalImageHistogram extends JComponent {
 
 	private static final long serialVersionUID = 1L;
 
-	static public void install() {
+	public static
+    void install() {
 		CustomInsertSystem.possibleComponents.add(new iPossibleComponent("x Image Histogram", Component.class));
 	}
 
-	static public FloatBuffer makeRemapBuffer(int size, ImageHistogramState state) {
+	public static
+    FloatBuffer makeRemapBuffer(int size, ImageHistogramState state) {
 		FloatBuffer f = ByteBuffer.allocateDirect(size * 4 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		for (int i = 0; i < size; i++) {
 			float a = i / (size - 1f);
@@ -150,7 +154,8 @@ public class MinimalImageHistogram extends JComponent {
 		return f;
 	}
 
-	static public float performMapping(float blackIn, float greyIn, float whiteIn, float blackOut, float greyOut, float whiteOut, float x) {
+	public static
+    float performMapping(float blackIn, float greyIn, float whiteIn, float blackOut, float greyOut, float whiteOut, float x) {
 		float gammaIn = 1 / (float) (Math.log(0.5) / Math.log((greyIn - blackIn) / (whiteIn - blackIn)));
 		float gammaOut = 1 / (float) (Math.log(0.5) / Math.log((greyOut - blackOut) / (whiteOut - blackOut)));
 
@@ -543,7 +548,7 @@ public class MinimalImageHistogram extends JComponent {
 				// lastBin and
 				// tx inclusive
 
-				out.put(4 * tx + c, out.get(4 * tx + c) + v);
+				out.put((4 * tx) + c, out.get(4 * tx + c) + v);
 				lastBin = tx;
 			}
 		}

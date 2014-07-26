@@ -22,6 +22,6 @@ public class Level {
 
     @Override
     public int hashCode() {
-        return name.hashCode() + (topology == null ? 0 : topology.hashCode());
+        return name.hashCode() + ((topology == null) ? 0 : topology.hashCode());
     }
 }

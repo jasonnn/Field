@@ -10,7 +10,8 @@ import java.util.Set;
 
 public class VerticalCenterToVerticalCenter extends VerticalLeftToLeftAlign {
 
-	static public class Resize extends VerticalCenterToVerticalCenter {
+	public static
+    class Resize extends VerticalCenterToVerticalCenter {
 		public Resize(float baseScore) {
 			super(baseScore);
 		}

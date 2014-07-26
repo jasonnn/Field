@@ -28,7 +28,7 @@ public class InstrumentationFilter {
 
     static boolean find(TreeSet<String> set, String query) {
         String lte = set.floor(query);
-        return lte != null && query.startsWith(lte);
+        return (lte != null) && query.startsWith(lte);
     }
 
     public boolean shouldAllow(String name) {

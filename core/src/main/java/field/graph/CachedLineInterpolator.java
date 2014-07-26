@@ -19,9 +19,9 @@ public class CachedLineInterpolator {
 
 	public class BlendEvent implements iAcceptor<Float> {
 
-		private Event ec;
-		private CachedLine ca;
-		private CachedLine cb;
+		private final Event ec;
+		private final CachedLine ca;
+		private final CachedLine cb;
 		int ia, ib;
 
 		public BlendEvent(CachedLine ca, int ia, CachedLine cb, int ib, Event ec) {
@@ -80,7 +80,7 @@ public class CachedLineInterpolator {
 				CachedLine leftLine = ii.next();
 				CachedLine rightLine = find(right, ee.getKey(), i);
 
-				constructed.put(ee.getKey() + "@" + i, constructBlender(leftLine, rightLine));
+				constructed.put(ee.getKey() + '@' + i, constructBlender(leftLine, rightLine));
 				i++;
 			}
 		}
@@ -93,10 +93,10 @@ public class CachedLineInterpolator {
 			while (ii.hasNext()) {
 				CachedLine rightLine = ii.next();
 
-				Blender already = constructed.get(ee.getKey() + "@" + i);
+				Blender already = constructed.get(ee.getKey() + '@' + i);
 
 				if (already == null)
-					constructed.put(ee.getKey() + "@" + i, constructBlender(null, rightLine));
+					constructed.put(ee.getKey() + '@' + i, constructBlender(null, rightLine));
 				i++;
 			}
 		}
@@ -120,10 +120,11 @@ public class CachedLineInterpolator {
 
 	}
 
-	public class Both extends Blender {
+	public static
+    class Both extends Blender {
 
-		private Blender one;
-		private Blender two;
+		private final Blender one;
+		private final Blender two;
 
 		public Both(Blender one, Blender two) {
 			this.one = one;
@@ -142,8 +143,8 @@ public class CachedLineInterpolator {
 
 	public class FadeIn extends Blender {
 
-		private CachedLine material;
-		private List<CachedLine> materialL;
+		private final CachedLine material;
+		private final List<CachedLine> materialL;
 
 		public FadeIn(CachedLine cc) {
 			material = LineUtils.transformLine(cc, null, null, null, null);
@@ -165,8 +166,8 @@ public class CachedLineInterpolator {
 
 	public class FadeOut extends Blender {
 
-		private CachedLine material;
-		private List<CachedLine> materialL;
+		private final CachedLine material;
+		private final List<CachedLine> materialL;
 
 		public FadeOut(CachedLine cc) {
 			material = LineUtils.transformLine(cc, null, null, null, null);
@@ -187,11 +188,11 @@ public class CachedLineInterpolator {
 
 	public class StraightInterpolatingBlender extends Blender {
 
-		private CachedLine material;
-		private List<CachedLine> materialL;
+		private final CachedLine material;
+		private final List<CachedLine> materialL;
 
 		List<iAcceptor<Float>> doBlend = new ArrayList<iAcceptor<Float>>();
-		private CachedLine b;
+		private final CachedLine b;
 
 		public StraightInterpolatingBlender(CachedLine a, CachedLine b) {
 
@@ -341,7 +342,7 @@ public class CachedLineInterpolator {
 				}
 			};
 		}
-		if (left instanceof Vector3 && right instanceof Vector3) {
+		if ((left instanceof Vector3) && (right instanceof Vector3)) {
 			return new iAcceptor<Float>() {
 				@Override
 				public iAcceptor<Float> set(Float to) {
@@ -352,7 +353,7 @@ public class CachedLineInterpolator {
 				}
 			};
 		}
-		if (left instanceof Vector2 && right instanceof Vector2) {
+		if ((left instanceof Vector2) && (right instanceof Vector2)) {
 			return new iAcceptor<Float>() {
 				@Override
 				public iAcceptor<Float> set(Float to) {
@@ -363,7 +364,7 @@ public class CachedLineInterpolator {
 				}
 			};
 		}
-		if (left instanceof Number && right instanceof Number) {
+		if ((left instanceof Number) && (right instanceof Number)) {
 			return new iAcceptor<Float>() {
 				@Override
 				public iAcceptor<Float> set(Float to) {
@@ -403,7 +404,7 @@ public class CachedLineInterpolator {
 				}
 			};
 		}
-		if (left instanceof Vector3 && right instanceof Vector3) {
+		if ((left instanceof Vector3) && (right instanceof Vector3)) {
 			return new iAcceptor<Float>() {
 				@Override
 				public iAcceptor<Float> set(Float to) {
@@ -417,7 +418,7 @@ public class CachedLineInterpolator {
 				}
 			};
 		}
-		if (left instanceof Vector2 && right instanceof Vector2) {
+		if ((left instanceof Vector2) && (right instanceof Vector2)) {
 			return new iAcceptor<Float>() {
 				@Override
 				public iAcceptor<Float> set(Float to) {
@@ -431,7 +432,7 @@ public class CachedLineInterpolator {
 				}
 			};
 		}
-		if (left instanceof Number && right instanceof Number) {
+		if ((left instanceof Number) && (right instanceof Number)) {
 			return new iAcceptor<Float>() {
 				@Override
 				public iAcceptor<Float> set(Float to) {

@@ -60,7 +60,7 @@ public class PythonScriptingSystem {
 				Promise p2 = (Promise) o2;
 				float y1 = p1.getPriority();
 				float y2 = p2.getPriority();
-				return y1 < y2 ? -1 : (y1==y2 ? 0 : 1);
+				return (y1 < y2) ? -1 : ((y1 == y2) ? 0 : 1);
 			}
 		};
 
@@ -97,7 +97,7 @@ public class PythonScriptingSystem {
 				Iterator i = intersection.iterator();
 				while (i.hasNext()) {
 					Promise p = (Promise) i.next();
-					if (p.getStart() > lastTime || firstRun) {
+					if ((p.getStart() > lastTime) || firstRun) {
 						nowactive.add(p);
 					}
 					if (p.getEnd() < t) {
@@ -115,7 +115,7 @@ public class PythonScriptingSystem {
 					if (p.getStart() > t) {
 						deactive.add(p);
 					}
-					if (p.getEnd() < lastTime || firstRun) {
+					if ((p.getEnd() < lastTime) || firstRun) {
 						nowactive.add(p);
 					}
 				}
@@ -175,7 +175,8 @@ public class PythonScriptingSystem {
 			return PythonScriptingSystem.this.allPythonScriptingElements();
 		}
 
-		abstract protected boolean continueToBeActive(float t, Promise p, boolean forwards);
+		protected abstract
+        boolean continueToBeActive(float t, Promise p, boolean forwards);
 
 		protected Set intersect(float from, float to) {
 			LinkedHashSet ret = new LinkedHashSet();
@@ -194,20 +195,24 @@ public class PythonScriptingSystem {
 			return ret;
 		}
 
-		abstract protected void jumpStop(float t, Promise p, boolean forwards);
+		protected abstract
+        void jumpStop(float t, Promise p, boolean forwards);
 
 		protected void sortActive() {
 
 		}
 
-		abstract protected void start(float t, Promise p, boolean forwards);
+		protected abstract
+        void start(float t, Promise p, boolean forwards);
 
-		abstract protected void startAndStop(float t, Promise p, boolean forwards);
+		protected abstract
+        void startAndStop(float t, Promise p, boolean forwards);
 
-		abstract protected void stop(float t, Promise p, boolean forwards);
+		protected abstract
+        void stop(float t, Promise p, boolean forwards);
 	}
 
-	static public final VisualElementProperty<PythonScriptingSystem> pythonScriptingSystem = new VisualElementProperty<PythonScriptingSystem>("pythonScriptingSystem_");
+	public static final VisualElementProperty<PythonScriptingSystem> pythonScriptingSystem = new VisualElementProperty<PythonScriptingSystem>("pythonScriptingSystem_");
 
 
 	HashMap promises = new HashMap();

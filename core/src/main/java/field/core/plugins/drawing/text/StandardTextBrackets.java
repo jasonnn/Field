@@ -15,7 +15,8 @@ import java.util.List;
 
 public class StandardTextBrackets {
 
-	static public class South implements iBracketFactory {
+	public static
+    class South implements iBracketFactory {
 
 		private final float underline;
 
@@ -86,7 +87,8 @@ public class StandardTextBrackets {
 		}
 	}
 
-	static public class North implements iBracketFactory {
+	public static
+    class North implements iBracketFactory {
 
 		private final float overline;
 
@@ -156,7 +158,8 @@ public class StandardTextBrackets {
 		}
 	}
 
-	static public class East implements iBracketFactory {
+	public static
+    class East implements iBracketFactory {
 
 		private final float overline;
 
@@ -180,8 +183,9 @@ public class StandardTextBrackets {
 
 			line.type = BracketElementType.line;
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -220,8 +224,9 @@ public class StandardTextBrackets {
 		}
 
 		public Vector2 getPositionForLink(AdvancedTextToCachedLine layout) {
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -248,7 +253,8 @@ public class StandardTextBrackets {
 		}
 	}
 
-	static public class West implements iBracketFactory {
+	public static
+    class West implements iBracketFactory {
 
 		private final float overline;
 
@@ -272,8 +278,9 @@ public class StandardTextBrackets {
 
 			line.type = BracketElementType.line;
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -313,8 +320,9 @@ public class StandardTextBrackets {
 
 		public Vector2 getPositionForLink(AdvancedTextToCachedLine layout) {
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -341,7 +349,8 @@ public class StandardTextBrackets {
 		}
 	}
 
-	static public class NorthEast implements iBracketFactory {
+	public static
+    class NorthEast implements iBracketFactory {
 		private final float overline;
 
 		private final float footsize;
@@ -364,8 +373,9 @@ public class StandardTextBrackets {
 			BracketElement line2 = new BracketElement();
 			BracketElement foot2 = new BracketElement();
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -426,8 +436,9 @@ public class StandardTextBrackets {
 		}
 
 		public Vector2 getPositionForLink(AdvancedTextToCachedLine layout) {
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -457,7 +468,8 @@ public class StandardTextBrackets {
 		}
 	}
 
-	static public class NorthWest implements iBracketFactory {
+	public static
+    class NorthWest implements iBracketFactory {
 		private final float overline;
 
 		private final float footsize;
@@ -480,8 +492,9 @@ public class StandardTextBrackets {
 			BracketElement line2 = new BracketElement();
 			BracketElement foot2 = new BracketElement();
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -545,8 +558,9 @@ public class StandardTextBrackets {
 			BracketElement foot1 = new BracketElement();
 			BracketElement line1 = new BracketElement();
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -583,7 +597,8 @@ public class StandardTextBrackets {
 		}
 	}
 
-	static public class SouthWest implements iBracketFactory {
+	public static
+    class SouthWest implements iBracketFactory {
 		private final float overline;
 
 		private final float footsize;
@@ -606,8 +621,9 @@ public class StandardTextBrackets {
 			BracketElement line2 = new BracketElement();
 			BracketElement foot2 = new BracketElement();
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -674,8 +690,9 @@ public class StandardTextBrackets {
 			BracketElement line2 = new BracketElement();
 			BracketElement foot2 = new BracketElement();
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -733,7 +750,8 @@ public class StandardTextBrackets {
 		}
 	}
 
-	static public class SouthEast implements iBracketFactory {
+	public static
+    class SouthEast implements iBracketFactory {
 		private final float overline;
 
 		private final float footsize;
@@ -756,8 +774,9 @@ public class StandardTextBrackets {
 			BracketElement line2 = new BracketElement();
 			BracketElement foot2 = new BracketElement();
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -823,8 +842,9 @@ public class StandardTextBrackets {
 			BracketElement line2 = new BracketElement();
 			BracketElement foot2 = new BracketElement();
 
-			Rect rectTop, rectBottom;
-			{
+			Rect rectTop;
+            Rect rectBottom;
+            {
 				Rect top = layout.getMiddleBounds();
 				Rect desc = layout.getTopBounds();
 				Rect full = layout.getFullRect();
@@ -884,7 +904,8 @@ public class StandardTextBrackets {
 		}
 	}
 
-	static public iBracketFactory[] connectTwoTextElements(float extraSpace, float feetSize, float proximity, AdvancedTextToCachedLine from, AdvancedTextToCachedLine to) {
+	public static
+    iBracketFactory[] connectTwoTextElements(float extraSpace, float feetSize, float proximity, AdvancedTextToCachedLine from, AdvancedTextToCachedLine to) {
 		ArrayList<CachedLine> q = new ArrayList<CachedLine>();
 
 		iBracketFactory[] factories = { new North(proximity, extraSpace, feetSize), new South(proximity, extraSpace, feetSize), new West(proximity, proximity, extraSpace, feetSize), new East(proximity, proximity, extraSpace, feetSize), new NorthEast(proximity, proximity, extraSpace, feetSize), new NorthWest(proximity, proximity, extraSpace, feetSize),
@@ -932,7 +953,8 @@ public class StandardTextBrackets {
 
 	}
 
-	static public iBracketFactory connectOneTextElement(float extraSpace, float feetSize, float proximity, AdvancedTextToCachedLine from, Vector2 to) {
+	public static
+    iBracketFactory connectOneTextElement(float extraSpace, float feetSize, float proximity, AdvancedTextToCachedLine from, Vector2 to) {
 		ArrayList<CachedLine> q = new ArrayList<CachedLine>();
 
 		iBracketFactory[] factories = { new North(proximity, extraSpace, feetSize), new South(proximity, extraSpace, feetSize), new West(proximity, proximity, extraSpace, feetSize), new East(proximity, proximity, extraSpace, feetSize), new NorthEast(proximity, proximity, extraSpace, feetSize), new NorthWest(proximity, proximity, extraSpace, feetSize),
@@ -974,14 +996,16 @@ public class StandardTextBrackets {
 
 	}
 
-	static public Vector2 middleFor(List<BracketElement> b) {
+	public static
+    Vector2 middleFor(List<BracketElement> b) {
 		CachedLine line2 = TextBrackets.drawBracketElementsNoFeet(b);
 		float d2 = (line2.events.size() - 1) * 0.5f;
 		Vector2 middle2 = LineUtils.getPointOnLine(line2, d2);
 		return middle2;
 	}
 
-	static public Rect interpolateRect(Rect bottom, Rect desc, Rect full, float underline) {
+	public static
+    Rect interpolateRect(Rect bottom, Rect desc, Rect full, float underline) {
 		Rect left = null;
 		Rect right = null;
 		float alpha;

@@ -26,7 +26,8 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 		FieldPyObjectAdaptor2.initialize();
 	}
 
-	static public <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> Triple<T, S, U> create(Rect bounds, Class<T> visualElementclass, Class<S> componentClass, Class<U> overrideClass) {
+	public static
+    <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> Triple<T, S, U> create(Rect bounds, Class<T> visualElementclass, Class<S> componentClass, Class<U> overrideClass) {
 		try {
 			S s = componentClass.getConstructor(new Class[] { Rect.class }).newInstance(bounds);
 			T t = visualElementclass.getConstructor(new Class[] { iComponent.class }).newInstance(s);
@@ -41,7 +42,8 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 		}
 	}
 
-	static public <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> Triple<T, S, U> createAddAndName(Rect bounds, final iVisualElement root, String defaultName, Class<T> visualElementclass, Class<S> componentClass, Class<U> overrideClass, final iUpdateable continuation) {
+	public static
+    <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> Triple<T, S, U> createAddAndName(Rect bounds, final iVisualElement root, String defaultName, Class<T> visualElementclass, Class<S> componentClass, Class<U> overrideClass, final iUpdateable continuation) {
 		try {
 			final S s = componentClass.getConstructor(new Class[] { Rect.class }).newInstance(bounds);
 			final T t = visualElementclass.getConstructor(new Class[] { iComponent.class }).newInstance(s);
@@ -67,7 +69,7 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 					iVisualElement.dirty.set(t, t, true);
 					Rect rect = s.getBounds();
 
-					OverlayAnimationManager.notifyAsText(root, "created element '" + to + "'", rect);
+					OverlayAnimationManager.notifyAsText(root, "created element '" + to + '\'', rect);
 
 					
 					SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(t);
@@ -92,7 +94,8 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 		}
 	}
 
-	static public <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> Triple<T, S, U> createWithName(Rect bounds, final iVisualElement root, Class<T> visualElementclass, Class<S> componentClass, Class<U> overrideClass, String name) {
+	public static
+    <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> Triple<T, S, U> createWithName(Rect bounds, final iVisualElement root, Class<T> visualElementclass, Class<S> componentClass, Class<U> overrideClass, String name) {
 		try {
 			S s = componentClass.getConstructor(new Class[] { Rect.class }).newInstance(bounds);
 			final T t = visualElementclass.getConstructor(new Class[] { iComponent.class }).newInstance(s);
@@ -117,7 +120,8 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 		}
 	}
 
-	static public <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> Triple<T, S, U> createWithToken(final Object token, iVisualElement root, Rect bounds, Class<T> visualElementclass, Class<S> componentClass, Class<U> overrideClass) {
+	public static
+    <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> Triple<T, S, U> createWithToken(final Object token, iVisualElement root, Rect bounds, Class<T> visualElementclass, Class<S> componentClass, Class<U> overrideClass) {
 		try {
 			final iVisualElement[] ans = new iVisualElement[1];
 			TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
@@ -193,7 +197,8 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 		// }});
 	}
 
-	static public void deleteWithToken(final Object token, iVisualElement root) {
+	public static
+    void deleteWithToken(final Object token, iVisualElement root) {
 		final iVisualElement[] ans = new iVisualElement[1];
 		TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
 			@Override
@@ -356,10 +361,11 @@ public class VisualElement extends NodeImpl<iVisualElement> implements iVisualEl
 
 	@Override
 	public String toString() {
-		return "Element, named <" + getProperty(iVisualElement.name) + "> : <"+id+"("+System.identityHashCode(this)+")>";
+		return "Element, named <" + getProperty(iVisualElement.name) + "> : <"+id+ '(' +System.identityHashCode(this)+")>";
 	}
 	
-	static public List<Comp> getClassCustomCompletion(String prefix, Object of) {
+	public static
+    List<Comp> getClassCustomCompletion(String prefix, Object of) {
 		VisualElement adaptor = ((VisualElement) of);
 		List<Comp> c = new ArrayList<Comp>();
 		if (prefix.length() == 0) {

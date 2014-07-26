@@ -32,10 +32,10 @@ public class ToolBarFolder {
 	public static ToolBarFolder currentFolder = null;
 	public static ToolBarFolder helpFolder = null;
 
-	private Composite container;
+	private final Composite container;
 	private ToolBar toolbar;
 	private final Composite into;
-	private StackLayout stack;
+	private final StackLayout stack;
 
 	private Composite tools;
 
@@ -44,7 +44,7 @@ public class ToolBarFolder {
 	public static Color firstLineBackground = Platform.isMac() ? new Color(Launcher.display, 170, 170, 170) : new Color(Launcher.display, 220, 220, 220);
 	public static Color sashBackground = Platform.isMac()  ? new Color(Launcher.display, 200, 200, 200) : new Color(Launcher.display, 200, 200, 200);
 
-	private HashMap<ToolItem, SelectionListener> listeners = new HashMap<ToolItem, SelectionListener>();
+	private final HashMap<ToolItem, SelectionListener> listeners = new HashMap<ToolItem, SelectionListener>();
 
     static public Rectangle defaultRect = AutoPersist.persist("toolBarPosition", new Rectangle(700, 150, 300, 400));
 

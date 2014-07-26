@@ -12,7 +12,8 @@ import java.io.*;
 
 public class LoadInternalWorkspaceFile {
 
-	static public class Shadow {
+	public static
+    class Shadow {
 		public String internalFile;
 		public VisualElementProperty property;
 		public iVisualElement inside;
@@ -149,7 +150,7 @@ public class LoadInternalWorkspaceFile {
     public static
     Object getOriginalText(iVisualElement targetElement, VisualElementProperty<String> targetProperty) {
         VersioningSystem vs = StandardFluidSheet.versioningSystem.get(targetElement);
-		Object o = new HGTools(vs).getOriginatingCopyFor(targetElement.getUniqueID() + "/" + targetProperty.getName() + ".property");
+		Object o = new HGTools(vs).getOriginatingCopyFor(targetElement.getUniqueID() + '/' + targetProperty.getName() + ".property");
 		return o;
 	}
 
@@ -171,9 +172,9 @@ public class LoadInternalWorkspaceFile {
 		}
 
 		BufferedReader reader = new BufferedReader(new FileReader(f));
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		while (reader.ready()) {
-			s.append(reader.readLine() + "\n");
+			s.append(reader.readLine()).append('\n');
 		}
 		return s.toString();
 	}
@@ -238,9 +239,9 @@ public class LoadInternalWorkspaceFile {
 			return null;
 
 		BufferedReader reader = new BufferedReader(new FileReader(f4));
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		while (reader.ready()) {
-			s.append(reader.readLine() + "\n");
+			s.append(reader.readLine()).append('\n');
 		}
 		return s.toString();
 	}
@@ -269,7 +270,7 @@ public class LoadInternalWorkspaceFile {
 						File ffh = new File(pathname.getCanonicalPath() + "/python_isTemplateHead_v.property");
 						if (pathname.isDirectory() && ff.exists()) {
 							String name = textForFile(ff);
-							boolean isHead = ffh.exists() ? !textForFile(ffh).equals("") : false;
+							boolean isHead = ffh.exists() ? !"".equals(textForFile(ffh)) : false;
 							if (name.equals(templateName))
 							{
 								found[0] = pathname.getCanonicalPath();
@@ -282,9 +283,9 @@ public class LoadInternalWorkspaceFile {
 
                 private String textForFile(File ff) throws IOException {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ff)));
-					StringBuffer read = new StringBuffer();
+					StringBuilder read = new StringBuilder();
 					while (reader.ready()) {
-						read.append(reader.readLine() + "\n");
+						read.append(reader.readLine()).append('\n');
 					}
 					reader.close();
 					String name = (String) VersioningSystem.objectRepresentationFor(read.toString());

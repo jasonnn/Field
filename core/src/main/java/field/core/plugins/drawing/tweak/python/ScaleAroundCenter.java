@@ -31,7 +31,7 @@ public class ScaleAroundCenter implements iWholeCoordTransform {
 
 	public void setNodes(List<Pair<SelectedVertex, Float>> all) {
 		int n = 0;
-		if (all.size() == 0) return;
+		if (all.isEmpty()) return;
 
 		float total = 0;
 		center.scale(0);

@@ -6,7 +6,8 @@ package field.math.abstraction;
 public interface iDoubleProvider {
 	public double evaluate();
 
-	static public class Constant implements iDoubleProvider {
+	public static
+    class Constant implements iDoubleProvider {
 
 		private double constant;
 
@@ -24,7 +25,8 @@ public interface iDoubleProvider {
 		}
 	}
 
-	static public class Monotonoic implements iDoubleProvider {
+	public static
+    class Monotonoic implements iDoubleProvider {
 
 		private final iDoubleProvider in;
 
@@ -40,7 +42,8 @@ public interface iDoubleProvider {
 		}
 	}
 
-	static public class FromFilter implements iDoubleProvider {
+	public static
+    class FromFilter implements iDoubleProvider {
 		private final iFilter<Double, Double> filter;
 
 		private final iDoubleProvider input;
@@ -55,7 +58,8 @@ public interface iDoubleProvider {
 		}
 	}
 
-	static public class Offset implements iDoubleProvider {
+	public static
+    class Offset implements iDoubleProvider {
 		private final iDoubleProvider from;
 
 		private final float amount;

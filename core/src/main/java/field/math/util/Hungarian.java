@@ -11,7 +11,7 @@ import java.nio.IntBuffer;
 public class Hungarian
 {
 	// what is this, fortran77 ?
-	static public final int maxHungarianSize = 500;
+    public static final int maxHungarianSize = 500;
 
 	// convience
 
@@ -55,7 +55,8 @@ public class Hungarian
 	}
 
 	// the actual method
-	native public void perform(Buffer matrix, int rows, int cols, Buffer output);
+    public native
+    void perform(Buffer matrix, int rows, int cols, Buffer output);
 
     protected static
     void rangeOf(FloatBuffer a, float[] out) {

@@ -68,7 +68,7 @@ public class DeferedFixedDuringUpdate extends DeferCallingFast {
 			return c;
 		try {
 			Object o = original.invoke(fromThis, args);
-			cache.put(args.length==1 ? args[0] : zeroArgs, o);
+			cache.put((args.length == 1) ? args[0] : zeroArgs, o);
 			return o;
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();

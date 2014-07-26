@@ -131,34 +131,37 @@ public class TessLineEmitter extends SmallLineEmitter {
 	protected void decorateVertex(int v, List<Object> properties) {
 	}
 
-	protected List<Object> interpolateProperites(Object[] data, float[] weight) {
+	protected static
+    List<Object> interpolateProperites(Object[] data, float[] weight) {
 		List<Object> o = new ArrayList<Object>();
 
 		int l = (((VInfo) data[0]).properties).size();
 		for (int i = 0; i < l; i++) {
 			Object ty = (((VInfo) data[0]).properties).get(i);
-			if (!(ty instanceof Vector4)) {
-				o.add(null);
-			} else {
-				Vector4 z = new Vector4();
-				float m = 0;
-				for (int q = 0; q < data.length; q++) {
+            if (ty instanceof Vector4) {
+                Vector4 z = new Vector4();
+                float m = 0;
+                for (int q = 0; q < data.length; q++) {
                     if (data[q] == null) {
                         //System.out.println(" null data ? <"+i+" "+q+">");
-                    } else {
-						z.x += (((Vector4) (((VInfo) data[q]).properties).get(i))).x * weight[q];
-						z.y += (((Vector4) (((VInfo) data[q]).properties).get(i))).y * weight[q];
-						z.z += (((Vector4) (((VInfo) data[q]).properties).get(i))).z * weight[q];
-						z.w += (((Vector4) (((VInfo) data[q]).properties).get(i))).w * weight[q];
-						m += weight[q];
-					}
-				}
-				z.x /= m;
-				z.y /= m;
-				z.z /= m;
-				z.w /= m;
-				o.add(z);
-			}
+                    }
+                    else {
+                        z.x += (((Vector4) (((VInfo) data[q]).properties).get(i))).x * weight[q];
+                        z.y += (((Vector4) (((VInfo) data[q]).properties).get(i))).y * weight[q];
+                        z.z += (((Vector4) (((VInfo) data[q]).properties).get(i))).z * weight[q];
+                        z.w += (((Vector4) (((VInfo) data[q]).properties).get(i))).w * weight[q];
+                        m += weight[q];
+                    }
+                }
+                z.x /= m;
+                z.y /= m;
+                z.z /= m;
+                z.w /= m;
+                o.add(z);
+            }
+            else {
+                o.add(null);
+            }
 		}
 
 		return o;

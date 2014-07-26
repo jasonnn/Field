@@ -17,17 +17,17 @@ import java.io.IOException;
 
 public class WorkspaceDirectory {
 
-	static public String[] dir = { null };
+	public static String[] dir = { null };
 
-    static public final String[] hgbinary = AutoPersist.persist("hgbinary", new String[]{null});
-    static public final String[] gitBinary = AutoPersist.persist("gitbinary", new String[]{null});
-    static public boolean useGit = SystemProperties.getIntProperty("useGit", 0) == 1;
+    public static final String[] hgbinary = AutoPersist.persist("hgbinary", new String[]{null});
+    public static final String[] gitBinary = AutoPersist.persist("gitbinary", new String[]{null});
+    public static boolean useGit = SystemProperties.getIntProperty("useGit", 0) == 1;
 
 	public WorkspaceDirectory() {
 
 		String d = SystemProperties.getProperty("versioning.dir", null);
 		if (d != null) {
-			System.err.println(" versioning dir already set to <" + d + ">");
+			System.err.println(" versioning dir already set to <" + d + '>');
 			return;
 		}
 
@@ -42,8 +42,8 @@ public class WorkspaceDirectory {
                                   new String[]{System.getProperty("user.home") + "/Documents/FieldWorkspace"});
 
 		d = dir[0];
-		System.err.println("   versioning dir is set to <" + d + "> which exists? <" + new File(d).exists() + ">");
-		System.err.println(" user home is <" + System.getProperty("user.home") + ">");
+		System.err.println("   versioning dir is set to <" + d + "> which exists? <" + new File(d).exists() + '>');
+		System.err.println(" user home is <" + System.getProperty("user.home") + '>');
 
 		if (!new File(d).exists()) {
 			System.err.println(" since this file doesn't exist, we're going to ask for one");
@@ -77,38 +77,46 @@ public class WorkspaceDirectory {
 
 				File f = new File(fn);
 
-				if (!f.exists()) {
-					boolean made = f.mkdir();
-					if (!made) {
-						mb = new MessageBox(s, SWT.ABORT | SWT.ICON_ERROR);
-						mb.setMessage("Field tried and failed to create the directory '" + f.getAbsolutePath() + "'. Check permissions on the enclosing directory?");
-						mb.open();
-						System.err.println(" failed to make 1 <" + f + ">");
-
-						System.exit(1);
-					} else {
-                        // System.out.println(" directory made successfully <"
-                        // + f.exists() + ">");
-					}
-				} else {
-					if (!new File(f, ".hg").exists()) {
-						f = new File(f, "FieldWorkspace");
-						boolean made = f.mkdir();
-						if (!made) {
-							mb = new MessageBox(s, SWT.ABORT | SWT.ICON_ERROR);
-							mb.setMessage("Field tried and failed to create the directory '" + f.getAbsolutePath() + "'. Check permissions on the enclosing directory?");
-							mb.open();
-
-							System.exit(1);
-						} else {
+                if (f.exists()) {
+                    if (new File(f, ".hg").exists()) {
+                        System.err.println(" mercurial repository already there");
+                    }
+                    else {
+                        f = new File(f, "FieldWorkspace");
+                        boolean made = f.mkdir();
+                        if (made) {
                             // System.out.println(" directory made successfully 2 <"
                             // + f.exists()
-								// + ">");
-						}
-					} else {
-						System.err.println(" mercurial repository already there");
-					}
-				}
+                            // + ">");
+                        }
+                        else {
+                            mb = new MessageBox(s, SWT.ABORT | SWT.ICON_ERROR);
+                            mb.setMessage("Field tried and failed to create the directory '"
+                                          + f.getAbsolutePath()
+                                          + "'. Check permissions on the enclosing directory?");
+                            mb.open();
+
+                            System.exit(1);
+                        }
+                    }
+                }
+                else {
+                    boolean made = f.mkdir();
+                    if (made) {
+                        // System.out.println(" directory made successfully <"
+                        // + f.exists() + ">");
+                    }
+                    else {
+                        mb = new MessageBox(s, SWT.ABORT | SWT.ICON_ERROR);
+                        mb.setMessage("Field tried and failed to create the directory '"
+                                      + f.getAbsolutePath()
+                                      + "'. Check permissions on the enclosing directory?");
+                        mb.open();
+                        System.err.println(" failed to make 1 <" + f + '>');
+
+                        System.exit(1);
+                    }
+                }
 
 				System.err.println(" directory already exists ");
 
@@ -128,7 +136,7 @@ public class WorkspaceDirectory {
 		}
 
 		// check to see if this is a repository
-		if (useGit == false) {
+		if (!useGit) {
 			boolean isRep = new File(dir[0], ".hg").exists();
 			if (!isRep) {
 				System.err.println(" making it into a repository ");
@@ -151,7 +159,7 @@ public class WorkspaceDirectory {
 			System.exit(1);
 		}
 
-		System.err.println(" and we're out of workspacedirectory(), still looking for #142: dir is <" + dir[0] + "> and new <" + new File(dir[0]).exists() + ">");
+		System.err.println(" and we're out of workspacedirectory(), still looking for #142: dir is <" + dir[0] + "> and new <" + new File(dir[0]).exists() + '>');
 		SystemProperties.setProperty("versioning.dir", dir[0]);
 	}
 
@@ -175,7 +183,7 @@ public class WorkspaceDirectory {
     protected static
     void checkHGInstalled() {
 
-		if (hgbinary != null && hgbinary[0] != null) {
+		if ((hgbinary != null) && (hgbinary[0] != null)) {
 			if (new File(hgbinary[0]).exists())
 				return;
 		}
@@ -207,7 +215,7 @@ public class WorkspaceDirectory {
     protected static
     void checkGitInstalled() {
 
-		if (gitBinary != null && gitBinary[0] != null) {
+		if ((gitBinary != null) && (gitBinary[0] != null)) {
 			if (new File(gitBinary[0]).exists())
 				return;
 		}

@@ -14,7 +14,7 @@ public class ComponentDrawingUtils {
 		line.open();
 
 		int start = (int)(bounds.x/pitch);
-		int end = (int)((bounds.x+2*Math.max(bounds.w, bounds.h))/pitch);
+		int end = (int)((bounds.x + (2 * Math.max(bounds.w, bounds.h)))/pitch);
 
 		for(int i=start;i<end;i++)
 		{
@@ -23,11 +23,11 @@ public class ComponentDrawingUtils {
 
 			// now we need to intersect rawStartX, rawStartY and the line -1, +1 with the rect
 
-			float l1 = (float) ((bounds.x+bounds.w-rawStartX)/(-1));
+			float l1 = (float) (((bounds.x + bounds.w) - rawStartX)/(-1));
 			if (l1<0) l1 = 0;
 
 			float l2 = (float) ((bounds.x-rawStartX)/(-1));
-			float l3 = (float) ((bounds.y+bounds.h-rawStartY)/(1));
+			float l3 = (float) (((bounds.y + bounds.h) - rawStartY)/(1));
 			if (l3<l2) l2 = l3;
 
 			drawLine(line, rawStartX, rawStartY, -1, 1, l1, l2, color);
@@ -37,7 +37,8 @@ public class ComponentDrawingUtils {
 		line.close();
 	}
 
-	static public void drawRectangle(iDynamicMesh triangle, DynamicLine line, DynamicPointlist point, float x, float y, float w, float h, Vector4 triangleColor,
+	public static
+    void drawRectangle(iDynamicMesh triangle, DynamicLine line, DynamicPointlist point, float x, float y, float w, float h, Vector4 triangleColor,
 				Vector4 lineColor) {
 
 		if (line != null) {

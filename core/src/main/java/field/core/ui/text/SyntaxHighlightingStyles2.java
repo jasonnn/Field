@@ -33,7 +33,8 @@ public class SyntaxHighlightingStyles2 {
             AutoPersist.persist("Color4_background", new Color4(85 / 255f, 85 / 255f, 85 / 255f, 1f));
     public static final float[] fontSizeMod = AutoPersist.persist("FontSizeMod", new float[]{0});
 
-	static public void initStyles(Color[] colors, StyledText target) {
+	public static
+    void initStyles(Color[] colors, StyledText target) {
 
 		colors[PythonScanner.TokenTypes.comment.ordinal()] = comment.toSWTColor();
 		colors[PythonScanner.TokenTypes.self.ordinal()] = self.toSWTColor();
@@ -56,7 +57,8 @@ public class SyntaxHighlightingStyles2 {
 	
 	static ToolBarFolder open;
 	
-	static public void openCustomizer(final Color[] colors, final StyledText target, final iUpdateable post) {
+	public static
+    void openCustomizer(final Color[] colors, final StyledText target, final iUpdateable post) {
 		if (open!=null && !open.getShell().isDisposed()) return;
 		
 		ToolBarFolder f = new ToolBarFolder(new Rectangle(50, 50, 300, 600), true);

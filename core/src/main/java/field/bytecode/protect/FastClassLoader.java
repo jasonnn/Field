@@ -1,10 +1,7 @@
 package field.bytecode.protect;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLStreamHandlerFactory;
+import java.net.*;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -42,7 +39,7 @@ public class FastClassLoader extends URLClassLoader {
             if (o != null) {
                 loadedmaphash = Long.parseLong(o);
             }
-            log.info(" loaded classmap with <" + a + ">");
+            log.info(" loaded classmap with <" + a + '>');
         } catch (Throwable x) {
             x.printStackTrace();
         }
@@ -75,8 +72,14 @@ public class FastClassLoader extends URLClassLoader {
 
     @Override
     protected void addURL(URL url) {
-        super.addURL(url);
-        maphash = 31 * maphash + url.hashCode();
+        try {
+            URI uri = url.toURI();
+            super.addURL(url);
+            maphash = 31 * maphash + uri.hashCode();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
     }
 
     boolean skipped = false;
@@ -105,7 +108,7 @@ public class FastClassLoader extends URLClassLoader {
         // long b = System.nanoTime();
 
         {
-            this.a.put(name, o == null ? null : o.toString());
+            this.a.put(name, (o == null) ? null : o.toString());
         }
         return o;
     }

@@ -31,9 +31,10 @@ public class BasicRunner extends Runner implements iExecutesPromise {
 		public void stop(float t, Promise p, boolean forwards);
 	}
 
-	static public final iVisualElement.VisualElementProperty<BasicRunner> basicRunner = new iVisualElement.VisualElementProperty<BasicRunner>("basicRunner_");
+	public static final iVisualElement.VisualElementProperty<BasicRunner> basicRunner = new iVisualElement.VisualElementProperty<BasicRunner>("basicRunner_");
 
-	static protected Delegate createDelegateForPromise_static(float t, Promise p, boolean forwards, boolean noDefaultBackwards) {
+	protected static
+    Delegate createDelegateForPromise_static(float t, Promise p, boolean forwards, boolean noDefaultBackwards) {
 		String text = p.getText();
 
 		PythonInterface.getPythonInterface().setVariable("_x", new Float(t));
@@ -47,7 +48,7 @@ public class BasicRunner extends Runner implements iExecutesPromise {
 			ret = PythonInterface.getPythonInterface().executeStringReturnValue(text, "_r");
 		} catch (Throwable tr) {
 
-			System.err.println(" exception throw while executing python ...<" + text + "> <" + tr + ">");
+			System.err.println(" exception throw while executing python ...<" + text + "> <" + tr + '>');
 			tr.printStackTrace();
 			new Exception().printStackTrace();
 			if (SystemProperties.getIntProperty("exitOnException", 0) == 1)
@@ -59,7 +60,8 @@ public class BasicRunner extends Runner implements iExecutesPromise {
 		return d;
 	}
 
-	static protected Delegate delegateForReturnValue_static(float t, Promise p, boolean forwards, Object ret, final boolean noDefaultBackwards) {
+	protected static
+    Delegate delegateForReturnValue_static(float t, Promise p, boolean forwards, Object ret, final boolean noDefaultBackwards) {
 		Delegate d = InterpretPythonAsDelegate.delegateForReturnValue_impl(t, p, forwards, ret, noDefaultBackwards);
 		if (d == null) {
 			return new Delegate() {
@@ -304,7 +306,8 @@ public class BasicRunner extends Runner implements iExecutesPromise {
         return p.toString();
 	}
 
-	private float rewriteTime(float t, Promise p) {
+	private static
+    float rewriteTime(float t, Promise p) {
         return PythonScriptingSystem.rewriteTime(t, p);
     }
 

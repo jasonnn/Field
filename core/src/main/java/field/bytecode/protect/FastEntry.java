@@ -19,33 +19,36 @@ import java.util.Map;
  * @author marc
  *
  */
-final public class FastEntry extends CallOnEntryFast {
+public final
+class FastEntry extends CallOnEntryFast {
 	public static Map<String, Map<String, FastEntry>> knownEntries = new HashMap<String, Map<String, FastEntry>>();
 
-	static public void linkWith(Method method, Class clazz, Run run) {
+	public static
+    void linkWith(Method method, Class clazz, Run run) {
 		String methodDescriptor = Type.getMethodDescriptor(method);
 		String methodName = method.getName();
 
 		Map<String, FastEntry> map = knownEntries.get(clazz.getName());
 		assert map != null;
-		FastEntry entry = map.get(methodName + ":" + methodDescriptor);
+		FastEntry entry = map.get(methodName + ':' + methodDescriptor);
 		assert entry != null;
 
 		if (entry.execute == null) entry.execute = new ArrayList<Run>();
 		entry.execute.add(run);
 	}
 
-	static public void unlinkWith(Method method, Class clazz, Run run) {
+	public static
+    void unlinkWith(Method method, Class clazz, Run run) {
 		String methodDescriptor = Type.getMethodDescriptor(method);
 		String methodName = method.getName();
 
 		Map<String, FastEntry> map = knownEntries.get(clazz.getName());
 		assert map != null;
-		FastEntry entry = map.get(methodName + ":" + methodDescriptor);
+		FastEntry entry = map.get(methodName + ':' + methodDescriptor);
 		assert entry != null;
 
 		if (entry.execute != null) entry.execute.remove(run);
-		if ((entry.execute != null ? entry.execute.size() : 0) == 0) entry.execute = null;
+		if (((entry.execute != null) ? entry.execute.size() : 0) == 0) entry.execute = null;
 	}
 
 	List<Run> execute;
@@ -56,7 +59,7 @@ final public class FastEntry extends CallOnEntryFast {
 		Map<String, FastEntry> methodMap = knownEntries.get(className);
 		if (methodMap == null) knownEntries.put(className, methodMap = new HashMap<String, FastEntry>());
 
-		methodMap.put(onMethod.getName() + ":" + onMethod.getDescriptor(), this);
+		methodMap.put(onMethod.getName() + ':' + onMethod.getDescriptor(), this);
 	}
 
 	@Override

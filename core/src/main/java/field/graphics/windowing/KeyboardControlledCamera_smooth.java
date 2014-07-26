@@ -98,10 +98,11 @@ public class KeyboardControlledCamera_smooth extends CoordinateFrameCamera imple
 		}
 
 		CharacterIsDown d = null;
-		if ((e.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
-			d = new CharacterIsDown(e.getKeyChar(), true, e.getKeyCode());
-		} else
-			d = new CharacterIsDown(e.getKeyChar(), false, e.getKeyCode());
+        if ((e.getModifiers() & KeyEvent.SHIFT_MASK) == 0)
+            d = new CharacterIsDown(e.getKeyChar(), false, e.getKeyCode());
+        else {
+            d = new CharacterIsDown(e.getKeyChar(), true, e.getKeyCode());
+        }
 
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			charactersDown.clear();
@@ -126,10 +127,11 @@ public class KeyboardControlledCamera_smooth extends CoordinateFrameCamera imple
 
 	public void keyReleased(KeyEvent e) {
 		CharacterIsDown d = null;
-		if ((e.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
-			d = new CharacterIsDown(e.getKeyChar(), true, e.getKeyCode());
-		} else
-			d = new CharacterIsDown(e.getKeyChar(), false, e.getKeyCode());
+        if ((e.getModifiers() & KeyEvent.SHIFT_MASK) == 0)
+            d = new CharacterIsDown(e.getKeyChar(), false, e.getKeyCode());
+        else {
+            d = new CharacterIsDown(e.getKeyChar(), true, e.getKeyCode());
+        }
 
 		// if (!charactersDown.contains(d))
 		charactersDown.remove(d);
@@ -241,7 +243,7 @@ public class KeyboardControlledCamera_smooth extends CoordinateFrameCamera imple
 		while (ii.hasNext()) {
 			Entry<CharacterIsDown, Float> n = ii.next();
 			CharacterIsDown c = n.getKey();
-			float f = n.getValue().floatValue();
+			float f = n.getValue();
 
 			if (c.doFade && gestureIsDown) {
 				f = f * 0.5f;
@@ -256,7 +258,7 @@ public class KeyboardControlledCamera_smooth extends CoordinateFrameCamera imple
 				if (x == null)
 					charactersDownBuffer.put(n.getKey(), new MutableFloat(f * (1 - alpha)));
 				else
-					charactersDownBuffer.put(n.getKey(), new MutableFloat(x.floatValue() * alpha + (1 - alpha) * f));
+					charactersDownBuffer.put(n.getKey(), new MutableFloat((x.floatValue() * alpha) + ((1 - alpha) * f)));
 			} else if (c.doFade) {
 				f = f * 0.4f;
 				if (f < 1e-3) {
@@ -297,7 +299,7 @@ public class KeyboardControlledCamera_smooth extends CoordinateFrameCamera imple
 			m.d = m.d * smoothing_up + (1 - smoothing_up) * f;
 		else
 			m.d = m.d * smoothing + (1 - smoothing) * f;
-		if (m.d < 1e-4 && m.d > f)
+		if ((m.d < 1e-4) && (m.d > f))
 			charactersDownBuffer.remove(key);
 	}
 
@@ -457,7 +459,7 @@ public class KeyboardControlledCamera_smooth extends CoordinateFrameCamera imple
 				// MutableFloat(e.xDirection));
 			}
 
-			else if (e.magnification < lastMag && e.magnification > 0.0) {
+			else if ((e.magnification < lastMag) && (e.magnification > 0.0)) {
                 CharacterIsDown d = new CharacterIsDown((char) SWT.ARROW_DOWN, true, SWT.ARROW_DOWN).setDoFade(true);
                 float q = (float) (lastMag - e.magnification) / lastMag;
 
@@ -470,7 +472,7 @@ public class KeyboardControlledCamera_smooth extends CoordinateFrameCamera imple
 				charactersDownBuffer.remove(d2);
 
 			}
-			if (e.magnification > 0 && e.magnification < 3)
+			if ((e.magnification > 0) && (e.magnification < 3))
 				lastMag = (float) e.magnification;
 		}
 

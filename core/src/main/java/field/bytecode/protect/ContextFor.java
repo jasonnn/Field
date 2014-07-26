@@ -23,14 +23,15 @@ public class ContextFor {
     public void enter() {
 
         if (entryCount == 0) contextOnCurrentEntry = on.getAt();
-        if (entryCount == 0 && contextTarget != null) on.setAt(contextTarget);
+        if ((entryCount == 0) && (contextTarget != null)) on.setAt(contextTarget);
         entryCount++;
     }
 
     public void exit() {
         entryCount--;
-        if (entryCount == 0) if (immediate || on.getAt() != contextOnCurrentEntry) if (contextTarget == null || !constant) contextTarget = on.getAt();
-        if (resets && entryCount == 0) on.setAt(contextOnCurrentEntry);
+        if (entryCount == 0) if (immediate || (on.getAt() != contextOnCurrentEntry)) if ((contextTarget == null)
+                                                                                         || !constant) contextTarget = on.getAt();
+        if (resets && (entryCount == 0)) on.setAt(contextOnCurrentEntry);
 
         assert entryCount >= 0;
     }

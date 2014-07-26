@@ -59,15 +59,15 @@ public class SmallMenu {
 			s.x += 20;
 			s.y += 15;
 
-			if (s.x > Launcher.display.getBounds().width * 0.8f) {
+			if (s.x > (Launcher.display.getBounds().width * 0.8f)) {
 				s.x = (int) (Launcher.display.getBounds().width * 0.8f);
 			}
 
-			if (position.y + s.y > Launcher.display.getBounds().height) {
+			if ((position.y + s.y) > Launcher.display.getBounds().height) {
 				position.y = Math.max(30, Launcher.display.getBounds().height - s.y - 10);
 			}
 
-			if (position.x + s.x > Launcher.display.getBounds().width + Launcher.display.getBounds().x) {
+			if ((position.x + s.x) > (Launcher.display.getBounds().width + Launcher.display.getBounds().x)) {
 				position.x = Launcher.display.getBounds().width + Launcher.display.getBounds().x - s.x - 10;
 			}
 
@@ -191,14 +191,14 @@ public class SmallMenu {
 				public void handleEvent(Event event) {
 					// do something
 					TableItem[] ss = menu.getSelection();
-                    TableItem m = ss == null || ss.length == 0 ? null : ss[0];
+                    TableItem m = ((ss == null) || (ss.length == 0)) ? null : ss[0];
 
 					if (event.item != null)
 						m = (TableItem) event.item;
 
 					System.out.println(" closing it (default selection)");
 					shell.setVisible(false);
-					Object d = m == null ? null : m.getData();
+					Object d = (m == null) ? null : m.getData();
 					// ;//System.out.println(" d = <" + d +
 					// "> <" + m + "> <" + ss.length + "> <"
 					// + event.item + ">");
@@ -238,7 +238,7 @@ public class SmallMenu {
 					TableItem m = menu.getItem(new Point(event.x, event.y));
 					System.out.println(" closing it (mouse down)");
 					shell.setVisible(false);
-					Object d = m == null ? null : m.getData();
+					Object d = (m == null) ? null : m.getData();
 					done();
 					if (d instanceof iUpdateable) {
 						fired = true;
@@ -263,10 +263,10 @@ public class SmallMenu {
 						// ;//System.out.println(" return, taking it");
 
 						TableItem[] ss = menu.getSelection();
-                        TableItem m = ss == null || ss.length == 0 ? null : ss[0];
+                        TableItem m = ((ss == null) || (ss.length == 0)) ? null : ss[0];
                         System.out.println(" closing it (newline)");
 						shell.setVisible(false);
-						Object d = m == null ? null : m.getData();
+						Object d = (m == null) ? null : m.getData();
 						// ;//System.out.println(" d = <"
 						// +
 						// d + ">");
@@ -279,14 +279,14 @@ public class SmallMenu {
 					} else if (event.keyCode == SWT.ARROW_DOWN) {
 						event.doit = false;
 						int s = menu.getSelectionIndex();
-						System.out.println(" down <" + s + ">");
+						System.out.println(" down <" + s + '>');
 						if (s == -1) {
 							System.out.println(" scaning for first selection ");
 							for (int i = 0; i < menu.getItemCount(); i++) {
-								System.out.println(i + " " + menu.getItemCount() + " " + menu.getItem(i).getData());
+								System.out.println(i + " " + menu.getItemCount() + ' ' + menu.getItem(i).getData());
 								if (menu.getItem(i).getData() != null) {
 									menu.setSelection(i);
-									System.out.println(" set selection to be <" + i + ">");
+									System.out.println(" set selection to be <" + i + '>');
 									if (hu != null)
 										hu.update(i);
 
@@ -331,7 +331,7 @@ public class SmallMenu {
 							}
 						} else {
 							for (int i = 0; i < menu.getItemCount(); i++) {
-								s = (s - 1 + menu.getItemCount()) % menu.getItemCount();
+								s = ((s - 1) + menu.getItemCount()) % menu.getItemCount();
 								if (menu.getItem(s).getData() != null) {
 									// ;//System.out.println(" now<"
 									// + s +
@@ -384,7 +384,7 @@ public class SmallMenu {
 					new Exception().printStackTrace();
 					shell.setVisible(false);
 
-					if (hu != null && !fired) {
+					if ((hu != null) && !fired) {
 						hu.cancel();
 					}
 
@@ -443,7 +443,8 @@ public class SmallMenu {
 						Launcher.display.removeFilter(SWT.MouseMove, this);
 						Launcher.display.removeFilter(SWT.MouseUp, this);
 
-						if ((down > 0 && System.currentTimeMillis() - down > 1000) || menu.getSelectionCount() > 0) {
+						if (((down > 0) && ((System.currentTimeMillis() - down) > 1000)) || (menu.getSelectionCount()
+                                                                                             > 0)) {
 
 							if (event.widget != menu) {
 
@@ -534,7 +535,8 @@ public class SmallMenu {
 		public void cancel();
 	}
 
-	static public class Submenu implements iUpdateable {
+	public static
+    class Submenu implements iUpdateable {
 		public LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
 
 		public Submenu(LinkedHashMap<String, iUpdateable> menu) {
@@ -546,7 +548,8 @@ public class SmallMenu {
 		}
 	}
 
-	static public class Documentation implements iUpdateable {
+	public static
+    class Documentation implements iUpdateable {
 
 		private final String documentation;
 
@@ -568,7 +571,11 @@ public class SmallMenu {
 		return createMenu(items, parent, keystrokeUpdate, null);
 	}
 
-	public BetterPopup createMenu(LinkedHashMap<String, iUpdateable> items, Decorations parent, final iKeystrokeUpdate keystrokeUpdate, iHoverUpdate hoverUpdate) {
+	public static
+    BetterPopup createMenu(LinkedHashMap<String, iUpdateable> items,
+                           Decorations parent,
+                           final iKeystrokeUpdate keystrokeUpdate,
+                           iHoverUpdate hoverUpdate) {
 
 		Iterator<Entry<String, iUpdateable>> i = items.entrySet().iterator();
 
@@ -663,7 +670,8 @@ public class SmallMenu {
 		return menu;
 	}
 
-	static public class Pretty {
+	public static
+    class Pretty {
 
 		Pattern SMALLER_PATTERN = Pattern.compile("(<font size=-3 color='#" + Constants.defaultTreeColorDim + "'>)(.*?)(</font>)");
 		Pattern SMALLER2_PATTERN = Pattern.compile("(<font size=-2>)(.*?)(</font>)");
@@ -677,17 +685,17 @@ public class SmallMenu {
 
 		Pattern CLEAN_PATTERN = Pattern.compile("(<.*?>)");
 
-		private Font boldFont;
-		private Font boldItalicFont;
-		private Font smallerFont;
-		private Font italicFont;
-		private Font normalFont;
-		private Font fixedFont;
-		private Font greyFont;
+		private final Font boldFont;
+		private final Font boldItalicFont;
+		private final Font smallerFont;
+		private final Font italicFont;
+		private final Font normalFont;
+		private final Font fixedFont;
+		private final Font greyFont;
 
 		int indent = 5;
 		int vertSpace = 3;
-		private Font bigFont;
+		private final Font bigFont;
 
 		public Pretty(final Table install, final int fixedWidth) {
 			String name = install.getFont().getFontData()[0].getName();

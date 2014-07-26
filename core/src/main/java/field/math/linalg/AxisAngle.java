@@ -29,7 +29,7 @@ public class AxisAngle implements java.io.Serializable, Cloneable {
 	 */
 	public float angle;
 
-	final static double EPS = 0.000001;
+	static final double EPS = 0.000001;
 
 	/**
 	 * Constructs and initializes a AxisAngle4f from the specified xyzw coordinates.
@@ -188,7 +188,7 @@ public class AxisAngle implements java.io.Serializable, Cloneable {
 	 * @return 
 	 */
 	public final AxisAngle set(Quaternion q1) {
-		double mag = q1.x * q1.x + q1.y * q1.y + q1.z * q1.z;
+		double mag = (q1.x * q1.x) + (q1.y * q1.y) + (q1.z * q1.z);
 
 		if (mag > EPS) {
 			mag = Math.sqrt(mag);
@@ -223,12 +223,12 @@ public class AxisAngle implements java.io.Serializable, Cloneable {
 		x = m3f.m21 - m3f.m12;
 		y = m3f.m02 - m3f.m20;
 		z = m3f.m10 - m3f.m01;
-		double mag = x * x + y * y + z * z;
+		double mag = (x * x) + (y * y) + (z * z);
 
 		if (mag > EPS) {
 			mag = Math.sqrt(mag);
 			double sin = 0.5 * mag;
-			double cos = 0.5 * (m3f.m00 + m3f.m11 + m3f.m22 - 1.0);
+			double cos = 0.5 * ((m3f.m00 + m3f.m11 + m3f.m22) - 1.0);
 
 			angle = (float) Math.atan2(sin, cos);
 			double invMag = 1.0 / mag;
@@ -256,11 +256,11 @@ public class AxisAngle implements java.io.Serializable, Cloneable {
         x = m1.m21 - m1.m12;
         y = m1.m02 - m1.m20;
         z = m1.m10 - m1.m01;
-        double mag = x * x + y * y + z * z;
+        double mag = (x * x) + (y * y) + (z * z);
 		if (mag > EPS) {
 			mag = Math.sqrt(mag);
 			double sin = 0.5 * mag;
-			double cos = 0.5 * (m1.m00 + m1.m11 + m1.m22 - 1.0);
+			double cos = 0.5 * ((m1.m00 + m1.m11 + m1.m22) - 1.0);
 
 			angle = (float) Math.atan2(sin, cos);
 
@@ -285,7 +285,7 @@ public class AxisAngle implements java.io.Serializable, Cloneable {
 	 * @return the String representation
 	 */
 	public String toString() {
-		return "(" + this.x + ", " + this.y + ", " + this.z + ", " + this.angle + ")";
+		return "(" + this.x + ", " + this.y + ", " + this.z + ", " + this.angle + ')';
 	}
 
 	/**
@@ -297,7 +297,7 @@ public class AxisAngle implements java.io.Serializable, Cloneable {
 	 */
 	public boolean equals(AxisAngle a1) {
 		try {
-			return (this.x == a1.x && this.y == a1.y && this.z == a1.z && this.angle == a1.angle);
+			return ((this.x == a1.x) && (this.y == a1.y) && (this.z == a1.z) && (this.angle == a1.angle));
 		} catch (NullPointerException e2) {
 			return false;
 		}
@@ -314,7 +314,7 @@ public class AxisAngle implements java.io.Serializable, Cloneable {
 	public boolean equals(Object o1) {
 		try {
 			AxisAngle a2 = (AxisAngle) o1;
-			return (this.x == a2.x && this.y == a2.y && this.z == a2.z && this.angle == a2.angle);
+			return ((this.x == a2.x) && (this.y == a2.y) && (this.z == a2.z) && (this.angle == a2.angle));
 		} catch (NullPointerException e2) {
 			return false;
 		} catch (ClassCastException e1) {
@@ -335,16 +335,16 @@ public class AxisAngle implements java.io.Serializable, Cloneable {
 		float diff;
 
 		diff = x - a1.x;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = y - a1.y;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = z - a1.z;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = angle - a1.angle;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		return true;
 

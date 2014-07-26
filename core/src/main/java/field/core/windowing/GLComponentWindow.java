@@ -76,15 +76,16 @@ import static org.lwjgl.opengl.GL11.*;
 @Woven
 public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue, iThreedDrawingSurface {
     
-	static public Set<Integer> keysDown = new LinkedHashSet<Integer>();
+	public static Set<Integer> keysDown = new LinkedHashSet<Integer>();
     
 	public LinkedHashMap<Object, String> extraTextStatusbarDescriptions = new LinkedHashMap<Object, String>();
     
-	static public boolean fieldStereo = SystemProperties.getIntProperty("fieldStereo", 0) == 1;
+	public static boolean fieldStereo = SystemProperties.getIntProperty("fieldStereo", 0) == 1;
 
-    static public Rectangle defaultRect = AutoPersist.persist("canvas", new Rectangle(0, 0, 0, 0));
+    public static Rectangle defaultRect = AutoPersist.persist("canvas", new Rectangle(0, 0, 0, 0));
     
-	static public class ComponentContainer implements iComponent {
+	public static
+    class ComponentContainer implements iComponent {
         
 		private final ComponentContainer parent;
         
@@ -707,7 +708,7 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 					}
                     
 					FileOutputStream fos;
-					RenderedOp op = JAI.create("filestore", bi, filename + cx + "." + cy + ".png", "PNG");
+					RenderedOp op = JAI.create("filestore", bi, filename + cx + '.' + cy + ".png", "PNG");
 					storage.rewind();
 				}
 			}
@@ -724,38 +725,40 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 		}
 	}
     
-	static public final Method method_display = ReflectionTools.methodOf("display", GLComponentWindow.class);
-	static public final Method method_update = ReflectionTools.methodOf("update", GLComponentWindow.class);
-	static public final Method method_doRender = ReflectionTools.methodOf("doRender", GLComponentWindow.class);
+	public static final Method method_display = ReflectionTools.methodOf("display", GLComponentWindow.class);
+	public static final Method method_update = ReflectionTools.methodOf("update", GLComponentWindow.class);
+	public static final Method method_doRender = ReflectionTools.methodOf("doRender", GLComponentWindow.class);
     
-	static public boolean isTransparent = false;
+	public static boolean isTransparent = false;
     
-	static public iLinearGraphicsContext currentContext;
+	public static iLinearGraphicsContext currentContext;
     
-	static public iLinearGraphicsContext fastContext;
+	public static iLinearGraphicsContext fastContext;
     
-	static public GLComponentWindow glComponentWindowThatLastGotFocus = null;
+	public static GLComponentWindow glComponentWindowThatLastGotFocus = null;
     
-	static public boolean draft = SystemProperties.getIntProperty("presentationMode", 0) == 0;
-	static public boolean present = SystemProperties.getIntProperty("presentationMode", 0) == 1;
+	public static boolean draft = SystemProperties.getIntProperty("presentationMode", 0) == 0;
+	public static boolean present = SystemProperties.getIntProperty("presentationMode", 0) == 1;
     
-	static public final SimpleContextTopology context =  SimpleContextTopology.newInstance();
+	public static final SimpleContextTopology context =  SimpleContextTopology.newInstance();
     
-	static public boolean pure2d = true;
+	public static boolean pure2d = true;
     
-	static public boolean alwaysVisibleForSave = true;
+	public static boolean alwaysVisibleForSave = true;
     
-	static protected int uniq = 0;
+	protected static int uniq = 0;
     
-	static protected GLComponentWindow currentWindow;
+	protected static GLComponentWindow currentWindow;
     
 	static WeakHashMap<Event, Vector2> floatResMouseEvents = new WeakHashMap<Event, Vector2>();
     
-	static public GLComponentWindow getCurrentWindow(iComponent component) {
+	public static
+    GLComponentWindow getCurrentWindow(iComponent component) {
 		return currentWindow;
 	}
     
-	static public Vector2 mousePositionForEvent(Event arg0) {
+	public static
+    Vector2 mousePositionForEvent(Event arg0) {
 		Vector2 at = floatResMouseEvents.get(arg0);
 		if (at == null) {
 			at = new Vector2();
@@ -852,14 +855,14 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 	Vector4 fragmentAdd = new Vector4(0, 0, 0, 0);
     
 	Vector2 currentMouse = null;
-	private boolean wasTransparent;
+	private final boolean wasTransparent;
 	protected boolean onlyRoot;
 	private Long nsContext;
 	private Rectangle oldbounds;
-	private ComponentWindowStatusbar componentWindowStatusbar;
-	private ComponentWindowDropShadow componentWindowDropShadow;
+	private final ComponentWindowStatusbar componentWindowStatusbar;
+	private final ComponentWindowDropShadow componentWindowDropShadow;
     
-	private ResourceMonitor resourceMonitor;
+	private final ResourceMonitor resourceMonitor;
     
 	private float canvasFps;
     
@@ -871,17 +874,17 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
     
 	public SashForm leftComp2;
     
-	private SashForm rsplit;
+	private final SashForm rsplit;
     
-	private SashForm hsplit;
+	private final SashForm hsplit;
     
 	static public GLComponentWindow lastCreatedWindow;
     
 	iCanvasInterface canvasInterface;
     
-	private BetterSash hBetterSash;
+	private final BetterSash hBetterSash;
     
-	private BetterSash rBetterSash;
+	private final BetterSash rBetterSash;
     
 	// public ToolBar toolbar;
     
@@ -895,7 +898,7 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 		this.eventProcessingTaskQueue = q;
 		context.begin(name);
         
-		frame = new Shell(Launcher.display, SWT.SHELL_TRIM | (Platform.getOS() == OS.mac ? (0) : 0));
+		frame = new Shell(Launcher.display, SWT.SHELL_TRIM | ((Platform.getOS() == OS.mac) ? (0) : 0));
 		frame.setText("Field");
         
 		// toolbar = frame.getToolBar();
@@ -1240,7 +1243,7 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 				Collection<String> v = extraTextStatusbarDescriptions.values();
                 
 				for (String vv : v)
-					t += " " + vv;
+					t += ' ' + vv;
                 
 				if (disableRepaint || disableRepaintNext) {
 					t += " <font face='" + Constants.defaultFont + "' size=-2 color='#660000'>Repainting is disabled</font>";
@@ -1911,7 +1914,7 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
             
 			masterProgram.performPass(null);
 			if (rendererInfo == null) {
-				rendererInfo = glGetString(GL_VENDOR).toLowerCase() + ":" + glGetString(GL11.GL_RENDERER);
+				rendererInfo = glGetString(GL_VENDOR).toLowerCase() + ':' + glGetString(GL11.GL_RENDERER);
 			}
             
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -1928,10 +1931,8 @@ public class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue,
 			GL11.glEnable(GL11.GL_LINE_SMOOTH);
             
 			GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_NICEST);
-			if (!Platform.isLinux())
-				GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
-			else
-				GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+            if (Platform.isLinux()) GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+            else GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
             
 			// iVisualElementOverrides.MakeDispatchProxy.
 			// dispatchForwardCount

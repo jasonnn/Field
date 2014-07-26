@@ -108,7 +108,7 @@ public class CachedLineCursor {
 		if (after.method.equals(iLine_m.close_m))
 			return on.events.get(lastMoveTo).getDestination(a);
 
-		System.err.println(" get in <" + after + ">");
+		System.err.println(" get in <" + after + '>');
 
 		return after.getDestination(a);
 	}
@@ -118,7 +118,7 @@ public class CachedLineCursor {
 	}
 
 	public boolean hasNextSegment() {
-		return currentIndex < on.events.size() - 1;
+		return currentIndex < (on.events.size() - 1);
 	}
 
 	public boolean hasPreviousInSpline() {
@@ -325,7 +325,7 @@ public class CachedLineCursor {
 	}
 
 	public boolean nextIsSkip() {
-		return after == null && hasNextSegment();
+		return (after == null) && hasNextSegment();
 	}
 
 	public boolean nextLinearFrame(Vector2 a, Vector2 b) {
@@ -370,7 +370,11 @@ public class CachedLineCursor {
 
 				return true;
 			}
-			assert false : after.method + " " + iLine_m.lineTo_m + " " + after.method.hashCode() + " " + iLine_m.lineTo_m.hashCode() + " " + after.method.equals(iLine_m.lineTo_m) + " " + (iLine_m.lineTo_m == after.method);
+			assert false : after.method + " " + iLine_m.lineTo_m + ' '
+                           + after.method.hashCode() + ' '
+                           + iLine_m.lineTo_m.hashCode() + ' '
+                           + after.method.equals(iLine_m.lineTo_m) + ' '
+                           + (iLine_m.lineTo_m == after.method);
 			return false;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -429,7 +433,11 @@ public class CachedLineCursor {
 
 				return true;
 			}
-			assert false : after.method + " " + iLine_m.lineTo_m + " " + after.method.hashCode() + " " + iLine_m.lineTo_m.hashCode() + " " + after.method.equals(iLine_m.lineTo_m) + " " + (iLine_m.lineTo_m == after.method);
+			assert false : after.method + " " + iLine_m.lineTo_m + ' '
+                           + after.method.hashCode() + ' '
+                           + iLine_m.lineTo_m.hashCode() + ' '
+                           + after.method.equals(iLine_m.lineTo_m) + ' '
+                           + (iLine_m.lineTo_m == after.method);
 			return false;
 		} catch (NullPointerException e) {
 			e.printStackTrace();

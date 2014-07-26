@@ -32,13 +32,14 @@ public class RawMesh2 extends BasicUtilities.OnePassListElement {
 
 	protected final Matrix4 tmpStorage = new Matrix4();
 
-	protected float matrix[] = null;
+	protected float[] matrix = null;
 
-	protected int[] attributeBuffers = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+	protected int[] attributeBuffers = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 
-	protected int[] elementBuffer = new int[] { -1 };
+	protected int[] elementBuffer = { -1 };
 
-	protected boolean[] needsReconstruction = new boolean[] { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
+	protected boolean[] needsReconstruction =
+            { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 
 	protected boolean elementBufferNeedsReconstruction = true;
 
@@ -55,7 +56,7 @@ public class RawMesh2 extends BasicUtilities.OnePassListElement {
 
 	public RawMesh2(String filename) throws IOException {
 		super(Base.StandardPass.render, Base.StandardPass.render);
-		header = (Header) new PythonUtils().loadAsXML(filename + ".xmlHeader");
+		header = (Header) PythonUtils.loadAsXML(filename + ".xmlHeader");
 		file = new RandomAccessFile(filename, "r");
 		source = file.getChannel().map(MapMode.READ_ONLY, 0, file.length());
 		source.order(ByteOrder.nativeOrder());
@@ -64,7 +65,7 @@ public class RawMesh2 extends BasicUtilities.OnePassListElement {
 
 	public RawMesh2(String filename, MappedByteBuffer source) throws IOException {
 		super(Base.StandardPass.render, Base.StandardPass.render);
-		header = (Header) new PythonUtils().loadAsXML(filename + ".xmlHeader");
+		header = (Header) PythonUtils.loadAsXML(filename + ".xmlHeader");
 		this.source = source;
 		setFrame(0);
 	}

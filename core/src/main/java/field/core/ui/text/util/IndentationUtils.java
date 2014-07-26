@@ -2,8 +2,9 @@ package field.core.ui.text.util;
 
 public class IndentationUtils {
 
-	static public String deindent(String a) {
-		StringBuffer out = new StringBuffer();
+	public static
+    String deindent(String a) {
+		StringBuilder out = new StringBuilder();
 		String[] lines = a.split("\n");
 		for (int i = 0; i < lines.length; i++) {
 			int n = numTabIndent(lines[i]);
@@ -14,26 +15,28 @@ public class IndentationUtils {
 		for (int i = 0; i < lines.length; i++) {
 			out.append(lines[i]);
 			if (i < lines.length - 1)
-				out.append("\n");
+				out.append('\n');
 		}
 		return out.toString();
 	}
 
-	static public String indent(String a) {
-		StringBuffer out = new StringBuffer();
+	public static
+    String indent(String a) {
+		StringBuilder out = new StringBuilder();
 		String[] lines = a.split("\n");
 		for (int i = 0; i < lines.length; i++) {
-			lines[i] = "\t" + lines[i];
+			lines[i] = '\t' + lines[i];
 		}
 		for (int i = 0; i < lines.length; i++) {
 			out.append(lines[i]);
 			if (i < lines.length - 1)
-				out.append("\n");
+				out.append('\n');
 		}
 		return out.toString();
 	}
 
-	static public String indentTo(int to, String lines) {
+	public static
+    String indentTo(int to, String lines) {
 		
 		int l = numTabIndent(lines);
 
@@ -58,7 +61,8 @@ public class IndentationUtils {
 		return lines;
 	}
 
-	static public int numTabIndent(String a) {
+	public static
+    int numTabIndent(String a) {
 		int l = 0;
 		boolean found = false;
 		for (int i = 0; i < a.length(); i++) {

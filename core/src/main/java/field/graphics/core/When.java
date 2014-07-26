@@ -20,9 +20,9 @@ import java.util.Map;
  */
 public class When {
 
-	static public Prop<StandardPass> when = new Prop<StandardPass>("when");
+	public static Prop<StandardPass> when = new Prop<StandardPass>("when");
 
-	static public HashMap<BasicSceneList, Map<StandardPass, When>> masterMap = new LinkedHashMap<BasicSceneList, Map<StandardPass, When>>();
+	public static HashMap<BasicSceneList, Map<StandardPass, When>> masterMap = new LinkedHashMap<BasicSceneList, Map<StandardPass, When>>();
 
 	private final BasicSceneList list;
 
@@ -75,7 +75,7 @@ public class When {
 				public void performPass() {
 					for (Map.Entry<String, Callable> c : map.known.entrySet()) {
 						StandardPass pp = c.getValue().getInfo().get(When.when);
-						if (pp != null && pp.equals(q)) {
+						if (pp != null && pp == q) {
 							map.current = c.getKey();
 							c.getValue().call(null, new Object[] { BasicContextManager.getGl() });
 						}

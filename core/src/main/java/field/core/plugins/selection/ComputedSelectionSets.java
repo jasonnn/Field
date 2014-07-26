@@ -13,7 +13,8 @@ import java.util.Set;
 
 public class ComputedSelectionSets {
 
-	static public class ByClass implements iSelectionPredicate {
+	public static
+    class ByClass implements iSelectionPredicate {
 
 		private final Set<Class<?>> c;
 
@@ -40,7 +41,8 @@ public class ComputedSelectionSets {
 		}
 	}
 
-	static public class ByComponentClass implements iSelectionPredicate {
+	public static
+    class ByComponentClass implements iSelectionPredicate {
 
 		private final Set<Class<?>> c;
 
@@ -66,7 +68,8 @@ public class ComputedSelectionSets {
 		}
 	}
 
-	static public class ByClass_computedSpline implements iSelectionPredicate {
+	public static
+    class ByClass_computedSpline implements iSelectionPredicate {
 		public void begin(Set<iVisualElement> everything, Set<iVisualElement> currentlySelected, Set<iVisualElement> previousCache) {
 		}
 
@@ -77,7 +80,8 @@ public class ComputedSelectionSets {
 		}
 	}
 
-	static public class ByClass_plainPython implements iSelectionPredicate {
+	public static
+    class ByClass_plainPython implements iSelectionPredicate {
 		public void begin(Set<iVisualElement> everything, Set<iVisualElement> currentlySelected, Set<iVisualElement> previousCache) {
 		}
 
@@ -90,7 +94,8 @@ public class ComputedSelectionSets {
 
 	
 
-	static public class CurrentlySelected implements iSelectionPredicate {
+	public static
+    class CurrentlySelected implements iSelectionPredicate {
 		private Set<iVisualElement> currentlySelected;
 
 		public void begin(Set<iVisualElement> everything, Set<iVisualElement> currentlySelected, Set<iVisualElement> previousCache) {
@@ -102,7 +107,8 @@ public class ComputedSelectionSets {
 		}
 	}
 
-	static public class Saved implements iSelectionPredicate {
+	public static
+    class Saved implements iSelectionPredicate {
 		private final Set<String> saved;
 
 		public Saved(Set<iVisualElement> saved) {

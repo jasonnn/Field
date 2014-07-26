@@ -70,9 +70,9 @@ public abstract class Unit<T> {
 
         //System.out.println(" update <"+this+"> inside <"+filterStack+">");
 
-        double ea = alpha == null ? 0 : alpha.filter(time);
-		double eb = beta == null ? 0 : beta.filter(time);
-		double eg = gamma == null ? 0 : gamma.filter(time);
+        double ea = (alpha == null) ? 0 : alpha.filter(time);
+		double eb = (beta == null) ? 0 : beta.filter(time);
+		double eg = (gamma == null) ? 0 : gamma.filter(time);
 
 		if (lastOutput == null)
 			eb = 0;
@@ -96,7 +96,8 @@ public abstract class Unit<T> {
 		firstUpdate = false;
 	}
 
-	abstract protected T filter(T input);
+	protected abstract
+    T filter(T input);
 
 	protected void cull() {
 		filterStack.removeUnit(this);

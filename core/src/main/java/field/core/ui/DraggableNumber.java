@@ -20,7 +20,7 @@ import java.text.NumberFormat;
 public class DraggableNumber extends JComponent implements MouseListener, MouseMotionListener, ComponentListener {
 
 	private static Image draggerLeft, draggerRight;
-	private static int draggerLeftWidth, draggerRightWidth, draggerHeight;
+	private static final int draggerLeftWidth, draggerRightWidth, draggerHeight;
 
 	static {
 
@@ -48,7 +48,7 @@ public class DraggableNumber extends JComponent implements MouseListener, MouseM
 	// todo: could use something like BoundedRangeModel (but then for
 	// floats) for checking bounds.
 
-	private JTextField numberField;
+	private final JTextField numberField;
 	private double oldValue, value;
 	private int previousX;
 
@@ -154,7 +154,7 @@ public class DraggableNumber extends JComponent implements MouseListener, MouseM
 
 	public void setStatusMixed(double value) {
 
-		boolean changed = !numberField.getText().equals("\u2014");
+		boolean changed = !"\u2014".equals(numberField.getText());
 		this.value = clampValue(value);
 		String formattedNumber = numberFormat.format(getValue());
 		numberField.setText("\u2014");
@@ -163,7 +163,7 @@ public class DraggableNumber extends JComponent implements MouseListener, MouseM
 	}
 
 	public void setStatusUnset(double value) {
-		boolean changed = !numberField.getText().equals(" ");
+		boolean changed = !" ".equals(numberField.getText());
 		this.value = clampValue(value);
 		String formattedNumber = numberFormat.format(getValue());
 		numberField.setText(" ");

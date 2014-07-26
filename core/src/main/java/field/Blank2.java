@@ -17,9 +17,8 @@ import field.util.WorkspaceDirectory;
 import java.io.File;
 import java.util.logging.Logger;
 
-@RefactorCarefully(
-        callerClases = {"field.launch.Launcher"},
-        note = "the system property main.class defaults to this class")
+@RefactorCarefully(callerClases = "field.launch.Launcher",
+                   note = "the system property main.class defaults to this class")
 @Woven
 public class Blank2 implements iLaunchable {
     private static final Logger log = Logger.getLogger(Blank2.class.getName());
@@ -53,7 +52,7 @@ public class Blank2 implements iLaunchable {
     @NextUpdate(delay = 2)
     public void part2() {
         log.info(" sheets are :" + FieldMenus2.fieldMenus.openSheets);
-        if (FieldMenus2.fieldMenus.openSheets.size() > 0)
+        if (!FieldMenus2.fieldMenus.openSheets.isEmpty())
             return;
 
         finished = true;
@@ -90,7 +89,7 @@ public class Blank2 implements iLaunchable {
 
         }
         String a = SystemProperties.getProperty("auto", "");
-        if (!a.equals("") && loaded != null) {
+        if (a != null && !a.isEmpty() && (loaded != null)) {
             AutoEngage auto = new AutoEngage(loaded.getRoot());
             auto.start(a);
         }

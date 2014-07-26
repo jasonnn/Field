@@ -109,12 +109,12 @@ public class DiagramZero {
 	}
 
 	public interface iMarkerRefNotify<T> {
-		static public final Method beginMarkerRefNotify = ReflectionTools.methodOf("beginMarkerRefNotify", iMarkerRefNotify.class);
+		public static final Method beginMarkerRefNotify = ReflectionTools.methodOf("beginMarkerRefNotify", iMarkerRefNotify.class);
 
-		static public final Method endMarkerRefNotify = ReflectionTools.methodOf("endMarkerRefNotify", iMarkerRefNotify.class);
+		public static final Method endMarkerRefNotify = ReflectionTools.methodOf("endMarkerRefNotify", iMarkerRefNotify.class);
 
-		static public final Method markerRefNowInvalid = ReflectionTools.methodOf("markerRefNowInvalid", iMarkerRefNotify.class, iMarkerRef.class);
-		static public final Method markerRefNowDifferent= ReflectionTools.methodOf("markerRefNowDifferent", iMarkerRefNotify.class, iMarkerRef.class, iMarker.class);
+		public static final Method markerRefNowInvalid = ReflectionTools.methodOf("markerRefNowInvalid", iMarkerRefNotify.class, iMarkerRef.class);
+		public static final Method markerRefNowDifferent= ReflectionTools.methodOf("markerRefNowDifferent", iMarkerRefNotify.class, iMarkerRef.class, iMarker.class);
 
 		public void beginMarkerRefNotify();
 
@@ -126,11 +126,11 @@ public class DiagramZero {
 	}
 
 	public interface iConnectionNotify<A, B> {
-		static public final Method beginConnectionNotify = ReflectionTools.methodOf("beginConnectionNotify", iConnectionNotify.class);
+		public static final Method beginConnectionNotify = ReflectionTools.methodOf("beginConnectionNotify", iConnectionNotify.class);
 
-		static public final Method endConnectionNotify = ReflectionTools.methodOf("endConnectionNotify", iConnectionNotify.class);
+		public static final Method endConnectionNotify = ReflectionTools.methodOf("endConnectionNotify", iConnectionNotify.class);
 
-		static public final Method connectionNowInvalid = ReflectionTools.methodOf("connectionNowInvalid", iConnectionNotify.class, iConnection.class);
+		public static final Method connectionNowInvalid = ReflectionTools.methodOf("connectionNowInvalid", iConnectionNotify.class, iConnection.class);
 
 		public void beginConnectionNotify();
 
@@ -140,13 +140,13 @@ public class DiagramZero {
 	}
 
 	public interface iMarkerNotify<T> {
-		static public final Method beginMarkerNotify = ReflectionTools.methodOf("beginMarkerNotify", iMarkerNotify.class);
+		public static final Method beginMarkerNotify = ReflectionTools.methodOf("beginMarkerNotify", iMarkerNotify.class);
 
-		static public final Method endMarkerNotify = ReflectionTools.methodOf("endMarkerNotify", iMarkerNotify.class);
+		public static final Method endMarkerNotify = ReflectionTools.methodOf("endMarkerNotify", iMarkerNotify.class);
 
-		static public final Method markerChanged = ReflectionTools.methodOf("markerChanged", iMarkerNotify.class, iMarker.class);
+		public static final Method markerChanged = ReflectionTools.methodOf("markerChanged", iMarkerNotify.class, iMarker.class);
 
-		static public final Method markerRemoved = ReflectionTools.methodOf("markerRemoved", iMarkerNotify.class, iMarker.class);
+		public static final Method markerRemoved = ReflectionTools.methodOf("markerRemoved", iMarkerNotify.class, iMarker.class);
 
 		public void beginMarkerNotify();
 
@@ -158,7 +158,8 @@ public class DiagramZero {
 
 	}
 
-	static public class aMarkerNotify<T> implements iMarkerNotify<T> {
+	public static
+    class aMarkerNotify<T> implements iMarkerNotify<T> {
 		public void beginMarkerNotify() {
 		}
 
@@ -174,15 +175,15 @@ public class DiagramZero {
 	}
 
 	public interface iChannelNotify<T> {
-		static public final Method beginMarkerNotify = ReflectionTools.methodOf("beginMarkerNotify", iChannelNotify.class);
+		public static final Method beginMarkerNotify = ReflectionTools.methodOf("beginMarkerNotify", iChannelNotify.class);
 
-		static public final Method endMarkerNotify = ReflectionTools.methodOf("endMarkerNotify", iChannelNotify.class);
+		public static final Method endMarkerNotify = ReflectionTools.methodOf("endMarkerNotify", iChannelNotify.class);
 
-		static public final Method markerAdded = ReflectionTools.methodOf("markerAdded", iChannelNotify.class, iMarker.class);
+		public static final Method markerAdded = ReflectionTools.methodOf("markerAdded", iChannelNotify.class, iMarker.class);
 
-		static public final Method markerRemoved = ReflectionTools.methodOf("markerRemoved", iChannelNotify.class, iMarker.class);
+		public static final Method markerRemoved = ReflectionTools.methodOf("markerRemoved", iChannelNotify.class, iMarker.class);
 
-		static public final Method markerChanged = ReflectionTools.methodOf("markerChanged", iChannelNotify.class, iMarker.class);
+		public static final Method markerChanged = ReflectionTools.methodOf("markerChanged", iChannelNotify.class, iMarker.class);
 
 		public void beginMarkerNotify();
 
@@ -195,7 +196,8 @@ public class DiagramZero {
 		public void markerChanged(iMarker<T> changed);
 	}
 
-	static public class aChannelNotify<T> implements iChannelNotify<T> {
+	public static
+    class aChannelNotify<T> implements iChannelNotify<T> {
 		boolean hasBegun = false;
 
 		int openCount = 0;
@@ -245,7 +247,8 @@ public class DiagramZero {
 		}
 	}
 
-	static public interface iMarkerFactory<T> {
+	public static
+    interface iMarkerFactory<T> {
 		public iMarker<T> makeMarker(iChannel<T> inside, double start, double duration, T payload);
 		public void removeMarker(iChannel<T> from, iMarker<T> marker);
 	}

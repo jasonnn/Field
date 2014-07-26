@@ -1,6 +1,7 @@
 package field.util;
 
 import field.namespace.generic.ReflectionTools;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -88,7 +89,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	public ExternalHashMap(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
 		if (initialCapacity > MAXIMUM_CAPACITY) initialCapacity = MAXIMUM_CAPACITY;
-		if (loadFactor <= 0 || Float.isNaN(loadFactor)) throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
+		if ((loadFactor <= 0) || Float.isNaN(loadFactor)) throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
 
 		// Find a power of 2 >= initialCapacity
 		int capacity = 1;
@@ -153,14 +154,14 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	 * Returns internal representation for key. Use NULL_KEY if key is null.
 	 */
 	static <T> T maskNull(T key) {
-		return key == null ? (T) NULL_KEY : key;
+		return (key == null) ? (T) NULL_KEY : key;
 	}
 
 	/**
 	 * Returns key represented by specified internal representation.
 	 */
 	static <T> T unmaskNull(T key) {
-		return (key == NULL_KEY ? null : key);
+		return ((key == NULL_KEY) ? null : key);
 	}
 
 	/**
@@ -183,7 +184,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	 * Check for equality of non-null reference x and possibly-null y.
 	 */
 	static boolean eq(Object x, Object y, iEquality e) {
-		return x == y || e.areEqual(x,y);
+		return (x == y) || e.areEqual(x, y);
 	}
 
 	/**
@@ -226,7 +227,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 		Entry<K, V> e = table[i];
 		while (true) {
 			if (e == null) return null;
-			if (e.hash == hash && eq(k, e.key, equality)) return e.value;
+			if ((e.hash == hash) && eq(k, e.key, equality)) return e.value;
 			e = e.next;
 		}
 	}
@@ -244,7 +245,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 		int i = indexFor(hash, table.length);
 		Entry e = table[i];
 		while (e != null) {
-			if (e.hash == hash && eq(k, e.key, equality)) return true;
+			if ((e.hash == hash) && eq(k, e.key, equality)) return true;
 			e = e.next;
 		}
 		return false;
@@ -258,7 +259,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 		int hash = hash(k, equality);
 		int i = indexFor(hash, table.length);
 		Entry<K, V> e = table[i];
-		while (e != null && !(e.hash == hash && eq(k, e.key, equality)))
+		while ((e != null) && !(e.hash == hash && eq(k, e.key, equality)))
 			e = e.next;
 		return e;
 	}
@@ -278,7 +279,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 		int i = indexFor(hash, table.length);
 
 		for (Entry<K, V> e = table[i]; e != null; e = e.next) {
-			if (e.hash == hash && eq(k, e.key, equality)) {
+			if ((e.hash == hash) && eq(k, e.key, equality)) {
 				V oldValue = e.value;
 				e.value = value;
 				e.recordAccess(this);
@@ -303,7 +304,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 		 * Look for preexisting entry for key. This will never happen for clone or deserialize. It will only happen for construction if the input Map is a sorted map whose ordering is inconsistent w/ equals.
 		 */
 		for (Entry<K, V> e = table[i]; e != null; e = e.next) {
-			if (e.hash == hash && eq(k, e.key, equality)) {
+			if ((e.hash == hash) && eq(k, e.key, equality)) {
 				e.value = value;
 				return;
 			}
@@ -378,7 +379,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 		 * Expand the map if the map if the number of mappings to be added is greater than or equal to threshold. This is conservative; the obvious condition is (m.size() + size) >= threshold, but this condition could result in a map with twice the appropriate capacity, if the keys to be added overlap with the keys already in this map. By using the conservative calculation, we subject ourself to at most one extra resize.
 		 */
 		if (numKeysToBeAdded > threshold) {
-			int targetCapacity = (int) (numKeysToBeAdded / loadFactor + 1);
+			int targetCapacity = (int) ((numKeysToBeAdded / loadFactor) + 1);
 			if (targetCapacity > MAXIMUM_CAPACITY) targetCapacity = MAXIMUM_CAPACITY;
 			int newCapacity = table.length;
 			while (newCapacity < targetCapacity)
@@ -401,7 +402,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	 */
 	public V remove(Object key) {
 		Entry<K, V> e = removeEntryForKey(key);
-		return (e == null ? null : e.value);
+		return ((e == null) ? null : e.value);
 	}
 
 	/**
@@ -416,7 +417,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 
 		while (e != null) {
 			Entry<K, V> next = e.next;
-			if (e.hash == hash && eq(k, e.key, equality)) {
+			if ((e.hash == hash) && eq(k, e.key, equality)) {
 				modCount++;
 				size--;
 				if (prev == e)
@@ -448,7 +449,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 
 		while (e != null) {
 			Entry<K, V> next = e.next;
-			if (e.hash == hash && e.equals(entry)) {
+			if ((e.hash == hash) && e.equals(entry)) {
 				modCount++;
 				size--;
 				if (prev == e)
@@ -564,16 +565,16 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 			Map.Entry e = (Map.Entry) o;
 			Object k1 = getKey();
 			Object k2 = e.getKey();
-			if (k1 == k2 || (k1 != null && k1.equals(k2))) {
+			if ((k1 == k2) || ((k1 != null) && k1.equals(k2))) {
 				Object v1 = getValue();
 				Object v2 = e.getValue();
-				if (v1 == v2 || (v1 != null && v1.equals(v2))) return true;
+				if ((v1 == v2) || ((v1 != null) && v1.equals(v2))) return true;
 			}
 			return false;
 		}
 
 		public int hashCode() {
-			return (key == NULL_KEY ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
+			return ((key == NULL_KEY) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());
 		}
 
 		public String toString() {
@@ -630,7 +631,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 			int i = t.length;
 			Entry<K, V> n = null;
 			if (size != 0) { // advance to first entry
-				while (i > 0 && (n = t[--i]) == null)
+				while ((i > 0) && ((n = t[--i]) == null))
 					;
 			}
 			next = n;
@@ -649,7 +650,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 			Entry<K, V> n = e.next;
 			Entry[] t = table;
 			int i = index;
-			while (n == null && i > 0)
+			while ((n == null) && (i > 0))
 				n = t[--i];
 			index = i;
 			next = n;
@@ -707,13 +708,15 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	 * 
 	 * @return a set view of the keys contained in this map.
 	 */
-	public Set<K> keySet() {
+	@NotNull
+    public Set<K> keySet() {
 		Set<K> ks = (Set<K>) ReflectionTools.illegalGetObject(this, "keySet");
-		return (Set<K>) (ks != null ? ks : (ReflectionTools.illegalSetObject(this, "keySet", new KeySet())));
+		return (Set<K>) ((ks != null) ? ks : (ReflectionTools.illegalSetObject(this, "keySet", new KeySet())));
 	}
 
 	private class KeySet extends AbstractSet<K> {
-		public Iterator<K> iterator() {
+		@NotNull
+        public Iterator<K> iterator() {
 			return newKeyIterator();
 		}
 
@@ -739,13 +742,15 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	 * 
 	 * @return a collection view of the values contained in this map.
 	 */
-	public Collection<V> values() {
+	@NotNull
+    public Collection<V> values() {
 		Collection<V> vs = (Collection<V>) ReflectionTools.illegalGetObject(this, "values");
-		return (Collection<V>) (vs != null ? vs : (ReflectionTools.illegalSetObject(this, "values", new Values())));
+		return (Collection<V>) ((vs != null) ? vs : (ReflectionTools.illegalSetObject(this, "values", new Values())));
 	}
 
 	private class Values extends AbstractCollection<V> {
-		public Iterator<V> iterator() {
+		@NotNull
+        public Iterator<V> iterator() {
 			return newValueIterator();
 		}
 
@@ -768,13 +773,15 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	 * @return a collection view of the mappings contained in this map.
 	 * @see Map.Entry
 	 */
-	public Set<Map.Entry<K, V>> entrySet() {
+	@NotNull
+    public Set<Map.Entry<K, V>> entrySet() {
 		Set<Map.Entry<K, V>> es = entrySet;
-		return (es != null ? es : (entrySet = (Set<Map.Entry<K, V>>) (Set) new EntrySet()));
+		return ((es != null) ? es : (entrySet = (Set<Map.Entry<K, V>>) (Set) new EntrySet()));
 	}
 
 	private class EntrySet extends AbstractSet/* <Map.Entry<K,V>> */{
-		public Iterator/* <Map.Entry<K,V>> */iterator() {
+		@NotNull
+        public Iterator/* <Map.Entry<K,V>> */iterator() {
 			return newEntryIterator();
 		}
 
@@ -782,7 +789,7 @@ public class ExternalHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 			if (!(o instanceof Map.Entry)) return false;
 			Map.Entry<K, V> e = (Map.Entry<K, V>) o;
 			Entry<K, V> candidate = getEntry(e.getKey());
-			return candidate != null && candidate.equals(e);
+			return (candidate != null) && candidate.equals(e);
 		}
 
 		public boolean remove(Object o) {

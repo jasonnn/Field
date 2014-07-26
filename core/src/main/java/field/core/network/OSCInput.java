@@ -57,10 +57,10 @@ public class OSCInput implements iUpdateable {
 		// ;//System.out.println(" string <"+dest+">");
 		if (dest.startsWith("#")) {
 			Long l = readLong(bb); // time-tag
-			System.out.println(" time tag <" + l + ">");
+			System.out.println(" time tag <" + l + '>');
 			while (bb.remaining() > 0) {
 				Integer length = readInt(bb);
-				if (length.intValue() > 0) {
+				if (length > 0) {
 					// ;//System.out.println(" length <" +
 					// length + ">");
 					decode(bb);
@@ -71,7 +71,7 @@ public class OSCInput implements iUpdateable {
 			}
 		} else {
 			String header = readString(bb);
-			System.out.println(" header is <" + header + ">");
+			System.out.println(" header is <" + header + '>');
 			List args = new LinkedList();
 			for (int i = 1; i < header.length(); i++) {
 				Object made = null;
@@ -171,12 +171,13 @@ public class OSCInput implements iUpdateable {
 		}
 	}
     
-	protected String readString(ByteBuffer b) {
+	protected static
+    String readString(ByteBuffer b) {
 		char read = '\0';
 		int position = b.position();
 		do {
 			read = (char) b.get();
-		} while (read != ';' && read != '\0' && b.remaining() > 0);
+		} while ((read != ';') && (read != '\0') && (b.remaining() > 0));
 		byte[] bytes = new byte[b.position() - position - 1];
 		b.position(position);
 		b.get(bytes);
@@ -196,7 +197,8 @@ public class OSCInput implements iUpdateable {
 		return new Integer((i1 << 24) | (i2 << 16) | (i3 << 8) | i4);
 	}
     
-	public Long readLong(ByteBuffer b) {
+	public static
+    Long readLong(ByteBuffer b) {
 		long i1 = BaseMath.longify(readInt(b).intValue());
 		long i2 = BaseMath.longify(readInt(b).intValue());
 		return new Long((i1 << 32) | i2);
@@ -207,7 +209,8 @@ public class OSCInput implements iUpdateable {
 		return new Double(Double.longBitsToDouble(l));
 	}
     
-	public Float readFloat(ByteBuffer b) {
+	public static
+    Float readFloat(ByteBuffer b) {
 		int l = readInt(b).intValue();
 		return new Float(Float.intBitsToFloat(l));
 	}

@@ -21,9 +21,9 @@ import java.util.Map;
 public class FieldGraphics2D2 extends AbstractGraphics2D {
 
 	List<CachedLine> geometry = new ArrayList<CachedLine>();
-	private GraphicsDevice dev;
-	private BufferedImage image;
-	private Graphics2D g_fake;
+	private final GraphicsDevice dev;
+	private final BufferedImage image;
+	private final Graphics2D g_fake;
 
 	public FieldGraphics2D2() {
 		super(true);

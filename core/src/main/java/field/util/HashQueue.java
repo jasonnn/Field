@@ -19,7 +19,7 @@ public class HashQueue implements iUpdateable {
 
 	public void update() {
 		
-		if (live.size() == 0) return;
+		if (live.isEmpty()) return;
 		Map<Object, Task> todo;
 		synchronized (lock) {
 			todo = live;
@@ -45,7 +45,8 @@ public class HashQueue implements iUpdateable {
 		}
 	}
 
-	abstract public class Task {
+	public abstract
+    class Task {
 
 		StackTraceElement[] alloc;
 		private final Object key;
@@ -56,7 +57,8 @@ public class HashQueue implements iUpdateable {
 			HashQueue.this.addTask(key, this);
 		}
 
-		abstract public void run();
+		public abstract
+        void run();
 
 		/**
 		 * run methods can call this if they want to have another crack at it
@@ -76,7 +78,8 @@ public class HashQueue implements iUpdateable {
 	}
 	
 
-	static public class Gate extends Task {
+	public static
+    class Gate extends Task {
 		boolean con = true;
 
 		private final iUpdateable up;

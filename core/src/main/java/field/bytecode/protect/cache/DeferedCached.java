@@ -40,7 +40,7 @@ public final class DeferedCached extends DeferCallingFast {
         super(name, access, method, delegate, to, signature, parameters);
 
         final Integer max = (Integer) parameters.get("max");
-        if (max == null || max == -1) {
+        if ((max == null) || (max == -1)) {
             cache = new WeakHashMap<ImmutableArrayWrapper, Object>();
         } else {
             cache = new LinkedHashMap<ImmutableArrayWrapper, Object>() {
@@ -73,20 +73,20 @@ public final class DeferedCached extends DeferCallingFast {
 
                 CacheParameter ann = f.getAnnotation(CacheParameter.class);
                 if (ann != null) {
-                    if ((ann.name() == null && parameters.get("name") == null) || ann.name().equals(parameters.get("name"))) {
+                    if (((ann.name() == null) && (parameters.get("name") == null)) || ann.name().equals(parameters.get("name"))) {
                         f.setAccessible(true);
                         implicatedFields.add(f);
                     }
                 }
             }
         }
-        if (implicatedFields.size() == 0) {
+        if (implicatedFields.isEmpty()) {
 
             // first check the cache
             ImmutableArrayWrapper iaw = new ImmutableArrayWrapper(argArray, false);
 
             Object object = cache.get(iaw);
-            if (object == null && !cache.containsKey(iaw)) {
+            if ((object == null) && !cache.containsKey(iaw)) {
                 try {
 //					;//System.out.println(" cache miss");
                     cache.put(iaw, object = original.invoke(fromThis, argArray));
@@ -113,7 +113,7 @@ public final class DeferedCached extends DeferCallingFast {
         ImmutableArrayWrapper iaw = new ImmutableArrayWrapper(na, false);
 
         Object object = cache.get(iaw);
-        if (object == null && !cache.containsKey(iaw)) {
+        if ((object == null) && !cache.containsKey(iaw)) {
             try {
                 cache.put(iaw, object = original.invoke(fromThis, argArray));
             } catch (IllegalAccessException e) {

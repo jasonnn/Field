@@ -21,7 +21,8 @@ public class TrampolineReflection {
     }
 
 
-    static public Field[] getAllFields(Class of) {
+    public static
+    Field[] getAllFields(Class of) {
         Field[] ret = fieldsCache.get(of);
         if (ret == null) {
             List<Field> fieldsList = new ArrayList<Field>();
@@ -31,7 +32,8 @@ public class TrampolineReflection {
         return ret;
     }
 
-    static public Method[] getAllMethods(Class of) {
+    public static
+    Method[] getAllMethods(Class of) {
         Method[] ret = methodsCache.get(of);
         if (ret == null) {
             ArrayList<Method> methodsList = new ArrayList<Method>();
@@ -41,7 +43,8 @@ public class TrampolineReflection {
         return ret;
     }
 
-    static public Field getFirstFieldCalled(Class of, String name) {
+    public static
+    Field getFirstFieldCalled(Class of, String name) {
         Field[] allFields = getAllFields(of);
         for (Field f : allFields) {
             if (f.getName().equals(name)) {
@@ -52,7 +55,8 @@ public class TrampolineReflection {
         return null;
     }
 
-    static protected void _getAllFields(Class of, List<Field> into) {
+    protected static
+    void _getAllFields(Class of, List<Field> into) {
         if (of == null)
             return;
         Field[] m = of.getDeclaredFields();
@@ -64,7 +68,8 @@ public class TrampolineReflection {
         for (Class anInterface : interfaces) _getAllFields(anInterface, into);
     }
 
-    static protected void _getAllMethods(Class of, List<Method> into) {
+    protected static
+    void _getAllMethods(Class of, List<Method> into) {
         if (of == null)
             return;
         Method[] m = of.getDeclaredMethods();

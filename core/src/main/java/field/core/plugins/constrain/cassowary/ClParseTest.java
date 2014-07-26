@@ -13,7 +13,8 @@ import java.io.StringReader;
 import java.util.Hashtable;
 
 public class ClParseTest {
-	public final static void main(String[] args) {
+	public static final
+    void main(String[] args) {
 		try {
             //System.out.println("Parsing: " + args[0]);
             StringReader string_reader = new StringReader(args[0]);

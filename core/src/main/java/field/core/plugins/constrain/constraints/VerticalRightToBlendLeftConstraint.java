@@ -22,12 +22,13 @@ public class VerticalRightToBlendLeftConstraint extends VerticalLeftToBlendLeftC
 	
 	@Override
 	protected Vector3 point1(VariablesForRect vLeft) {
-		return new Vector3(vLeft.variableX.value()+vLeft.variableW.value(), vLeft.variableY.value() + vLeft.variableH.value() / 2, 0);
+		return new Vector3(vLeft.variableX.value()+vLeft.variableW.value(),
+                           vLeft.variableY.value() + (vLeft.variableH.value() / 2), 0);
 	}
 	@Override
 	protected Vector3 point2(VariablesForRect vRight, VariablesForRect rightB) {
-		Vector3 v1 = new Vector3(vRight.variableX.value(), vRight.variableY.value() + vRight.variableH.value() / 2, 0);
-		Vector3 v2 = new Vector3(rightB.variableX.value(), rightB.variableY.value() + rightB.variableH.value() / 2, 0);
+		Vector3 v1 = new Vector3(vRight.variableX.value(), vRight.variableY.value() + (vRight.variableH.value() / 2), 0);
+		Vector3 v2 = new Vector3(rightB.variableX.value(), rightB.variableY.value() + (rightB.variableH.value() / 2), 0);
 		Float f = verticalLeftToBlendLeftConstraint_constraintBlend.get(forElement);
 		if (f == null) f = 0f;
 		return v1.lerp(v1, v2, f);

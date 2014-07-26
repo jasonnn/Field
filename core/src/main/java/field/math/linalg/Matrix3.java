@@ -125,7 +125,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 
 			if (ga > fa) {
 				pmax = 2;
-				if (fa / ga < EPS) {
+				if ((fa / ga) < EPS) {
 
 					gasmal = false;
 					ssmax = ga;
@@ -161,14 +161,14 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 				if (l == 0.) {
 					r = Math.abs(m);
 				} else {
-					r = Math.sqrt(l * l + mm);
+					r = Math.sqrt((l * l) + mm);
 				}
 
 				a = (s + r) * .5;
 
 				if (ga > fa) {
 					pmax = 2;
-					if (fa / ga < EPS) {
+					if ((fa / ga) < EPS) {
 
 						gasmal = false;
 						ssmax = ga;
@@ -204,7 +204,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 					if (l == 0.) {
 						r = Math.abs(m);
 					} else {
-						r = Math.sqrt(l * l + mm);
+						r = Math.sqrt((l * l) + mm);
 					}
 
 					a = (s + r) * .5;
@@ -219,12 +219,12 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 							t = gt / d_sign(d, ft) + m / t;
 						}
 					} else {
-						t = (m / (s + t) + m / (r + l)) * (a + 1.);
+						t = ((m / (s + t)) + (m / (r + l))) * (a + 1.);
 					}
-					l = Math.sqrt(t * t + 4.);
+					l = Math.sqrt((t * t) + 4.);
 					crt = 2. / l;
 					srt = t / l;
-					clt = (crt + srt * m) / a;
+					clt = (crt + (srt * m)) / a;
 					slt = ht / ft * srt / a;
 				}
 			}
@@ -281,11 +281,11 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 
 		first = 1;
 
-		if (Math.abs(e[1]) < CONVERGE_TOL || Math.abs(e[0]) < CONVERGE_TOL) converged = true;
+		if ((Math.abs(e[1]) < CONVERGE_TOL) || (Math.abs(e[0]) < CONVERGE_TOL)) converged = true;
 
-		for (k = 0; k < MAX_INTERATIONS && !converged; k++) {
+		for (k = 0; (k < MAX_INTERATIONS) && !converged; k++) {
 			shift = compute_shift(s[1], e[1], s[2]);
-			f = (Math.abs(s[0]) - shift) * (d_sign(c_b48, s[0]) + shift / s[0]);
+			f = (Math.abs(s[0]) - shift) * (d_sign(c_b48, s[0]) + (shift / s[0]));
 			g = e[0];
 			r = compute_rot(f, g, sinr, cosr, 0, first);
 			f = cosr[0] * s[0] + sinr[0] * e[0];
@@ -367,7 +367,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 			m[7] = 0.0;
 			m[8] = s[2];
 
-			if (Math.abs(e[1]) < CONVERGE_TOL || Math.abs(e[0]) < CONVERGE_TOL) converged = true;
+			if ((Math.abs(e[1]) < CONVERGE_TOL) || (Math.abs(e[0]) < CONVERGE_TOL)) converged = true;
 		}
 
 		if (Math.abs(e[1]) < CONVERGE_TOL) {
@@ -455,7 +455,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 					g1 *= safmn2;
 					scale = max(Math.abs(f1), Math.abs(g1));
 				}
-				r = Math.sqrt(f1 * f1 + g1 * g1);
+				r = Math.sqrt((f1 * f1) + (g1 * g1));
 				cs = f1 / r;
 				sn = g1 / r;
 				i__1 = count;
@@ -470,7 +470,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 					g1 *= safmx2;
 					scale = max(Math.abs(f1), Math.abs(g1));
 				}
-				r = Math.sqrt(f1 * f1 + g1 * g1);
+				r = Math.sqrt((f1 * f1) + (g1 * g1));
 				cs = f1 / r;
 				sn = g1 / r;
 				i__1 = count;
@@ -478,11 +478,11 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 					r *= safmn2;
 				}
 			} else {
-				r = Math.sqrt(f1 * f1 + g1 * g1);
+				r = Math.sqrt((f1 * f1) + (g1 * g1));
 				cs = f1 / r;
 				sn = g1 / r;
 			}
-			if (Math.abs(f) > Math.abs(g) && cs < 0.) {
+			if ((Math.abs(f) > Math.abs(g)) && (cs < 0.)) {
 				cs = -cs;
 				sn = -sn;
 				r = -r;
@@ -516,7 +516,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 				at = (fhmx - fhmn) / fhmx;
 				d__1 = ga / fhmx;
 				au = d__1 * d__1;
-				c = 2. / (Math.sqrt(as * as + au) + Math.sqrt(at * at + au));
+				c = 2. / (Math.sqrt((as * as) + au) + Math.sqrt((at * at) + au));
 				ssmin = fhmn * c;
 			} else {
 				au = fhmx / ga;
@@ -527,7 +527,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 					at = (fhmx - fhmn) / fhmx;
 					d__1 = as * au;
 					d__2 = at * au;
-					c = 1. / (Math.sqrt(d__1 * d__1 + 1.) + Math.sqrt(d__2 * d__2 + 1.));
+					c = 1. / (Math.sqrt((d__1 * d__1) + 1.) + Math.sqrt((d__2 * d__2) + 1.));
 					ssmin = fhmn * c * au;
 					ssmin += ssmin;
 				}
@@ -563,7 +563,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 
 		// u1
 
-		if (m[3] * m[3] < EPS) {
+		if ((m[3] * m[3]) < EPS) {
 			u1[0] = 1.0;
 			u1[1] = 0.0;
 			u1[2] = 0.0;
@@ -573,7 +573,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 			u1[6] = 0.0;
 			u1[7] = 0.0;
 			u1[8] = 1.0;
-		} else if (m[0] * m[0] < EPS) {
+		} else if ((m[0] * m[0]) < EPS) {
 			tmp[0] = m[0];
 			tmp[1] = m[1];
 			tmp[2] = m[2];
@@ -595,7 +595,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 			u1[7] = 0.0;
 			u1[8] = 1.0;
 		} else {
-			g = 1.0 / Math.sqrt(m[0] * m[0] + m[3] * m[3]);
+			g = 1.0 / Math.sqrt((m[0] * m[0]) + (m[3] * m[3]));
 			c1 = m[0] * g;
 			s1 = m[3] * g;
 			tmp[0] = c1 * m[0] + s1 * m[3];
@@ -622,8 +622,8 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 
 		// u2
 
-		if (m[6] * m[6] < EPS) {
-		} else if (m[0] * m[0] < EPS) {
+		if ((m[6] * m[6]) < EPS) {
+		} else if ((m[0] * m[0]) < EPS) {
 			tmp[0] = m[0];
 			tmp[1] = m[1];
 			tmp[2] = m[2];
@@ -646,7 +646,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 			u1[7] = -tmp[1];
 			u1[8] = -tmp[2];
 		} else {
-			g = 1.0 / Math.sqrt(m[0] * m[0] + m[6] * m[6]);
+			g = 1.0 / Math.sqrt((m[0] * m[0]) + (m[6] * m[6]));
 			c2 = m[0] * g;
 			s2 = m[6] * g;
 			tmp[0] = c2 * m[0] + s2 * m[6];
@@ -675,7 +675,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 
 		// v1
 
-		if (m[2] * m[2] < EPS) {
+		if ((m[2] * m[2]) < EPS) {
 			v1[0] = 1.0;
 			v1[1] = 0.0;
 			v1[2] = 0.0;
@@ -685,7 +685,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 			v1[6] = 0.0;
 			v1[7] = 0.0;
 			v1[8] = 1.0;
-		} else if (m[1] * m[1] < EPS) {
+		} else if ((m[1] * m[1]) < EPS) {
 			tmp[2] = m[2];
 			tmp[5] = m[5];
 			tmp[8] = m[8];
@@ -707,7 +707,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 			v1[7] = 1.0;
 			v1[8] = 0.0;
 		} else {
-			g = 1.0 / Math.sqrt(m[1] * m[1] + m[2] * m[2]);
+			g = 1.0 / Math.sqrt((m[1] * m[1]) + (m[2] * m[2]));
 			c3 = m[1] * g;
 			s3 = m[2] * g;
 			tmp[1] = c3 * m[1] + s3 * m[2]; // can assign to m[1]?
@@ -735,8 +735,8 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 
 		// u3
 
-		if (m[7] * m[7] < EPS) {
-		} else if (m[4] * m[4] < EPS) {
+		if ((m[7] * m[7]) < EPS) {
+		} else if ((m[4] * m[4]) < EPS) {
 			tmp[3] = m[3];
 			tmp[4] = m[4];
 			tmp[5] = m[5];
@@ -760,7 +760,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 			u1[8] = -tmp[5];
 
 		} else {
-			g = 1.0 / Math.sqrt(m[4] * m[4] + m[7] * m[7]);
+			g = 1.0 / Math.sqrt((m[4] * m[4]) + (m[7] * m[7]));
 			c4 = m[4] * g;
 			s4 = m[7] * g;
 			tmp[3] = c4 * m[3] + s4 * m[6];
@@ -794,7 +794,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 		e[0] = m[1];
 		e[1] = m[5];
 
-		if (e[0] * e[0] < EPS && e[1] * e[1] < EPS) {
+		if (((e[0] * e[0]) < EPS) && ((e[1] * e[1]) < EPS)) {
 
 		} else {
 			compute_qr(single_values, e, u1, v1);
@@ -829,8 +829,8 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 
 	static double d_sign(double a, double b) {
 		double x;
-		x = (a >= 0 ? a : -a);
-		return (b >= 0 ? x : -x);
+		x = ((a >= 0) ? a : -a);
+		return ((b >= 0) ? x : -x);
 	}
 
 	/**
@@ -863,30 +863,35 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 				float sum;
 
 				ip = row_perm[rp + i];
-				sum = matrix2[cv + 3 * ip];
-				matrix2[cv + 3 * ip] = matrix2[cv + 3 * i];
+				sum = matrix2[(cv + (3 * ip))];
+				matrix2[(cv + (3 * ip))] = matrix2[(cv + (3 * i))];
 				if (ii >= 0) {
 					// rv = &(matrix1[i][0]);
 					rv = i * 3;
-					for (j = ii; j <= i - 1; j++) {
-						sum -= matrix1[rv + j] * matrix2[cv + 3 * j];
+					for (j = ii; j <= (i - 1); j++) {
+						sum -= matrix1[rv + j] * matrix2[(cv + (3 * j))];
 					}
 				} else if (sum != 0.0f) {
 					ii = i;
 				}
-				matrix2[cv + 3 * i] = sum;
+				matrix2[(cv + (3 * i))] = sum;
 			}
 
 			// Backsubstitution
 			// rv = &(matrix1[3][0]);
 			rv = 2 * 3;
-			matrix2[cv + 3 * 2] /= matrix1[rv + 2];
+			matrix2[(cv + (3 * 2))] /= matrix1[rv + 2];
 
 			rv -= 3;
-			matrix2[cv + 3 * 1] = (matrix2[cv + 3 * 1] - matrix1[rv + 2] * matrix2[cv + 3 * 2]) / matrix1[rv + 1];
+			matrix2[(cv + (3 * 1))] = (matrix2[(cv + (3 * 1))] - (matrix1[rv + 2] * matrix2[cv + 3 * 2])) / matrix1[rv + 1];
 
 			rv -= 3;
-			matrix2[cv + 4 * 0] = (matrix2[cv + 3 * 0] - matrix1[rv + 1] * matrix2[cv + 3 * 1] - matrix1[rv + 2] * matrix2[cv + 3 * 2]) / matrix1[rv + 0];
+			matrix2[(cv + (4 * 0))] = (matrix2[(cv + (3 * 0))] - (matrix1[rv + 1] * matrix2[cv + 3 * 1]) - (matrix1[rv
+                                                                                                                    + 2]
+                                                                                                            * matrix2[cv
+                                                                                                                      +
+                                                                                                                      3
+                                                                                                                      * 2])) / matrix1[rv + 0];
 
 		}
 	}
@@ -905,7 +910,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	//
 	static boolean luDecomposition(float[] matrix0, int[] row_perm) {
 
-		float row_scale[] = new float[3];
+		float[] row_scale = new float[3];
 
 		// Determine implicit scaling information by looping over rows
 		{
@@ -1194,9 +1199,9 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 			 */
 
 			// sort the order of the input matrix
-			mag[0] = (m[0] * m[0] + m[1] * m[1] + m[2] * m[2]);
-			mag[1] = (m[3] * m[3] + m[4] * m[4] + m[5] * m[5]);
-			mag[2] = (m[6] * m[6] + m[7] * m[7] + m[8] * m[8]);
+			mag[0] = ((m[0] * m[0]) + (m[1] * m[1]) + (m[2] * m[2]));
+			mag[1] = ((m[3] * m[3]) + (m[4] * m[4]) + (m[5] * m[5]));
+			mag[2] = ((m[6] * m[6]) + (m[7] * m[7]) + (m[8] * m[8]));
 
 			if (mag[0] > mag[1]) {
 				if (mag[0] > mag[2]) {
@@ -1577,7 +1582,11 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	public final float determinant() {
 		float total;
 
-		total = this.m00 * (this.m11 * this.m22 - this.m12 * this.m21) + this.m01 * (this.m12 * this.m20 - this.m10 * this.m22) + this.m02 * (this.m10 * this.m21 - this.m11 * this.m20);
+		total = this.m00 * ((this.m11 * this.m22) - (this.m12 * this.m21)) + this.m01 * ((this.m12 * this.m20)
+                                                                                         - (this.m10 * this.m22)) + this.m02 * ((this.m10
+                                                                                                                                 * this.m21)
+                                                                                                                                - (this.m11
+                                                                                                                                   * this.m20));
 		return total;
 	}
 
@@ -1593,31 +1602,31 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 		float diff;
 
 		diff = m00 - m1.m00;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = m01 - m1.m01;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = m02 - m1.m02;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = m10 - m1.m10;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = m11 - m1.m11;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = m12 - m1.m12;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = m20 - m1.m20;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = m21 - m1.m21;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		diff = m22 - m1.m22;
-		if ((diff < 0 ? -diff : diff) > epsilon) return false;
+		if (((diff < 0) ? -diff : diff) > epsilon) return false;
 
 		return true;
 	}
@@ -1631,7 +1640,15 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 */
 	public boolean equals(Matrix3 m1) {
 		try {
-			return (this.m00 == m1.m00 && this.m01 == m1.m01 && this.m02 == m1.m02 && this.m10 == m1.m10 && this.m11 == m1.m11 && this.m12 == m1.m12 && this.m20 == m1.m20 && this.m21 == m1.m21 && this.m22 == m1.m22);
+			return ((this.m00 == m1.m00)
+                    && (this.m01 == m1.m01)
+                    && (this.m02 == m1.m02)
+                    && (this.m10 == m1.m10)
+                    && (this.m11 == m1.m11)
+                    && (this.m12 == m1.m12)
+                    && (this.m20 == m1.m20)
+                    && (this.m21 == m1.m21)
+                    && (this.m22 == m1.m22));
 		} catch (NullPointerException e2) {
 			return false;
 		}
@@ -1649,7 +1666,15 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	public boolean equals(Object t1) {
 		try {
 			Matrix3 m2 = (Matrix3) t1;
-			return (this.m00 == m2.m00 && this.m01 == m2.m01 && this.m02 == m2.m02 && this.m10 == m2.m10 && this.m11 == m2.m11 && this.m12 == m2.m12 && this.m20 == m2.m20 && this.m21 == m2.m21 && this.m22 == m2.m22);
+			return ((this.m00 == m2.m00)
+                    && (this.m01 == m2.m01)
+                    && (this.m02 == m2.m02)
+                    && (this.m10 == m2.m10)
+                    && (this.m11 == m2.m11)
+                    && (this.m12 == m2.m12)
+                    && (this.m20 == m2.m20)
+                    && (this.m21 == m2.m21)
+                    && (this.m22 == m2.m22));
 		} catch (ClassCastException e1) {
 			return false;
 		} catch (NullPointerException e2) {
@@ -1666,7 +1691,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 * @param v
 	 *                        the array into which the matrix row values will be copied
 	 */
-	public final void getColumn(int column, float v[]) {
+	public final void getColumn(int column, float[] v) {
 		if (column == 0) {
 			v[0] = m00;
 			v[1] = m10;
@@ -1776,7 +1801,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 * @param v
 	 *                        the array into which the matrix row values will be copied
 	 */
-	public final void getRow(int row, float v[]) {
+	public final void getRow(int row, float[] v) {
 		if (row == 0) {
 			v[0] = m00;
 			v[1] = m01;
@@ -1968,7 +1993,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 *                        the second matrix
 	 */
 	public final void mul(Matrix3 m1, Matrix3 m2) {
-		if (this != m1 && this != m2) {
+		if ((this != m1) && (this != m2)) {
 			this.m00 = m1.m00 * m2.m00 + m1.m01 * m2.m10 + m1.m02 * m2.m20;
 			this.m01 = m1.m00 * m2.m01 + m1.m01 * m2.m11 + m1.m02 * m2.m21;
 			this.m02 = m1.m00 * m2.m02 + m1.m01 * m2.m12 + m1.m02 * m2.m22;
@@ -2098,7 +2123,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 *                        the matrix on the right hand side of the multiplication
 	 */
 	public final void mulTransposeBoth(Matrix3 m1, Matrix3 m2) {
-		if (this != m1 && this != m2) {
+		if ((this != m1) && (this != m2)) {
 			this.m00 = m1.m00 * m2.m00 + m1.m10 * m2.m01 + m1.m20 * m2.m02;
 			this.m01 = m1.m00 * m2.m10 + m1.m10 * m2.m11 + m1.m20 * m2.m12;
 			this.m02 = m1.m00 * m2.m20 + m1.m10 * m2.m21 + m1.m20 * m2.m22;
@@ -2147,7 +2172,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 *                        the matrix on the right hand side of the multiplication
 	 */
 	public final void mulTransposeLeft(Matrix3 m1, Matrix3 m2) {
-		if (this != m1 && this != m2) {
+		if ((this != m1) && (this != m2)) {
 			this.m00 = m1.m00 * m2.m00 + m1.m10 * m2.m10 + m1.m20 * m2.m20;
 			this.m01 = m1.m00 * m2.m01 + m1.m10 * m2.m11 + m1.m20 * m2.m21;
 			this.m02 = m1.m00 * m2.m02 + m1.m10 * m2.m12 + m1.m20 * m2.m22;
@@ -2195,7 +2220,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 *                        the matrix on the right hand side of the multiplication
 	 */
 	public final void mulTransposeRight(Matrix3 m1, Matrix3 m2) {
-		if (this != m1 && this != m2) {
+		if ((this != m1) && (this != m2)) {
 			this.m00 = m1.m00 * m2.m00 + m1.m01 * m2.m01 + m1.m02 * m2.m02;
 			this.m01 = m1.m00 * m2.m10 + m1.m01 * m2.m11 + m1.m02 * m2.m12;
 			this.m02 = m1.m00 * m2.m20 + m1.m01 * m2.m21 + m1.m02 * m2.m22;
@@ -2340,12 +2365,12 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 */
 
 	public final void normalizeCP() {
-		float mag = (float) (1.0f / Math.sqrt(m00 * m00 + m10 * m10 + m20 * m20));
+		float mag = (float) (1.0f / Math.sqrt((m00 * m00) + (m10 * m10) + (m20 * m20)));
 		m00 = m00 * mag;
 		m10 = m10 * mag;
 		m20 = m20 * mag;
 
-		mag = (float) (1.0f / Math.sqrt(m01 * m01 + m11 * m11 + m21 * m21));
+		mag = (float) (1.0f / Math.sqrt((m01 * m01) + (m11 * m11) + (m21 * m21)));
 		m01 = m01 * mag;
 		m11 = m11 * mag;
 		m21 = m21 * mag;
@@ -2362,12 +2387,12 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 *                        Provides the matrix values to be normalized
 	 */
 	public final void normalizeCP(Matrix3 m1) {
-		float mag = (float) (1.0f / Math.sqrt(m1.m00 * m1.m00 + m1.m10 * m1.m10 + m1.m20 * m1.m20));
+		float mag = (float) (1.0f / Math.sqrt((m1.m00 * m1.m00) + (m1.m10 * m1.m10) + (m1.m20 * m1.m20)));
 		m00 = m1.m00 * mag;
 		m10 = m1.m10 * mag;
 		m20 = m1.m20 * mag;
 
-		mag = (float) (1.0f / Math.sqrt(m1.m01 * m1.m01 + m1.m11 * m1.m11 + m1.m21 * m1.m21));
+		mag = (float) (1.0f / Math.sqrt((m1.m01 * m1.m01) + (m1.m11 * m1.m11) + (m1.m21 * m1.m21)));
 		m01 = m1.m01 * mag;
 		m11 = m1.m11 * mag;
 		m21 = m1.m21 * mag;
@@ -2459,7 +2484,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 *                        the axis and angle to be converted
 	 */
 	public final void set(AxisAngle a1) {
-		float mag = (float) Math.sqrt(a1.x * a1.x + a1.y * a1.y + a1.z * a1.z);
+		float mag = (float) Math.sqrt((a1.x * a1.x) + (a1.y * a1.y) + (a1.z * a1.z));
 		if (mag < EPS) {
 			m00 = 1.0f;
 			m01 = 0.0f;
@@ -2567,17 +2592,17 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 *                        the quaternion to be converted
 	 */
 	public final void set(Quaternion q1) {
-		this.m00 = (1.0f - 2.0f * q1.y * q1.y - 2.0f * q1.z * q1.z);
-		this.m10 = (2.0f * (q1.x * q1.y + q1.w * q1.z));
-		this.m20 = (2.0f * (q1.x * q1.z - q1.w * q1.y));
+		this.m00 = (1.0f - (2.0f * q1.y * q1.y) - (2.0f * q1.z * q1.z));
+		this.m10 = (2.0f * ((q1.x * q1.y) + (q1.w * q1.z)));
+		this.m20 = (2.0f * ((q1.x * q1.z) - (q1.w * q1.y)));
 
-		this.m01 = (2.0f * (q1.x * q1.y - q1.w * q1.z));
-		this.m11 = (1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.z * q1.z);
-		this.m21 = (2.0f * (q1.y * q1.z + q1.w * q1.x));
+		this.m01 = (2.0f * ((q1.x * q1.y) - (q1.w * q1.z)));
+		this.m11 = (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.z * q1.z));
+		this.m21 = (2.0f * ((q1.y * q1.z) + (q1.w * q1.x)));
 
-		this.m02 = (2.0f * (q1.x * q1.z + q1.w * q1.y));
-		this.m12 = (2.0f * (q1.y * q1.z - q1.w * q1.x));
-		this.m22 = (1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.y * q1.y);
+		this.m02 = (2.0f * ((q1.x * q1.z) + (q1.w * q1.y)));
+		this.m12 = (2.0f * ((q1.y * q1.z) - (q1.w * q1.x)));
+		this.m22 = (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.y * q1.y));
 	}
 
 	/**
@@ -2588,7 +2613,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 * @param v
 	 *                        the replacement column
 	 */
-	public final void setColumn(int column, float v[]) {
+	public final void setColumn(int column, float[] v) {
 		switch (column) {
 		case 0:
 			this.m00 = v[0];
@@ -2773,7 +2798,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 * @param v
 	 *                        the replacement row
 	 */
-	public final void setRow(int row, float v[]) {
+	public final void setRow(int row, float[] v) {
 		switch (row) {
 		case 0:
 			this.m00 = v[0];
@@ -2961,7 +2986,9 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 */
 	@Override
 	public String toString() {
-		return this.m00 + ", " + this.m01 + ", " + this.m02 + "\n" + this.m10 + ", " + this.m11 + ", " + this.m12 + "\n" + this.m20 + ", " + this.m21 + ", " + this.m22 + "\n";
+		return this.m00 + ", " + this.m01 + ", " + this.m02 + '\n'
+               + this.m10 + ", " + this.m11 + ", " + this.m12 + '\n'
+               + this.m20 + ", " + this.m21 + ", " + this.m22 + '\n';
 	}
 
 	/**
@@ -3051,8 +3078,8 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	 * Also note that since this routine is slow anyway, we won't worry about allocating a little bit of garbage.
 	 */
 	private final void invertGeneral(Matrix3 m1) {
-		float result[] = new float[9];
-		int row_perm[] = new int[3];
+		float[] result = new float[9];
+		int[] row_perm = new int[3];
 		int i, r, c;
 		float[] tmp = new float[9]; // scratch matrix
 
@@ -3103,7 +3130,7 @@ public class Matrix3 implements java.io.Serializable, Cloneable {
 	/**
 	 * perform SVD (if necessary to get rotational component
 	 */
-	final void getScaleRotate(float scales[], float rots[]) {
+	final void getScaleRotate(float[] scales, float[] rots) {
 
 		double[] tmp = new double[9]; // scratch matrix
 

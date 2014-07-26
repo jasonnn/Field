@@ -109,7 +109,7 @@ public class NewTemplates {
 			}
 		}
 
-		if (all.size() == 0) {
+		if (all.isEmpty()) {
 			up.put("<i>(no templates are installed, right click on a selected box to make one)</i>", new iUpdateable() {
 				public void update() {
 				}
@@ -129,7 +129,7 @@ public class NewTemplates {
     private static
     String trim(String right) {
         if (right.length() > 40)
-			return right.substring(0, 40) + "\u2014";
+			return right.substring(0, 40) + '\u2014';
 		return right;
 	}
 

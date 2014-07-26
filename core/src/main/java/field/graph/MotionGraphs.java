@@ -8,38 +8,42 @@ import java.util.Collection;
 
 public class MotionGraphs {
 
-	static public final Prop<iAxis> x_axis = new Prop<iAxis>("x_axis");
-	static public final Prop<iAxis> y_axis = new Prop<iAxis>("y_axis");
+	public static final Prop<iAxis> x_axis = new Prop<iAxis>("x_axis");
+	public static final Prop<iAxis> y_axis = new Prop<iAxis>("y_axis");
 
-	static public final Prop<iLayout> mark = new Prop<iLayout>("mark");
+	public static final Prop<iLayout> mark = new Prop<iLayout>("mark");
 
-	static public final Prop<Collection<Cobj>> dataSet = new Prop<Collection<Cobj>>("dataSet");
+	public static final Prop<Collection<Cobj>> dataSet = new Prop<Collection<Cobj>>("dataSet");
 
-	static public final Prop<Cobj> datum = new Prop<Cobj>("datum");
+	public static final Prop<Cobj> datum = new Prop<Cobj>("datum");
 
-	static public final Prop<iLayout> markMaker = new Prop<iLayout>("markMaker");
+	public static final Prop<iLayout> markMaker = new Prop<iLayout>("markMaker");
 
-	static public final Prop<Collection<CachedLine>> geometry = new Prop<Collection<CachedLine>>("geometry");
+	public static final Prop<Collection<CachedLine>> geometry = new Prop<Collection<CachedLine>>("geometry");
 	
-	static public interface iLayout
+	public static
+    interface iLayout
 	{
 		public void begin();
 		public void layout();
 		public void end();
 	}
 
-	static public interface iDraw
+	public static
+    interface iDraw
 	{
 		public void draw();
 	}
 
-	static public interface iAxis
+	public static
+    interface iAxis
 	{
 		public float map(Cobj x);
 		public float mapNumber(float n);
 	}
 
-	static public class Graph extends Cobj
+	public static
+    class Graph extends Cobj
 	{
 		
 	}

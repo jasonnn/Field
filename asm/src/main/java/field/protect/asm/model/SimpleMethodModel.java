@@ -41,12 +41,12 @@ public class SimpleMethodModel extends AbstractSimpleModel {
     @SuppressWarnings("RedundantIfStatement")
     @Override
     protected boolean doEquals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if ((o == null) || (getClass() != o.getClass())) return false;
         if (!super.doEquals(o)) return false;
 
         SimpleMethodModel that = (SimpleMethodModel) o;
 
-        if (desc != null ? !desc.equals(that.desc) : that.desc != null) return false;
+        if ((desc != null) ? !desc.equals(that.desc) : (that.desc != null)) return false;
         if (!Arrays.equals(exceptions, that.exceptions)) return false;
 
         return true;
@@ -55,7 +55,7 @@ public class SimpleMethodModel extends AbstractSimpleModel {
     @Override
     protected int doHashCode() {
         int result = super.doHashCode();
-        result = 31 * result + (desc != null ? desc.hashCode() : 0);
+        result = 31 * result + ((desc != null) ? desc.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(exceptions);
         return result;
     }

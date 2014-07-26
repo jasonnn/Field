@@ -17,11 +17,11 @@ public class MeshBlastLoader {
 
 	FloatBuffer vertex;
 	IntBuffer topology;
-	private ByteBuffer vertexb;
-	private ByteBuffer topologyb;
+	private final ByteBuffer vertexb;
+	private final ByteBuffer topologyb;
 
 	public MeshBlastLoader(String filename) throws IOException {
-		header = (Header) new PythonUtils().loadAsXML(filename + ".xmlHeader");
+		header = (Header) PythonUtils.loadAsXML(filename + ".xmlHeader");
 		file = new RandomAccessFile(filename, "r");
 		source = file.getChannel().map(MapMode.READ_ONLY, 0, file.length());
 		source.order(ByteOrder.nativeOrder());

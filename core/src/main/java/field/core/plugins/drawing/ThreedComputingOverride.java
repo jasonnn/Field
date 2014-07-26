@@ -29,8 +29,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class ThreedComputingOverride extends SplineComputingOverride {
 
-	static public final VisualElementProperty<ThreedContext> context = new VisualElementProperty<ThreedContext>("context_");
-	static public final VisualElementProperty<State> camera = new VisualElementProperty<State>("camera");
+	public static final VisualElementProperty<ThreedContext> context = new VisualElementProperty<ThreedContext>("context_");
+	public static final VisualElementProperty<State> camera = new VisualElementProperty<State>("camera");
 
 	public VisualElementProperty<BasicSceneList> canvas = new VisualElementProperty<BasicSceneList>("canvas");
 	public VisualElementProperty<BasicSceneList> canvasLeft = new VisualElementProperty<BasicSceneList>("canvasLeft");
@@ -43,7 +43,7 @@ public class ThreedComputingOverride extends SplineComputingOverride {
 	public VisualElementProperty<Number> orthoDisparity = new VisualElementProperty<Number>("orthoDisparity");
 	public VisualElementProperty<Number> leftDisparity = new VisualElementProperty<Number>("leftDisparity");
 
-	static public float globalDisparity = 1f;
+	public static float globalDisparity = 1f;
 
 	/*
 	 * 
@@ -79,7 +79,7 @@ public class ThreedComputingOverride extends SplineComputingOverride {
 
 		@Override
 		public Object getAttribute(String name) {
-			if (name.equals("camera"))
+			if ("camera".equals(name))
 			{
 				return camera.get(forElement);
 			}
@@ -89,7 +89,7 @@ public class ThreedComputingOverride extends SplineComputingOverride {
 
 		@Override
 		public void setAttribute(String name, Object value) {
-			if (name.equals("camera") && value instanceof State)
+			if ("camera".equals(name) && (value instanceof State))
 			{
 				camera.set(forElement, forElement, (State) value);
 			}
@@ -220,9 +220,9 @@ public class ThreedComputingOverride extends SplineComputingOverride {
 				state.far = 10000;
 				Rect f = forElement.getFrame(new Rect());
 				float back = (float) f.w;
-				state.position = new Vector3(f.x + f.w / 2, f.y + f.h / 2, -back);
+				state.position = new Vector3(f.x + (f.w / 2), f.y + (f.h / 2), -back);
 				state.up = new Vector3(0, -1, 0);
-				state.target = new Vector3(f.x + f.w / 2, f.y + f.h / 2, 0);
+				state.target = new Vector3(f.x + (f.w / 2), f.y + (f.h / 2), 0);
 				c.setTransformState(state);
 
 				State cc = camera.get(forElement);
@@ -438,7 +438,7 @@ public class ThreedComputingOverride extends SplineComputingOverride {
 
         //System.out.println(" hke <" + newSource + "> <" + event + "> <" + isSelected() + ">");
 
-		if (isSelected() && newSource == forElement) {
+		if (isSelected() && (newSource == forElement)) {
 			{
 				ball.keyTyped(null, event);
 			}

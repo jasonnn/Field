@@ -18,7 +18,8 @@ import java.util.Map;
 
 public class AbsoluteTool extends BaseTool {
 
-	static public class AbsoluteCoordinateChange implements iCoordDesc {
+	public static
+    class AbsoluteCoordinateChange implements iCoordDesc {
 		public iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
 			if (claimed.size() == 0) return null;
 
@@ -48,11 +49,11 @@ public class AbsoluteTool extends BaseTool {
 				}
 
 				public String toExpression() {
-					return "Abs(" + v(changes[0]) + ", " + v(changes[1]) + ", " + v(changes[2]) + ")";
+					return "Abs(" + v(changes[0]) + ", " + v(changes[1]) + ", " + v(changes[2]) + ')';
 				}
 
 				protected String v(Vector2 vv) {
-					return (vv == null ? "None" : "Vector2(" + vv.x + ", " + vv.y + ")");
+					return (vv == null ? "None" : "Vector2(" + vv.x + ", " + vv.y + ')');
 				}
 
 				public void toProperties(iVisualElement e, Map<String, Object> soFar) {
@@ -61,7 +62,8 @@ public class AbsoluteTool extends BaseTool {
 		}
 	}
 
-	static public class AbsoluteNodeDescription implements iNodeDesc {
+	public static
+    class AbsoluteNodeDescription implements iNodeDesc {
 
 		public List<iResult> describe(List<CachedLine> index, List<SelectedVertex> claimed) {
 			if (claimed.size() == 0) return null;

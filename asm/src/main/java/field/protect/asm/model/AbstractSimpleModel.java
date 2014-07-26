@@ -38,14 +38,14 @@ public abstract class AbstractSimpleModel {
     @SuppressWarnings("RedundantIfStatement")
     protected boolean doEquals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if ((o == null) || (getClass() != o.getClass())) return false;
 
         AbstractSimpleModel that = (AbstractSimpleModel) o;
 
         if (access != that.access) return false;
         if (!annotations.equals(that.annotations)) return false;
         if (!name.equals(that.name)) return false;
-        if (signature != null ? !signature.equals(that.signature) : that.signature != null) return false;
+        if ((signature != null) ? !signature.equals(that.signature) : (that.signature != null)) return false;
 
         return true;
     }
@@ -53,7 +53,7 @@ public abstract class AbstractSimpleModel {
     protected int doHashCode() {
         int result = access;
         result = 31 * result + name.hashCode();
-        result = 31 * result + (signature != null ? signature.hashCode() : 0);
+        result = 31 * result + ((signature != null) ? signature.hashCode() : 0);
         result = 31 * result + annotations.hashCode();
         return result;
     }
@@ -67,21 +67,19 @@ public abstract class AbstractSimpleModel {
         return tmp;
     }
 
-    protected static
     @NotNull
+    protected static
     <T> Set<T> ensureNonNull(@Nullable Set<T> set) {
-        return (set == null) ?
-                Collections.<T>emptySet() : set.isEmpty() ?
-                Collections.<T>emptySet() : Collections.unmodifiableSet(set);
+        return (set == null)
+               ? Collections.<T>emptySet()
+               : (set.isEmpty() ? Collections.<T>emptySet() : Collections.unmodifiableSet(set));
     }
 
-    protected static
     @NotNull
+    protected static
     String[] ensureNonNull(@Nullable String[] str) {
 
-        return (str == null) ?
-                EMPTY_STRING_ARRAY : str.length == 0 ?
-                EMPTY_STRING_ARRAY : str;
+        return (str == null) ? EMPTY_STRING_ARRAY : ((str.length == 0) ? EMPTY_STRING_ARRAY : str);
     }
 
 

@@ -19,7 +19,8 @@ import java.util.Map.Entry;
 
 public class SimpleConstraints implements iPlugin {
 
-	static public class AtPoint extends Constraint {
+	public static
+    class AtPoint extends Constraint {
 		private final float x;
 
 		private final float y;
@@ -82,7 +83,8 @@ public class SimpleConstraints implements iPlugin {
 		}
 	}
 
-	static public class AtPointBelow extends Constraint {
+	public static
+    class AtPointBelow extends Constraint {
 
 		float oy;
 
@@ -112,7 +114,8 @@ public class SimpleConstraints implements iPlugin {
 		}
 	}
 
-	static public class AtPointBelowMinWidth extends Constraint {
+	public static
+    class AtPointBelowMinWidth extends Constraint {
 
 		float oy;
 		private final float minWidth;
@@ -142,7 +145,8 @@ public class SimpleConstraints implements iPlugin {
 		}
 	}
 
-	static public class RectangleAllocatorConstraint extends Constraint {
+	public static
+    class RectangleAllocatorConstraint extends Constraint {
 
 		private final VisualElementProperty<RectangleAllocator> allocator;
 
@@ -170,7 +174,8 @@ public class SimpleConstraints implements iPlugin {
 
 	}
 
-	static public abstract class Constraint {
+	public abstract static
+    class Constraint {
 		VisualElementReference fireOn;
 
 		VisualElementReference from;
@@ -284,7 +289,7 @@ public class SimpleConstraints implements iPlugin {
 		}
 	}
 
-	static public final String pluginId = "//plugin_simpleConstraints";
+	public static final String pluginId = "//plugin_simpleConstraints";
 
 	public static final VisualElementProperty<SimpleConstraints> simpleConstraints_plugin = new VisualElementProperty<SimpleConstraints>("simpleConstraints_plugin");
 

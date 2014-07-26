@@ -17,7 +17,8 @@ import java.util.*;
 
 public class TopologyMerging {
 
-	static public abstract class CompressRun<T extends NodeImpl<T>> implements iProvidesQueue {
+	public abstract static
+    class CompressRun<T extends NodeImpl<T>> implements iProvidesQueue {
 		private final List<T> all;
 
 		TaskQueue queue = new TaskQueue();
@@ -50,14 +51,14 @@ public class TopologyMerging {
 					@Override
 					protected Object catagoryFor(T tt) {
 						if (isLineConnectedAndNotEnd(tt)) {
-							return new Integer(0);
+							return 0;
 						} else
 							return ne;
 					}
 
 					@Override
 					protected T createNewNodeFor(Collection<T> domain, Collection<T> fringe) {
-						System.err.println(" fringe size is <" + fringe.size() + "> domain size is <" + domain + ">");
+						System.err.println(" fringe size is <" + fringe.size() + "> domain size is <" + domain + '>');
 						assert fringe.size() <= 2 : fringe + " " + domain;
 						if (fringe.size() == 2) {
 
@@ -74,7 +75,10 @@ public class TopologyMerging {
 								last = di.next();
 
 							if (first.getChildren().contains(b)) {
-								assert last.getChildren().contains(a) : last + " " + last.getChildren() + " " + first + " " + first.getChildren() + " (" + a + " " + b + ") d"
+								assert last.getChildren().contains(a) : last + " " + last.getChildren() + ' '
+                                                                        + first + ' '
+                                                                        + first.getChildren() + " (" + a + ' '
+                                                                        + b + ") d"
 								+ domain + " f" + fringe;
 								T c = b;
 								b = a;
@@ -114,12 +118,14 @@ public class TopologyMerging {
 			return this;
 		}
 
-		abstract protected T createNewNodeFor(Collection<T> domain, T domainStart, T fringeStart, T domainEnd, T fringeEnd);
+		protected abstract
+        T createNewNodeFor(Collection<T> domain, T domainStart, T fringeStart, T domainEnd, T fringeEnd);
 
 	}
 
 	@Woven
-	static public abstract class EliminateShortBranches<T extends NodeImpl<T>> implements iProvidesQueue {
+    public abstract static
+    class EliminateShortBranches<T extends NodeImpl<T>> implements iProvidesQueue {
 		private final HashSet<T> all;
 
 		TaskQueue queue = new TaskQueue();
@@ -137,7 +143,8 @@ public class TopologyMerging {
 			return queue;
 		}
 
-		abstract public boolean mergeOnto(T head, List<T> tail);
+		public abstract
+        boolean mergeOnto(T head, List<T> tail);
 
 		public List<T> perform() {
 
@@ -178,7 +185,8 @@ public class TopologyMerging {
 
 		}
 
-		abstract public boolean shouldEliminate(List<T> branch);
+		public abstract
+        boolean shouldEliminate(List<T> branch);
 
 		private boolean nothingConnectedTo(HashSet<T> all, NodeImpl n) {
 			for (T t : all)
@@ -203,7 +211,8 @@ public class TopologyMerging {
 		}
 	}
 
-	static public abstract class ExtractBorderOf<T> {
+	public abstract static
+    class ExtractBorderOf<T> {
 
 		private final iTopology<T> top;
 
@@ -239,7 +248,8 @@ public class TopologyMerging {
 			return null;
 		}
 
-		abstract protected boolean isBorder(T t);
+		protected abstract
+        boolean isBorder(T t);
 	}
 
 	/**
@@ -247,7 +257,8 @@ public class TopologyMerging {
 	 * "catagory" and replaces them with a single
 	 * node, with the same connectivity
 	 */
-	static public abstract class GlossGraph<T extends NodeImpl<T>> implements iProvidesQueue {
+    public abstract static
+    class GlossGraph<T extends NodeImpl<T>> implements iProvidesQueue {
 		private final HashSet<T> all;
 
 		TaskQueue queue = new TaskQueue();
@@ -304,7 +315,8 @@ public class TopologyMerging {
 
 		protected abstract Object catagoryFor(T tt);
 
-		abstract protected T createNewNodeFor(Collection<T> domain, Collection<T> fringe);
+		protected abstract
+        T createNewNodeFor(Collection<T> domain, Collection<T> fringe);
 
 		protected T mergeNodes(Collection<T> domain, Collection<T> fringe) {
 			T t = createNewNodeFor(domain, fringe);
@@ -324,7 +336,8 @@ public class TopologyMerging {
 		}
 	}
 
-	static public class LineChaser<T> {
+	public static
+    class LineChaser<T> {
 		private final iTopology<T> t;
 
 		ArrayList<List<T>> lines = new ArrayList<List<T>>();
@@ -376,7 +389,8 @@ public class TopologyMerging {
 		}
 	}
 
-	static public abstract class MakeSingleLoop<T extends NodeImpl<T>> {
+	public abstract static
+    class MakeSingleLoop<T extends NodeImpl<T>> {
 		T at = null;
 
 		List<T> soFar = new ArrayList<T>();
@@ -420,7 +434,8 @@ public class TopologyMerging {
 			return soFar;
 		}
 
-		abstract protected float distance(T t, T root);
+		protected abstract
+        float distance(T t, T root);
 
 
 		protected List<T> shortestPath(T at, final T to) {
@@ -432,7 +447,8 @@ public class TopologyMerging {
 		}
 	}
 
-	static public abstract class MakeSingleLoop2<T extends NodeImpl<T>> {
+	public abstract static
+    class MakeSingleLoop2<T extends NodeImpl<T>> {
 		T at = null;
 
 		List<T> soFar = new ArrayList<T>();
@@ -478,7 +494,8 @@ public class TopologyMerging {
 			return soFar;
 		}
 
-		abstract protected float distance(T t, T root);
+		protected abstract
+        float distance(T t, T root);
 
 
 		protected List<T> shortestPath(T at, final T to, List<T> soFar2) {
@@ -490,7 +507,8 @@ public class TopologyMerging {
 		}
 	}
 
-	static public abstract class MakeSinglyConnected_biconnected<T extends NodeImpl<T>> {
+	public abstract static
+    class MakeSinglyConnected_biconnected<T extends NodeImpl<T>> {
 		T r1;
 
 		T r2;
@@ -540,28 +558,33 @@ public class TopologyMerging {
 
 		protected float distance(List<T> from, List<T> name) {
 			float m = Float.POSITIVE_INFINITY;
-			for (int i = 0; i < from.size(); i++) {
-				for (int j = 0; j < name.size(); j++) {
-					float d = distance(from.get(i), name.get(j));
-					if (d < m) {
-						m = d;
-						r1 = from.get(i);
-						r2 = name.get(j);
-					}
-				}
-			}
+            for (T aFrom : from) {
+                for (T aName : name) {
+                    float d = distance(aFrom, aName);
+                    if (d < m) {
+                        m = d;
+                        r1 = aFrom;
+                        r2 = aName;
+                    }
+                }
+            }
 			return m;
 		}
 
-		abstract protected float distance(T t, T t2);
+		protected abstract
+        float distance(T t, T t2);
 
+        protected NodeImpl<T>[] returnConnected(){
+            return new NodeImpl[]{r1,r2};
+        }
 		protected T[] returnConnected(List<T> from, List<T> name) {
 			return (T[]) new NodeImpl[] { r1, r2 };
 		}
 
 	}
 
-	static public abstract class MakeSinglyConnected_biconnectedTopology<T> {
+	public abstract static
+    class MakeSinglyConnected_biconnectedTopology<T> {
 
 		private final iTopology<T> topology;
 
@@ -616,7 +639,8 @@ public class TopologyMerging {
 			}
 		}
 
-		abstract protected void connect(T t, T t2);
+		protected abstract
+        void connect(T t, T t2);
 
 		protected float distance(List<T> from, List<T> name) {
 			float m = Float.POSITIVE_INFINITY;
@@ -633,7 +657,8 @@ public class TopologyMerging {
 			return m;
 		}
 
-		abstract protected float distance(T t, T t2);
+		protected abstract
+        float distance(T t, T t2);
 
 		protected Object[] returnConnected(List<T> from, List<T> name) {
 			return new Object[] { r1, r2 };
@@ -641,7 +666,8 @@ public class TopologyMerging {
 
 	}
 
-	static public void disconnectAll(NodeImpl n) {
+	public static
+    void disconnectAll(NodeImpl n) {
 		for (NodeImpl c : new ArrayList<NodeImpl>(n.getChildren())) {
 			n.removeChild(c);
 			c.removeChild(n);
@@ -657,7 +683,8 @@ public class TopologyMerging {
 	}
 
 	// only works on biconnected graph
-	static public <T extends NodeImpl<T>> List<List<T>> extractDomainsBiConnected(List<T> all) {
+    public static
+    <T extends NodeImpl<T>> List<List<T>> extractDomainsBiConnected(List<T> all) {
 		List<List<T>> ret = new ArrayList<List<T>>();
 		final List[] gathering = { null };
 
@@ -690,7 +717,8 @@ public class TopologyMerging {
 		return ret;
 	}
 
-	static public <T> List<List<T>> extractDomainsBiConnected(List<T> all, iTopology<T> top) {
+	public static
+    <T> List<List<T>> extractDomainsBiConnected(List<T> all, iTopology<T> top) {
 		List<List<T>> ret = new ArrayList<List<T>>();
 		final List[] gathering = { null };
 
@@ -721,7 +749,8 @@ public class TopologyMerging {
 		return ret;
 	}
 
-	static public <T extends NodeImpl<T>> boolean isBiconnected(List<T> all) {
+	public static
+    <T extends NodeImpl<T>> boolean isBiconnected(List<T> all) {
 		for (T t : all) {
 			List<T> c = t.getChildren();
 			for (T child : c) {
@@ -731,11 +760,13 @@ public class TopologyMerging {
 		return true;
 	}
 
-	static public boolean isEnd(NodeImpl n, List<? extends NodeImpl> stack) {
+	public static
+    boolean isEnd(NodeImpl n, List<? extends NodeImpl> stack) {
 		return n.getChildren().size() == 0 || (n.getChildren().size() == 1 && stack.size() > 2 && n.getChildren().get(0) == stack.get(stack.size() - 2));
 	}
 
-	static public boolean isLineConnected(NodeImpl t) {
+	public static
+    boolean isLineConnected(NodeImpl t) {
 		// either t is
 		// just
 		// connected to
@@ -754,7 +785,8 @@ public class TopologyMerging {
 		return ((NodeImpl) t.getChildren().get(0)).getChildren().contains(t) || ((NodeImpl) t.getChildren().get(1)).getChildren().contains(t);
 	}
 
-	static public boolean isLineConnectedAndNotEnd(NodeImpl t) {
+	public static
+    boolean isLineConnectedAndNotEnd(NodeImpl t) {
 		// either t is
 		// just
 		// connected to

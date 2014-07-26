@@ -51,15 +51,15 @@ public class TreeBrowserDispatch {
 						String n = in.getClass().getName();
 						String[] n2 = n.split("\\.");
 						n = n2[n2.length - 1];
-						return (name == null ? "" : ("<b>" + name + "</b> ")) + "(" + n + ")";
+						return ((name == null) ? "" : ("<b>" + name + "</b> ")) + '(' + n + ')';
 					}
-					System.out.println(" custom tostring for <" + in.getClass() + "> <" + m + ">");
+					System.out.println(" custom tostring for <" + in.getClass() + "> <" + m + '>');
 				} catch (NoSuchMethodException e) {
 					e.printStackTrace();
 				} catch (SecurityException e) {
 					e.printStackTrace();
 				}
-				return (name == null ? "" : ("<b>" + name + "</b> ")) + in;
+				return ((name == null) ? "" : ("<b>" + name + "</b> ")) + in;
 			}
 		});
         
@@ -74,7 +74,7 @@ public class TreeBrowserDispatch {
 					List<Object> o = new ArrayList<Object>();
 					int num = 0;
 					Iterator ii = ((Iterable) in).iterator();
-					while (ii.hasNext() && num < 40) {
+					while (ii.hasNext() && (num < 40)) {
 						o.add(ii.next());
 						num++;
 					}
@@ -113,7 +113,7 @@ public class TreeBrowserDispatch {
 						}
 					});
                     
-					if (((FullScreenCanvasSWT) in).leftSceneList.getChildren().size() > 0) {
+					if (!((FullScreenCanvasSWT) in).leftSceneList.getChildren().isEmpty()) {
 						a.add(new iLabelled() {
                             
 							@Override
@@ -129,7 +129,7 @@ public class TreeBrowserDispatch {
 							}
 						});
 					}
-					if (((FullScreenCanvasSWT) in).rightSceneList.getChildren().size() > 0) {
+					if (!((FullScreenCanvasSWT) in).rightSceneList.getChildren().isEmpty()) {
 						a.add(new iLabelled() {
                             
 							@Override
@@ -214,7 +214,7 @@ public class TreeBrowserDispatch {
 		if (m == null) {
 			dispatch.put(c, m = new ArrayList<PythonCallableMap>());
 		}
-		if (m.size() == 0) {
+		if (m.isEmpty()) {
 			m.add(new PythonCallableMap());
 		}
         
@@ -226,7 +226,7 @@ public class TreeBrowserDispatch {
 		if (m == null) {
 			dispatch.put(c, m = new ArrayList<PythonCallableMap>());
 		}
-		if (m.size() == 0) {
+		if (m.isEmpty()) {
 			m.add(new PythonCallableMap());
 		}
         
@@ -234,12 +234,12 @@ public class TreeBrowserDispatch {
 	}
     
 	public Object call(Object... args) {
-		List<Class> l = linearize(args[0] == null ? Object.class : args[0].getClass());
+		List<Class> l = linearize((args[0] == null) ? Object.class : args[0].getClass());
 		for (Class cc : l) {
 			Collection<PythonCallableMap> o = dispatch.get(cc);
 			if (o == null)
 				continue;
-			if (o.size() == 0)
+			if (o.isEmpty())
 				continue;
 			for (PythonCallableMap map : o) {
 				Object out = map.invoke(args);
@@ -252,12 +252,12 @@ public class TreeBrowserDispatch {
     
 	public List<Object> gather(Object... args) {
 		List<Object> r = new ArrayList<Object>();
-		List<Class> l = linearize(args[0] == null ? Object.class : args[0].getClass());
+		List<Class> l = linearize((args[0] == null) ? Object.class : args[0].getClass());
 		for (Class cc : l) {
 			Collection<PythonCallableMap> o = dispatch.get(cc);
 			if (o == null)
 				continue;
-			if (o.size() == 0)
+			if (o.isEmpty())
 				continue;
 			for (PythonCallableMap map : o) {
 				Collection<Object> out = map.gather(args);

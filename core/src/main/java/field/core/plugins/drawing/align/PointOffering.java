@@ -22,7 +22,8 @@ import java.util.Set;
  */
 public abstract class PointOffering implements iOffering {
 
-	static public abstract class BaseDrawable implements iDrawable {
+	public abstract static
+    class BaseDrawable implements iDrawable {
 		public int fadeIn = 10;
 		public int fadeOut = 10;
 		private final float score;
@@ -73,7 +74,8 @@ public abstract class PointOffering implements iOffering {
 			return stopping;
 		}
 
-		abstract public void process(Rect currentrect, Rect newRect);
+		public abstract
+        void process(Rect currentrect, Rect newRect);
 
 		public boolean restart() {
 			if (stopping)
@@ -87,9 +89,11 @@ public abstract class PointOffering implements iOffering {
 			stopping = true;
 		}
 
-		abstract public void update(Rect currentrect, Rect newRect);
+		public abstract
+        void update(Rect currentrect, Rect newRect);
 
-		abstract protected void drawWithOpacity(OfferedAlignment alignment, float alpha);
+		protected abstract
+        void drawWithOpacity(OfferedAlignment alignment, float alpha);
 
 		public iDrawable merge(iDrawable d) {
 			return this;
@@ -179,14 +183,17 @@ public abstract class PointOffering implements iOffering {
 
 	}
 
-	abstract protected Vector2 connectionPoint(iVisualElement source, Vector2 sourcePoint, iVisualElement target, Rect targetRect);
+	protected abstract
+    Vector2 connectionPoint(iVisualElement source, Vector2 sourcePoint, iVisualElement target, Rect targetRect);
 
 	protected void createConstraint(iVisualElement root, iVisualElement from, iVisualElement to) {
 	}
 
-	abstract protected Vector2 originalPoint(Rect currentRect);
+	protected abstract
+    Vector2 originalPoint(Rect currentRect);
 
-	abstract protected float returnLastScore();
+	protected abstract
+    float returnLastScore();
 
 	abstract iDrawable newDrawableFor(float bestScore, Set<Vector2> best, Vector2 point, LinkedHashMap<iVisualElement, Rect> current, iVisualElement element, Rect originalRect, Rect currentRect, Rect newRect);
 }

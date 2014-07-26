@@ -22,14 +22,14 @@ public class ObjectToMarkDown {
 
 	public Map<String, SoftReference> forward = new HashMap<String, SoftReference>();
 	public Map<Object, String> backward = new WeakHashMap<Object, String>();
-	static public Map<String, String> browsed = new LinkedHashMap<String, String>() {
+	public static Map<String, String> browsed = new LinkedHashMap<String, String>() {
 		protected boolean removeEldestEntry(Map.Entry<String, String> arg0) {
 			return (this.size() > 10);
 
         }
     };
 
-	static public Map<String, iProvider<String>> invokeMap = new LinkedHashMap<String, iProvider<String>>() {
+	public static Map<String, iProvider<String>> invokeMap = new LinkedHashMap<String, iProvider<String>>() {
 		protected boolean removeEldestEntry(Map.Entry<String, field.math.abstraction.iProvider<String>> arg0) {
 			return this.size() > 100;
         }
@@ -70,8 +70,8 @@ public class ObjectToMarkDown {
         //System.out.println(" get class is <" + cc + ">");
 
 		if (cc != null)
-			if (cc.getComment() != null && cc.getComment().trim().length() > 0)
-				s += "\n" + cc.getComment() + "\n";
+			if ((cc.getComment() != null) && !cc.getComment().trim().isEmpty())
+				s += '\n' + cc.getComment() + '\n';
 
 		q = 0;
 		for (Field f : o.getClass().getFields()) {
@@ -82,7 +82,7 @@ public class ObjectToMarkDown {
 			try {
 				Object n = f.get(o);
 
-				if (f.getType().isPrimitive() && n == null) {
+				if (f.getType().isPrimitive() && (n == null)) {
                     s += "#### <a href=\"#"
                          + q
                          + "\">"
@@ -106,11 +106,11 @@ public class ObjectToMarkDown {
                          + trim(String.valueOf(f.getType()))
                          + "*) </sub>\n";
                 }
-				if (n != null & cc != null) {
+				if ((n != null) & (cc != null)) {
 					s += "\n[fold]\n\n";
 					JavaField fbm = cc.getFieldByName(f.getName());
-					if (fbm != null && fbm.getComment() != null)
-						s += "> " + fbm.getComment().replace("\n", "\n> ") + "\n";
+					if ((fbm != null) && (fbm.getComment() != null))
+						s += "> " + fbm.getComment().replace("\n", "\n> ") + '\n';
 					s += "\n[/fold]\n\n";
 				}
 			} catch (IllegalArgumentException e) {
@@ -140,7 +140,8 @@ public class ObjectToMarkDown {
 		return s;
 	}
 
-	private JavaClass resolveJavaClass(Class<? extends Object> c) {
+	private static
+    JavaClass resolveJavaClass(Class<? extends Object> c) {
 		JavaClass cc = JavaDocCache.cache.getClass(c);
 
 		if (cc == null) {
@@ -185,7 +186,7 @@ public class ObjectToMarkDown {
 	private String convertMap(Map o) {
 		String s = "";
 
-		s += "<h1>Map (" + o.size() + " element" + (o.size() == 1 ? "" : "s") + ")</h1>\n";
+		s += "<h1>Map (" + o.size() + " element" + ((o.size() == 1) ? "" : "s") + ")</h1>\n";
 		s += "Object is of class *" + o.getClass().getName() + "*, its ";
 		s += "unique id is *" + System.identityHashCode(o.getClass()) + "*\n\n";
 
@@ -204,7 +205,7 @@ public class ObjectToMarkDown {
 	private String convertCollection(Collection o) {
 		String s = "";
 
-		s += "<h1>Collection (" + o.size() + " element" + (o.size() == 1 ? "" : "s") + ")</h1>\n";
+		s += "<h1>Collection (" + o.size() + " element" + ((o.size() == 1) ? "" : "s") + ")</h1>\n";
 		s += "Object is of class *" + o.getClass().getName() + "*, its ";
 		s += "unique id is *" + System.identityHashCode(o.getClass()) + "*\n\n";
 
@@ -225,14 +226,15 @@ public class ObjectToMarkDown {
 			forward.put(q, new SoftReference(n));
 			return q;
 		} else {
-            q = (n == null ? "" : (String.valueOf(System.identityHashCode(n))));
+            q = ((n == null) ? "" : (String.valueOf(System.identityHashCode(n))));
             backward.put(n, q);
 			forward.put(q, new SoftReference(n));
 			return q;
 		}
 	}
 
-	public String trim(String m) {
+	public static
+    String trim(String m) {
 		if (m.lastIndexOf('.') == -1)
 			return m;
 		return m.substring(Math.max(m.lastIndexOf('$'), m.lastIndexOf('.')) + 1);
@@ -240,7 +242,8 @@ public class ObjectToMarkDown {
 
 	static int stringUrlUniq = 0;
 
-	static public String urlForString(String m) {
+	public static
+    String urlForString(String m) {
 		stringUrlUniq++;
         browsed.put(String.valueOf(stringUrlUniq), m);
         return "http://localhost:10010/browsed/" + stringUrlUniq;
@@ -305,7 +308,7 @@ public class ObjectToMarkDown {
 						ctext += " )";
 
 						Class<?> tt = m.getReturnType();
-						if (tt.equals(Void.class) || tt.getName().toLowerCase().equals("void")) {
+						if (tt.equals(Void.class) || "void".equals(tt.getName().toLowerCase())) {
 
 						} else {
 							ctext += " &rarr; " + strip(tt.getName());
@@ -374,7 +377,8 @@ public class ObjectToMarkDown {
 		return s;
 	}
 
-	private String strip(String name) {
+	private static
+    String strip(String name) {
 
 		if (name.indexOf('.') != -1) {
 			String[] sp = name.split("\\.");

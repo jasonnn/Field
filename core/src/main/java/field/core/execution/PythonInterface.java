@@ -42,7 +42,7 @@ public class PythonInterface implements ScriptingInterface {
 				if (s != null)
 					return s.f(arg0);
                 
-				if (globalTrap.size() > 0 && !arg0.startsWith("_")) {
+				if (!globalTrap.isEmpty() && !arg0.startsWith("_")) {
 					topic = arg0;
 					r = (PyObject) globalTrap.peek().findItem(arg0, r);
 				}
@@ -54,7 +54,7 @@ public class PythonInterface implements ScriptingInterface {
         
 		public String findReverse(Object o, Class c) {
             
-			System.out.println(" find reverse <" + o + " / " + c + ">");
+			System.out.println(" find reverse <" + o + " / " + c + '>');
             
 			String oo = reverseCache.get(o);
 			if (oo != null)
@@ -73,7 +73,7 @@ public class PythonInterface implements ScriptingInterface {
 					Object f = v.__tojava__(Object.class);
                     
 					try {
-						System.out.println("<" + p + "> = <" + f + "> / <" + v + ">");
+						System.out.println('<' + p + "> = <" + f + "> / <" + v + '>');
 					} catch (Throwable t) {
 						t.printStackTrace();
 					}
@@ -88,7 +88,7 @@ public class PythonInterface implements ScriptingInterface {
 				}
 			}
             
-			System.out.println(" couldn't find <" + o + "> in <" + k + ">");
+			System.out.println(" couldn't find <" + o + "> in <" + k + '>');
             
 			return null;
 		}
@@ -104,11 +104,11 @@ public class PythonInterface implements ScriptingInterface {
 				if (g != null) {
 					arg1 = g.f(arg1);
 				}
-				if (globalTrap.size() > 0) {
+				if (!globalTrap.isEmpty()) {
 					PyObject was = super.__finditem__(arg0);
 					arg1 = (PyObject) globalTrap.peek().setItem(arg0, was, arg1);
                     
-					if (shared.size() > 0 && !arg0.startsWith("_")) {
+					if (!shared.isEmpty() && !arg0.startsWith("_")) {
 						topic = arg0;
 						insideShared = true;
 						try {
@@ -135,7 +135,8 @@ public class PythonInterface implements ScriptingInterface {
     
 	private static PythonInterface pythonInterface;
     
-	static public PythonInterface getPythonInterface() {
+	public static
+    PythonInterface getPythonInterface() {
 		if (pythonInterface == null) {
 			init();
 		}
@@ -162,11 +163,11 @@ public class PythonInterface implements ScriptingInterface {
     
 	List<ScriptingInterface> shared = new ArrayList<ScriptingInterface>();
     
-	private ExecutionMonitor monitor;
+	private final ExecutionMonitor monitor;
     
-	private PySystemState state;
+	private final PySystemState state;
     
-	private ThreadState ts;
+	private final ThreadState ts;
     
 	protected PythonInterface() {
 		pythonInterface = this;
@@ -214,7 +215,8 @@ public class PythonInterface implements ScriptingInterface {
 		execString("from java.lang import System");
 		execString("from field.util.PythonUtils import OKeyByName");
 		execString("from field.util.PythonUtils import FKeyByName");
-		execString("\n" + "from field.core.ui.text.embedded import FreezeProperties\n" + "from field.core.ui.text.embedded.FreezeProperties import Freeze\n" + "");
+		execString('\n'
+                   + "from field.core.ui.text.embedded import FreezeProperties\n" + "from field.core.ui.text.embedded.FreezeProperties import Freeze\n" + "");
 		execString("import TextTransforms\n" + "from TextTransforms import *");
 		execString("from LineInteractionTools import *");
 		execString("from field.core.plugins.log.KeyframeGroupOverride import Position");
@@ -237,7 +239,11 @@ public class PythonInterface implements ScriptingInterface {
 			}
 		}
 		execString("from array import array");
-		execString("from java.lang import Runtime\n" + "from field.core.execution import PythonInterface\n" + "\n" + "import signal\n" + "\n" + "def __signal_handler( signal_number ):\n" + "	def __decorator( function ):\n" + "		was = signal.signal( signal_number, function )\n" + "		print was\n" + "		return function\n" + "	\n" + "	return __decorator\n" + "\n" + "@__signal_handler(signal.SIGINT)\n" + "def __forceExit(a,b):\n" + "	PythonInterface.getPythonInterface().forceExit()\n" + "\n" + "");
+		execString("from java.lang import Runtime\n" + "from field.core.execution import PythonInterface\n" + '\n'
+                   + "import signal\n" + '\n'
+                   + "def __signal_handler( signal_number ):\n" + "	def __decorator( function ):\n" + "		was = signal.signal( signal_number, function )\n" + "		print was\n" + "		return function\n" + "	\n" + "	return __decorator\n" + '\n'
+                   + "@__signal_handler(signal.SIGINT)\n" + "def __forceExit(a,b):\n" + "	PythonInterface.getPythonInterface().forceExit()\n" + '\n'
+                   + "");
 		execString("from NewCachedLines import CFrame, FLine");
         
 		String extensionsDir = SystemProperties.getProperty("extensions.dir", "../../extensions/");
@@ -268,13 +274,13 @@ public class PythonInterface implements ScriptingInterface {
 		for (String p : pythonFiles) {
 			try {
 				BufferedReader reader;
-				reader = new BufferedReader(new FileReader(new File(file.getAbsolutePath() + "/" + p)));
+				reader = new BufferedReader(new FileReader(new File(file.getAbsolutePath() + '/' + p)));
 				String firstLine = reader.readLine();
 				if (firstLine.contains("field-library")) {
-					System.err.println(" --- executing file from extensions directory <" + file.getAbsolutePath() + ">");
-					executeFile(file.getAbsolutePath() + "/" + p);
+					System.err.println(" --- executing file from extensions directory <" + file.getAbsolutePath() + '>');
+					executeFile(file.getAbsolutePath() + '/' + p);
 				} else {
-					System.err.println(" --- importing module from extensions directory <" + p.replace(".py", "") + ">");
+					System.err.println(" --- importing module from extensions directory <" + p.replace(".py", "") + '>');
 					execString("from " + p.replace(".py", "") + " import *");
 				}
 			} catch (FileNotFoundException e) {
@@ -342,7 +348,7 @@ public class PythonInterface implements ScriptingInterface {
                             
 						} catch (Throwable t2) {
 							System.err.println(" throw another exception ");
-							w.println("python exception <" + ((PyException) t).value.__tojava__(Object.class) + ">");
+							w.println("python exception <" + ((PyException) t).value.__tojava__(Object.class) + '>');
 							w.println("on line " + ((((PyException) t).traceback != null ? ((PyException) t).traceback.tb_lineno : "null")));
 							t.printStackTrace(w);
 							t.printStackTrace(System.err);
@@ -389,7 +395,7 @@ public class PythonInterface implements ScriptingInterface {
                             
 						} catch (Throwable t2) {
 							System.err.println(" throw another exception ");
-							w.println("python exception <" + ((PyException) t).value.__tojava__(Object.class) + ">");
+							w.println("python exception <" + ((PyException) t).value.__tojava__(Object.class) + '>');
 							w.println("on line " + ((((PyException) t).traceback != null ? ((PyException) t).traceback.tb_lineno : "null")));
 							t.printStackTrace(w);
 							t.printStackTrace(System.err);
@@ -434,12 +440,16 @@ public class PythonInterface implements ScriptingInterface {
 	}
     
 	private void writeException(Throwable t, PrintWriter w) {
-		w.println("python exception <" + ((PyException) t).value + ">");
+		w.println("python exception <" + ((PyException) t).value + '>');
 		try {
-			w.println("on line " + ((PyException) t).traceback.tb_lineno + " " + moduleNameFor(((PyException) t).traceback.tb_frame.f_code.co_filename) + " / " + ((PyException) t).traceback.tb_frame.f_code.co_name + " " + HyperlinkedErrorMessage.error(((PyException) t).traceback.tb_frame.f_code.co_filename, ((PyException) t).traceback.tb_lineno));
+			w.println("on line " + ((PyException) t).traceback.tb_lineno + ' '
+                      + moduleNameFor(((PyException) t).traceback.tb_frame.f_code.co_filename) + " / " + ((PyException) t).traceback.tb_frame.f_code.co_name + ' '
+                      + HyperlinkedErrorMessage.error(((PyException) t).traceback.tb_frame.f_code.co_filename, ((PyException) t).traceback.tb_lineno));
 			PyTraceback n = (PyTraceback) (((PyException) t).traceback.tb_next);
 			while (n != null) {
-				w.println("from line " + n.tb_lineno + " " + moduleNameFor(n.tb_frame.f_code.co_filename) + " / " + n.tb_frame.f_code.co_name + " " + HyperlinkedErrorMessage.error(n.tb_frame.f_code.co_filename, n.tb_lineno));
+				w.println("from line " + n.tb_lineno + ' '
+                          + moduleNameFor(n.tb_frame.f_code.co_filename) + " / " + n.tb_frame.f_code.co_name + ' '
+                          + HyperlinkedErrorMessage.error(n.tb_frame.f_code.co_filename, n.tb_lineno));
 				n = (PyTraceback) n.tb_next;
 			}
 			lastError = t;
@@ -693,7 +703,7 @@ public class PythonInterface implements ScriptingInterface {
             
 			String s = "";
 			while (r.ready()) {
-				s += r.readLine() + "\n";
+				s += r.readLine() + '\n';
 			}
 			execString(s);
 		} catch (FileNotFoundException e) {
@@ -956,7 +966,7 @@ public class PythonInterface implements ScriptingInterface {
 					lastTab = t;
 			}
             
-			b.append(ll + "\n");
+			b.append(ll + '\n');
 		}
 		return b.toString();
         
@@ -991,7 +1001,7 @@ public class PythonInterface implements ScriptingInterface {
             
 			public String getLongDescription() {
                 
-				String m = "<html>" + PopupInfoWindow.title("Exception") + PopupInfoWindow.content(t.getMessage() + " / (" + t.getClass().getSimpleName() + ")") + "<br>";
+				String m = "<html>" + PopupInfoWindow.title("Exception") + PopupInfoWindow.content(t.getMessage() + " / (" + t.getClass().getSimpleName() + ')') + "<br>";
 				StackTraceElement[] trace = t.getStackTrace();
 
                 // System.out.println(" stack trace is <" +

@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 
 public class ReloadingSupport {
 
-	static public class ChildClassLoader extends ClassLoader {
+	public static
+    class ChildClassLoader extends ClassLoader {
 		public Map<String, byte[]> map;
 
 		public ChildClassLoader(ClassLoader parent, Map<String, byte[]> map) {
@@ -68,7 +69,7 @@ public class ReloadingSupport {
 			Set<Entry<String, Class>> es = loaded.entrySet();
 			for (Entry<String, Class> e : es) {
 				String k = e.getKey();
-				byte[] bytes = Trampoline2.trampoline.bytesForClass(Trampoline2.trampoline.getClassLoader(), k);
+				byte[] bytes = Trampoline2.bytesForClass(Trampoline2.trampoline.getClassLoader(), k);
 
 				loader.add(k, bytes);
 			}
@@ -107,7 +108,7 @@ public class ReloadingSupport {
 
 				@Override
 				public int compare(ReloadingDomain arg0, ReloadingDomain arg1) {
-					return arg0.priority < arg1.priority ? -1 : 	1;
+					return (arg0.priority < arg1.priority) ? -1 : 1;
 				}
 			});
 
@@ -155,7 +156,7 @@ public class ReloadingSupport {
 
 				Boolean m = d.matcher.f(name);
 				if (m) {
-					byte[] b = Trampoline2.trampoline.bytesForClass(Trampoline2.trampoline.getClassLoader(), name);
+					byte[] b = Trampoline2.bytesForClass(Trampoline2.trampoline.getClassLoader(), name);
 					map.put(name, b);
 				}
 				return false;

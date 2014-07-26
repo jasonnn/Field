@@ -6,7 +6,7 @@ import field.math.abstraction.iFloatProvider;
 
 public interface iExecutesPromise {
 
-	static public final VisualElementProperty<iExecutesPromise> promiseExecution = new VisualElementProperty<iExecutesPromise>("promiseExecution_");
+	public static final VisualElementProperty<iExecutesPromise> promiseExecution = new VisualElementProperty<iExecutesPromise>("promiseExecution_");
 
 	public abstract void addActive(iFloatProvider timeProvider, Promise p);
 

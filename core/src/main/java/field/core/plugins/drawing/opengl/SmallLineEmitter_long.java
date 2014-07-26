@@ -35,7 +35,8 @@ public abstract class SmallLineEmitter_long {
 
 	}
 
-	abstract public void emitLinearFrame(Vector2 a, Vector2 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context);
+	public abstract
+    void emitLinearFrame(Vector2 a, Vector2 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context);
 
     public static
     void emitCubicFrame(Vector2 a,

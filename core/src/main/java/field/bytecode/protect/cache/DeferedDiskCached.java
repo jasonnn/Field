@@ -25,7 +25,7 @@ import java.util.*;
 
 public final class DeferedDiskCached extends DeferCallingFast {
 
-	static public final String diskCacheRoot = SystemProperties.getDirProperty("deferedDiskCachedRoot", "/var/tmp/expCache/");
+	public static final String diskCacheRoot = SystemProperties.getDirProperty("deferedDiskCachedRoot", "/var/tmp/expCache/");
 
 	private final HashMap<String, Object> parameters;
 
@@ -59,7 +59,7 @@ public final class DeferedDiskCached extends DeferCallingFast {
 			original.setAccessible(true);
 
 			String storageType = (String) parameters.get("storage");
-			if (storageType != null && storageType.equals("strong")) {
+			if ((storageType != null) && "strong".equals(storageType)) {
 				cache = strongCache;
 			}
 		}
@@ -70,7 +70,7 @@ public final class DeferedDiskCached extends DeferCallingFast {
 
 				CacheParameter ann = f.getAnnotation(CacheParameter.class);
 				if (ann != null) {
-					if ((ann.name() == null && parameters.get("name") == null) || ann.name().equals(parameters.get("name"))) {
+					if (((ann.name() == null) && (parameters.get("name") == null)) || ann.name().equals(parameters.get("name"))) {
 						f.setAccessible(true);
 						implicatedFields.add(f);
 					}
@@ -80,7 +80,7 @@ public final class DeferedDiskCached extends DeferCallingFast {
 
 		Object[] na = null;
 
-		if (implicatedFields.size() != 0) {
+		if (!implicatedFields.isEmpty()) {
 			na = new Object[argArray.length + implicatedFields.size()];
 			System.arraycopy(argArray, 0, na, 0, argArray.length);
 			for (int i = 0; i < implicatedFields.size(); i++)
@@ -98,7 +98,7 @@ public final class DeferedDiskCached extends DeferCallingFast {
 		ImmutableArrayWrapper iaw = new ImmutableArrayWrapper(na, false);
 
 		Object object = cache.get(iaw);
-		if (object == null && !cache.containsKey(iaw)) {
+		if ((object == null) && !cache.containsKey(iaw)) {
 
 			// now check the disk cache
 
@@ -115,14 +115,14 @@ public final class DeferedDiskCached extends DeferCallingFast {
 			name = name == null ? "unknown" : name;
 			name += "_" + fromThis.getClass();
 
-			final String filename = diskCacheRoot + name + "/" + string;
+			final String filename = diskCacheRoot + name + '/' + string;
 
 			if (new File(filename).exists()) {
 				Object ty = parameters.get("type");
 				Object loaded = null;
-				if (ty == null || ty.equals("xml")) {
+				if ((ty == null) || "xml".equals(ty)) {
 					try {
-						loaded = new PythonUtils().loadAsXML(filename);
+						loaded = PythonUtils.loadAsXML(filename);
 					} catch (Throwable t) {
                         //System.out.println(" (( non fatal error while attempting to load (xml) cache from <" + filename + "> is ))");
                         t.printStackTrace();
@@ -149,7 +149,7 @@ public final class DeferedDiskCached extends DeferCallingFast {
 			if (object != null) {
 				new File(diskCacheRoot + name).mkdirs();
 				Object ty = parameters.get("type");
-				if (ty == null || ty.equals("xml")) {
+				if ((ty == null) || "xml".equals(ty)) {
 					try {
 						new PythonUtils().persistAsXML(object, filename);
 					} catch (Throwable t) {

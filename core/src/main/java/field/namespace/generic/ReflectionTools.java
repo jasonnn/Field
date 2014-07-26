@@ -13,7 +13,8 @@ import java.util.*;
 public class ReflectionTools {
 
 	// this pair needs "protection"
-	static public class Pair<A, B> implements Serializable {
+    public static
+    class Pair<A, B> implements Serializable {
 		public A left;
 
 		public B right;
@@ -46,14 +47,14 @@ public class ReflectionTools {
 		}
 	}
 
-	static public Comparator methodComparator = new Comparator() {
+	public static Comparator methodComparator = new Comparator() {
 
 		public int compare(Object arg0, Object arg1) {
 			return ((Method) arg0).getName().compareTo(((Method) arg1).getName());
 		}
 	};
 
-	static public Comparator fieldComparator = new Comparator() {
+	public static Comparator fieldComparator = new Comparator() {
 
 		public int compare(Object arg0, Object arg1) {
 			return ((Field) arg0).getName().compareTo(((Field) arg1).getName());
@@ -66,8 +67,9 @@ public class ReflectionTools {
 
 	static HashMap constructorsCache = new HashMap();
 
-	static public void apply(Collection list, Method m) throws IllegalArgumentException {
-		Object[] zero = new Object[] {};
+	public static
+    void apply(Collection list, Method m) throws IllegalArgumentException {
+		Object[] zero = {};
 		for (Object o : list) {
 			try {
 				// needed
@@ -90,7 +92,7 @@ public class ReflectionTools {
 	}
 
 	static public void apply(Collection list, Method m, Object parameter) throws IllegalArgumentException {
-		Object[] zero = new Object[] { parameter };
+		Object[] zero = { parameter };
 		for (Object o : new ArrayList(list)) {
 			try {
 				if (o instanceof WeakReference)
@@ -128,7 +130,7 @@ public class ReflectionTools {
 	}
 
 	static public void apply(Collection list, Method m, Object parameter, Object parameter2) throws IllegalArgumentException {
-		Object[] zero = new Object[] { parameter, parameter2 };
+		Object[] zero = { parameter, parameter2 };
 		for (Object o : list) {
 			try {
 				if (o != null)
@@ -276,18 +278,18 @@ public class ReflectionTools {
 					} else if (value.getClass().isArray()) {
 						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= [(" + Array.getLength(value) + ")\n";
 						for (int j = 0; j < Array.getLength(value); j++)
-							total += debugToString(indent + " ", Array.get(value, j));
+							total += debugToString(indent + ' ', Array.get(value, j));
 						total += indent + "]\n";
 					} else if (value.getClass().isPrimitive()) {
-						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + "\n";
+						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + '\n';
 					} else if (value instanceof Number) {
-						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + "\n";
+						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + '\n';
 					} else if (value instanceof Boolean) {
-						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + "\n";
+						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + '\n';
 					} else if (value instanceof String) {
-						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + "\n";
+						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + '\n';
 					} else {
-						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= [(" + value.getClass() + ") \n" + debugToString(indent + " ", value) + "\n";
+						total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= [(" + value.getClass() + ") \n" + debugToString(indent + ' ', value) + '\n';
 					}
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
@@ -319,7 +321,7 @@ public class ReflectionTools {
 
 			Method [] m= ofc.getDeclaredMethods();
 			for(int i=0;i<m.length;i++)
-				total += indent + m[i]+"\n";
+				total += indent + m[i]+ '\n';
 			
 			Field[] fields = ofc.getDeclaredFields();
 			for (int i = 0; i < fields.length; i++) {
@@ -336,15 +338,15 @@ public class ReflectionTools {
 								total += " " + Array.get(value, j);
 							total += indent + "]\n";
 						} else if (value.getClass().isPrimitive()) {
-							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + "\n";
+							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + '\n';
 						} else if (value instanceof Number) {
-							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + "\n";
+							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + '\n';
 						} else if (value instanceof Boolean) {
-							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + "\n";
+							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + '\n';
 						} else if (value instanceof String) {
-							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + "\n";
+							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= " + value + '\n';
 						} else {
-							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= [(" + value.getClass() + ") \n" + (value) + "\n";
+							total += indent + ANSIColorUtils.yellow(fields[i].getName()) + "= [(" + value.getClass() + ") \n" + (value) + '\n';
 						}
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
@@ -755,9 +757,9 @@ public class ReflectionTools {
 				}
 			}
 		}
-		assert found : "not found " + o + " " + string + " " + to + " " + o.getClass();
+		assert found : "not found " + o + ' ' + string + ' ' + to + ' ' + o.getClass();
 		if (!found) {
-			System.err.println(" not found " + o + " " + string + " " + to + " " + o.getClass());
+			System.err.println(" not found " + o + ' ' + string + ' ' + to + ' ' + o.getClass());
 			new Exception().printStackTrace();
 		}
 		return to;

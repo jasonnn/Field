@@ -60,7 +60,8 @@ public abstract class DeferCallingFast extends FieldASMGeneratorAdapter implemen
 
     }
 
-    abstract public Object handle(int fromName, Object fromThis, String originalMethodName, Object[] argArray);
+    public abstract
+    Object handle(int fromName, Object fromThis, String originalMethodName, Object[] argArray);
 
     @Override
     public void visitCode() {

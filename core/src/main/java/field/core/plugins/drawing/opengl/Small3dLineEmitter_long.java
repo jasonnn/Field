@@ -42,7 +42,8 @@ public abstract class Small3dLineEmitter_long {
 	}
 
 	
-	abstract public void emitLinearFrame(Vector3 a, Vector3 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context);
+	public abstract
+    void emitLinearFrame(Vector3 a, Vector3 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context);
 
 	public void emitCubicFrame(Vector3 a, Vector3 c1, Vector3 c2, Vector3 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context) {
 		throw new IllegalArgumentException();

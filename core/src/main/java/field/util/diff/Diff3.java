@@ -64,14 +64,14 @@ public class Diff3 {
 		iMarkerIterator<ChannelDifferences<Character>.EditRelationship> i1 = rel1.getIterator();
 		iMarkerIterator<ChannelDifferences<Character>.EditRelationship> i2 = rel2.getIterator();
 
-		StringBuffer output = new StringBuffer();
+		StringBuilder output = new StringBuilder();
 
 		while (i1.hasNext() || i2.hasNext()) {
 			iMarker<ChannelDifferences<Character>.EditRelationship> n1 = i1.hasNext() ? i1.next() : null;
 			iMarker<ChannelDifferences<Character>.EditRelationship> n2 = i2.hasNext() ? i2.next() : null;
 
-			if (n1 == null || n1.getPayload().type == EditType.equivalence) {
-				if (n2 == null || n2.getPayload().type == EditType.equivalence) {
+			if ((n1 == null) || (n1.getPayload().type == EditType.equivalence)) {
+				if ((n2 == null) || (n2.getPayload().type == EditType.equivalence)) {
 					if (n1 != null) {
 						output.append(n1.getPayload().left.get(0).getPayload());
 						if (n2 != null) {
@@ -93,7 +93,8 @@ public class Diff3 {
 					// assert q.getPayload().type == EditType.equivalence : q;
 					// }
 					if (n1 != null) {
-						while (i2.hasNext() && n2 != null && n2.getTime() + n2.getDuration() <= n1.getTime() + n1.getDuration())
+						while (i2.hasNext() && (n2 != null) && ((n2.getTime() + n2.getDuration()) <= (n1.getTime()
+                                                                                                      + n1.getDuration())))
 							n2 = i2.hasNext() ? i2.next() : null;
 						i2.previous();
 					}
@@ -106,7 +107,8 @@ public class Diff3 {
 				i2.previous();
 			} else if (n1.getPayload().type == EditType.deletion) {
 				// don't have to copySource anything
-				while (i2.hasNext() && n2 != null && n2.getTime() + n2.getDuration() <= n1.getTime() + n1.getDuration())
+				while (i2.hasNext() && (n2 != null) && ((n2.getTime() + n2.getDuration()) <= (n1.getTime()
+                                                                                              + n1.getDuration())))
 					n2 = i2.hasNext() ? i2.next() : null;
 				i2.previous();
 				// for (int i = 0; i < n1.getPayload().left.size();) {

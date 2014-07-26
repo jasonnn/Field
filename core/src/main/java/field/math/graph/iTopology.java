@@ -16,10 +16,10 @@ public interface iTopology<T> {
 	 */
 	public interface iMutableTopology<T> extends iTopology<T>
 	{
-        static public Method method_begin = ReflectionTools.methodOf("begin", iMutableTopology.class);
-        static public Method method_end = ReflectionTools.methodOf("end", iMutableTopology.class);
-        static public Method method_addChild = ReflectionTools.methodOf("addChild", iMutableTopology.class, Object.class, Object.class);
-        static public Method method_removeChild = ReflectionTools.methodOf("removeChild", iMutableTopology.class, Object.class, Object.class);
+        public static Method method_begin = ReflectionTools.methodOf("begin", iMutableTopology.class);
+        public static Method method_end = ReflectionTools.methodOf("end", iMutableTopology.class);
+        public static Method method_addChild = ReflectionTools.methodOf("addChild", iMutableTopology.class, Object.class, Object.class);
+        public static Method method_removeChild = ReflectionTools.methodOf("removeChild", iMutableTopology.class, Object.class, Object.class);
 
         public void begin();
 

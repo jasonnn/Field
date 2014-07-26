@@ -24,16 +24,16 @@ import java.util.regex.Pattern;
 
 @Woven
 public class FindAndReplace extends Composite {
-	private Text text;
-	private Text text_1;
-	private MenuItem mntmThisBoxOnly;
-	private MenuItem mntmThisPropertyOnly;
-	private MenuItem mntmUseRegularExpressions;
+	private final Text text;
+	private final Text text_1;
+	private final MenuItem mntmThisBoxOnly;
+	private final MenuItem mntmThisPropertyOnly;
+	private final MenuItem mntmUseRegularExpressions;
 	private FindAll found;
-	private Label lblNewLabel_1;
-	private Button btnFindNext;
-	private Button btnReplaceFind;
-	private Button btnReplaceAll;
+	private final Label lblNewLabel_1;
+	private final Button btnFindNext;
+	private final Button btnReplaceFind;
+	private final Button btnReplaceAll;
 	private Found current;
 
 	/**
@@ -209,7 +209,7 @@ public class FindAndReplace extends Composite {
 		boolean boxOnly;
 		boolean propertyOnly;
 		boolean regex;
-		private Pattern r;
+		private final Pattern r;
 
 		public FindAll(String text, boolean boxOnly, boolean propertyOnly, boolean regex) {
 			super();
@@ -278,7 +278,7 @@ public class FindAndReplace extends Composite {
 	@NextUpdate(delay=3)
 	protected void replaceAll(String find, String with, boolean boxOnly, boolean propertyOnly, boolean regex) {
 		
-		System.out.println(" replace all <"+found.found.size()+">");
+		System.out.println(" replace all <"+found.found.size()+ '>');
 		
 		if (found.found.size()>0 || current!=null)
 		{

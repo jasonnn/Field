@@ -31,7 +31,16 @@ public class FreezeProperties {
 			Map<Object, Object> properties = ele.payload();
 			Set<Entry<Object, Object>> es = properties.entrySet();
 			for (Entry<Object, Object> e : es) {
-				if (e.getKey() instanceof VisualElementProperty && ( ((VisualElementProperty)e.getKey()).isFreezable()) || (include!=null && include.contains(((VisualElementProperty) e.getKey()).getName()))) if (include == null || include.contains(((VisualElementProperty) e.getKey()).getName())) if (exclude == null || !exclude.contains(((VisualElementProperty) e.getValue()).getName())) {
+				if (((e.getKey() instanceof VisualElementProperty)
+                     && (((VisualElementProperty) e.getKey()).isFreezable())) || ((include != null)
+                                                                                  && include.contains(((VisualElementProperty) e.getKey())
+                                                                                                              .getName()))) if ((include
+                                                                                                                                 == null)
+                                                                                                                                || include.contains(((VisualElementProperty) e.getKey())
+                                                                                                                                                            .getName())) if ((exclude
+                                                                                                                                                                              == null)
+                                                                                                                                                                             || !exclude.contains(((VisualElementProperty) e.getValue())
+                                                                                                                                                                                                          .getName())) {
 					cloneInto(frozen, (VisualElementProperty) e.getKey(), e.getValue(), !optimistic);
 				}
 			}
@@ -59,7 +68,8 @@ public class FreezeProperties {
 		public Object clone(Object o);
 	}
 
-	static public void standardCloneHelpers(final FreezeProperties f) {
+	public static
+    void standardCloneHelpers(final FreezeProperties f) {
 		f.helpers.add(new iCloneHelper(){
 			public boolean canClone(Object name, Class o) {
 				return String.class.isAssignableFrom(o);

@@ -11,8 +11,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 public class iComponent_m {
-static public final Method isHit_m = ReflectionTools.methodOf("isHit", field.core.windowing.components.iComponent.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorMethod<field.core.windowing.components.iComponent, Float, org.eclipse.swt.widgets.Event> isHit_s = new Mirroring.MirrorMethod<field.core.windowing.components.iComponent, Float, org.eclipse.swt.widgets.Event>(field.core.windowing.components.iComponent.class, "isHit", new Class[]{org.eclipse.swt.widgets.Event.class});
+public static final Method isHit_m = ReflectionTools.methodOf("isHit", field.core.windowing.components.iComponent.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorMethod<field.core.windowing.components.iComponent, Float, org.eclipse.swt.widgets.Event> isHit_s = new Mirroring.MirrorMethod<field.core.windowing.components.iComponent, Float, org.eclipse.swt.widgets.Event>(field.core.windowing.components.iComponent.class, "isHit", new Class[]{org.eclipse.swt.widgets.Event.class});
 
 public interface isHit_interface extends iAcceptor<org.eclipse.swt.widgets.Event>, iFunction<Float ,org.eclipse.swt.widgets.Event >
 	{
@@ -23,8 +23,8 @@ public iProvider<Float> bind(final org.eclipse.swt.widgets.Event p0);
 
 public final isHit_interface isHit;
 
-static public final Method hit_m = ReflectionTools.methodOf("hit", field.core.windowing.components.iComponent.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, org.eclipse.swt.widgets.Event> hit_s = new Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, org.eclipse.swt.widgets.Event>(field.core.windowing.components.iComponent.class, "hit", new Class[]{org.eclipse.swt.widgets.Event.class});
+public static final Method hit_m = ReflectionTools.methodOf("hit", field.core.windowing.components.iComponent.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, org.eclipse.swt.widgets.Event> hit_s = new Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, org.eclipse.swt.widgets.Event>(field.core.windowing.components.iComponent.class, "hit", new Class[]{org.eclipse.swt.widgets.Event.class});
 
 public interface hit_interface extends iAcceptor<org.eclipse.swt.widgets.Event>, iFunction<field.core.windowing.components.iComponent ,org.eclipse.swt.widgets.Event >
 	{
@@ -35,12 +35,12 @@ public iProvider<field.core.windowing.components.iComponent> bind(final org.ecli
 
 public final hit_interface hit;
 
-static public final Method getBounds_m = ReflectionTools.methodOf("getBounds", field.core.windowing.components.iComponent.class);
-static public final Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect> getBounds_s = new Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect>(field.core.windowing.components.iComponent.class, "getBounds");
+public static final Method getBounds_m = ReflectionTools.methodOf("getBounds", field.core.windowing.components.iComponent.class);
+public static final Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect> getBounds_s = new Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect>(field.core.windowing.components.iComponent.class, "getBounds");
 
 public final Mirroring.iBoundNoArgsMethod<field.core.dispatch.iVisualElement.Rect> getBounds;
-static public final Method setBounds_m = ReflectionTools.methodOf("setBounds", field.core.windowing.components.iComponent.class, field.core.dispatch.iVisualElement.Rect.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect> setBounds_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect>(field.core.windowing.components.iComponent.class, "setBounds", new Class[]{field.core.dispatch.iVisualElement.Rect.class});
+public static final Method setBounds_m = ReflectionTools.methodOf("setBounds", field.core.windowing.components.iComponent.class, field.core.dispatch.iVisualElement.Rect.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect> setBounds_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect>(field.core.windowing.components.iComponent.class, "setBounds", new Class[]{field.core.dispatch.iVisualElement.Rect.class});
 
 public interface setBounds_interface extends iAcceptor<field.core.dispatch.iVisualElement.Rect>, iFunction<Object ,field.core.dispatch.iVisualElement.Rect >
 	{
@@ -49,8 +49,8 @@ public interface setBounds_interface extends iAcceptor<field.core.dispatch.iVisu
 
 public final setBounds_interface setBounds;
 
-static public final Method keyTyped_m = ReflectionTools.methodOf("keyTyped", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> keyTyped_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "keyTyped", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method keyTyped_m = ReflectionTools.methodOf("keyTyped", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> keyTyped_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "keyTyped", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface keyTyped_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -59,8 +59,8 @@ public interface keyTyped_interface extends iAcceptor<Object[]>, iFunction<Objec
 
 public final keyTyped_interface keyTyped;
 
-static public final Method keyPressed_m = ReflectionTools.methodOf("keyPressed", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> keyPressed_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "keyPressed", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method keyPressed_m = ReflectionTools.methodOf("keyPressed", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> keyPressed_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "keyPressed", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface keyPressed_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -69,8 +69,8 @@ public interface keyPressed_interface extends iAcceptor<Object[]>, iFunction<Obj
 
 public final keyPressed_interface keyPressed;
 
-static public final Method keyReleased_m = ReflectionTools.methodOf("keyReleased", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> keyReleased_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "keyReleased", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method keyReleased_m = ReflectionTools.methodOf("keyReleased", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> keyReleased_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "keyReleased", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface keyReleased_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -79,8 +79,8 @@ public interface keyReleased_interface extends iAcceptor<Object[]>, iFunction<Ob
 
 public final keyReleased_interface keyReleased;
 
-static public final Method mouseClicked_m = ReflectionTools.methodOf("mouseClicked", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseClicked_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseClicked", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method mouseClicked_m = ReflectionTools.methodOf("mouseClicked", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseClicked_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseClicked", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface mouseClicked_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -89,8 +89,8 @@ public interface mouseClicked_interface extends iAcceptor<Object[]>, iFunction<O
 
 public final mouseClicked_interface mouseClicked;
 
-static public final Method mousePressed_m = ReflectionTools.methodOf("mousePressed", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mousePressed_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mousePressed", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method mousePressed_m = ReflectionTools.methodOf("mousePressed", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mousePressed_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mousePressed", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface mousePressed_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -99,8 +99,8 @@ public interface mousePressed_interface extends iAcceptor<Object[]>, iFunction<O
 
 public final mousePressed_interface mousePressed;
 
-static public final Method mouseReleased_m = ReflectionTools.methodOf("mouseReleased", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseReleased_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseReleased", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method mouseReleased_m = ReflectionTools.methodOf("mouseReleased", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseReleased_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseReleased", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface mouseReleased_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -109,8 +109,8 @@ public interface mouseReleased_interface extends iAcceptor<Object[]>, iFunction<
 
 public final mouseReleased_interface mouseReleased;
 
-static public final Method mouseEntered_m = ReflectionTools.methodOf("mouseEntered", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseEntered_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseEntered", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method mouseEntered_m = ReflectionTools.methodOf("mouseEntered", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseEntered_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseEntered", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface mouseEntered_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -119,8 +119,8 @@ public interface mouseEntered_interface extends iAcceptor<Object[]>, iFunction<O
 
 public final mouseEntered_interface mouseEntered;
 
-static public final Method mouseExited_m = ReflectionTools.methodOf("mouseExited", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseExited_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseExited", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method mouseExited_m = ReflectionTools.methodOf("mouseExited", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseExited_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseExited", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface mouseExited_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -129,8 +129,8 @@ public interface mouseExited_interface extends iAcceptor<Object[]>, iFunction<Ob
 
 public final mouseExited_interface mouseExited;
 
-static public final Method mouseDragged_m = ReflectionTools.methodOf("mouseDragged", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseDragged_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseDragged", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method mouseDragged_m = ReflectionTools.methodOf("mouseDragged", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseDragged_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseDragged", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface mouseDragged_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -139,8 +139,8 @@ public interface mouseDragged_interface extends iAcceptor<Object[]>, iFunction<O
 
 public final mouseDragged_interface mouseDragged;
 
-static public final Method mouseMoved_m = ReflectionTools.methodOf("mouseMoved", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseMoved_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseMoved", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
+public static final Method mouseMoved_m = ReflectionTools.methodOf("mouseMoved", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> mouseMoved_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "mouseMoved", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class});
 
 public interface mouseMoved_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -149,8 +149,8 @@ public interface mouseMoved_interface extends iAcceptor<Object[]>, iFunction<Obj
 
 public final mouseMoved_interface mouseMoved;
 
-static public final Method beginMouseFocus_m = ReflectionTools.methodOf("beginMouseFocus", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer> beginMouseFocus_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer>(field.core.windowing.components.iComponent.class, "beginMouseFocus", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class});
+public static final Method beginMouseFocus_m = ReflectionTools.methodOf("beginMouseFocus", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer> beginMouseFocus_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer>(field.core.windowing.components.iComponent.class, "beginMouseFocus", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class});
 
 public interface beginMouseFocus_interface extends iAcceptor<field.core.windowing.GLComponentWindow.ComponentContainer>, iFunction<Object ,field.core.windowing.GLComponentWindow.ComponentContainer >
 	{
@@ -159,8 +159,8 @@ public interface beginMouseFocus_interface extends iAcceptor<field.core.windowin
 
 public final beginMouseFocus_interface beginMouseFocus;
 
-static public final Method endMouseFocus_m = ReflectionTools.methodOf("endMouseFocus", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer> endMouseFocus_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer>(field.core.windowing.components.iComponent.class, "endMouseFocus", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class});
+public static final Method endMouseFocus_m = ReflectionTools.methodOf("endMouseFocus", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer> endMouseFocus_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer>(field.core.windowing.components.iComponent.class, "endMouseFocus", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class});
 
 public interface endMouseFocus_interface extends iAcceptor<field.core.windowing.GLComponentWindow.ComponentContainer>, iFunction<Object ,field.core.windowing.GLComponentWindow.ComponentContainer >
 	{
@@ -169,8 +169,8 @@ public interface endMouseFocus_interface extends iAcceptor<field.core.windowing.
 
 public final endMouseFocus_interface endMouseFocus;
 
-static public final Method paint_m = ReflectionTools.methodOf("paint", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, field.math.linalg.iCoordinateFrame.class, boolean.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> paint_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "paint", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, field.math.linalg.iCoordinateFrame.class, boolean.class});
+public static final Method paint_m = ReflectionTools.methodOf("paint", field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, field.math.linalg.iCoordinateFrame.class, boolean.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> paint_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "paint", new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class, field.math.linalg.iCoordinateFrame.class, boolean.class});
 
 public interface paint_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -179,8 +179,8 @@ public interface paint_interface extends iAcceptor<Object[]>, iFunction<Object ,
 
 public final paint_interface paint;
 
-static public final Method handleResize_m = ReflectionTools.methodOf("handleResize", field.core.windowing.components.iComponent.class, java.util.Set.class, float.class, float.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> handleResize_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "handleResize", new Class[]{java.util.Set.class, float.class, float.class});
+public static final Method handleResize_m = ReflectionTools.methodOf("handleResize", field.core.windowing.components.iComponent.class, java.util.Set.class, float.class, float.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> handleResize_s = new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class, "handleResize", new Class[]{java.util.Set.class, float.class, float.class});
 
 public interface handleResize_interface extends iAcceptor<Object[]>, iFunction<Object ,Object[] >
 	{
@@ -189,8 +189,8 @@ public interface handleResize_interface extends iAcceptor<Object[]>, iFunction<O
 
 public final handleResize_interface handleResize;
 
-static public final Method getVisualElement_m = ReflectionTools.methodOf("getVisualElement", field.core.windowing.components.iComponent.class);
-static public final Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement> getVisualElement_s = new Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement>(field.core.windowing.components.iComponent.class, "getVisualElement");
+public static final Method getVisualElement_m = ReflectionTools.methodOf("getVisualElement", field.core.windowing.components.iComponent.class);
+public static final Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement> getVisualElement_s = new Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement>(field.core.windowing.components.iComponent.class, "getVisualElement");
 
 public interface getVisualElement_interface extends field.core.dispatch.iVisualElement, Mirroring.iBoundNoArgsMethod<field.core.dispatch.iVisualElement>	{
 		public field.core.dispatch.iVisualElement getVisualElement( );
@@ -198,8 +198,8 @@ public interface getVisualElement_interface extends field.core.dispatch.iVisualE
 
 public final getVisualElement_interface getVisualElement;
 
-static public final Method setVisualElement_m = ReflectionTools.methodOf("setVisualElement", field.core.windowing.components.iComponent.class, field.core.dispatch.iVisualElement.class);
-static public final Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement> setVisualElement_s = new Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement>(field.core.windowing.components.iComponent.class, "setVisualElement", new Class[]{field.core.dispatch.iVisualElement.class});
+public static final Method setVisualElement_m = ReflectionTools.methodOf("setVisualElement", field.core.windowing.components.iComponent.class, field.core.dispatch.iVisualElement.class);
+public static final Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement> setVisualElement_s = new Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement>(field.core.windowing.components.iComponent.class, "setVisualElement", new Class[]{field.core.dispatch.iVisualElement.class});
 
 public interface setVisualElement_interface extends iAcceptor<field.core.dispatch.iVisualElement>, iFunction<field.core.windowing.components.iComponent ,field.core.dispatch.iVisualElement >
 	{
@@ -813,7 +813,7 @@ getBounds = getBounds_s.bind(x);
 		getVisualElement = (getVisualElement_interface) Proxy.newProxyInstance(x.getClass().getClassLoader(), new Class[] { getVisualElement_interface.class}, new InvocationHandler(){
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-				if (method.getName().equals("get") && args.length == 0) return bound.get();
+				if ("get".equals(method.getName()) && (args.length == 0)) return bound.get();
 
 				return method.invoke(bound.get(), args);
 			}

@@ -48,7 +48,7 @@ public class FluidStreamParser {
         this.file = file;
         this.loadProperties = loadProperties;
 
-        System.err.println(" reading <" + file + ">");
+        System.err.println(" reading <" + file + '>');
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(false);
         try {
@@ -66,10 +66,10 @@ public class FluidStreamParser {
 
             //System.out.println(" about to prse <" + file + ">");
 
-            StringBuffer ddoc = new StringBuffer(1024 * 1024);
+            StringBuilder ddoc = new StringBuilder(1024 * 1024);
             BufferedReader r = new BufferedReader(new FileReader(file));
             while (r.ready()) {
-                ddoc.append(r.readLine() + "\n");
+                ddoc.append(r.readLine()).append('\n');
             }
 
             String doc = ddoc.toString().replace((char) 0x0b, ' ');
@@ -119,10 +119,10 @@ public class FluidStreamParser {
     private void parseElements(Node node) {
 
         if (debug)
-            System.out.println(" inside parse elements for <" + file + ">");
+            System.out.println(" inside parse elements for <" + file + '>');
 
 //		System.out.println(node.getNodeName());
-        if (node.getNodeName().equals("field.core.dispatch.VisualElement")) {
+        if ("field.core.dispatch.VisualElement".equals(node.getNodeName())) {
             System.out.println(" looking at visual element ");
             NodeList nl = node.getChildNodes();
 
@@ -133,13 +133,13 @@ public class FluidStreamParser {
 
                 ii = resolve(ii);
 
-                if (ii.getNodeName().equals("uid")) {
+                if ("uid".equals(ii.getNodeName())) {
                     uid = ii.getTextContent().trim();
 
-                    System.out.println(" got <" + uid + ">");
+                    System.out.println(" got <" + uid + '>');
 
                 }
-                if (ii.getNodeName().equals("properties")) {
+                if ("properties".equals(ii.getNodeName())) {
                     HashMap<String, Object> props = parseProperties(ii);
                     //System.out.println(" parsed props, got <" + props + ">");
 
@@ -149,7 +149,7 @@ public class FluidStreamParser {
                         System.out.println(" we now have <" + properties.keySet() + "> for UID :" + uid);
                         Set<Entry<String, HashMap<String, Object>>> es = properties.entrySet();
                         for (Entry<String, HashMap<String, Object>> e : es) {
-                            System.out.println("       " + e.getKey() + " " + e.getValue().get("name"));
+                            System.out.println("       " + e.getKey() + ' ' + e.getValue().get("name"));
                         }
                     }
                 }
@@ -172,7 +172,7 @@ public class FluidStreamParser {
 
 
         Node n = nodeMap.get(ii.getNodeName() + "::" + t);
-        System.out.println(" looking up reference <" + t + "> to find <" + n + ">");
+        System.out.println(" looking up reference <" + t + "> to find <" + n + '>');
         if (n == null)
             return ii;
         return n;
@@ -187,9 +187,9 @@ public class FluidStreamParser {
 
             ii = resolve(ii);
 
-            System.out.println(" entry, name <" + ii.getNodeName() + ">");
+            System.out.println(" entry, name <" + ii.getNodeName() + '>');
 
-            if (ii.getNodeName().equals("field.core.dispatch.iVisualElement_-VisualElementProperty")) {
+            if ("field.core.dispatch.iVisualElement_-VisualElementProperty".equals(ii.getNodeName())) {
 
                 NodeList childNodes = ii.getChildNodes();
                 for (int j = 0; j < childNodes.getLength(); j++) {
@@ -197,17 +197,17 @@ public class FluidStreamParser {
                     Node cn = childNodes.item(j);
                     cn = resolve(cn);
 
-                    System.out.println(" property <" + cn.getNodeName() + ">");
-                    if (cn.getNodeName().equals("name")) {
+                    System.out.println(" property <" + cn.getNodeName() + '>');
+                    if ("name".equals(cn.getNodeName())) {
                         name = cn.getTextContent();
-                        System.out.println(" name is <" + name + ">");
+                        System.out.println(" name is <" + name + '>');
                     }
                 }
-            } else if (ii.getNodeName().equals("string")) {
+            } else if ("string".equals(ii.getNodeName())) {
                 value = ii.getTextContent().trim();
-            } else if (ii.getNodeName().equals("float")) {
+            } else if ("float".equals(ii.getNodeName())) {
                 value = Float.parseFloat(ii.getTextContent().trim());
-            } else if (ii.getNodeName().equals("double")) {
+            } else if ("double".equals(ii.getNodeName())) {
                 value = Double.parseDouble(ii.getTextContent().trim());
             } else {
 
@@ -216,7 +216,7 @@ public class FluidStreamParser {
                 if (loadProperties) {
                     try {
                         String xml = nodeToString(ii);
-                        if (xml.trim().length() == 0)
+                        if (xml.trim().isEmpty())
                             continue;
                         if (xml.contains("reference="))
                             continue;
@@ -277,7 +277,7 @@ public class FluidStreamParser {
         NodeList nl = node.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node ii = nl.item(i);
-            if (ii.getNodeName().equals("entry")) {
+            if ("entry".equals(ii.getNodeName())) {
                 Pair<String, Object> a = parseEntry(ii);
                 if (a != null)
                     ret.put(a.left, a.right);

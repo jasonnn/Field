@@ -51,35 +51,35 @@ public class HungarianConvience2 {
 
 	public void computeDistanceMatrix() {
 		// this should be accelerated!
-		for (int x = 0; x < sourceLength + sources; x++) {
+		for (int x = 0; x < (sourceLength + sources); x++) {
 
 			float x1 = 0;
 			float y1 = 0;
 			float z1 = 0;
 			if (x < sourceLength) {
-				x1 = sourceBuffer.get(x * 4 + 0);
-				y1 = sourceBuffer.get(x * 4 + 1);
-				z1 = sourceBuffer.get(x * 4 + 2);
+				x1 = sourceBuffer.get((x * 4) + 0);
+				y1 = sourceBuffer.get((x * 4) + 1);
+				z1 = sourceBuffer.get((x * 4) + 2);
 			}
-			for (int y = 0; y < targetLength + sinks; y++) {
+			for (int y = 0; y < (targetLength + sinks); y++) {
 
 				float x2 = 0, y2 = 0, z2 = 0;
 				if (y < targetLength) {
-					x2 = targetBuffer.get(y * 4 + 0);
-					y2 = targetBuffer.get(y * 4 + 1);
-					z2 = targetBuffer.get(y * 4 + 2);
+					x2 = targetBuffer.get((y * 4) + 0);
+					y2 = targetBuffer.get((y * 4) + 1);
+					z2 = targetBuffer.get((y * 4) + 2);
 				}
 
-				if (x < sourceLength && y < targetLength) {
-					float d = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2);
+				if ((x < sourceLength) && (y < targetLength)) {
+					float d = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
 					d = (float) Math.sqrt(d);
-					distanceMatrix.put(y * (sourceLength + sources) + x, d);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, d);
 				} else if (x < sourceLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, distanceToSource);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, distanceToSource);
 				} else if (y < targetLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, distanceToSink);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, distanceToSink);
 				} else {
-					distanceMatrix.put(y * (sourceLength + sources) + x, sourceDistanceToSink);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, sourceDistanceToSink);
 				}
 			}
 		}
@@ -99,7 +99,7 @@ public class HungarianConvience2 {
 	}
 
 	public float getDistance(int source, int target) {
-		return distanceMatrix.get(target * (sourceLength + sources) + source);
+		return distanceMatrix.get((target * (sourceLength + sources)) + source);
 	}
 
 	public int mapTargetToSource(int targetElement) {
@@ -108,7 +108,7 @@ public class HungarianConvience2 {
 
 		// assert r<sourceLength : r+" "+sourceLength;
 
-		if (r >= sourceLength + sinks) return -1;
+		if (r >= (sourceLength + sinks)) return -1;
 		return r;
 	}
 
@@ -127,7 +127,7 @@ public class HungarianConvience2 {
 		for (int i = 0; i < targetLength; i++) {
 			int to = mapTargetToSource(i);
 			if (to != -1) {
-				distance[c++] = distanceMatrix.get(i * (sourceLength + sources) + to);
+				distance[c++] = distanceMatrix.get((i * (sourceLength + sources)) + to);
 			}
 
 		}
@@ -135,10 +135,10 @@ public class HungarianConvience2 {
 		if (targetLength2 == 1) return distance[0];
 
 		Arrays.sort(distance);
-		if (distance.length % 2 == 1)
+		if ((distance.length % 2) == 1)
 			return distance[distance.length / 2];
 		else
-			return (distance[distance.length / 2] + distance[distance.length / 2 + 1]) / 2;
+			return (distance[distance.length / 2] + distance[((distance.length / 2) + 1)]) / 2;
 	}
 
 	public String printDetailedMatchResults() {
@@ -149,14 +149,16 @@ public class HungarianConvience2 {
 
 		for (int i = 0; i < targetLength; i++) {
 			int to = mapTargetToSource(i);
-			r += ("  map <" + i + (i >= targetLength ? "(sink)" : "") + "> -> <" + to + (to >= sourceLength ? "(source)" : "") + ">");
+			r += ("  map <" + i + ((i >= targetLength) ? "(sink)" : "") + "> -> <" + to + ((to >= sourceLength)
+                                                                                           ? "(source)"
+                                                                                           : "") + '>');
 			if (to != -1)
-				r += (" d = <" + distanceMatrix.get(i * (sourceLength + sources) + to) + ">\n");
+				r += (" d = <" + distanceMatrix.get((i * (sourceLength + sources)) + to) + ">\n");
 			else
 				r += "\n";
 			if (to != -1) {
-				total += distanceMatrix.get(i * (sourceLength + sources) + to);
-				distance[i] = distanceMatrix.get(i * (sourceLength + sources) + to);
+				total += distanceMatrix.get((i * (sourceLength + sources)) + to);
+				distance[i] = distanceMatrix.get((i * (sourceLength + sources)) + to);
 			}
 		}
 
@@ -168,7 +170,7 @@ public class HungarianConvience2 {
               + "> max <"
               + distance[distance.length - 1]
               + "> max2 <"
-              + (distance.length > 2 ? String.valueOf(distance[distance.length - 2]) : "n/a")
+              + ((distance.length > 2) ? String.valueOf(distance[distance.length - 2]) : "n/a")
               + ">\n");
 
 		r += ("  distance <" + totalAssignmentDistanceSinkless() + " sinkless or " + totalAssignmentDistance() + " including sinks>");
@@ -176,33 +178,33 @@ public class HungarianConvience2 {
 	}
 
 	public void setDefaultDistances(float d) {
-		for (int x = 0; x < sourceLength + sources; x++) {
-			for (int y = 0; y < targetLength + sinks; y++) {
-				if (x < sourceLength && y < targetLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, d);
+		for (int x = 0; x < (sourceLength + sources); x++) {
+			for (int y = 0; y < (targetLength + sinks); y++) {
+				if ((x < sourceLength) && (y < targetLength)) {
+					distanceMatrix.put((y * (sourceLength + sources)) + x, d);
 				}
 				if (x < sourceLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, distanceToSource);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, distanceToSource);
 				} else if (y < targetLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, distanceToSink);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, distanceToSink);
 				} else {
-					distanceMatrix.put(y * (sourceLength + sources) + x, sourceDistanceToSink);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, sourceDistanceToSink);
 				}
 			}
 		}
 	}
 
 	public void setDistance(int source, int target, float d) {
-		distanceMatrix.put(target * (sourceLength + sources) + source, d);
+		distanceMatrix.put((target * (sourceLength + sources)) + source, d);
 	}
 
 	public void setSource(int num, Vector3 to) {
 		assert num < sourceLength : num + " " + sourceLength;
-		assert num * 4 + 3 < sourceBuffer.capacity() : num + " " + sourceBuffer.capacity();
+		assert ((num * 4) + 3) < sourceBuffer.capacity() : num + " " + sourceBuffer.capacity();
 		sourceBuffer.put(num * 4, to.x);
-		sourceBuffer.put(num * 4 + 1, to.y);
-		sourceBuffer.put(num * 4 + 2, to.z);
-		sourceBuffer.put(num * 4 + 3, 0);
+		sourceBuffer.put((num * 4) + 1, to.y);
+		sourceBuffer.put((num * 4) + 2, to.z);
+		sourceBuffer.put((num * 4) + 3, 0);
 	}
 
 	public void setSourceLength(int sourceLength) {
@@ -219,12 +221,12 @@ public class HungarianConvience2 {
 
 	public void setTarget(int num, Vector3 to) {
 		assert num < targetLength : num + " " + targetLength;
-		assert num * 4 + 3 < targetBuffer.capacity() : num + " " + targetBuffer.capacity();
+		assert ((num * 4) + 3) < targetBuffer.capacity() : num + " " + targetBuffer.capacity();
 
 		targetBuffer.put(num * 4, to.x);
-		targetBuffer.put(num * 4 + 1, to.y);
-		targetBuffer.put(num * 4 + 2, to.z);
-		targetBuffer.put(num * 4 + 3, 0);
+		targetBuffer.put((num * 4) + 1, to.y);
+		targetBuffer.put((num * 4) + 2, to.z);
+		targetBuffer.put((num * 4) + 3, 0);
 	}
 
 	public void setTargetLength(int targetLength) {
@@ -233,9 +235,9 @@ public class HungarianConvience2 {
 
 	public float totalAssignmentDistance() {
 		float d = 0;
-		for (int i = 0; i < targetLength + sinks; i++) {
+		for (int i = 0; i < (targetLength + sinks); i++) {
 			int to = mapTargetToSource(i);
-			if (to != -1) d += distanceMatrix.get(i * (sourceLength + sources) + to);
+			if (to != -1) d += distanceMatrix.get((i * (sourceLength + sources)) + to);
 
 		}
 		return d;
@@ -247,7 +249,7 @@ public class HungarianConvience2 {
 			int to = mapTargetToSource(i);
 			if (to < sourceLength) {
 				if (to != -1) {
-					d += distanceMatrix.get(i * (sourceLength + sources) + to);
+					d += distanceMatrix.get((i * (sourceLength + sources)) + to);
 				}
 			}
 		}

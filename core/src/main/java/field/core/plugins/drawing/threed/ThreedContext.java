@@ -52,7 +52,7 @@ public class ThreedContext extends BaseGLGraphicsContext implements iTransformin
 	}
 
 	private final Rect viewportRectangle;
-	private BasicCamera subCamera;
+	private final BasicCamera subCamera;
 
 	int[] viewPort = new int[4];
 	double[] mm = new double[16];

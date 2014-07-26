@@ -17,7 +17,8 @@ import java.util.Map;
 
 
 public class ScaleAroundCenterTool extends BaseTool {
-	static public class AllNodesDescription implements iNodeDesc {
+	public static
+    class AllNodesDescription implements iNodeDesc {
 		public List<iResult> describe(List<CachedLine> index, List<SelectedVertex> claimed) {
 			if (claimed.size() == 0) return null;
 
@@ -34,7 +35,7 @@ public class ScaleAroundCenterTool extends BaseTool {
 				if (cclaimed.get(i).whatSelected.contains(SubSelection.postion)) code += 2;
 				if (cclaimed.get(i).whatSelected.contains(SubSelection.nextControl)) code += 4;
 
-				expression = expression + ind + "," + v + "," + code + ", ";
+				expression = expression + ind + ',' + v + ',' + code + ", ";
 			}
 			final String fexpression = expression;
 
@@ -54,7 +55,8 @@ public class ScaleAroundCenterTool extends BaseTool {
 		}
 	}
 
-	static public class ScaleAroundCenterChange implements iCoordDesc {
+	public static
+    class ScaleAroundCenterChange implements iCoordDesc {
 
 		String toolname = "ScaleAroundCenter";
 
@@ -76,7 +78,7 @@ public class ScaleAroundCenterTool extends BaseTool {
 				}
 
 				public String toExpression() {
-					return toolname + "(" + mi.lastOx + ", " + mi.lastOy + ", " + mi.lastOdx + ", " + mi.lastOdy + ")";
+					return toolname + '(' + mi.lastOx + ", " + mi.lastOy + ", " + mi.lastOdx + ", " + mi.lastOdy + ')';
 				}
 
 				public void toProperties(iVisualElement e, Map<String, Object> soFar) {

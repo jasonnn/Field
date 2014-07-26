@@ -36,7 +36,7 @@ public class SimpleWebpageDrawing {
 	final DynamicMesh mesh = DynamicMesh.unshadedMesh();
 	private BaseGLGraphicsContext installedContext;
 	private iUpdateable refreshHandle;
-	private boolean useRect;
+	private final boolean useRect;
 
 	public class DrawsBrowser implements iDrawingAcceptor<CachedLine> {
 		private final BaseGLGraphicsContext context;

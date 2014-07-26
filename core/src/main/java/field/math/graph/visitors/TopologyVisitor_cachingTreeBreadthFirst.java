@@ -72,7 +72,7 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
         List<T> r = new ArrayList<T>();
         r.add(to);
         T p = parented.get(to);
-        while (p != null && r.size() < 20) {
+        while ((p != null) && (r.size() < 20)) {
             r.add(p);
             T op = parented.get(p);
             if (p == op)
@@ -123,7 +123,7 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
 
             visitFringe(nextFringe);
 
-        } while (currentFringe.size() > 0 && (maxDepth == -1 || m < maxDepth));
+        } while (!currentFringe.isEmpty() && ((maxDepth == -1) || (m < maxDepth)));
     }
 
     protected List<T> getCachedPath(T from, T to) {
@@ -139,12 +139,13 @@ public abstract class TopologyVisitor_cachingTreeBreadthFirst<T> {
     }
 
     protected void markPathAsCached(List<T> path) {
-        for (int i = 0; i < path.size() - 1; i++) {
+        for (int i = 0; i < (path.size() - 1); i++) {
             knownPaths.addToList(path.get(i), new Pair<T, List<T>>(path.get(path.size() - 1), path.subList(i + 1, path.size())));
         }
     }
 
-    abstract protected GraphNodeSearching.VisitCode visit(T c);
+    protected abstract
+    GraphNodeSearching.VisitCode visit(T c);
 
     protected void visitFringe(HashSet<T> nextFringe) {
     }

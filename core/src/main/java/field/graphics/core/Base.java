@@ -24,30 +24,31 @@ import java.util.Map;
 public class Base {
 
 	//static public final iContextTree context = new LocalContextTree();
-	static public final SimpleContextTopology context =SimpleContextTopology.newInstance();
+    public static final SimpleContextTopology context =SimpleContextTopology.newInstance();
 	
 	// this is the id of vertex_data, taken from the spec (ARB_vertex_program)
-	static final public int vertex_id = 0;
+    public static final int vertex_id = 0;
 
-	static final public int normal_id = 2;
+	public static final int normal_id = 2;
 
-	static final public int color0_id = 3;
+	public static final int color0_id = 3;
 
-	static final public int texture0_id = 8;
-	static final public int noise = 11;
+	public static final int texture0_id = 8;
+	public static final int noise = 11;
 
-	static final public int max_id = 16;
+	public static final int max_id = 16;
 
-	static final public int min_id = 1;
+	public static final int min_id = 1;
 
-	static public final boolean trace = false;
+	public static final boolean trace = false;
 
 	
 	/**
 	 * these are the standard passes inside the renderer: do stuff that can be done before transform transform stuff into world space. do stuff that depends on world space (e.g. skinning) put it on the screen
 	 */
-	
-	static public class LocalPass implements iPass
+
+    public static
+    class LocalPass implements iPass
 	{
 		protected  float value;
 
@@ -74,7 +75,7 @@ public class Base {
 	public enum StandardPass implements iPass {
 		preTransform(-1), transform(0), postTransform(1), preRender(2), render(3), postRender(4), preDisplay(5);
 
-		private int value;
+		private final int value;
 
 		StandardPass(int value) {
 			this.value = value;

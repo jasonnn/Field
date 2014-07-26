@@ -16,12 +16,12 @@ public
 class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunction<T>, Serializable {
 
     // static private final long serialVersionUID = -119976144885796527L;
-    static private final long serialVersionUID = 494798624173987102L;
+    private static final long serialVersionUID = 494798624173987102L;
 
     public static
     class Sample<B extends iBlendable<B>> implements Serializable, Comparable<Sample<B>> {
 
-        static private final long serialVersionUID = -4587582997695641410L;
+        private static final long serialVersionUID = -4587582997695641410L;
 
         public B data;
 
@@ -49,7 +49,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
         @Override
         public
         int compareTo(@NotNull Sample<B> o) {
-            return time < o.time ? -1 : time > o.time ? 1 : 0;
+            return (time < o.time) ? -1 : ((time > o.time) ? 1 : 0);
         }
     }
 
@@ -130,7 +130,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
     public
     boolean debugGetValue(float time, T value) {
 
-        System.err.println(" num samples are <" + samples.size() + ">");
+        System.err.println(" num samples are <" + samples.size() + '>');
 
         if (samples.size() < 1) return false;
 
@@ -140,7 +140,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
 
         float a = (time - now) / (duration);
 
-        System.err.println(" time <" + time + "> <" + now + "> <" + duration + ">");
+        System.err.println(" time <" + time + "> <" + now + "> <" + duration + '>');
 
         if (Float.isNaN(a) || Float.isInfinite(a)) a = 0.5f;
 
@@ -148,7 +148,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
             if (a > 1) a = 1;
             if (a < 0) a = 0;
 
-            System.err.println(" clamping to <" + a + ">");
+            System.err.println(" clamping to <" + a + '>');
 
         }
         else {
@@ -162,7 +162,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
                 indexNext = samples.size() - 1;
             }
 
-            if (indexNow == indexNext && indexNow != 0) {
+            if ((indexNow == indexNext) && (indexNow != 0)) {
                 indexNow--;
                 indexBefore--;
                 if (indexBefore < 0) indexBefore = 0;
@@ -179,7 +179,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
                                + indexNext
                                + "> <"
                                + a
-                               + ">");
+                               + '>');
 
             value.lerp(getSample(indexNow).data, getSample(indexNext).data, a);
             return true;
@@ -202,7 +202,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
                                + getSample(indexNow)
                                + "> <"
                                + getSample(indexNext)
-                               + ">");
+                               + '>');
 
             value.lerp(getSample(indexNow).data, getSample(indexNext).data, a);
 
@@ -211,23 +211,23 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
 
         System.err.println(" cerp <"
                            + getSample(indexBefore).data
-                           + " "
+                           + ' '
                            + getSample(indexBefore).time
-                           + " "
+                           + ' '
                            + getSample(indexNow).data
-                           + " "
+                           + ' '
                            + getSample(indexNow).time
-                           + " "
+                           + ' '
                            + getSample(indexNext).data
-                           + " "
+                           + ' '
                            + getSample(indexNext).time
-                           + " "
+                           + ' '
                            + getSample(indexAfter).data
-                           + " "
+                           + ' '
                            + getSample(indexAfter).time
-                           + " "
+                           + ' '
                            + a
-                           + ">");
+                           + '>');
 
         value.cerp(getSample(indexBefore).data,
                    getSample(indexBefore).time,
@@ -308,7 +308,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
 
     public
     float getEndTime() {
-        if (samples.size() == 0) return 0;
+        if (samples.isEmpty()) return 0;
         return getSample(samples.size() - 1).time;
     }
 
@@ -319,14 +319,14 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
 
     public
     Sample<T> getSample(int i) {
-        if (i >= samples.size() - 1) i = samples.size() - 1;
+        if (i >= (samples.size() - 1)) i = samples.size() - 1;
         if (i < 0) i = 0;
         return samples.get(i);
     }
 
     public
     float getStartTime() {
-        if (samples.size() == 0) return 0;
+        if (samples.isEmpty()) return 0;
         return getSample(0).time;
     }
 
@@ -360,7 +360,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
                 indexNext = samples.size() - 1;
             }
 
-            if (indexNow == indexNext && indexNow != 0) {
+            if ((indexNow == indexNext) && (indexNow != 0)) {
                 indexNow--;
                 indexBefore--;
                 if (indexBefore < 0) indexBefore = 0;
@@ -426,13 +426,13 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
 
     public
     boolean isInDomain(double now) {
-        return now >= getDomainMin() && now <= getDomainMax();
+        return (now >= getDomainMin()) && (now <= getDomainMax());
     }
 
     public
     void mergeInto(CubicInterpolatorDynamic<T> from) {
-        if (from.getDomainMax() > this.getDomainMax() && from.getDomainMin() < this.getDomainMax())
-            System.err.println(" warning, overlapping merge of cubic interpolators <" + this + "> <" + from + ">");
+        if ((from.getDomainMax() > this.getDomainMax()) && (from.getDomainMin() < this.getDomainMax()))
+            System.err.println(" warning, overlapping merge of cubic interpolators <" + this + "> <" + from + '>');
 
         for (int i = 0; i < from.getNumSamples(); i++) {
             new Sample<T>(from.getSample(i).data, from.getSample(i).time);
@@ -492,7 +492,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
     public
     void removeSample(int i) {
         samples.remove(i);
-        if (indexAfter == i || indexBefore == i || indexNext == i || indexNow == i) cacheInvalid = true;
+        if ((indexAfter == i) || (indexBefore == i) || (indexNext == i) || (indexNow == i)) cacheInvalid = true;
     }
 
     public
@@ -501,7 +501,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
         if (n >= 0) {
             removeSample(n);
         }
-        else throw new ArrayIndexOutOfBoundsException(" couldn't find sample <" + sample + "> from <" + samples + ">");
+        else throw new ArrayIndexOutOfBoundsException(" couldn't find sample <" + sample + "> from <" + samples + '>');
     }
 
     public
@@ -529,7 +529,7 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
     @Override
     public
     String toString() {
-        return "v3cubic:" + this.getNumSamples() + "(" + this.getStartTime() + " -> " + this.getEndTime() + ")";
+        return "v3cubic:" + this.getNumSamples() + '(' + this.getStartTime() + " -> " + this.getEndTime() + ')';
     }
 
     public
@@ -548,11 +548,11 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
     void validateCache(float time) {
 
         if (!cacheInvalid) {
-            if (time >= now && time <= next) {
+            if ((time >= now) && (time <= next)) {
                 return;
             }
             else {
-                if (time >= next && time <= after) {
+                if ((time >= next) && (time <= after)) {
                     indexBefore = indexNow;
                     indexNow = indexNext;
                     indexNext = indexAfter;

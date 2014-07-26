@@ -20,10 +20,11 @@ import java.util.Set;
 
 public class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
 
-	static public VisualElementProperty<Vector4> groupFillColor = new VisualElementProperty<Vector4>("groupFillColor");
-	static public VisualElementProperty<Vector4> groupStrokeColor = new VisualElementProperty<Vector4>("groupStrokeColor");
+	public static VisualElementProperty<Vector4> groupFillColor = new VisualElementProperty<Vector4>("groupFillColor");
+	public static VisualElementProperty<Vector4> groupStrokeColor = new VisualElementProperty<Vector4>("groupStrokeColor");
 
-	static public void mixin(iVisualElement e) {
+	public static
+    void mixin(iVisualElement e) {
 		new Mixins().mixInOverride(DrawGroupMixin.class, e);
 	}
 
@@ -37,7 +38,7 @@ public class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.
 			final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
 			new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source).getProperty(source, iVisualElement.selectionGroup, group);
 
-			items.put("Groups (" + forElement.getProperty(iVisualElement.name) + ")", null);
+			items.put("Groups (" + forElement.getProperty(iVisualElement.name) + ')', null);
 
 			items.put("   \u21e3  unpack selection from this group", new iUpdateable() {
 

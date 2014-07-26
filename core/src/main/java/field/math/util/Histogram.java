@@ -34,7 +34,7 @@ public class Histogram<T> implements iHistogram<T>, Serializable {
 
 	public float get(T t, float def) {
 		MutableFloat f = counts.get(t);
-		return (float) (f == null ? def : f.d);
+		return (float) ((f == null) ? def : f.d);
 	}
 
 	public Set<Entry<T, MutableFloat>> getEntries() {
@@ -72,7 +72,7 @@ public class Histogram<T> implements iHistogram<T>, Serializable {
 				MutableFloat m2 = counts.get(o2);
 				int m = Double.compare(m1.d, m2.d);
 				if (m == 0)
-					return o1 == o2 ? 0 : 1;
+					return (o1 == o2) ? 0 : 1;
 				return m;
 			}
 		});
@@ -89,7 +89,9 @@ public class Histogram<T> implements iHistogram<T>, Serializable {
 		Set<Entry<T, MutableFloat>> e = h.counts.entrySet();
 		for (Entry<T, MutableFloat> entry : e) {
 			float dd = (float) entry.getValue().d;
-			this.visit(entry.getKey(), rawWeight * dd + normalizedWeight * dd / norm + partialWeight * normalization * dd / (norm * norm));
+			this.visit(entry.getKey(),
+                       (rawWeight * dd) + ((normalizedWeight * dd) / norm) + ((partialWeight * normalization * dd)
+                                                                              / (norm * norm)));
 		}
 	}
 
@@ -166,9 +168,9 @@ public class Histogram<T> implements iHistogram<T>, Serializable {
 		String r = "";
 		for (Entry<T, MutableFloat> e : es) {
 			if (e == biggest) {
-				r += ANSIColorUtils.red(e.getKey() + ":" + (e.getValue().floatValue() / norm)) + " ";
+				r += ANSIColorUtils.red(e.getKey() + ":" + (e.getValue().floatValue() / norm)) + ' ';
 			} else {
-				r += e.getKey() + ":" + (e.getValue().floatValue() / norm) + " ";
+				r += e.getKey() + ":" + (e.getValue().floatValue() / norm) + ' ';
 			}
 		}
 		return r;
@@ -202,7 +204,7 @@ public class Histogram<T> implements iHistogram<T>, Serializable {
 		while (i.hasNext()) {
 			Entry<T, MutableFloat> e = i.next();
 			cum += e.getValue().floatValue();
-			if (v <= cum / normalization)
+			if (v <= (cum / normalization))
 				return e.getKey();
 		}
 		assert false : counts + " " + normalization;
@@ -218,7 +220,7 @@ public class Histogram<T> implements iHistogram<T>, Serializable {
 			}
 		});
 		
-		return a==null ? null : a.getKey();
+		return (a == null) ? null : a.getKey();
 	}
 
 	public T select(float power) {
@@ -232,7 +234,7 @@ public class Histogram<T> implements iHistogram<T>, Serializable {
 		double c = 0;
 		for (Map.Entry<T, MutableFloat> m : counts.entrySet()) {
 			c += Math.pow(m.getValue().d, power);
-			if (v <= c / n1) {
+			if (v <= (c / n1)) {
 				return m.getKey();
 			}
 		}
@@ -249,7 +251,7 @@ public class Histogram<T> implements iHistogram<T>, Serializable {
 		while (i.hasNext()) {
 			Entry<T, MutableFloat> e = i.next();
 			cum += e.getValue().floatValue();
-			if (v <= cum / normalization)
+			if (v <= (cum / normalization))
 				return e.getKey();
 		}
 		return null;

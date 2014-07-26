@@ -55,13 +55,14 @@ public class TextSearching {
 							found = true;
 						}
 					}
-					if (!found) {
-						((iProvidesSearchTerms) n).notFound();
-					} else {
-						for (int i = 0; i < stack.size(); i++) {
-							keep.add(stack.get(i));
-						}
-					}
+                    if (found) {
+                        for (int i = 0; i < stack.size(); i++) {
+                            keep.add(stack.get(i));
+                        }
+                    }
+                    else {
+                        ((iProvidesSearchTerms) n).notFound();
+                    }
 				}
 
 				return VisitCode.cont;
@@ -82,7 +83,7 @@ public class TextSearching {
                     iMutable cloned = ((iProvidesSearchTerms) n).duplicate();
 					created.put(n, (T) cloned);
 
-					if (n.getParents().size() > 0) {
+					if (!n.getParents().isEmpty()) {
 						T p = created.get(n.getParents().get(0));
 						((iMutable) p).addChild(cloned);
 					} else {

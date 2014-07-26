@@ -38,7 +38,8 @@ public class GitVersioningQueries {
 				}
 				while (p2.contains("//"))
 					p2 = p2.replaceAll("//", "/");
-				ExecuteCommand e = new ExecuteCommand(workspace, new String[] { GitVersioningSystem.gitCommand, "show", commit + ":" + p2 }, true);
+				ExecuteCommand e = new ExecuteCommand(workspace, new String[] { GitVersioningSystem.gitCommand, "show", commit + ':'
+                                                                                                                        + p2 }, true);
 				e.waitFor(true);
 				contents = e.getOutput();
 			}
@@ -97,7 +98,7 @@ public class GitVersioningQueries {
 				if (m != null) {
 					s.start = Math.min(s.start, m);
 					s.stop = Math.max(s.stop, m + 1);
-					s.contents += b[m].replaceFirst("string>", "") + "\n";
+					s.contents += b[m].replaceFirst("string>", "") + '\n';
 				}
 			}
 			return s;
@@ -122,10 +123,10 @@ public class GitVersioningQueries {
 
                     //System.out.println("ER "+e.getPayload());
 
-                    if (e.getPayload().left != null && e.getPayload().right != null)
+                    if ((e.getPayload().left != null) && (e.getPayload().right != null))
 						for (iMarker<String> m : e.getPayload().left) {
                             //System.out.println(" time is "+m);
-                            if (m.getTime() == a && e.getPayload().right.size()>0) {
+                            if ((m.getTime() == a) && !e.getPayload().right.isEmpty()) {
 								EditRelationship p = e.getPayload();
 								if (p.type == EditType.equivalence) {
 									return (int) e.getPayload().right.get(Math.min(e.getPayload().right.size()-1, index)).getTime();

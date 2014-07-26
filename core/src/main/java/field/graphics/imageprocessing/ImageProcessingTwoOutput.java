@@ -253,7 +253,9 @@ public class ImageProcessingTwoOutput implements iImageProcessor {
 		if (c.getSceneListSide() == StereoSide.middle)
             Cont.linkWith(c, FullScreenCanvasSWT.method_beforeFlush, arun);
         else {
-            Method attachMethod = c.getSceneListSide() == StereoSide.left ? FullScreenCanvasSWT.method_beforeLeftFlush : FullScreenCanvasSWT.method_beforeRightFlush;
+            Method attachMethod = (c.getSceneListSide() == StereoSide.left)
+                                  ? FullScreenCanvasSWT.method_beforeLeftFlush
+                                  : FullScreenCanvasSWT.method_beforeRightFlush;
             Cont.linkWith(c, attachMethod, arun);
 		}
 
@@ -283,7 +285,7 @@ public class ImageProcessingTwoOutput implements iImageProcessor {
 		int gl_texture_min_filter = genMipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 		int gl_texture_mag_filter = GL_LINEAR;
 
-		glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0]);
+		glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : (useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D), tex[0]);
 		// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
 		glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? GL_RGBA16F : GL_RGBA, width, height, 0, GL_RGBA, useFloat ? GL11.GL_FLOAT : GL_UNSIGNED_INT_8_8_8_8_REV, (ByteBuffer) null);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[0], 0);
@@ -292,7 +294,7 @@ public class ImageProcessingTwoOutput implements iImageProcessor {
 		glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_texture_mag_filter);
 		glTexParameteri(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_texture_min_filter);
 
-		glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1]);
+		glBindTexture(useRect ? GL_TEXTURE_RECTANGLE : (useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D), tex[1]);
 		// glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, 0);
 		glTexImage2D(useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, 0, useFloat ? GL_RGBA16F : GL_RGBA, width, height, 0, GL_RGBA, useFloat ? GL11.GL_FLOAT : GL_UNSIGNED_INT_8_8_8_8_REV, (ByteBuffer) null);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, useRect ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D, tex[1], 0);
@@ -400,10 +402,11 @@ public class ImageProcessingTwoOutput implements iImageProcessor {
 
 		FloatBuffer tex = mesh.aux(Base.texture0_id, 2);
 
-		for (int x = 0; x < devision + 1; x++) {
-			for (int y = 0; y < devision + 1; y++) {
-				v.put(-1 + 2 * x / (float) devision).put(-1 + 2 * y / (float) devision).put(0.5f);
-				tex.put((useRect ? width : 1) * x / (float) devision).put((useRect ? width : 1) * y / (float) devision);
+		for (int x = 0; x < (devision + 1); x++) {
+			for (int y = 0; y < (devision + 1); y++) {
+				v.put(-1 + ((2 * x) / (float) devision)).put(-1 + ((2 * y) / (float) devision)).put(0.5f);
+				tex.put(((useRect ? width : 1) * x) / (float) devision).put(((useRect ? width : 1) * y)
+                                                                            / (float) devision);
 			}
 		}
 
@@ -411,7 +414,13 @@ public class ImageProcessingTwoOutput implements iImageProcessor {
 
 		for (int x = 0; x < devision; x++) {
 			for (int y = 0; y < devision; y++) {
-				s.put((short) (y * (devision + 1) + x + 1)).put((short) ((y + 1) * (devision + 1) + x + 1)).put((short) ((y + 1) * (devision + 1) + x)).put((short) (y * (devision + 1) + x));
+				s.put((short) ((y * (devision + 1)) + x + 1)).put((short) (((y + 1) * (devision + 1))
+                                                                           + x
+                                                                           + 1)).put((short) (((y + 1) * (devision + 1))
+                                                                                              + x)).put((short) ((y
+                                                                                                                  * (devision
+                                                                                                                     + 1))
+                                                                                                                 + x));
 			}
 		}
 

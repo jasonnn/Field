@@ -10,9 +10,10 @@ import java.util.List;
  help me
  */
 public class RotationTools {
-	static private Quaternion output;
+	private static Quaternion output;
 
-	static public double angleSubtract(double a, double b) {
+	public static
+    double angleSubtract(double a, double b) {
 		if (a - b > Math.PI) {
 			return a - b - Math.PI * 2;
 		}
@@ -23,7 +24,8 @@ public class RotationTools {
 		}
 	}
 
-	static public double findEulerZRotation(Quaternion of) {
+	public static
+    double findEulerZRotation(Quaternion of) {
 		Vector3 eulerN = new Vector3();
 
 		// commented out as a service to bruce
@@ -34,7 +36,8 @@ public class RotationTools {
 
 
 	// could be faster
-	static public void rollAngles(List l1) {
+    public static
+    void rollAngles(List l1) {
 		float largestInterval = Float.NEGATIVE_INFINITY;
 		int index = 0;
 		for (int i = 0; i < l1.size(); i++) {
@@ -58,7 +61,8 @@ public class RotationTools {
 	/**
 	 finds the rotation around z that this quaternion does
 	 */
-	static public double findForwardRotation(Quaternion of) {
+    public static
+    double findForwardRotation(Quaternion of) {
 		Vector3 negY = new Vector3(0, -1, 0);
 		Vector3 rot = new Vector3();
 		of.rotateVector(negY, rot);
@@ -82,7 +86,8 @@ public class RotationTools {
 	/**
 	 rotates this quaternion by a z rotation
 	 */
-	static public void rotateThisMoreZ(Quaternion me, double z) {
+    public static
+    void rotateThisMoreZ(Quaternion me, double z) {
 		Quaternion zRotation = new Quaternion().set(new Vector3(0, 0, 1), (float) z);
 		Quaternion output = new Quaternion();
 		output.mul(zRotation, me);
@@ -94,7 +99,8 @@ public class RotationTools {
 	 makes this quaternion rotate around z this much
 
 	 */
-	static public void setYRotationOfQuaternion(Quaternion me, double z) {
+    public static
+    void setYRotationOfQuaternion(Quaternion me, double z) {
 		double oz = findYRotation(me);
 		double diff = angleSubtract(z, oz);
 		rotateThisMoreY(me, diff);
@@ -103,7 +109,8 @@ public class RotationTools {
 	/**
 	 finds the rotation around z that this quaternion does
 	 */
-	static public double findYRotation(Quaternion of) {
+    public static
+    double findYRotation(Quaternion of) {
 		Vector3 negY = new Vector3(0, 0, -1);
 		Vector3 rot = new Vector3();
 		of.rotateVector(negY, rot);
@@ -128,14 +135,16 @@ public class RotationTools {
 	/**
 	 rotates this quaternion by a z rotation
 	 */
-	static public void rotateThisMoreY(Quaternion me, double z) {
+    public static
+    void rotateThisMoreY(Quaternion me, double z) {
 		Quaternion zRotation = new Quaternion().set(new Vector3(0, 1, 0), -(float) z);
 		Quaternion output = new Quaternion();
 		output.mul(zRotation, me);
 		me.set(output);
 	}
 
-	static public void rotateThisMoreY(Vector3 me, double z) {
+	public static
+    void rotateThisMoreY(Vector3 me, double z) {
 		Quaternion zRotation = new Quaternion().set(new Vector3(0, 1, 0), -(float) z);
 		me.setValue(zRotation.rotateVector(me));
 	}
@@ -145,14 +154,16 @@ public class RotationTools {
 	 makes this quaternion rotate around z this much
 
 	 */
-	static public void setZRotationOfQuaternion(Quaternion me, double z) {
+    public static
+    void setZRotationOfQuaternion(Quaternion me, double z) {
 		double oz = findForwardRotation(me);
 		double diff = angleSubtract(z, oz);
 		rotateThisMoreZ(me, diff);
 	}
 
 	// O(N^2)
-	static public void sortAngles(List l1) {
+    public static
+    void sortAngles(List l1) {
 		if (l1.size() == 0)
 			return;
 

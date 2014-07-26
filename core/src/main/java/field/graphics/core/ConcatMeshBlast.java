@@ -12,8 +12,8 @@ import java.util.Map.Entry;
 
 public class ConcatMeshBlast {
 
-	private ArrayList<Header> headers;
-	private FileChannel channelOut;
+	private final ArrayList<Header> headers;
+	private final FileChannel channelOut;
 
 	public ConcatMeshBlast(String[] names, String out) throws IOException {
 		headers = new ArrayList<Header>();
@@ -21,7 +21,7 @@ public class ConcatMeshBlast {
 		HashMap<Integer, Integer> newStrides = new HashMap<Integer, Integer>();
 		int totalFrames = 0;
 		for (String n : names) {
-			Header h = (Header) new PythonUtils().loadAsXML(n + ".xmlHeader");
+			Header h = (Header) PythonUtils.loadAsXML(n + ".xmlHeader");
 			headers.add(h);
 			for (Map.Entry<Integer, Integer> ii : h.maximumDimensions.entrySet()) {
 				Integer q = newMaxes.get(ii.getKey());
@@ -34,8 +34,8 @@ public class ConcatMeshBlast {
 				Integer q = newStrides.get(ii.getKey());
 				if (q == null)
 					newStrides.put(ii.getKey(), ii.getValue());
-				else if (q != ii.getValue())
-					throw new IllegalArgumentException(" strides for <" + ii.getKey() + "> not compatible <" + newStrides + "> <" + h.strides + ">");
+				else if (!q.equals(ii.getValue()))
+					throw new IllegalArgumentException(" strides for <" + ii.getKey() + "> not compatible <" + newStrides + "> <" + h.strides + '>');
 			}
 			totalFrames += h.numFrames;
 		}
@@ -71,7 +71,7 @@ public class ConcatMeshBlast {
 	static public void concatSavedMeshSetIndex(String[] names, String out) {
 		List l2 = new ArrayList();
 		for (String n : names) {
-			List ll = (List) new PythonUtils().loadAsXML(n);
+			List ll = (List) PythonUtils.loadAsXML(n);
 			l2.addAll(ll);
 		}
 		new PythonUtils().persistAsXML(l2, out);

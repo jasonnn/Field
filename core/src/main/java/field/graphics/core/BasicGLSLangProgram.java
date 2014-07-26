@@ -105,13 +105,13 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         }
 
         protected void setup() {
-            if (code == null || code.length == 0)
+            if ((code == null) || (code.length == 0))
                 return;
             boolean found = false;
             for (String s : code) {
                 if (s == null)
                     return;
-                if (s.trim().length() > 0)
+                if (!s.trim().isEmpty())
                     found = true;
             }
             if (!found)
@@ -133,8 +133,8 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             if (didCompile == 0) {
                 String ret = GL20.glGetShaderInfoLog(shader, 10000);
                 System.err.println(isFragment + " program failed to compile");
-                System.err.println(" log is <" + ret + ">");
-                System.err.println(" shader source is <" + code[0] + ">");
+                System.err.println(" log is <" + ret + '>');
+                System.err.println(" shader source is <" + code[0] + '>');
                 if (onError != null) {
                     onError.beginError();
                     String log = ret;
@@ -181,11 +181,11 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         int id = -1;
 
         public int getID() {
-            return id != -1 ? id : (id = glGetAttribLocation(getProgram(), name));
+            return (id != -1) ? id : (id = glGetAttribLocation(getProgram(), name));
         }
     }
 
-    private HashMap<Object, UniformCache> uniformCache = new HashMap<Object, UniformCache>();
+    private final HashMap<Object, UniformCache> uniformCache = new HashMap<Object, UniformCache>();
 
     public enum ElementType {
         vertex(GL_VERTEX_SHADER), geometry(GL_GEOMETRY_SHADER), fragment(GL_FRAGMENT_SHADER), tessControl(GL40.GL_TESS_CONTROL_SHADER), tessEval(GL40.GL_TESS_EVALUATION_SHADER), compute(GL43.GL_COMPUTE_SHADER);
@@ -654,7 +654,7 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
         if (ii == -1)
             return name;
 
-        return name.substring(0, ii) + "[" + name.substring(ii + 2) + "]";
+        return name.substring(0, ii) + '[' + name.substring(ii + 2) + ']';
 
     }
 
@@ -674,7 +674,7 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             URL r = ClassLoader.getSystemResource(names[i]);
             assert r != null : names[i];
             if (r == null) {
-                System.err.println(" can't find resource <" + names[i] + ">");
+                System.err.println(" can't find resource <" + names[i] + '>');
             }
             f[i] = new File(r.getPath());
         }
@@ -701,7 +701,7 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
 
             assert r != null : names[i];
             if (r == null) {
-                System.err.println(" can't find resource <" + names[i] + ">");
+                System.err.println(" can't find resource <" + names[i] + '>');
             }
             f[i] = new File(r.getPath());
         }
@@ -709,7 +709,7 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
     }
 
     public static String readFile(File code) {
-        if (code.getPath().indexOf(".jar!") != -1) {
+        if (code.getPath().contains(".jar!")) {
             String p = code.getPath();
 
             // if (p.startsWith("file"))
@@ -733,10 +733,10 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(st));
-            String s = "";
+            StringBuilder s = new StringBuilder();
             try {
                 while (reader.ready()) {
-                    s += reader.readLine() + "\n";
+                    s.append(reader.readLine()).append('\n');
                 }
                 reader.close();
             } catch (FileNotFoundException e) {
@@ -745,16 +745,17 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
                 e.printStackTrace();
             }
 
-            return s;
+            return s.toString();
 
         } else {
 
             BufferedReader reader = null;
-            String s = "";
+            StringBuilder s = new StringBuilder();
+
             try {
                 reader = new BufferedReader(new FileReader(code));
                 while (reader.ready()) {
-                    s += reader.readLine() + "\n";
+                    s.append(reader.readLine()).append('\n');
                 }
                 reader.close();
             } catch (FileNotFoundException e) {
@@ -763,7 +764,7 @@ public class BasicGLSLangProgram extends BasicUtilities.OnePassListElement imple
                 e.printStackTrace();
             }
 
-            return s;
+            return s.toString();
         }
     }
 

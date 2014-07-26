@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MergeGroupFreezer extends MergeGroup {
-	static public final VisualElementProperty<HashMap<iVisualElement, Freeze>> mergeGroup_initialParameters = new VisualElementProperty<HashMap<iVisualElement, Freeze>>("mergeGroup_initialParameters");
+	public static final VisualElementProperty<HashMap<iVisualElement, Freeze>> mergeGroup_initialParameters = new VisualElementProperty<HashMap<iVisualElement, Freeze>>("mergeGroup_initialParameters");
 
 	protected HashSet<iVisualElement> newlyCreated = new HashSet<iVisualElement>();
 
@@ -74,7 +74,7 @@ public class MergeGroupFreezer extends MergeGroup {
 	// these echo those in PythonPlugin, but can diff3 merge on set
 	// it might be better to defer these until end() time
 	public void setAttr(iVisualElement a, String name, Object value) {
-		System.err.println(" setting property <" + a + "> <" + name + "> <" + value + ">");
+		System.err.println(" setting property <" + a + "> <" + name + "> <" + value + '>');
 		if (frozen.containsKey(a)) {
 			name = PythonPlugin.externalPropertyNameToInternalName(name);
 			Freeze f = frozen.get(a);
@@ -82,7 +82,9 @@ public class MergeGroupFreezer extends MergeGroup {
 			Object initValue = f.getMap().get(vp);
 			Object currentValue = vp.get(a, a);
 
-			if (initValue != null && currentValue != null && value != null) if (initValue instanceof String && currentValue instanceof String && value instanceof String) {
+			if ((initValue != null) && (currentValue != null) && (value != null)) if ((initValue instanceof String)
+                                                                                      && (currentValue instanceof String)
+                                                                                      && (value instanceof String)) {
 				Diff3 d = new Diff3((String) currentValue, (String) initValue, (String) value);
 				String c = d.getResult();
 				vp.set(a, a, c);

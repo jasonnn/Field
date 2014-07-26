@@ -58,7 +58,7 @@ import java.util.Map.Entry;
 @Woven
 public class DraggableComponent implements iComponent, iDraggableComponent {
     
-	static public final VisualElementProperty<Number> text_opacity = new VisualElementProperty<Number>("textOpacity");
+	public static final VisualElementProperty<Number> text_opacity = new VisualElementProperty<Number>("textOpacity");
     
 	// private List<SelectionGroup<iComponent>>
 	// selectionGroups =
@@ -138,15 +138,19 @@ public class DraggableComponent implements iComponent, iDraggableComponent {
 			Set<Resize> currentResize = new HashSet<Resize>();
             
 			currentResize.clear();
-			if (arg0.x - getX() < zone / GLComponentWindow.getCurrentWindow(DraggableComponent.this).getXScale())
+			if ((arg0.x - getX()) < (zone / GLComponentWindow.getCurrentWindow(DraggableComponent.this).getXScale()))
 				currentResize.add(Resize.left);
-			if (arg0.x - getX() > DraggableComponent.this.getWidth() - zone / GLComponentWindow.getCurrentWindow(DraggableComponent.this).getXScale())
+			if ((arg0.x - getX()) > (DraggableComponent.this.getWidth() - (zone
+                                                                           / GLComponentWindow.getCurrentWindow(DraggableComponent.this)
+                                                                                              .getXScale())))
 				currentResize.add(Resize.right);
-			if (arg0.y - getY() < zone / GLComponentWindow.getCurrentWindow(DraggableComponent.this).getXScale())
+			if ((arg0.y - getY()) < (zone / GLComponentWindow.getCurrentWindow(DraggableComponent.this).getXScale()))
 				currentResize.add(Resize.up);
-			if (arg0.y - getY() > DraggableComponent.this.getHeight() - zone / GLComponentWindow.getCurrentWindow(DraggableComponent.this).getXScale())
+			if ((arg0.y - getY()) > (DraggableComponent.this.getHeight() - (zone
+                                                                            / GLComponentWindow.getCurrentWindow(DraggableComponent.this)
+                                                                                               .getXScale())))
 				currentResize.add(Resize.down);
-			if (currentResize.size() == 0)
+			if (currentResize.isEmpty())
 				currentResize.add(Resize.translate);
             
 			PresentationMode.filterResize(DraggableComponent.this, currentResize);
@@ -191,15 +195,15 @@ public class DraggableComponent implements iComponent, iDraggableComponent {
 			down = true;
             
 			currentResize.clear();
-			if (arg0.x - getX() < zone)
+			if ((arg0.x - getX()) < zone)
 				currentResize.add(Resize.left);
-			if (arg0.x - getX() > DraggableComponent.this.getWidth() - zone)
+			if ((arg0.x - getX()) > (DraggableComponent.this.getWidth() - zone))
 				currentResize.add(Resize.right);
-			if (arg0.y - getY() < zone)
+			if ((arg0.y - getY()) < zone)
 				currentResize.add(Resize.up);
-			if (arg0.y - getY() > DraggableComponent.this.getHeight() - zone)
+			if ((arg0.y - getY()) > (DraggableComponent.this.getHeight() - zone))
 				currentResize.add(Resize.down);
-			if (currentResize.size() == 0)
+			if (currentResize.isEmpty())
 				currentResize.add(Resize.translate);
             
 			PresentationMode.filterResize(DraggableComponent.this, currentResize);
@@ -226,7 +230,7 @@ public class DraggableComponent implements iComponent, iDraggableComponent {
                 
 				for (SelectionGroup<iComponent> s : getSelectionGroups()) {
 					for (iComponent d : s.getSelection()) {
-						if (d != DraggableComponent.this && d.getVisualElement() != null) {
+						if ((d != DraggableComponent.this) && (d.getVisualElement() != null)) {
 							finalizeRect(d.getVisualElement(), currentResize, arg0.stateMask);
 						}
 					}
@@ -241,7 +245,8 @@ public class DraggableComponent implements iComponent, iDraggableComponent {
 		left, right, up, down, translate, innerTranslate, innerScale
 	}
     
-	static public void finalizeRect(iVisualElement toFinalize, Set<Resize> currentResize, int modifiersDown) {
+	public static
+    void finalizeRect(iVisualElement toFinalize, Set<Resize> currentResize, int modifiersDown) {
 		Rect frameIn = toFinalize.getFrame(new Rect(0, 0, 0, 0));
 		Rect frameOut = toFinalize.getFrame(new Rect(0, 0, 0, 0));
 		BasicDrawingPlugin.frameManipulationEnd.set(toFinalize, toFinalize, new FrameManipulation(currentResize, frameOut, modifiersDown));
@@ -257,7 +262,8 @@ public class DraggableComponent implements iComponent, iDraggableComponent {
 		}
 	}
     
-	static public void initiateRect(iVisualElement toInitiate, Set<Resize> with) {
+	public static
+    void initiateRect(iVisualElement toInitiate, Set<Resize> with) {
 		if (toInitiate != null) {
 			BasicDrawingPlugin.frameManipulationBegin.set(toInitiate, toInitiate, new FrameManipulation(with, toInitiate.getFrame(new Rect(0, 0, 0, 0))));
 		}
@@ -747,7 +753,7 @@ if (b != null && b.trim().length() > 0) {
 CachedLine text = new CachedLine();
 
 text.getInput().moveTo((int) (bounds.x + bounds.w / 2), (int) (bounds.y + bounds.h / 2 + 14));
-text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, "\"" + b + "\"");
+text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, '"' + b + '"');
 text.getProperties().put(iLinearGraphicsContext.containsText, true);
 text.getProperties().put(iLinearGraphicsContext.color, new Vector4(0, 0, 0, 0.9f));
 text.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new Font(Constants.defaultFont, Font.BOLD, 9));// (float)

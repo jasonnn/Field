@@ -25,7 +25,8 @@ import java.io.Writer;
  */
 
 public class MatrixN implements Cloneable, Serializable {
-	static public class DimensionMismatchException extends RuntimeException {
+	public static
+    class DimensionMismatchException extends RuntimeException {
 		public DimensionMismatchException(String s) {
 			super(s);
 		}
@@ -34,7 +35,8 @@ public class MatrixN implements Cloneable, Serializable {
 		}
 	}
 
-	static public class SingularMatrixNException extends RuntimeException {
+	public static
+    class SingularMatrixNException extends RuntimeException {
 		public SingularMatrixNException(String s) {
 			super(s);
 		}
@@ -43,7 +45,8 @@ public class MatrixN implements Cloneable, Serializable {
 		}
 	}
 
-	static public class NonSquareMatrixNException extends RuntimeException {
+	public static
+    class NonSquareMatrixNException extends RuntimeException {
 		public NonSquareMatrixNException(String s) {
 			super(s);
 		}
@@ -52,7 +55,8 @@ public class MatrixN implements Cloneable, Serializable {
 		}
 	}
 
-	static public class InPlaceMatrixNMultException extends RuntimeException {
+	public static
+    class InPlaceMatrixNMultException extends RuntimeException {
 		public InPlaceMatrixNMultException(String s) {
 			super(s);
 		}
@@ -67,9 +71,9 @@ public class MatrixN implements Cloneable, Serializable {
 	// package scope for efficiency in other impls in this package
 	double[][] rep;
 
-	public final static double TINY = 1.0e-11;
+	public static final double TINY = 1.0e-11;
 
-	public final static double CLOSE_ENOUGH_TO_ZERO = 1.0e-11;
+	public static final double CLOSE_ENOUGH_TO_ZERO = 1.0e-11;
 
 	/*
 	 * Constructors
@@ -261,7 +265,9 @@ public class MatrixN implements Cloneable, Serializable {
 	 */
 	public final void set(MatrixN m) throws DimensionMismatchException {
 		if ((numColumns() != m.numColumns()) || (numRows() != m.numRows()) || (numColumns() == 0) || (numRows() == 0)) {
-			throw new DimensionMismatchException("Matrices' dimensions must match for in-place set. This matrix " + "was " + numRows() + "x" + numColumns() + ", argument given is " + m.numRows() + "x" + m.numColumns());
+			throw new DimensionMismatchException("Matrices' dimensions must match for in-place set. This matrix " + "was " + numRows() + 'x'
+                                                 + numColumns() + ", argument given is " + m.numRows() + 'x'
+                                                 + m.numColumns());
 		}
 		int i, j;
 		for (i = 0; i < numRows(); i++)
@@ -880,7 +886,8 @@ public class MatrixN implements Cloneable, Serializable {
 		}
 
 		if (a.dim() != b.numRows() || out.dim() != b.numColumns()) {
-			throw new DimensionMismatchException("mult(Vec a, MatrixN b, Vec out): bad dimensions: " + "1x" + a.dim() + " * " + b.numRows() + "x" + b.numColumns() + " != " + "1x" + out.dim());
+			throw new DimensionMismatchException("mult(Vec a, MatrixN b, Vec out): bad dimensions: " + "1x" + a.dim() + " * " + b.numRows() + 'x'
+                                                 + b.numColumns() + " != " + "1x" + out.dim());
 		}
 
 		int i, k;
@@ -913,7 +920,8 @@ public class MatrixN implements Cloneable, Serializable {
 		}
 
 		if (a.numColumns() != b.dim() || out.dim() != a.numRows()) {
-			throw new DimensionMismatchException("mult(MatrixN a, Vec b, Vec out): bad dimensions: " + a.numRows() + "x" + a.numColumns() + " * " + b.dim() + "x1" + " != " + out.dim() + "x1");
+			throw new DimensionMismatchException("mult(MatrixN a, Vec b, Vec out): bad dimensions: " + a.numRows() + 'x'
+                                                 + a.numColumns() + " * " + b.dim() + "x1" + " != " + out.dim() + "x1");
 		}
 
 		int i, k;
@@ -945,7 +953,10 @@ public class MatrixN implements Cloneable, Serializable {
 		}
 
 		if (a.numColumns() != b.numRows() || out.numRows() != a.numRows() || out.numColumns() != b.numColumns()) {
-			throw new DimensionMismatchException("mult(MatrixN A, MatrixN B, " + "MatrixN out): bad dimensions on " + "matrix multiply. A is " + a.numRows() + "x" + a.numColumns() + ", B is " + b.numRows() + "x" + b.numColumns() + ", out is " + out.numRows() + "x" + out.numColumns());
+			throw new DimensionMismatchException("mult(MatrixN A, MatrixN B, " + "MatrixN out): bad dimensions on " + "matrix multiply. A is " + a.numRows() + 'x'
+                                                 + a.numColumns() + ", B is " + b.numRows() + 'x'
+                                                 + b.numColumns() + ", out is " + out.numRows() + 'x'
+                                                 + out.numColumns());
 		}
 
 		int i, j, k; // i E [0 .. a.rows-1] j E [0 ..
@@ -1074,7 +1085,8 @@ public class MatrixN implements Cloneable, Serializable {
 	 * @see innards.math.linalg.Matrix@decomposeLU()
 	 */
 
-	static public class LUDState {
+    public static
+    class LUDState {
 		/***********************************************
 		 * Rep
 		 **********************************************/

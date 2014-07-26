@@ -38,7 +38,7 @@ public class ConstantDistanceResampling {
 			Vector2 lastOut = null;
 
 			public void emitLinearFrame(Vector2 a, Vector2 b, java.util.List<Object> name, java.util.List<Object> name2, Dict properties, iLinearGraphicsContext contex) {
-				if (firstOut || lastOut.distanceFrom(a) > 1e-5) {
+				if (firstOut || (lastOut.distanceFrom(a) > 1e-5)) {
 					in.moveTo(a.x, a.y);
 					firstOut = false;
 					lastOut = new Vector2(b);
@@ -49,7 +49,7 @@ public class ConstantDistanceResampling {
 			}
 
 			public void emitCubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context) {
-				if (firstOut || lastOut.distanceFrom(a) > 1e-5) {
+				if (firstOut || (lastOut.distanceFrom(a) > 1e-5)) {
 					in.moveTo(a.x, a.y);
 					firstOut = false;
 					lastOut = new Vector2(b);
@@ -61,7 +61,7 @@ public class ConstantDistanceResampling {
 
 			@Override
 			protected boolean shouldTerm(float flatness, Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, int n) {
-				return n > maxSubdiv || a.distanceFrom(b) < minResolution;
+				return (n > maxSubdiv) || (a.distanceFrom(b) < minResolution);
 			}
 		}.setCanEmitCubic(true);
 
@@ -104,7 +104,7 @@ public class ConstantDistanceResampling {
 			}
 		}
 
-		if (numIsDistance && num == minResolution) return fine;
+		if (numIsDistance && (num == minResolution)) return fine;
 
 		Vector2 c12 = new Vector2();
 		Vector2 c21 = new Vector2();
@@ -117,7 +117,7 @@ public class ConstantDistanceResampling {
 			while (cursor.hasNextSegment()) {
 				float length = subsegmentLengths.remove(0);
 
-				float subsegTargetLength = numIsDistance ? num : length / num;
+				float subsegTargetLength = numIsDistance ? num : (length / num);
 				float currentLength = 0;
 
 				List<Vector2> stream = new ArrayList<Vector2>();
@@ -127,7 +127,7 @@ public class ConstantDistanceResampling {
 
 				segment: while (cursor.hasNextInSpline()) {
 
-					System.err.println(" processing <" + cursor.getCurrentIndex() + ">");
+					System.err.println(" processing <" + cursor.getCurrentIndex() + '>');
 					if (cursor.nextIsCubic()) {
 						if (cursor.nextCubicFrame(a, c1, c2, b)) {
 							if (first) {
@@ -135,11 +135,11 @@ public class ConstantDistanceResampling {
 								first = false;
 							}
 							inner: while (true) {
-								System.err.println(" subdividing frame <" + a + " " + c1 + " " + c2 + " " + b + ">");
+								System.err.println(" subdividing frame <" + a + ' ' + c1 + ' ' + c2 + ' ' + b + '>');
 								LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f, out);
 								float l1 = a.distanceFrom(out);
                                 //System.out.println("        " + l1 + " / " + subsegTargetLength + " " + currentLength);
-                                if (currentLength + l1 > subsegTargetLength) {
+                                if ((currentLength + l1) > subsegTargetLength) {
 									float alpha = (subsegTargetLength - currentLength) / l1;
 									if (Float.isInfinite(alpha)) alpha = 0;
 									if (Float.isNaN(alpha)) alpha = 0;
@@ -151,7 +151,7 @@ public class ConstantDistanceResampling {
                                     //System.out.println(" over 1, added <" + out + ">");
 
 									float nowLength = currentLength + out.distanceFrom(a);
-									subsegTargetLength = length / num - (nowLength - length / num) / 2;
+									subsegTargetLength = length / num - (nowLength - (length / num)) / 2;
 									currentLength = 0;
 
 									LineUtils.splitCubicFrame(a, c1, c2, b, 0.5f * alpha, c12, m, c21, tmp);
@@ -171,21 +171,21 @@ public class ConstantDistanceResampling {
 								}
 								float l2 = out.distanceFrom(b);
                                 //System.out.println("         " + l2 + " / " + subsegTargetLength + " " + currentLength);
-                                if (currentLength + l1 + l2 > subsegTargetLength) {
+                                if ((currentLength + l1 + l2) > subsegTargetLength) {
 									float alpha = (subsegTargetLength - currentLength - l1) / l2;
 									if (Float.isInfinite(alpha)) alpha = 0;
 									if (Float.isNaN(alpha)) alpha = 0;
 									if (alpha < 0) alpha = 0;
 									if (alpha > 1) alpha = 1;
-									LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f + 0.5f * alpha, out);
+									LineUtils.evaluateCubicFrame(a, c1, c2, b, 0.5f + (0.5f * alpha), out);
 
 									stream.add(new Vector2(out));
                                     //System.out.println(" over 2, added <" + out + ">");
 
 									float nowLength = currentLength + out.distanceFrom(a);
-									subsegTargetLength = length / num - (nowLength - length / num) / 2;
+									subsegTargetLength = length / num - (nowLength - (length / num)) / 2;
 									currentLength = 0;
-									LineUtils.splitCubicFrame(a, c1, c2, b, 0.5f + 0.5f * alpha, c12, m, c21, tmp);
+									LineUtils.splitCubicFrame(a, c1, c2, b, 0.5f + (0.5f * alpha), c12, m, c21, tmp);
 
 									a.setValue(m);
 									c1.setValue(c21);
@@ -214,7 +214,7 @@ public class ConstantDistanceResampling {
 
 							while (true) {
 								float l1 = a.distanceFrom(b);
-								if (currentLength + l1 > subsegTargetLength) {
+								if ((currentLength + l1) > subsegTargetLength) {
 									float alpha = (subsegTargetLength - currentLength) / l1;
 									if (Float.isInfinite(alpha)) alpha = 0;
 									if (Float.isNaN(alpha)) alpha = 0;
@@ -263,7 +263,7 @@ public class ConstantDistanceResampling {
 		for (int i = 0; i < stream.size(); i++) {
 			if (i == 0)
 				resampledIn.moveTo(stream.get(i).x, stream.get(i).y);
-			else if (i < stream.size() - 1 && i > 1) {
+			else if ((i < (stream.size() - 1)) && (i > 1)) {
 				Vector2 t1 = new Vector2(stream.get(i + 1)).sub(stream.get(i - 1)).scale(-1 / 6f).add(stream.get(i));
 				Vector2 t2 = new Vector2(stream.get(i)).sub(stream.get(i - 2)).scale(1 / 6f).add(stream.get(i - 1));
 				resampledIn.cubicTo(t2.x, t2.y, t1.x, t1.y, stream.get(i).x, stream.get(i).y);
@@ -271,7 +271,7 @@ public class ConstantDistanceResampling {
 				Vector2 t1 = new Vector2(stream.get(i + 1)).sub(stream.get(i - 1)).scale(-1 / 6f).add(stream.get(i));
 				Vector2 t2 = new Vector2(stream.get(i)).sub(stream.get(i - 1)).scale(1 / 3f).add(stream.get(i - 1));
 				resampledIn.cubicTo(t2.x, t2.y, t1.x, t1.y, stream.get(i).x, stream.get(i).y);
-			} else if (i == stream.size() - 1) {
+			} else if (i == (stream.size() - 1)) {
 				Vector2 t1 = new Vector2(stream.get(i)).sub(stream.get(i - 1)).scale(-1 / 3f).add(stream.get(i));
 				Vector2 t2 = new Vector2(stream.get(i)).sub(stream.get(i - 2)).scale(1 / 6f).add(stream.get(i - 1));
 				resampledIn.cubicTo(t2.x, t2.y, t1.x, t1.y, stream.get(i).x, stream.get(i).y);

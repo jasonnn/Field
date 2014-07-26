@@ -10,8 +10,8 @@ import java.net.SocketException;
 
 public class SimpleUDPListener implements iUpdateable {
 
-	private DatagramSocket socket;
-	private Thread t;
+	private final DatagramSocket socket;
+	private final Thread t;
 
 	int maxSize = 1536;
 

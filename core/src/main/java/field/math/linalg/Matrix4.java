@@ -66,33 +66,45 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 				double sum;
 
 				ip = row_perm[rp + i];
-				sum = matrix2[cv + 4 * ip];
-				matrix2[cv + 4 * ip] = matrix2[cv + 4 * i];
+				sum = matrix2[(cv + (4 * ip))];
+				matrix2[(cv + (4 * ip))] = matrix2[(cv + (4 * i))];
 				if (ii >= 0) {
 					// rv = &(matrix1[i][0]);
 					rv = i * 4;
-					for (j = ii; j <= i - 1; j++) {
-						sum -= matrix1[rv + j] * matrix2[cv + 4 * j];
+					for (j = ii; j <= (i - 1); j++) {
+						sum -= matrix1[rv + j] * matrix2[(cv + (4 * j))];
 					}
 				} else if (sum != 0.0) {
 					ii = i;
 				}
-				matrix2[cv + 4 * i] = sum;
+				matrix2[(cv + (4 * i))] = sum;
 			}
 
 			// Backsubstitution
 			// rv = &(matrix1[3][0]);
 			rv = 3 * 4;
-			matrix2[cv + 4 * 3] /= matrix1[rv + 3];
+			matrix2[(cv + (4 * 3))] /= matrix1[rv + 3];
 
 			rv -= 4;
-			matrix2[cv + 4 * 2] = (matrix2[cv + 4 * 2] - matrix1[rv + 3] * matrix2[cv + 4 * 3]) / matrix1[rv + 2];
+			matrix2[(cv + (4 * 2))] = (matrix2[(cv + (4 * 2))] - (matrix1[rv + 3] * matrix2[cv + 4 * 3])) / matrix1[rv + 2];
 
 			rv -= 4;
-			matrix2[cv + 4 * 1] = (matrix2[cv + 4 * 1] - matrix1[rv + 2] * matrix2[cv + 4 * 2] - matrix1[rv + 3] * matrix2[cv + 4 * 3]) / matrix1[rv + 1];
+			matrix2[(cv + (4 * 1))] = (matrix2[(cv + (4 * 1))] - (matrix1[rv + 2] * matrix2[cv + 4 * 2]) - (matrix1[rv
+                                                                                                                    + 3]
+                                                                                                            * matrix2[cv
+                                                                                                                      +
+                                                                                                                      4
+                                                                                                                      * 3])) / matrix1[rv + 1];
 
 			rv -= 4;
-			matrix2[cv + 4 * 0] = (matrix2[cv + 4 * 0] - matrix1[rv + 1] * matrix2[cv + 4 * 1] - matrix1[rv + 2] * matrix2[cv + 4 * 2] - matrix1[rv + 3] * matrix2[cv + 4 * 3]) / matrix1[rv + 0];
+			matrix2[(cv + (4 * 0))] = (matrix2[(cv + (4 * 0))]
+                                       - (matrix1[rv + 1] * matrix2[cv + 4 * 1])
+                                       - (matrix1[rv
+                                                  + 2]
+                                          * matrix2[cv
+                                                    + 4
+                                                      * 2])
+                                       - (matrix1[rv + 3] * matrix2[cv + 4 * 3])) / matrix1[rv + 0];
 		}
 	}
 
@@ -118,7 +130,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	//
 	static boolean luDecomposition(double[] matrix0, int[] row_perm) {
 
-		double row_scale[] = new double[4];
+		double[] row_scale = new double[4];
 
 		// Determine implicit scaling information by looping over rows
 		{
@@ -558,17 +570,17 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                the scale value applied to the rotational components
 	 */
 	public Matrix4(Quaternion q1, Vector3 t1, float s) {
-		m00 = (float) (s * (1.0 - 2.0 * q1.y * q1.y - 2.0 * q1.z * q1.z));
-		m10 = (float) (s * (2.0 * (q1.x * q1.y + q1.w * q1.z)));
-		m20 = (float) (s * (2.0 * (q1.x * q1.z - q1.w * q1.y)));
+		m00 = (float) (s * (1.0 - (2.0 * q1.y * q1.y) - (2.0 * q1.z * q1.z)));
+		m10 = (float) (s * (2.0 * ((q1.x * q1.y) + (q1.w * q1.z))));
+		m20 = (float) (s * (2.0 * ((q1.x * q1.z) - (q1.w * q1.y))));
 
-		m01 = (float) (s * (2.0 * (q1.x * q1.y - q1.w * q1.z)));
-		m11 = (float) (s * (1.0 - 2.0 * q1.x * q1.x - 2.0 * q1.z * q1.z));
-		m21 = (float) (s * (2.0 * (q1.y * q1.z + q1.w * q1.x)));
+		m01 = (float) (s * (2.0 * ((q1.x * q1.y) - (q1.w * q1.z))));
+		m11 = (float) (s * (1.0 - (2.0 * q1.x * q1.x) - (2.0 * q1.z * q1.z)));
+		m21 = (float) (s * (2.0 * ((q1.y * q1.z) + (q1.w * q1.x))));
 
-		m02 = (float) (s * (2.0 * (q1.x * q1.z + q1.w * q1.y)));
-		m12 = (float) (s * (2.0 * (q1.y * q1.z - q1.w * q1.x)));
-		m22 = (float) (s * (1.0 - 2.0 * q1.x * q1.x - 2.0 * q1.y * q1.y));
+		m02 = (float) (s * (2.0 * ((q1.x * q1.z) + (q1.w * q1.y))));
+		m12 = (float) (s * (2.0 * ((q1.y * q1.z) - (q1.w * q1.x))));
+		m22 = (float) (s * (1.0 - (2.0 * q1.x * q1.x) - (2.0 * q1.y * q1.y)));
 
 		m03 = t1.x;
 		m13 = t1.y;
@@ -596,17 +608,17 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                the scale value applied to the rotational components
 	 */
 	public Matrix4(Quaternion q1, Vector3 t1, Vector3 s) {
-		m00 = (float) (s.x * (1.0 - 2.0 * q1.y * q1.y - 2.0 * q1.z * q1.z));
-		m10 = (float) (s.y * (2.0 * (q1.x * q1.y + q1.w * q1.z)));
-		m20 = (float) (s.z * (2.0 * (q1.x * q1.z - q1.w * q1.y)));
+		m00 = (float) (s.x * (1.0 - (2.0 * q1.y * q1.y) - (2.0 * q1.z * q1.z)));
+		m10 = (float) (s.y * (2.0 * ((q1.x * q1.y) + (q1.w * q1.z))));
+		m20 = (float) (s.z * (2.0 * ((q1.x * q1.z) - (q1.w * q1.y))));
 
-		m01 = (float) (s.x * (2.0 * (q1.x * q1.y - q1.w * q1.z)));
-		m11 = (float) (s.y * (1.0 - 2.0 * q1.x * q1.x - 2.0 * q1.z * q1.z));
-		m21 = (float) (s.z * (2.0 * (q1.y * q1.z + q1.w * q1.x)));
+		m01 = (float) (s.x * (2.0 * ((q1.x * q1.y) - (q1.w * q1.z))));
+		m11 = (float) (s.y * (1.0 - (2.0 * q1.x * q1.x) - (2.0 * q1.z * q1.z)));
+		m21 = (float) (s.z * (2.0 * ((q1.y * q1.z) + (q1.w * q1.x))));
 
-		m02 = (float) (s.x * (2.0 * (q1.x * q1.z + q1.w * q1.y)));
-		m12 = (float) (s.y * (2.0 * (q1.y * q1.z - q1.w * q1.x)));
-		m22 = (float) (s.z * (1.0 - 2.0 * q1.x * q1.x - 2.0 * q1.y * q1.y));
+		m02 = (float) (s.x * (2.0 * ((q1.x * q1.z) + (q1.w * q1.y))));
+		m12 = (float) (s.y * (2.0 * ((q1.y * q1.z) - (q1.w * q1.x))));
+		m22 = (float) (s.z * (1.0 - (2.0 * q1.x * q1.x) - (2.0 * q1.y * q1.y)));
 
 		m03 = t1.x;
 		m13 = t1.y;
@@ -765,10 +777,25 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 
 		// cofactor exapainsion along first row
 
-		det = m00 * (m11 * m22 * m33 + m12 * m23 * m31 + m13 * m21 * m32 - m13 * m22 * m31 - m11 * m23 * m32 - m12 * m21 * m33);
-		det -= m01 * (m10 * m22 * m33 + m12 * m23 * m30 + m13 * m20 * m32 - m13 * m22 * m30 - m10 * m23 * m32 - m12 * m20 * m33);
-		det += m02 * (m10 * m21 * m33 + m11 * m23 * m30 + m13 * m20 * m31 - m13 * m21 * m30 - m10 * m23 * m31 - m11 * m20 * m33);
-		det -= m03 * (m10 * m21 * m32 + m11 * m22 * m30 + m12 * m20 * m31 - m12 * m21 * m30 - m10 * m22 * m31 - m11 * m20 * m32);
+		det = m00 * (((m11 * m22 * m33) + (m12 * m23 * m31) + (m13 * m21 * m32))
+                     - (m13 * m22 * m31)
+                     - (m11 * m23 * m32)
+                     - (m12 * m21 * m33));
+		det -= m01 * (((m10 * m22 * m33) + (m12 * m23 * m30) + (m13 * m20 * m32)) - (m13 * m22 * m30) - (m10
+                                                                                                         * m23
+                                                                                                         * m32) - (m12
+                                                                                                                   * m20
+                                                                                                                   * m33));
+		det += m02 * (((m10 * m21 * m33) + (m11 * m23 * m30) + (m13 * m20 * m31)) - (m13 * m21 * m30) - (m10
+                                                                                                         * m23
+                                                                                                         * m31) - (m11
+                                                                                                                   * m20
+                                                                                                                   * m33));
+		det -= m03 * (((m10 * m21 * m32) + (m11 * m22 * m30) + (m12 * m20 * m31)) - (m12 * m21 * m30) - (m10
+                                                                                                         * m22
+                                                                                                         * m31) - (m11
+                                                                                                                   * m20
+                                                                                                                   * m32));
 
 		return (det);
 	}
@@ -838,7 +865,22 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 */
 	public boolean equals(Matrix4 m1) {
 		try {
-			return (this.m00 == m1.m00 && this.m01 == m1.m01 && this.m02 == m1.m02 && this.m03 == m1.m03 && this.m10 == m1.m10 && this.m11 == m1.m11 && this.m12 == m1.m12 && this.m13 == m1.m13 && this.m20 == m1.m20 && this.m21 == m1.m21 && this.m22 == m1.m22 && this.m23 == m1.m23 && this.m30 == m1.m30 && this.m31 == m1.m31 && this.m32 == m1.m32 && this.m33 == m1.m33);
+			return ((this.m00 == m1.m00)
+                    && (this.m01 == m1.m01)
+                    && (this.m02 == m1.m02)
+                    && (this.m03 == m1.m03)
+                    && (this.m10 == m1.m10)
+                    && (this.m11 == m1.m11)
+                    && (this.m12 == m1.m12)
+                    && (this.m13 == m1.m13)
+                    && (this.m20 == m1.m20)
+                    && (this.m21 == m1.m21)
+                    && (this.m22 == m1.m22)
+                    && (this.m23 == m1.m23)
+                    && (this.m30 == m1.m30)
+                    && (this.m31 == m1.m31)
+                    && (this.m32 == m1.m32)
+                    && (this.m33 == m1.m33));
 		} catch (NullPointerException e2) {
 			return false;
 		}
@@ -858,7 +900,22 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	public boolean equals(Object t1) {
 		try {
 			Matrix4 m2 = (Matrix4) t1;
-			return (this.m00 == m2.m00 && this.m01 == m2.m01 && this.m02 == m2.m02 && this.m03 == m2.m03 && this.m10 == m2.m10 && this.m11 == m2.m11 && this.m12 == m2.m12 && this.m13 == m2.m13 && this.m20 == m2.m20 && this.m21 == m2.m21 && this.m22 == m2.m22 && this.m23 == m2.m23 && this.m30 == m2.m30 && this.m31 == m2.m31 && this.m32 == m2.m32 && this.m33 == m2.m33);
+			return ((this.m00 == m2.m00)
+                    && (this.m01 == m2.m01)
+                    && (this.m02 == m2.m02)
+                    && (this.m03 == m2.m03)
+                    && (this.m10 == m2.m10)
+                    && (this.m11 == m2.m11)
+                    && (this.m12 == m2.m12)
+                    && (this.m13 == m2.m13)
+                    && (this.m20 == m2.m20)
+                    && (this.m21 == m2.m21)
+                    && (this.m22 == m2.m22)
+                    && (this.m23 == m2.m23)
+                    && (this.m30 == m2.m30)
+                    && (this.m31 == m2.m31)
+                    && (this.m32 == m2.m32)
+                    && (this.m33 == m2.m33));
 		} catch (ClassCastException e1) {
 			return false;
 		} catch (NullPointerException e2) {
@@ -975,7 +1032,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		if (ww < 0)
 			ww = 0;
 
-		if (!((ww < 0 ? -ww : ww) < 1.0e-7)) {
+		if (!(((ww < 0) ? -ww : ww) < 1.0e-7)) {
 			double w = (float) Math.sqrt(ww);
 			ww = 0.25 / w;
 			double x = (float) ((tmp_rot[7] - tmp_rot[5]) * ww);
@@ -993,7 +1050,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		ww = -0.5 * (tmp_rot[4] + tmp_rot[8]);
 		if (ww < 0)
 			ww = 0;
-		if (!((ww < 0 ? -ww : ww) < 1.0e-7)) {
+		if (!(((ww < 0) ? -ww : ww) < 1.0e-7)) {
 			q1.x = (float) Math.sqrt(ww);
 			ww = 0.5 / q1.x;
 			q1.y = (float) (tmp_rot[3] * ww);
@@ -1005,7 +1062,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		ww = 0.5 * (1.0 - tmp_rot[8]);
 		if (ww < 0)
 			ww = 0;
-		if (!((ww < 0 ? -ww : ww) < 1.0e-7)) {
+		if (!(((ww < 0) ? -ww : ww) < 1.0e-7)) {
 			q1.y = (float) (Math.sqrt(ww));
 			q1.z = (float) (tmp_rot[7] / (2.0 * q1.y));
 			return q1;
@@ -1032,7 +1089,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		double ww;
 
 		ww = 0.25 * (1.0 + tmp_rot[0] + tmp_rot[4] + tmp_rot[8]);
-		if (!((ww < 0 ? -ww : ww) < 1.0e-30)) {
+		if (!(((ww < 0) ? -ww : ww) < 1.0e-30)) {
 			q1.w = (float) Math.sqrt(Math.abs(ww));
 			ww = 0.25 / q1.w;
 			q1.x = (float) ((tmp_rot[7] - tmp_rot[5]) * ww);
@@ -1045,7 +1102,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 
 		q1.w = 0.0f;
 		ww = -0.5 * (tmp_rot[4] + tmp_rot[8]);
-		if (!((ww < 0 ? -ww : ww) < 1.0e-30)) {
+		if (!(((ww < 0) ? -ww : ww) < 1.0e-30)) {
 			q1.x = (float) Math.sqrt(Math.abs(ww));
 			ww = 0.5 / q1.x;
 			q1.y = (float) (tmp_rot[3] * ww);
@@ -1057,7 +1114,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 
 		q1.x = 0.0f;
 		ww = 0.5 * (1.0 - tmp_rot[8]);
-		if (!((ww < 0 ? -ww : ww) < 1.0e-30)) {
+		if (!(((ww < 0) ? -ww : ww) < 1.0e-30)) {
 			q1.y = (float) (Math.sqrt(Math.abs(ww)));
 			q1.z = (float) (tmp_rot[7] / (2.0 * q1.y));
 
@@ -1097,7 +1154,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                the array into which the matrix row values will be
 	 *                copied
 	 */
-	public final void getColumn(int column, float v[]) {
+	public final void getColumn(int column, float[] v) {
 		if (column == 0) {
 			v[0] = m00;
 			v[1] = m10;
@@ -1288,7 +1345,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                the array into which the matrix row values will be
 	 *                copied
 	 */
-	public final void getRow(int row, float v[]) {
+	public final void getRow(int row, float[] v) {
 		if (row == 0) {
 			v[0] = m00;
 			v[1] = m01;
@@ -1568,7 +1625,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                the second matrix
 	 */
 	public final Matrix4 mul(Matrix4 m1, Matrix4 m2) {
-		if (this != m1 && this != m2) {
+		if ((this != m1) && (this != m2)) {
 
 			this.m00 = m1.m00 * m2.m00 + m1.m01 * m2.m10 + m1.m02 * m2.m20 + m1.m03 * m2.m30;
 			this.m01 = m1.m00 * m2.m01 + m1.m01 * m2.m11 + m1.m02 * m2.m21 + m1.m03 * m2.m31;
@@ -1646,7 +1703,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                multiplication
 	 */
 	public final Matrix4 mulTransposeBoth(Matrix4 m1, Matrix4 m2) {
-		if (this != m1 && this != m2) {
+		if ((this != m1) && (this != m2)) {
 			this.m00 = m1.m00 * m2.m00 + m1.m10 * m2.m01 + m1.m20 * m2.m02 + m1.m30 * m2.m03;
 			this.m01 = m1.m00 * m2.m10 + m1.m10 * m2.m11 + m1.m20 * m2.m12 + m1.m30 * m2.m13;
 			this.m02 = m1.m00 * m2.m20 + m1.m10 * m2.m21 + m1.m20 * m2.m22 + m1.m30 * m2.m23;
@@ -1726,7 +1783,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                multiplication
 	 */
 	public final Matrix4 mulTransposeLeft(Matrix4 m1, Matrix4 m2) {
-		if (this != m1 && this != m2) {
+		if ((this != m1) && (this != m2)) {
 			this.m00 = m1.m00 * m2.m00 + m1.m10 * m2.m10 + m1.m20 * m2.m20 + m1.m30 * m2.m30;
 			this.m01 = m1.m00 * m2.m01 + m1.m10 * m2.m11 + m1.m20 * m2.m21 + m1.m30 * m2.m31;
 			this.m02 = m1.m00 * m2.m02 + m1.m10 * m2.m12 + m1.m20 * m2.m22 + m1.m30 * m2.m32;
@@ -1807,7 +1864,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                multiplication
 	 */
 	public final void mulTransposeRight(Matrix4 m1, Matrix4 m2) {
-		if (this != m1 && this != m2) {
+		if ((this != m1) && (this != m2)) {
 			this.m00 = m1.m00 * m2.m00 + m1.m01 * m2.m01 + m1.m02 * m2.m02 + m1.m03 * m2.m03;
 			this.m01 = m1.m00 * m2.m10 + m1.m01 * m2.m11 + m1.m02 * m2.m12 + m1.m03 * m2.m13;
 			this.m02 = m1.m00 * m2.m20 + m1.m01 * m2.m21 + m1.m02 * m2.m22 + m1.m03 * m2.m23;
@@ -2033,7 +2090,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                the axis and angle to be converted
 	 */
 	public final void set(AxisAngle a1) {
-		float mag = (float) Math.sqrt(a1.x * a1.x + a1.y * a1.y + a1.z * a1.z);
+		float mag = (float) Math.sqrt((a1.x * a1.x) + (a1.y * a1.y) + (a1.z * a1.z));
 		if (mag < EPS) {
 			m00 = 1.0f;
 			m01 = 0.0f;
@@ -2269,17 +2326,17 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 *                the quaternion to be converted
 	 */
 	public final void set(Quaternion q1) {
-		this.m00 = (1.0f - 2.0f * q1.y * q1.y - 2.0f * q1.z * q1.z);
-		this.m10 = (2.0f * (q1.x * q1.y + q1.w * q1.z));
-		this.m20 = (2.0f * (q1.x * q1.z - q1.w * q1.y));
+		this.m00 = (1.0f - (2.0f * q1.y * q1.y) - (2.0f * q1.z * q1.z));
+		this.m10 = (2.0f * ((q1.x * q1.y) + (q1.w * q1.z)));
+		this.m20 = (2.0f * ((q1.x * q1.z) - (q1.w * q1.y)));
 
-		this.m01 = (2.0f * (q1.x * q1.y - q1.w * q1.z));
-		this.m11 = (1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.z * q1.z);
-		this.m21 = (2.0f * (q1.y * q1.z + q1.w * q1.x));
+		this.m01 = (2.0f * ((q1.x * q1.y) - (q1.w * q1.z)));
+		this.m11 = (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.z * q1.z));
+		this.m21 = (2.0f * ((q1.y * q1.z) + (q1.w * q1.x)));
 
-		this.m02 = (2.0f * (q1.x * q1.z + q1.w * q1.y));
-		this.m12 = (2.0f * (q1.y * q1.z - q1.w * q1.x));
-		this.m22 = (1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.y * q1.y);
+		this.m02 = (2.0f * ((q1.x * q1.z) + (q1.w * q1.y)));
+		this.m12 = (2.0f * ((q1.y * q1.z) - (q1.w * q1.x)));
+		this.m22 = (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.y * q1.y));
 
 		this.m03 = (float) 0.0;
 		this.m13 = (float) 0.0;
@@ -2304,17 +2361,17 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 */
 	public final void set(Quaternion q1, Vector3 t1, float s) {
 
-		this.m00 = (s * (1.0f - 2.0f * q1.y * q1.y - 2.0f * q1.z * q1.z));
-		this.m10 = (s * (2.0f * (q1.x * q1.y + q1.w * q1.z)));
-		this.m20 = (s * (2.0f * (q1.x * q1.z - q1.w * q1.y)));
+		this.m00 = (s * (1.0f - (2.0f * q1.y * q1.y) - (2.0f * q1.z * q1.z)));
+		this.m10 = (s * (2.0f * ((q1.x * q1.y) + (q1.w * q1.z))));
+		this.m20 = (s * (2.0f * ((q1.x * q1.z) - (q1.w * q1.y))));
 
-		this.m01 = (s * (2.0f * (q1.x * q1.y - q1.w * q1.z)));
-		this.m11 = (s * (1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.z * q1.z));
-		this.m21 = (s * (2.0f * (q1.y * q1.z + q1.w * q1.x)));
+		this.m01 = (s * (2.0f * ((q1.x * q1.y) - (q1.w * q1.z))));
+		this.m11 = (s * (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.z * q1.z)));
+		this.m21 = (s * (2.0f * ((q1.y * q1.z) + (q1.w * q1.x))));
 
-		this.m02 = (s * (2.0f * (q1.x * q1.z + q1.w * q1.y)));
-		this.m12 = (s * (2.0f * (q1.y * q1.z - q1.w * q1.x)));
-		this.m22 = (s * (1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.y * q1.y));
+		this.m02 = (s * (2.0f * ((q1.x * q1.z) + (q1.w * q1.y))));
+		this.m12 = (s * (2.0f * ((q1.y * q1.z) - (q1.w * q1.x))));
+		this.m22 = (s * (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.y * q1.y)));
 
 		this.m03 = t1.x;
 		this.m13 = t1.y;
@@ -2328,19 +2385,19 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 
 	public void set(Quaternion q1, Vector3 t1, Vector3 s) {
 		if (Math.abs(q1.mag() - 1) > 0.2)
-			throw new IllegalArgumentException("not normalized <" + q1 + ">");
+			throw new IllegalArgumentException("not normalized <" + q1 + '>');
 
-		this.m00 = (s.x * (1.0f - 2.0f * q1.y * q1.y - 2.0f * q1.z * q1.z));
-		this.m10 = (s.y * (2.0f * (q1.x * q1.y + q1.w * q1.z)));
-		this.m20 = (s.z * (2.0f * (q1.x * q1.z - q1.w * q1.y)));
+		this.m00 = (s.x * (1.0f - (2.0f * q1.y * q1.y) - (2.0f * q1.z * q1.z)));
+		this.m10 = (s.y * (2.0f * ((q1.x * q1.y) + (q1.w * q1.z))));
+		this.m20 = (s.z * (2.0f * ((q1.x * q1.z) - (q1.w * q1.y))));
 
-		this.m01 = (s.x * (2.0f * (q1.x * q1.y - q1.w * q1.z)));
-		this.m11 = (s.y * (1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.z * q1.z));
-		this.m21 = (s.z * (2.0f * (q1.y * q1.z + q1.w * q1.x)));
+		this.m01 = (s.x * (2.0f * ((q1.x * q1.y) - (q1.w * q1.z))));
+		this.m11 = (s.y * (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.z * q1.z)));
+		this.m21 = (s.z * (2.0f * ((q1.y * q1.z) + (q1.w * q1.x))));
 
-		this.m02 = (s.x * (2.0f * (q1.x * q1.z + q1.w * q1.y)));
-		this.m12 = (s.y * (2.0f * (q1.y * q1.z - q1.w * q1.x)));
-		this.m22 = (s.z * (1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.y * q1.y));
+		this.m02 = (s.x * (2.0f * ((q1.x * q1.z) + (q1.w * q1.y))));
+		this.m12 = (s.y * (2.0f * ((q1.y * q1.z) - (q1.w * q1.x))));
+		this.m22 = (s.z * (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.y * q1.y)));
 
 		this.m03 = t1.x;
 		this.m13 = t1.y;
@@ -2422,7 +2479,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 * @param v
 	 *                the replacement column
 	 */
-	public final void setColumn(int column, float v[]) {
+	public final void setColumn(int column, float[] v) {
 		switch (column) {
 		case 0:
 			this.m00 = v[0];
@@ -2719,7 +2776,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 
 		getScaleRotate(tmp_scale, tmp_rot);
 
-		double mag = Math.sqrt(a1.x * a1.x + a1.y * a1.y + a1.z * a1.z);
+		double mag = Math.sqrt((a1.x * a1.x) + (a1.y * a1.y) + (a1.z * a1.z));
 		if (mag < EPS) {
 			m00 = 1.0f;
 			m01 = 0.0f;
@@ -2746,17 +2803,17 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 			double xy = a1.x * a1.y;
 			double yz = a1.y * a1.z;
 
-			m00 = (float) ((t * ax * ax + cosTheta) * tmp_scale[0]);
-			m01 = (float) ((t * xy - sinTheta * az) * tmp_scale[1]);
-			m02 = (float) ((t * xz + sinTheta * ay) * tmp_scale[2]);
+			m00 = (float) (((t * ax * ax) + cosTheta) * tmp_scale[0]);
+			m01 = (float) (((t * xy) - (sinTheta * az)) * tmp_scale[1]);
+			m02 = (float) (((t * xz) + (sinTheta * ay)) * tmp_scale[2]);
 
-			m10 = (float) ((t * xy + sinTheta * az) * tmp_scale[0]);
-			m11 = (float) ((t * ay * ay + cosTheta) * tmp_scale[1]);
-			m12 = (float) ((t * yz - sinTheta * ax) * tmp_scale[2]);
+			m10 = (float) (((t * xy) + (sinTheta * az)) * tmp_scale[0]);
+			m11 = (float) (((t * ay * ay) + cosTheta) * tmp_scale[1]);
+			m12 = (float) (((t * yz) - (sinTheta * ax)) * tmp_scale[2]);
 
-			m20 = (float) ((t * xz - sinTheta * ay) * tmp_scale[0]);
-			m21 = (float) ((t * yz + sinTheta * ax) * tmp_scale[1]);
-			m22 = (float) ((t * az * az + cosTheta) * tmp_scale[2]);
+			m20 = (float) (((t * xz) - (sinTheta * ay)) * tmp_scale[0]);
+			m21 = (float) (((t * yz) + (sinTheta * ax)) * tmp_scale[1]);
+			m22 = (float) (((t * az * az) + cosTheta) * tmp_scale[2]);
 		}
 
 	}
@@ -2810,17 +2867,17 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		double[] tmp_scale = new double[3]; // scratch matrix
 		getScaleRotate(tmp_scale, tmp_rot);
 
-		m00 = (float) ((1.0f - 2.0f * q1.y * q1.y - 2.0f * q1.z * q1.z) * tmp_scale[0]);
-		m10 = (float) ((2.0f * (q1.x * q1.y + q1.w * q1.z)) * tmp_scale[0]);
-		m20 = (float) ((2.0f * (q1.x * q1.z - q1.w * q1.y)) * tmp_scale[0]);
+		m00 = (float) ((1.0f - (2.0f * q1.y * q1.y) - (2.0f * q1.z * q1.z)) * tmp_scale[0]);
+		m10 = (float) ((2.0f * ((q1.x * q1.y) + (q1.w * q1.z))) * tmp_scale[0]);
+		m20 = (float) ((2.0f * ((q1.x * q1.z) - (q1.w * q1.y))) * tmp_scale[0]);
 
-		m01 = (float) ((2.0f * (q1.x * q1.y - q1.w * q1.z)) * tmp_scale[1]);
-		m11 = (float) ((1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.z * q1.z) * tmp_scale[1]);
-		m21 = (float) ((2.0f * (q1.y * q1.z + q1.w * q1.x)) * tmp_scale[1]);
+		m01 = (float) ((2.0f * ((q1.x * q1.y) - (q1.w * q1.z))) * tmp_scale[1]);
+		m11 = (float) ((1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.z * q1.z)) * tmp_scale[1]);
+		m21 = (float) ((2.0f * ((q1.y * q1.z) + (q1.w * q1.x))) * tmp_scale[1]);
 
-		m02 = (float) ((2.0f * (q1.x * q1.z + q1.w * q1.y)) * tmp_scale[2]);
-		m12 = (float) ((2.0f * (q1.y * q1.z - q1.w * q1.x)) * tmp_scale[2]);
-		m22 = (float) ((1.0f - 2.0f * q1.x * q1.x - 2.0f * q1.y * q1.y) * tmp_scale[2]);
+		m02 = (float) ((2.0f * ((q1.x * q1.z) + (q1.w * q1.y))) * tmp_scale[2]);
+		m12 = (float) ((2.0f * ((q1.y * q1.z) - (q1.w * q1.x))) * tmp_scale[2]);
+		m22 = (float) ((1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.y * q1.y)) * tmp_scale[2]);
 		return this;
 	}
 
@@ -2852,7 +2909,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 * @param v
 	 *                the replacement row
 	 */
-	public final void setRow(int row, float v[]) {
+	public final void setRow(int row, float[] v) {
 		switch (row) {
 		case 0:
 			this.m00 = v[0];
@@ -3116,7 +3173,10 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 */
 	@Override
 	public String toString() {
-		return this.m00 + ", " + this.m01 + ", " + this.m02 + ", " + this.m03 + "\n" + this.m10 + ", " + this.m11 + ", " + this.m12 + ", " + this.m13 + "\n" + this.m20 + ", " + this.m21 + ", " + this.m22 + ", " + this.m23 + "\n" + this.m30 + ", " + this.m31 + ", " + this.m32 + ", " + this.m33 + "\n";
+		return this.m00 + ", " + this.m01 + ", " + this.m02 + ", " + this.m03 + '\n'
+               + this.m10 + ", " + this.m11 + ", " + this.m12 + ", " + this.m13 + '\n'
+               + this.m20 + ", " + this.m21 + ", " + this.m22 + ", " + this.m23 + '\n'
+               + this.m30 + ", " + this.m31 + ", " + this.m32 + ", " + this.m33 + '\n';
 	}
 
 	/**
@@ -3352,7 +3412,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		return this;
 	}
 
-	private final void getScaleRotate(double scales[], double rots[]) {
+	private final void getScaleRotate(double[] scales, double[] rots) {
 
 		double[] tmp = new double[9]; // scratch matrix
 		tmp[0] = m00;
@@ -3383,9 +3443,9 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	 * @return
 	 */
 	final Matrix4 invertGeneral(Matrix4 m1) {
-		double temp[] = new double[16];
-		double result[] = new double[16];
-		int row_perm[] = new int[4];
+		double[] temp = new double[16];
+		double[] result = new double[16];
+		int[] row_perm = new int[4];
 		int i, r, c;
 
 		// Use LU decomposition and backsubstitution code specifically
@@ -3451,7 +3511,8 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	}
 
 	public float minusIdentityFrobenius() {
-		float m = (this.m00-1)*(this.m00-1)+this.m01*this.m01+this.m02*this.m02+this.m03*this.m03;
+		float m = ((this.m00 - 1) * (this.m00 - 1)) + (this.m01 * this.m01) + (this.m02 * this.m02) + (this.m03
+                                                                                                       * this.m03);
 		m+=this.m10*this.m10+(this.m11-1)*(this.m11-1)+this.m12*this.m12+this.m13*this.m13;
 		m+=this.m20*this.m20+this.m21*this.m21+(this.m22-1)*(this.m22-1)+this.m23*this.m23;
 		m+=this.m30*this.m30+this.m31*this.m31+this.m32*this.m32+(this.m33-1)*(this.m33-1);
@@ -3459,7 +3520,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	}
 
 	public float frobenius() {
-		float m = this.m00*this.m00+this.m01*this.m01+this.m02*this.m02+this.m03*this.m03;
+		float m = (this.m00 * this.m00) + (this.m01 * this.m01) + (this.m02 * this.m02) + (this.m03 * this.m03);
 		m+=this.m10*this.m10+this.m11*this.m11+this.m12*this.m12+this.m13*this.m13;
 		m+=this.m20*this.m20+this.m21*this.m21+this.m22*this.m22+this.m23*this.m23;
 		m+=this.m30*this.m30+this.m31*this.m31+this.m32*this.m32+this.m33*this.m33;
@@ -3472,7 +3533,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		Matrix4 y = new Matrix4().setIdentity();
 
 		int q = 0;
-		while (new Matrix4().mul(x, x).sub(this).frobenius() > 1e-6 && q < 10) {
+		while ((new Matrix4().mul(x, x).sub(this).frobenius() > 1e-6) && (q < 10)) {
 			Matrix4 ix = new Matrix4().invertGeneral(x);
 			Matrix4 iy = new Matrix4().invertGeneral(y);
 
@@ -3487,7 +3548,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 	public Matrix4 exp()
 	{
 		float zz = frobenius();
-		int j = (int) Math.max(0, 1+Math.log10(zz)/Math.log10(2));
+		int j = (int) Math.max(0, 1 + (Math.log10(zz) / Math.log10(2)));
 		
 		Matrix4 a = new Matrix4(this).mul((float) Math.pow(2, -j));
 		Matrix4 d = new Matrix4().setIdentity();
@@ -3495,9 +3556,9 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		Matrix4 x = new Matrix4().setIdentity();
 		float c = 1;
 		int q = 6;
-		for(int k=1;k<q+1;k++)
+		for(int k=1; k < (q + 1);k++)
 		{
-			c = c*(q-k+1)/(k*(2*q-k+1));
+			c = c*((q - k) + 1)/(k*(((2 * q) - k) + 1));
 			x = new Matrix4().mul(a, x);
 			n = n.madd(c, x);
 			d = d.madd((float) (Math.pow(-1, k)*c), x);
@@ -3513,7 +3574,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
         //System.out.println(" x "+x+" "+p);
 
 		Matrix4 x2 = new Matrix4(x);
-		for(int i=0;i<p-1;i++)
+		for(int i=0; i < (p - 1);i++)
 		{
 			x2 = new Matrix4().mul(x2, x);
 		}
@@ -3525,7 +3586,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 
 	public Matrix4 log() {
 		int k = 0;
-		while (minusIdentityFrobenius() > 1e-4 && k < 20) {
+		while ((minusIdentityFrobenius() > 1e-4) && (k < 20)) {
 			sqrt();
 			k++;
 		}
@@ -3537,7 +3598,7 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		Matrix4 z = new Matrix4(this);
 		Matrix4 x = new Matrix4(this);
 		int i = 1;
-		while (z.frobenius() > 1e-9 && i < 9) {			
+		while ((z.frobenius() > 1e-9) && (i < 9)) {
 			z = new Matrix4().mul(z, this);
 			i++;
 			x = new Matrix4(x).madd(1f / i, z);
@@ -3566,7 +3627,8 @@ public class Matrix4 implements java.io.Serializable, Cloneable {
 		return this;
 	}
 	
-	static public Matrix4 alexaInterpolate(Matrix4 a, Matrix4 b, float t)
+	public static
+    Matrix4 alexaInterpolate(Matrix4 a, Matrix4 b, float t)
 	{
 		a = new Matrix4(a);
 		b = new Matrix4(b);

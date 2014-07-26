@@ -13,13 +13,14 @@ import java.util.Set;
 
 public class PresentationMode {
 
-    static public final VisualElementProperty<PresentationParameters> present = new VisualElementProperty<PresentationParameters>("present");
+    public static final VisualElementProperty<PresentationParameters> present = new VisualElementProperty<PresentationParameters>("present");
 
     public PresentationMode() {
 
     }
 
-    static public boolean isHidden(iComponent c) {
+    public static
+    boolean isHidden(iComponent c) {
 	iVisualElement v = c.getVisualElement();
 	if (v == null)
 	    return false;
@@ -33,7 +34,8 @@ public class PresentationMode {
 	return p.hidden;
     }
 
-    static public boolean canResizeWidth(iComponent c) {
+    public static
+    boolean canResizeWidth(iComponent c) {
 	iVisualElement v = c.getVisualElement();
 	if (v == null)
 	    return true;
@@ -45,7 +47,8 @@ public class PresentationMode {
 	return !p.fixedWidth;
     }
 
-    static public boolean canResizeHeight(iComponent c) {
+    public static
+    boolean canResizeHeight(iComponent c) {
 	iVisualElement v = c.getVisualElement();
 	if (v == null)
 	    return true;
@@ -57,7 +60,8 @@ public class PresentationMode {
 	return !p.fixedHeight;
     }
 
-    static public boolean canMove(iComponent c) {
+    public static
+    boolean canMove(iComponent c) {
 	iVisualElement v = c.getVisualElement();
 	if (v == null)
 	    return true;
@@ -69,7 +73,8 @@ public class PresentationMode {
 	return !p.fixedPosition;
     }
 
-    static public boolean transformOptionClick(iComponent c, Event e) {
+    public static
+    boolean transformOptionClick(iComponent c, Event e) {
 
 	iVisualElement v = c.getVisualElement();
 	if (v == null)
@@ -95,7 +100,8 @@ public class PresentationMode {
 	return false;
     }
 
-    static public boolean isSpace(iComponent c, Event e) {
+    public static
+    boolean isSpace(iComponent c, Event e) {
 	iVisualElement v = c.getVisualElement();
 	if (v == null)
 	    return false;

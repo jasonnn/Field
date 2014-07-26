@@ -18,7 +18,8 @@ public class MiscNative {
 		// System.loadLibrary("miscNative2");
 	}
 
-	static public void goToBlack() {
+	public static
+    void goToBlack() {
 		FloatBuffer wrOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
 		FloatBuffer wgOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
 		FloatBuffer wbOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
@@ -36,7 +37,8 @@ public class MiscNative {
 		new MiscNative().setScreenTransferTable(wrOut, wgOut, wbOut);
 	}
 
-	static public void fadeUp() {
+	public static
+    void fadeUp() {
 		final FloatBuffer wrOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
 		final FloatBuffer wgOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
 		final FloatBuffer wbOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
@@ -66,7 +68,8 @@ public class MiscNative {
 		});
 	}
 
-	static public void load() {
+	public static
+    void load() {
 		try {
             //System.out.println(" loading native (snow)");
             System.loadLibrary("miscNative2_snow");
@@ -141,7 +144,8 @@ public class MiscNative {
         return false;
 	}
 
-	native public void performFloat(Buffer matrix, int rows, int cols, Buffer output);
+	public native
+    void performFloat(Buffer matrix, int rows, int cols, Buffer output);
 
 	public native int fastRandom(FloatBuffer floats, int length);
 
@@ -155,13 +159,16 @@ public class MiscNative {
 		return false;
 	}
 
-	native public void makeScreenSaverLevel(Object frame);
+	public native
+    void makeScreenSaverLevel(Object frame);
 
-	native public void makePopUpLevel(Object frame);
+	public native
+    void makePopUpLevel(Object frame);
 
 	public native boolean fixTransparentWindowBug(Object frame, float opacity);
 
-	native public void goMultithreadedRenderer();
+	public native
+    void goMultithreadedRenderer();
 
 	public boolean makeChildWindowOf_safe(Object insideParent, Object insideChild) {
 		if (nativeAvailable)
@@ -185,7 +192,8 @@ public class MiscNative {
 
 	public native int nativeRLEDecompress(ByteBuffer input, int length, ByteBuffer output);
 
-	native public void setFrameVisibleSpecial(long nsContext, boolean b);
+	public native
+    void setFrameVisibleSpecial(long nsContext, boolean b);
 
 	public void setScreenTransferTable(FloatBuffer red, FloatBuffer green, FloatBuffer blue) {
 		assert (red.capacity() == green.capacity());
@@ -199,28 +207,32 @@ public class MiscNative {
 			splashDown();
 	}
 
-	native public void splashDown();
+	public native
+    void splashDown();
 
 	public void splashUp_safe() {
 		if (nativeAvailable)
 			splashUp();
 	}
 
-	native public void splashUp();
+	public native
+    void splashUp();
 
 	public void noteDown_safe() {
 		if (nativeAvailable)
 			noteDown();
 	}
 
-	native public void noteDown();
+	public native
+    void noteDown();
 
 	public void noteUp_safe(String text, int x, int y, Object windowParent) {
 		if (nativeAvailable)
 			noteUp(text, x, y, windowParent);
 	}
 
-	native public void noteUp(String text, int x, int y, Object windowParent);
+	public native
+    void noteUp(String text, int x, int y, Object windowParent);
 
 	public boolean unmakeChildWindowOf_safe(Object insideParent, Object insideChild) {
 		if (nativeAvailable)
@@ -229,7 +241,8 @@ public class MiscNative {
 		return false;
 	}
 
-	native public boolean unmakeChildWindowOf(Object insideParent, Object insideChild);
+	public native
+    boolean unmakeChildWindowOf(Object insideParent, Object insideChild);
 
 	public void forceFullScreenNow_safe(long context) {
 		if (nativeAvailable)

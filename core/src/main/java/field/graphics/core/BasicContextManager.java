@@ -34,11 +34,11 @@ import java.util.Map.Entry;
 public class BasicContextManager {
 	private static HashMap<Object, Integer> currentContextIdMap = new HashMap<Object, Integer>();
 
-	private static HashMap<Object, HashMap<Object, Integer>> contextOwnerMap = new HashMap<Object, HashMap<Object, Integer>>();
+	private static final HashMap<Object, HashMap<Object, Integer>> contextOwnerMap = new HashMap<Object, HashMap<Object, Integer>>();
 
-	private static HashMap<Object, Long> coreImageContextMap = new HashMap<Object, Long>();
+	private static final HashMap<Object, Long> coreImageContextMap = new HashMap<Object, Long>();
 
-	private static HashMap<Object, HashMap<Object, Boolean>> contextValidMap = new HashMap<Object, HashMap<Object, Boolean>>();
+	private static final HashMap<Object, HashMap<Object, Boolean>> contextValidMap = new HashMap<Object, HashMap<Object, Boolean>>();
 
 	private static HashMap<Object, Boolean> currentValidMap = new HashMap<Object, Boolean>();
 
@@ -46,8 +46,8 @@ public class BasicContextManager {
 
 	private static Object currentContext;
 
-	private static ThreadLocal<Object> gl = new ThreadLocal<Object>();
-	private static ThreadLocal<Object> glu = new ThreadLocal<Object>();
+	private static final ThreadLocal<Object> gl = new ThreadLocal<Object>();
+	private static final ThreadLocal<Object> glu = new ThreadLocal<Object>();
 
 	public static long coreImageContext;
 
@@ -92,7 +92,7 @@ public class BasicContextManager {
 	 * Use this to store an id into the currentContextIdMap.
 	 */
 	public static void putId(Object owner, int id) {
-		currentContextIdMap.put(owner, new Integer(id));
+		currentContextIdMap.put(owner, id);
 	}
 
 	/**

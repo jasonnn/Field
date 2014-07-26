@@ -55,7 +55,7 @@ public class SimpleClassModel extends AbstractSimpleModel {
     @Override
     protected boolean doEquals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if ((o == null) || (getClass() != o.getClass())) return false;
         if (!super.doEquals(o)) return false;
 
         SimpleClassModel that = (SimpleClassModel) o;
@@ -73,7 +73,7 @@ public class SimpleClassModel extends AbstractSimpleModel {
         result = 31 * result + fields.hashCode();
         result = 31 * result + methods.hashCode();
         result = 31 * result + superName.hashCode();
-        result = 31 * result + (interfaces != null ? Arrays.hashCode(interfaces) : 0);
+        result = 31 * result + ((interfaces != null) ? Arrays.hashCode(interfaces) : 0);
         return result;
     }
 

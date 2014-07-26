@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class PackageTools {
 
-	static public final VisualElementProperty<String> isPackageImported = new VisualElementProperty<String>("isPackageImported");
+	public static final VisualElementProperty<String> isPackageImported = new VisualElementProperty<String>("isPackageImported");
 
 	HashMap<String, String> packagesToSheets = new HashMap<String, String>();
 
@@ -42,7 +42,8 @@ public class PackageTools {
 		}));
 
 		try {
-			packagesToSheets = (HashMap<String, String>) new PythonUtils().loadAsXML(FieldMenus2.getFieldDir() + "/packagesToSheets");
+			packagesToSheets = (HashMap<String, String>) PythonUtils.loadAsXML(FieldMenus2.getFieldDir()
+                                                                               + "/packagesToSheets");
 		} catch (Throwable e) {
 		} finally {
 			if (packagesToSheets == null)
@@ -138,7 +139,8 @@ public class PackageTools {
 		packagesToSheets.put(openingFile, fn);
 	}
 
-	public File newTempFileWithSelected(iVisualElement root, String suggestedName) {
+	public static
+    File newTempFileWithSelected(iVisualElement root, String suggestedName) {
 		FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
 
 		SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(root);

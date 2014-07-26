@@ -11,7 +11,8 @@ import java.util.List;
 
 public class Intersections {
 
-	static public class Intersection_CubicCubic {
+	public static
+    class Intersection_CubicCubic {
 		float fuzz = 1e-5f;
 
 		int maxIndex = 15;
@@ -86,7 +87,8 @@ public class Intersections {
 		}
 	}
 
-	static public class Intersection_LineCubic {
+	public static
+    class Intersection_LineCubic {
 		float fuzz = 1e-5f;
 
 		int maxIndex = 10;
@@ -157,7 +159,8 @@ public class Intersections {
 		}
 	}
 
-	static public class Intersection_LineLine {
+	public static
+    class Intersection_LineLine {
 		Vector2 t1 = new Vector2();
 
 		Vector2 t2 = new Vector2();
@@ -176,7 +179,7 @@ public class Intersections {
 			float irx = Math.min(ra.x, rb.x);
 			float iry = Math.min(ra.y, rb.y);
 
-			float lambda = mlx - ilx + mly - ily + mrx - irx + mry - iry;
+			//float lambda = mlx - ilx + mly - ily + mrx - irx + mry - iry;
 
 			if ((mlx + fuzz >= irx) && (mly + fuzz >= iry) && (mrx + fuzz >= ilx) && (mry + fuzz >= ily)) {
 
@@ -210,15 +213,16 @@ public class Intersections {
 		}
 	}
 
-	static public float tol = 0.5f;
+	public static float tol = 0.5f;
 
-	static public List<Vector2> intersect(CachedLine line, Vector2 a, Vector2 b) {
+	public static
+    List<Vector2> intersect(CachedLine line, Vector2 a, Vector2 b) {
 		List<Vector2> in = new ArrayList<Vector2>();
 		for (int i = 1; i < line.events.size(); i++) {
 			if (!line.events.get(i - 1).hasDestination())
 				continue;
 
-			Vector2 prev = line.events.get(i - 1).getDestination(null);
+			Vector2 prev = line.events.get(i - 1).getDestination();
 			if (line.events.get(i).method.equals(iLine_m.lineTo_m)) {
 				Vector2 o = new Vector2();
 				Intersection_LineLine ll = new Intersection_LineLine();
@@ -246,7 +250,8 @@ public class Intersections {
 		return in;
 	}
 
-	static public List<Pair<CachedLine.Event, CachedLine.Event>> intersectAndSubdivide(List<CachedLine> p1, List<CachedLine> p2, int limit) {
+	public static
+    List<Pair<CachedLine.Event, CachedLine.Event>> intersectAndSubdivide(List<CachedLine> p1, List<CachedLine> p2, int limit) {
 
 		ArrayList<Pair<Event, Event>> ret = new ArrayList<Pair<CachedLine.Event, CachedLine.Event>>();
 
@@ -254,7 +259,7 @@ public class Intersections {
 		Intersection_LineCubic lc = new Intersection_LineCubic();
 		Intersection_LineLine ll = new Intersection_LineLine();
 
-		int n = 0;
+		//int n = 0;
 		boolean skipOut = true;
 		while (skipOut) {
 			for (CachedLine c1 : p1) {
@@ -647,7 +652,8 @@ public class Intersections {
 		return ret;
 	}
 
-	static public Event resolve(final Event left) {
+	public static
+    Event resolve(final Event left) {
 		if (left.container.events.contains(left))
 			return left;
 

@@ -15,7 +15,7 @@ public class Blender implements iBlendAlgebra<Blender>, iFilter<Float, Float> {
 	}
 	
 	public Float filter(Float value) {
-		return value*a+b;
+		return (value * a) + b;
 	}
 
 	public Blender setFromMaxMin(float max, float min) {

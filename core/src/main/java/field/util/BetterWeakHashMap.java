@@ -2,6 +2,7 @@ package field.util;
 
 import field.launch.Launcher;
 import field.launch.iUpdateable;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -16,7 +17,8 @@ import java.util.*;
 
 public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 
-	static public class BaseWeakHashMapKey implements iWeakHashMapKey {
+	public static
+    class BaseWeakHashMapKey implements iWeakHashMapKey {
 		IdentityHashMap map = new IdentityHashMap();
 
 		public Object getWHMKValue(Object inside) {
@@ -100,10 +102,10 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			Map.Entry e = (Map.Entry) o;
 			Object k1 = getKey();
 			Object k2 = e.getKey();
-			if (k1 == k2 || (k1 != null && k1.equals(k2))) {
+			if ((k1 == k2) || ((k1 != null) && k1.equals(k2))) {
 				Object v1 = getValue();
 				Object v2 = e.getValue();
-				if (v1 == v2 || (v1 != null && v1.equals(v2))) return true;
+				if ((v1 == v2) || ((v1 != null) && v1.equals(v2))) return true;
 			}
 			return false;
 		}
@@ -123,7 +125,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			Object k = getKey();
 			// Object v = getValue();
 			// return ((k == null ? 0 : k.hashCode()) ^ (v == null ? 0 : v.hashCode()));
-			return ((k == null ? 0 : k.hashCode()) ^ (value == null ? 0 : value.hashCode()));
+			return (((k == null) ? 0 : k.hashCode()) ^ ((value == null) ? 0 : value.hashCode()));
 		}
 
 		public Object setValue(Object newValue) {
@@ -199,10 +201,11 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			Map.Entry e = (Map.Entry) o;
 			Object k = e.getKey();
 			Entry candidate = getEntry(e.getKey());
-			return candidate != null && candidate.equals(e);
+			return (candidate != null) && candidate.equals(e);
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public Iterator iterator() {
 			return new EntryIterator();
 		}
@@ -240,7 +243,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		Object currentKey = null;
 
 		HashIterator() {
-			index = (size() != 0 ? table.length : 0);
+			index = ((size() != 0) ? table.length : 0);
 		}
 
 		public boolean hasNext() {
@@ -249,7 +252,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			while (nextKey == null) {
 				Entry e = entry;
 				int i = index;
-				while (e == null && i > 0)
+				while ((e == null) && (i > 0))
 					e = t[--i];
 				entry = e;
 				index = i;
@@ -277,7 +280,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
         protected
         BetterWeakHashMap.Entry nextEntry() {
             if (modCount != expectedModCount) throw new ConcurrentModificationException();
-			if (nextKey == null && !hasNext()) throw new NoSuchElementException();
+			if ((nextKey == null) && !hasNext()) throw new NoSuchElementException();
 
 			lastReturned = entry;
 			entry = entry.next;
@@ -307,7 +310,8 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			return containsKey(o);
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public Iterator iterator() {
 			return new KeyIterator();
 		}
@@ -326,7 +330,8 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			return BetterWeakHashMap.this.size();
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public Object[] toArray() {
 			Collection c = new ArrayList(size());
 			for (Iterator i = iterator(); i.hasNext();)
@@ -334,8 +339,9 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			return c.toArray();
 		}
 
-		@Override
-		public Object[] toArray(Object a[]) {
+		@NotNull
+        @Override
+		public Object[] toArray(Object[] a) {
 			Collection c = new ArrayList(size());
 			for (Iterator i = iterator(); i.hasNext();)
 				c.add(i.next());
@@ -362,7 +368,8 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			return containsValue(o);
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public Iterator iterator() {
 			return new ValueIterator();
 		}
@@ -372,7 +379,8 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			return BetterWeakHashMap.this.size();
 		}
 
-		@Override
+		@NotNull
+        @Override
 		public Object[] toArray() {
 			Collection c = new ArrayList(size());
 			for (Iterator i = iterator(); i.hasNext();)
@@ -380,8 +388,9 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			return c.toArray();
 		}
 
-		@Override
-		public Object[] toArray(Object a[]) {
+		@NotNull
+        @Override
+		public Object[] toArray(Object[] a) {
 			Collection c = new ArrayList(size());
 			for (Iterator i = iterator(); i.hasNext();)
 				c.add(i.next());
@@ -429,25 +438,22 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			}
 
 			private String debug() {
-				if (true) return "";
+
 				String s = "";
-				Iterator<WeakReference<BetterWeakHashMap>> m = weakness.iterator();
-				while(m.hasNext())
-				{
-					WeakReference<BetterWeakHashMap> r = m.next();
-					BetterWeakHashMap toMap = r.get();
-					if (toMap!=null)
-					{
-						s+=toMap;
-					}
-				}
+                for (WeakReference<BetterWeakHashMap> r : weakness) {
+                    BetterWeakHashMap toMap = r.get();
+                    if (toMap != null) {
+                        s += toMap;
+                    }
+                }
 				return s;
 			}
 
 		});
 	}
 
-	static public int hash(Object x) {
+	public static
+    int hash(Object x) {
 		int h = x.hashCode();
 
 		h += ~(h << 9);
@@ -463,21 +469,21 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	 * Use NULL_KEY for key if it is null.
 	 */
 	private static Object maskNull(Object key) {
-		return (key == null ? NULL_KEY : key);
+		return ((key == null) ? NULL_KEY : key);
 	}
 
 	/**
 	 * Return internal representation of null key back to caller as null
 	 */
 	private static Object unmaskNull(Object key) {
-		return (key == NULL_KEY ? null : key);
+		return ((key == NULL_KEY) ? null : key);
 	}
 
 	/**
 	 * Check for equality of non-null reference x and possibly-null y. By default uses Object.equals.
 	 */
 	static boolean eq(Object x, Object y) {
-		return x == y || x.equals(y);
+		return (x == y) || x.equals(y);
 	}
 
 	/**
@@ -566,7 +572,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		if (initialCapacity < 0) throw new IllegalArgumentException("Illegal Initial Capacity: " + initialCapacity);
 		if (initialCapacity > MAXIMUM_CAPACITY) initialCapacity = MAXIMUM_CAPACITY;
 
-		if (loadFactor <= 0 || Float.isNaN(loadFactor)) throw new IllegalArgumentException("Illegal Load factor: " + loadFactor);
+		if ((loadFactor <= 0) || Float.isNaN(loadFactor)) throw new IllegalArgumentException("Illegal Load factor: " + loadFactor);
 		int capacity = 1;
 		while (capacity < initialCapacity)
 			capacity <<= 1;
@@ -602,7 +608,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			;
 
 		modCount++;
-		Entry tab[] = table;
+		Entry[] tab = table;
 		for (int i = 0; i < tab.length; ++i)
 			tab[i] = null;
 		size = 0;
@@ -637,7 +643,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	public boolean containsValue(Object value) {
 		if (value == null) return containsNullValue();
 
-		Entry tab[] = getTable();
+		Entry[] tab = getTable();
 		for (int i = tab.length; i-- > 0;)
 			for (Entry e = tab[i]; e != null; e = e.next)
 				if (value.equals(e.getValue())) return true;
@@ -650,10 +656,11 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	 * @return a collection view of the mappings contained in this map.
 	 * @see Map.Entry
 	 */
-	@Override
+	@NotNull
+    @Override
 	public Set entrySet() {
 		Set es = entrySet;
-		return (es != null ? es : (entrySet = new EntrySet()));
+		return ((es != null) ? es : (entrySet = new EntrySet()));
 	}
 
 	/**
@@ -672,7 +679,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		int index = indexFor(h, tab.length);
 		Entry e = tab[index];
 		while (e != null) {
-			if (e.hash == h && eq(k, e.get())) return (V) e.getValue();
+			if ((e.hash == h) && eq(k, e.get())) return (V) e.getValue();
 			e = e.next;
 		}
 		return null;
@@ -686,10 +693,11 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		return size() == 0;
 	}
 
-	@Override
+	@NotNull
+    @Override
 	public Set keySet() {
 		Set ks = keySet;
-		return (ks != null ? ks : (keySet = new KeySet()));
+		return ((ks != null) ? ks : (keySet = new KeySet()));
 	}
 
 	/**
@@ -709,7 +717,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		int i = indexFor(h, tab.length);
 
 		for (Entry e = tab[i]; e != null; e = e.next) {
-			if (h == e.hash && eq(k, e.get())) {
+			if ((h == e.hash) && eq(k, e.get())) {
 				Object oldValue = e.getValue();
 				if (value != oldValue) e.setValue(value);
 				return (V) oldValue;
@@ -740,7 +748,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		 * Expand the map if the map if the number of mappings to be added is greater than or equal to threshold. This is conservative; the obvious condition is (m.size() + size) >= threshold, but this condition could result in a map with twice the appropriate capacity, if the keys to be added overlap with the keys already in this map. By using the conservative calculation, we subject ourself to at most one extra resize.
 		 */
 		if (numKeysToBeAdded > threshold) {
-			int targetCapacity = (int) (numKeysToBeAdded / loadFactor + 1);
+			int targetCapacity = (int) ((numKeysToBeAdded / loadFactor) + 1);
 			if (targetCapacity > MAXIMUM_CAPACITY) targetCapacity = MAXIMUM_CAPACITY;
 			int newCapacity = table.length;
 			while (newCapacity < targetCapacity)
@@ -772,7 +780,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 
 		while (e != null) {
 			Entry next = e.next;
-			if (h == e.hash && eq(k, e.get())) {
+			if ((h == e.hash) && eq(k, e.get())) {
 				modCount++;
 				size--;
 				if (prev == e)
@@ -805,17 +813,18 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	 *
 	 * @return a collection view of the values contained in this map.
 	 */
-	@Override
+	@NotNull
+    @Override
 	public Collection values() {
 		Collection vs = values;
-		return (vs != null ? vs : (values = new Values()));
+		return ((vs != null) ? vs : (values = new Values()));
 	}
 
 	/**
 	 * Special-case code for containsValue with null argument
 	 */
 	private boolean containsNullValue() {
-		Entry tab[] = getTable();
+		Entry[] tab = getTable();
 		for (int i = tab.length; i-- > 0;)
 			for (Entry e = tab[i]; e != null; e = e.next)
 				if (e.getValue() == null) return true;
@@ -892,7 +901,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		Entry[] tab = getTable();
 		int index = indexFor(h, tab.length);
 		Entry e = tab[index];
-		while (e != null && !(e.hash == h && eq(k, e.get())))
+		while ((e != null) && !((e.hash == h) && eq(k, e.get())))
 			e = e.next;
 		return e;
 	}
@@ -910,7 +919,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 
 		while (e != null) {
 			Entry next = e.next;
-			if (h == e.hash && e.equals(entry)) {
+			if ((h == e.hash) && e.equals(entry)) {
 				modCount++;
 				size--;
 				if (prev == e)
@@ -949,7 +958,7 @@ public class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		/*
 		 * If ignoring null elements and processing ref queue caused massive shrinkage, then restore old table. This should be rare, but avoids unbounded expansion of garbage-filled tables.
 		 */
-		if (size >= threshold / 2) {
+		if (size >= (threshold / 2)) {
 			threshold = (int) (newCapacity * loadFactor);
 		} else {
 			expungeStaleEntries();

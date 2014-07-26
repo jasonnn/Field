@@ -27,7 +27,7 @@ class ClSlackVariable extends ClAbstractVariable {
 
 	@Override
 	public String toString() {
-		return "[" + name() + ":slack]";
+		return '[' + name() + ":slack]";
 	}
 
 	@Override

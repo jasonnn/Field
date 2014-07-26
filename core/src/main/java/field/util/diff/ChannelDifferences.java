@@ -13,7 +13,8 @@ import java.util.*;
 
 public class ChannelDifferences<A> {
     
-	static public class DefaultMarkerEquality<A> implements iEquality<List<iMarker<A>>> {
+	public static
+    class DefaultMarkerEquality<A> implements iEquality<List<iMarker<A>>> {
         
 		public boolean areEqual(List<iMarker<A>> o1, List<iMarker<A>> o2) {
 			if (o1 == null || o2 == null)

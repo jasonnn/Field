@@ -83,7 +83,8 @@ public class MacScrollbarHack {
 		}
 	}
 
-	static public void skipAFrame(Shell s) {
+	public static
+    void skipAFrame(Shell s) {
 		if (Platform.getOS() != Platform.OS.mac)
 			return;
 		try {

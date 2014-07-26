@@ -18,7 +18,8 @@ import java.util.List;
 @Woven
 public class PostingChannel<T> implements iChannel<T>, iUpdateable {
 
-	static public class ContingentMarker<T, Q> extends mRun<PostingChannel<T>> {
+	public static
+    class ContingentMarker<T, Q> extends mRun<PostingChannel<T>> {
 
 		protected final iMarker<? extends Q> contingentOn;
 
@@ -41,7 +42,8 @@ public class PostingChannel<T> implements iChannel<T>, iUpdateable {
 			this.token = token;
 			this.contingentOn = contingentOn;
 			this.payload = payload;
-			if (this.contingentOn.getRootChannel().getIterator().remaining().contains(contingentOn) && postTo.getExistingMarker(token) == null) {
+			if (this.contingentOn.getRootChannel().getIterator().remaining().contains(contingentOn)
+                && (postTo.getExistingMarker(token) == null)) {
 				in = true;
 				contingentOn.addNotify(notify = new aMarkerNotify() {
 					@Override
@@ -86,7 +88,8 @@ public class PostingChannel<T> implements iChannel<T>, iUpdateable {
 		T payload;
 	}
 
-	static public class PostAlways<T> extends mRun<PostingChannel<T>> {
+	public static
+    class PostAlways<T> extends mRun<PostingChannel<T>> {
 		private final iChannel<T> channelToPost;
 
 		WeakReference<PostingChannel<T>> ref;
@@ -155,7 +158,7 @@ public class PostingChannel<T> implements iChannel<T>, iUpdateable {
 
 	public iMarker<T> getExistingMarker(Object token, boolean touch) {
 		iMarker<T> r = posting.getExistingMarker(token);
-		if (r != null && touch) {
+		if ((r != null) && touch) {
 			posting.getMarker(token, r.getTime(), r.getDuration(), null, false);
 		}
 		return r;

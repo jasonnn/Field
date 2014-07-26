@@ -23,7 +23,8 @@ import java.util.Set;
 
 public class VerticalLeftToLeftAlign extends PointOffering {
 
-	static public class Resize extends VerticalLeftToLeftAlign {
+	public static
+    class Resize extends VerticalLeftToLeftAlign {
 		public Resize(float baseScore) {
 			super(baseScore);
 		}
@@ -152,7 +153,7 @@ public class VerticalLeftToLeftAlign extends PointOffering {
 
 			@Override
 			public String toString() {
-				return "iDrawable for <" + VerticalLeftToLeftAlign.this.getClass() + "> <" + currentRect + ">";
+				return "iDrawable for <" + VerticalLeftToLeftAlign.this.getClass() + "> <" + currentRect + '>';
 			}
 
 			@Override

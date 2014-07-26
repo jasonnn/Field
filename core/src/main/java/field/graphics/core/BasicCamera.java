@@ -51,14 +51,15 @@ public class BasicCamera extends BasicUtilities.OnePassListElement implements iB
         
 	}
     
-	static public class Projector implements Serializable {
+	public static
+    class Projector implements Serializable {
 		private static final long serialVersionUID = 1L;
-		private Matrix4 matrix;
-		private Matrix4 m1;
-		private Matrix4 p1;
+		private final Matrix4 matrix;
+		private final Matrix4 m1;
+		private final Matrix4 p1;
         
-		private float width;
-		private float height;
+		private final float width;
+		private final float height;
         
 		/**
 		 * creates a Projector object --- useful for converting to and
@@ -216,7 +217,8 @@ public class BasicCamera extends BasicUtilities.OnePassListElement implements iB
         
 	}
     
-	static public class State implements Serializable, iBlendable<State>, iExtensible {
+	public static
+    class State implements Serializable, iBlendable<State>, iExtensible {
 		private static final long serialVersionUID = 1L;
         
 		/**
@@ -231,9 +233,9 @@ public class BasicCamera extends BasicUtilities.OnePassListElement implements iB
             
 			o.fov = (float) (a.fov * w + to.fov);
 			o.near = (float) (a.near * w + to.near);
-			o.far = (float) (a.far * w + to.far);
-			o.sx = (float) (a.sx * w + to.sx);
-			o.sy = (float) (a.sy * w + to.sy);
+			o.far = (float) ((a.far * w) + to.far);
+			o.sx = (float) ((a.sx * w) + to.sx);
+			o.sy = (float) ((a.sy * w) + to.sy);
 			o.rx = (float) (a.rx * w + to.rx);
 			o.aspect = (float) (a.aspect * w + to.aspect);
 			o.width = (float) (a.width * w + to.width);
@@ -573,7 +575,7 @@ public class BasicCamera extends BasicUtilities.OnePassListElement implements iB
 		@Override
 		@HiddenInAutocomplete
 		public String toString() {
-			return position + " " + target + " " + up;
+			return position + " " + target + ' ' + up;
 		}
         
 		/**
@@ -1480,7 +1482,8 @@ public class BasicCamera extends BasicUtilities.OnePassListElement implements iB
 	@Override
 	@HiddenInAutocomplete
 	public String toString() {
-		return "camera position<" + this.getPosition(null) + "> look at <" + this.getLookAt(null) + "> up <" + this.getUp(null) + ">" + (rshift != 0 ? "rshift <" + rshift + "> <" + tshift + "> <" + frustrumMul + ">" : "");
+		return "camera position<" + this.getPosition(null) + "> look at <" + this.getLookAt(null) + "> up <" + this.getUp(null) + '>'
+               + (rshift != 0 ? "rshift <" + rshift + "> <" + tshift + "> <" + frustrumMul + '>' : "");
 	}
     
 	@HiddenInAutocomplete
@@ -1545,10 +1548,9 @@ public class BasicCamera extends BasicUtilities.OnePassListElement implements iB
 
     private static
     String arrayToString(float[] p) {
-        String s = "";
-		for (int i = 0; i < p.length; i++)
-			s += p[i] + " ";
-		return s;
+        StringBuilder s = new StringBuilder();
+        for (float aP : p) s.append(aP).append(' ');
+		return s.toString();
 	}
     
 	/**

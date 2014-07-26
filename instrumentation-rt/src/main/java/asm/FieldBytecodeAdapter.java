@@ -18,9 +18,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author marc
  */
-@SuppressWarnings("UnusedDeclaration")
 @RefactorCarefully
-final public
+@SuppressWarnings("UnusedDeclaration")
+public final
 class FieldBytecodeAdapter {
 
 
@@ -178,7 +178,7 @@ class FieldBytecodeAdapter {
         entryHandlerList.remove(handler);
     }
 
-    static public
+    public static
     Object handleExit(Object returningThis,
                       String fromName,
                       Object fromThis,
@@ -194,14 +194,14 @@ class FieldBytecodeAdapter {
                                        methodReturnName);
     }
 
-    static public
+    public static
     void handleEntry(String fromName, Object fromThis, String methodName, String parameterName, Object[] argArray) {
-        assert entryHandlers.containsKey(fromName) : fromName + " " + entryHandlers;
+        assert entryHandlers.containsKey(fromName) : fromName + ' ' + entryHandlers;
         entryHandlers.get(fromName)
                      .handleEntry(fromName, fromThis, methodName, parameters.get(parameterName), argArray);
     }
 
-    static public
+    public static
     void handleDefered(String fromName,
                        Object fromThis,
                        String methodName,
@@ -217,17 +217,17 @@ class FieldBytecodeAdapter {
                                       paramArray);
     }
 
-    static public
+    public static
     int handle_yieldIndex(String fromName, Object fromThis, String methodName) {
         return yieldHandlers.get(fromName).yieldIndexFor(fromName, fromThis, methodName);
     }
 
-    static public
+    public static
     Object[] handle_yieldLoad(String fromName, Object fromThis, String methodName) {
         return yieldHandlers.get(fromName).yieldLoad(fromName, fromThis, methodName);
     }
 
-    static public
+    public static
     Object handle_yieldStore(Object wasReturn,
                              Object[] localStorage,
                              String fromName,
@@ -238,13 +238,13 @@ class FieldBytecodeAdapter {
                             .yieldStore(wasReturn, localStorage, fromName, fromThis, methodName, resumeLabel);
     }
 
-    static public
+    public static
     Object handleCancelFast(int name, Object from, String method, Object[] args) {
         return entryCancelList.get(name).handle(name, from, method, args);
     }
 
 
-    static public
+    public static
     void handleFast(int fromName, Object fromThis, Object[] argArray) {
         entryHandlerList.get(fromName).handle(fromName, fromThis, argArray);
     }

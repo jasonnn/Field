@@ -22,7 +22,8 @@ public class AttributeHistory {
 		FieldPyObjectAdaptor2.isHandlesAttributes(AttributeHistoryAccess.class);
 	}
 	
-	static public class AttributeHistoryAccess implements iHandlesAttributes
+	public static
+    class AttributeHistoryAccess implements iHandlesAttributes
 	{
 		private final iVisualElement e;
 
@@ -85,12 +86,12 @@ public class AttributeHistory {
 	{
         Set<VersionNode> versions = HistoryExplorerHG.buildHistoryGraph(ex.getSheetPrefix()
                                                                         + e.getUniqueID()
-                                                                        + "/"
+                                                                        + '/'
                                                                         + propertyName.getName()
                                                                         + ".property");
         for(VersionNode n : versions)
 		{
-			Object versionProperty = ex.getVersionProperty(n.revision, ex.getSheetPrefix()+e.getUniqueID()+"/", propertyName);
+			Object versionProperty = ex.getVersionProperty(n.revision, ex.getSheetPrefix()+e.getUniqueID()+ '/', propertyName);
 			values.add(new Pair<VersionNode, Object>(n, versionProperty));
 		}
 	}

@@ -41,7 +41,7 @@ public class BaseTrampolineClassLoader extends FastClassLoader {
         super.addURL(url);
 
         String oldCP = System.getProperty("java.class.path");
-        oldCP += ":" + url.getFile();
+        oldCP += ':' + url.getFile();
         System.setProperty("java.class.path", oldCP);
     }
 

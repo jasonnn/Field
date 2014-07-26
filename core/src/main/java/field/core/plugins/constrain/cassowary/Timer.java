@@ -58,10 +58,8 @@ public class Timer {
 	// an implicit type conversion takes place before doing the division
 	// required in either case.
 	public double ElapsedTime() {
-		if (!TimerIsRunning) // Normal case
-			return (double) ElapsedMs / 1000;
-		else
-			return (double) (ElapsedMs + System.currentTimeMillis() - StartReading) / 1000;
+        if (TimerIsRunning) return (double) ((ElapsedMs + System.currentTimeMillis()) - StartReading) / 1000;
+        else return (double) ElapsedMs / 1000;
 	}
 
 	private boolean TimerIsRunning;

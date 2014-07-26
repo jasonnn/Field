@@ -8,7 +8,8 @@ import field.math.graph.visitors.GraphNodeSearching.VisitCode;
 
 public class LocalTimeMixin extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
 
-	static public void mixin(iVisualElement e) {
+	public static
+    void mixin(iVisualElement e) {
 		new Mixins().mixInOverride(LocalTimeMixin.class, e);
 	}
 

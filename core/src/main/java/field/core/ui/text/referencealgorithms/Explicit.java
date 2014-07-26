@@ -26,7 +26,7 @@ public class Explicit extends BaseReferenceAlgorithm implements Comparator<iVisu
 	public int compare(iVisualElement o1, iVisualElement o2) {
 		float d1 = o1.getFrame(tFrame).midpoint2().distanceFrom(center);
 		float d2 = o2.getFrame(tFrame).midpoint2().distanceFrom(center);
-		return d2 < d1 ? 1 : -1;
+		return (d2 < d1) ? 1 : -1;
 	}
 
 	@Override

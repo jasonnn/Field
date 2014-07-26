@@ -23,7 +23,7 @@ public class ExtendedMenuMap extends LinkedHashMap<String, iUpdateable> {
 	}
 
 	public void doMenu(Canvas invoker, Point local) {
-		if (builder.spec.size() > 0) {
+		if (!builder.spec.isEmpty()) {
 //			builder.defaultMenu().currentlyBuilding.menu.putAll(this);
 
             local = Launcher.display.map(invoker, null, local);

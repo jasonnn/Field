@@ -27,9 +27,9 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
  */
 public class TwoPassImageProcessingTwoOutputMultisampled implements iImageProcessor {
 
-	private ImageProcessingTwoOutputMultisampled left;
+	private final ImageProcessingTwoOutputMultisampled left;
 
-	private ImageProcessingTwoOutputMultisampled right;
+	private final ImageProcessingTwoOutputMultisampled right;
 
 	private final boolean doBothPasses;
 
@@ -81,7 +81,9 @@ public class TwoPassImageProcessingTwoOutputMultisampled implements iImageProces
 		if (c.getSceneListSide() == StereoSide.middle)
             Cont.linkWith(c, FullScreenCanvasSWT.method_beforeFlush, arun);
         else {
-            Method attachMethod = c.getSceneListSide() == StereoSide.left ? FullScreenCanvasSWT.method_beforeLeftFlush : FullScreenCanvasSWT.method_beforeRightFlush;
+            Method attachMethod = (c.getSceneListSide() == StereoSide.left)
+                                  ? FullScreenCanvasSWT.method_beforeLeftFlush
+                                  : FullScreenCanvasSWT.method_beforeRightFlush;
             Cont.linkWith(c, attachMethod, arun);
 		}
 	}

@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class Welcome {
 
-	private Shell s;
+	private final Shell s;
 
 	public Welcome()
 	{

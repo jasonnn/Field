@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Canvas;
 
 public class LinuxCanvasInterface implements iCanvasInterface {
 
-	private GLCanvas c;
+	private final GLCanvas c;
 
 	public LinuxCanvasInterface(Canvas c) {
 		this.c = (GLCanvas) c;

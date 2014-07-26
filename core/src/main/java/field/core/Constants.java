@@ -9,13 +9,13 @@ import java.awt.*;
 public class Constants {
 
 	// static public final String defaultFont = "Gill Sans";
-	static public final String defaultFont = Platform.getOS() == OS.mac ? SystemProperties.getProperty("systemFont", "Gill Sans") : "Source Sans Pro";
-	static public final String defaultTextEditorFont = SystemProperties.getProperty("textEditorFont", defaultFont);
-	static public int defaultFont_editorSize = SystemProperties.getIntProperty("editorFontSize", 16);
+    public static final String defaultFont = Platform.getOS() == OS.mac ? SystemProperties.getProperty("systemFont", "Gill Sans") : "Source Sans Pro";
+	public static final String defaultTextEditorFont = SystemProperties.getProperty("textEditorFont", defaultFont);
+	public static int defaultFont_editorSize = SystemProperties.getIntProperty("editorFontSize", 16);
 
 	// static public final String defaultTreeColor = "eeeeee";
-	static public final String defaultTreeColor = "111111";
-	static public final String defaultTreeColorDim = "666666";
+    public static final String defaultTreeColor = "111111";
+	public static final String defaultTreeColorDim = "666666";
 	public static final float defaultTabMul = SystemProperties.getIntProperty("editorTabSize", 4);
 
 	public static Vector4 execution_color = new Vector4(0.3f, 0.5f, 0.39f, 0.25f);

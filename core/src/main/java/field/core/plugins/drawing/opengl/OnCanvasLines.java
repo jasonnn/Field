@@ -37,7 +37,7 @@ import java.util.*;
 
 public class OnCanvasLines {
 
-	private BaseGLGraphicsContext context;
+	private final BaseGLGraphicsContext context;
 	/**
 	 * This is the list of FLine-s to draw each animation frame. Add things
 	 * to this line to cause them to appear.
@@ -400,7 +400,7 @@ public class OnCanvasLines {
 				Object cl = ll.__tojava__(CachedLine.class);
 				return cl;
 			} else {
-				System.err.println(" bad entry into line list <" + o + ">");
+				System.err.println(" bad entry into line list <" + o + '>');
 				return null;
 			}
 		} else

@@ -2,7 +2,6 @@ package field.core.ui.text.referencealgorithms;
 
 import field.core.dispatch.VisualElement;
 import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
 import field.core.ui.text.embedded.iReferenceAlgorithm;
 import field.math.linalg.Vector3;
 import field.namespace.generic.ReflectionTools;
@@ -23,7 +22,7 @@ public class Above extends iReferenceAlgorithm.BaseReferenceAlgorithm {
 
 		List<iVisualElement> all = allVisualElements(root);
 
-		Rect frame = forElement.getFrame(null);
+		iVisualElement.Rect frame = forElement.getFrame(null);
 
 
 		final Vector3 targetPoint = frame.relativize(atPoint);
@@ -31,7 +30,7 @@ public class Above extends iReferenceAlgorithm.BaseReferenceAlgorithm {
 			public float distance(iVisualElement e) {
 
 				if (e instanceof VisualElement) {
-					Rect otherFrame = e.getFrame(null);
+					iVisualElement.Rect otherFrame = e.getFrame(null);
 					Vector3 m = otherFrame.midPoint();
 
 					m.sub(targetPoint);

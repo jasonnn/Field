@@ -17,8 +17,9 @@ import java.rmi.server.UID;
 
 public class MinimalStepper extends JComponent  {
 
-	static public class Component_Stepper extends ProvidedComponent {
-		transient private iProvider value;
+	public static
+    class Component_Stepper extends ProvidedComponent {
+		private transient iProvider value;
 		String name = "Component_iFloatProvider:" + new UID().toString() + ".transient";
 		OKey localKey;
 		boolean go = false;
@@ -189,7 +190,7 @@ public class MinimalStepper extends JComponent  {
 		int width = g2.getFontMetrics().charsWidth(caption.toCharArray(), 0, caption.toCharArray().length);
 		g2.setColor(new Color(0.02f, 0.02f, 0.1f, didExecute | executed ? 0.4f : 0.1f));
 
-		g2.drawString(didExecute ? caption + "\u2014" : caption, (bounds.width / 2 - width / 2), 12);
+		g2.drawString(didExecute ? caption + '\u2014' : caption, (bounds.width / 2 - width / 2), 12);
 
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK);
 	}

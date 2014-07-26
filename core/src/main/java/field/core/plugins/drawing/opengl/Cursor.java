@@ -208,7 +208,7 @@ public class Cursor {
 
 	public Cursor removeNode() {
 		if (this.cursor.current.method == iLine_m.moveTo_m) {
-			if (this.cursor.currentIndex == this.line.events.size() - 1) {
+			if (this.cursor.currentIndex == (this.line.events.size() - 1)) {
 			} else {
 				Event e = this.line.events.get(this.cursor.currentIndex + 1);
 				Vector2 d = e.getDestination();
@@ -615,7 +615,7 @@ public class Cursor {
 		if (o[0] instanceof Vector2)
 			return new Vector2().lerp((Vector2) o[0], (Vector2) o[1], t);
 		if (o[0] instanceof Number)
-			return ((Number) o[0]).floatValue() * (1 - t) + t * ((Number) o[1]).floatValue();
+			return (((Number) o[0]).floatValue() * (1 - t)) + (t * ((Number) o[1]).floatValue());
 		return null;
 	}
 
@@ -792,7 +792,7 @@ public class Cursor {
 		Vector2 d = tangentForward();
 		Vector2 d2 = accelerationForward();
 
-		float k = (float) ((d.x * d2.y - d.y * d2.x) / Math.pow(d.x * d.x + d.y * d.y, 3 / 2));
+		float k = (float) (((d.x * d2.y) - (d.y * d2.x)) / Math.pow((d.x * d.x) + (d.y * d.y), 3 / 2));
 		return k / 243;
 	}
 
@@ -819,10 +819,11 @@ public class Cursor {
 	}
 
 	public boolean isStartOfLine() {
-		return !cursor.hasPreviousSegment() && t == 0;
+		return !cursor.hasPreviousSegment() && (t == 0);
 	}
 
-	static public List<Cursor> cursorsFromMinimalApproach(CachedLine l1, Vector2 to) {
+	public static
+    List<Cursor> cursorsFromMinimalApproach(CachedLine l1, Vector2 to) {
 		AllDistanceMinima minima = new LineUtils.AllDistanceMinima(l1, to);
 		List<Minimum> a = minima.minima;
 		ArrayList<Cursor> cc = new ArrayList<Cursor>();
@@ -832,7 +833,8 @@ public class Cursor {
 		return cc;
 	}
 
-	static public Cursor cursorFromClosestPoint(CachedLine l1, Vector2 to) {
+	public static
+    Cursor cursorFromClosestPoint(CachedLine l1, Vector2 to) {
 		ClosestPointToSpline cp = new LineUtils.ClosestPointToSpline(l1, to);
 
         //System.out.println(" closest point is <" + cp.minAtIndex + " " + cp.minT + ">");
@@ -840,13 +842,15 @@ public class Cursor {
 		return new Cursor(l1, cp.minAtIndex + cp.minT);
 	}
 
-	static public Vector2 pointFromClosestPoint(CachedLine ll, Vector2 to) {
+	public static
+    Vector2 pointFromClosestPoint(CachedLine ll, Vector2 to) {
 		ClosestPointToSpline cp = new LineUtils.ClosestPointToSpline(ll, to);
 
 		return cp.getMinPoint();
 	}
 
-	static public Cursor cursorFromClosestPoint(CachedLine l1, Vector3 to) {
+	public static
+    Cursor cursorFromClosestPoint(CachedLine l1, Vector3 to) {
 		ClosestPointToSpline3 cp = new LineUtils.ClosestPointToSpline3(l1, to);
 
         //System.out.println(" closest point is <" + cp.minAtIndex + " " + cp.minT + ">");
@@ -854,7 +858,8 @@ public class Cursor {
 		return new Cursor(l1, cp.minAtIndex + cp.minT);
 	}
 
-	static public Vector3 pointFromClosestPoint(CachedLine ll, Vector3 to) {
+	public static
+    Vector3 pointFromClosestPoint(CachedLine ll, Vector3 to) {
 		ClosestPointToSpline3 cp = new LineUtils.ClosestPointToSpline3(ll, to);
 
 		return cp.getMinPoint();

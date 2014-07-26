@@ -24,18 +24,18 @@ import java.util.logging.Logger;
 public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
     private static final Logger log = Logger.getLogger(Trampoline2.class.getName());
 
-    static public final List<ClassLoadedNotification> notifications = new ArrayList<ClassLoadedNotification>();
+    public static final List<ClassLoadedNotification> notifications = new ArrayList<ClassLoadedNotification>();
 
-    static public final ModificationCache cache = new ModificationCache();
+    public static final ModificationCache cache = new ModificationCache();
 
-    static public ReloadingSupport reloadingSupport = new ReloadingSupport();
+    public static ReloadingSupport reloadingSupport = new ReloadingSupport();
 
-    static public Trampoline2 trampoline = null;
-    static public HashSet<String> plugins = new LinkedHashSet<String>();
+    public static Trampoline2 trampoline = null;
+    public static HashSet<String> plugins = new LinkedHashSet<String>();
 
-    static public final boolean debug = false;
+    public static final boolean debug = false;
 
-    static public List<String> extendedClassPaths = new ArrayList<String>();
+    public static List<String> extendedClassPaths = new ArrayList<String>();
 
     static String classToLaunch;
 
@@ -55,7 +55,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         classToLaunch = c;
     }
 
-    static public void handle(Throwable e) {
+    public static
+    void handle(Throwable e) {
         e.printStackTrace();
         if (SystemProperties.getIntProperty("exitOnException", 0) == 1 || e instanceof Error || e.getCause() instanceof Error)
             System.exit(1);
@@ -90,7 +91,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
 //				System.out.println(" adding to loader <" + "file://" + path.getAbsolutePath() + "/" + ">");
 
-                loader.addURL(new URL("file://" + path.getCanonicalPath() + "/"));
+                loader.addURL(new URL("file://" + path.getCanonicalPath() + '/'));
 
                 // URL[] uu = loader.getURLs();
                 // for(URL uuu : uu)
@@ -113,8 +114,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
             if (jars != null)
                 for (String j : jars) {
                     try {
-                        loader.addURL(new URL("file://" + path.getCanonicalPath() + "/" + j));
-                        classPath.addClassPath(path.getCanonicalPath() + "/" + j);
+                        loader.addURL(new URL("file://" + path.getCanonicalPath() + '/' + j));
+                        classPath.addClassPath(path.getCanonicalPath() + '/' + j);
                         // extendedClassPaths.add(path.getCanonicalPath() + "/" + j);
 
                         JarFile m = new JarFile(new File(path.getCanonicalFile() + "/" + j));
@@ -249,7 +250,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         File dir = new File(aa.replace("**", ""));
         if (dir.exists()) {
 
-            loader.addURL(new URL("file://" + dir.getAbsolutePath() + "/"));
+            loader.addURL(new URL("file://" + dir.getAbsolutePath() + '/'));
 
             // extendedClassPaths.add(dir.getAbsolutePath());
             ClassPath.getInstance().addClassPath(dir.getAbsolutePath());
@@ -265,7 +266,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
             if (ll != null)
                 for (String l : ll) {
 
-                    String fp = new File(dir.getAbsolutePath() + "/" + l).getAbsolutePath();
+                    String fp = new File(dir.getAbsolutePath() + '/' + l).getAbsolutePath();
 
                     URL url = new URL("file://" + fp + (fp.endsWith(".jar") ? "" : "/"));
 
@@ -326,7 +327,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
                     // System.out.println(" l = " + l);
 
-                    String fp = new File(dir.getAbsolutePath() + "/" + l).getAbsolutePath();
+                    String fp = new File(dir.getAbsolutePath() + '/' + l).getAbsolutePath();
 
                     URL url = new URL("file://" + fp + (fp.endsWith(".jar") ? "" : "/"));
 
@@ -426,7 +427,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
     }
 
-    public byte[] bytesForClass(java.lang.ClassLoader deferTo, String class_name) {
+    public static
+    byte[] bytesForClass(java.lang.ClassLoader deferTo, String class_name) {
 
         System.out.println(" bytes for class :" + class_name);
 
@@ -528,7 +530,7 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         //     System.out.println(" already loaded all of <" + v +
         // ">");
 
-        if (!System.getProperty("asserts", "none").equals("none"))
+        if (!"none".equals(System.getProperty("asserts", "none")))
             loader.setDefaultAssertionStatus(true);
 
         Thread.currentThread().setContextClassLoader(loader);
@@ -599,7 +601,8 @@ public class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         return loader.shouldLoadLocal(s);
     }
 
-    private Set<Object> injectManifestProperties(Manifest manifest) {
+    private static
+    Set<Object> injectManifestProperties(Manifest manifest) {
 
         // System.out.println(" inject manifest properties ");
 

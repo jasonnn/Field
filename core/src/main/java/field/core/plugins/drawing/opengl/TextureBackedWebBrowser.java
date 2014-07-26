@@ -28,17 +28,17 @@ import java.nio.IntBuffer;
 @Woven
 public class TextureBackedWebBrowser {
 
-	private int w;
-	private int h;
-	private Shell window;
-	private Browser browser;
-	private Image image;
-	private GC gc;
-	private ByteBuffer buffer;
-	private int[] row;
-	private IntBuffer bufferInt;
-	private BaseSlowRawTexture texture;
-	private int[] all;
+	private final int w;
+	private final int h;
+	private final Shell window;
+	private final Browser browser;
+	private final Image image;
+	private final GC gc;
+	private final ByteBuffer buffer;
+	private final int[] row;
+	private final IntBuffer bufferInt;
+	private final BaseSlowRawTexture texture;
+	private final int[] all;
 
 	volatile int needsUpdate = 0;
 	private String url;
@@ -174,7 +174,7 @@ public class TextureBackedWebBrowser {
                         + "    0, 0, 0, 0, 0, false, false, false, false, 0, null);\n"
                         + "document.elementFromPoint("
                         + e.x
-                        + ","
+                        + ','
                         + e.y
                         + ").dispatchEvent(evt)");
         needsUpdate++;
@@ -191,7 +191,7 @@ public class TextureBackedWebBrowser {
 	 * scrolls the webpage inside it's container by ,x,y
 	 */
 	public void scroll(float x, float y) {
-		browser.execute("window.scrollBy(" + x + ", " + y + ")");
+		browser.execute("window.scrollBy(" + x + ", " + y + ')');
 		needsUpdate++;
 		updateTexture();
 	}

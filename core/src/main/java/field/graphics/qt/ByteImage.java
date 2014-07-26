@@ -11,7 +11,7 @@ import java.nio.IntBuffer;
 
 public class ByteImage {
 
-	private String filename;
+	private final String filename;
 	private int width;
 	private int height;
 	private ByteBuffer byteBuffer;
@@ -46,7 +46,7 @@ public class ByteImage {
 			a.put(pixels);
 			width = w;
 			height = h;
-			System.out.println(" dim :" + width + " " + height);
+			System.out.println(" dim :" + width + ' ' + height);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

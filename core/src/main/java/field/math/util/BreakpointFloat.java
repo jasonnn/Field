@@ -47,7 +47,7 @@ public class BreakpointFloat implements iBlendable<BreakpointFloat>, iHasScalar 
 			return setValue(r);
 		}
 		case linear: {
-			float x = before.value * (1 - a) + a * now.value;
+			float x = (before.value * (1 - a)) + (a * now.value);
 			BreakpointFloat r = new BreakpointFloat();
 			r.value = x;
 			r.controlNext = x;
@@ -89,7 +89,7 @@ public class BreakpointFloat implements iBlendable<BreakpointFloat>, iHasScalar 
 
 	@Override
 	public String toString() {
-		return "bpf: "+value+" "+controlNext+" "+controlPrevious+" "+next;
+		return "bpf: "+value+ ' ' +controlNext+ ' ' +controlPrevious+ ' ' +next;
 	}
 	
 }

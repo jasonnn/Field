@@ -7,14 +7,14 @@ import java.io.File;
 
 public class HGVersioningSystem extends VersioningSystem {
 
-	static public String hgCommand = "/usr/local/bin/hg";
+	public static String hgCommand = "/usr/local/bin/hg";
 
 	static {
 		computeHGCommand();
 	}
 
 	public static void computeHGCommand() {
-		if (WorkspaceDirectory.hgbinary != null && WorkspaceDirectory.hgbinary[0] != null) {
+		if ((WorkspaceDirectory.hgbinary != null) && (WorkspaceDirectory.hgbinary[0] != null)) {
 			if (new File(WorkspaceDirectory.hgbinary[0]).exists()) {
 				hgCommand = WorkspaceDirectory.hgbinary[0];
 			}
@@ -77,13 +77,15 @@ public class HGVersioningSystem extends VersioningSystem {
 	@Override
 	public void scmCommitDirectory(File path) {
 		scmAddFile(path);
-		executeCommand(fullPathToSheetDirectory, new String[] { hgCommand, "commit", "-m", "\"" + currentLogMessage + "\"", path.getAbsolutePath() });
+		executeCommand(fullPathToSheetDirectory, new String[] { hgCommand, "commit", "-m",
+                                                                '"' + currentLogMessage + '"', path.getAbsolutePath() });
 	}
 
 	@Override
 	public void scmCommitFile(File path) {
         //System.out.println(" commit file, log message is <" + currentLogMessage + ">");
-        executeCommand(fullPathToSheetDirectory, new String[] { hgCommand, "commit", "-m", "\"" + currentLogMessage + "\"", path.getAbsolutePath() });
+        executeCommand(fullPathToSheetDirectory, new String[] { hgCommand, "commit", "-m",
+                                                                '"' + currentLogMessage + '"', path.getAbsolutePath() });
 	}
 
 	@Override
@@ -125,7 +127,8 @@ public class HGVersioningSystem extends VersioningSystem {
 		executeCommand(fullPathToSheetDirectory, new String[] { hgCommand, "rename", from.getAbsolutePath(), to.getAbsolutePath() });
 	}
 
-	protected String executeCommand(String dir, String[] command) {
+	protected static
+    String executeCommand(String dir, String[] command) {
 		ExecuteCommand c = new ExecuteCommand(dir, command, true);
 		c.waitFor(true);
 		String output = c.getOutput();

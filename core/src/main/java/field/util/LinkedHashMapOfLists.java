@@ -55,11 +55,12 @@ public class LinkedHashMapOfLists<K,V> extends LinkedHashMap<K, Collection<V>> {
 		while(i.hasNext())
 		{
 			Map.Entry e = (Entry) i.next();
-			if (((Collection)e.getValue()).size()==0) i.remove();
+			if (((Collection) e.getValue()).isEmpty()) i.remove();
 		}
 	}
 	
-	static public class LinkedHashMapOfSets<K, V> extends LinkedHashMapOfLists<K, V>
+	public static
+    class LinkedHashMapOfSets<K, V> extends LinkedHashMapOfLists<K, V>
 	{
 		@Override
 		protected Collection<V> newList() {

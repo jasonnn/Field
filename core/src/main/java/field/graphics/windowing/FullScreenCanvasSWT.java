@@ -70,23 +70,23 @@ import java.util.List;
 public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, iAcceptsSceneListElement {
 
 	@HiddenInAutocomplete
-	static public final Method method_beforeFlush = ReflectionTools.methodOf("beforeFlush", FullScreenCanvasSWT.class);
+    public static final Method method_beforeFlush = ReflectionTools.methodOf("beforeFlush", FullScreenCanvasSWT.class);
 	@HiddenInAutocomplete
-	static public final Method method_beforeLeftFlush = ReflectionTools.methodOf("beforeLeftFlush", FullScreenCanvasSWT.class);
+    public static final Method method_beforeLeftFlush = ReflectionTools.methodOf("beforeLeftFlush", FullScreenCanvasSWT.class);
 	@HiddenInAutocomplete
-	static public final Method method_beforeRightFlush = ReflectionTools.methodOf("beforeRightFlush", FullScreenCanvasSWT.class);
+    public static final Method method_beforeRightFlush = ReflectionTools.methodOf("beforeRightFlush", FullScreenCanvasSWT.class);
 
 	@HiddenInAutocomplete
-	static public final Method method_display = ReflectionTools.methodOf("display", FullScreenCanvasSWT.class);
+    public static final Method method_display = ReflectionTools.methodOf("display", FullScreenCanvasSWT.class);
 
 	@HiddenInAutocomplete
-	static public final SimpleContextTopology windowContextTree = SimpleContextTopology.newInstance();
+    public static final SimpleContextTopology windowContextTree = SimpleContextTopology.newInstance();
 
 	@HiddenInAutocomplete
-	static public int uniq = 0;
+    public static int uniq = 0;
 
 	@HiddenInAutocomplete
-	static public int[] dimensions = { 0, 0, 0, 0 };
+    public static int[] dimensions = { 0, 0, 0, 0 };
 
 	@HiddenInAutocomplete
 	public String contextName = "fullScreenCanvas+" + (uniq++);
@@ -121,13 +121,13 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 	public boolean activeLayered = SystemProperties.getIntProperty("activeLayered", 0) == 1;
 
 	@HiddenInAutocomplete
-	static public boolean doMultisampling = SystemProperties.getIntProperty("needsFSAA", 0) == 1;
+    public static boolean doMultisampling = SystemProperties.getIntProperty("needsFSAA", 0) == 1;
 
 	@HiddenInAutocomplete
 	public OnCanvasLines onCanvasPLine;
 
 	@HiddenInAutocomplete
-	static public FullScreenCanvasSWT currentCanvas = null;
+    public static FullScreenCanvasSWT currentCanvas = null;
 
 	public FullScreenCanvasSWT() {
 		this(false);
@@ -135,7 +135,7 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 
 	DynamicFrameRateCuller culler = new DynamicFrameRateCuller();
 	// private GLCanvas_field canvas;
-	private Canvas canvas;
+	private final Canvas canvas;
 	public iCanvasInterface canvasInterface;
 	private final boolean inAWindow;
 
@@ -186,7 +186,7 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 
 			frame.setBounds(new Rectangle(0, 0, w, h));
 		}
-		if (SystemProperties.getProperty("rect") != null && !SystemProperties.getProperty("rect").equals("")) {
+		if (SystemProperties.getProperty("rect") != null && !SystemProperties.getProperty("rect").isEmpty()) {
 			String p = SystemProperties.getProperty("rect");
 			String[] parts = p.split("\\.");
 
@@ -979,7 +979,7 @@ public class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, 
 			private String pad(int n) {
                 String q = String.valueOf(n);
                 while (q.length() < 5)
-					q = "0" + q;
+					q = '0' + q;
 				return q;
 			}
 

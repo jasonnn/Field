@@ -26,12 +26,14 @@ import java.util.Set;
  */
 public class MeshBlast {
 
-	static public class Frame {
+	public static
+    class Frame {
 		public long offset;
 		public long length;
 	}
 
-	static public class Header implements Serializable {
+	public static
+    class Header implements Serializable {
 		private static final long serialVersionUID = 1L;
 		public HashMapOfLists<Integer, Frame> frames = new HashMapOfLists<Integer, Frame>();
 		public int numFrames = 0;
@@ -40,7 +42,7 @@ public class MeshBlast {
 	}
 
 	Header header = new Header();
-	private FileChannel channel;
+	private final FileChannel channel;
 	private final String filename;
 
 	public MeshBlast(String filename) throws FileNotFoundException {
@@ -149,7 +151,7 @@ public class MeshBlast {
 		
 		if (length>header.maximumDimensions.get(i))
 		{
-			System.err.println(" WARNING: truncated buffer <"+i+"> too long <"+header.maximumDimensions.get(i)+">");
+			System.err.println(" WARNING: truncated buffer <"+i+"> too long <"+header.maximumDimensions.get(i)+ '>');
 			buffer.limit(header.maximumDimensions.get(i)*4);
 		}
 			

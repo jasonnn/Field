@@ -21,7 +21,7 @@ public class AppleScript {
 			tmp.deleteOnExit();
 
 			BufferedWriter w = new BufferedWriter(new FileWriter(tmp));
-			w.append(command + "\n");
+			w.append(command).append('\n');
 			w.close();
 
 			cc = new ExecuteCommand(".", new String[] { "/usr/bin/osascript", tmp.getAbsolutePath() }, true);
@@ -45,7 +45,7 @@ public class AppleScript {
 
     private static
     String scrub(String o) {
-        StringBuffer b = new StringBuffer(o.length());
+        StringBuilder b = new StringBuilder(o.length());
 		for(int i=0;i<o.length();i++)
 		{
 			char c = o.charAt(i);

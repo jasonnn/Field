@@ -121,21 +121,24 @@ public class AssemblingLogging extends InvocationLogging {
 
 		@Override
 		public String toString() {
-			String r = name + "(" + type + ", " + path + ")";
+			String r = name + '(' + type + ", " + path + ')';
 			if (type == LinkType.call)
-				r += "args=" + args + " <" + before + " -> " + after + ">";
+				r += "args=" + args + " <" + before + " -> " + after + '>';
 			if (type == LinkType.set)
-				r += " <" + before + " <- " + to + " -> " + after + "> " + (before != current ? " (now <" + current + ">)" : "");
+				r += " <" + before + " <- " + to + " -> " + after + "> " + ((before != current) ? (" (now <"
+                                                                                                   + current
+                                                                                                   + ">)") : "");
 			if (type == LinkType.dot)
-				r += " <" + before + ">" + (before != current ? " (now <" + current + ">)" : "");
+				r += " <" + before + '>' + ((before != current) ? (" (now <" + current + ">)") : "");
 			if (type == LinkType.origin)
-				r += " currently <" + current + ">";
+				r += " currently <" + current + '>';
 			return r;
 		}
 
 	}
 
-	public class LinkNode extends NodeImpl<LinkNode> {
+	public static
+    class LinkNode extends NodeImpl<LinkNode> {
 		Link link;
 
 		boolean consumed = false;
@@ -154,7 +157,8 @@ public class AssemblingLogging extends InvocationLogging {
         origin, dot, call, set
     }
 
-	public class Move<T> {
+	public static
+    class Move<T> {
 
 		ArrayList<Link> links = new ArrayList<Link>();
 
@@ -427,7 +431,7 @@ public class AssemblingLogging extends InvocationLogging {
 						Object c = ((Link) move.links.get(move.links.size() - 2)).current;
 						String n = ((Link) move.links.get(move.links.size() - 1)).name;
 
-						if (c instanceof PyInstance || c instanceof PyObject) {
+						if ((c instanceof PyInstance) || (c instanceof PyObject)) {
 
 							Object current = (((PyObject) c).__getattr__(n)).__tojava__(Object.class);
 
@@ -477,7 +481,7 @@ public class AssemblingLogging extends InvocationLogging {
 		}
 
 		public String getTextDescription() {
-			return (prefix.equals("") ? "" : (prefix + " \u2014 ")) + move.expression;
+			return ("".equals(prefix) ? "" : (prefix + " \u2014 ")) + move.expression;
 		}
 
 		public String getUndoExpression() {
@@ -510,7 +514,8 @@ public class AssemblingLogging extends InvocationLogging {
 		}
 	}
 
-	static public class PartiallyEvaluatedFunction {
+	public static
+    class PartiallyEvaluatedFunction {
 		Object evalautedTo;
 		transient iProvider<Object> function;
 		transient CapturedEnvironment env;

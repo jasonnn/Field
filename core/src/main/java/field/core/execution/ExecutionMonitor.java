@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class ExecutionMonitor implements Runnable {
 
-	static public JEditorPane pane;
+	public static JEditorPane pane;
 
 	private Thread tt;
 
@@ -35,7 +35,7 @@ public class ExecutionMonitor implements Runnable {
 
 		while (true) {
 
-			while (System.currentTimeMillis() - at < 500) {
+			while ((System.currentTimeMillis() - at) < 500) {
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {

@@ -15,14 +15,14 @@ import java.util.ConcurrentModificationException;
 public class SpringUtil<t_node> {
 
 	protected double diameter = 10;
-	private double length_factor = 0.9;
-	private double disconnected_multiplier = 0.5;
+	private static final double length_factor = 0.9;
+	private static final double disconnected_multiplier = 0.5;
 
 	int currentIteration = 0;
 
 	double EPSILON = 0.0001d;
 
-	private iMetric<t_node, t_node> distance;
+	private final iMetric<t_node, t_node> distance;
 	private final ArrayList<t_node> vertex;
 	private double[][] dm;
 	private Vector2[] xydata;

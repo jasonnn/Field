@@ -879,25 +879,26 @@ abstract class AbstractGraphics2D extends Graphics2D implements Cloneable {
   public boolean drawImage(Image img, AffineTransform xform, ImageObserver obs) {
     boolean retVal = true;
 
-    if (xform.getDeterminant() != 0) {
-      AffineTransform inverseTransform = null;
-      try {
-        inverseTransform = xform.createInverse();
-      } catch (NoninvertibleTransformException e) {
-        // Should never happen since we checked the
-        // matrix determinant
-        throw new Error(e.getMessage());
+      if (xform.getDeterminant() == 0) {
+          AffineTransform savTransform = new AffineTransform(gc.getTransform());
+          gc.transform(xform);
+          retVal = drawImage(img, 0, 0, null);
+          gc.setTransform(savTransform);
       }
+      else {
+          AffineTransform inverseTransform = null;
+          try {
+              inverseTransform = xform.createInverse();
+          } catch (NoninvertibleTransformException e) {
+              // Should never happen since we checked the
+              // matrix determinant
+              throw new Error(e.getMessage());
+          }
 
-      gc.transform(xform);
-      retVal = drawImage(img, 0, 0, null);
-      gc.transform(inverseTransform);
-    } else {
-      AffineTransform savTransform = new AffineTransform(gc.getTransform());
-      gc.transform(xform);
-      retVal = drawImage(img, 0, 0, null);
-      gc.setTransform(savTransform);
-    }
+          gc.transform(xform);
+          retVal = drawImage(img, 0, 0, null);
+          gc.transform(inverseTransform);
+      }
 
     return retVal;
 
@@ -1597,10 +1598,7 @@ class GraphicContext implements Cloneable {
     copyGc.composite = this.composite;
 
     // Clip
-    if (clip != null)
-      copyGc.clip = new GeneralPath(clip);
-    else
-      copyGc.clip = null;
+      copyGc.clip = clip != null ? new GeneralPath(clip) : null;
 
     // RenderingHints
     copyGc.hints = (RenderingHints) this.hints.clone();
@@ -1949,7 +1947,7 @@ class GraphicContext implements Cloneable {
    *          the <i>y</i> coordinate.
    */
   public void translate(int x, int y) {
-    if (x != 0 || y != 0) {
+    if ((x != 0) || (y != 0)) {
       transform.translate(x, y);
       transformStack.add(TransformStackElement.createTranslateElement(x, y));
     }
@@ -2307,8 +2305,8 @@ class GraphicContext implements Cloneable {
     //
     Object antialiasingHint = hints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
     boolean isAntialiased = true;
-    if (antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-        && antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
+    if ((antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_ON) && (antialiasingHint
+                                                                         != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT)) {
 
       // If antialias was not turned off, then use the general rendering
       // hint.
@@ -2316,8 +2314,8 @@ class GraphicContext implements Cloneable {
         antialiasingHint = hints.get(RenderingHints.KEY_ANTIALIASING);
 
         // Test general hint
-        if (antialiasingHint != RenderingHints.VALUE_ANTIALIAS_ON
-            && antialiasingHint != RenderingHints.VALUE_ANTIALIAS_DEFAULT) {
+        if ((antialiasingHint != RenderingHints.VALUE_ANTIALIAS_ON) && (antialiasingHint
+                                                                        != RenderingHints.VALUE_ANTIALIAS_DEFAULT)) {
           // Antialiasing was not requested. However, if it was not turned
           // off explicitly, use it.
           if (antialiasingHint == RenderingHints.VALUE_ANTIALIAS_OFF)
@@ -2374,7 +2372,7 @@ abstract class TransformStackElement implements Cloneable {
   /**
    * Transform type
    */
-  private TransformType type;
+  private final TransformType type;
 
   /**
    * Value
@@ -2602,9 +2600,9 @@ class TransformType {
 
   public static final TransformType GENERAL = new TransformType(TRANSFORM_GENERAL, GENERAL_STRING);
 
-  private String desc;
+  private final String desc;
 
-  private int val;
+  private final int val;
 
   /**
    * Constructor is private so that no instances other than the ones in the

@@ -32,7 +32,7 @@ public class HashedCopy {
 	public boolean copyInto(HashedCopy target, int targetPosition) {
 		CopyRecord c = cached.get(target.getHash());
 
-		if (c != null && c.index == targetPosition && c.accumulatedHash == target.accumulatedHash) {
+		if ((c != null) && (c.index == targetPosition) && (c.accumulatedHash == target.accumulatedHash)) {
 			target.accumulatedHash = target.accumulatedHash * 31L + getHash();
 			return false;
 		} else {

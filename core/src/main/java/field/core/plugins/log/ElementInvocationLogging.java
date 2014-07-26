@@ -22,7 +22,8 @@ import java.util.LinkedHashSet;
  */
 public class ElementInvocationLogging {
 
-	static public class DidGetLocalVariable implements iLoggingEvent, iProvidesContextStack {
+	public static
+    class DidGetLocalVariable implements iLoggingEvent, iProvidesContextStack {
 
 		private StackTrace stack;
 		String name;
@@ -72,7 +73,7 @@ public class ElementInvocationLogging {
                    + " get: "
                    + copyToClipboard(name, name)
                    + " ("
-                   + (o == null ? objectText : (openInBrowser(name, "" + dress(o), o)))
+                   + (o == null ? objectText : (openInBrowser(name, dress(o), o)))
                    + ")";
         }
 		public boolean isError() {
@@ -80,10 +81,11 @@ public class ElementInvocationLogging {
 		}
 	}
 
-	static public class DidGetLocalVariableByAutoExecution implements iLoggingEvent, iSuspendedContext {
+	public static
+    class DidGetLocalVariableByAutoExecution implements iLoggingEvent, iSuspendedContext {
 
 		private final iVisualElement element;
-		transient public final Object got;
+		public final transient Object got;
 		private final String gotText;
 		private StackTrace stack;
 		String name;
@@ -128,7 +130,8 @@ public class ElementInvocationLogging {
 		}
 	}
 
-	static public class DidGetProperty implements iLoggingEvent, iProvidesContextStack
+	public static
+    class DidGetProperty implements iLoggingEvent, iProvidesContextStack
 	{
 		private StackTrace stack;
 		private final iVisualElement element;
@@ -180,7 +183,8 @@ public class ElementInvocationLogging {
 		}
 	}
 
-	static public class DidSetLocalVariable implements iLoggingEvent, iProvidesContextStack {
+	public static
+    class DidSetLocalVariable implements iLoggingEvent, iProvidesContextStack {
 
 		private StackTrace stack;
 		String name;
@@ -221,7 +225,7 @@ public class ElementInvocationLogging {
 		}
 
 		public String getTextDescription() {
-			if (objectWasText.equals("null")) return "<html><font color='#"
+			if ("null".equals(objectWasText)) return "<html><font color='#"
                                                      + Constants.defaultTreeColor
                                                      + "'>"
                                                      + smallerStill("global,")
@@ -246,7 +250,8 @@ public class ElementInvocationLogging {
 		}
 	}
 
-	static public class DidSetProperty implements iLoggingEvent, iProvidesContextStack, iUndoable
+	public static
+    class DidSetProperty implements iLoggingEvent, iProvidesContextStack, iUndoable
 	{
 		private StackTrace stack;
 		private final VisualElementProperty p;
@@ -324,7 +329,8 @@ public class ElementInvocationLogging {
 		}
 	}
 
-	static public class ElementExecutionBegin implements iLoggingEvent, iSuspendedContext, iProvidesContextStack {
+	public static
+    class ElementExecutionBegin implements iLoggingEvent, iSuspendedContext, iProvidesContextStack {
 		public iVisualElement element;
 		private StackTrace stack;
 
@@ -372,7 +378,8 @@ public class ElementInvocationLogging {
 		}
 	}
 
-	static public class ElementExecutionEnd implements iLoggingEvent, iSuspendedContext, iProvidesContextStack {
+	public static
+    class ElementExecutionEnd implements iLoggingEvent, iSuspendedContext, iProvidesContextStack {
 		public iVisualElement element;
 		private StackTrace stack;
 
@@ -420,7 +427,8 @@ public class ElementInvocationLogging {
 
 	}
 
-	static public class ElementExecutionFocusBegin implements iLoggingEvent, iSuspendedContext {
+	public static
+    class ElementExecutionFocusBegin implements iLoggingEvent, iSuspendedContext {
 		public iVisualElement element;
 		private StackTrace stack;
 
@@ -463,7 +471,8 @@ public class ElementInvocationLogging {
 
 	}
 
-	static public class ElementExecutionFocusEnd implements iLoggingEvent, iSuspendedContext {
+	public static
+    class ElementExecutionFocusEnd implements iLoggingEvent, iSuspendedContext {
 		public iVisualElement element;
 		private StackTrace stack;
 
@@ -506,7 +515,8 @@ public class ElementInvocationLogging {
 
 	}
 
-	static public class ElementTextFragmentWasExecuted implements iLoggingEvent, iProvidesContextStack {
+	public static
+    class ElementTextFragmentWasExecuted implements iLoggingEvent, iProvidesContextStack {
 		public final String text;
 		public final iVisualElement element;
 		public StackTrace stack;
@@ -545,7 +555,8 @@ public class ElementInvocationLogging {
 
 	// these need to be mushed to simply _label _ moves I guess
 
-	static public class ElementTextWasExecuted implements iLoggingEvent, iProvidesContextStack {
+	public static
+    class ElementTextWasExecuted implements iLoggingEvent, iProvidesContextStack {
 		public final String text;
 		private StackTrace stack;
 
@@ -600,10 +611,11 @@ public class ElementInvocationLogging {
 		public boolean isExclusivelyContextural();
 	}
 
-	static public class MakeAutoExecutionTarget implements iLoggingEvent, iProvidesContextStack {
+	public static
+    class MakeAutoExecutionTarget implements iLoggingEvent, iProvidesContextStack {
 
 		private final iVisualElement element;
-		transient private final Object got;
+		private final transient Object got;
 		private final String gotText;
 		private StackTrace stack;
 		String name;
@@ -638,7 +650,8 @@ public class ElementInvocationLogging {
 
 	}
 
-	static public class StackTrace
+	public static
+    class StackTrace
 	{
 		private final StackTraceElement[] trace;
 
@@ -676,7 +689,8 @@ public class ElementInvocationLogging {
 		}
 	}
 
-	static public class WillGetLocalVariableByAutoExecution implements iLoggingEvent, iSuspendedContext, iProvidesContextStack {
+	public static
+    class WillGetLocalVariableByAutoExecution implements iLoggingEvent, iSuspendedContext, iProvidesContextStack {
 
 		private final iVisualElement element;
 		private StackTrace stack;
@@ -726,9 +740,10 @@ public class ElementInvocationLogging {
 		}
 	}
 
-	static public boolean storeStackTraces = SystemProperties.getIntProperty("logging.stacktraces", 0)==1;
+	public static boolean storeStackTraces = SystemProperties.getIntProperty("logging.stacktraces", 0)==1;
 
-	static public String dress(Object o) {
+	public static
+    String dress(Object o) {
 		if (o instanceof iVisualElement)
 			return SelectionSetDriver.nameFor((iVisualElement) o);
         return safeText(String.valueOf(o));
@@ -760,14 +775,15 @@ public class ElementInvocationLogging {
 
 	static String openInBrowser(String name, String valueAsText, Object value)
 	{
-        return UbiquitousLinks.link(valueAsText, UbiquitousLinks.links.code_openInBrowser(name, value), null);
+        return UbiquitousLinks.link(valueAsText, UbiquitousLinks.code_openInBrowser(name, value), null);
     }
 
 	static String smaller(String t) {
 		return "<i><font size=-2>"+t+"</font></i>";
 	}
 	
-	static protected String smallerStill(String text) {
+	protected static
+    String smallerStill(String text) {
 		return "<font size=-3 color='#" + Constants.defaultTreeColorDim + "'>" + text + "</font>";
 	}
 

@@ -32,9 +32,9 @@ public class ToolPalette2 {
 		public String getDescription();
 	}
 
-    static public Rectangle defaultRect = AutoPersist.persist("modalMousePosition", new Rectangle(700, 150, 300, 200));
+    public static Rectangle defaultRect = AutoPersist.persist("modalMousePosition", new Rectangle(700, 150, 300, 200));
 
-	private ToolBarFolder toolBarPaletteInspector;
+	private final ToolBarFolder toolBarPaletteInspector;
 
 	public ToolPalette2() {
 

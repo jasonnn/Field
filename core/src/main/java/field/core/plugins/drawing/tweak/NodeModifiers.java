@@ -18,7 +18,8 @@ public class NodeModifiers {
 		public void apply(CachedLine inside, CachedLine.Event event, int index);
 	}
 
-	static public class SubdivideLeft implements iNodeModifier {
+	public static
+    class SubdivideLeft implements iNodeModifier {
 		Vector2 c12 = new Vector2();
 
 		Vector2 c21 = new Vector2();
@@ -27,7 +28,7 @@ public class NodeModifiers {
 
 		Vector2 tmp = new Vector2();
 
-		private float alpha;
+		private final float alpha;
 
 		public SubdivideLeft() {
 			this(0.5f);

@@ -95,7 +95,7 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 
 		Collections.sort(toDraw, new Comparator<Vector2>(){
 			public int compare(Vector2 o1, Vector2 o2) {
-				return o1.x < o2.x ? -1 : 1;
+				return (o1.x < o2.x) ? -1 : 1;
 			}
 		});
 
@@ -103,8 +103,8 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 			float nx = (toDraw.get(i).x - minX) / (maxX - minX);
 			float ny = (toDraw.get(i).y - 0) / (maxY - 0);
 
-			float prevx = (i > 0 ? ((toDraw.get(i - 1).x - minX) / (maxX - minX) + nx) / 2 : 0);
-			float nextx = (i < toDraw.size() - 1 ? ((toDraw.get(i + 1).x - minX) / (maxX - minX) + nx) / 2 : 1);
+			float prevx = ((i > 0) ? ((((toDraw.get(i - 1).x - minX) / (maxX - minX)) + nx) / 2) : 0);
+			float nextx = ((i < (toDraw.size() - 1)) ? ((((toDraw.get(i + 1).x - minX) / (maxX - minX)) + nx) / 2) : 1);
 
 			draw(prevx, nextx, nx, ny, g, size, toDraw.get(i).x, toDraw.get(i).y);
 		}
@@ -135,7 +135,7 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
             g.setFont(font);
 			g.setColor(baseColor);
 			int w = g.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());
-			g.drawString(label, (int) ((maxYat - minX) / (maxX - minX) * size.getWidth() + 10), (10));
+			g.drawString(label, (int) ((((maxYat - minX) / (maxX - minX)) * size.getWidth()) + 10), (10));
 		}
 
 	}
@@ -178,7 +178,7 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 
 		Collections.sort(toDraw, new Comparator<Vector2>(){
 			public int compare(Vector2 o1, Vector2 o2) {
-				return o1.x < o2.x ? -1 : 1;
+				return (o1.x < o2.x) ? -1 : 1;
 			}
 		});
 
@@ -186,10 +186,10 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 			float nx = (toDraw.get(i).x - minX) / (maxX - minX);
 			float ny = (toDraw.get(i).y - 0) / (maxY - 0);
 
-			float prevx = (i > 0 ? ((toDraw.get(i - 1).x - minX) / (maxX - minX) )  : 0);
-			float prevy = (i > 0 ? ((toDraw.get(i - 1).y - 0) / (maxY - 0))  : 0);
-			float nextx = (i < toDraw.size() - 1 ? ((toDraw.get(i + 1).x - minX) / (maxX - minX) )  : 1);
-			float nexty = (i < toDraw.size() - 1 ? ((toDraw.get(i + 1).y - 0) / (maxY ) )  : 1);
+			float prevx = ((i > 0) ? ((toDraw.get(i - 1).x - minX) / (maxX - minX)) : 0);
+			float prevy = ((i > 0) ? ((toDraw.get(i - 1).y - 0) / (maxY - 0)) : 0);
+			float nextx = ((i < (toDraw.size() - 1)) ? ((toDraw.get(i + 1).x - minX) / (maxX - minX)) : 1);
+			float nexty = ((i < (toDraw.size() - 1)) ? ((toDraw.get(i + 1).y - 0) / (maxY)) : 1);
 
 			draw(prevx, prevy, nextx, nexty, nx, ny, g, size, toDraw.get(i).x, toDraw.get(i).y);
 		}
@@ -220,7 +220,7 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
             g.setFont(font);
 			g.setColor(baseColor);
 			int w = g.getFontMetrics(font).charsWidth(label.toCharArray(), 0, label.length());
-			g.drawString(label, (int) ((maxYat - minX) / (maxX - minX) * size.getWidth() + 10), (10));
+			g.drawString(label, (int) ((((maxYat - minX) / (maxX - minX)) * size.getWidth()) + 10), (10));
 		}
 
 	}
@@ -245,7 +245,9 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 		p.lineTo(nx, (float) (size.getHeight() - ny));
 		p.lineTo(nextx, (float) (size.getHeight() - nexty));
 
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.5f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.5f));
 		g.draw(p);
 		g.setStroke(new BasicStroke(1));
 
@@ -256,27 +258,36 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 		p.moveTo(nx, (float) (size.getHeight() - ny));
 		p.lineTo(nx, 0);
 
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.2f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.2f));
 		g.draw(p);
 
 		p = new GeneralPath();
 		p.moveTo(0, (float) (size.getHeight()-ny));
 		p.lineTo(nx, (float) (size.getHeight()-ny));
 
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.2f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.2f));
 		g.draw(p);
 
 		float w = 3;
-		Double dd = new Ellipse2D.Double(nx - w / 2, size.getHeight() - ny - w / 2, w, w);
+		Double dd = new Ellipse2D.Double(nx - (w / 2), size.getHeight() - ny - (w / 2), w, w);
 
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.5f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.5f));
 		g.fill(dd);
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.15f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.15f));
 		g.draw(dd);
 
 		g.setFont(font);
 		g.setColor(baseColor);
-		g.drawString(BaseMath.toDP(vx,2)+"/"+BaseMath.toDP(vy, 2), (prevx+nextx)/2, (float) (size.getHeight()/2- ny/2));
+		g.drawString(BaseMath.toDP(vx,2)+ '/' +BaseMath.toDP(vy, 2), (prevx+nextx)/2, (float) ((size.getHeight() / 2)
+                                                                                             - (ny / 2)));
 
 	}
 
@@ -295,17 +306,25 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 		p.lineTo(nextx, (float) (size.getHeight() - ny));
 		p.lineTo(nextx, (float) (size.getHeight() - 0));
 
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.5f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.5f));
 		g.draw(p);
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.15f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.15f));
 		g.fill(p);
 
 		float w = 3;
-		Double dd = new Ellipse2D.Double(nx - w / 2, size.getHeight() - ny - w / 2, w, w);
+		Double dd = new Ellipse2D.Double(nx - (w / 2), size.getHeight() - ny - (w / 2), w, w);
 
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.5f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.5f));
 		g.fill(dd);
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.15f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.15f));
 		g.draw(dd);
 
 		g.setStroke(new BasicStroke(0.5f, 1, 1, 4, new float[] { 5, 10}, 0));
@@ -314,7 +333,9 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 		p.moveTo(nx, (float) (size.getHeight() - 0));
 		p.lineTo(nx, 0);
 
-		g.setColor(new Color(0.8f * baseColor.getRed() / 255, 0.85f * baseColor.getGreen() / 255, 0.82f * baseColor.getBlue() / 255, 0.2f));
+		g.setColor(new Color((0.8f * baseColor.getRed()) / 255,
+                             (0.85f * baseColor.getGreen()) / 255,
+                             (0.82f * baseColor.getBlue()) / 255, 0.2f));
 		g.draw(p);
 		p = new GeneralPath();
 		p.moveTo(0, (float) (size.getHeight() - ny));
@@ -324,7 +345,8 @@ public class HistogramLayerPainter implements iMinimalLayerPainter {
 
 		g.setFont(font);
 		g.setColor(baseColor);
-		g.drawString(BaseMath.toDP(vx,2)+"/"+BaseMath.toDP(vy, 2), (prevx+nextx)/2, (float) (size.getHeight()/2- ny/2));
+		g.drawString(BaseMath.toDP(vx,2)+ '/' +BaseMath.toDP(vy, 2), (prevx+nextx)/2, (float) ((size.getHeight() / 2)
+                                                                                             - (ny / 2)));
 
 		g.setStroke(new BasicStroke(1));
 	}

@@ -26,10 +26,10 @@ import java.util.Map;
 
 public class EditorSpaceBox {
 
-	static public final VisualElementProperty<Boolean> isEditorSpace = new VisualElementProperty<Boolean>("isEditorSpace");
-	static public final VisualElementProperty<VisualElementReference> isEditorSpace_belongsTo = new VisualElementProperty<VisualElementReference>("isEditorSpace_belongsTo");
-	static public final VisualElementProperty<String> isEditorSpace_belongsToProperty = new VisualElementProperty<String>("isEditorSpace_belongsToProperty");
-	private GLComponentWindow window;
+	public static final VisualElementProperty<Boolean> isEditorSpace = new VisualElementProperty<Boolean>("isEditorSpace");
+	public static final VisualElementProperty<VisualElementReference> isEditorSpace_belongsTo = new VisualElementProperty<VisualElementReference>("isEditorSpace_belongsTo");
+	public static final VisualElementProperty<String> isEditorSpace_belongsToProperty = new VisualElementProperty<String>("isEditorSpace_belongsToProperty");
+	private final GLComponentWindow window;
 	private final iVisualElement root;
 
 	public EditorSpaceBox(GLComponentWindow window, iVisualElement root) {
@@ -97,7 +97,7 @@ public class EditorSpaceBox {
 			Vector4 thawAt = new Vector4(window.getXScale(), window.getYScale(), window.getXTranslation(), window.getYTranslation());
 			ArrayList<Vector2> thrawAtLineMap = buildLineMap();
 
-			System.out.println(" thaw has <" + thrawAtLineMap.size() + "> lines <" + thawAt + ">");
+			System.out.println(" thaw has <" + thrawAtLineMap.size() + "> lines <" + thawAt + '>');
 
 			// if (thawAt.equals(frozenAt) &&
 			// thrawAtLineMap.equals(frozenAtLineMap)) return;
@@ -147,7 +147,8 @@ public class EditorSpaceBox {
 		}
 	}
 
-	private Rect transform(Pair<Rect, Position> pair, Vector4 from, Vector4 to, Vector2 f2, Vector2 to2) {
+	private static
+    Rect transform(Pair<Rect, Position> pair, Vector4 from, Vector4 to, Vector2 f2, Vector2 to2) {
 
 		Vector2 p1 = new Vector2(pair.left.x, pair.left.y);
 		Vector2 p2 = new Vector2(pair.left.x + pair.left.w, pair.left.y + pair.left.h);

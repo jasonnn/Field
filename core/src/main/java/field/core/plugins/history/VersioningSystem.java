@@ -15,7 +15,7 @@ import java.util.*;
 
 public abstract class VersioningSystem {
 
-	static public PrintStream debugOut = null;
+	public static PrintStream debugOut = null;
 
 	static {
 		// debugOut = new PrintStream(new File("/dev/ttyp2"));
@@ -24,7 +24,7 @@ public abstract class VersioningSystem {
 
 	/* this is sheet local storage */
 
-	static public boolean useGit = SystemProperties.getIntProperty("useGit", 0) == 1;
+	public static boolean useGit = SystemProperties.getIntProperty("useGit", 0) == 1;
 
 	// static public final OKey<VersioningSystem> versioningSystem = new
 	// OKey<VersioningSystem>("versioningSystem").rootSet(null);
@@ -56,7 +56,8 @@ public abstract class VersioningSystem {
 		return r;
 	}
 
-	static public Object objectRepresentationFor(String read) {
+	public static
+    Object objectRepresentationFor(String read) {
 
 		if (read.startsWith("string>"))
 			return read.substring("string>".length());
@@ -107,7 +108,7 @@ public abstract class VersioningSystem {
         // System.out.println(" inside versioning system constructor <"+fullPathToRepositoryDirectory+"> <"+sheetSubdirectory+"> <"+xmlFilename+">");
 
 		this.fullPathToRepositoryDirectory = fullPathToRepositoryDirectory;
-		this.fullPathToSheetDirectory = fullPathToRepositoryDirectory + "/" + sheetSubdirectory;
+		this.fullPathToSheetDirectory = fullPathToRepositoryDirectory + '/' + sheetSubdirectory;
 		this.xmlFilename = xmlFilename;
 		// versioningSystem.set(this);
 
@@ -116,19 +117,19 @@ public abstract class VersioningSystem {
 		// if so, synchronizeElementWithFileStructure
 		// will do something
 
-		if (!new File(fullPathToRepositoryDirectory + "/" + sheetSubdirectory).exists()) {
-			new File(fullPathToRepositoryDirectory + "/" + sheetSubdirectory).mkdir();
-			scmAddDirectory(new File(fullPathToRepositoryDirectory + "/" + sheetSubdirectory));
+		if (!new File(fullPathToRepositoryDirectory + '/' + sheetSubdirectory).exists()) {
+			new File(fullPathToRepositoryDirectory + '/' + sheetSubdirectory).mkdir();
+			scmAddDirectory(new File(fullPathToRepositoryDirectory + '/' + sheetSubdirectory));
 		}
-		if (!new File(fullPathToSheetDirectory + "/" + xmlFilename).exists()) {
+		if (!new File(fullPathToSheetDirectory + '/' + xmlFilename).exists()) {
 			try {
-				new File(fullPathToSheetDirectory + "/" + xmlFilename).createNewFile();
-				scmAddFile(new File(fullPathToSheetDirectory + "/" + xmlFilename));
+				new File(fullPathToSheetDirectory + '/' + xmlFilename).createNewFile();
+				scmAddFile(new File(fullPathToSheetDirectory + '/' + xmlFilename));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		this.xmlFilename = fullPathToSheetDirectory + "/" + xmlFilename;
+		this.xmlFilename = fullPathToSheetDirectory + '/' + xmlFilename;
 	}
 
 	/**
@@ -179,10 +180,10 @@ public abstract class VersioningSystem {
 	}
 
 	public void notifyCopyFileToProperty(String filename, iVisualElement targetElement, VisualElementProperty<String> targetProperty) {
-		File f = new File(fullPathToSheetDirectory + "/" + targetElement.getUniqueID());
+		File f = new File(fullPathToSheetDirectory + '/' + targetElement.getUniqueID());
 		if (!f.exists())
 			f.mkdir();
-		String dest = fullPathToSheetDirectory + "/" + targetElement.getUniqueID() + "/" + targetProperty.getName() + ".property";
+		String dest = fullPathToSheetDirectory + '/' + targetElement.getUniqueID() + '/' + targetProperty.getName() + ".property";
 		scmCopyFile(new File(filename), new File(dest));
 	}
 
@@ -234,7 +235,7 @@ public abstract class VersioningSystem {
 
 	public void setCurrentLogMessage(String currentLogMessage) {
 		this.currentLogMessage = currentLogMessage;
-		if (currentLogMessage.trim().equals(""))
+		if (currentLogMessage.trim() != null && currentLogMessage.trim().isEmpty())
 			currentLogMessage = "(no message)";
 	}
 
@@ -268,10 +269,10 @@ public abstract class VersioningSystem {
 				for (String p : properties) {
 					File load = new File(p);
 					try {
-						BufferedReader reader = new BufferedReader(new FileReader(path.getPath() + "/" + load));
-						StringBuffer read = new StringBuffer();
+						BufferedReader reader = new BufferedReader(new FileReader(path.getPath() + '/' + load));
+						StringBuilder read = new StringBuilder();
 						while (reader.ready()) {
-							read.append(reader.readLine() + "\n");
+							read.append(reader.readLine()).append('\n');
 						}
 						reader.close();
 						Object o = objectRepresentationFor(read.toString());
@@ -393,7 +394,7 @@ public abstract class VersioningSystem {
 
 		Path path = pathFor(to, null);
 
-		System.out.println(" ensure under version control <" + path + ">");
+		System.out.println(" ensure under version control <" + path + '>');
 
 		boolean needsSVNSupport = false;
 		boolean justCreated = false;
@@ -443,21 +444,29 @@ public abstract class VersioningSystem {
 		return new Versionings.Path(fullPathToSheetDirectory, element.getUniqueID(), property == null ? Versionings.NoProperty : property.getName());
 	}
 
-	abstract protected void scmAddDirectory(File file);
+	protected abstract
+    void scmAddDirectory(File file);
 
-	abstract protected void scmAddFile(File path);
+	protected abstract
+    void scmAddFile(File path);
 
-	abstract protected void scmCommitDirectory(File path);
+	protected abstract
+    void scmCommitDirectory(File path);
 
-	abstract protected void scmCommitFile(File path);
+	protected abstract
+    void scmCommitFile(File path);
 
-	abstract protected void scmCopyDirectory(File from, File to);
+	protected abstract
+    void scmCopyDirectory(File from, File to);
 
-	abstract protected void scmCopyFile(File from, File to);
+	protected abstract
+    void scmCopyFile(File from, File to);
 
-	abstract protected void scmDeleteDirectory(File path);
+	protected abstract
+    void scmDeleteDirectory(File path);
 
-	abstract protected void scmDeleteFile(File path);
+	protected abstract
+    void scmDeleteFile(File path);
 
 	protected boolean setFileFromString(Path path, String string, boolean shouldAdd) {
 		if (string != null) {
@@ -493,7 +502,7 @@ public abstract class VersioningSystem {
 				out.writeObject(property);
 				out.close();
 			} catch (IOException e) {
-				System.err.println(" failure to serialize <" + property + ">");
+				System.err.println(" failure to serialize <" + property + '>');
 				e.printStackTrace();
 				return null;
 			}

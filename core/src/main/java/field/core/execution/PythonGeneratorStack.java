@@ -145,7 +145,7 @@ public class PythonGeneratorStack implements iUpdateable {
 		try {
 			// ;//System.out.println(" stack is <"+stack+">");
 			Object ret = didNotEvaluate;
-			if (shouldEvaluateMain() && (stack.size() > 0)) {
+			if (shouldEvaluateMain() && (!stack.isEmpty())) {
 				if (first) {
 					first();
 					first = false;
@@ -171,7 +171,7 @@ public class PythonGeneratorStack implements iUpdateable {
 					// time
 				} else if (ret == null) {
 					stack.pop();
-					if (stack.size() == 0) {
+					if (stack.isEmpty()) {
 						ret = didNotEvaluate;
 						finished();
 					} else {
@@ -203,16 +203,18 @@ public class PythonGeneratorStack implements iUpdateable {
 				if (shouldEvaluate(stack2))
 					sret = stack2.evaluate();
 
-				sret = sret == null ? null : (sret instanceof PyObject ? ((PyObject) sret).__tojava__(Object.class) : sret);
+				sret = sret == null ? null : ((sret instanceof PyObject)
+                                              ? ((PyObject) sret).__tojava__(Object.class)
+                                              : sret);
 
 				handleEvaluation(i, sret);
 				int outSize = subUpdateables.size();
 				i -= inSize - outSize;
 			}
 
-			if ((stack.size() == 0) && (subUpdateables.size() == 0))
+			if ((stack.isEmpty()) && (subUpdateables.isEmpty()))
 				outOfThingsTodo();
-			ret = ret == null ? null : (ret instanceof PyObject ? ((PyObject) ret).__tojava__(Object.class) : ret);
+			ret = ret == null ? null : ((ret instanceof PyObject) ? ((PyObject) ret).__tojava__(Object.class) : ret);
 
 			handleEvaluation(-1, ret);
 
@@ -239,7 +241,7 @@ public class PythonGeneratorStack implements iUpdateable {
 	public void update() {
 		try {
 			Object to = evaluate();
-			evaluatedTo(to == didNotEvaluate ? null : to);
+			evaluatedTo((to == didNotEvaluate) ? null : to);
 		} catch (Exception e) {
 			e.printStackTrace();
 			IllegalArgumentException iae = new IllegalArgumentException();

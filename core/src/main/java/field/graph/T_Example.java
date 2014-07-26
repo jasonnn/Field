@@ -14,9 +14,10 @@ import java.util.Collection;
 
 public class T_Example implements iLaunchable {
 
-	static public final Prop<Vector2> at = new Prop<Vector2>("at");
+	public static final Prop<Vector2> at = new Prop<Vector2>("at");
 	
-	static public class Mark extends Cobj implements iLayout {
+	public static
+    class Mark extends Cobj implements iLayout {
 		
 		
 		@Override
@@ -48,7 +49,8 @@ public class T_Example implements iLaunchable {
 		
 	}
 
-	static public class MarkMaker extends Cobj implements iLayout {
+	public static
+    class MarkMaker extends Cobj implements iLayout {
 
 		@Override
 		public void layout() {
@@ -71,10 +73,11 @@ public class T_Example implements iLaunchable {
 		}
 	}
 
-	static public final Prop<Number> x = new Prop<Number>("x");
-	static public final Prop<Number> y = new Prop<Number>("y");
+	public static final Prop<Number> x = new Prop<Number>("x");
+	public static final Prop<Number> y = new Prop<Number>("y");
 	
-	static public class Datum extends Cobj
+	public static
+    class Datum extends Cobj
 	{
 		public Datum(float x, float y)
 		{
@@ -85,16 +88,17 @@ public class T_Example implements iLaunchable {
 		
 		@Override
 		public String toString() {
-			return "datum["+getProperty(x)+", "+getProperty(y)+"]";
+			return "datum["+getProperty(x)+", "+getProperty(y)+ ']';
 		}
 	}
 	
-	static public class Axis extends Cobj implements iLayout, iAxis {
+	public static
+    class Axis extends Cobj implements iLayout, iAxis {
 
 		private final Prop<Number> dimension;
 		private float min;
 		private float max;
-		private float length;
+		private final float length;
 		private float offset;
 
 		public Axis(Prop<Number> dimension, float length, float offset) {
@@ -140,7 +144,7 @@ public class T_Example implements iLaunchable {
 		
 		@Override
 		public String toString() {
-			return "axis["+min+" -> "+max+"]";
+			return "axis["+min+" -> "+max+ ']';
 		}
 		
 		@Override

@@ -70,11 +70,9 @@ public class SimpleLineDrawing {
 								outputLine.startLine();
 								outputLine.moveTo(v);
 								started = true;
-							} else if (e.method.equals(iLine_m.lineTo_m))
+							} else if (e.method.equals(iLine_m.lineTo_m) || e.method.equals(iLine_m.cubicTo_m))
 								outputLine.lineTo(v);
-							else if (e.method.equals(iLine_m.cubicTo_m))
-								outputLine.lineTo(v);
-							ii++;
+                            ii++;
 							if (ii > 200)
 								break;
 						}
@@ -126,7 +124,7 @@ public class SimpleLineDrawing {
 				@Override
 				protected void decorateVertex(int v1, List<Object> name) {
 
-					Object color = name == null ? null : name.get(0);
+					Object color = (name == null) ? null : name.get(0);
 					if (color == null)
 						color = properties.get(iLinearGraphicsContext.fillColor);
 					if (color == null)
@@ -148,7 +146,7 @@ public class SimpleLineDrawing {
 
 			fillEmitter.addTrackedProperty(iLinearGraphicsContext.fillColor_v, new iMetric<Vector4, Vector4>() {
 				public float distance(Vector4 from, Vector4 to) {
-					if (from == null || to == null)
+					if ((from == null) || (to == null))
 						return 0;
 
 					float d = (from).distanceFrom((to)) * 10;
@@ -163,7 +161,7 @@ public class SimpleLineDrawing {
 
 				public void update() {
 
-					DynamicMesh_long x = seen > 2 ? outputLineOld : outputLine;
+					DynamicMesh_long x = (seen > 2) ? outputLineOld : outputLine;
 
 					if (!context.isLayer(line))
 						return;
@@ -234,7 +232,7 @@ public class SimpleLineDrawing {
 
 				@Override
 				protected void decorateVertex(int v1, List<Object> name) {
-					Object color = name == null ? null : name.get(1);
+					Object color = (name == null) ? null : name.get(1);
 					if (color == null)
 						color = properties.get(iLinearGraphicsContext.fillColor);
 					if (color == null)
@@ -262,7 +260,9 @@ public class SimpleLineDrawing {
 
 				@Override
 				protected boolean shouldTerm(float flatness, Vector3 a, Vector3 c1, Vector3 c2, Vector3 b, int n) {
-					return constantDistance == 0 ? super.shouldTerm(flatness, a, c1, c2, b, n) : a.distanceFrom(b) < constantDistance;
+					return (constantDistance == 0)
+                           ? super.shouldTerm(flatness, a, c1, c2, b, n)
+                           : (a.distanceFrom(b) < constantDistance);
 				}
 				
 				protected void nextVertex(VInfo info) {
@@ -286,7 +286,7 @@ public class SimpleLineDrawing {
 				fillEmitter.clearTrackedProperties();
 				fillEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
 					public float distance(Vector4 from, Vector4 to) {
-						if (from == null || to == null)
+						if ((from == null) || (to == null))
 							return 0;
 						float d = from.distanceFrom(to);
 						return d;
@@ -308,7 +308,7 @@ public class SimpleLineDrawing {
 				fillEmitter.clearTrackedProperties();
 				fillEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
 					public float distance(Vector4 from, Vector4 to) {
-						if (from == null || to == null)
+						if ((from == null) || (to == null))
 							return 0;
 						float d = from.distanceFrom(to);
 						return d;
@@ -323,11 +323,11 @@ public class SimpleLineDrawing {
 			DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
 				int seen = 0;
 
-				CoordinateFrame prevTransform = transform==null ? null : transform.duplicate();
+				CoordinateFrame prevTransform = (transform == null) ? null : transform.duplicate();
 				
 				public void update() {
 
-					DynamicMesh_long x = seen > 2 ? outputLineOld : outputLine;
+					DynamicMesh_long x = (seen > 2) ? outputLineOld : outputLine;
 
 					if (!context.isLayer(line))
 						return;
@@ -395,7 +395,7 @@ public class SimpleLineDrawing {
 			this.context = context;
 			lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
 				public float distance(Vector4 from, Vector4 to) {
-					if (from == null || to == null)
+					if ((from == null) || (to == null))
 						return 0;
 					float d = from.distanceFrom(to);
 					return d;
@@ -440,13 +440,13 @@ public class SimpleLineDrawing {
 			DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
 
 				int seen = 0;
-				CoordinateFrame prevTransform = transform==null ? null : transform.duplicate();
+				CoordinateFrame prevTransform = (transform == null) ? null : transform.duplicate();
 				
 				public void update() {
 
 					transform = line.getProperties().get(iLinearGraphicsContext.transform);
 
-					DynamicLine_long x = seen > 2 ? outputLineOld : outputLine;
+					DynamicLine_long x = (seen > 2) ? outputLineOld : outputLine;
 
 					if (!context.isLayer(line))
 						return;
@@ -680,13 +680,15 @@ public class SimpleLineDrawing {
 
 	}
 
-	static public boolean equals(CoordinateFrame a, CoordinateFrame b) {
+	public static
+    boolean equals(CoordinateFrame a, CoordinateFrame b) {
 		if (a==null) return b==null;
 		if (b==null) return false;
 		return a.equals(b);
 	}
 
-	static public Vector3 maybeTransform(CoordinateFrame transform, Vector3 v2) {
+	public static
+    Vector3 maybeTransform(CoordinateFrame transform, Vector3 v2) {
 		if (transform==null) return v2;
 		
 		return transform.transformPosition(new Vector3(v2));
@@ -789,7 +791,8 @@ public class SimpleLineDrawing {
 	public SimpleLineDrawing() {
 	}
 
-	static public void drawInto(CachedLine line, Dict properties, iDynamicMesh outputLine, BaseGLGraphicsContext context, SmallLineEmitter_long lineEmitter) {
+	public static
+    void drawInto(CachedLine line, Dict properties, iDynamicMesh outputLine, BaseGLGraphicsContext context, SmallLineEmitter_long lineEmitter) {
 
 		CachedLineCursor cursor = new CachedLineCursor(line);
 
@@ -849,7 +852,7 @@ public class SimpleLineDrawing {
 
 	static Vector2 zOffset = new Vector2();
 
-	static public iFunction<Vector3, Vector3> thisCamera;
+	public static iFunction<Vector3, Vector3> thisCamera;
 
 	public class Plain3dLine implements iDrawingAcceptor<CachedLine> {
 
@@ -1108,7 +1111,7 @@ public class SimpleLineDrawing {
 		return nl;
 	}
 
-	static public int cacheUniq = 0;
+	public static int cacheUniq = 0;
 
     private static
     Float uniqueFor(BiMap<Float, iDynamicMesh> allreadyConstructedLines) {
@@ -1142,7 +1145,8 @@ public class SimpleLineDrawing {
 		return nl;
 	}
 
-	public DynamicMesh_long getCachedMesh(BaseGLGraphicsContext context, boolean mustBeUniq) {
+	public static
+    DynamicMesh_long getCachedMesh(BaseGLGraphicsContext context, boolean mustBeUniq) {
 		float f = -2;
 		if (!mustBeUniq) {
 			iDynamicMesh already = context.allreadyConstructedLines.get(f);
@@ -1180,7 +1184,8 @@ public class SimpleLineDrawing {
 		return nl;
 	}
 
-	public DynamicMesh_long getOldCachedMesh(BaseGLGraphicsContext context, boolean mustBeUniq) {
+	public static
+    DynamicMesh_long getOldCachedMesh(BaseGLGraphicsContext context, boolean mustBeUniq) {
 		float f = -3;
 		if (!mustBeUniq) {
 			iDynamicMesh already = context.allreadyConstructedLines.get(f);
@@ -1201,7 +1206,8 @@ public class SimpleLineDrawing {
 		return nl;
 	}
 
-	public DynamicPointlist getCachedPoints(BaseGLGraphicsContext context) {
+	public static
+    DynamicPointlist getCachedPoints(BaseGLGraphicsContext context) {
 		float f = -1;
 		iDynamicMesh already = context.allreadyConstructedLines.get(f);
 		if (already != null) {
@@ -1339,7 +1345,8 @@ public class SimpleLineDrawing {
 		outputLine.close();
 	}
 
-	static public Vector3 camera(Vector3 a) {
+	public static
+    Vector3 camera(Vector3 a) {
 		if (thisCamera != null) {
 			return thisCamera.f(a);
 		}

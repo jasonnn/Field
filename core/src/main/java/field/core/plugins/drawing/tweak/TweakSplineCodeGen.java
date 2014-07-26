@@ -40,7 +40,7 @@ public class TweakSplineCodeGen {
 		public void toProperties(iVisualElement e, Map<String, Object> soFar);
 	}
 
-	static public final iResult abort = new iResult(){
+	public static final iResult abort = new iResult(){
 
 		public List<SelectedVertex> getClaimedVertex() {
 			return null;
@@ -60,7 +60,8 @@ public class TweakSplineCodeGen {
 	 * @author marc
 	 * 
 	 */
-	static public class BaseTool {
+    public static
+    class BaseTool {
 		List<iNodeDesc> nodes = new ArrayList<iNodeDesc>();
 
 		List<iCoordDesc> coords = new ArrayList<iCoordDesc>();
@@ -91,7 +92,7 @@ public class TweakSplineCodeGen {
 					if (res != null) nodeDescriptions.addAll(res);
 				} while (res != null);
 			}
-			assert toClaim.size() == 0 : "unclaimed node descriptions " + toClaim + ":" + selected + ":" + nodeDescriptions;
+			assert toClaim.size() == 0 : "unclaimed node descriptions " + toClaim + ':' + selected + ':' + nodeDescriptions;
 
 			String expression = "";
 			final Map<String, Object> property = new HashMap<String, Object>();
@@ -118,9 +119,11 @@ public class TweakSplineCodeGen {
 				}
 
 				if (!aborted) {
-					assert ndToClaim.size() == 0 : "unclaimed coord transformations " + ndToClaim + ":" + selected + ":" + nodeDescriptions + "  : " + nd;
+					assert ndToClaim.size() == 0 : "unclaimed coord transformations " + ndToClaim + ':'
+                                                   + selected + ':'
+                                                   + nodeDescriptions + "  : " + nd;
 
-					expression += assembleExpression(e, nd, coordDescriptions, property, mi) + "\n";
+					expression += assembleExpression(e, nd, coordDescriptions, property, mi) + '\n';
 				}
 			}
 			final String fexpression = expression;
@@ -146,11 +149,11 @@ public class TweakSplineCodeGen {
 				iResult r = coords.get(i).describe(index, sel, mi);
 				if (r != null) {
 					String e = r.toExpression();
-					ex += e + ",";
+					ex += e + ',';
 				}
 			}
 
-			final String fex = "(" + ex + ")";
+			final String fex = '(' + ex + ')';
 			return fex;
 		}
 
@@ -176,7 +179,7 @@ public class TweakSplineCodeGen {
 			while(ee.hasNext())
 			{
 				Entry<String, String> ii = ee.next();
-				exp+=","+ii.getKey()+"="+ii.getValue();
+				exp+= ',' +ii.getKey()+ '=' +ii.getValue();
 			}
 			
 			
@@ -190,7 +193,8 @@ public class TweakSplineCodeGen {
 
 	}
 
-	static public String uniqProperty(iVisualElement e, Map<String, Object> p) {
+	public static
+    String uniqProperty(iVisualElement e, Map<String, Object> p) {
 		String base = "_tweakProperty";
 		int n = 0;
 		while (e.getProperty(new VisualElementProperty(base + n)) != null || (p!=null && p.containsKey(base + n)))

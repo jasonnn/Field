@@ -21,11 +21,11 @@ public class VisualElementReference {
 	
 	public iVisualElement get(iVisualElement root)
 	{
-		return cached==null ? cached = StandardFluidSheet.findVisualElement(root, uid) : cached;
+		return (cached == null) ? (cached = StandardFluidSheet.findVisualElement(root, uid)) : cached;
 	}
 	
 	@Override
 	public String toString() {
-		return uid+":"+cached;
+		return uid+ ':' +cached;
 	}
 }

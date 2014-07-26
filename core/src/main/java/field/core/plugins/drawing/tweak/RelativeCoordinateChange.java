@@ -17,7 +17,7 @@ import java.util.Map;
 public class RelativeCoordinateChange implements iCoordDesc {
 
 	public iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
-		if (claimed.size() == 0) return null;
+		if (claimed.isEmpty()) return null;
 
 		final SelectedVertex c = claimed.remove(0);
 		final Vector2[] changes = { null, null, null};
@@ -39,7 +39,7 @@ public class RelativeCoordinateChange implements iCoordDesc {
 			}
 		}
 
-		if (changes[0] == null && changes[1] == null && changes[2] == null) return TweakSplineCodeGen.abort;
+		if ((changes[0] == null) && (changes[1] == null) && (changes[2] == null)) return TweakSplineCodeGen.abort;
 
 		return new iResult(){
 			public List<SelectedVertex> getClaimedVertex() {
@@ -47,11 +47,11 @@ public class RelativeCoordinateChange implements iCoordDesc {
 			}
 
 			public String toExpression() {
-				return "Rel(" + v(changes[0]) + ", " + v(changes[1]) + ", " + v(changes[2]) + ")";
+				return "Rel(" + v(changes[0]) + ", " + v(changes[1]) + ", " + v(changes[2]) + ')';
 			}
 
 			protected String v(Vector2 vv) {
-				return (vv == null ? "None" : "Vector2(" + vv.x + ", " + vv.y + ")");
+				return ((vv == null) ? "None" : ("Vector2(" + vv.x + ", " + vv.y + ')'));
 			}
 
 			public void toProperties(iVisualElement e, Map<String, Object> soFar) {

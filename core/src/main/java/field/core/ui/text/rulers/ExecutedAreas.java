@@ -18,7 +18,8 @@ import java.util.Map.Entry;
 
 public class ExecutedAreas {
 
-	static public class Area {
+	public static
+    class Area {
 
 		public int allocation;
 
@@ -36,7 +37,7 @@ public class ExecutedAreas {
 
 		transient Position trackingEnd;
 
-		transient public Dict textend = new Dict();
+		public transient Dict textend = new Dict();
 
 		public List<ExecutionRecord> exec = new ArrayList<ExecutionRecord>();
 
@@ -49,8 +50,8 @@ public class ExecutedAreas {
 
 		@Override
 		public String toString() {
-			return "area:<" + lineStart + " -> " + lineEnd + ">"
-					+ (invalid ? "invalid" : "") + " " + trackingStart + " "
+			return "area:<" + lineStart + " -> " + lineEnd + '>'
+					+ (invalid ? "invalid" : "") + ' ' + trackingStart + ' '
 					+ trackingEnd;
 		}
 
@@ -109,7 +110,8 @@ public class ExecutedAreas {
 
 	}
 
-	static public class ExecutionRecord {
+	public static
+    class ExecutionRecord {
 		public Date when = new Date();
 		public String stringAtExecution;
 
@@ -156,7 +158,8 @@ public class ExecutedAreas {
 	 * @author marc
 	 * 
 	 */
-	static public class State {
+    public static
+    class State {
 		public List<Area> areas = new ArrayList<Area>();
 
 		public Histogram<Area> rootHistogram = new Histogram<Area>();
@@ -197,17 +200,18 @@ public class ExecutedAreas {
 
 	}
 
-	static public final Prop<Histogram<Area>> forwardTransitions = new Prop<Histogram<Area>>(
+	public static final Prop<Histogram<Area>> forwardTransitions = new Prop<Histogram<Area>>(
 			"forwardTransitions");
-	static public final Prop<Character> keyboardShortcut = new Prop<Character>(
+	public static final Prop<Character> keyboardShortcut = new Prop<Character>(
 			"keyboardShortcut");
 
-	static public final Prop<Boolean> isUnitTest = new Prop<Boolean>(
+	public static final Prop<Boolean> isUnitTest = new Prop<Boolean>(
 			"isUnitTest");
-	static public final Prop<Boolean> passedUnitTest = new Prop<Boolean>(
+	public static final Prop<Boolean> passedUnitTest = new Prop<Boolean>(
 			"passedUnitTest");
 
-	static public int lineForOffset(int offset, String text) {
+	public static
+    int lineForOffset(int offset, String text) {
 		String[] lines = text.split("\n");
 		int at = 0;
 		for (int n = 0; n < lines.length; n++) {
@@ -220,7 +224,8 @@ public class ExecutedAreas {
 		return -1;
 	}
 
-	static public int positionForLineEnd(int i, String text) {
+	public static
+    int positionForLineEnd(int i, String text) {
 		String[] lines = text.split("\n");
 		int at = 0;
 		for (int n = 0; n < Math.min(lines.length, i + 1); n++) {
@@ -229,7 +234,8 @@ public class ExecutedAreas {
 		return Math.max(0, at - 1);
 	}
 
-	static public int positionForLineStart(int i, String text) {
+	public static
+    int positionForLineStart(int i, String text) {
 		String[] lines = text.split("\n");
 		int at = 0;
 		for (int n = 0; n < Math.min(lines.length, i); n++) {
@@ -252,7 +258,8 @@ public class ExecutedAreas {
 		this.text = p;
 	}
 
-	public void allocateNew(Area newArea, List<Area> others) {
+	public static
+    void allocateNew(Area newArea, List<Area> others) {
 		for (Area a : others) {
 			if (a != newArea) {
 				if (overlaps(newArea, a)) {

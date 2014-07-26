@@ -33,13 +33,15 @@ public class Batching {
 
 	static Object none = new Object();
 
-	static public Object masquerade(Class as, Object target, String fireOn) {
+	public static
+    Object masquerade(Class as, Object target, String fireOn) {
 		return masquerade(as, target, fireOn, fireOn);
 	}
 
-	static public Object masquerade(Class as, Object target, String up, String down) {
+	public static
+    Object masquerade(Class as, Object target, String up, String down) {
 		final Batching b = new Batching(target);
-		assert as.isAssignableFrom(target.getClass()) : as + " " + target + " " + target.getClass();
+		assert as.isAssignableFrom(target.getClass()) : as + " " + target + ' ' + target.getClass();
 		final Method mdown = ReflectionTools.methodOf(down, as);
 		final Method mup = ReflectionTools.methodOf(up, as);
 

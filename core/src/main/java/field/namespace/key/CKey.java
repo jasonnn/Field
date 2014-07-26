@@ -16,15 +16,16 @@ import java.util.*;
  * 
  * @author marc
  */
-abstract public class CKey extends Key {
+public abstract
+class CKey extends Key {
 	
-	static public final SimpleContextTopology tree= SimpleContextTopology.newInstance();
+	public static final SimpleContextTopology tree= SimpleContextTopology.newInstance();
 	protected final SimpleContextTopology localContextTree;
 
 	static boolean debug = false;
 
 	// todo: should be meta
-	transient protected List executionStack = new ArrayList();
+    protected transient List executionStack = new ArrayList();
 
 	public CKey(String s) {
 		super(s);
@@ -111,7 +112,7 @@ abstract public class CKey extends Key {
 	}
 
 	public CKey with(Key k, float e) {
-		executionStack.add(new With(k, new Float(e)));
+		executionStack.add(new With(k, e));
 		return this;
 	}
 
@@ -201,7 +202,8 @@ abstract public class CKey extends Key {
 
 	// here are the elements that we need
 
-	static public abstract class Phi implements StackElement {
+	public abstract static
+    class Phi implements StackElement {
 		boolean nullIsFailure = true;
 
 		StackTraceElement[] allocationStackTrace;
@@ -242,7 +244,7 @@ abstract public class CKey extends Key {
 
 			try {
 				
-				System.err.println(" calling <"+objectCall+"> <"+floatCall+"> <"+intCall+"> <"+voidCall+">");
+				System.err.println(" calling <"+objectCall+"> <"+floatCall+"> <"+intCall+"> <"+voidCall+ '>');
 				
 				if (objectCall != null)
                     o = objectCall.invoke(this, o);
@@ -278,14 +280,15 @@ abstract public class CKey extends Key {
 		}
 	}
 
-	static protected float toFloat(Object o) {
+	protected static
+    float toFloat(Object o) {
 		if (o instanceof Number)
 			return ((Number) o).floatValue();
 		if (o instanceof iFloatProvider)
 			return ((iFloatProvider) o).evaluate();
 		if (o instanceof CKey)
 			return ((CKey) o).asFloat();
-		throw new PhiException(" toFloat, failed, got class <" + o + "> <" + (o == null ? null : o.getClass()) + ">");
+		throw new PhiException(" toFloat, failed, got class <" + o + "> <" + (o == null ? null : o.getClass()) + '>');
 	}
 
 	protected float asFloat() {
@@ -321,18 +324,19 @@ abstract public class CKey extends Key {
 		return o;
 	}
 
-	static public class PhiException extends RuntimeException {
+	public static
+    class PhiException extends RuntimeException {
 		public PhiException(String message) {
 			super(message);
 		}
 
 		public PhiException(String message, StackTraceElement[] e) {
-			super(message + (e == null ? "\n    turn on asserts for better stacktrace" : "allocation stacktrace is <" + Arrays.asList(e) + ">"));
+			super(message + (e == null ? "\n    turn on asserts for better stacktrace" : "allocation stacktrace is <" + Arrays.asList(e) + '>'));
 		}
 	}
 
 	static class Failure {
 	}
 
-	static protected Failure failure = new Failure();
+	protected static Failure failure = new Failure();
 }

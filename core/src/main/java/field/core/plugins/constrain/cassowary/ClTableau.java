@@ -48,28 +48,28 @@ class ClTableau extends CL {
 
 	// Originally from Michael Noth <noth@cs>
 	public String getInternalInfo() {
-		StringBuffer retstr = new StringBuffer("Tableau Information:\n");
-		retstr.append("Rows: " + _rows.size());
-		retstr.append(" (= " + (_rows.size() - 1) + " constraints)");
-		retstr.append("\nColumns: " + _columns.size());
-		retstr.append("\nInfeasible Rows: " + _infeasibleRows.size());
-		retstr.append("\nExternal basic variables: " + _externalRows.size());
+		StringBuilder retstr = new StringBuilder("Tableau Information:\n");
+		retstr.append("Rows: ").append(_rows.size());
+		retstr.append(" (= ").append(_rows.size() - 1).append(" constraints)");
+		retstr.append("\nColumns: ").append(_columns.size());
+		retstr.append("\nInfeasible Rows: ").append(_infeasibleRows.size());
+		retstr.append("\nExternal basic variables: ").append(_externalRows.size());
 		retstr.append("\nExternal parametric variables: ");
 		retstr.append(_externalParametricVars.size());
-		retstr.append("\n");
+		retstr.append('\n');
 		return retstr.toString();
 	}
 
 	@Override
 	public String toString() {
-		StringBuffer bstr = new StringBuffer("Tableau:\n");
+		StringBuilder bstr = new StringBuilder("Tableau:\n");
 		for (Enumeration<ClAbstractVariable> e = _rows.keys(); e.hasMoreElements();) {
 			ClAbstractVariable clv = e.nextElement();
 			ClLinearExpression expr = _rows.get(clv);
 			bstr.append(clv.toString());
 			bstr.append(" <==> ");
 			bstr.append(expr.toString());
-			bstr.append("\n");
+			bstr.append('\n');
 		}
 		bstr.append("\nColumns:\n");
 		bstr.append(_columns.toString());
@@ -103,8 +103,7 @@ class ClTableau extends CL {
 		// for each variable in expr, add var to the set of rows which
 		// have that variable in their expression
 		_rows.put(var, expr);
-		for (Enumeration<ClAbstractVariable> e = expr.terms().keys(); e.hasMoreElements();) {
-			ClAbstractVariable clv = e.nextElement();
+		for (ClAbstractVariable clv:  expr.terms().keySet()) {
 			insertColVar(clv, var);
 			if (clv.isExternal()) {
 				_externalParametricVars.insert(clv);
@@ -150,8 +149,7 @@ class ClTableau extends CL {
 		// For each variable in this expression, update
 		// the column mapping and remove the variable from the list
 		// of rows it is known to be in
-		for (Enumeration<ClAbstractVariable> e = expr.terms().keys(); e.hasMoreElements();) {
-			ClAbstractVariable clv = e.nextElement();
+		for (ClAbstractVariable clv:  expr.terms().keySet()) {
 			Set varset = _columns.get(clv);
 			if (varset != null) {
 				if (fTraceOn)

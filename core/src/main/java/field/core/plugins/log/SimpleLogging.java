@@ -74,7 +74,9 @@ public class SimpleLogging {
 
 					public String getLongDescription(Throwable t) {
 						String m = "<html><font color=#ffffff><i>message</i><br>" + t + "<br><br>";
-						String er = isError() ? "<i>stack trace</i><br>" + Arrays.asList(t.getStackTrace()).toString().replace(",", "<br>") : "";
+						String er = isError() ? ("<i>stack trace</i><br>" + Arrays.asList(t.getStackTrace())
+                                                                                  .toString()
+                                                                                  .replace(",", "<br>")) : "";
 						Throwable cc = t.getCause();
 						if (cc!=null)
 							return m + er + "<br><br><i>cause</i><br>"+getLongDescription(cc);
@@ -134,7 +136,9 @@ public class SimpleLogging {
 
 			public String getLongDescription() {
 				String m = "<html><font color=#ffffff><i>message</i><br>" + s + "<br><br>";
-				String er = isError() ? "<i>stack trace</i><br>" + Arrays.asList(e.getStackTrace()).toString().replace(",", "<br>") : "";
+				String er = isError() ? ("<i>stack trace</i><br>" + Arrays.asList(e.getStackTrace())
+                                                                          .toString()
+                                                                          .replace(",", "<br>")) : "";
 				return m + er;
 			}
 

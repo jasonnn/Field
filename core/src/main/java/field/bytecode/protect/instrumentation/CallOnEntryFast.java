@@ -39,7 +39,8 @@ public abstract class CallOnEntryFast extends FieldASMGeneratorAdapter implement
         uniq = FieldBytecodeAdapter.entryHandlerList.length - 1;
     }
 
-    abstract public void handle(int fromName, Object fromThis, Object[] argArray);
+    public abstract
+    void handle(int fromName, Object fromThis, Object[] argArray);
 
     @Override
     public void visitCode() {

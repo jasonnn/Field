@@ -9,7 +9,7 @@ import static org.lwjgl.opengl.GL15.*;
 
 public class PointList_partial extends PointList {
 
-	static public int vertexPerFrame = 5000;
+	public static int vertexPerFrame = 5000;
 
 	int uploadedVertex = 0;
 

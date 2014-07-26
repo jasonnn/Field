@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 public class PluginList {
 
 	private final iVisualElement root;
-	private SelectionSetUI selectionUI;
+	private final SelectionSetUI selectionUI;
 
 	public class PluginOrExtensionNode extends field.math.graph.NodeImpl<PluginOrExtensionNode> {
 		protected final String rootname;
@@ -83,7 +83,7 @@ public class PluginList {
 			String rootnamesplit = dressName();
 
 			// ;//System.out.println(" enabled :" + enabled);
-			return rootnamesplit + " " + smaller(getTypeDescription());
+			return rootnamesplit + ' ' + smaller(getTypeDescription());
 		}
 
 		protected String dressName() {
@@ -214,7 +214,7 @@ public class PluginList {
 
 		if (f.isDirectory()) {
 			String n = f.getName();
-			n = f.getParentFile().getName()+"_"+n;
+			n = f.getParentFile().getName()+ '_' +n;
 			if (n.indexOf('.') != -1) {
 				n = n.replace('.', '_');
 			}
@@ -222,29 +222,29 @@ public class PluginList {
 			
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir + "/" + n + "_extension.mf")));
-				writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/**" : "") + "\n");
+				writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/**" : "") + '\n');
 				writer.close();
 			} catch (IOException ee) {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir2 + "/" + n + "_extension.mf")));
-				writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/**" : "") + "\n");
+				writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/**" : "") + '\n');
 				writer.close();
 
 			}
 			invalidateAndRebuild();
 		} else if (f.getName().endsWith(".jar")) {
 			String n = f.getName();
-			n = f.getParentFile().getName()+"_"+n;
+			n = f.getParentFile().getName()+ '_' +n;
 			if (n.indexOf('.') != -1) {
 				n = n.replace('.', '_');
 			}
 
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir + "/" + n + "_extension.mf")));
-				writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/" : "") + "\n");
+				writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/" : "") + '\n');
 				writer.close();
 			} catch (IOException ee) {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir2 + "/" + n + "_extension.mf")));
-				writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/" : "") + "\n");
+				writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/" : "") + '\n');
 				writer.close();
 			}
 			invalidateAndRebuild();
@@ -267,13 +267,13 @@ public class PluginList {
 						File f = getFile("Add Jar / Directory", true, new String[] { ".jar", ".jar_" });
 						if (f != null) {
 							String n = f.getName();
-							n = f.getParentFile().getName()+"_"+n;
+							n = f.getParentFile().getName()+ '_' +n;
 							if (n.indexOf('.') != -1) {
 								n = n.replace('.', '_');
 							}
 							try {
 								BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir2 + "/" + n + "_extension.mf")));
-								writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/" : "") + "\n");
+								writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/" : "") + '\n');
 								writer.close();
 
 								invalidateAndRebuild();
@@ -290,13 +290,13 @@ public class PluginList {
 						File f = getFile("Add Jar / Directory", true, new String[] { ".jar", ".jar_" });
 						if (f != null) {
 							String n = f.getName();
-							n = f.getParentFile().getName()+"_"+n;
+							n = f.getParentFile().getName()+ '_' +n;
 							if (n.indexOf('.') != -1) {
 								n = n.replace('.', '_');
 							}
 							try {
 								BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir2 + "/" + n + "_extension.mf")));
-								writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/**" : "") + "\n");
+								writer.write("Field-RedirectionPath: " + f.getCanonicalPath() + (f.isDirectory() ? "/**" : "") + '\n');
 								writer.close();
 
 								invalidateAndRebuild();
@@ -343,13 +343,13 @@ public class PluginList {
 						File f = getFile("Add Python directory", true, new String[] {});
 						if (f != null) {
 							String n = f.getName();
-							n = f.getParentFile().getName()+"_"+n;
+							n = f.getParentFile().getName()+ '_' +n;
 							if (n.indexOf('.') != -1) {
                                 n = n.substring(0, n.indexOf('.'));
                             }
 							try {
 								BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir2 + "/" + n + "_extension.mf")));
-								writer.write("Field-Property-Append-python-path: " + f.getCanonicalPath() + "\n");
+								writer.write("Field-Property-Append-python-path: " + f.getCanonicalPath() + '\n');
 								writer.close();
 							} catch (IOException e) {
 								e.printStackTrace();
@@ -365,13 +365,13 @@ public class PluginList {
 						File f = getFile("Add Source Jar / Directory", true, new String[] { ".jar", ".jar_" });
 						if (f != null) {
 							String n = f.getName();
-							n = f.getParentFile().getName()+"_"+n;
+							n = f.getParentFile().getName()+ '_' +n;
 							if (n.indexOf('.') != -1) {
                                 n = n.substring(0, n.indexOf('.'));
                             }
 							try {
 								BufferedWriter writer = new BufferedWriter(new FileWriter(new File(extensionsDir2 + "/" + n + "_extension.mf")));
-								writer.write("Field-Property-Append-java-source-paths: " + f.getCanonicalPath() + "\n");
+								writer.write("Field-Property-Append-java-source-paths: " + f.getCanonicalPath() + '\n');
 								writer.close();
 							} catch (IOException e) {
 								e.printStackTrace();
@@ -569,7 +569,8 @@ public class PluginList {
 		invalidateAndRebuild();
 	}
 
-	protected boolean is16() {
+	protected static
+    boolean is16() {
 		String plist = loadInfoPList();
 		Matcher m = Pattern.compile("(<key>JVMVersion</key>\\s*?<string>)(\\d\\.\\d)(</string>)").matcher(plist);
 		boolean found = m.find();
@@ -729,8 +730,8 @@ public class PluginList {
 			if (parts.length != 2)
 				continue;
 
-			if (parts[1].equals("jar") || parts[1].equals("jar_")) {
-				JARNode j = new JARNode(f.getName(), parts[1].equals("jar")) {
+			if ("jar".equals(parts[1]) || "jar_".equals(parts[1])) {
+				JARNode j = new JARNode(f.getName(), "jar".equals(parts[1])) {
 					@Override
 					public boolean isEnableable() {
 						return true;
@@ -748,7 +749,7 @@ public class PluginList {
 					JarFile m = new JarFile(f);
 					Manifest manifest = m.getManifest();
 					if (manifest != null) {
-						MFNode n = new MFNode(f.getName() + ":manifest", parts[1].equals("jar")) {
+						MFNode n = new MFNode(f.getName() + ":manifest", "jar".equals(parts[1])) {
 							@Override
 							public boolean isEnableable() {
 								return true;
@@ -767,8 +768,8 @@ public class PluginList {
 					e.printStackTrace();
 				}
 
-			} else if (parts[1].equals("mf") || parts[1].equals("mf_")) {
-				MFNode n = new MFNode(f.getName(), parts[1].equals("mf")) {
+			} else if ("mf".equals(parts[1]) || "mf_".equals(parts[1])) {
+				MFNode n = new MFNode(f.getName(), "mf".equals(parts[1])) {
 					@Override
 					public boolean isEnableable() {
 						return true;
@@ -792,8 +793,8 @@ public class PluginList {
 					e.printStackTrace();
 				}
 				root.addChild(n);
-			} else if (parts[1].equals("py") || parts[1].equals("py_")) {
-				root.addChild(new ExtensionNode(f.getName(), parts[1].equals("py")) {
+			} else if ("py".equals(parts[1]) || "py_".equals(parts[1])) {
+				root.addChild(new ExtensionNode(f.getName(), "py".equals(parts[1])) {
 					@Override
 					public boolean isEnableable() {
 						return true;

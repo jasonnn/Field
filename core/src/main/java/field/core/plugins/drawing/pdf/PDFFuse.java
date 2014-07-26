@@ -106,7 +106,7 @@ public class PDFFuse {
 			
 			over.saveState();
 			over.setGState(gs1);
-			over.addTemplate(template, ox == null ? 0 : ox[i].x, ox == null ? 0 : ox[i].y);
+			over.addTemplate(template, (ox == null) ? 0 : ox[i].x, (ox == null) ? 0 : ox[i].y);
 			over.restoreState();
 		}
 

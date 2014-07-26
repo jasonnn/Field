@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class OverDrawing {
 	
-	static public VisualElementProperty<OverDrawing> overdraw = new VisualElementProperty<OverDrawing>("__overdraw");
+	public static VisualElementProperty<OverDrawing> overdraw = new VisualElementProperty<OverDrawing>("__overdraw");
 	private final BaseGLGraphicsContext context;
 	private final GLComponentWindow window;
 	

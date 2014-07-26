@@ -11,8 +11,8 @@ import java.lang.reflect.Field;
 
 public class BetterPythonConstructors implements ClassLoadedNotification {
 
-	@Target(value = { ElementType.TYPE })
-	@Retention(value = RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
 	public @interface SynthesizeFactory {
 	}
 
@@ -46,7 +46,8 @@ public class BetterPythonConstructors implements ClassLoadedNotification {
 					String upperName = name;
 					name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
 
-					String doc = "Construct a" + (name.startsWith("a") | name.startsWith("e") | name.startsWith("i") | name.startsWith("o") | name.startsWith("u") ? "n" : "") + " " + name + ".\n\n Automatically constructs a " + Platform.getCanonicalName(loaded) + " using keyword arg style.\n\n Keys are:\n\n";
+					String doc = "Construct a" + (name.startsWith("a") | name.startsWith("e") | name.startsWith("i") | name.startsWith("o") | name.startsWith("u") ? "n" : "") + ' '
+                                 + name + ".\n\n Automatically constructs a " + Platform.getCanonicalName(loaded) + " using keyword arg style.\n\n Keys are:\n\n";
 					Field[] f = loaded.getDeclaredFields();
 					for (Field ff : f) {
 						doc += "\tX{" + ff.getName() + "} (C{" + ff.getType().getName() + "})\n\n";

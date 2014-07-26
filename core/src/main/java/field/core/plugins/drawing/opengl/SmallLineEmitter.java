@@ -35,7 +35,8 @@ public abstract class SmallLineEmitter {
 
 	}
 
-	abstract public void emitLinearFrame(Vector2 a, Vector2 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context);
+	public abstract
+    void emitLinearFrame(Vector2 a, Vector2 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context);
 
 	public void emitCubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, List<Object> name, List<Object> name2, Dict properties, iLinearGraphicsContext context) {
 		throw new IllegalArgumentException();

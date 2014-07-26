@@ -24,7 +24,8 @@ import java.util.List;
 
 public class LineUtils {
 
-	static public class AllDistanceMinima {
+	public static
+    class AllDistanceMinima {
 		public class Minimum {
 			float min = Float.POSITIVE_INFINITY;
 
@@ -61,7 +62,7 @@ public class LineUtils {
 
 			@Override
 			public String toString() {
-				return "minimum @ " + minAtIndex + " " + min + " " + minT + "  " + getMinPoint();
+				return "minimum @ " + minAtIndex + ' ' + min + ' ' + minT + "  " + getMinPoint();
 			}
 		}
 
@@ -141,7 +142,7 @@ public class LineUtils {
                             double d = cubicF.f(x);
 							double d0 = cubicF.f(Math.max(0, x - 1e-2));
 							double d1 = cubicF.f(Math.min(1, x + 1e-2));
-							if (d <= d0 && d <= d1)
+							if ((d <= d0) && (d <= d1))
 								newMinimum(x / 2, d, cc.getCurrentIndex());
 						}
 						b.setValue(ob);
@@ -154,7 +155,7 @@ public class LineUtils {
                             double d = cubicF.f(x);
 							double d0 = cubicF.f(Math.max(0, x - 1e-2));
 							double d1 = cubicF.f(Math.min(1, x + 1e-2));
-							if (d <= d0 && d <= d1)
+							if ((d <= d0) && (d <= d1))
 								newMinimum(0.5 + x / 2, d, cc.getCurrentIndex());
 						}
 					}
@@ -223,7 +224,8 @@ public class LineUtils {
 		}
 	}
 
-	static public class ClosestEvent {
+	public static
+    class ClosestEvent {
 		private final CachedLine target;
 
 		private float d;
@@ -264,7 +266,8 @@ public class LineUtils {
 		}
 	}
 
-	static public class ClosestPointToSpline {
+	public static
+    class ClosestPointToSpline {
 		public static double ptSegDistSqT(double x1, double y1, double x2, double y2, double px, double py) {
 			x2 -= x1;
 			y2 -= y1;
@@ -358,7 +361,7 @@ public class LineUtils {
                             double d = cubicF.f(x);
 							if (d < min) {
 								min = (float) d;
-								minT = (float) (0.5 + x / 2);
+								minT = (float) (0.5 + (x / 2));
 								minAtIndex = cc.getCurrentIndex();
 							}
 						}
@@ -420,7 +423,8 @@ public class LineUtils {
 
 	}
 
-	static public class ClosestPointToSpline3 {
+	public static
+    class ClosestPointToSpline3 {
 		public static double ptSegDistSqT(double x1, double y1, double z1, double x2, double y2, double z2, double px, double py, double pz) {
 			x2 -= x1;
 			y2 -= y1;
@@ -597,7 +601,8 @@ public class LineUtils {
 
 	}
 
-	static public Vector2 evaluateCubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, float alpha, Vector2 out) {
+	public static
+    Vector2 evaluateCubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, float alpha, Vector2 out) {
 		float oma = 1 - alpha;
 		float oma2 = oma * oma;
 		float oma3 = oma2 * oma;
@@ -610,7 +615,8 @@ public class LineUtils {
 		return out;
 	}
 
-	static public float evaluateCubicFrame(float a, float c1, float c2, float b, float alpha) {
+	public static
+    float evaluateCubicFrame(float a, float c1, float c2, float b, float alpha) {
 		float oma = 1 - alpha;
 		float oma2 = oma * oma;
 		float oma3 = oma2 * oma;
@@ -620,7 +626,8 @@ public class LineUtils {
 		return a * oma3 + 3 * c1 * alpha * oma2 + 3 * c2 * alpha2 * oma + b * alpha3;
 	}
 
-	static public Vector2 evaluateDCubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, float alpha, Vector2 out) {
+	public static
+    Vector2 evaluateDCubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, float alpha, Vector2 out) {
 
 		out.x = -3 * c1.x * alpha * (2 - 2 * alpha) + 6 * c2.x * alpha * (1 - alpha) - 3 * a.x * (1 - alpha) * (1 - alpha) - 3 * c2.x * alpha * alpha + 3 * b.x * alpha * alpha + 3 * c1.x * (1 - alpha) * (1 - alpha);
 		out.y = -3 * c1.y * alpha * (2 - 2 * alpha) + 6 * c2.y * alpha * (1 - alpha) - 3 * a.y * (1 - alpha) * (1 - alpha) - 3 * c2.y * alpha * alpha + 3 * b.y * alpha * alpha + 3 * c1.y * (1 - alpha) * (1 - alpha);
@@ -628,7 +635,8 @@ public class LineUtils {
 		return out;
 	}
 
-	static public Vector3 evaluateDCubicFrame3(Vector3 a, Vector3 c1, Vector3 c2, Vector3 b, float alpha, Vector3 out) {
+	public static
+    Vector3 evaluateDCubicFrame3(Vector3 a, Vector3 c1, Vector3 c2, Vector3 b, float alpha, Vector3 out) {
 
 		out.x = -3 * c1.x * alpha * (2 - 2 * alpha) + 6 * c2.x * alpha * (1 - alpha) - 3 * a.x * (1 - alpha) * (1 - alpha) - 3 * c2.x * alpha * alpha + 3 * b.x * alpha * alpha + 3 * c1.x * (1 - alpha) * (1 - alpha);
 		out.y = -3 * c1.y * alpha * (2 - 2 * alpha) + 6 * c2.y * alpha * (1 - alpha) - 3 * a.y * (1 - alpha) * (1 - alpha) - 3 * c2.y * alpha * alpha + 3 * b.y * alpha * alpha + 3 * c1.y * (1 - alpha) * (1 - alpha);
@@ -637,7 +645,8 @@ public class LineUtils {
 		return out;
 	}
 
-	static public Vector2 evaluateD2CubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, float alpha, Vector2 out) {
+	public static
+    Vector2 evaluateD2CubicFrame(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b, float alpha, Vector2 out) {
 
 		out.x = -12 * c2.x * alpha - 6 * c1.x * (2 - 2 * alpha) + 3 * a.x * (2 - 2 * alpha) + 6 * b.x * alpha + 6 * c1.x * alpha + 6 * c2.x * (1 - alpha);
 		out.y = -12 * c2.y * alpha - 6 * c1.y * (2 - 2 * alpha) + 3 * a.y * (2 - 2 * alpha) + 6 * b.y * alpha + 6 * c1.y * alpha + 6 * c2.y * (1 - alpha);
@@ -645,7 +654,8 @@ public class LineUtils {
 		return out;
 	}
 
-	static public Vector3 evaluateD2CubicFrame3(Vector3 a, Vector3 c1, Vector3 c2, Vector3 b, float alpha, Vector3 out) {
+	public static
+    Vector3 evaluateD2CubicFrame3(Vector3 a, Vector3 c1, Vector3 c2, Vector3 b, float alpha, Vector3 out) {
 
 		out.x = -12 * c2.x * alpha - 6 * c1.x * (2 - 2 * alpha) + 3 * a.x * (2 - 2 * alpha) + 6 * b.x * alpha + 6 * c1.x * alpha + 6 * c2.x * (1 - alpha);
 		out.y = -12 * c2.y * alpha - 6 * c1.y * (2 - 2 * alpha) + 3 * a.y * (2 - 2 * alpha) + 6 * b.y * alpha + 6 * c1.y * alpha + 6 * c2.y * (1 - alpha);
@@ -654,7 +664,8 @@ public class LineUtils {
 		return out;
 	}
 
-	static public Vector3 evaluateCubicFrame3(Vector3 a, Vector3 c1, Vector3 c2, Vector3 b, float alpha, Vector3 out) {
+	public static
+    Vector3 evaluateCubicFrame3(Vector3 a, Vector3 c1, Vector3 c2, Vector3 b, float alpha, Vector3 out) {
 		float oma = 1 - alpha;
 		float oma2 = oma * oma;
 		float oma3 = oma2 * oma;
@@ -669,7 +680,7 @@ public class LineUtils {
 	}
 
 	public static Vector2[] fastBounds(CachedLine c) {
-		Vector2[] minMax = new Vector2[] { new Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY), new Vector2(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY) };
+		Vector2[] minMax = { new Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY), new Vector2(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY) };
 
 		boolean touched = false;
 		for (int i = 0; i < c.events.size(); i++) {
@@ -697,7 +708,7 @@ public class LineUtils {
 	}
 
 	public static Vector3[] fastBounds3(CachedLine c) {
-		Vector3[] minMax = new Vector3[] { new Vector3(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY), new Vector3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY) };
+		Vector3[] minMax = { new Vector3(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY), new Vector3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY) };
 
 		boolean touched = false;
 		for (int i = 0; i < c.events.size(); i++) {
@@ -738,7 +749,7 @@ public class LineUtils {
 	}
 
 	public static Vector2[] fastBoundsAndMidpoints(CachedLine c) {
-		Vector2[] minMax = new Vector2[] { new Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY), new Vector2(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY) };
+		Vector2[] minMax = { new Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY), new Vector2(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY) };
 
 		boolean touched = false;
 		Vector2 a = new Vector2();
@@ -797,7 +808,7 @@ public class LineUtils {
 	}
 
 	public static Vector2[] fastBoundsMoveTos(CachedLine c) {
-		Vector2[] minMax = new Vector2[] { new Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY), new Vector2(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY) };
+		Vector2[] minMax = { new Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY), new Vector2(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY) };
 		if (c == null) {
             // System.out.println(" null c ? ");
             return new Vector2[] { new Vector2(), new Vector2() };
@@ -1039,8 +1050,8 @@ public class LineUtils {
 					if (after != null) {
 						v2.add(after);
 					}
-					(ll.args)[2 * i] = new Float(v2.x);
-					(ll.args)[2 * i + 1] = new Float(v2.y);
+					(ll.args)[2 * i] = v2.x;
+					(ll.args)[2 * i + 1] = v2.y;
 				}
 			r.events.add(ll);
 
@@ -1075,9 +1086,9 @@ public class LineUtils {
 				if (after != null)
 					a.add(after);
 
-				ll.args[0] = new Float(a.x);
-				ll.args[1] = new Float(a.y);
-				ll.getAttributes().put(iLinearGraphicsContext.z_v, new Float(a.z));
+				ll.args[0] = a.x;
+				ll.args[1] = a.y;
+				ll.getAttributes().put(iLinearGraphicsContext.z_v, a.z);
 			} else if (e.args.length == 6) {
 				Vector3 mainZ = new Vector3();
 				{
@@ -1097,8 +1108,8 @@ public class LineUtils {
 					if (after != null)
 						a.add(after);
 
-					ll.args[0] = new Float(a.x);
-					ll.args[1] = new Float(a.y);
+					ll.args[0] = a.x;
+					ll.args[1] = a.y;
 					mainZ.x = a.z;
 				}
 				{
@@ -1118,8 +1129,8 @@ public class LineUtils {
 					if (after != null)
 						a.add(after);
 
-					ll.args[2] = new Float(a.x);
-					ll.args[3] = new Float(a.y);
+					ll.args[2] = a.x;
+					ll.args[3] = a.y;
 					mainZ.y = a.z;
 				}
 				{
@@ -1139,8 +1150,8 @@ public class LineUtils {
 					if (after != null)
 						a.add(after);
 
-					ll.args[4] = new Float(a.x);
-					ll.args[5] = new Float(a.y);
+					ll.args[4] = a.x;
+					ll.args[5] = a.y;
 					mainZ.z = a.z;
 				}
 				ll.getAttributes().put(iLinearGraphicsContext.z_v, mainZ);
@@ -1173,9 +1184,9 @@ public class LineUtils {
 				Vector3 a = new Vector3(((Number) e.args[0]).floatValue(), ((Number) e.args[1]).floatValue(), ((Number) z).floatValue());
 				frame.transformPosition(a);
 
-				ll.args[0] = new Float(a.x);
-				ll.args[1] = new Float(a.y);
-				ll.getAttributes().put(iLinearGraphicsContext.z_v, new Float(a.z));
+				ll.args[0] = a.x;
+				ll.args[1] = a.y;
+				ll.getAttributes().put(iLinearGraphicsContext.z_v, a.z);
 			} else if (e.args.length == 6) {
 				Vector3 mainZ = new Vector3();
 				{
@@ -1188,8 +1199,8 @@ public class LineUtils {
 					Vector3 a = new Vector3(((Number) e.args[0]).floatValue(), ((Number) e.args[1]).floatValue(), ((Number) z).floatValue());
 					frame.transformPosition(a);
 
-					ll.args[0] = new Float(a.x);
-					ll.args[1] = new Float(a.y);
+					ll.args[0] = a.x;
+					ll.args[1] = a.y;
 					mainZ.x = a.z;
 				}
 				{
@@ -1202,8 +1213,8 @@ public class LineUtils {
 					Vector3 a = new Vector3(((Number) e.args[2]).floatValue(), ((Number) e.args[3]).floatValue(), ((Number) z).floatValue());
 					frame.transformPosition(a);
 
-					ll.args[2] = new Float(a.x);
-					ll.args[3] = new Float(a.y);
+					ll.args[2] = a.x;
+					ll.args[3] = a.y;
 					mainZ.y = a.z;
 				}
 				{
@@ -1216,8 +1227,8 @@ public class LineUtils {
 					Vector3 a = new Vector3(((Number) e.args[4]).floatValue(), ((Number) e.args[5]).floatValue(), ((Number) z).floatValue());
 					frame.transformPosition(a);
 
-					ll.args[4] = new Float(a.x);
-					ll.args[5] = new Float(a.y);
+					ll.args[4] = a.x;
+					ll.args[5] = a.y;
 					mainZ.z = a.z;
 				}
 				ll.getAttributes().put(iLinearGraphicsContext.z_v, mainZ);
@@ -1494,7 +1505,8 @@ public class LineUtils {
 		}
 	}
 
-	public void piToCachedLine(PathIterator pi, CachedLine contInto, boolean firstIsMoveto) {
+	public static
+    void piToCachedLine(PathIterator pi, CachedLine contInto, boolean firstIsMoveto) {
 		piToCachedLine(pi, contInto, firstIsMoveto, false);
 	}
 
@@ -1995,7 +2007,7 @@ public class LineUtils {
 			arc.setAngleStart(start);
 			arc.setAngleExtent(ex);
 
-			new LineUtils().piToCachedLine(arc.getPathIterator(null), into, true);
+			LineUtils.piToCachedLine(arc.getPathIterator(null), into, true);
 
 			return true;
 		}

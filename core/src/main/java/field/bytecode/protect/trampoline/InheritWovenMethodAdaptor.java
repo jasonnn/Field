@@ -48,7 +48,7 @@ public class InheritWovenMethodAdaptor extends MethodVisitor {
     public AnnotationVisitor visitAnnotation(final String annotationName, boolean vis) {
 
 
-        if (!annotationName.equals("Lfield/bytecode/protect/annotations/InheritWeave;")) {
+        if (!"Lfield/bytecode/protect/annotations/InheritWeave;".equals(annotationName)) {
             return super.visitAnnotation(annotationName, vis);
         }
 
@@ -59,12 +59,14 @@ public class InheritWovenMethodAdaptor extends MethodVisitor {
             Annotation[] annotations = trampoline.getAllAnotationsForSuperMethodsOf(name, desc, at, super_name, interfaces);
 
             for (Annotation annotation : annotations) {
-                AnnotationVisitor va = mv.visitAnnotation("L" + annotation.annotationType().getName().replace('.', '/') + ";", true);
+                AnnotationVisitor va = mv.visitAnnotation('L'
+                                                          + annotation.annotationType().getName().replace('.', '/') + ';', true);
 
                 Method[] annotationMethods = annotation.annotationType().getDeclaredMethods();
 
                 if (annotation.annotationType().getClassLoader() != trampoline.getLoader())
-                    assert !trampoline.shouldLoadLocal(annotation.annotationType().getName()) : "WARNING: leaked, " + annotation.annotationType().getClassLoader() + " " + annotation.annotationType();
+                    assert !trampoline.shouldLoadLocal(annotation.annotationType().getName()) : "WARNING: leaked, " + annotation.annotationType().getClassLoader() + ' '
+                                                                                                + annotation.annotationType();
 
                 for (Method mm : annotationMethods) {
                     try {

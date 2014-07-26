@@ -79,22 +79,25 @@ public class TwoPassImageProcessing implements iImageProcessor {
 		};
 
 		iProvider<Integer>[] fboInputsRight = new iProvider[fboInputs.length + 1];
-		if (!doBothPasses) {
-			System.arraycopy(fboInputs, 0, fboInputsRight, 0, fboInputs.length);
-			fboInputsRight[fboInputs.length] = new iProvider<Integer>() {
-				public Integer get() {
-					return left.getOutput(0).get();
-				}
-			};
-		} else {
-			System.arraycopy(fboInputs, 0, fboInputsRight, 1, fboInputs.length);
-			fboInputsRight[0] = new iProvider<Integer>() {
-				public Integer get() {
-					return left.getOutput(0).get();
-				}
-			};
+        if (doBothPasses) {
+            System.arraycopy(fboInputs, 0, fboInputsRight, 1, fboInputs.length);
+            fboInputsRight[0] = new iProvider<Integer>() {
+                public
+                Integer get() {
+                    return left.getOutput(0).get();
+                }
+            };
 
-		}
+        }
+        else {
+            System.arraycopy(fboInputs, 0, fboInputsRight, 0, fboInputs.length);
+            fboInputsRight[fboInputs.length] = new iProvider<Integer>() {
+                public
+                Integer get() {
+                    return left.getOutput(0).get();
+                }
+            };
+        }
 
 		left = new ImageProcessing(fboInputsLeft, width, height, useRect, genMipmap, useFloat);
 		right = new ImageProcessing(fboInputsRight, width, height, useRect, genMipmap, useFloat);
@@ -224,7 +227,9 @@ public class TwoPassImageProcessing implements iImageProcessor {
 		if (c.getSceneListSide() == StereoSide.middle)
             Cont.linkWith(c, FullScreenCanvasSWT.method_beforeFlush, arun);
         else {
-            Method attachMethod = c.getSceneListSide() == StereoSide.left ? FullScreenCanvasSWT.method_beforeLeftFlush : FullScreenCanvasSWT.method_beforeRightFlush;
+            Method attachMethod = (c.getSceneListSide() == StereoSide.left)
+                                  ? FullScreenCanvasSWT.method_beforeLeftFlush
+                                  : FullScreenCanvasSWT.method_beforeRightFlush;
             Cont.linkWith(c, attachMethod, arun);
 		}
 	}

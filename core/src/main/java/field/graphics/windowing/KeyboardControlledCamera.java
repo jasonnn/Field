@@ -74,10 +74,11 @@ public class KeyboardControlledCamera extends CoordinateFrameCamera implements K
 
 	public void keyPressed(KeyEvent e) {
 		CharacterIsDown d = null;
-		if ((e.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
-			d = new CharacterIsDown(e.getKeyChar(), true, e.getKeyCode());
-		} else
-			d = new CharacterIsDown(e.getKeyChar(), false, e.getKeyCode());
+        if ((e.getModifiers() & KeyEvent.SHIFT_MASK) == 0)
+            d = new CharacterIsDown(e.getKeyChar(), false, e.getKeyCode());
+        else {
+            d = new CharacterIsDown(e.getKeyChar(), true, e.getKeyCode());
+        }
 
 		if (e.getKeyCode() == KeyEvent.VK_ENTER)
 		{
@@ -90,10 +91,11 @@ public class KeyboardControlledCamera extends CoordinateFrameCamera implements K
 
 	public void keyReleased(KeyEvent e) {
 		CharacterIsDown d = null;
-		if ((e.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
-			d = new CharacterIsDown(e.getKeyChar(), true, e.getKeyCode());
-		} else
-			d = new CharacterIsDown(e.getKeyChar(), false, e.getKeyCode());
+        if ((e.getModifiers() & KeyEvent.SHIFT_MASK) == 0)
+            d = new CharacterIsDown(e.getKeyChar(), false, e.getKeyCode());
+        else {
+            d = new CharacterIsDown(e.getKeyChar(), true, e.getKeyCode());
+        }
 
 		// if (!charactersDown.contains(d))
 		charactersDown.remove(d);

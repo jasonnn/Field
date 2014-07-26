@@ -42,29 +42,32 @@ public class ImmutableArrayList<E> extends ArrayList<E> implements iImmutableCon
 		return bigBaseHashCode = getBigBaseHashCodeForIterable(this);
 	}
 
-	static public String getBigBaseHashCodeForIterable(Iterable i) {
+	public static
+    String getBigBaseHashCodeForIterable(Iterable i) {
 		StringBuilder buffer = new StringBuilder();
 		for (Object o : i) {
 			int q = System.identityHashCode(o);
-			buffer.append(":");
+			buffer.append(':');
 			buffer.append(toBase256(q));
 		}
 		return buffer.toString();
 	}
 
-	static public String getBigBaseHashCodeForIterable(Object[] i) {
+	public static
+    String getBigBaseHashCodeForIterable(Object[] i) {
 		StringBuilder buffer = new StringBuilder();
 		for (Object o : i) {
 			int q = System.identityHashCode(o);
-			buffer.append(":");
+			buffer.append(':');
 			buffer.append(toBase256(q));
 		}
 		return buffer.toString();
 	}
 
-	static public char[] base256Table = null;
+	public static char[] base256Table = null;
 
-	static public StringBuffer toBase256(int num) {
+	public static
+    StringBuffer toBase256(int num) {
 		if (base256Table == null) {
 			base256Table = new char[256];
 			for (int i = 0; i < 256; i++)
@@ -72,7 +75,7 @@ public class ImmutableArrayList<E> extends ArrayList<E> implements iImmutableCon
 		}
 		StringBuffer sb = new StringBuffer(4);
 		if (num < 0) {
-			sb.append("-");
+			sb.append('-');
 			num = -num;
 		}
 		sb.append(base256Table[num & 255]);

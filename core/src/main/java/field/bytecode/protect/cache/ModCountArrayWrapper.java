@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class ModCountArrayWrapper implements iGetModCount<ModCountArrayWrapper> {
 
-	final private Object[] a;
+	private final Object[] a;
 
 	public ModCountArrayWrapper(Object[] a) {
 		this.a = a;

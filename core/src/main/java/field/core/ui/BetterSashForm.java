@@ -58,7 +58,7 @@ public class BetterSashForm extends Canvas {
 		 * @return a string representation of the event
 		 */
 		public String toString() {
-			return getName() + " {weight=" + weight + "}"; //$NON-NLS-2$
+			return getName() + " {weight=" + weight + '}'; //$NON-NLS-2$
 		}
 	}
 
@@ -101,7 +101,7 @@ public class BetterSashForm extends Canvas {
 			long total = 0;
 			for (int i = 0; i < cArray.length; i++) {
 				Object data = cArray[i].getLayoutData();
-				if (data != null && data instanceof BetterSashFormData) {
+				if ((data != null) && (data instanceof BetterSashFormData)) {
 					ratios[i] = ((BetterSashFormData) data).weight;
 				} else {
 					data = new BetterSashFormData();
@@ -112,11 +112,14 @@ public class BetterSashForm extends Canvas {
 				total += ratios[i];
 			}
 			if (ratios[maxIndex] > 0) {
-				int sashwidth = BetterSashForm.sashes.length > 0 ? BetterSashForm.SASH_WIDTH + BetterSashForm.sashes[0].getBorderWidth() * 2 : BetterSashForm.SASH_WIDTH;
+				int sashwidth = (BetterSashForm.sashes.length > 0)
+                                ? (BetterSashForm.SASH_WIDTH
+                                   + (BetterSashForm.sashes[0].getBorderWidth() * 2))
+                                : BetterSashForm.SASH_WIDTH;
 				if (vertical) {
-					height += (int) (total * maxValue / ratios[maxIndex]) + (cArray.length - 1) * sashwidth;
+					height += (int) ((total * maxValue) / ratios[maxIndex]) + (cArray.length - 1) * sashwidth;
 				} else {
-					width += (int) (total * maxValue / ratios[maxIndex]) + (cArray.length - 1) * sashwidth;
+					width += (int) ((total * maxValue) / ratios[maxIndex]) + (cArray.length - 1) * sashwidth;
 				}
 			}
 			width += BetterSashForm.getBorderWidth() * 2;
@@ -135,17 +138,17 @@ public class BetterSashForm extends Canvas {
 		protected void layout(Composite composite, boolean flushCache) {
 			BetterSashForm sashForm = (BetterSashForm) composite;
 			Rectangle area = sashForm.getClientArea();
-			if (area.width <= 1 || area.height <= 1)
+			if ((area.width <= 1) || (area.height <= 1))
 				return;
 
 			Control[] newControls = sashForm.getControls(true);
-			if (sashForm.controls.length == 0 && newControls.length == 0)
+			if ((sashForm.controls.length == 0) && (newControls.length == 0))
 				return;
 			sashForm.controls = newControls;
 
 			Control[] controls = sashForm.controls;
 
-			if (sashForm.maxControl != null && !sashForm.maxControl.isDisposed()) {
+			if ((sashForm.maxControl != null) && !sashForm.maxControl.isDisposed()) {
 				for (int i = 0; i < controls.length; i++) {
 					if (controls[i] != sashForm.maxControl) {
 						controls[i].setBounds(-200, -200, 0, 0);
@@ -157,7 +160,7 @@ public class BetterSashForm extends Canvas {
 			}
 
 			// keep just the right number of sashes
-			if (sashForm.sashes.length < controls.length - 1) {
+			if (sashForm.sashes.length < (controls.length - 1)) {
 				Sash[] newSashes = new Sash[controls.length - 1];
 				System.arraycopy(sashForm.sashes, 0, newSashes, 0, sashForm.sashes.length);
 				for (int i = sashForm.sashes.length; i < newSashes.length; i++) {
@@ -165,7 +168,7 @@ public class BetterSashForm extends Canvas {
 				}
 				sashForm.sashes = newSashes;
 			}
-			if (sashForm.sashes.length > controls.length - 1) {
+			if (sashForm.sashes.length > (controls.length - 1)) {
 				if (controls.length == 0) {
 					for (int i = 0; i < sashForm.sashes.length; i++) {
 						sashForm.sashes[i].dispose();
@@ -188,7 +191,7 @@ public class BetterSashForm extends Canvas {
 			long total = 0;
 			for (int i = 0; i < controls.length; i++) {
 				Object data = controls[i].getLayoutData();
-				if (data != null && data instanceof BetterSashFormData) {
+				if ((data != null) && (data instanceof BetterSashFormData)) {
 					ratios[i] = ((BetterSashFormData) data).weight;
 				} else {
 					data = new BetterSashFormData();
@@ -199,16 +202,18 @@ public class BetterSashForm extends Canvas {
 				total += ratios[i];
 			}
 
-			int sashwidth = sashes.length > 0 ? sashForm.SASH_WIDTH + sashes[0].getBorderWidth() * 2 : sashForm.SASH_WIDTH;
+			int sashwidth = (sashes.length > 0)
+                            ? (sashForm.SASH_WIDTH + (sashes[0].getBorderWidth() * 2))
+                            : sashForm.SASH_WIDTH;
 			if (sashForm.getOrientation() == SWT.HORIZONTAL) {
-				int width = (int) (ratios[0] * (area.width - sashes.length * sashwidth) / total);
+				int width = (int) ((ratios[0] * (area.width - (sashes.length * sashwidth))) / total);
 				int x = area.x;
 				controls[0].setBounds(x, area.y, width, area.height);
 				x += width;
-				for (int i = 1; i < controls.length - 1; i++) {
+				for (int i = 1; i < (controls.length - 1); i++) {
 					sashes[i - 1].setBounds(x, area.y, sashwidth, area.height);
 					x += sashwidth;
-					width = (int) (ratios[i] * (area.width - sashes.length * sashwidth) / total);
+					width = (int) ((ratios[i] * (area.width - (sashes.length * sashwidth))) / total);
 					controls[i].setBounds(x, area.y, width, area.height);
 					x += width;
 				}
@@ -219,14 +224,14 @@ public class BetterSashForm extends Canvas {
 					controls[controls.length - 1].setBounds(x, area.y, width, area.height);
 				}
 			} else {
-				int height = (int) (ratios[0] * (area.height - sashes.length * sashwidth) / total);
+				int height = (int) ((ratios[0] * (area.height - (sashes.length * sashwidth))) / total);
 				int y = area.y;
 				controls[0].setBounds(area.x, y, area.width, height);
 				y += height;
-				for (int i = 1; i < controls.length - 1; i++) {
+				for (int i = 1; i < (controls.length - 1); i++) {
 					sashes[i - 1].setBounds(area.x, y, area.width, sashwidth);
 					y += sashwidth;
-					height = (int) (ratios[i] * (area.height - sashes.length * sashwidth) / total);
+					height = (int) ((ratios[i] * (area.height - (sashes.length * sashwidth))) / total);
 					controls[i].setBounds(area.x, y, area.width, height);
 					y += height;
 				}
@@ -332,7 +337,7 @@ public class BetterSashForm extends Canvas {
 	 */
 	public int getOrientation() {
 		// checkWidget();
-		return (sashStyle & SWT.VERTICAL) != 0 ? SWT.HORIZONTAL : SWT.VERTICAL;
+		return ((sashStyle & SWT.VERTICAL) != 0) ? SWT.HORIZONTAL : SWT.VERTICAL;
 	}
 
 	/**
@@ -400,8 +405,8 @@ public class BetterSashForm extends Canvas {
 		int[] ratios = new int[cArray.length];
 		for (int i = 0; i < cArray.length; i++) {
 			Object data = cArray[i].getLayoutData();
-			if (data != null && data instanceof BetterSashFormData) {
-				ratios[i] = (int) (((BetterSashFormData) data).weight * 1000 >> 16);
+			if ((data != null) && (data instanceof BetterSashFormData)) {
+				ratios[i] = (int) ((((BetterSashFormData) data).weight * 1000) >> 16);
 			} else {
 				ratios[i] = 200;
 			}
@@ -448,7 +453,7 @@ public class BetterSashForm extends Canvas {
 		boolean correction = false;
 		if (getOrientation() == SWT.HORIZONTAL) {
 			correction = b1.width < DRAG_MINIMUM || b2.width < DRAG_MINIMUM;
-			int totalWidth = b2.x + b2.width - b1.x;
+			int totalWidth = (b2.x + b2.width) - b1.x;
 			int shift = event.x - sashBounds.x;
 			b1.width += shift;
 			b2.x += shift;
@@ -468,20 +473,20 @@ public class BetterSashForm extends Canvas {
 				event.doit = false;
 			}
 			Object data1 = c1.getLayoutData();
-			if (data1 == null || !(data1 instanceof BetterSashFormData)) {
+			if ((data1 == null) || !(data1 instanceof BetterSashFormData)) {
 				data1 = new BetterSashFormData();
 				c1.setLayoutData(data1);
 			}
 			Object data2 = c2.getLayoutData();
-			if (data2 == null || !(data2 instanceof BetterSashFormData)) {
+			if ((data2 == null) || !(data2 instanceof BetterSashFormData)) {
 				data2 = new BetterSashFormData();
 				c2.setLayoutData(data2);
 			}
-			((BetterSashFormData) data1).weight = (((long) b1.width << 16) + area.width - 1) / area.width;
-			((BetterSashFormData) data2).weight = (((long) b2.width << 16) + area.width - 1) / area.width;
+			((BetterSashFormData) data1).weight = ((((long) b1.width << 16) + area.width) - 1) / area.width;
+			((BetterSashFormData) data2).weight = ((((long) b2.width << 16) + area.width) - 1) / area.width;
 		} else {
 			correction = b1.height < DRAG_MINIMUM || b2.height < DRAG_MINIMUM;
-			int totalHeight = b2.y + b2.height - b1.y;
+			int totalHeight = (b2.y + b2.height) - b1.y;
 			int shift = event.y - sashBounds.y;
 			b1.height += shift;
 			b2.y += shift;
@@ -501,19 +506,19 @@ public class BetterSashForm extends Canvas {
 				event.doit = false;
 			}
 			Object data1 = c1.getLayoutData();
-			if (data1 == null || !(data1 instanceof BetterSashFormData)) {
+			if ((data1 == null) || !(data1 instanceof BetterSashFormData)) {
 				data1 = new BetterSashFormData();
 				c1.setLayoutData(data1);
 			}
 			Object data2 = c2.getLayoutData();
-			if (data2 == null || !(data2 instanceof BetterSashFormData)) {
+			if ((data2 == null) || !(data2 instanceof BetterSashFormData)) {
 				data2 = new BetterSashFormData();
 				c2.setLayoutData(data2);
 			}
-			((BetterSashFormData) data1).weight = (((long) b1.height << 16) + area.height - 1) / area.height;
-			((BetterSashFormData) data2).weight = (((long) b2.height << 16) + area.height - 1) / area.height;
+			((BetterSashFormData) data1).weight = ((((long) b1.height << 16) + area.height) - 1) / area.height;
+			((BetterSashFormData) data2).weight = ((((long) b2.height << 16) + area.height) - 1) / area.height;
 		}
-		if (correction || (event.doit && event.detail != SWT.DRAG)) {
+		if (correction || (event.doit && (event.detail != SWT.DRAG))) {
 			c1.setBounds(b1);
 			sash.setBounds(event.x, event.y, event.width, event.height);
 			c2.setBounds(b2);
@@ -542,7 +547,7 @@ public class BetterSashForm extends Canvas {
 		checkWidget();
 		if (getOrientation() == orientation)
 			return;
-		if (orientation != SWT.HORIZONTAL && orientation != SWT.VERTICAL) {
+		if ((orientation != SWT.HORIZONTAL) && (orientation != SWT.VERTICAL)) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 		sashStyle &= ~(SWT.HORIZONTAL | SWT.VERTICAL);
@@ -691,7 +696,7 @@ public class BetterSashForm extends Canvas {
 	public void setWeights(int[] weights) {
 		checkWidget();
 		Control[] cArray = getControls(false);
-		if (weights == null || weights.length != cArray.length) {
+		if ((weights == null) || (weights.length != cArray.length)) {
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 		}
 
@@ -707,11 +712,11 @@ public class BetterSashForm extends Canvas {
 		}
 		for (int i = 0; i < cArray.length; i++) {
 			Object data = cArray[i].getLayoutData();
-			if (data == null || !(data instanceof BetterSashFormData)) {
+			if ((data == null) || !(data instanceof BetterSashFormData)) {
 				data = new BetterSashFormData();
 				cArray[i].setLayoutData(data);
 			}
-			((BetterSashFormData) data).weight = (((long) weights[i] << 16) + total - 1) / total;
+			((BetterSashFormData) data).weight = ((((long) weights[i] << 16) + total) - 1) / total;
 		}
 
 		layout(false);

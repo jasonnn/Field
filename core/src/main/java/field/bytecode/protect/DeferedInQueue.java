@@ -29,7 +29,8 @@ public class DeferedInQueue extends DeferCallingFast {
 
 	Method original = null;
 
-	static public class AtomicIntegerMap<T> {
+	public static
+    class AtomicIntegerMap<T> {
 
 		final Map<T, AtomicInteger> m = new HashMap<T, AtomicInteger>();
 
@@ -150,10 +151,10 @@ public class DeferedInQueue extends DeferCallingFast {
 
 			original.invoke(fromThis, argArray);
 		} catch (IllegalArgumentException e) {
-			System.err.println(" inside DeferedInQueue +" + fromThis + " " + originalMethod + " " + Arrays.asList(argArray));
+			System.err.println(" inside DeferedInQueue +" + fromThis + ' ' + originalMethod + ' ' + Arrays.asList(argArray));
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			System.err.println(" inside DeferedInQueue +" + fromThis + " " + originalMethod + " " + Arrays.asList(argArray));
+			System.err.println(" inside DeferedInQueue +" + fromThis + ' ' + originalMethod + ' ' + Arrays.asList(argArray));
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			// System.err.println("
@@ -170,7 +171,7 @@ public class DeferedInQueue extends DeferCallingFast {
 			stack.printStackTrace();
 			e.printStackTrace();
 		} catch (Throwable t) {
-			System.err.println(" inside DeferedInQueue +" + fromThis + " " + originalMethod + " " + Arrays.asList(argArray));
+			System.err.println(" inside DeferedInQueue +" + fromThis + ' ' + originalMethod + ' ' + Arrays.asList(argArray));
 			t.printStackTrace();
 		} finally {
 			if (out != null)

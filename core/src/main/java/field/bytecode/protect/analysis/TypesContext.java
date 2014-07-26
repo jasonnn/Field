@@ -12,41 +12,41 @@ import org.objectweb.asm.Type;
 import java.util.*;
 
 public class TypesContext implements Cloneable {
-	public final static String CAT1_BOOLEAN = "1Z";
+	public static final String CAT1_BOOLEAN = "1Z";
 
-	public final static String CAT1_CHAR = "1C";
+	public static final String CAT1_CHAR = "1C";
 
-	public final static String CAT1_FLOAT = "1F";
+	public static final String CAT1_FLOAT = "1F";
 
-	public final static String CAT1_BYTE = "1B";
+	public static final String CAT1_BYTE = "1B";
 
-	public final static String CAT1_SHORT = "1S";
+	public static final String CAT1_SHORT = "1S";
 
-	public final static String CAT1_INT = "1I";
+	public static final String CAT1_INT = "1I";
 
-	public final static String CAT1_ADDRESS = "1A";
+	public static final String CAT1_ADDRESS = "1A";
 
-	public final static String CAT2_DOUBLE = "2D";
+	public static final String CAT2_DOUBLE = "2D";
 
-	public final static String CAT2_LONG = "2J";
+	public static final String CAT2_LONG = "2J";
 
-	public final static String ARRAY_BOOLEAN = "[Z";
+	public static final String ARRAY_BOOLEAN = "[Z";
 
-	public final static String ARRAY_CHAR = "[C";
+	public static final String ARRAY_CHAR = "[C";
 
-	public final static String ARRAY_FLOAT = "[F";
+	public static final String ARRAY_FLOAT = "[F";
 
-	public final static String ARRAY_BYTE = "[B";
+	public static final String ARRAY_BYTE = "[B";
 
-	public final static String ARRAY_SHORT = "[S";
+	public static final String ARRAY_SHORT = "[S";
 
-	public final static String ARRAY_INT = "[I";
+	public static final String ARRAY_INT = "[I";
 
-	public final static String ARRAY_DOUBLE = "[D";
+	public static final String ARRAY_DOUBLE = "[D";
 
-	public final static String ARRAY_LONG = "[J";
+	public static final String ARRAY_LONG = "[J";
 
-	public final static String NULL = "NULL";
+	public static final String NULL = "NULL";
 
 	private Map<Integer, String> mVars = null;
 
@@ -110,7 +110,7 @@ public class TypesContext implements Cloneable {
 
 	public String pop() {
 		String result = null;
-		if (mStack.size() > 0) {
+		if (!mStack.isEmpty()) {
 			result = mStack.pop();
 		}
 		printStack();

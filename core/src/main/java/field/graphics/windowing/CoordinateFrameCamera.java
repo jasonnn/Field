@@ -17,7 +17,8 @@ import java.util.Iterator;
  */
 public class CoordinateFrameCamera implements iUpdateable {
 
-	static public class SavedCamera implements Serializable {
+	public static
+    class SavedCamera implements Serializable {
 		public Vector3 position = new Vector3();
 		public Vector3 lookAt = new Vector3();
 		public Vector3 up = new Vector3();

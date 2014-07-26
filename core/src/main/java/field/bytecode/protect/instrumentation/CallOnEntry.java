@@ -40,7 +40,8 @@ public abstract class CallOnEntry extends FieldASMGeneratorAdapter implements En
         FieldBytecodeAdapter.entryHandlers.put(name, this);
     }
 
-    abstract public void handleEntry(String fromName,
+    public abstract
+    void handleEntry(String fromName,
                                      Object fromThis,
                                      String methodName,
                                      Map<String, Object> parameterName,

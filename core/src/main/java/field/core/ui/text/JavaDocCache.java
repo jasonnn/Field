@@ -11,7 +11,7 @@ import java.util.jar.JarFile;
 
 public class JavaDocCache {
 
-    static public JavaDocCache cache;
+    public static JavaDocCache cache;
 
     public JavaDocCache() {
         cache = this;
@@ -20,7 +20,7 @@ public class JavaDocCache {
     JavaProjectBuilder db = new JavaProjectBuilder();
     private Collection<JavaClass> classes = db.getClasses();
 
-    static public final boolean debug = true;
+    public static final boolean debug = true;
 
     LinkedHashMap<JarFile, Map<String, JarEntry>> jarCache = new LinkedHashMap<JarFile, Map<String, JarEntry>>();
 
@@ -131,7 +131,7 @@ public class JavaDocCache {
 //			}
 //		}
 
-        if (r == null && !triedAndFailed.contains(className)) {
+        if ((r == null) && !triedAndFailed.contains(className)) {
             String matchName = className.substring(className.lastIndexOf('.') + 1);
 
             for (JavaClass c : classes) {

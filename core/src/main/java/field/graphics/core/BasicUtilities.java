@@ -43,9 +43,10 @@ import static org.lwjgl.opengl.GL14.*;
 public class BasicUtilities {
 
 	// for debugging only
-	static public final boolean thinState = false;
+    public static final boolean thinState = false;
 
-	static public class ChangeLineWidth extends BasicUtilities.TwoPassElement implements iSceneListElement {
+	public static
+    class ChangeLineWidth extends BasicUtilities.TwoPassElement implements iSceneListElement {
 
 		private float o;
 
@@ -76,7 +77,8 @@ public class BasicUtilities {
 	//
 	// public static FKey freq = new FKey("blurFreq").rootSet(1);
 
-	static public class Clear extends OnePassElement implements iSceneListElement {
+	public static
+    class Clear extends OnePassElement implements iSceneListElement {
 
 		Vector3 background = new Vector3(0.1, 0.1, 0.1);
 
@@ -129,7 +131,8 @@ public class BasicUtilities {
 		}
 	}
 
-	static public class ClearAlpha extends OnePassElement implements iSceneListElement {
+	public static
+    class ClearAlpha extends OnePassElement implements iSceneListElement {
 
 		private final float to;
 
@@ -156,7 +159,8 @@ public class BasicUtilities {
 		}
 	}
 
-	static public class ClearColor extends OnePassElement implements iSceneListElement {
+	public static
+    class ClearColor extends OnePassElement implements iSceneListElement {
 
 		Vector3 background = new Vector3(0.1, 0.1, 0.1);
 
@@ -203,7 +207,8 @@ public class BasicUtilities {
 		}
 	}
 
-	static public class ClearDepth extends OnePassElement implements iSceneListElement {
+	public static
+    class ClearDepth extends OnePassElement implements iSceneListElement {
 		public ClearDepth() {
 			super(StandardPass.preRender);
 		}
@@ -230,7 +235,8 @@ public class BasicUtilities {
 	 *         Window - Preferences - Java - Code Generation - Code and
 	 *         Comments
 	 */
-	static public class ClearOnce extends OnePassElement implements iSceneListElement {
+    public static
+    class ClearOnce extends OnePassElement implements iSceneListElement {
 
 		Vector3 background = new Vector3(0.1, 0.1, 0.1);
 
@@ -271,7 +277,8 @@ public class BasicUtilities {
 
 	}
 
-	static abstract public class ContextWrapper extends BasicSceneList implements iSceneListElement {
+	public abstract static
+    class ContextWrapper extends BasicSceneList implements iSceneListElement {
 
 		protected iSceneListElement[] one;
 
@@ -291,11 +298,13 @@ public class BasicUtilities {
 			one[indexForContext(BasicContextManager.getCurrentContext())].performPass(p);
 		}
 
-		abstract protected int indexForContext(Object object);
+		protected abstract
+        int indexForContext(Object object);
 
 	}
 
-	static public class DepthMask extends TwoPassElement {
+	public static
+    class DepthMask extends TwoPassElement {
 
 		boolean enable = false;
 
@@ -323,7 +332,8 @@ public class BasicUtilities {
 		}
 	}
 
-	static public class DisableBlending extends OnePassElement {
+	public static
+    class DisableBlending extends OnePassElement {
 		public DisableBlending() {
 			super(StandardPass.preRender);
 
@@ -339,7 +349,8 @@ public class BasicUtilities {
 	/**
 	 * @author marc created on Jul 20, 2003
 	 */
-	static public class DisableCull extends OnePassElement {
+    public static
+    class DisableCull extends OnePassElement {
 
 		public DisableCull() {
 			super(StandardPass.render);
@@ -353,7 +364,8 @@ public class BasicUtilities {
 
 	}
 
-	static public class DisableDepthTest extends OnePassElement {
+	public static
+    class DisableDepthTest extends OnePassElement {
 
 		boolean enable = false;
 
@@ -394,7 +406,8 @@ public class BasicUtilities {
 		}
 	}
 
-	static public class DisableDepthTestWrap extends TwoPassElement {
+	public static
+    class DisableDepthTestWrap extends TwoPassElement {
 
 		boolean enable = false;
 
@@ -418,7 +431,8 @@ public class BasicUtilities {
 
 	}
 
-	static public class EnableDepthTestWrap extends TwoPassElement {
+	public static
+    class EnableDepthTestWrap extends TwoPassElement {
 
 		boolean enable = false;
 
@@ -442,7 +456,8 @@ public class BasicUtilities {
 
 	}
 
-	static public class EnableBlending extends OnePassElement {
+	public static
+    class EnableBlending extends OnePassElement {
 		public EnableBlending() {
 			super(StandardPass.preRender);
 
@@ -455,7 +470,8 @@ public class BasicUtilities {
 		}
 	}
 
-	static public class AlphaTest extends TwoPassElement {
+	public static
+    class AlphaTest extends TwoPassElement {
 		public AlphaTest() {
 			super("", StandardPass.preRender, StandardPass.postRender);
 
@@ -479,9 +495,10 @@ public class BasicUtilities {
         }
     }
 
-	static public class EnableCull extends OnePassElement {
+	public static
+    class EnableCull extends OnePassElement {
 
-		private Boolean b;
+		private final Boolean b;
 
 		public EnableCull() {
 			super(StandardPass.render);
@@ -752,9 +769,10 @@ public class BasicUtilities {
 	}
 
 	// abstract classes that are very useful
-	@Woven
-	@HiddenInAutocomplete
-	static public abstract class OnePassElement extends BasicSceneList implements iSceneListElement {
+    @HiddenInAutocomplete
+    @Woven
+    public abstract static
+    class OnePassElement extends BasicSceneList implements iSceneListElement {
 
 		static public final Method method_performPass = ReflectionTools.methodOf("performPass", OnePassElement.class);
 
@@ -1013,7 +1031,8 @@ public class BasicUtilities {
 		}
 	}
 
-	static public class SetBlendMode extends OnePassElement {
+	public static
+    class SetBlendMode extends OnePassElement {
 
 		private final int src;
 
@@ -1065,7 +1084,7 @@ public class BasicUtilities {
 
 	static public class SetBlendColor extends OnePassElement {
 
-		private Vector4 constant;
+		private final Vector4 constant;
 
 		public SetBlendColor(StandardPass preRender, Vector4 vector4) {
 			super(preRender);

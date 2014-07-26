@@ -5,8 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(value={ElementType.PARAMETER})
-@Retention(value=RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface AliasingParameter {
 
 	public String value() default "";

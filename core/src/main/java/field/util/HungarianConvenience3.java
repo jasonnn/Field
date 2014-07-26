@@ -53,29 +53,29 @@ public class HungarianConvenience3<t_element> {
 
 	public void computeDistanceMatrix(iMetric<t_element, t_element> e) {
 		// this should be accelerated!
-		for (int x = 0; x < sourceLength + sources; x++) {
+		for (int x = 0; x < (sourceLength + sources); x++) {
 
 			t_element x1 = null;
 			if (x < sourceLength) {
 				x1 = sourceBuffer[x];
 			}
-			for (int y = 0; y < targetLength + sinks; y++) {
+			for (int y = 0; y < (targetLength + sinks); y++) {
 
 				t_element x2 = null;
 				if (y < targetLength) {
 					x2 = targetBuffer[y];
 				}
 
-				if (x < sourceLength && y < targetLength) {
+				if ((x < sourceLength) && (y < targetLength)) {
 					float d = e.distance(x1, x2);
 					d = (float) Math.sqrt(d);
-					distanceMatrix.put(y * (sourceLength + sources) + x, d);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, d);
 				} else if (x < sourceLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, distanceToSource);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, distanceToSource);
 				} else if (y < targetLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, distanceToSink);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, distanceToSink);
 				} else {
-					distanceMatrix.put(y * (sourceLength + sources) + x, sourceDistanceToSink);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, sourceDistanceToSink);
 				}
 			}
 		}
@@ -95,7 +95,7 @@ public class HungarianConvenience3<t_element> {
 	}
 
 	public float getDistance(int source, int target) {
-		return distanceMatrix.get(target * (sourceLength + sources) + source);
+		return distanceMatrix.get((target * (sourceLength + sources)) + source);
 	}
 
 	public int mapTargetToSource(int targetElement) {
@@ -104,7 +104,7 @@ public class HungarianConvenience3<t_element> {
 
 		// assert r<sourceLength : r+" "+sourceLength;
 
-		if (r >= sourceLength + sinks) return -1;
+		if (r >= (sourceLength + sinks)) return -1;
 		return r;
 	}
 
@@ -123,7 +123,7 @@ public class HungarianConvenience3<t_element> {
 		for (int i = 0; i < targetLength; i++) {
 			int to = mapTargetToSource(i);
 			if (to != -1) {
-				distance[c++] = distanceMatrix.get(i * (sourceLength + sources) + to);
+				distance[c++] = distanceMatrix.get((i * (sourceLength + sources)) + to);
 			}
 
 		}
@@ -131,10 +131,10 @@ public class HungarianConvenience3<t_element> {
 		if (targetLength2 == 1) return distance[0];
 
 		Arrays.sort(distance);
-		if (distance.length % 2 == 1)
+		if ((distance.length % 2) == 1)
 			return distance[distance.length / 2];
 		else
-			return (distance[distance.length / 2] + distance[distance.length / 2 + 1]) / 2;
+			return (distance[distance.length / 2] + distance[((distance.length / 2) + 1)]) / 2;
 	}
 
 	public String printDetailedMatchResults() {
@@ -145,14 +145,16 @@ public class HungarianConvenience3<t_element> {
 
 		for (int i = 0; i < targetLength; i++) {
 			int to = mapTargetToSource(i);
-			r += ("  map <" + i + (i >= targetLength ? "(sink)" : "") + "> -> <" + to + (to >= sourceLength ? "(source)" : "") + ">");
+			r += ("  map <" + i + ((i >= targetLength) ? "(sink)" : "") + "> -> <" + to + ((to >= sourceLength)
+                                                                                           ? "(source)"
+                                                                                           : "") + '>');
 			if (to != -1)
-				r += (" d = <" + distanceMatrix.get(i * (sourceLength + sources) + to) + ">\n");
+				r += (" d = <" + distanceMatrix.get((i * (sourceLength + sources)) + to) + ">\n");
 			else
 				r += "\n";
 			if (to != -1) {
-				total += distanceMatrix.get(i * (sourceLength + sources) + to);
-				distance[i] = distanceMatrix.get(i * (sourceLength + sources) + to);
+				total += distanceMatrix.get((i * (sourceLength + sources)) + to);
+				distance[i] = distanceMatrix.get((i * (sourceLength + sources)) + to);
 			}
 		}
 
@@ -164,7 +166,7 @@ public class HungarianConvenience3<t_element> {
               + "> max <"
               + distance[distance.length - 1]
               + "> max2 <"
-              + (distance.length > 2 ? String.valueOf(distance[distance.length - 2]) : "n/a")
+              + ((distance.length > 2) ? String.valueOf(distance[distance.length - 2]) : "n/a")
               + ">\n");
 
 		r += ("  distance <" + totalAssignmentDistanceSinkless() + " sinkless or " + totalAssignmentDistance() + " including sinks>");
@@ -172,24 +174,24 @@ public class HungarianConvenience3<t_element> {
 	}
 
 	public void setDefaultDistances(float d) {
-		for (int x = 0; x < sourceLength + sources; x++) {
-			for (int y = 0; y < targetLength + sinks; y++) {
-				if (x < sourceLength && y < targetLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, d);
+		for (int x = 0; x < (sourceLength + sources); x++) {
+			for (int y = 0; y < (targetLength + sinks); y++) {
+				if ((x < sourceLength) && (y < targetLength)) {
+					distanceMatrix.put((y * (sourceLength + sources)) + x, d);
 				}
 				if (x < sourceLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, distanceToSource);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, distanceToSource);
 				} else if (y < targetLength) {
-					distanceMatrix.put(y * (sourceLength + sources) + x, distanceToSink);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, distanceToSink);
 				} else {
-					distanceMatrix.put(y * (sourceLength + sources) + x, sourceDistanceToSink);
+					distanceMatrix.put((y * (sourceLength + sources)) + x, sourceDistanceToSink);
 				}
 			}
 		}
 	}
 
 	public void setDistance(int source, int target, float d) {
-		distanceMatrix.put(target * (sourceLength + sources) + source, d);
+		distanceMatrix.put((target * (sourceLength + sources)) + source, d);
 	}
 
 	public void setSource(int num, t_element to) {
@@ -233,9 +235,9 @@ public class HungarianConvenience3<t_element> {
 
 	public float totalAssignmentDistance() {
 		float d = 0;
-		for (int i = 0; i < targetLength + sinks; i++) {
+		for (int i = 0; i < (targetLength + sinks); i++) {
 			int to = mapTargetToSource(i);
-			if (to != -1) d += distanceMatrix.get(i * (sourceLength + sources) + to);
+			if (to != -1) d += distanceMatrix.get((i * (sourceLength + sources)) + to);
 
 		}
 		return d;
@@ -247,7 +249,7 @@ public class HungarianConvenience3<t_element> {
 			int to = mapTargetToSource(i);
 			if (to < sourceLength) {
 				if (to != -1) {
-					d += distanceMatrix.get(i * (sourceLength + sources) + to);
+					d += distanceMatrix.get((i * (sourceLength + sources)) + to);
 				}
 			}
 		}

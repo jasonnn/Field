@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class ContainerTopology implements DispatchProvider {
 
-	static public ThreadLocal<MethodUtilities> utilities = new ThreadLocal<MethodUtilities>() {
+	public static ThreadLocal<MethodUtilities> utilities = new ThreadLocal<MethodUtilities>() {
 		@Override
 		protected MethodUtilities initialValue() {
 			return new MethodUtilities();
@@ -34,8 +34,9 @@ public class ContainerTopology implements DispatchProvider {
 	public Apply getTopologyForEntrance(final Object root, final Map<String, Object> parameters, Object[] args, final String className) {
 		if (!alreadyDone.contains(root)) {
 			alreadyDone.add(root);
-			if (parameters.get("forwards") == null || (Boolean) parameters.get("forwards")) {
-				final ClassLoader loader = cachedLoader == null ? (cachedLoader = root.getClass().getClassLoader()) : cachedLoader;
+			if ((parameters.get("forwards") == null) || (Boolean) parameters.get("forwards")) {
+				final ClassLoader loader =
+                        (cachedLoader == null) ? (cachedLoader = root.getClass().getClassLoader()) : cachedLoader;
 				final org.objectweb.asm.commons.Method method = (org.objectweb.asm.commons.Method) parameters.get("method");
 				final Method m = utilities.get().getMethodFor(loader, method, null, className);
 				return new Apply() {
@@ -55,8 +56,9 @@ public class ContainerTopology implements DispatchProvider {
 
 	public Apply getTopologyForExit(final Object root, final Map<String, Object> parameters, Object[] args, final String className) {
 		if (alreadyDone.contains(root)) {
-			if (parameters.get("forwards") != null && !(Boolean) parameters.get("forwards")) {
-				final ClassLoader loader = cachedLoader == null ? (cachedLoader = root.getClass().getClassLoader()) : cachedLoader;
+			if ((parameters.get("forwards") != null) && !(Boolean) parameters.get("forwards")) {
+				final ClassLoader loader =
+                        (cachedLoader == null) ? (cachedLoader = root.getClass().getClassLoader()) : cachedLoader;
 				final org.objectweb.asm.commons.Method method = (org.objectweb.asm.commons.Method) parameters.get("method");
 				final Method m = utilities.get().getMethodFor(loader, method, null, className);
 				return new Apply() {

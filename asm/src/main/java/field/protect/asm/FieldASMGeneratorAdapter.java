@@ -345,13 +345,13 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
      */
     public
     void push(final int value) {
-        if (value >= -1 && value <= 5) {
+        if ((value >= -1) && (value <= 5)) {
             mv.visitInsn(Opcodes.ICONST_0 + value);
         }
-        else if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+        else if ((value >= Byte.MIN_VALUE) && (value <= Byte.MAX_VALUE)) {
             mv.visitIntInsn(Opcodes.BIPUSH, value);
         }
-        else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+        else if ((value >= Short.MIN_VALUE) && (value <= Short.MAX_VALUE)) {
             mv.visitIntInsn(Opcodes.SIPUSH, value);
         }
         else {
@@ -366,7 +366,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
      */
     public
     void push(final long value) {
-        if (value == 0L || value == 1L) {
+        if ((value == 0L) || (value == 1L)) {
             mv.visitInsn(Opcodes.LCONST_0 + (int) value);
         }
         else {
@@ -382,7 +382,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
     public
     void push(final float value) {
         int bits = Float.floatToIntBits(value);
-        if (bits == 0L || bits == 0x3f800000 || bits == 0x40000000) { // 0..2
+        if ((bits == 0L) || (bits == 0x3f800000) || (bits == 0x40000000)) { // 0..2
             mv.visitInsn(Opcodes.FCONST_0 + (int) value);
         }
         else {
@@ -398,7 +398,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
     public
     void push(final double value) {
         long bits = Double.doubleToLongBits(value);
-        if (bits == 0L || bits == 0x3ff0000000000000L) { // +0.0d and 1.0d
+        if ((bits == 0L) || (bits == 0x3ff0000000000000L)) { // +0.0d and 1.0d
             mv.visitInsn(Opcodes.DCONST_0 + (int) value);
         }
         else {
@@ -487,7 +487,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
      */
     private
     int getArgIndex(final int arg) {
-        int index = (access & Opcodes.ACC_STATIC) == 0 ? 1 : 0;
+        int index = ((access & Opcodes.ACC_STATIC) == 0) ? 1 : 0;
         for (int i = 0; i < arg; i++) {
             index += argumentTypes[i].getSize();
         }
@@ -611,7 +611,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
     protected
     void setLocalType(final int local, final ASMType type) {
         int index = local - firstLocal;
-        while (localTypes.size() < index + 1) {
+        while (localTypes.size() < (index + 1)) {
             localTypes.add(null);
         }
         localTypes.set(index, type);
@@ -934,7 +934,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
      */
     public
     void box(final ASMType type) {
-        if (type.getSort() == ASMType.OBJECT || type.getSort() == ASMType.ARRAY) {
+        if ((type.getSort() == ASMType.OBJECT) || (type.getSort() == ASMType.ARRAY)) {
             return;
         }
         if (type == ASMType.VOID_TYPE) {
@@ -967,7 +967,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
      */
     public
     void valueOf(final ASMType type) {
-        if (type.getSort() == ASMType.OBJECT || type.getSort() == ASMType.ARRAY) {
+        if ((type.getSort() == ASMType.OBJECT) || (type.getSort() == ASMType.ARRAY)) {
             return;
         }
         if (type == ASMType.VOID_TYPE) {
@@ -1075,10 +1075,10 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
                 mv.visitInsn(Opcodes.LCMP);
                 break;
             case ASMType.DOUBLE:
-                mv.visitInsn(mode == GE || mode == GT ? Opcodes.DCMPL : Opcodes.DCMPG);
+                mv.visitInsn(((mode == GE) || (mode == GT)) ? Opcodes.DCMPL : Opcodes.DCMPG);
                 break;
             case ASMType.FLOAT:
-                mv.visitInsn(mode == GE || mode == GT ? Opcodes.FCMPL : Opcodes.FCMPG);
+                mv.visitInsn(((mode == GE) || (mode == GT)) ? Opcodes.FCMPL : Opcodes.FCMPG);
                 break;
             case ASMType.ARRAY:
             case ASMType.OBJECT:
@@ -1201,7 +1201,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
             density = 0;
         }
         else {
-            density = (float) keys.length / (keys[keys.length - 1] - keys[0] + 1);
+            density = (float) keys.length / ((keys[keys.length - 1] - keys[0]) + 1);
         }
         tableSwitch(keys, generator, density >= 0.5f);
     }
@@ -1227,7 +1227,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
             int len = keys.length;
             int min = keys[0];
             int max = keys[len - 1];
-            int range = max - min + 1;
+            int range = (max - min) + 1;
             if (useTable) {
                 Label[] labels = new Label[range];
                 Arrays.fill(labels, def);
@@ -1349,7 +1349,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
      */
     private
     void invokeInsn(final int opcode, final ASMType type, final ASMMethod method, final boolean itf) {
-        String owner = type.getSort() == ASMType.ARRAY ? type.getDescriptor() : type.getInternalName();
+        String owner = (type.getSort() == ASMType.ARRAY) ? type.getDescriptor() : type.getInternalName();
         mv.visitMethodInsn(opcode, owner, method.getName(), method.getDescriptor(), itf);
     }
 

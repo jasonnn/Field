@@ -51,7 +51,8 @@ public class RectangleAllocator {
 		return rect;
 	}
 
-	static public Rect allocateOnSheet(iVisualElement root, Rect rect, Move move, float buffer)
+	public static
+    Rect allocateOnSheet(iVisualElement root, Rect rect, Move move, float buffer)
 	{
 		RectangleAllocator allocator = new RectangleAllocator();
 		List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);

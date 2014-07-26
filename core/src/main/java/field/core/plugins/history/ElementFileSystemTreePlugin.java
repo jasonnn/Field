@@ -12,7 +12,7 @@ import field.core.plugins.history.ElementFileSystemTree.SheetDropSupport;
 @Woven
 public class ElementFileSystemTreePlugin extends BaseSimplePlugin {
 
-	static public final VisualElementProperty<ElementFileSystemTreePlugin> fileSystemTree = new VisualElementProperty<ElementFileSystemTreePlugin>("fileSystemTree");
+	public static final VisualElementProperty<ElementFileSystemTreePlugin> fileSystemTree = new VisualElementProperty<ElementFileSystemTreePlugin>("fileSystemTree");
 	private ElementFileSystemTree efst;
 
 	@Override

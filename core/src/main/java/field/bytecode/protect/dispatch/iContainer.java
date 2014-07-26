@@ -14,11 +14,13 @@ public interface iContainer {
 
 	public List propagateTo(String tag, Class clazz, Method method, Object... args);
 	
-	static public class MakeProxy
+	public static
+    class MakeProxy
 	{
 		DispatchOverContainer container = new DispatchOverContainer();
 		
-		public <T> T makeProxyFor(final Class<T> interfase, final iContainer on, final String tag)
+		public static
+        <T> T makeProxyFor(final Class<T> interfase, final iContainer on, final String tag)
 		{
 			return (T) Proxy.newProxyInstance(on.getClass().getClassLoader(), new Class[]{interfase}, new InvocationHandler(){
 			
@@ -30,7 +32,8 @@ public interface iContainer {
 		}
 	}
 	
-	static public class DispatchOverContainer
+	public static
+    class DispatchOverContainer
 	{
         public static
         void dispatch(String tag, Class clazz, Method method, iContainer on, Object... args) {
@@ -66,7 +69,8 @@ public interface iContainer {
 			}
 		}
 		
-		public void dispatchBackwards(String tag, Class clazz, Method method, iContainer on, Object... args)
+		public static
+        void dispatchBackwards(String tag, Class clazz, Method method, iContainer on, Object... args)
 		{
 			if (clazz == null) clazz = on.getClass();
 			List list = on.propagateTo(tag, clazz, method, args);
@@ -101,12 +105,12 @@ public interface iContainer {
 	
 	public interface iContainerUpdateable extends iContainer, iUpdateable
 	{
-		static public final Method method_update = ReflectionTools.methodOf("update", iContainerUpdateable.class);
+		public static final Method method_update = ReflectionTools.methodOf("update", iContainerUpdateable.class);
 	}
 	
 	public interface iContainerUpdateableAtTime extends iContainer
 	{
-		static public final Method method_update = ReflectionTools.methodOf("update", iContainerUpdateable.class, Double.TYPE );
+		public static final Method method_update = ReflectionTools.methodOf("update", iContainerUpdateable.class, Double.TYPE );
 
 		public void update(double time);
 	}

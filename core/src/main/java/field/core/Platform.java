@@ -13,29 +13,37 @@ public class Platform {
         mac, windows, linux
     }
 
-	static final OS os = System.getProperty("os.name").toLowerCase().contains("mac os x") | System.getProperty("os.name").toLowerCase().contains("darwin") ? OS.mac : OS.linux;
+	static final OS os =
+            (System.getProperty("os.name").toLowerCase().contains("mac os x") | System.getProperty("os.name")
+                                                                                      .toLowerCase()
+                                                                                      .contains("darwin"))
+            ? OS.mac
+            : OS.linux;
 	static
 	{
 		System.err.println(" platform is :"+os+" / "+System.getProperty("os.name")+"  "+isMac());
 	}
-	static public final int META_MASK = (os == OS.mac ? InputEvent.META_MASK
-			: InputEvent.CTRL_MASK);
+	public static final int META_MASK = ((os == OS.mac) ? InputEvent.META_MASK : InputEvent.CTRL_MASK);
 
-	static public boolean isPopupTrigger(Event e) {
+	public static
+    boolean isPopupTrigger(Event e) {
 
 		return e.button == 3;
 
 	}
 
-	static public OS getOS() {
+	public static
+    OS getOS() {
 		return os;
 	}
 
-	static public boolean shouldUseQuaqua() {
+	public static
+    boolean shouldUseQuaqua() {
 		return getOS() == OS.mac;
 	}
 
-	static public Point getLocationOnScreen(MouseEvent e) {
+	public static
+    Point getLocationOnScreen(MouseEvent e) {
 		Point at = e.getPoint();
 		try {
 			Component c = e.getComponent();
@@ -46,14 +54,16 @@ public class Platform {
 		}
 	}
 
-	static public int getCommandModifier() {
+	public static
+    int getCommandModifier() {
 		if (os == OS.mac)
 			return SWT.COMMAND;
 		else
 			return SWT.CTRL;
 	}
 
-	static public int getCommandModifier2() {
+	public static
+    int getCommandModifier2() {
 		if (os == OS.mac)
 			return SWT.COMMAND;
 		else
@@ -61,7 +71,7 @@ public class Platform {
 		}
 
 	public static boolean isPopupTrigger(MouseEvent e) {
-        return e.getButton() == MouseEvent.BUTTON3 && e.getID() == MouseEvent.MOUSE_PRESSED;
+        return (e.getButton() == MouseEvent.BUTTON3) && (e.getID() == MouseEvent.MOUSE_PRESSED);
     }
 
 	public static boolean isPopupTrigger(org.eclipse.swt.events.MouseEvent e) {
@@ -90,6 +100,6 @@ public class Platform {
 
 		return System.getProperty("java.version").contains("1.7");
 	}
-	static public boolean willBe17 = is17();
+	public static boolean willBe17 = is17();
 
 }

@@ -70,7 +70,8 @@ public class OutputInsertsOnSheet {
 	private static final int defaultHeight = 14;
 
 	@Woven
-	static public class Wrap extends SwingBridgeComponent {
+    public static
+    class Wrap extends SwingBridgeComponent {
 		public Wrap() {
 			super();
 		}
@@ -235,7 +236,8 @@ public class OutputInsertsOnSheet {
 		}
 	}
 
-	static public class WrapNoEvents extends SwingBridgeComponent {
+	public static
+    class WrapNoEvents extends SwingBridgeComponent {
 		public WrapNoEvents() {
 			super();
 		}
@@ -266,18 +268,19 @@ public class OutputInsertsOnSheet {
 		}
 	}
 
-	static public VisualElementProperty<OutputInsertsOnSheet> outputInsertsOnSheet = new VisualElementProperty<OutputInsertsOnSheet>("outputInsertsOnSheet_");
+	public static VisualElementProperty<OutputInsertsOnSheet> outputInsertsOnSheet = new VisualElementProperty<OutputInsertsOnSheet>("outputInsertsOnSheet_");
 
-	static public VisualElementProperty<RectangleAllocator> outputInsertsOnSheet_allocactor = new VisualElementProperty<RectangleAllocator>("outputInsertsOnSheet_allocactor");
-	static public VisualElementProperty<RectangleAllocator> outputInsertsOnSheet_allocactorVert = new VisualElementProperty<RectangleAllocator>("outputInsertsOnSheet_allocactorVert");
+	public static VisualElementProperty<RectangleAllocator> outputInsertsOnSheet_allocactor = new VisualElementProperty<RectangleAllocator>("outputInsertsOnSheet_allocactor");
+	public static VisualElementProperty<RectangleAllocator> outputInsertsOnSheet_allocactorVert = new VisualElementProperty<RectangleAllocator>("outputInsertsOnSheet_allocactorVert");
 
-	static public VisualElementProperty<ProvidedComponent> outputInsertsOnSheet_providedComponent = new VisualElementProperty<ProvidedComponent>("outputInsertsOnSheet_providedComponent");
+	public static VisualElementProperty<ProvidedComponent> outputInsertsOnSheet_providedComponent = new VisualElementProperty<ProvidedComponent>("outputInsertsOnSheet_providedComponent");
 
-	static public VisualElementProperty<Map<String, String>> outputInsertsOnSheet_knownComponents = new VisualElementProperty<Map<String, String>>("outputInsertsOnSheet_knownComponents");
+	public static VisualElementProperty<Map<String, String>> outputInsertsOnSheet_knownComponents = new VisualElementProperty<Map<String, String>>("outputInsertsOnSheet_knownComponents");
 
 	private static boolean lastWasNew;
 
-	static public iProvider<Object> printCurve2(String name, final iVisualElement inside, final PyObject onChange, boolean below) {
+	public static
+    iProvider<Object> printCurve2(String name, final iVisualElement inside, final PyObject onChange, boolean below) {
 		OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
 
 		iVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
@@ -352,7 +355,8 @@ public class OutputInsertsOnSheet {
 
 	}
 
-	static public iProviderAcceptor<Object> printSlider(String name, final iVisualElement inside, final PyObject onChange, boolean below) {
+	public static
+    iProviderAcceptor<Object> printSlider(String name, final iVisualElement inside, final PyObject onChange, boolean below) {
 		OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
 
         //System.out.println(" inside print slider for <" + inside + "> got <" + oi + ">");
@@ -462,7 +466,8 @@ public class OutputInsertsOnSheet {
 		return r;
 	}
 
-	static public iProviderAcceptor<Object> printLazy(String name, final iVisualElement inside, boolean below) {
+	public static
+    iProviderAcceptor<Object> printLazy(String name, final iVisualElement inside, boolean below) {
 		OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
 
         //System.out.println(" inside print slider for <" + inside + "> got <" + oi + ">");
@@ -623,7 +628,8 @@ public class OutputInsertsOnSheet {
 	// return tuple.state;
 	// }
 
-	static public iProviderAcceptor<Object> printXYSlider(String name, final iVisualElement inside, final PyObject onChange, boolean below) {
+	public static
+    iProviderAcceptor<Object> printXYSlider(String name, final iVisualElement inside, final PyObject onChange, boolean below) {
 		OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
 		Map<String, String> map = getKnownMap(inside);
 
@@ -666,7 +672,7 @@ public class OutputInsertsOnSheet {
 				captured.enter();
 				try {
 					String s = tuple.getCurrentRepresentedString();
-					System.err.println(" about to eval <" + s + ">");
+					System.err.println(" about to eval <" + s + '>');
 					Object o = PythonInterface.getPythonInterface().eval(s);
 					return o;
 				} finally {
@@ -866,7 +872,7 @@ public class OutputInsertsOnSheet {
             //System.out.println(" created, map now <" + map + ">");
             lastWasNew = true;
 
-			oi.layoutHierarchy(comp.componentToRender, alreadyCreated);
+			OutputInsertsOnSheet.layoutHierarchy(comp.componentToRender, alreadyCreated);
 		}
 
 		final iVisualElement falreadyCreated = alreadyCreated;
@@ -1109,7 +1115,8 @@ public class OutputInsertsOnSheet {
 	}
 
 	@NextUpdate(delay = 20)
-	private void layoutHierarchy(Container c, iVisualElement e) {
+	private static
+    void layoutHierarchy(Container c, iVisualElement e) {
 		c.validate();
 		c.doLayout();
 

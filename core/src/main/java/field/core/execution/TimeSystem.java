@@ -36,7 +36,7 @@ public class TimeSystem implements iDoubleProvider {
 			}
 		}
 	}
-	static public boolean isRealTime = false;
+	public static boolean isRealTime = false;
 
 	public boolean thisIsRealTime = isRealTime;
 
@@ -79,18 +79,18 @@ public class TimeSystem implements iDoubleProvider {
 
 			@Override
 			public java.lang.Double addImpl(java.lang.Double a, double w, java.lang.Double to) {
-				return to + a * w;
+				return to + (a * w);
 			}
 
 			@Override
 			protected java.lang.Double blendImpl(java.lang.Double a, java.lang.Double b, double ea) {
-				return a * (1 - ea) + ea * b;
+				return (a * (1 - ea)) + (ea * b);
 			}
 		};
 
 		processingTime_rate = new FilterStack<Double>(new iProvider<Double>() {
 			public java.lang.Double get() {
-				return new Double(thisIsRealTime ? timeElapsed() : baseTime);
+				return thisIsRealTime ? timeElapsed() : baseTime;
 			}
 		}, new iDoubleProvider() {
 			public double evaluate() {
@@ -100,12 +100,12 @@ public class TimeSystem implements iDoubleProvider {
 
 			@Override
 			public java.lang.Double addImpl(java.lang.Double a, double w, java.lang.Double to) {
-				return to + a * w;
+				return to + (a * w);
 			}
 
 			@Override
 			protected java.lang.Double blendImpl(java.lang.Double a, java.lang.Double b, double ea) {
-				return a * (1 - ea) + ea * b;
+				return (a * (1 - ea)) + (ea * b);
 			}
 		};
 
@@ -144,7 +144,7 @@ public class TimeSystem implements iDoubleProvider {
 
 	public void supplyTimeManipulation(float deltaProcessingTime, float deltaExecutionTime) {
 		if (supressNewStack) {
-			if (manipulations.size() == 0)
+			if (manipulations.isEmpty())
 				manipulations.add(new Manipulation(deltaProcessingTime, deltaExecutionTime));
 		} else {
 			if (clearOnce) {
@@ -170,7 +170,7 @@ public class TimeSystem implements iDoubleProvider {
 
 //		System.err.println(" -- updating <" + manipulations + "> at <" + processingTimeNow + "> with rate <" + processingTime_rate.get() + "> output is <"+executionTimeNow+">");
 		// now lets look at the stack
-		if (manipulations.size() == 0)
+		if (manipulations.isEmpty())
 			return true;
 
 		Manipulation m = manipulations.get(0);
@@ -196,13 +196,13 @@ public class TimeSystem implements iDoubleProvider {
 			else if (a2 < 0)
 				a2 = 0;
 
-			double change = m.deltaEx * (a1 - a2) / m.deltaProc;
+			double change = (m.deltaEx * (a1 - a2)) / m.deltaProc;
 
-			System.err.println(" change is <" + change + "> -- looking for a total change of <" + m.deltaEx + "> over <" + m.deltaProc + "> and we are at <" + a1 + ">\n   executionTimeNow was <" + executionTimeNow + ">");
+			System.err.println(" change is <" + change + "> -- looking for a total change of <" + m.deltaEx + "> over <" + m.deltaProc + "> and we are at <" + a1 + ">\n   executionTimeNow was <" + executionTimeNow + '>');
 
 			executionTimeNow += change;
 
-			System.err.println("    and now is  <" + executionTimeNow + ">");
+			System.err.println("    and now is  <" + executionTimeNow + '>');
 
 			if (a1 == m.deltaProc) {
 				manipulations.remove(0);
@@ -217,7 +217,7 @@ public class TimeSystem implements iDoubleProvider {
 		if (twentyFrames) {
 			long timeNow = System.currentTimeMillis();
 
-			System.err.println(" time elapsed is <" + (timeNow - lastTime) + ">");
+			System.err.println(" time elapsed is <" + (timeNow - lastTime) + '>');
 
 			double inc = 0;
 			inc = (50f) / (33d + 5);

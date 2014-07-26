@@ -50,27 +50,46 @@ import java.util.regex.Pattern;
 @Woven
 public class HelpBrowser extends BaseSimplePlugin {
 
-	static public final VisualElementProperty<HelpBrowser> helpBrowser = new VisualElementProperty<HelpBrowser>("helpBrowser");
+	public static final VisualElementProperty<HelpBrowser> helpBrowser = new VisualElementProperty<HelpBrowser>("helpBrowser");
 
-	static public final VisualElementProperty<String> documentation = new VisualElementProperty<String>("documentation");
+	public static final VisualElementProperty<String> documentation = new VisualElementProperty<String>("documentation");
 
 	private Browser browser;
 
 	static PegDownProcessor proc;
 
 	static String preamble = "<html><head> <script type=\"text/javascript\" src=\"http://localhost:10010/documentation/scripts/mootools.js\"></script><style type=\"text/css\">\n" + "body\n" + "{\n" + "	line-height:18px; font-size:12px; background-color:#d3d3d3;\n" + "	font-family:\"Gill Sans\";\n" + "}\n" + "h1\n" + "{\n" + "	font-size:18px;\n" + "	background-color:#bbb;\n" + "	margin-left:-10px;\n" + "	padding-left:10px;\n" + "	padding:10px;\n" + "	text-align:center;\n" + "}\n" + "h2\n" + "{\n" + "	font-size:14px;\n" + "	background-color:#bbb;\n" + "	margin-left:-10px;\n" + "	padding-left:10px;\n" + "	padding:5px;\n" + "	text-align:center;\n" + "}\n" + "h3\n" + "{\n" + "	font-size:14px;\n" + "	background-color:#bbb;\n" + "	margin-left:-10px;\n" + "	padding-left:10px;\n"
-			+ "	padding:5px;\n margin-top:5px; margin-bottom:5px;" + "	text-align:center;\n " + "}\n" + "h4\n" + "{\n" + "	font-size:14px;\n" + "	background-color:#bbb; text-decoration:none; font-weight:100;\n" + "	margin-left:-10px;\n" + "	padding-left:10px;\n" + "	padding:5px;\n margin-top:5px; margin-bottom:5px;" + "	text-align:left;\n text-decoration: none !important;" + "}\n" + "A:link {text-decoration: underline; color: black; background-color:#bbb; text-underline-style: dotted;}\n" + "h3 {text-decoration: none !important;}" + "A:visited {text-decoration: none; color: grey;}\n" + "A:active {text-decoration: none; color: dark-red; background-color: #ebb;}\n" + "A:hover {text-decoration: underline; background-color: #cbb;}\n" + "\n"
+			+ "	padding:5px;\n margin-top:5px; margin-bottom:5px;" + "	text-align:center;\n " + "}\n" + "h4\n" + "{\n" + "	font-size:14px;\n" + "	background-color:#bbb; text-decoration:none; font-weight:100;\n" + "	margin-left:-10px;\n" + "	padding-left:10px;\n" + "	padding:5px;\n margin-top:5px; margin-bottom:5px;" + "	text-align:left;\n text-decoration: none !important;" + "}\n" + "A:link {text-decoration: underline; color: black; background-color:#bbb; text-underline-style: dotted;}\n" + "h3 {text-decoration: none !important;}" + "A:visited {text-decoration: none; color: grey;}\n" + "A:active {text-decoration: none; color: dark-red; background-color: #ebb;}\n" + "A:hover {text-decoration: underline; background-color: #cbb;}\n" + '\n'
 			+ "pre{background:#888;}code{font-family:'gill sans'; font-size:11px;line-height:13px;} .hll { background-color: #ffffcc }\n" + ".c { color: #5F5A60; font-style: italic } /* Comment */\n" + ".err { border:#B22518; } /* Error */\n" + ".k { color: #CDA869 } /* Keyword */\n" + ".cm { color: #5F5A60; font-style: italic } /* Comment.Multiline */\n" + ".cp { color: #5F5A60 } /* Comment.Preproc */\n" + ".c1 { color: #5F5A60; font-style: italic } /* Comment.Single */\n" + ".cs { color: #5F5A60; font-style: italic } /* Comment.Special */\n" + ".gd { background: #420E09 } /* Generic.Deleted */\n" + ".ge { font-style: italic } /* Generic.Emph */\n" + ".gr { background: #B22518 } /* Generic.Error */\n" + ".gh { color: #000080; font-weight: bold } /* Generic.Heading */\n"
 			+ ".gi { background: #253B22 } /* Generic.Inserted */\n" + ".go { } /* Generic.Output */\n" + ".gp { font-weight: bold } /* Generic.Prompt */\n" + ".gs { font-weight: bold } /* Generic.Strong */\n" + ".gu { color: #800080; font-weight: bold } /* Generic.Subheading */\n" + ".gt { } /* Generic.Traceback */\n" + ".kc { } /* Keyword.Constant */\n" + ".kd { color: #e9df8f; } /* Keyword.Declaration */\n" + ".kn { } /* Keyword.Namespace */\n" + ".kp { color: #9B703F } /* Keyword.Pseudo */\n" + ".kr { } /* Keyword.Reserved */\n" + ".kt { } /* Keyword.Type */\n" + ".m { } /* Literal.Number */\n" + ".s { color: #8F9D6A } /* Literal.String */\n" + ".na { color: #F9EE98 } /* Name.Attribute */\n" + ".nb { } /* Name.Builtin */\n"
 			+ ".nc { color: #9B859D; font-weight: bold } /* Name.Class */\n" + ".no { color: #9B859D } /* Name.Constant */\n" + ".nd { color: #7587A6 } /* Name.Decorator */\n" + ".ni { color: #CF6A4C; font-weight: bold } /* Name.Entity */\n" + ".nf { } /* Name.Function */\n" + ".nn { color: #9B859D; font-weight: bold } /* Name.Namespace */\n" + ".nt { color: #CDA869; font-weight: bold } /* Name.Tag */\n" + ".nv { color: #7587A6 } /* Name.Variable */\n" + ".ow { color: #aaaaaa; font-weight: bold } /* Operator.Word */\n" + ".w { color: #141414 } /* Text.Whitespace */\n" + ".mf { color: #CF6A4C } /* Literal.Number.Float */\n" + ".mh { color: #CF6A4C } /* Literal.Number.Hex */\n" + ".mi { color: #CF6A4C } /* Literal.Number.Integer */\n"
 			+ ".mo { color: #CF6A4C } /* Literal.Number.Oct */\n" + ".sb { color: #8F9D6A } /* Literal.String.Backtick */\n" + ".sc { color: #8F9D6A } /* Literal.String.Char */\n" + ".sd { color: #8F9D6A; font-style: italic; } /* Literal.String.Doc */\n" + ".s2 { color: #8F9D6A } /* Literal.String.Double */\n" + ".se { color: #F9EE98; font-weight: bold; } /* Literal.String.Escape */\n" + ".sh { color: #8F9D6A } /* Literal.String.Heredoc */\n" + ".si { color: #DAEFA3; font-weight: bold; } /* Literal.String.Interpol */\n" + ".sx { color: #8F9D6A } /* Literal.String.Other */\n" + ".sr { color: #E9C062 } /* Literal.String.Regex */\n" + ".s1 { color: #8F9D6A } /* Literal.String.Single */\n" + ".ss { color: #CF6A4C } /* Literal.String.Symbol */\n"
 			+ ".bp { color: #00aaaa } /* Name.Builtin.Pseudo */\n" + ".vc { color: #7587A6 } /* Name.Variable.Class */\n" + ".vg { color: #7587A6 } /* Name.Variable.Global */\n" + ".vi { color: #7587A6 } /* Name.Variable.Instance */\n" + ".il { color: #009999 } /* Literal.Number.Integer.Long */\n" + "</style></head><body>";
 
-	static String postamble = "<script type=\"text/javascript\">\n" + "\n" + "      //scripts have been put here as a courtesy to you, the sourcecode viewer.\n" + "\n" + "      //this script uses mootools: http://mootools.net\n" + "\n" + "      var stretchers = $$('div.accordion');\n" + "      var togglers = $$('h4');\n" + "\n" + "      stretchers.setStyles({'height': '0', 'overflow': 'hidden'});\n" + "\n" + "      window.addEvent('load', function(){\n" + "\n" + "      //initialization of togglers effects\n" + "\n" + "      togglers.each(function(toggler, i){\n" + "      toggler.color = toggler.getStyle('background-color');\n" + "      toggler.$tmp.first = toggler.getFirst();\n"
-			+ "      toggler.$tmp.fx = new Fx.Style(toggler, 'background-color', {'wait': false, 'transition': Fx.Transitions.Quart.easeOut});\n" + "      });\n" + "\n" + "      //the accordion\n" + "\n" + "      var myAccordion = new Accordion(togglers, stretchers, {\n" + "\n" + "      'opacity': false,\n" + "\n" + "      'start': false,\n" + "\n" + "      'transition': Fx.Transitions.Quad.easeOut,\n" + "\n" + "      onActive: function(toggler){\n" + "      toggler.$tmp.fx.start('#e555555');\n" + "      toggler.$tmp.first.setStyle('color', '#000');\n" + "      },\n" + "\n" + "      onBackground: function(toggler){\n" + "      toggler.$tmp.fx.STOP();\n" + "      toggler.setStyle('background-color', toggler.color).$tmp.first.setStyle('color', '#222');\n" + "      }\n"
-			+ "      });\n" + "\n" + "      //open the accordion section relative to the url\n" + "\n" + "      var found = 0;\n" + "      $$('h3.toggler a').each(function(link, i){\n" + "      if (window.location.hash.test(link.hash)) found = i;\n" + "      });\n" +
+	static String postamble = "<script type=\"text/javascript\">\n" + '\n'
+                              + "      //scripts have been put here as a courtesy to you, the sourcecode viewer.\n" + '\n'
+                              + "      //this script uses mootools: http://mootools.net\n" + '\n'
+                              + "      var stretchers = $$('div.accordion');\n" + "      var togglers = $$('h4');\n" + '\n'
+                              + "      stretchers.setStyles({'height': '0', 'overflow': 'hidden'});\n" + '\n'
+                              + "      window.addEvent('load', function(){\n" + '\n'
+                              + "      //initialization of togglers effects\n" + '\n'
+                              + "      togglers.each(function(toggler, i){\n" + "      toggler.color = toggler.getStyle('background-color');\n" + "      toggler.$tmp.first = toggler.getFirst();\n"
+			+ "      toggler.$tmp.fx = new Fx.Style(toggler, 'background-color', {'wait': false, 'transition': Fx.Transitions.Quart.easeOut});\n" + "      });\n" + '\n'
+            + "      //the accordion\n" + '\n'
+            + "      var myAccordion = new Accordion(togglers, stretchers, {\n" + '\n'
+            + "      'opacity': false,\n" + '\n'
+            + "      'start': false,\n" + '\n'
+            + "      'transition': Fx.Transitions.Quad.easeOut,\n" + '\n'
+            + "      onActive: function(toggler){\n" + "      toggler.$tmp.fx.start('#e555555');\n" + "      toggler.$tmp.first.setStyle('color', '#000');\n" + "      },\n" + '\n'
+            + "      onBackground: function(toggler){\n" + "      toggler.$tmp.fx.STOP();\n" + "      toggler.setStyle('background-color', toggler.color).$tmp.first.setStyle('color', '#222');\n" + "      }\n"
+			+ "      });\n" + '\n'
+            + "      //open the accordion section relative to the url\n" + '\n'
+            + "      var found = 0;\n" + "      $$('h3.toggler a').each(function(link, i){\n" + "      if (window.location.hash.test(link.hash)) found = i;\n" + "      });\n" +
 
-			"      myAccordion.display(found);\n" + "\n" + "\n" + "      });\n" + "\n" + "    </script></body></html>\n" + "";
+			"      myAccordion.display(found);\n" + '\n'
+            + '\n'
+            + "      });\n" + '\n'
+            + "    </script></body></html>\n" + "";
 
 	@Override
 	protected String getPluginNameImpl() {
@@ -91,7 +110,7 @@ public class HelpBrowser extends BaseSimplePlugin {
 
 	ObjectToMarkDown otmd = new ObjectToMarkDown();
 
-	static public final String documentationDirectory = "../documentation/";
+	public static final String documentationDirectory = "../documentation/";
 
 	@Override
 	public void registeredWith(final iVisualElement root) {
@@ -182,7 +201,7 @@ public class HelpBrowser extends BaseSimplePlugin {
 							String name = uri.replace("/field/run/", "");
 							InputStream ans = findAndRun(name, parms);
 							if (ans == null)
-								return new Response(HTTP_NOTFOUND, null, "no element called <" + name + ">");
+								return new Response(HTTP_NOTFOUND, null, "no element called <" + name + '>');
 							return new Response(HTTP_OK, null, ans);
 						} else if (uri.startsWith("/field/invoke/")) {
 
@@ -191,7 +210,7 @@ public class HelpBrowser extends BaseSimplePlugin {
 							String name = uri.replace("/field/invoke/", "");
 							InputStream ans = findAndInvoke(name, parms);
 							if (ans == null)
-								return new Response(HTTP_NOTFOUND, null, "no element called <" + name + ">");
+								return new Response(HTTP_NOTFOUND, null, "no element called <" + name + '>');
 							return new Response(HTTP_OK, null, ans);
 						} else if (uri.startsWith("")) {
 							try {
@@ -347,7 +366,7 @@ public class HelpBrowser extends BaseSimplePlugin {
 					Browser browser = new Browser(shell, SWT.NONE);
 					event.browser = browser;
 					shell.setVisible(true);
-					System.out.println(" opened a browser on <" + event + ">");
+					System.out.println(" opened a browser on <" + event + '>');
 				}
 			});
 		} catch (NoSuchMethodError e) {
@@ -359,7 +378,8 @@ public class HelpBrowser extends BaseSimplePlugin {
 
 	public String HOME = "http://localhost:10010/field_2/StandardLibrary.html";
 
-	private void configureBridge(Browser browser) {
+	private static
+    void configureBridge(Browser browser) {
 
 		BrowserFunction f = new BrowserFunction(browser, "executeInField") {
 			@Override
@@ -421,7 +441,8 @@ public class HelpBrowser extends BaseSimplePlugin {
 	// "text/html;charset=utf-8", all);
 	// }
 
-	protected Response rewriteOnlineWikipage(String uri) throws IOException {
+	protected static
+    Response rewriteOnlineWikipage(String uri) throws IOException {
 
 		URL u = new URL("http://openendedgroup.com/" + uri);
 		URLConnection connect = u.openConnection();
@@ -453,7 +474,7 @@ public class HelpBrowser extends BaseSimplePlugin {
 		String endMarker = "<div style=\"clear:both; margin-bottom:50px\">&nbsp;</div>";
 		int end = sub.indexOf(endMarker);
 
-		if (start != -1 && end != -1) {
+		if ((start != -1) && (end != -1)) {
 			sub = sub.substring(start + startMarker.length(), end);
 		}
 
@@ -471,7 +492,8 @@ public class HelpBrowser extends BaseSimplePlugin {
         return new Response(NanoHTTPD.HTTP_OK, "text/html;charset=utf-8", all);
     }
 
-	protected Response rewriteOnlineResource(String uri) throws IOException {
+	protected static
+    Response rewriteOnlineResource(String uri) throws IOException {
 
 		URL u = new URL("http://openendedgroup.com/" + uri);
 		URLConnection connect = u.openConnection();
@@ -531,13 +553,15 @@ public class HelpBrowser extends BaseSimplePlugin {
 		setText(x);
 	}
 
-	public String textFromElement(iVisualElement e) {
+	public static
+    String textFromElement(iVisualElement e) {
 
 		String d = documentation.get(e);
 		return textFromMarkdown(d);
 	}
 
-	static public String textFromMarkdown(String d) {
+	public static
+    String textFromMarkdown(String d) {
 		String x = proc.markdownToHtml(d);
 
 		x = x.replace("<p>[fold]</p>", "<div class=\"accordion\">");
@@ -551,9 +575,9 @@ public class HelpBrowser extends BaseSimplePlugin {
 	}
 
 	protected void setText(String x) {
-		if (x == null || x.equals("null"))
+		if (x == null || "null".equals(x))
 			return;
-		if (x.trim().equals("<p>null</p>"))
+		if ("<p>null</p>".equals(x.trim()))
 			return;
 
         // System.out.println(" SETTING << " + x + " >>");
@@ -674,7 +698,8 @@ public class HelpBrowser extends BaseSimplePlugin {
 		return null;
     }
 
-    private Object parseObject(Object object) {
+    private static
+    Object parseObject(Object object) {
         try {
 			String s = ((String) object);
 			try {

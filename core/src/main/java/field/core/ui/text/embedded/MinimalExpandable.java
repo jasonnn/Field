@@ -55,11 +55,11 @@ public class MinimalExpandable extends JComponent implements iAcceptsInsertRende
         //System.out.println(" hello are we compiling ? :" + this.getClass());
 
 		super.processMouseEvent(e);
-		int x = e.getX() - 0 * this.bounds().x;
-		int y = (e.getY() - 0 * this.bounds().y);
+		int x = e.getX() - (0 * this.bounds().x);
+		int y = (e.getY() - (0 * this.bounds().y));
 
-        if (e.getClickCount() == 2 && e.getID() == MouseEvent.MOUSE_PRESSED) {
-            if (isCollapsing && this.getBounds().height != maxHeight)
+        if ((e.getClickCount() == 2) && (e.getID() == MouseEvent.MOUSE_PRESSED)) {
+            if (isCollapsing && (this.getBounds().height != maxHeight))
 				expand();
 			else
 				colapse();
@@ -70,14 +70,14 @@ public class MinimalExpandable extends JComponent implements iAcceptsInsertRende
 
             //System.out.println(" mouse pressed <" + x + "> <" + this.getBounds().width + "> <" + y + ">");
 
-			if (x > this.getBounds().width - 12 && y < 12 /*
+			if ((x > (this.getBounds().width - 12)) && (y < 12) /*
 								 * ||
 								 * e.getButton()
 								 * ==
 								 * MouseEvent.
 								 * BUTTON2
 								 */) {
-				if (isCollapsing && this.getBounds().height != maxHeight)
+				if (isCollapsing && (this.getBounds().height != maxHeight))
 					expand();
 				else
 					colapse();
@@ -89,7 +89,7 @@ public class MinimalExpandable extends JComponent implements iAcceptsInsertRende
 			hover = false;
 		}
         if (e.getID() == MouseEvent.MOUSE_MOVED) {
-            if (x > this.getBounds().width - 12 && y < 12) {
+            if ((x > (this.getBounds().width - 12)) && (y < 12)) {
 				if (!hover)
 					repaint();
 				hover = true;
@@ -115,11 +115,11 @@ public class MinimalExpandable extends JComponent implements iAcceptsInsertRende
 	void newAnimationThread() {
 		Launcher.getLauncher().registerUpdateable(animationThread = new iUpdateable() {
 			public void update() {
-				if (isCollapsing && collapseness >= maxCollapse) {
+				if (isCollapsing && (collapseness >= maxCollapse)) {
 					Launcher.getLauncher().deregisterUpdateable(this);
 					animationThread = null;
 				}
-				if (!isCollapsing && collapseness <= 0) {
+				if (!isCollapsing && (collapseness <= 0)) {
 					Launcher.getLauncher().deregisterUpdateable(this);
 					animationThread = null;
 				}
@@ -137,8 +137,8 @@ public class MinimalExpandable extends JComponent implements iAcceptsInsertRende
                 //System.out.println(" collapseness :" + collapseness);
 
 				float alpha = collapseness / maxCollapse;
-				height = (int) (12 * alpha + maxHeight * (1 - alpha));
-				alignment = (float) (0.9 * alpha + 0.5 * (1 - alpha));
+				height = (int) ((12 * alpha) + (maxHeight * (1 - alpha)));
+				alignment = (float) ((0.9 * alpha) + (0.5 * (1 - alpha)));
 
                 //System.out.println(" set size <" + getSize().width + " " + height + ">");
                 insideAnimationThread = true;

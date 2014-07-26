@@ -7,7 +7,8 @@ import java.util.LinkedHashMap;
 
 public class ModificationCache {
 
-	static public class Modification implements Serializable {
+	public static
+    class Modification implements Serializable {
 		boolean instrumented;
 		long at;
 
@@ -54,7 +55,7 @@ public class ModificationCache {
 		}
 		if (external.startsWith("jar:"))
 		{
-			String e = external.substring("jar:file:".length(), external.indexOf("!"));
+			String e = external.substring("jar:file:".length(), external.indexOf('!'));
 			return new File(e).lastModified();
 		}
         //System.out.println(" no modification date available from <"+u.toExternalForm()+">");
@@ -65,7 +66,7 @@ public class ModificationCache {
     public static
     <T> T persist(String name, T defaultValue) {
         T t = defaultValue;
-		final String filename = System.getProperty("user.home") + "/Library/Application Support/Field" + "/" + name + ".xml";
+		final String filename = System.getProperty("user.home") + "/Library/Application Support/Field" + '/' + name + ".xml";
 		try {
 
 			ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File(filename))));

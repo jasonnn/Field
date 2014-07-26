@@ -12,11 +12,11 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class LayeredNullTexture extends BaseTexture {
 
-	private int width;
-	private int height;
-	private int layers;
+	private final int width;
+	private final int height;
+	private final int layers;
 	private int textureId;
-	private int unit;
+	private final int unit;
 
 	public LayeredNullTexture(int width, int height, int layers, int unit) {
 		this.width = width;

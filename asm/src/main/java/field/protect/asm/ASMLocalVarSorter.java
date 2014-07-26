@@ -214,7 +214,7 @@ class ASMLocalVarSorter extends MethodVisitor {
         int number = 0; // old local variable number
         for (; number < nLocal; ++number) {
             Object t = local[number];
-            int size = t == Opcodes.LONG || t == Opcodes.DOUBLE ? 2 : 1;
+            int size = ((t == Opcodes.LONG) || (t == Opcodes.DOUBLE)) ? 2 : 1;
             if (t != Opcodes.TOP) {
                 ASMType typ = ASMType.OBJECT_TYPE;
                 if (t == Opcodes.INTEGER) {
@@ -243,10 +243,10 @@ class ASMLocalVarSorter extends MethodVisitor {
         number = 0;
         for (int i = 0; index < newLocals.length; ++i) {
             Object t = newLocals[index++];
-            if (t != null && t != Opcodes.TOP) {
+            if ((t != null) && (t != Opcodes.TOP)) {
                 newLocals[i] = t;
                 number = i + 1;
-                if (t == Opcodes.LONG || t == Opcodes.DOUBLE) {
+                if ((t == Opcodes.LONG) || (t == Opcodes.DOUBLE)) {
                     index += 1;
                 }
             }
@@ -352,10 +352,10 @@ class ASMLocalVarSorter extends MethodVisitor {
 
     private
     int remap(final int var, final ASMType type) {
-        if (var + type.getSize() <= firstLocal) {
+        if ((var + type.getSize()) <= firstLocal) {
             return var;
         }
-        int key = 2 * var + type.getSize() - 1;
+        int key = ((2 * var) + type.getSize()) - 1;
         int size = mapping.length;
         if (key >= size) {
             int[] newMapping = new int[Math.max(2 * size, key + 1)];

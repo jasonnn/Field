@@ -113,7 +113,7 @@ void main()
 public class BasicGLSLangImage_dynamic extends OnePassElement{
 
 
-	private PointList target;
+	private final PointList target;
 	private final int height;
 	private final int unit;
 	private final int stride;
@@ -147,7 +147,7 @@ public class BasicGLSLangImage_dynamic extends OnePassElement{
 //			image = new BasicGLSLangImage(unit, texture,  GL30.GL_RGBA32F);
 			image = new BasicGLSLangImage(unit, texture,  GL30.GL_RG16F);
 			width = stride*(1+num/stride);
-			System.out.println(" reallocted texture at dimensions <"+stride+"> <"+(1+num/stride)*height+"> <"+width+">");
+			System.out.println(" reallocted texture at dimensions <"+stride+"> <"+(1+num/stride)*height+"> <"+width+ '>');
 		}
 		
 		textureWrap.performPass(null);

@@ -23,7 +23,8 @@ import java.util.*;
 
 public interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualElement> {
 
-	static public class Rect implements Serializable {
+	public static
+    class Rect implements Serializable {
 		public static Rect slowUnion(Rect r, Rect rect, Vector3 cameraPosition) {
 			return union(r, rect);
 		}
@@ -289,7 +290,7 @@ public interface iVisualElement extends iMutableContainer<Map<Object, Object>, i
 
 		@Override
 		public String toString() {
-			return "r:" + x + " " + y + " " + w + " " + h;
+			return "r:" + x + ' ' + y + ' ' + w + ' ' + h;
 		}
 
 		public Rect union(Rect r) {
@@ -328,7 +329,8 @@ public interface iVisualElement extends iMutableContainer<Map<Object, Object>, i
 
 	}
 
-	static public class VisualElementProperty<T> {
+	public static
+    class VisualElementProperty<T> {
 		private final String name;
 
 		private VisualElementProperty<T> aliasedTo;
@@ -337,7 +339,7 @@ public interface iVisualElement extends iMutableContainer<Map<Object, Object>, i
 
 		public VisualElementProperty(String name) {
 			if (name.startsWith("//"))
-				name = name.substring(2) + "_";
+				name = name.substring(2) + '_';
 			this.name = name;
 		}
 
@@ -537,52 +539,52 @@ public interface iVisualElement extends iMutableContainer<Map<Object, Object>, i
 		}
 	}
 
-	static public final VisualElementProperty<String> name = new VisualElementProperty<String>("name");
+	public static final VisualElementProperty<String> name = new VisualElementProperty<String>("name");
 
-	static public final VisualElementProperty<iVisualElementOverrides> overrides = new VisualElementProperty<iVisualElementOverrides>("overrides");
+	public static final VisualElementProperty<iVisualElementOverrides> overrides = new VisualElementProperty<iVisualElementOverrides>("overrides");
 
-	static public final VisualElementProperty<SelectionGroup<iComponent>> selectionGroup = new VisualElementProperty<SelectionGroup<iComponent>>("selectionGroup");
+	public static final VisualElementProperty<SelectionGroup<iComponent>> selectionGroup = new VisualElementProperty<SelectionGroup<iComponent>>("selectionGroup");
 
-	static public final VisualElementProperty<SelectionGroup<iComponent>> markingGroup = new VisualElementProperty<SelectionGroup<iComponent>>("markingGroup");
+	public static final VisualElementProperty<SelectionGroup<iComponent>> markingGroup = new VisualElementProperty<SelectionGroup<iComponent>>("markingGroup");
 
-	static public final VisualElementProperty<GLComponentWindow> enclosingFrame = new VisualElementProperty<GLComponentWindow>("enclosingFrame");
+	public static final VisualElementProperty<GLComponentWindow> enclosingFrame = new VisualElementProperty<GLComponentWindow>("enclosingFrame");
 
-	static public final VisualElementProperty<RootComponent> rootComponent = new VisualElementProperty<RootComponent>("rootComponent");
+	public static final VisualElementProperty<RootComponent> rootComponent = new VisualElementProperty<RootComponent>("rootComponent");
 
-	static public final VisualElementProperty<GlassComponent> glassComponent = new VisualElementProperty<GlassComponent>("glassComponent");
+	public static final VisualElementProperty<GlassComponent> glassComponent = new VisualElementProperty<GlassComponent>("glassComponent");
 
-	static public final VisualElementProperty<ToolPalette2> toolPalette2 = new VisualElementProperty<ToolPalette2>("toolPalette2");
+	public static final VisualElementProperty<ToolPalette2> toolPalette2 = new VisualElementProperty<ToolPalette2>("toolPalette2");
 
-	static public final VisualElementProperty<StandardFluidSheet> sheetView = new VisualElementProperty<StandardFluidSheet>("sheetView");
+	public static final VisualElementProperty<StandardFluidSheet> sheetView = new VisualElementProperty<StandardFluidSheet>("sheetView");
 
-	static public final VisualElementProperty<iComponent> localView = new VisualElementProperty<iComponent>("localView");
+	public static final VisualElementProperty<iComponent> localView = new VisualElementProperty<iComponent>("localView");
 
-	static public final VisualElementProperty<Boolean> dirty = new VisualElementProperty<Boolean>("dirty");
+	public static final VisualElementProperty<Boolean> dirty = new VisualElementProperty<Boolean>("dirty");
 
-	static public final VisualElementProperty<Boolean> hidden = new VisualElementProperty<Boolean>("hidden");
+	public static final VisualElementProperty<Boolean> hidden = new VisualElementProperty<Boolean>("hidden");
 
-	static public final VisualElementProperty<Object> creationToken = new VisualElementProperty<Object>("creationToken");
+	public static final VisualElementProperty<Object> creationToken = new VisualElementProperty<Object>("creationToken");
 
-	static public final VisualElementProperty<Boolean> doNotSave = new VisualElementProperty<Boolean>("doNotSave");
-	static public final VisualElementProperty<iVisualElement> timeSlider = new VisualElementProperty<iVisualElement>("timeSlider");
+	public static final VisualElementProperty<Boolean> doNotSave = new VisualElementProperty<Boolean>("doNotSave");
+	public static final VisualElementProperty<iVisualElement> timeSlider = new VisualElementProperty<iVisualElement>("timeSlider");
 
-	static public final VisualElementProperty<FluidCopyPastePersistence> copyPaste = new VisualElementProperty<FluidCopyPastePersistence>("copyPaste");
+	public static final VisualElementProperty<FluidCopyPastePersistence> copyPaste = new VisualElementProperty<FluidCopyPastePersistence>("copyPaste");
 
-	static public final VisualElementProperty<Boolean> hasFocusLock = new VisualElementProperty<Boolean>("hasFocusLock_");
+	public static final VisualElementProperty<Boolean> hasFocusLock = new VisualElementProperty<Boolean>("hasFocusLock_");
 
-	static public final VisualElementProperty<iLinearGraphicsContext> fastContext = new VisualElementProperty<iLinearGraphicsContext>("fastContext");
+	public static final VisualElementProperty<iLinearGraphicsContext> fastContext = new VisualElementProperty<iLinearGraphicsContext>("fastContext");
 
-	static public final VisualElementProperty<MarkingMenuBuilder> spaceMenu = new VisualElementProperty<MarkingMenuBuilder>("spaceMenu_");
+	public static final VisualElementProperty<MarkingMenuBuilder> spaceMenu = new VisualElementProperty<MarkingMenuBuilder>("spaceMenu_");
 
-	static public final VisualElementProperty<Number> isRenderer= new VisualElementProperty<Number>("isRenderer");
-	static public final VisualElementProperty<BasicRunner> multithreadedRunner= new VisualElementProperty<BasicRunner>("multithreadedRunner");
+	public static final VisualElementProperty<Number> isRenderer= new VisualElementProperty<Number>("isRenderer");
+	public static final VisualElementProperty<BasicRunner> multithreadedRunner= new VisualElementProperty<BasicRunner>("multithreadedRunner");
 
 
-	static public final VisualElementProperty<Vector4> color1 = new VisualElementProperty<Vector4>("color1");
-	static public final VisualElementProperty<Vector4> color2 = new VisualElementProperty<Vector4>("color2");
-	static public final VisualElementProperty<Object> visibleInPreview= new VisualElementProperty<Object>("visibleInPreview");
+	public static final VisualElementProperty<Vector4> color1 = new VisualElementProperty<Vector4>("color1");
+	public static final VisualElementProperty<Vector4> color2 = new VisualElementProperty<Vector4>("color2");
+	public static final VisualElementProperty<Object> visibleInPreview= new VisualElementProperty<Object>("visibleInPreview");
 
-	static public final VisualElementProperty<String> boundTo = new VisualElementProperty<String>("boundTo");
+	public static final VisualElementProperty<String> boundTo = new VisualElementProperty<String>("boundTo");
 	
 	public <T> void deleteProperty(VisualElementProperty<T> p);
 

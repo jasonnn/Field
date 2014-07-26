@@ -53,7 +53,7 @@ public class DelegationContextTopology<K> extends ContextTopology<K, K> {
 		assert getAt().equals(k) : k + " " + getAt();
 
 		Context c = contextFor(null, getAt());
-		if (c.parent.size() > 0) {
+		if (!c.parent.isEmpty()) {
 			K top = getTop(c.parent);
 			setAt(top);
 		} else
@@ -95,7 +95,7 @@ public class DelegationContextTopology<K> extends ContextTopology<K, K> {
 		}
 
 		if (parent != null) {
-			K nn = parent.name == null ? null : parent.name.get();
+			K nn = (parent.name == null) ? null : parent.name.get();
 			cc.parent.remove(nn);
 			cc.parent.put(nn, parent);
 			parent.children.put(k, cc);
@@ -143,7 +143,7 @@ public class DelegationContextTopology<K> extends ContextTopology<K, K> {
 	
 	@Override
 	public void delete(K child) {
-		assert getAt()==null || !getAt().equals(child) : "can't delete current context";
+		assert (getAt() == null) || !getAt().equals(child) : "can't delete current context";
 		LinkedHashMap<K, Context> p = contextFor(null, getAt()).parent;
 		for(K pp : p.keySet())
 		{
@@ -157,11 +157,11 @@ public class DelegationContextTopology<K> extends ContextTopology<K, K> {
 		HashSet<K> seen = new HashSet<K>();
 		K aa = getAt();
 		String p = "";
-		while (!seen.contains(aa) && aa != null) {
+		while (!seen.contains(aa) && (aa != null)) {
 			seen.add(aa);
 			p = aa + "/" + p;
 			LinkedHashMap<K, Context> pnext = contextFor(null, aa).parent;
-			if (pnext.size() == 0) {
+			if (pnext.isEmpty()) {
 				aa = null;
 				break;
 			}

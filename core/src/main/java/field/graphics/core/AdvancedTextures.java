@@ -31,7 +31,8 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
  */
 public class AdvancedTextures extends BasicTextures {
 
-	static public class Base1ByteTexture extends BaseTexture {
+	public static
+    class Base1ByteTexture extends BaseTexture {
 		ByteBuffer pixelBuffer;
 
 		TextureRange in;
@@ -90,7 +91,7 @@ public class AdvancedTextures extends BasicTextures {
 			}
 			assert (glGetError() == 0) : this.getClass().getName();
 			glBindTexture(textureTarget, textureId);
-			assert (glGetError() == 0) : this.getClass().getName() + " " + BasicContextManager.getCurrentContext();
+			assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
 			glEnable(textureTarget);
 			assert (glGetError() == 0) : this.getClass().getName();
 			if (in != null)
@@ -151,7 +152,8 @@ public class AdvancedTextures extends BasicTextures {
 	}
 
 	// broken (GPU bug?)
-	static public class Base2ByteTexture extends BaseTexture {
+    public static
+    class Base2ByteTexture extends BaseTexture {
 		ByteBuffer pixelBuffer;
 
 		TextureRange in;
@@ -201,7 +203,7 @@ public class AdvancedTextures extends BasicTextures {
 			// "> <" + pixelBuffer + "> <" + in + ">");
 			assert (glGetError() == 0) : this.getClass().getName();
 			glBindTexture(this.textureTarget, textureId);
-			assert (glGetError() == 0) : this.getClass().getName() + " " + BasicContextManager.getCurrentContext();
+			assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
 			glEnable(this.textureTarget);
 			assert (glGetError() == 0) : this.getClass().getName();
 			if (in != null)
@@ -251,7 +253,8 @@ public class AdvancedTextures extends BasicTextures {
 
 	}
 
-	static public class Base3ByteTexture extends BaseTexture {
+	public static
+    class Base3ByteTexture extends BaseTexture {
 		protected ByteBuffer pixelBuffer;
 
 		TextureRange in;
@@ -327,7 +330,8 @@ public class AdvancedTextures extends BasicTextures {
 				long a = System.currentTimeMillis();
 				glTexSubImage2D(this.textureTarget, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixelBuffer);
 				long b = System.currentTimeMillis();
-				System.out.println(" texture upload took :" + (b - a) + " " + (width * height * 3 / 1024.0 / 1024.0) / ((b - a) / 1000.0) + " MB/s");
+				System.out.println(" texture upload took :" + (b - a) + ' '
+                                   + (width * height * 3 / 1024.0 / 1024.0) / ((b - a) / 1000.0) + " MB/s");
 
 				// glTexSubImage2D(this.textureTarget, 0, 0,
 				// 0, width, height, GL_BGRA,
@@ -394,7 +398,8 @@ public class AdvancedTextures extends BasicTextures {
 
 	}
 
-	static public class Base3ByteTexture_pbo extends BaseTexture {
+	public static
+    class Base3ByteTexture_pbo extends BaseTexture {
 		protected ByteBuffer pixelBuffer;
 
 		TextureRange in;
@@ -475,7 +480,7 @@ public class AdvancedTextures extends BasicTextures {
 				long b = System.currentTimeMillis();
 //				System.out.println(" texture upload B took :" + (b - a) + " " + (width * height * 3 / 1024.0 / 1024.0) / ((b - a) / 1000.0) + " MB/s");
 			} catch (Throwable t) {
-				System.err.println(" texture upload failed <" + t + ">");
+				System.err.println(" texture upload failed <" + t + '>');
 			}
 			pbo = pboA;
 		}
@@ -525,7 +530,7 @@ public class AdvancedTextures extends BasicTextures {
 //				System.out.println(" texture upload B took :" + (b - a) + " " + (width * height * 3 / 1024.0 / 1024.0) / ((b - a) / 1000.0) + " MB/s");
 
 			} catch (Throwable t) {
-				System.err.println(" texture upload failed <" + t + ">");
+				System.err.println(" texture upload failed <" + t + '>');
 			}
 			pbo = pboA;
 		}
@@ -631,7 +636,8 @@ public class AdvancedTextures extends BasicTextures {
 
 	}
 
-	static public class Base4FloatTexture extends BaseTexture {
+	public static
+    class Base4FloatTexture extends BaseTexture {
 		protected FloatBuffer pixelBuffer;
 
 		TextureRange in;
@@ -690,7 +696,7 @@ public class AdvancedTextures extends BasicTextures {
 			}
 			assert (glGetError() == 0) : this.getClass().getName();
 			glBindTexture(this.textureTarget, textureId);
-			assert (glGetError() == 0) : this.getClass().getName() + " " + BasicContextManager.getCurrentContext();
+			assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
 			glEnable(this.textureTarget);
 			assert (glGetError() == 0) : this.getClass().getName();
 			if (in != null)
@@ -736,7 +742,8 @@ public class AdvancedTextures extends BasicTextures {
 	// for maximum shearing protection, use BufferedDynamic texture (which
 	// will use this class) and render no more than one frame ahead
 	// (typical)
-	static public class BaseFastRawTexture extends BaseTexture {
+    public static
+    class BaseFastRawTexture extends BaseTexture {
 		IntBuffer from;
 
 		TextureRange in;
@@ -901,7 +908,8 @@ public class AdvancedTextures extends BasicTextures {
 		}
 	}
 
-	static public class BaseFastNoStorageTexture extends BaseTexture {
+	public static
+    class BaseFastNoStorageTexture extends BaseTexture {
 		int width;
 
 		int height;
@@ -990,7 +998,8 @@ public class AdvancedTextures extends BasicTextures {
 		}
 	}
 
-	static public class BaseFastSwitchedRawTexture extends BaseTexture {
+	public static
+    class BaseFastSwitchedRawTexture extends BaseTexture {
 		Buffer from;
 
 		TextureRange in;
@@ -1127,7 +1136,8 @@ public class AdvancedTextures extends BasicTextures {
 		}
 	}
 
-	static public class BaseFastRaw422Texture extends BaseTexture {
+	public static
+    class BaseFastRaw422Texture extends BaseTexture {
 		IntBuffer from;
 
 		TextureRange in;
@@ -1253,7 +1263,8 @@ public class AdvancedTextures extends BasicTextures {
 	 * @author marc
 	 */
 
-	static public class BaseFloatTexture extends BaseTexture {
+    public static
+    class BaseFloatTexture extends BaseTexture {
 		protected FloatBuffer pixelBuffer;
 
 		TextureRange in;
@@ -1314,7 +1325,7 @@ public class AdvancedTextures extends BasicTextures {
 			assert (glGetError() == 0) : this.getClass().getName();
 
 			glBindTexture(textureTarget, textureId);
-			assert (glGetError() == 0) : this.getClass().getName() + " " + BasicContextManager.getCurrentContext();
+			assert (glGetError() == 0) : this.getClass().getName() + ' ' + BasicContextManager.getCurrentContext();
 			if (!CoreHelpers.isCore)
 				glEnable(textureTarget);
 			assert (glGetError() == 0) : this.getClass().getName();
@@ -1377,7 +1388,8 @@ public class AdvancedTextures extends BasicTextures {
 	 * @author marc
 	 * 
 	 */
-	static public class BaseSlowRawTexture extends BaseTexture {
+    public static
+    class BaseSlowRawTexture extends BaseTexture {
 		IntBuffer from;
 
 		TextureRange in;
@@ -1502,7 +1514,8 @@ public class AdvancedTextures extends BasicTextures {
 		}
 	}
 
-	static public class BufferedAnimationTexture extends BaseTexture {
+	public static
+    class BufferedAnimationTexture extends BaseTexture {
 		IntBuffer buffer;
 
 		IntBuffer[] animationData;
@@ -1548,7 +1561,8 @@ public class AdvancedTextures extends BasicTextures {
 		}
 	}
 
-	static public class BufferedDynamicTexture extends BaseTexture {
+	public static
+    class BufferedDynamicTexture extends BaseTexture {
 		IntBuffer withGL;
 
 		IntBuffer withApp;
@@ -1658,7 +1672,8 @@ public class AdvancedTextures extends BasicTextures {
 	//
 	//
 
-	static public class LuminanceTexture extends BaseTexture {
+	public static
+    class LuminanceTexture extends BaseTexture {
 		ByteBuffer pixelBuffer;
 
 		int allocated = 0;
@@ -1728,7 +1743,8 @@ public class AdvancedTextures extends BasicTextures {
 
 	}
 
-	static public class OneDTexture extends BaseTexture {
+	public static
+    class OneDTexture extends BaseTexture {
 		private final int width;
 
 		private int textureId;
@@ -1812,7 +1828,8 @@ public class AdvancedTextures extends BasicTextures {
 		}
 	}
 
-	static public class OneDFloatTexture extends BaseTexture {
+	public static
+    class OneDFloatTexture extends BaseTexture {
 		private final int width;
 
 		private int textureId;
@@ -1925,7 +1942,8 @@ public class AdvancedTextures extends BasicTextures {
 	// }
 	// }
 
-	static public class SelfTexture extends BaseTexture {
+	public static
+    class SelfTexture extends BaseTexture {
 		private final int width;
 
 		private final int height;
@@ -1986,7 +2004,8 @@ public class AdvancedTextures extends BasicTextures {
 		}
 	}
 
-	static public class Stack3dTexture extends BasicUtilities.TwoPassElement {
+	public static
+    class Stack3dTexture extends BasicUtilities.TwoPassElement {
 		private final int width;
 
 		private final ByteImage[] images;
@@ -1995,7 +2014,7 @@ public class AdvancedTextures extends BasicTextures {
 
 		int[] tex = { -1 };
 
-		private int height;
+		private final int height;
 
 		public Stack3dTexture(int width, int height, String[] filename) {
 			super("", StandardPass.preRender, StandardPass.postRender);

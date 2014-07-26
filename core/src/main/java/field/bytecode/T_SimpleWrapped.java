@@ -16,7 +16,8 @@ public class T_SimpleWrapped implements iLaunchable {
     class Banana implements iProvidesWrapping {
 		
 		@SimplyWrapped
-		public Object banana()
+		public static
+        Object banana()
 		{
             //System.out.println(" I'm a banana ");
             return new Vector3(0,0,0);
@@ -31,7 +32,7 @@ public class T_SimpleWrapped implements iLaunchable {
 	
 	public void launch() {
 
-		new Banana().banana();
+		Banana.banana();
 		
 	}
 }

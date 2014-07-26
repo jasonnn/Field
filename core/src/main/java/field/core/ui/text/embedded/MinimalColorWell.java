@@ -36,7 +36,8 @@ public class MinimalColorWell extends JComponent implements iAcceptsInsertRender
 		this.irc = context;
 	}
 
-	static public class Component extends ProvidedComponent {
+	public static
+    class Component extends ProvidedComponent {
 
 		protected Vector4 value = new Vector4(0, 0, 0, 01.0f);
 		public transient iUpdateable notify;
@@ -81,7 +82,7 @@ public class MinimalColorWell extends JComponent implements iAcceptsInsertRender
 
 		@Override
 		public String getCurrentRepresentedString() {
-			return "Vector4(" + value.x + ", " + value.y + ", " + value.z + ", " + value.w + ")";
+			return "Vector4(" + value.x + ", " + value.y + ", " + value.z + ", " + value.w + ')';
 		}
 
 		@Override
@@ -98,7 +99,8 @@ public class MinimalColorWell extends JComponent implements iAcceptsInsertRender
 		}
 	}
 
-	static public class Component255 extends ProvidedComponent {
+	public static
+    class Component255 extends ProvidedComponent {
 		protected Vector4 value = new Vector4(0, 0, 0, 01.0f);
 		public transient iUpdateable notify;
 

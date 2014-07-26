@@ -9,6 +9,7 @@ import field.math.linalg.Vector4;
 import field.math.linalg.iToFloatArray;
 import field.util.Dict;
 import field.util.Dict.Prop;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.lang.reflect.InvocationHandler;
@@ -17,7 +18,6 @@ import java.lang.reflect.Proxy;
 import java.util.*;
 import java.util.List;
 
-//import field.util.BiMap;
 
 /**
  * this is like a LineProperties3 class for extremely high level caching of
@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class CachedLine {
 
-	static public BiMap<Method, String> methodMap = HashBiMap.create(); //new BiMap<Method, String>();
+	public static BiMap<Method, String> methodMap = HashBiMap.create();
 	static {
 		methodMap.put(iLine_m.moveTo_m, "m");
 		methodMap.put(iLine_m.lineTo_m, "l");
@@ -67,13 +67,15 @@ public class CachedLine {
 
 			Object zz = getAttributes().get(iLinearGraphicsContext.z_v);
 
-			return (" " + method.getName() + " " + (args == null ? null : Arrays.asList(args)) + " " + (zz == null ? "" : ("z=" + zz)));
+			return (" " + method.getName() + " " + ((args == null) ? null : Arrays.asList(args)) + " " + ((zz == null)
+                                                                                                          ? ""
+                                                                                                          : ("z=" + zz)));
 		}
 
 		public CachedLine container = CachedLine.this;
 
 		public Event<T> copy() {
-			Event e = new Event();
+			Event<T> e = new Event<T>();
 			e.method = method;
 			if (attributes != null)
 				e.attributes = new Dict().putAll(attributes);
@@ -88,26 +90,30 @@ public class CachedLine {
 			return e;
 		}
 
-		public Vector2 getAt(int i, Vector2... s) {
-			Vector2 v = null;
-			if (s == null)
-				v = new Vector2();
-			else if (s.length == 0)
-				v = new Vector2();
-			else
-				v = s[0];
+        public Vector2 getAt(int i){
+            return getAt(i,new Vector2());
+        }
+
+		public Vector2 getAt(int i,@NotNull Vector2 v) {
+//			Vector2 v;
+//            if (s.length == 0) {
+//                v = new Vector2();
+//            }
+//            else {
+//                v = s[0];
+//            }
 
 			if (i == -1)
 				i = args.length / 2 - 1;
 
 			v.x = ((Number) args[i * 2]).floatValue();
-			v.y = ((Number) args[i * 2 + 1]).floatValue();
+			v.y = ((Number) args[((i * 2) + 1)]).floatValue();
 
 			return v;
 		}
 
 		public Vector2 getDestination() {
-			return getDestination((Vector2[]) null);
+			return getDestination(new Vector2());
 		}
 
 		public Vector3 getDestination3() {
@@ -115,22 +121,20 @@ public class CachedLine {
 		}
 
 		public Vector2 getAt() {
-			return getDestination((Vector2[]) null);
+			return getDestination();
 		}
 
-		public Vector2 getDestination(Vector2... s) {
-			Vector2 v = null;
-			if (s == null)
-				v = new Vector2();
-			else if (s.length == 0)
-				v = new Vector2();
-			else
-				v = s[0];
+        //TODO why is this varargs?
+		public Vector2 getDestination(@NotNull Vector2 v) {
+		//	Vector2 v;
+//            if (s.length == 0) {
+//                v = new Vector2();
+//            }
+//            else {
+//                v = s[0];
+//            }
 
-			if (v == null)
-				v = new Vector2();
-
-			v.x = ((Number) args[args.length - 2]).floatValue();
+            v.x = ((Number) args[args.length - 2]).floatValue();
 			v.y = ((Number) args[args.length - 1]).floatValue();
 
 			return v;
@@ -143,16 +147,16 @@ public class CachedLine {
 		public void setAt(int lastIndexToSet, Vector2 last) {
 			if (lastIndexToSet == -1)
 				lastIndexToSet = args.length / 2 - 1;
-            args[2 * lastIndexToSet] = new Float(last.x);
-            args[2 * lastIndexToSet + 1] = new Float(last.y);
+            args[2 * lastIndexToSet] = last.x;
+            args[((2 * lastIndexToSet) + 1)] = last.y;
         }
 
 		public void setAt3(int lastIndexToSet, Vector3 last) {
 			if (lastIndexToSet == -1)
 				lastIndexToSet = args.length / 2 - 1;
 
-            args[2 * lastIndexToSet] = new Float(last.x);
-            args[2 * lastIndexToSet + 1] = new Float(last.y);
+            args[2 * lastIndexToSet] = last.x;
+            args[((2 * lastIndexToSet) + 1)] = last.y;
 
 			Object zwas = getAttributes().get(iLinearGraphicsContext.z_v);
 
@@ -160,10 +164,7 @@ public class CachedLine {
 				if (args.length == 6) {
 					zwas = new Vector3();
 					getAttributes().put(iLinearGraphicsContext.z_v, zwas);
-					if (zwas instanceof Vector3)
-						((Vector3) zwas).set(lastIndexToSet, last.z);
-					else
-						getAttributes().put(iLinearGraphicsContext.z_v, last.z);
+                    ((Vector3) zwas).set(lastIndexToSet, last.z);
 				} else {
 					getAttributes().put(iLinearGraphicsContext.z_v, last.z);
 				}
@@ -181,7 +182,7 @@ public class CachedLine {
 		}
 
 		public boolean hasDestination() {
-			return args != null && args.length > 0;
+			return (args != null) && (args.length > 0);
 		}
 
 		public CachedLine getContainer() {
@@ -263,6 +264,7 @@ public class CachedLine {
 					try {
 						interpolateAttribute(a.getKey(), a.getValue(), lastSeenAt, lastMoveToAt, i, events);
 					} catch (NotInterpolateable ew) {
+                        ew.printStackTrace();
 					}
 				}
 			}
@@ -328,7 +330,7 @@ public class CachedLine {
 				}
 			}
 
-			for (int i = currentIndex + 1; i < forwardAt + 1; i++) {
+			for (int i = currentIndex + 1; i < (forwardAt + 1); i++) {
 				Object in = interpolateProperty(property, propertyValue, fowardValue, (i - currentIndex) / (float) (forwardAt - currentIndex));
 				if (in != null) {
 					eventStack.get(i).getAttributes().put(property, in);

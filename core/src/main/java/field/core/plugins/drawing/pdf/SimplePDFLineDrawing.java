@@ -31,7 +31,8 @@ import java.util.List;
 
 public class SimplePDFLineDrawing {
 
-	static public class ExportedStyle {
+	public static
+    class ExportedStyle {
 		Vector4 fillColor = new Vector4();
 
 		Vector4 strokeColor = new Vector4();
@@ -74,12 +75,12 @@ public class SimplePDFLineDrawing {
 
 		@Override
 		public String toString() {
-			return "es[f" + fillColor + " s" + strokeColor + " " + thickness + "]";
+			return "es[f" + fillColor + " s" + strokeColor + ' ' + thickness + ']';
 
 		}
 	}
 
-	static public PythonCallableMap thicknessOpacity = new PythonCallableMap();
+	public static PythonCallableMap thicknessOpacity = new PythonCallableMap();
 
     protected static
     Pair<Float, Float> filteredThickness(float thick, float w) {
@@ -92,7 +93,7 @@ public class SimplePDFLineDrawing {
 		return null;
 	}
 
-	static public PythonCallableMap colorTransform= new PythonCallableMap();
+	public static PythonCallableMap colorTransform= new PythonCallableMap();
 
     protected static
     Vector4 filteredColor(Vector4 c) {
@@ -196,11 +197,11 @@ public class SimplePDFLineDrawing {
                     o.setLineCap(PdfContentByte.LINE_CAP_ROUND);
                 }
 
-				System.err.println(" set stoke properties <" + color + "> <" + opName + ">");
+				System.err.println(" set stoke properties <" + color + "> <" + opName + '>');
 				o.setColorStroke(new Color(clamp(color.x), clamp(color.y), clamp(color.z)));
 				o.setLineWidth(thick);
 
-				if (opName.equals("Opaque")) {
+				if ("Opaque".equals(opName)) {
 					PdfGState gs1 = new PdfGState();
 					gs1.setFillOpacity(1);
 					gs1.setStrokeOpacity(1);
@@ -365,7 +366,7 @@ public class SimplePDFLineDrawing {
 
 				o.setColorFill(new Color(clamp(color.x), clamp(color.y), clamp(color.z)));
 
-				if (opName.equals("Opaque")) {
+				if ("Opaque".equals(opName)) {
 					PdfGState gs1 = new PdfGState();
 					gs1.setFillOpacity(1);
 					gs1.setStrokeOpacity(1);
@@ -411,10 +412,10 @@ public class SimplePDFLineDrawing {
 				color = properties.get(iLinearGraphicsContext.color);
 			if (color != null) {
 				if (color.w < 0.001) {
-					System.err.println(" rejected: too transparent <" + color + ">");
+					System.err.println(" rejected: too transparent <" + color + '>');
 					return null;
 				} else {
-					System.err.println(" color is <" + color + ">");
+					System.err.println(" color is <" + color + '>');
 				}
 			}
 
@@ -1012,7 +1013,7 @@ public class SimplePDFLineDrawing {
 
 	public static final Prop<Number> pointSizeMul = new Prop<Number>("pointSizeMul");
 
-	static public Vector4 outputTransform = new Vector4(2, -2, 0, 2000);
+	public static Vector4 outputTransform = new Vector4(2, -2, 0, 2000);
 
 	public static String defaultOpType = "Multiply";
 

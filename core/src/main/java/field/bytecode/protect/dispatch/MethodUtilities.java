@@ -38,7 +38,7 @@ public class MethodUtilities {
            // for (int i = 0; i < classTypes.length; i++)
 				//System.out.println("          " + classTypes[i].getClassLoader());
 
-			throw new IllegalArgumentException(onClass + " " + name + " " + Arrays.asList(classTypes));
+			throw new IllegalArgumentException(onClass + " " + name + ' ' + Arrays.asList(classTypes));
 		}
 		return m;
 	}
@@ -53,7 +53,7 @@ public class MethodUtilities {
 		ch.right = className;
 
 		Method m = cache.get(ch);
-		if (m != null || cache.containsKey(ch))
+		if ((m != null) || cache.containsKey(ch))
 		{
 			return m;
 		}
@@ -100,7 +100,7 @@ public class MethodUtilities {
 							// ugh!
 							classTypes[i] = Array.newInstance(loader.loadClass(elementType.getClassName()), 0).getClass();
 						} catch (ClassNotFoundException e) {
-							assert false : elementType.getClassName() + " " + argumentTypes[i].getClassName();
+							assert false : elementType.getClassName() + ' ' + argumentTypes[i].getClassName();
 							e.printStackTrace();
 						}
 					else

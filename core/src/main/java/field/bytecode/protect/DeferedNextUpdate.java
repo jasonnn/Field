@@ -36,8 +36,9 @@ public class DeferedNextUpdate extends DeferCallingFast {
 		}
 		original.setAccessible(true);
 
-		boolean doSaveAliasing = parameters.get("saveAliasing") == null || (Boolean) parameters.get("saveAliasing");
-		boolean doSaveContextLocation = parameters.get("saveAliasing") == null || (Boolean) parameters.get("saveAliasing");
+		boolean doSaveAliasing = (parameters.get("saveAliasing") == null) || (Boolean) parameters.get("saveAliasing");
+		boolean doSaveContextLocation =
+                (parameters.get("saveAliasing") == null) || (Boolean) parameters.get("saveAliasing");
 
 		
 		
@@ -48,16 +49,16 @@ public class DeferedNextUpdate extends DeferCallingFast {
 										
 					original.invoke(fromThis, argArray);
 				} catch (IllegalArgumentException e) {
-					System.err.println(" inside deferednextupdate +" + fromThis + " " + originalMethod + " " + Arrays.asList(argArray));
+					System.err.println(" inside deferednextupdate +" + fromThis + ' ' + originalMethod + ' ' + Arrays.asList(argArray));
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
-					System.err.println(" inside deferednextupdate +" + fromThis + " " + originalMethod + " " + Arrays.asList(argArray));
+					System.err.println(" inside deferednextupdate +" + fromThis + ' ' + originalMethod + ' ' + Arrays.asList(argArray));
 					e.printStackTrace();
 				} catch (InvocationTargetException e) {
-					System.err.println(" inside deferednextupdate +" + fromThis + " " + originalMethod + " " + Arrays.asList(argArray));
+					System.err.println(" inside deferednextupdate +" + fromThis + ' ' + originalMethod + ' ' + Arrays.asList(argArray));
 					e.printStackTrace();
 				} catch (Throwable t) {
-					System.err.println(" inside deferednextupdate +" + fromThis + " " + originalMethod + " " + Arrays.asList(argArray));
+					System.err.println(" inside deferednextupdate +" + fromThis + ' ' + originalMethod + ' ' + Arrays.asList(argArray));
 					t.printStackTrace();
 				}
 				

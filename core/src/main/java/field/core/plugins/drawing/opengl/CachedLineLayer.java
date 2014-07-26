@@ -26,8 +26,8 @@ public class CachedLineLayer {
 
 	public class UpdateMesh extends BasicUtilities.OnePassElement {
 
-		private DynamicMesh_long target;
-		private DirectMesh m;
+		private final DynamicMesh_long target;
+		private final DirectMesh m;
 
 		public UpdateMesh(DynamicMesh_long target, DirectMesh m) {
 			super(Base.StandardPass.transform);
@@ -48,8 +48,8 @@ public class CachedLineLayer {
 
 	public class UpdatePoint extends BasicUtilities.OnePassElement {
 
-		private DynamicPointlist target;
-		private DirectPoint m;
+		private final DynamicPointlist target;
+		private final DirectPoint m;
 
 		public UpdatePoint(DynamicPointlist target, DirectPoint m) {
 			super(Base.StandardPass.transform);
@@ -70,8 +70,8 @@ public class CachedLineLayer {
 
 	public class UpdateLine extends BasicUtilities.OnePassElement {
 
-		private DynamicLine_long target;
-		private DirectLine m;
+		private final DynamicLine_long target;
+		private final DirectLine m;
 
 		public UpdateLine(DynamicLine_long target, DirectLine m) {
 			super(Base.StandardPass.transform);

@@ -32,16 +32,16 @@ public class SimplyWrappedInQueue extends DeferCallingFast {
 						{
 							if (p[i].isPrimitive())
 							{
-								if (p[i] == Integer.TYPE && !(argArray[i] instanceof Integer)) continue outer;
-								if (p[i] == Long.TYPE && !(argArray[i] instanceof Long)) continue outer;
-								if (p[i] == Short.TYPE && !(argArray[i] instanceof Short)) continue outer;
-								if (p[i] == Double.TYPE && !(argArray[i] instanceof Double)) continue outer;
-								if (p[i] == Byte.TYPE && !(argArray[i] instanceof Byte)) continue outer;
-								if (p[i] == Character.TYPE && !(argArray[i] instanceof Character)) continue outer;
-								if (p[i] == Float.TYPE && !(argArray[i] instanceof Float)) continue outer;
+								if ((p[i] == Integer.TYPE) && !(argArray[i] instanceof Integer)) continue outer;
+								if ((p[i] == Long.TYPE) && !(argArray[i] instanceof Long)) continue outer;
+								if ((p[i] == Short.TYPE) && !(argArray[i] instanceof Short)) continue outer;
+								if ((p[i] == Double.TYPE) && !(argArray[i] instanceof Double)) continue outer;
+								if ((p[i] == Byte.TYPE) && !(argArray[i] instanceof Byte)) continue outer;
+								if ((p[i] == Character.TYPE) && !(argArray[i] instanceof Character)) continue outer;
+								if ((p[i] == Float.TYPE) && !(argArray[i] instanceof Float)) continue outer;
 							}
 							else
-							if (!(argArray[i]==null || p[i].isAssignableFrom(argArray[i].getClass())))
+							if (!((argArray[i] == null) || p[i].isAssignableFrom(argArray[i].getClass())))
 								continue outer;
 						}
 						
@@ -59,8 +59,9 @@ public class SimplyWrappedInQueue extends DeferCallingFast {
         }
 		original.setAccessible(true);
 
-		boolean doSaveAliasing = parameters.get("saveAliasing") == null || (Boolean) parameters.get("saveAliasing");
-		boolean doSaveContextLocation = parameters.get("saveAliasing") == null || (Boolean) parameters.get("saveAliasing");
+		boolean doSaveAliasing = (parameters.get("saveAliasing") == null) || (Boolean) parameters.get("saveAliasing");
+		boolean doSaveContextLocation =
+                (parameters.get("saveAliasing") == null) || (Boolean) parameters.get("saveAliasing");
 
 	
 

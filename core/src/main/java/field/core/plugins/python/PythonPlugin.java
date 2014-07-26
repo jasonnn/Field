@@ -105,7 +105,7 @@ public class PythonPlugin implements iPlugin {
 		}
 
 		public boolean throwException(String when, Throwable t, CapturedEnvironment parent) {
-			handleExceptionThrownDuringRunning(when, element, parent == null ? null : parent.element, t);
+			handleExceptionThrownDuringRunning(when, element, (parent == null) ? null : parent.element, t);
 
 			return false;
 		}
@@ -153,7 +153,7 @@ public class PythonPlugin implements iPlugin {
 			configurePythonPostEnvironment(element);
 			stackOfPythonPositionablesExecuting.pop();
 
-			ongoingEnvironment = environments.size() > 0 ? environments.peek() : null;
+			ongoingEnvironment = !environments.isEmpty() ? environments.peek() : null;
 
 			Logging.internal();
 		}
@@ -181,7 +181,7 @@ public class PythonPlugin implements iPlugin {
 		public float getPriority() {
 			Rect o = new Rect(0, 0, 0, 0);
 			element.getFrame(o);
-			return (float) (o.y + o.x / 1000f);
+			return (float) (o.y + (o.x / 1000f));
 		}
 
 		public float getStart() {
@@ -241,7 +241,7 @@ public class PythonPlugin implements iPlugin {
 		@Override
 		public boolean isPaused() {
 			Boolean n = element.getProperty(python_isPaused);
-			return (n != null && n);
+			return ((n != null) && n);
 		}
 
 	}
@@ -316,7 +316,7 @@ public class PythonPlugin implements iPlugin {
 			// it
 			// executing?
 			Boolean is = source.getProperty(python_isExecuting);
-			if (is != null && is.booleanValue() && GLComponentWindow.draft) {
+			if ((is != null) && is && GLComponentWindow.draft) {
 				if (triangles == null) {
 					triangles = new BasicGeometry.TriangleMesh();
 					triangles.rebuildVertex(0).rebuildTriangle(0);
@@ -324,10 +324,10 @@ public class PythonPlugin implements iPlugin {
 				}
 
 				Boolean p = source.getProperty(python_isPaused);
-				boolean paused = p != null && p;
+				boolean paused = (p != null) && p;
 
 				p = source.getProperty(SplineComputingOverride.noFrame);
-				if (p != null && p) {
+				if ((p != null) && p) {
 					ComponentDrawingUtils.drawRectangle(triangle, null, null, (float) bounds.x+2, (float) bounds.y+2, (float) 15, (float) 15, paused ? Constants.paused_execution_color : Constants.execution_color, null);
 					triangles.performPass(null);
 				} else {
@@ -341,13 +341,15 @@ public class PythonPlugin implements iPlugin {
 
 	}
 
-	static public class PythonTextualInformation {
+	public static
+    class PythonTextualInformation {
 		String uid;
 
 		HashMap<String, Object> persistantVariables = new HashMap();
 	}
 
-	static public class UnacknowledgedError {
+	public static
+    class UnacknowledgedError {
 		transient Throwable cause;
 		String when;
 		VisualElementReference parent;
@@ -363,24 +365,24 @@ public class PythonPlugin implements iPlugin {
 
 	}
 
-	static public final String pluginId = "//plugin_python";
+	public static final String pluginId = "//plugin_python";
 
-	static public final VisualElementProperty<String> python_source = new VisualElementProperty<String>("python_source_v");
+	public static final VisualElementProperty<String> python_source = new VisualElementProperty<String>("python_source_v");
 
-	static public final VisualElementProperty<String> python_source_forExecution = new VisualElementProperty<String>("python_source_forExecution", python_source);
+	public static final VisualElementProperty<String> python_source_forExecution = new VisualElementProperty<String>("python_source_forExecution", python_source);
 
-	static public final VisualElementProperty<Boolean> python_isExecuting = new VisualElementProperty<Boolean>("python_isExecuting_");
-	static public final VisualElementProperty<Boolean> python_isPaused = new VisualElementProperty<Boolean>("python_isPaused_");
+	public static final VisualElementProperty<Boolean> python_isExecuting = new VisualElementProperty<Boolean>("python_isExecuting_");
+	public static final VisualElementProperty<Boolean> python_isPaused = new VisualElementProperty<Boolean>("python_isPaused_");
 
-	static public final VisualElementProperty<Stack<UnacknowledgedError>> python_unacknowledgedError = new VisualElementProperty<Stack<UnacknowledgedError>>("python_unacknowledgedError");
+	public static final VisualElementProperty<Stack<UnacknowledgedError>> python_unacknowledgedError = new VisualElementProperty<Stack<UnacknowledgedError>>("python_unacknowledgedError");
 
-	static public final VisualElementProperty<PythonPlugin> python_plugin = new VisualElementProperty<PythonPlugin>("python_plugin_");
+	public static final VisualElementProperty<PythonPlugin> python_plugin = new VisualElementProperty<PythonPlugin>("python_plugin_");
 
-	static public final VisualElementProperty<Globals> python_globals = new VisualElementProperty<Globals>("python_globals_");
+	public static final VisualElementProperty<Globals> python_globals = new VisualElementProperty<Globals>("python_globals_");
 
-	static public final VisualElementProperty<iFunction<String, String>> python_sourceFilter = new VisualElementProperty<iFunction<String, String>>("python_sourceFilter");
+	public static final VisualElementProperty<iFunction<String, String>> python_sourceFilter = new VisualElementProperty<iFunction<String, String>>("python_sourceFilter");
 
-	static public final VisualElementProperty<Map<String, field.core.ui.text.rulers.ExecutedAreas.State>> python_areas = new VisualElementProperty<Map<String, field.core.ui.text.rulers.ExecutedAreas.State>>("python_areas");
+	public static final VisualElementProperty<Map<String, field.core.ui.text.rulers.ExecutedAreas.State>> python_areas = new VisualElementProperty<Map<String, field.core.ui.text.rulers.ExecutedAreas.State>>("python_areas");
 
 	public static String externalPropertyNameToInternalName(String name) {
 		return name;
@@ -398,7 +400,8 @@ public class PythonPlugin implements iPlugin {
 		// return name;
 	}
 
-	static public Object getAttr(iVisualElement from, iVisualElement to, String name) {
+	public static
+    Object getAttr(iVisualElement from, iVisualElement to, String name) {
 		name = externalPropertyNameToInternalName(name);
 
 		// ;//System.out.println(" get attr <"+from+" "+to+" "+name+">");
@@ -414,11 +417,13 @@ public class PythonPlugin implements iPlugin {
 		return r.get();
 	}
 
-	static public Object getAttr(iVisualElement from, String name) {
+	public static
+    Object getAttr(iVisualElement from, String name) {
 		return getAttr(from, from, name);
 	}
 
-	static public Object getLocalProperty(iVisualElement of, String name) {
+	public static
+    Object getLocalProperty(iVisualElement of, String name) {
 		name = externalPropertyNameToInternalName(name);
 		VisualElementProperty<Object> n = new iVisualElement.VisualElementProperty<Object>(name);
 		return of.getProperty(n);
@@ -442,7 +447,8 @@ public class PythonPlugin implements iPlugin {
 		return name;
 	}
 
-	static public List<String> listAttr(iVisualElement from, iVisualElement to) {
+	public static
+    List<String> listAttr(iVisualElement from, iVisualElement to) {
 
 		final List<String> rr = new ArrayList<String>();
 
@@ -467,11 +473,13 @@ public class PythonPlugin implements iPlugin {
 		return rr;
 	}
 
-	static public void redraw(iVisualElement o) {
+	public static
+    void redraw(iVisualElement o) {
 		o.setProperty(iVisualElement.dirty, true);
 	}
 
-	static public void setAttr(iVisualElement from, iVisualElement to, String name, Object value) {
+	public static
+    void setAttr(iVisualElement from, iVisualElement to, String name, Object value) {
 		name = externalPropertyNameToInternalName(name);
 		VisualElementProperty<Object> n = new iVisualElement.VisualElementProperty<Object>(name);
 		n.set(to, to, value);
@@ -482,7 +490,8 @@ public class PythonPlugin implements iPlugin {
 		// topology.end(from);
 	}
 
-	static public void setAttr(iVisualElement to, String name, Object value) {
+	public static
+    void setAttr(iVisualElement to, String name, Object value) {
 		name = externalPropertyNameToInternalName(name);
 		VisualElementProperty<Object> n = new iVisualElement.VisualElementProperty<Object>(name);
 
@@ -495,7 +504,7 @@ public class PythonPlugin implements iPlugin {
 
 	}
 
-	static public PyModule toolsModule;
+	public static PyModule toolsModule;
 
 	protected LocalVisualElement lve;
 
@@ -511,7 +520,7 @@ public class PythonPlugin implements iPlugin {
 
 	Stack<CapturedEnvironment> environments = new Stack<CapturedEnvironment>();
 
-	static public CapturedEnvironment ongoingEnvironment;
+	public static CapturedEnvironment ongoingEnvironment;
 
 	Globals globals = new Globals();
 
@@ -601,7 +610,7 @@ public class PythonPlugin implements iPlugin {
 		PythonInterface.getPythonInterface().setVariable("_environment", capenv);
 
 		final String modWas = PythonInterface.getPythonInterface().getModuleName();
-		PythonInterface.getPythonInterface().setModuleName(element.getProperty(iVisualElement.name) + "[" + element.getUniqueID());
+		PythonInterface.getPythonInterface().setModuleName(element.getProperty(iVisualElement.name) + '[' + element.getUniqueID());
 
 		capenv.exitHandler.put("restore _r", new iUpdateable() {
 			public void update() {

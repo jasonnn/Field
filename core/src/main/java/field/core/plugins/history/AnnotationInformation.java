@@ -86,7 +86,7 @@ public class AnnotationInformation {
 			else
 				break;
 		}
-		while (startstop.right+1 < maxLine) {
+		while ((startstop.right + 1) < maxLine) {
 			ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> x = compressedTrace(startstop.right + 1);
 
 //			;//System.out.println(" considering line <" + (startstop.right + 1) + ">");
@@ -112,7 +112,7 @@ public class AnnotationInformation {
 			else
 				break;
 		}
-		while (startstop.right+1 < maxLine) {
+		while ((startstop.right + 1) < maxLine) {
 			ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> x = compressedTrace(startstop.right + 1);
 			if (equiv(c, x, before))
 				startstop.right++;
@@ -146,14 +146,16 @@ public class AnnotationInformation {
 				//if (m.size() > 0)
 				//	;//System.out.println("           " + m.get(0).getPayload().right + " " + m.get(0).getPayload().left);
 
-				if (m.size() > 0 && m.get(0).getPayload().right != null && m.get(0).getPayload().left != null) {
+				if (!m.isEmpty() && (m.get(0).getPayload().right != null) && (m.get(0).getPayload().left != null)) {
 					String becomes = m.get(0).getPayload().right.get(0).getPayload();
 					String was = m.get(0).getPayload().left.get(0).getPayload();
 					line = (int) m.get(0).getPayload().right.get(0).getTime();
 					a.add(new Triple<VersionNode, Integer, Pair<String, String>>(v, line, new Pair<String, String>(was, becomes)));
 					string = was;
 					//;//System.out.println(" line now <" + line + "> <" + was + " -> " + becomes + ">");
-				} else if (string != null && m.size() > 0 && m.get(0).getPayload().right == null && m.get(0).getPayload().left != null) {
+				} else if ((string != null) && !m.isEmpty() && (m.get(0).getPayload().right == null) && (m.get(0)
+                                                                                                          .getPayload().left
+                                                                                                         != null)) {
 					// line originated here
 					a.add(new Triple<VersionNode, Integer, Pair<String, String>>(v, line, new Pair<String, String>(string, null)));
 					break;
@@ -182,7 +184,10 @@ public class AnnotationInformation {
 		return true;
 	}
 
-	private boolean equiv(ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> c, ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> x, Date before) {
+	private static
+    boolean equiv(ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> c,
+                  ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> x,
+                  Date before) {
 		ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> c2 = new ArrayList<Triple<VersionNode, Integer, Pair<String, String>>>();
 		ArrayList<Triple<VersionNode, Integer, Pair<String, String>>> x2 = new ArrayList<Triple<VersionNode, Integer, Pair<String, String>>>();
 

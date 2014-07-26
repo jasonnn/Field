@@ -47,13 +47,14 @@ public class TripleQuote {
 			} else
 				on = true;
 			ii = ne + 1;
-			if (ii > t.length() - 1)
+			if (ii > (t.length() - 1))
 				return;
 		}
 	}
 
 	@TimingStatistics
-	protected void drawHighlight(JEditorPane ed, Graphics2D g, int start, int stop) throws BadLocationException {
+	protected static
+    void drawHighlight(JEditorPane ed, Graphics2D g, int start, int stop) throws BadLocationException {
 
 		Rectangle left = ed.modelToView(start);
 		Rectangle right = ed.modelToView(stop + 3);

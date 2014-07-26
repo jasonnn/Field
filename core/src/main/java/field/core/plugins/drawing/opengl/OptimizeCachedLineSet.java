@@ -17,7 +17,7 @@ public class OptimizeCachedLineSet {
 		for (CachedLine cc : c) {
 			long hash = getHashFor(cc, ex);
 			CachedLine target = cache.get(hash);
-			if (target != null && hash != -1) {
+			if ((target != null) && (hash != -1)) {
 				concat(cc, target);
 			} else {
 				CachedLine displaced = cache.put(hash, cc);
@@ -34,7 +34,8 @@ public class OptimizeCachedLineSet {
         //System.out.println(" optimized <" + old + " -> " + newSize + ">");
     }
 
-	private long getHashFor(CachedLine cc, Set<String> ex) {
+	private static
+    long getHashFor(CachedLine cc, Set<String> ex) {
 		if (cc.properties == null)
 			return 0;
 		// if (cc.properties.isTrue(iLinearGraphicsContext.filled,

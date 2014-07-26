@@ -34,9 +34,10 @@ import java.util.LinkedHashSet;
 
 public class MinimalGraphWidget2 extends MinimalExpandable implements iRegistersMinimalLayerPainter {
 
-	static public class Component_tuple extends ProvidedComponent {
+	public static
+    class Component_tuple extends ProvidedComponent {
 
-		transient public iUpdateable notify;
+		public transient iUpdateable notify;
 
 		public CubicInterpolatorDynamic<BreakpointFloat> interpolator;
 
@@ -113,7 +114,8 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 		}
 	}
 
-	static public class Component_tuple2 extends ProvidedComponent {
+	public static
+    class Component_tuple2 extends ProvidedComponent {
 
 		protected ExecutesWhen when;
 
@@ -188,7 +190,8 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 		}
 	}
 
-	static public class InterpolatorWithWidget extends CubicInterpolatorDynamic<BreakpointFloat> {
+	public static
+    class InterpolatorWithWidget extends CubicInterpolatorDynamic<BreakpointFloat> {
 		public transient iRegistersMinimalLayerPainter widget;
 
 		public InterpolatorWithWidget() {
@@ -518,7 +521,7 @@ public class MinimalGraphWidget2 extends MinimalExpandable implements iRegisters
 				if (initialDownOn != -1) {
 					LinkedHashMap<String, iUpdateable> items = new LinkedHashMap<String, iUpdateable>();
 
-					items.put("Tangent type, currently \"" + interpolator.getSample(initialDownOn).data.next.toString() + "\"", null);
+					items.put("Tangent type, currently \"" + interpolator.getSample(initialDownOn).data.next.toString() + '"', null);
 					for (final Next t : Next.values()) {
 						String prefix = (t == interpolator.getSample(initialDownOn).data.next) ? "!" : "";
 						items.put(prefix+"    " + t.toString(), new iUpdateable() {

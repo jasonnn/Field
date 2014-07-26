@@ -38,7 +38,7 @@ class ASMClassCtx {
 
     public
     void callAfterClass(VisitEndCallback cb) {
-        if (cv != null && cv instanceof MainVisitorThing) {
+        if ((cv != null) && (cv instanceof MainVisitorThing)) {
             ((MainVisitorThing) cv).callBeforeEnd(cb);
         }
         else {

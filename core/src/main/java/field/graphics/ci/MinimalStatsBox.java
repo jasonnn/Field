@@ -36,7 +36,8 @@ import java.util.List;
 
 public class MinimalStatsBox extends MinimalExpandable {
 
-	static public class State {
+	public static
+    class State {
 		List<Float> previousSample = new ArrayList<Float>();
 		List<Float> ongoingSample = new ArrayList<Float>();
 
@@ -196,7 +197,8 @@ public class MinimalStatsBox extends MinimalExpandable {
 
 	}
 
-	static public class Component extends ProvidedComponent {
+	public static
+    class Component extends ProvidedComponent {
 		State state;
 		OKey<State> localKey;
 		String name;
@@ -573,7 +575,7 @@ public class MinimalStatsBox extends MinimalExpandable {
 
 		}
 
-		if (state.histogramStillborn.equals("") && state.binned != null) {
+		if (state.histogramStillborn != null && state.histogramStillborn.isEmpty() && state.binned != null) {
 			Rectangle inset = this.getBounds();
 
 			// inset.x += insetAmount;
@@ -681,7 +683,14 @@ public class MinimalStatsBox extends MinimalExpandable {
 
 	private Font font;
 
-	private void paintHistogram(Graphics2D g, Rectangle size, int numBins, Color c, Histogram<Integer> binned, float maxBin, float per) {
+	private static
+    void paintHistogram(Graphics2D g,
+                        Rectangle size,
+                        int numBins,
+                        Color c,
+                        Histogram<Integer> binned,
+                        float maxBin,
+                        float per) {
 
 		for (int i = 0; i < numBins + 1; i++) {
 			float v = binned.get(i, 0);

@@ -165,7 +165,8 @@ public class RBFInterpolator implements Serializable {
 	/**
 	 * Returns the number of dimensions in the domain.
 	 */
-	final public int inputDimension() {
+    public final
+    int inputDimension() {
 		return input_dimension;
 	}
 
@@ -217,14 +218,16 @@ public class RBFInterpolator implements Serializable {
 	/**
 	 * Returns the number of interpolation samples stored.
 	 */
-	final public int numExamples() {
+    public final
+    int numExamples() {
 		return examples.size();
 	}
 
 	/**
 	 * Returns the number of dimensions in the range.
 	 */
-	final public int outputDimension() {
+    public final
+    int outputDimension() {
 		return output_dimension;
 	}
 

@@ -91,11 +91,11 @@ public class Connections implements iPlugin{
 		}
 	}
 
-	static public final VisualElementProperty<Connections> connections_plugin = new VisualElementProperty<Connections>("connection_plugin");
+	public static final VisualElementProperty<Connections> connections_plugin = new VisualElementProperty<Connections>("connection_plugin");
 
-	static public final String pluginId = "//plugin_connections";
+	public static final String pluginId = "//plugin_connections";
 
-	static public int uniq;
+	public static int uniq;
 
 	public Map<String, iVisualElement> connections = new HashMap<String, iVisualElement>();
 
@@ -156,13 +156,14 @@ public class Connections implements iPlugin{
 		final GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
 
 		if (askforname)
-		PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(c1.left), "name :", "'"+iVisualElement.name.get(from)+"' to '"+iVisualElement.name.get(to)+"'", new iAcceptor<String>() {
+		PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(c1.left), "name :",
+                                     '\'' +iVisualElement.name.get(from)+"' to '"+iVisualElement.name.get(to)+ '\'', new iAcceptor<String>() {
 			public iAcceptor<String> set(String x) {
 				iVisualElement.name.set(c1.left, c1.left, x);
 				iVisualElement.dirty.set(c1.left, c1.left, true);
 
 				if (frame != null) {
-					OverlayAnimationManager.notifyAsText(from, "created connection '" + to + "'", to.getFrame(null).union(from.getFrame(null)));
+					OverlayAnimationManager.notifyAsText(from, "created connection '" + to + '\'', to.getFrame(null).union(from.getFrame(null)));
 				}
 
 				return this;
@@ -170,7 +171,9 @@ public class Connections implements iPlugin{
 		});
 		else
 		{
-			iVisualElement.name.set(c1.left, c1.left, "'"+from.getProperty(iVisualElement.name)+"'->'"+to.getProperty(iVisualElement.name)+"'");
+			iVisualElement.name.set(c1.left, c1.left,
+                                    '\''
+                                    +from.getProperty(iVisualElement.name)+"'->'"+to.getProperty(iVisualElement.name)+ '\'');
 		}
 
 

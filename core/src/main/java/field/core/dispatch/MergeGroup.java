@@ -21,9 +21,9 @@ import java.util.Map.Entry;
  */
 public class MergeGroup {
 
-	static public final VisualElementProperty<Integer> mergeGroup_visitCount = new VisualElementProperty<Integer>("mergeGroup_visitCount_");
+	public static final VisualElementProperty<Integer> mergeGroup_visitCount = new VisualElementProperty<Integer>("mergeGroup_visitCount_");
 
-	static public final VisualElementProperty<Object> mergeGroup_token = new VisualElementProperty<Object>("mergeGroup_token");
+	public static final VisualElementProperty<Object> mergeGroup_token = new VisualElementProperty<Object>("mergeGroup_token");
 
 	protected final iVisualElement owner;
 
@@ -56,7 +56,7 @@ public class MergeGroup {
 			Ref<Object> tok = new Ref<Object>(null);
 			new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(v).getProperty(v, mergeGroup_token, tok);
 			Object object = tok.get();
-			if (object != null && v instanceof VisualElement) {
+			if ((object != null) && (v instanceof VisualElement)) {
 				createdElements.put(object, ((VisualElement) v));
 				createdComponents.put(object, v.getProperty(iVisualElement.localView));
 				createdOverrides.put(object, v.getProperty(iVisualElement.overrides));
@@ -131,10 +131,10 @@ public class MergeGroup {
 				int hash = getPropertyHash(element);
 				assert element != null : createdElements;
 				Integer visitedAtI = element.getProperty(mergeGroup_visitCount);
-				int vistedAt = visitedAtI == null ? -1 : visitedAtI;
+				int vistedAt = (visitedAtI == null) ? -1 : visitedAtI;
 				if (vistedAt != visitCount) {
 					Integer oldHashI = propertyHashes.get(element);
-					int oldHash = oldHashI == null ? -1 : oldHashI;
+					int oldHash = (oldHashI == null) ? -1 : oldHashI;
 
 
 					if (shouldCull(element, hash, oldHash)) {
@@ -203,7 +203,7 @@ public class MergeGroup {
 	}
 
 	protected boolean shouldCull(VisualElement element, int hash, int oldHash) {
-		return hash == oldHash || oldHash == -1;
+		return (hash == oldHash) || (oldHash == -1);
 	}
 
 }

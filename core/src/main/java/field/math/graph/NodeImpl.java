@@ -139,13 +139,13 @@ public class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializabl
 		
 		@Override
 		public boolean equals(Object obj) {
-			return obj instanceof MWeakReference && ((MWeakReference)obj).get()==this.get();
+			return (obj instanceof MWeakReference) && (((MWeakReference) obj).get() == this.get());
 		}
 		
 		@Override
 		public int hashCode() {
 			T t = this.get();
-			return t==null ? 0 : t.hashCode();
+			return (t == null) ? 0 : t.hashCode();
 		}
 		
 	}

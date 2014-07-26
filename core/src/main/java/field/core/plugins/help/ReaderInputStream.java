@@ -80,7 +80,7 @@ public class ReaderInputStream extends InputStream {
 		}
 
 		byte result;
-		if (slack != null && begin < slack.length) {
+		if ((slack != null) && (begin < slack.length)) {
 			result = slack[begin];
 			if (++begin == slack.length) {
 				slack = null;
@@ -131,7 +131,7 @@ public class ReaderInputStream extends InputStream {
 			}
 		}
 
-		if (len > slack.length - begin) {
+		if (len > (slack.length - begin)) {
 			len = slack.length - begin;
 		}
 

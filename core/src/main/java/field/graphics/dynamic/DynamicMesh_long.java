@@ -128,8 +128,12 @@ public class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAc
 
 			}
 
-			if ((shrink_policy_tries != 0) && (closeCount % shrink_policy_tries == 0)) {
-				if ((vertexCursor / shrink_policy_min_fraction < cachedVertexBuffer.capacity() / 3) || (triangleCursor / shrink_policy_min_fraction < cachedTriangleBuffer.capacity() / elementSize)) {
+			if ((shrink_policy_tries != 0) && ((closeCount % shrink_policy_tries) == 0)) {
+				if (((vertexCursor / shrink_policy_min_fraction) < (cachedVertexBuffer.capacity()
+                                                                    / 3)) || ((triangleCursor
+                                                                               / shrink_policy_min_fraction)
+                                                                              < (cachedTriangleBuffer.capacity()
+                                                                                 / elementSize))) {
 					shrink = true;
 					shrink_vertex_to = (int) (vertexCursor * Math.sqrt(growthFactor));
 					shrink_triangle_to = (int) (triangleCursor * Math.sqrt(growthFactor));
@@ -143,7 +147,7 @@ public class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAc
 
 	HashedCopy copy;
 
-	int[] zeroTo15 = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+	int[] zeroTo15 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
 	@HiddenInAutocomplete
 	public void copyFrom(SubMesh_long subMesh) {
@@ -612,7 +616,9 @@ public class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAc
 		checkVertexStorage(n, 3);
 		int vertexCursor3 = 3 * n;
 
-		assert vertexCursor3 < cachedVertexBuffer.capacity() : n + " " + vertexCursor3 + " " + cachedVertexBuffer.capacity() + " " + cachedVertexBuffer.limit();
+		assert vertexCursor3 < cachedVertexBuffer.capacity() : n + " " + vertexCursor3 + ' '
+                                                               + cachedVertexBuffer.capacity() + ' '
+                                                               + cachedVertexBuffer.limit();
 
 		cachedVertexBuffer.put(vertexCursor3, v1.get(0));
 		cachedVertexBuffer.put(vertexCursor3 + 1, v1.get(1));

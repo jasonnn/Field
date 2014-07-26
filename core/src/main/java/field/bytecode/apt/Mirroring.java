@@ -52,7 +52,8 @@ public class Mirroring {
 
 	// the Mirror implementations
 
-	static public class MirrorFloatMember<t_class> extends MirrorMember<t_class, Float> {
+	public static
+    class MirrorFloatMember<t_class> extends MirrorMember<t_class, Float> {
 
 		public MirrorFloatMember(Class on, String name) {
 			super(on, name, Float.TYPE);
@@ -108,7 +109,8 @@ public class Mirroring {
 
 	}
 
-	static public class MirrorDoubleMember<t_class> extends MirrorMember<t_class, Double> {
+	public static
+    class MirrorDoubleMember<t_class> extends MirrorMember<t_class, Double> {
 
 		public MirrorDoubleMember(Class on, String name) {
 			super(on, name, Double.TYPE);
@@ -165,7 +167,8 @@ public class Mirroring {
 	}
 
 
-	static public class MirrorMember<t_class, t_is> implements iMethodMember<t_class, t_is> {
+	public static
+    class MirrorMember<t_class, t_is> implements iMethodMember<t_class, t_is> {
 		protected Field field;
 
 		public MirrorMember(Class on, String name, Class type) {
@@ -217,7 +220,8 @@ public class Mirroring {
 
 	}
 
-	static public class MirrorMethod<t_class, t_returns, t_accepts> implements iMethodFunction<t_class, t_returns, t_accepts> {
+	public static
+    class MirrorMethod<t_class, t_returns, t_accepts> implements iMethodFunction<t_class, t_returns, t_accepts> {
 		protected Method method;
 
 		public MirrorMethod(Class on, String name, Class[] parameters) {
@@ -297,7 +301,7 @@ public class Mirroring {
 					// one
 					// stage
 					// earlier
-					if (to.size() == 0)
+					if (to.isEmpty())
 						return Collections.EMPTY_LIST;
 					if (to.size() == 1)
 						return (Collection<? extends t_returns>) Collections.singletonList(invoke(to.iterator().next(), in));
@@ -352,7 +356,7 @@ public class Mirroring {
 
 		protected Object invoke(t_class target, Object... with) {
 			try {
-				if (with.length==1 && with[0] instanceof Object[])
+				if ((with.length == 1) && (with[0] instanceof Object[]))
 					return method.invoke(target, (Object[]) with[0]);
 				else
 					return method.invoke(target, with);
@@ -364,7 +368,8 @@ public class Mirroring {
 		}
 	}
 
-	static public class MirrorNoArgsMethod<t_class, t_returns> implements iMethodFunction<t_class, t_returns, Object>, iFunction<t_returns, t_class> {
+	public static
+    class MirrorNoArgsMethod<t_class, t_returns> implements iMethodFunction<t_class, t_returns, Object>, iFunction<t_returns, t_class> {
 		protected Method method;
 
 		public MirrorNoArgsMethod(Class on, String name) {
@@ -429,7 +434,7 @@ public class Mirroring {
 					// one
 					// stage
 					// earlier
-					if (to.size() == 0)
+					if (to.isEmpty())
 						return Collections.EMPTY_LIST;
 					if (to.size() == 1)
 						return (Collection<? extends t_returns>) Collections.singletonList(invoke(to.iterator().next(), in));
@@ -465,7 +470,7 @@ public class Mirroring {
 
 		protected <A> Object invoke(final A to, final Object... with) {
 			try {
-				if (with.length==1 && with[0] instanceof Object[])
+				if ((with.length == 1) && (with[0] instanceof Object[]))
 					return method.invoke(to, (Object[]) with[0]);
 				else
 					return method.invoke(to, with);
@@ -478,7 +483,8 @@ public class Mirroring {
 
 	}
 
-	static public class MirrorNoReturnMethod<t_class, t_accepts> implements iMethodFunction<t_class, Object, t_accepts> {
+	public static
+    class MirrorNoReturnMethod<t_class, t_accepts> implements iMethodFunction<t_class, Object, t_accepts> {
 		protected Method method;
 
 		public MirrorNoReturnMethod(Class on, String name, Class[] parameters) {
@@ -553,7 +559,7 @@ public class Mirroring {
                 @SuppressWarnings("unchecked")
                 public
                 Collection<?> f(t_accepts in) {
-                    if (to.size() == 0)
+                    if (to.isEmpty())
 						return Collections.EMPTY_LIST;
 					if (to.size() == 1)
 						return Collections.singletonList(invoke(to.iterator().next(), in));
@@ -590,7 +596,7 @@ public class Mirroring {
 
 		protected <A> Object invoke(final A to, final Object... with) {
 			try {
-				if (with.length==1 && with[0] instanceof Object[])
+				if ((with.length == 1) && (with[0] instanceof Object[]))
 					return method.invoke(to, (Object[]) with[0]);
 				else
 					return method.invoke(to, with);
@@ -608,7 +614,8 @@ public class Mirroring {
 
 	}
 
-	static public class MirrorNoReturnNoArgsMethod<t_class> implements iMethodFunction<t_class, Object, Object> {
+	public static
+    class MirrorNoReturnNoArgsMethod<t_class> implements iMethodFunction<t_class, Object, Object> {
 		protected Method method;
 
 		public MirrorNoReturnNoArgsMethod(Class on, String name) {
@@ -699,7 +706,7 @@ public class Mirroring {
 
 		protected <A> void invoke(final A to, final Object... with) {
 			try {
-				if (with.length==1 && with[0] instanceof Object[])
+				if ((with.length == 1) && (with[0] instanceof Object[]))
 					method.invoke(to, (Object[]) with[0]);
 				else
 					method.invoke(to, with);

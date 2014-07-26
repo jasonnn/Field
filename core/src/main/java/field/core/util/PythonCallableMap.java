@@ -131,7 +131,7 @@ public class PythonCallableMap implements iCallable {
 	public Object invokeChained(Object... a) {
 		PythonInterface.getPythonInterface().setVariable("hooks", this);
 
-		Object[] aa = new Object[a == null ? 1 : a.length + 1];
+		Object[] aa = new Object[(a == null) ? 1 : (a.length + 1)];
 		if (a != null)
 			System.arraycopy(a, 0, aa, 1, a.length);
 		aa[0] = Py.None;
@@ -149,11 +149,11 @@ public class PythonCallableMap implements iCallable {
 			}
 			clear.clear();
 		}
-		return aa[0] instanceof PyObject ? Py.tojava((PyObject) aa[0], Object.class) : aa[0];
+		return (aa[0] instanceof PyObject) ? Py.tojava((PyObject) aa[0], Object.class) : aa[0];
 	}
 
 	public boolean isEmpty() {
-		return known.size() == 0;
+		return known.isEmpty();
 	}
 
 	public void remove() {
@@ -186,7 +186,8 @@ public class PythonCallableMap implements iCallable {
 			this.known.putAll(u.known);
 	}
 	
-	static public PythonCallableMap merge(iVisualElement from, VisualElementProperty<PythonCallableMap> parameter)
+	public static
+    PythonCallableMap merge(iVisualElement from, VisualElementProperty<PythonCallableMap> parameter)
 	{
 		return new FastVisualElementOverridesPropertyCombiner<PythonCallableMap, PythonCallableMap>(false).getProperty(from, parameter, new iCombiner<PythonCallableMap, PythonCallableMap>() {
 

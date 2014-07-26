@@ -10,7 +10,8 @@ package field.math.linalg;
 
 public class EigenStructure {
 
-	static public class EigenStructureException extends RuntimeException {
+	public static
+    class EigenStructureException extends RuntimeException {
 
 		public EigenStructureException() {
 			super();
@@ -29,7 +30,8 @@ public class EigenStructure {
 		}
 	}
 
-	static public class DimensionMismatchException extends RuntimeException {
+	public static
+    class DimensionMismatchException extends RuntimeException {
 
 		public DimensionMismatchException() {
 			super();
@@ -103,7 +105,7 @@ public class EigenStructure {
 		return new VectorN(eigenvalues);
 	}
 
-	private static double EPS = 0.000000001;
+	private static final double EPS = 0.000000001;
 
 	/* 
 	 Computes all eigenvalues and eigenvectors of a real symmetric MatrixN <code>a</code>.
@@ -117,8 +119,8 @@ public class EigenStructure {
         int j, iq, ip, i, nrot;
 		double tresh, theta, tau, t, sm, s, h, g, c;
 
-		double b[] = new double[n];
-		double z[] = new double[n];
+		double[] b = new double[n];
+		double[] z = new double[n];
 
 		for (ip = 0; ip < n; ip++) {
 			/* Initialize the identity MatrixN */

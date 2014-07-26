@@ -33,7 +33,8 @@ public class NewInspector2 {
         valid, unset, mixed
     }
 
-	static public abstract class iIO<T> {
+	public abstract static
+    class iIO<T> {
 
 		public iIO(String name) {
 			this.name = name;
@@ -42,14 +43,18 @@ public class NewInspector2 {
 		public String name;
 		public Class<? extends BaseControl<T>> editor;
 
-		abstract public T getValue();
+		public abstract
+        T getValue();
 
-		abstract public Status getStatus();
+		public abstract
+        Status getStatus();
 
-		abstract public void setValue(T s);
+		public abstract
+        void setValue(T s);
 	}
 
-	static public abstract class Inspected<T> extends Composite {
+	public abstract static
+    class Inspected<T> extends Composite {
 
 		protected iIO<T> io;
 
@@ -60,7 +65,8 @@ public class NewInspector2 {
 				this.name = io.name;
 		}
 
-		abstract protected void setValue(T s);
+		protected abstract
+        void setValue(T s);
 
 		public String name;
 
@@ -69,7 +75,8 @@ public class NewInspector2 {
 				io.setValue(s);
 		}
 
-		abstract protected Status getStatus();
+		protected abstract
+        Status getStatus();
 	}
 
 	private Button actions;
@@ -192,13 +199,15 @@ public class NewInspector2 {
 
 		}
 
-		abstract protected void makeControl();
+		protected abstract
+        void makeControl();
 
 		public T getValue() {
 			return io.getValue();
 		}
 
-		abstract public void setValue(T s);
+		public abstract
+        void setValue(T s);
 
 		@Override
 		protected Status getStatus() {

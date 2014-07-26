@@ -43,5 +43,5 @@ abstract class ClEditOrStayConstraint extends ClConstraint {
 	protected ClVariable _variable;
 
 	// cache the expresion
-	private ClLinearExpression _expression;
+	private final ClLinearExpression _expression;
 }

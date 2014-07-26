@@ -5,13 +5,15 @@ import java.util.Map;
 
 public interface ScriptingInterface {
 
-	static public interface iGlobalTrap {
+	public static
+    interface iGlobalTrap {
 		public Object findItem(String name, Object actuallyIs);
 
 		public Object setItem(String name, Object was, Object to);
 	}
 	
-	static public enum Language {
+	public static
+    enum Language {
         python, ruby, scala, jsr, ioke
     }
 

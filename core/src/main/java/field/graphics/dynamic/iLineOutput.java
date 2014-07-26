@@ -59,7 +59,8 @@ public interface iLineOutput extends iInside {
 
 	public void setAuxOnSpline(int id, float a1, float a2, float a3, float a4);
 
-	static public class Join implements iLineOutput {
+	public static
+    class Join implements iLineOutput {
 		private final iLineOutput[] o;
 
 		public Join(iLineOutput[] o) {
@@ -127,7 +128,8 @@ public interface iLineOutput extends iInside {
 		}
 	}
 
-	static public class Defaults implements iLineOutput {
+	public static
+    class Defaults implements iLineOutput {
 		iLineOutput delegate;
 
 		Map<Integer, iToFloatArray> defaults = new HashMap<Integer, iToFloatArray>();
@@ -230,7 +232,8 @@ public interface iLineOutput extends iInside {
 
 	}
 
-	static public class Force implements iLineOutput {
+	public static
+    class Force implements iLineOutput {
 		iLineOutput delegate;
 
 		Map<Integer, iToFloatArray> defaults = new HashMap<Integer, iToFloatArray>();

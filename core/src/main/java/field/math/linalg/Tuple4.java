@@ -340,7 +340,7 @@ public abstract class Tuple4 implements java.io.Serializable, Cloneable {
 	 * @return the String representation
 	 */
 	public String toString() {
-		return "(" + this.x + ", " + this.y + ", " + this.z + ", " + this.w + ")";
+		return "(" + this.x + ", " + this.y + ", " + this.z + ", " + this.w + ')';
 	}
 
 	/**
@@ -352,7 +352,7 @@ public abstract class Tuple4 implements java.io.Serializable, Cloneable {
 	 */
 	public boolean equals(Tuple4 t1) {
 		try {
-			return (this.x == t1.x && this.y == t1.y && this.z == t1.z && this.w == t1.w);
+			return ((this.x == t1.x) && (this.y == t1.y) && (this.z == t1.z) && (this.w == t1.w));
 		} catch (NullPointerException e2) {
 			return false;
 		}
@@ -368,7 +368,7 @@ public abstract class Tuple4 implements java.io.Serializable, Cloneable {
 	public boolean equals(Object t1) {
 		try {
 			Tuple4 t2 = (Tuple4) t1;
-			return (this.x == t2.x && this.y == t2.y && this.z == t2.z && this.w == t2.w);
+			return ((this.x == t2.x) && (this.y == t2.y) && (this.z == t2.z) && (this.w == t2.w));
 		} catch (NullPointerException e2) {
 			return false;
 		} catch (ClassCastException e1) {
@@ -389,19 +389,19 @@ public abstract class Tuple4 implements java.io.Serializable, Cloneable {
 		float diff;
 
 		diff = x - t1.x;
-		if ((diff < 0 ? -diff : diff) > epsilon)
+		if (((diff < 0) ? -diff : diff) > epsilon)
 			return false;
 
 		diff = y - t1.y;
-		if ((diff < 0 ? -diff : diff) > epsilon)
+		if (((diff < 0) ? -diff : diff) > epsilon)
 			return false;
 
 		diff = z - t1.z;
-		if ((diff < 0 ? -diff : diff) > epsilon)
+		if (((diff < 0) ? -diff : diff) > epsilon)
 			return false;
 
 		diff = w - t1.w;
-		if ((diff < 0 ? -diff : diff) > epsilon)
+		if (((diff < 0) ? -diff : diff) > epsilon)
 			return false;
 
 		return true;

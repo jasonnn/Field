@@ -24,7 +24,7 @@ public final class VectorN implements Cloneable, Serializable {
 	 *                     if dimensions are wrong It IS safe for a == out or b == out.
 	 */
 	public static void add(VectorN a, VectorN b, float w, VectorN out) {
-		if (a.dim() != b.dim() || a.dim() != out.dim()) {
+		if ((a.dim() != b.dim()) || (a.dim() != out.dim())) {
 			throw new DimensionMismatchException("add: can't add Vec with different dimension");
 		}
 		for (int i = 0; i < a.dim(); i++) {
@@ -40,7 +40,7 @@ public final class VectorN implements Cloneable, Serializable {
 	 *                     if dimensions are wrong It IS safe for a == out or b == out.
 	 */
 	public static void add(VectorN a, VectorN b, VectorN out) {
-		if (a.dim() != b.dim() || a.dim() != out.dim()) {
+		if ((a.dim() != b.dim()) || (a.dim() != out.dim())) {
 			throw new DimensionMismatchException("add: can't add Vec with different dimension");
 		}
 		for (int i = 0; i < a.dim(); i++) {
@@ -73,7 +73,7 @@ public final class VectorN implements Cloneable, Serializable {
 	 */
 	public static void lerp(VectorN from, float alpha, VectorN to, VectorN out) {
 		for (int i = 0; i < from.dim(); i++) {
-			out.set(i, from.get(i) * (1 - alpha) + to.get(i) * alpha);
+			out.set(i, (from.get(i) * (1 - alpha)) + (to.get(i) * alpha));
 		}
 	}
 
@@ -123,7 +123,7 @@ public final class VectorN implements Cloneable, Serializable {
 	 *                     if dimensions are wrong It IS safe for a == out or b == out.
 	 */
 	public static void sub(VectorN a, VectorN b, VectorN out) {
-		if (a.dim() != b.dim() || a.dim() != out.dim()) {
+		if ((a.dim() != b.dim()) || (a.dim() != out.dim())) {
 			throw new DimensionMismatchException("sub: can't add Vec with different dimension");
 		}
 		for (int i = 0; i < a.dim(); i++) {
@@ -282,7 +282,7 @@ public final class VectorN implements Cloneable, Serializable {
 	public double angleBetween(VectorN b) {
 		double amag = this.mag();
 		double bmag = b.mag();
-		if (amag == 0.0 || bmag == 0.0)
+		if ((amag == 0.0) || (bmag == 0.0))
 			return 0.0;
 
 		double d = this.dot(b);
@@ -335,7 +335,7 @@ public final class VectorN implements Cloneable, Serializable {
 	 *                     if this or b is not of dimension 3.
 	 */
 	public VectorN cross(VectorN b) throws IllegalArgumentException {
-		if (dim() != 3 || b.dim() != 3) {
+		if ((dim() != 3) || (b.dim() != 3)) {
 			throw new IllegalArgumentException("this.cross(Vec b, Vec out): this and b must dimension 3 vectors");
 		}
 
@@ -353,7 +353,7 @@ public final class VectorN implements Cloneable, Serializable {
 	 *                     if this or b is not of dimension 3.
 	 */
 	public void cross(VectorN b, VectorN out) throws IllegalArgumentException {
-		if (dim() != 3 || b.dim() != 3) {
+		if ((dim() != 3) || (b.dim() != 3)) {
 			throw new IllegalArgumentException("this.cross(Vec b): this and b must dimension 3 vectors");
 		}
 
@@ -361,9 +361,9 @@ public final class VectorN implements Cloneable, Serializable {
 		if (out.dim() > 3)
 			out.zero();
 
-		float x = rep[1] * b.rep[2] - rep[2] * b.rep[1];
-		float y = -rep[0] * b.rep[2] + rep[2] * b.rep[0];
-		float z = rep[0] * b.rep[1] - rep[1] * b.rep[0];
+		float x = (rep[1] * b.rep[2]) - (rep[2] * b.rep[1]);
+		float y = (-rep[0] * b.rep[2]) + (rep[2] * b.rep[0]);
+		float z = (rep[0] * b.rep[1]) - (rep[1] * b.rep[0]);
 
 		out.rep[0] = x;
 		out.rep[1] = y;
@@ -789,8 +789,8 @@ public final class VectorN implements Cloneable, Serializable {
 	public String toString() {
 		String s = "[ ";
 		if (dim() > 0) {
-			for (int i = 0; i < dim() - 1; i++) {
-				s = s + rep[i] + " ";
+			for (int i = 0; i < (dim() - 1); i++) {
+				s = s + rep[i] + ' ';
 			}
 			s = s + rep[dim() - 1] + "] ";
 		} else {

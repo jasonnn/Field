@@ -6,7 +6,7 @@ import field.core.plugins.BaseSimplePlugin;
 
 public class TreeBrowserPlugin  extends BaseSimplePlugin{
     
-	static public final VisualElementProperty<TreeBrowserPlugin> generalTree= new VisualElementProperty<TreeBrowserPlugin>("generalTree");
+	public static final VisualElementProperty<TreeBrowserPlugin> generalTree= new VisualElementProperty<TreeBrowserPlugin>("generalTree");
 	private TreeBrowser tree;
     
 	

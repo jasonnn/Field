@@ -10,7 +10,8 @@ import java.util.Map.Entry;
 public class Dict implements Serializable {
 	private static final long serialVersionUID = 4506062700963421662L;
 
-	static public class Prop<T> implements Serializable {
+	public static
+    class Prop<T> implements Serializable {
 		String name;
 
 		public Prop(String name) {
@@ -98,7 +99,7 @@ public class Dict implements Serializable {
 	public float getFloat(Prop<? extends Number> n, float def) {
 		Object x = dictionary.get(n);
 		if (x instanceof Float[])
-			return ((Float[]) x)[0].floatValue();
+			return ((Float[]) x)[0];
 		if (x instanceof float[])
 			return ((float[]) x)[0];
 
@@ -132,7 +133,7 @@ public class Dict implements Serializable {
 			if (v instanceof PyObject)
 				c += System.identityHashCode(v);
 			else
-				c += (v == null ? 0 : v.hashCode());
+				c += ((v == null) ? 0 : v.hashCode());
 		}
 		return c;
 	}
@@ -149,7 +150,7 @@ public class Dict implements Serializable {
 		if (p instanceof Number)
 			return ((Number) p).intValue() > 0;
 		if (p instanceof String)
-			return ((String) p).length() > 0;
+			return !((String) p).isEmpty();
 		return true;
 	}
 
@@ -219,7 +220,9 @@ public class Dict implements Serializable {
 		long start = 1;
 		Set<Entry<Prop, Object>> e = dictionary.entrySet();
 		for (Entry ee : e) {
-			start = start * 31L + (long) (ee.getValue() instanceof PyObject ? System.identityHashCode(ee.getValue()) : ee.hashCode());
+			start = start * 31L + (long) ((ee.getValue() instanceof PyObject)
+                                          ? System.identityHashCode(ee.getValue())
+                                          : ee.hashCode());
 		}
 		return start;
 	}
@@ -229,7 +232,9 @@ public class Dict implements Serializable {
 		Set<Entry<Prop, Object>> e = dictionary.entrySet();
 		for (Entry<Prop, Object> ee : e) {
 			if (!ex.contains(ee.getKey().name))
-				start = start * 31L + (long) (ee.getValue() instanceof PyObject ? System.identityHashCode(ee.getValue()) : ee.hashCode());
+				start = start * 31L + (long) ((ee.getValue() instanceof PyObject)
+                                              ? System.identityHashCode(ee.getValue())
+                                              : ee.hashCode());
 		}
 		return start;
 	}

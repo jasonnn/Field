@@ -15,14 +15,15 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Visitors {
 
-	static public class BaseFilter {
+	public static
+    class BaseFilter {
 		CachedLineCursor currentInput;
 
 		CachedLineCursor currentOutput;
 
 		CachedLine out = new CachedLine();
 
-		private CachedLine in;
+		//private CachedLine in;
 
 		public BaseFilter() {
 		}
@@ -32,7 +33,7 @@ public class Visitors {
 			CachedLineCursor c = new CachedLineCursor(out);
 			currentOutput = c;
 			currentInput = new CachedLineCursor(in);
-			this.in = in;
+		//	this.in = in;
 
 			while (c.hasNextSegment()) {
 				c.next();
@@ -74,7 +75,7 @@ public class Visitors {
 			CachedLineCursor c = new CachedLineCursor(out);
 			currentOutput = c;
 			currentInput = new CachedLineCursor(in);
-			this.in = in;
+			//this.in = in;
 
 			while (c.hasNextSegment()) {
 				currentInput.next();
@@ -423,7 +424,7 @@ public class Visitors {
 		}
 
 		public boolean isCubicOutOf() {
-			return currentInput.after == null ? false : currentInput.after.method.equals(iLine_m.cubicTo_m);
+			return currentInput.after != null && currentInput.after.method.equals(iLine_m.cubicTo_m);
 		}
 
         public static
@@ -446,7 +447,8 @@ public class Visitors {
     }
 
 	// python can't enum yet, and, anyway, some of this is dynamic
-	static public interface WritingReturn {
+    public static
+    interface WritingReturn {
 
 		public Needs needsLeftTangent();
 
@@ -462,7 +464,8 @@ public class Visitors {
 		public Vector2 setPosition(Vector2 out, CachedLineCursor now);
 	}
 
-	static public class Corner implements WritingReturn {
+	public static
+    class Corner implements WritingReturn {
 		final Vector2 left;
 
 		final Vector2 right;
@@ -490,8 +493,8 @@ public class Visitors {
 					return null;
 				}
 
-				Vector2 beforeAt = now.before.getDestination(null);
-				Vector2 hereAt = now.current.getDestination(null);
+				Vector2 beforeAt = now.before.getDestination();
+				Vector2 hereAt = now.current.getDestination();
 				beforeAt.sub(hereAt).scale(1 / 3f).add(hereAt);
 				out.setValue(beforeAt);
 			}
@@ -515,8 +518,8 @@ public class Visitors {
 					return null;
 				}
 
-				Vector2 nextAt = now.after.getDestination(null);
-				Vector2 hereAt = now.current.getDestination(null);
+				Vector2 nextAt = now.after.getDestination();
+				Vector2 hereAt = now.current.getDestination();
 				nextAt.sub(hereAt).scale(1 / 3f).add(hereAt);
 				out.setValue(nextAt);
 			}
@@ -529,13 +532,15 @@ public class Visitors {
 	}
 
 	// for ApplyTool
-	static public class TCorner extends Corner {
+    public static
+    class TCorner extends Corner {
 		public TCorner() {
 			super(null, null);
 		}
 	}
 
-	static public class Smooth implements WritingReturn {
+	public static
+    class Smooth implements WritingReturn {
 		final Vector2 left;
 
 		final Vector2 right;
@@ -571,8 +576,8 @@ public class Visitors {
 			}
 
 			Vector2 nextAt = now.after == null ? null : now.getNextDestination(null);
-			Vector2 beforeAt = now.before == null ? null : now.before.getDestination(null);
-			Vector2 hereAt = now.current.getDestination(null);
+			Vector2 beforeAt = now.before == null ? null : now.before.getDestination();
+			Vector2 hereAt = now.current.getDestination();
 
 			System.err.println("        " + nextAt + " " + hereAt + " " + beforeAt);
 
@@ -594,10 +599,8 @@ public class Visitors {
 			}
 
 			if (beforeAt == null) {
-				if (nextAt == null)
-					return out;
 
-				nextAt.sub(hereAt).scale(-1 / 3f).add(hereAt);
+                nextAt.sub(hereAt).scale(-1 / 3f).add(hereAt);
 				if (out != null)
 					nextAt.interpolate(out, 1 - amount);
 				if (out == null) {
@@ -644,9 +647,9 @@ public class Visitors {
 				return right;
 			}
 
-			Vector2 nextAt = now.after == null ? null : now.after.getDestination(null);
-			Vector2 beforeAt = now.before == null ? null : now.before.getDestination(null);
-			Vector2 hereAt = now.current.getDestination(null);
+			Vector2 nextAt = now.after == null ? null : now.after.getDestination();
+			Vector2 beforeAt = now.before == null ? null : now.before.getDestination();
+			Vector2 hereAt = now.current.getDestination();
 
 			System.err.println("        " + nextAt + " " + hereAt + " " + beforeAt);
 
@@ -665,10 +668,8 @@ public class Visitors {
 			}
 
 			if (beforeAt == null) {
-				if (nextAt == null)
-					return out;
 
-				nextAt.sub(hereAt).scale(1 / 3f).add(hereAt);
+                nextAt.sub(hereAt).scale(1 / 3f).add(hereAt);
 				if (out != null)
 					nextAt.interpolate(out, 1 - amount);
 				if (out == null) {
@@ -706,13 +707,15 @@ public class Visitors {
 
 	}
 
-	static public class TSmooth extends Smooth {
+	public static
+    class TSmooth extends Smooth {
 		public TSmooth() {
 			super(null, null, 1);
 		}
 	}
 
-	static public class NormalizeTangentLength implements WritingReturn {
+	public static
+    class NormalizeTangentLength implements WritingReturn {
 		private final float normalizeAmount;
 
 		private final float normalizeTo;
@@ -738,9 +741,9 @@ public class Visitors {
 
 		public Vector2 setLeftTangent(Vector2 out, CachedLineCursor now) {
 
-			Vector2 nextAt = now.after == null ? null : now.after.getDestination(null);
-			Vector2 beforeAt = now.before == null ? null : now.before.getDestination(null);
-			Vector2 hereAt = now.current.getDestination(null);
+			Vector2 nextAt = now.after == null ? null : now.after.getDestination();
+			Vector2 beforeAt = now.before == null ? null : now.before.getDestination();
+			Vector2 hereAt = now.current.getDestination();
 
 			if (nextAt == null) {
 				if (beforeAt == null)
@@ -759,10 +762,8 @@ public class Visitors {
 				out.interpolate(beforeAt, applyAmount);
 				return out;
 			} else if (beforeAt == null) {
-				if (nextAt == null)
-					return out;
 
-				float m = nextAt.sub(hereAt).mag();
+                float m = nextAt.sub(hereAt).mag();
 				if (m < 1e-10)
 					return out;
 
@@ -771,8 +772,8 @@ public class Visitors {
 					return out;
 
 				nextAt.sub(hereAt).scale(-m2 / m).add(hereAt);
-				if (out == null)
-					return beforeAt;
+				if (out == null) return null;
+					//return beforeAt;
 
 				out.interpolate(nextAt, applyAmount);
 				return out;
@@ -798,9 +799,9 @@ public class Visitors {
 
 		public Vector2 setRightTangent(Vector2 out, CachedLineCursor now) {
 
-			Vector2 nextAt = now.after == null ? null : now.after.getDestination(null);
-			Vector2 beforeAt = now.before == null ? null : now.before.getDestination(null);
-			Vector2 hereAt = now.current.getDestination(null);
+			Vector2 nextAt = now.after == null ? null : now.after.getDestination();
+			Vector2 beforeAt = now.before == null ? null : now.before.getDestination();
+			Vector2 hereAt = now.current.getDestination();
 
 			if (nextAt == null) {
 				if (beforeAt == null)
@@ -819,10 +820,8 @@ public class Visitors {
 				out.interpolate(beforeAt, applyAmount);
 				return out;
 			} else if (beforeAt == null) {
-				if (nextAt == null)
-					return out;
 
-				float m = nextAt.sub(hereAt).mag();
+                float m = nextAt.sub(hereAt).mag();
 				if (m < 1e-10)
 					return out;
 
@@ -832,7 +831,7 @@ public class Visitors {
 
 				nextAt.sub(hereAt).scale(m2 / m).add(hereAt);
 				if (out == null)
-					return beforeAt;
+					return null;//beforeAt;
 
 				out.interpolate(nextAt, applyAmount);
 				return out;
@@ -861,13 +860,15 @@ public class Visitors {
 		}
 	}
 
-	static public class TNormalizeTangentLength extends NormalizeTangentLength {
+	public static
+    class TNormalizeTangentLength extends NormalizeTangentLength {
 		public TNormalizeTangentLength() {
 			super(1, 0.33f, 0, 1f);
 		}
 	}
 
-	static public class ContinueLeftward implements WritingReturn {
+	public static
+    class ContinueLeftward implements WritingReturn {
 		final float scaleTotal;
 
 		final float scaleInOut;
@@ -891,7 +892,7 @@ public class Visitors {
 		public Vector2 setLeftTangent(Vector2 out, CachedLineCursor now) {
 
 			Vector2 nextAt = now.after == null ? null : (now.after.method.equals(iLine_m.cubicTo_m) ? now.after.getAt(0) : now.after.getDestination(null));
-			Vector2 hereAt = now.current.getDestination(null);
+			Vector2 hereAt = now.current.getDestination();
 
 			if (nextAt == null)
 				return out;
@@ -914,13 +915,15 @@ public class Visitors {
 		}
 	}
 
-	static public class TContinueLeftward extends ContinueLeftward {
+	public static
+    class TContinueLeftward extends ContinueLeftward {
 		public TContinueLeftward() {
 			super(1, 1, 1);
 		}
 	}
 
-	static public class ContinueRightward implements WritingReturn {
+	public static
+    class ContinueRightward implements WritingReturn {
 		final float scaleTotal;
 
 		final float scaleInOut;
@@ -944,7 +947,7 @@ public class Visitors {
 		public Vector2 setRightTangent(Vector2 out, CachedLineCursor now) {
 
 			Vector2 beforeAt = now.before == null ? null : (now.current.method.equals(iLine_m.cubicTo_m) ? now.current.getAt(1) : now.before.getDestination(null));
-			Vector2 hereAt = now.current.getDestination(null);
+			Vector2 hereAt = now.current.getDestination();
 
 			if (beforeAt == null)
 				return out;
@@ -968,7 +971,8 @@ public class Visitors {
 
 	}
 
-	static public class TContinueRightward extends ContinueLeftward {
+	public static
+    class TContinueRightward extends ContinueLeftward {
 		public TContinueRightward() {
 			super(1, 1, 1);
 		}
@@ -981,7 +985,8 @@ public class Visitors {
 	// (0.5*((1-tcbm1.x)*(1+tcbm1.y)*(1+tcbm1.z)*(now-before)+
 	// (1-tcbm1.x)*(1-tcbm1.y)*(1-tcbm1.z)*(next-now))*tcbm1.w);
 
-	static public class TCB implements WritingReturn {
+	public static
+    class TCB implements WritingReturn {
 		private final float[] tcb1;
 
 		private final boolean changeLeft;
@@ -1013,9 +1018,9 @@ public class Visitors {
 			if (!changeLeft)
 				return out;
 
-			Vector2 nextAt = now.after == null ? null : now.after.getDestination(null);
-			Vector2 beforeAt = now.before == null ? null : now.before.getDestination(null);
-			Vector2 hereAt = now.current.getDestination(null);
+			Vector2 nextAt = now.after == null ? null : now.after.getDestination();
+			Vector2 beforeAt = now.before == null ? null : now.before.getDestination();
+			Vector2 hereAt = now.current.getDestination();
 
 			if (nextAt == null) {
 				if (beforeAt == null)
@@ -1040,9 +1045,9 @@ public class Visitors {
 			if (!changeRight)
 				return out;
 
-			Vector2 nextAt = now.after == null ? null : now.after.getDestination(null);
-			Vector2 beforeAt = now.before == null ? null : now.before.getDestination(null);
-			Vector2 hereAt = now.current.getDestination(null);
+			Vector2 nextAt = now.after == null ? null : now.after.getDestination();
+			Vector2 beforeAt = now.before == null ? null : now.before.getDestination();
+			Vector2 hereAt = now.current.getDestination();
 
 			if (nextAt == null) {
 				if (beforeAt == null)

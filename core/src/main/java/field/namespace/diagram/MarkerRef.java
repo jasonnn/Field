@@ -92,7 +92,7 @@ public class MarkerRef<T> implements DiagramZero.iMarkerRef<T> {
 	@Override
 	public int hashCode() {
 		iMarker<T> r = ref.get();
-		return r == null ? 0 : r.hashCode();
+		return (r == null) ? 0 : r.hashCode();
 	}
 
 	@Override

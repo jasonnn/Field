@@ -16,7 +16,7 @@ public class Cursor<T> implements iMarkerIterator<T>, iMarker<T> {
 
 	private iMarker<T> marker;
 
-	private iMarkerIterator<T> iterator;
+	private final iMarkerIterator<T> iterator;
 
 	public Cursor(iMarkerIterator<T> on) {
 		assert on.hasNext();

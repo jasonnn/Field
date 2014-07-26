@@ -14,7 +14,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 
 	public class Sample implements Serializable {
 
-		static private final long serialVersionUID = -4587582997695641410L;
+		private static final long serialVersionUID = -4587582997695641410L;
 
 		public T data;
 
@@ -45,7 +45,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 	private final class MComparator implements Comparator<Sample>, Serializable{
 		public int compare(Sample s1, Sample s2) {
 
-			return s1.time < s2.time ? -1 : s1.time > s2.time ? 1 : 0;
+			return (s1.time < s2.time) ? -1 : ((s1.time > s2.time) ? 1 : 0);
 		}
 	}
 
@@ -110,7 +110,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 
 	public boolean debugGetValue(double time, T value) {
 
-		System.err.println(" num samples are <"+samples.size()+">");
+		System.err.println(" num samples are <"+samples.size()+ '>');
 
 		if (samples.size() < 1)
 			return false;
@@ -124,7 +124,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 
 		if (Double.isNaN(a) || Double.isInfinite(a)) a = 0.5f;
 
-		System.err.println(" time <"+time+"> <"+now+"> <"+duration+">");
+		System.err.println(" time <"+time+"> <"+now+"> <"+duration+ '>');
 
 		if (!extrapolation) {
 			if (a > 1)
@@ -132,7 +132,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 			if (a < 0)
 				a = 0;
 
-			System.err.println(" clamping to <"+a+">");
+			System.err.println(" clamping to <"+a+ '>');
 
 		} else {
 			if (a<0)
@@ -147,7 +147,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 				indexNext = samples.size()-1;
 			}
 
-			if (indexNow == indexNext && indexNow != 0) {
+			if ((indexNow == indexNext) && (indexNow != 0)) {
 				indexNow--;
 				indexBefore--;
 				if (indexBefore < 0)
@@ -155,7 +155,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 				a += 1;
 			}
 
-			System.err.println(" extrapolating <"+getSample(indexNow).data+"> <"+getSample(indexNext).data+"> <"+indexNow+"> <"+indexNext+"> <"+a+">");
+			System.err.println(" extrapolating <"+getSample(indexNow).data+"> <"+getSample(indexNext).data+"> <"+indexNow+"> <"+indexNext+"> <"+a+ '>');
 
 
 			value.lerp(getSample(indexNow).data, getSample(indexNext).data, (float) a);
@@ -172,14 +172,22 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 
 		if (linear)
 		{
-			System.err.println(" is linear <"+indexNow+"> <"+indexNext+"> <"+getSample(indexNow)+"> <"+getSample(indexNext)+">");
+			System.err.println(" is linear <"+indexNow+"> <"+indexNext+"> <"+getSample(indexNow)+"> <"+getSample(indexNext)+ '>');
 
 			value.lerp(getSample(indexNow).data, getSample(indexNext).data, (float) a);
 
 			return true;
 		}
 
-		System.err.println(" cerp <"+getSample(indexBefore).data+" "+ getSample(indexBefore).time+" "+ getSample(indexNow).data+" "+ getSample(indexNow).time+" "+ getSample(indexNext).data+" "+ getSample(indexNext).time+" "+ getSample(indexAfter).data+" "+ getSample(indexAfter).time+" "+ a+">");
+		System.err.println(" cerp <"+getSample(indexBefore).data+ ' '
+                           + getSample(indexBefore).time+ ' '
+                           + getSample(indexNow).data+ ' '
+                           + getSample(indexNow).time+ ' '
+                           + getSample(indexNext).data+ ' '
+                           + getSample(indexNext).time+ ' '
+                           + getSample(indexAfter).data+ ' '
+                           + getSample(indexAfter).time+ ' '
+                           + a+ '>');
 
 		value.cerp(getSample(indexBefore).data,0, getSample(indexNow).data, (float)(getSample(indexNow).time-getSample(indexBefore).time), getSample(indexNext).data, (float)(getSample(indexNext).time-getSample(indexBefore).time), getSample(indexAfter).data, (float)(getSample(indexAfter).time-getSample(indexBefore).time), (float) a);
 
@@ -251,7 +259,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 	}
 
 	public double getEndTime() {
-		if (samples.size() == 0)
+		if (samples.isEmpty())
 			return 0;
 		return getSample(samples.size() - 1).time;
 	}
@@ -261,7 +269,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 	}
 
 	public Sample getSample(int i) {
-		if (i >= samples.size() - 1)
+		if (i >= (samples.size() - 1))
 			i = samples.size() - 1;
 		if (i < 0)
 			i = 0;
@@ -269,7 +277,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 	}
 
 	public double getStartTime() {
-		if (samples.size() == 0)
+		if (samples.isEmpty())
 			return 0;
 		return getSample(0).time;
 	}
@@ -310,7 +318,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 				indexNext = samples.size()-1;
 			}
 
-			if (indexNow == indexNext && indexNow != 0) {
+			if ((indexNow == indexNext) && (indexNow != 0)) {
 				indexNow--;
 				indexBefore--;
 				if (indexBefore < 0)
@@ -343,12 +351,12 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 	}
 
 	public boolean isInDomain(double now) {
-		return now>=getDomainMin() && now<=getDomainMax();
+		return (now >= getDomainMin()) && (now <= getDomainMax());
 	}
 
 	public void mergeInto(CubicInterpolatorDynamic_double<T> from) {
-		if (from.getDomainMax() > this.getDomainMax() && from.getDomainMin() < this.getDomainMax())
-			System.err.println(" warning, overlapping merge of cubic interpolators <" + this + "> <" + from + ">");
+		if ((from.getDomainMax() > this.getDomainMax()) && (from.getDomainMin() < this.getDomainMax()))
+			System.err.println(" warning, overlapping merge of cubic interpolators <" + this + "> <" + from + '>');
 
 		for (int i = 0; i < from.getNumSamples(); i++) {
 			new Sample(from.getSample(i).data, from.getSample(i).time);
@@ -403,7 +411,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 
 	public void removeSample(int i) {
 		samples.remove(i);
-		if (indexAfter == i || indexBefore == i || indexNext == i || indexNow == i)
+		if ((indexAfter == i) || (indexBefore == i) || (indexNext == i) || (indexNow == i))
 			cacheInvalid = true;
 	}
 
@@ -412,7 +420,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 		if (n >= 0) {
 			removeSample(n);
 		} else
-			throw new ArrayIndexOutOfBoundsException(" couldn't find sample <" + sample + "> from <" + samples + ">");
+			throw new ArrayIndexOutOfBoundsException(" couldn't find sample <" + sample + "> from <" + samples + '>');
 	}
 
 	public void resort() {
@@ -438,7 +446,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 
 	@Override
 	public String toString() {
-		return "v3cubic:" + this.getNumSamples() + "(" + this.getStartTime() + " -> " + this.getEndTime() + ")";
+		return "v3cubic:" + this.getNumSamples() + '(' + this.getStartTime() + " -> " + this.getEndTime() + ')';
 	}
 
 	public void trimStartTo(int maxSamples) {
@@ -451,7 +459,7 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 		comparator = new Comparator<Sample>() {
 
 			public int compare(Sample s1, Sample s2) {
-				return s1.time < s2.time ? -1 : s1.time > s2.time ? 1 : 0;
+				return (s1.time < s2.time) ? -1 : ((s1.time > s2.time) ? 1 : 0);
 			}
 		};
 	}
@@ -459,10 +467,10 @@ public class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements
 	private void validateCache(double time) {
 
 		if (!cacheInvalid) {
-			if (time >= now && time <= next) {
+			if ((time >= now) && (time <= next)) {
 				return;
 			} else {
-				if (time >= next && time <= after) {
+				if ((time >= next) && (time <= after)) {
 					indexBefore = indexNow;
 					indexNow = indexNext;
 					indexNext = indexAfter;

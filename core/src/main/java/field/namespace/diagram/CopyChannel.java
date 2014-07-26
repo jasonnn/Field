@@ -18,7 +18,8 @@ import java.util.Set;
  */
 public class CopyChannel<t_left, t_right> implements iMapsMarkers<t_left, t_right> {
 
-	static public class StraightCopy<t_both> extends CopyChannel<t_both, t_both> {
+	public static
+    class StraightCopy<t_both> extends CopyChannel<t_both, t_both> {
 
 		public StraightCopy(iChannel<t_both> left, iMarkerFactory<t_both> leftFactory, iChannel<t_both> right, iMarkerFactory<t_both> rightFactory) {
 			super(left, leftFactory, right, rightFactory);

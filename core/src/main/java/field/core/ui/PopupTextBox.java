@@ -27,7 +27,7 @@ public class PopupTextBox {
 
 	Shell shell;
 
-	private Label label;
+	private final Label label;
 
 	protected Text textBox;
 
@@ -148,7 +148,8 @@ public class PopupTextBox {
 
 	boolean gone = false;
 
-	static public class Modal {
+	public static
+    class Modal {
 		static public void getString(Point at, String label, String def, final iAcceptor<String> result) {
 			new PopupTextBox(def, at, label) {
 				@Override

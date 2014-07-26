@@ -24,7 +24,7 @@ public class ContextualHelp {
 
 	private final HelpBrowser helpBrowser;
 
-	static public final VisualElementProperty<String> contextualHelp = new VisualElementProperty<String>("contextualHelp");
+	public static final VisualElementProperty<String> contextualHelp = new VisualElementProperty<String>("contextualHelp");
 
 	public ContextualHelp(HelpBrowser helpBrowser) {
 		this.helpBrowser = helpBrowser;
@@ -64,7 +64,7 @@ public class ContextualHelp {
 		}
 
 		if (hasContext) {
-			if (!lastString.equals(next) && next!=null) {
+			if (!lastString.equals(next) && (next != null)) {
 				lastString = next;
 				offerHelp("", next);
 			}
@@ -73,7 +73,8 @@ public class ContextualHelp {
 		}
 	}
 
-	static public class Context {
+	public static
+    class Context {
 		int inContext = 0;
 
 		String lastString = "";
@@ -97,9 +98,9 @@ public class ContextualHelp {
 			public String get() {
 				try {
 					BufferedReader r = new BufferedReader(new FileReader(m));
-					final StringBuffer s = new StringBuffer();
+					final StringBuilder s = new StringBuilder();
 					while (r.ready()) {
-						s.append(r.readLine() + "\n");
+						s.append(r.readLine()).append('\n');
 					}
 					return s.toString();
 				} catch (IOException e) {
@@ -162,7 +163,7 @@ public class ContextualHelp {
 		if (markdown == null)
 			return;
 
-		if (markdown.equals("null")) return;
+		if ("null".equals(markdown)) return;
 
         String x = HelpBrowser.proc.markdownToHtml(markdown);
 

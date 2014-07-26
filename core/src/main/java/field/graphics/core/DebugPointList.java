@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class DebugPointList extends OnePassElement{
 
 	private final int numPoints;
-	private FloatBuffer vertex;
+	private final FloatBuffer vertex;
 
 	public DebugPointList(int numPoints)
 	{

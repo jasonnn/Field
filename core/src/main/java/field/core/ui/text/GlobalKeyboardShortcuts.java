@@ -21,7 +21,7 @@ import java.util.Map;
 @Woven
 public class GlobalKeyboardShortcuts {
 
-	static public VisualElementProperty<GlobalKeyboardShortcuts> shortcuts = new VisualElementProperty<GlobalKeyboardShortcuts>("keyboardShortcuts_");
+	public static VisualElementProperty<GlobalKeyboardShortcuts> shortcuts = new VisualElementProperty<GlobalKeyboardShortcuts>("keyboardShortcuts_");
 
     public static
     class Shortcut {
@@ -44,7 +44,7 @@ public class GlobalKeyboardShortcuts {
 		}
 
 		public boolean matches(char c, int code, int state) {
-			return (((character != '\0' && c== character) || (keycode != -1 && code == keycode)) && ((state & andMask) == equals));
+			return ((((character != '\0') && (c == character)) || ((keycode != -1) && (code == keycode))) && ((state & andMask) == equals));
 		}
 	}
 

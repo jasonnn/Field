@@ -29,7 +29,7 @@ public class SimpleGraphLayout {
 	public enum NodeType {
 		root(10), level1(5), level2(0);
 
-		private float z;
+		private final float z;
 
 		private NodeType(float z) {
 			this.z = z;

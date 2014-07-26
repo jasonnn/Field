@@ -111,16 +111,22 @@ public abstract class ExecutionDecoration2 {
 
 	}
 
-	abstract public boolean isExecuting();
+	public abstract
+    boolean isExecuting();
 
-	abstract public boolean isPaused();
+	public abstract
+    boolean isPaused();
 
-	abstract protected void stopBeingActiveNow();
+	protected abstract
+    void stopBeingActiveNow();
 
-	abstract protected void pauseBeingActiveNow();
-	abstract protected void unpauseBeingActiveNow();
+	protected abstract
+    void pauseBeingActiveNow();
+	protected abstract
+    void unpauseBeingActiveNow();
 
-	abstract protected void continueToBeActiveAfterUp();
+	protected abstract
+    void continueToBeActiveAfterUp();
 
     public static
     boolean drag(Event arg0) {

@@ -22,7 +22,8 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
  * tools for texturing things
  */
 public class BasicTextures {
-	abstract static public class BaseTexture extends BasicUtilities.TwoPassElement implements iSceneListElement {
+	public abstract static
+    class BaseTexture extends BasicUtilities.TwoPassElement implements iSceneListElement {
 		public static boolean enableTextures = true;
 
 		public int gl_texture_min_filter = GL_NEAREST;
@@ -111,16 +112,20 @@ public class BasicTextures {
 		}
 
 		@Override
-		abstract protected void post();
+        protected abstract
+        void post();
 
 		@Override
-		abstract protected void pre();
+        protected abstract
+        void pre();
 
 		@Override
-		abstract protected void setup();
+        protected abstract
+        void setup();
 	}
 
-	static public class DisableTextures extends BasicUtilities.TwoPassElement implements iSceneListElement {
+	public static
+    class DisableTextures extends BasicUtilities.TwoPassElement implements iSceneListElement {
 		boolean texturesEnabled;
 
 		public DisableTextures() {
@@ -146,7 +151,8 @@ public class BasicTextures {
 		}
 	}
 
-	static public class ModifyUnit extends BasicUtilities.TwoPassElement {
+	public static
+    class ModifyUnit extends BasicUtilities.TwoPassElement {
 		int unit;
 
 		public ModifyUnit(int unit) {
@@ -180,7 +186,8 @@ public class BasicTextures {
 	 * Instead we are now using CoreImage's image loader.
 	 */
 
-	static public class TextureFromQTImage extends BaseTexture implements iSceneListElement {
+    public static
+    class TextureFromQTImage extends BaseTexture implements iSceneListElement {
 
 		private boolean deallocated = false;
 
@@ -220,7 +227,7 @@ public class BasicTextures {
 
 		public TextureFromQTImage(URL resource) {
 			this(resource.toExternalForm());
-			assert resource.getProtocol().equals("file") : resource + " " + resource.getProtocol();
+			assert "file".equals(resource.getProtocol()) : resource + " " + resource.getProtocol();
 		}
 
 		protected TextureFromQTImage(ByteImage image) {
@@ -398,7 +405,8 @@ public class BasicTextures {
 		}
 	}
 
-	static public class ExplicitMipTexture extends BaseTexture implements iSceneListElement {
+	public static
+    class ExplicitMipTexture extends BaseTexture implements iSceneListElement {
 
 		private boolean deallocated = false;
 
@@ -573,7 +581,8 @@ public class BasicTextures {
 	/**
 	 * synonym for the now misnamed TextureFromQTImage
 	 */
-	static public class TextureFromImage extends TextureFromQTImage {
+    public static
+    class TextureFromImage extends TextureFromQTImage {
 
 		public TextureFromImage(ByteImage image) {
 			super(image);
@@ -600,8 +609,9 @@ public class BasicTextures {
 	}
 
 	/** wraps some other texture thing inside a different unit */
-	static public class TextureUnit extends BaseTexture {
-		private int unit;
+    public static
+    class TextureUnit extends BaseTexture {
+		private final int unit;
 
 		TwoPassElement wrap;
 
@@ -678,7 +688,7 @@ public class BasicTextures {
 	}
 
 	static public class StereoUnit extends BaseTexture {
-		private int unit;
+		private final int unit;
 
 		TwoPassElement left;
 

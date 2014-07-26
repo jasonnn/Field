@@ -28,7 +28,8 @@ public class Freehand3dUtils {
 		this.inside = inside;
 	}
 
-	public CachedLine projectAtZeroPoint(RawSplineData d) {
+	public static
+    CachedLine projectAtZeroPoint(RawSplineData d) {
 		CachedLine l = new CachedLine();
 		iLine input = l.getInput();
 
@@ -37,11 +38,11 @@ public class Freehand3dUtils {
 		Projector p = s.getProjector();
 		Rect frame = d.elementFrameAtDrawTime;
 		
-		Iterator<Object> states = d.transformStates == null ? null : d.transformStates.iterator();
+		Iterator<Object> states = (d.transformStates == null) ? null : d.transformStates.iterator();
 		
 		for (Vector2 v : d.points) {
 			
-			if (states!=null && states.hasNext())
+			if ((states != null) && states.hasNext())
 				s = (State)states.next();
 			
 			Vector3 x = singleProject(v, p, s, frame);
@@ -67,7 +68,7 @@ public class Freehand3dUtils {
 		Vector3 o1 = new Vector3();
 		Vector3 o2 = new Vector3();
 
-		p.createIntersectionRay((float) (v.x - frame.x), (float) (frame.h - v.y + frame.y), o1, o2, (int) frame.w, (int) frame.h);
+		p.createIntersectionRay((float) (v.x - frame.x), (float) ((frame.h - v.y) + frame.y), o1, o2, (int) frame.w, (int) frame.h);
 
 		Vector3 target = s.getLookAt(null);
 		Vector3 ray = s.getView();
@@ -111,12 +112,12 @@ public class Freehand3dUtils {
 
 		input.moveTo(center.x + up.x + left.x, center.y + up.y + left.y);
 		input.setPointAttribute(iLinearGraphicsContext.z_v, center.z + up.z + left.z);
-		input.lineTo(center.x + up.x - left.x, center.y + up.y - left.y);
-		input.setPointAttribute(iLinearGraphicsContext.z_v, center.z + up.z - left.z);
+		input.lineTo((center.x + up.x) - left.x, (center.y + up.y) - left.y);
+		input.setPointAttribute(iLinearGraphicsContext.z_v, (center.z + up.z) - left.z);
 		input.lineTo(center.x - up.x - left.x, center.y - up.y - left.y);
 		input.setPointAttribute(iLinearGraphicsContext.z_v, center.z - up.z - left.z);
-		input.lineTo(center.x - up.x + left.x, center.y - up.y + left.y);
-		input.setPointAttribute(iLinearGraphicsContext.z_v, center.z - up.z + left.z);
+		input.lineTo((center.x - up.x) + left.x, (center.y - up.y) + left.y);
+		input.setPointAttribute(iLinearGraphicsContext.z_v, (center.z - up.z) + left.z);
 		input.lineTo(center.x + up.x + left.x, center.y + up.y + left.y);
 		input.setPointAttribute(iLinearGraphicsContext.z_v, center.z + up.z + left.z);
 
@@ -149,7 +150,7 @@ public class Freehand3dUtils {
 			if (f<min) min = f;
 		}
 
-		if (max-min<0.1) return;
+		if ((max - min) < 0.1) return;
 
         //System.out.println(" max - min for line <"+(max-min)+">");
 
@@ -158,7 +159,7 @@ public class Freehand3dUtils {
 		for (Event ee : e) {
 			if (ee.method.equals(iLine_m.moveTo_m)) {
 				last = LineUtils.getDestination3(ee);
-			} else if (last != null && ee.method.equals(iLine_m.lineTo_m)) {
+			} else if ((last != null) && ee.method.equals(iLine_m.lineTo_m)) {
 				intersect(last, LineUtils.getDestination3(ee), center, ray, position, defaultContext);
 				last = LineUtils.getDestination3(ee);
 			}
@@ -181,7 +182,7 @@ public class Freehand3dUtils {
 		if (a1!=a2)
 		{
 			LinePointIntersectionInfo a = IntersectionPrimatives.lineToPlane(new Vector3(ll), new Vector3(dd).sub(ll).normalize(), center, ray);
-			if (a!=null && a.distanceAlongLine>=0 && a.distanceAlongLine<=dd.distanceFrom(ll))
+			if ((a != null) && (a.distanceAlongLine >= 0) && (a.distanceAlongLine <= dd.distanceFrom(ll)))
 			{
 				CachedLine point = new CachedLine();
 				

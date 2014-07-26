@@ -32,7 +32,8 @@ import java.util.regex.Pattern;
 @GenerateMethods
 public class BasePDFGraphicsContext extends iLinearGraphicsContext {
 
-	static public class DrawingResult {
+	public static
+    class DrawingResult {
 		DrawingResultCode code;
 
 		iUpdateable compute;

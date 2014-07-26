@@ -26,7 +26,7 @@ public class ExtractPathTool extends BaseTool {
 	// todo, need to "preclean" obtainExpressions( ... selected ...) so that we only get one path extraction regardless of selection
 	
 	public class ExtractPathCoordinateChange implements iCoordDesc {
-		private List<SelectedVertex> totalClaimed = new ArrayList<SelectedVertex>();
+		private final List<SelectedVertex> totalClaimed = new ArrayList<SelectedVertex>();
 
 		public iResult describe(List<CachedLine> index, List<SelectedVertex> claimed, MouseInfo mi) {
 			if (claimed.size() == 0) return null;

@@ -48,7 +48,7 @@ public class GLCanvas_field extends Canvas {
 		super(parent, style);
 		if (data == null)
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
-		int attrib[] = new int[MAX_ATTRIBUTES];
+		int[] attrib = new int[MAX_ATTRIBUTES];
 		int pos = 0;
 
 		if (SystemProperties.getIntProperty("forceSoftwareRenderer", 0) == 1) {
@@ -282,7 +282,7 @@ public class GLCanvas_field extends Canvas {
 	public boolean isCurrent() {
 		checkWidget();
 		NSOpenGLContext current = NSOpenGLContext.currentContext();
-		return current != null && current.id == context.id;
+		return (current != null) && (current.id == context.id);
 	}
 
 	/**

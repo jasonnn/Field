@@ -29,7 +29,7 @@ import java.util.Map.Entry;
 
 public class Templating {
 
-	static public HashMap<String, VisualElementProperty<String>> shortForms = new HashMap<String, VisualElementProperty<String>>();
+	public static HashMap<String, VisualElementProperty<String>> shortForms = new HashMap<String, VisualElementProperty<String>>();
 	static {
 		shortForms.put("main", PythonPlugin.python_source);
 		shortForms.put("update", SplineComputingOverride.onChange);
@@ -38,7 +38,8 @@ public class Templating {
 		shortForms.put("tweak", SplineComputingOverride.tweak);
 	}
 
-	static public iVisualElement elementFromKnownTemplate(String name, iVisualElement root) throws IOException {
+	public static
+    iVisualElement elementFromKnownTemplate(String name, iVisualElement root) throws IOException {
         File found = LoadInternalWorkspaceFile.findTemplateCalled(name);
         if (found == null)
 			return null;
@@ -61,7 +62,8 @@ public class Templating {
 		return loaded.iterator().next();
 	}
 
-	static public ArrayList<iVisualElement> elementsFromKnownSheet(String name, iVisualElement root) throws IOException {
+	public static
+    ArrayList<iVisualElement> elementsFromKnownSheet(String name, iVisualElement root) throws IOException {
 		File sheetName = new File(SystemProperties.getDirProperty("versioning.dir") + name);
 		if (!sheetName.exists())
 			return null;
@@ -71,7 +73,8 @@ public class Templating {
 		return new ArrayList<iVisualElement>(loaded);
 	}
 
-	static public ArrayList<iVisualElement> elementsFromKnownSheetNoTimeslider(String name, iVisualElement root) throws IOException {
+	public static
+    ArrayList<iVisualElement> elementsFromKnownSheetNoTimeslider(String name, iVisualElement root) throws IOException {
 		File sheetName = new File(SystemProperties.getDirProperty("versioning.dir") + name);
 		if (!sheetName.exists())
 			return null;
@@ -92,7 +95,8 @@ public class Templating {
 		return new ArrayList<iVisualElement>(loaded);
 	}
 
-	static public Pair<String, String> findTemplateInstance(final String templateName) {
+	public static
+    Pair<String, String> findTemplateInstance(final String templateName) {
 		File dir = new File(SystemProperties.getDirProperty("versioning.dir"));
 		File[] files = dir.listFiles(new FileFilter() {
 			public boolean accept(File pathname) {
@@ -115,9 +119,9 @@ public class Templating {
 						File ff = new File(pathname.getCanonicalPath() + "/python_isTemplate.+.property");
 						if (pathname.isDirectory() && ff.exists()) {
 							BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ff)));
-							StringBuffer read = new StringBuffer();
+							StringBuilder read = new StringBuilder();
 							while (reader.ready()) {
-								read.append(reader.readLine() + "\n");
+								read.append(reader.readLine()).append('\n');
 							}
 							reader.close();
 							String name = (String) VersioningSystem.objectRepresentationFor(read.toString());
@@ -145,7 +149,8 @@ public class Templating {
 		return null;
 	}
 
-	static public void merge(VisualElement source, iVisualElement copy, boolean preferTemplate, boolean becomeVisual) throws IOException {
+	public static
+    void merge(VisualElement source, iVisualElement copy, boolean preferTemplate, boolean becomeVisual) throws IOException {
 
 		LoadInternalWorkspaceFile liwf = new LoadInternalWorkspaceFile();
 
@@ -182,12 +187,14 @@ public class Templating {
 
 	}
 
-	static public void newEditableProperty(String propertyName, iVisualElement inside) {
+	public static
+    void newEditableProperty(String propertyName, iVisualElement inside) {
 		VisualElementProperty p = new VisualElementProperty(propertyName);
 		PythonPluginEditor.knownPythonProperties.put("Template \u2014 " + propertyName, p);
 	}
 
-	static public iVisualElement simpleCopy(VisualElement source, iVisualElement dispatchTo) {
+	public static
+    iVisualElement simpleCopy(VisualElement source, iVisualElement dispatchTo) {
 		iVisualElementOverrides o = source.getProperty(iVisualElement.overrides);
 		iComponent c = source.getProperty(iVisualElement.localView);
 

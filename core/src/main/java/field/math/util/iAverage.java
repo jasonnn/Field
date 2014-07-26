@@ -8,7 +8,8 @@ import java.util.TreeMap;
 
 public interface iAverage<T_accepts, T_produces> {
 
-	static public class Best<T_accepts> implements iAverage<T_accepts, T_accepts> {
+	public static
+    class Best<T_accepts> implements iAverage<T_accepts, T_accepts> {
 		private double best;
 
 		private T_accepts bestIs;
@@ -30,7 +31,8 @@ public interface iAverage<T_accepts, T_produces> {
 		}
 	}
 
-	static public class ChiSquared<T2_accepts> {
+	public static
+    class ChiSquared<T2_accepts> {
 		public float chiSquared(iHistogram<T2_accepts> one, iHistogram<T2_accepts> two) {
 			final Map<T2_accepts, Double> left = new HashMap<T2_accepts, Double>();
 			one.average(new iAverage<T2_accepts, Float>(){
@@ -69,7 +71,8 @@ public interface iAverage<T_accepts, T_produces> {
 		}
 	}
 
-	static public class DistanceFrom implements iAverage<Number, Float> {
+	public static
+    class DistanceFrom implements iAverage<Number, Float> {
 		private float center;
 
 		private float radius;
@@ -131,7 +134,8 @@ public interface iAverage<T_accepts, T_produces> {
 		}
 	}
 
-	static public class NumberAverage implements iAverage<Number, Float> {
+	public static
+    class NumberAverage implements iAverage<Number, Float> {
 
 		private float value;
 
@@ -186,7 +190,8 @@ public interface iAverage<T_accepts, T_produces> {
 		}
 	}
 
-	static public class Print<T_accepts> implements iAverage<T_accepts, T_accepts> {
+	public static
+    class Print<T_accepts> implements iAverage<T_accepts, T_accepts> {
 		public <X extends T_accepts> void accept(X accept, double weight) {
             //System.out.println(" accepted <" + accept + "> at <" + weight + ">");
         }
@@ -199,7 +204,8 @@ public interface iAverage<T_accepts, T_produces> {
 		}
 	}
 
-	static public class VarianceFrom<X extends Number> {
+	public static
+    class VarianceFrom<X extends Number> {
 		public float totalWeightedVariance(iHistogram<X> histogram, float radius, float priorCenter, float priorWeight) {
 			final Map<X, Float> left = new HashMap<X, Float>();
 			histogram.average(new iAverage<X, Float>(){

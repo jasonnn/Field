@@ -46,8 +46,8 @@ import java.util.List;
 
 public class BasicDrawingPlugin implements iPlugin {
 
-	static public final VisualElementProperty<PythonCallableMap> selectionStateCallback = new VisualElementProperty<PythonCallableMap>("selectionStateCallback_");
-	static public final VisualElementProperty<Number> allwaysConstrain = new VisualElementProperty<Number>("allwaysConstrain");
+	public static final VisualElementProperty<PythonCallableMap> selectionStateCallback = new VisualElementProperty<PythonCallableMap>("selectionStateCallback_");
+	public static final VisualElementProperty<Number> allwaysConstrain = new VisualElementProperty<Number>("allwaysConstrain");
 
 	static {
 		SnippetsPlugin.addURLHandler(new iFunction<Boolean, Pair<URL, SnippetsPlugin>>() {
@@ -55,7 +55,8 @@ public class BasicDrawingPlugin implements iPlugin {
 			public Boolean f(Pair<URL, SnippetsPlugin> in) {
 				boolean s = in.left.getPath().endsWith(".svg");
 				if (s) {
-					String forms = in.left.getPath() + "\n" + "lines = [PLine(x) for x in SVGImport(File(\"" + in.left.getPath() + "\")).lines(None, None)]";
+					String forms = in.left.getPath() + '\n'
+                                   + "lines = [PLine(x) for x in SVGImport(File(\"" + in.left.getPath() + "\")).lines(None, None)]";
 					in.right.addText(forms, "svg file", new String[] { "filename", "load & extract PLines" }, "operation");
 					return true;
 				} else
@@ -71,7 +72,7 @@ public class BasicDrawingPlugin implements iPlugin {
 				public Boolean f(Pair<URL, SnippetsPlugin> in) {
 					boolean s = in.left.getPath().endsWith(i);
 					if (s) {
-						String forms = in.left.getPath() + "\n" + "ii = image(\"" + in.left.toExternalForm() + "\")";
+						String forms = in.left.getPath() + '\n' + "ii = image(\"" + in.left.toExternalForm() + "\")";
 						in.right.addText(forms, "image file", new String[] { "filename", "load" }, "operation");
 						return true;
 					} else
@@ -81,7 +82,8 @@ public class BasicDrawingPlugin implements iPlugin {
 		}
 	}
 
-	static public class FrameManipulation {
+	public static
+    class FrameManipulation {
 		public Rect originalFrame;
 
 		Set<Resize> resizeType;
@@ -103,7 +105,7 @@ public class BasicDrawingPlugin implements iPlugin {
 
 		@Override
 		public String toString() {
-			return "fm:" + resizeType + " " + originalFrame;
+			return "fm:" + resizeType + ' ' + originalFrame;
 		}
 
 	}
@@ -318,13 +320,13 @@ public class BasicDrawingPlugin implements iPlugin {
 		}
 	}
 
-	static public final String pluginId = "//plugin_basicDrawingPlugin";
+	public static final String pluginId = "//plugin_basicDrawingPlugin";
 
 	public static final VisualElementProperty<BasicDrawingPlugin> simpleConstraints_plugin = new VisualElementProperty<BasicDrawingPlugin>("plugin_basicDrawingPlugin");
 
-	static public final VisualElementProperty<FrameManipulation> frameManipulationBegin = new VisualElementProperty<FrameManipulation>("frameManipulationBegin_");
+	public static final VisualElementProperty<FrameManipulation> frameManipulationBegin = new VisualElementProperty<FrameManipulation>("frameManipulationBegin_");
 
-	static public final VisualElementProperty<FrameManipulation> frameManipulationEnd = new VisualElementProperty<FrameManipulation>("frameManipulationEnd_");
+	public static final VisualElementProperty<FrameManipulation> frameManipulationEnd = new VisualElementProperty<FrameManipulation>("frameManipulationEnd_");
 
 	private final LocalVisualElement lve;
 

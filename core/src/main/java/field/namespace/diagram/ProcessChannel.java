@@ -38,11 +38,12 @@ public class ProcessChannel<T> implements iInside {
 			HashSet<Object> toRemove = new HashSet<Object>();
 			while (i.hasNext()) {
 				Entry<Object, iMarker<T>> e = i.next();
-				if (!touched.contains(e.getValue())) {
-					factory.removeMarker(outputTo, e.getValue());
-					toRemove.add(e.getKey());
-				} else {
-				}
+                if (touched.contains(e.getValue())) {
+                }
+                else {
+                    factory.removeMarker(outputTo, e.getValue());
+                    toRemove.add(e.getKey());
+                }
 			}
 
 			for (Object n : toRemove) {
@@ -59,7 +60,7 @@ public class ProcessChannel<T> implements iInside {
 
 	public iMarker<T> getExistingMarker(Object named, boolean touch) {
 		iMarker<T> m = markers.get(named);
-		if (m != null && touch) {
+		if ((m != null) && touch) {
 			touched.add(m);
 		}
 		return m;

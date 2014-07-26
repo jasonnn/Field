@@ -65,6 +65,6 @@ public class ComplexCubicFloat implements iBlendable<ComplexCubicFloat>, iHasSca
 
 	@Override
 	public String toString() {
-		return "ccf:" + value + "(" + tangent + ")";
+		return "ccf:" + value + '(' + tangent + ')';
 	}
 }

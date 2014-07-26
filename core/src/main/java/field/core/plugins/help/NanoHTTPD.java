@@ -159,7 +159,7 @@ public class NanoHTTPD {
 
                 String tok = st.nextToken();
 
-                System.out.println(" remaining <" + tok + ">");
+                System.out.println(" remaining <" + tok + '>');
 
                 String uri = /* decodePercent */(tok);
 
@@ -188,7 +188,7 @@ public class NanoHTTPD {
                 Properties header = new Properties();
                 if (st.hasMoreTokens()) {
                     String line = in.readLine();
-                    while (line.trim().length() > 0) {
+                    while (!line.trim().isEmpty()) {
                         int p = line.indexOf(':');
                         header.put(line.substring(0, p).trim().toLowerCase(), line.substring(p + 1).trim());
                         line = in.readLine();
@@ -200,7 +200,7 @@ public class NanoHTTPD {
                 // If the method is POST, there may be
                 // parameters
                 // in data section, too, read it:
-                if (method.equalsIgnoreCase("POST")) {
+                if ("POST".equalsIgnoreCase(method)) {
                     long size = 0x7FFFFFFFFFFFFFFFl;
                     String contentLength = header.getProperty("content-length");
                     if (contentLength != null) {
@@ -210,14 +210,14 @@ public class NanoHTTPD {
                         }
                     }
 
-                    System.out.println(" content length :" + contentLength + " " + size);
+                    System.out.println(" content length :" + contentLength + ' ' + size);
 
                     String postLine = "";
-                    char buf[] = new char[512];
+                    char[] buf = new char[512];
                     if (size != 0) {
                         int read = in.read(buf);
                         System.out.println(" reading ");
-                        while (read >= 0 && size > 0 && !postLine.endsWith("\n")) {
+                        while ((read >= 0) && (size > 0) && !postLine.endsWith("\n")) {
                             System.out.println(" reading ");
                             size -= read;
                             postLine += String.valueOf(buf, 0, read);
@@ -278,7 +278,7 @@ public class NanoHTTPD {
                 if (mime != null)
                     pw.print("Content-Type: " + mime + "\r\n");
 
-                if (header == null || header.getProperty("Date") == null)
+                if ((header == null) || (header.getProperty("Date") == null))
                     pw.print("Date: " + gmtFrmt.format(new Date()) + "\r\n");
 
                 if (header != null) {
@@ -319,12 +319,20 @@ public class NanoHTTPD {
     /**
      * Some HTTP response status codes
      */
-    public static final String HTTP_OK = "200 OK", HTTP_REDIRECT = "301 Moved Permanently", HTTP_FORBIDDEN = "403 Forbidden", HTTP_NOTFOUND = "404 Not Found", HTTP_BADREQUEST = "400 Bad Request", HTTP_INTERNALERROR = "500 Internal Server Error", HTTP_NOTIMPLEMENTED = "501 Not Implemented";
+    public static final String HTTP_OK = "200 OK";
+    public static final String HTTP_REDIRECT = "301 Moved Permanently";
+    public static final String HTTP_FORBIDDEN = "403 Forbidden";
+    public static final String HTTP_NOTFOUND = "404 Not Found";
+    public static final String HTTP_BADREQUEST = "400 Bad Request";
+    public static final String HTTP_INTERNALERROR = "500 Internal Server Error";
+    public static final String HTTP_NOTIMPLEMENTED = "501 Not Implemented";
 
     /**
      * Common mime types for dynamic content
      */
-    public static final String MIME_PLAINTEXT = "text/plain", MIME_HTML = "text/html", MIME_DEFAULT_BINARY = "application/octet-stream";
+    public static final String MIME_PLAINTEXT = "text/plain";
+    public static final String MIME_HTML = "text/html";
+    public static final String MIME_DEFAULT_BINARY = "application/octet-stream";
 
     // ==================================================
     // Socket & server code
@@ -333,17 +341,19 @@ public class NanoHTTPD {
     /**
      * Hashtable mapping (String)FILENAME_EXTENSION -> (String)MIME_TYPE
      */
-    private static Hashtable theMimeTypes = new Hashtable();
+    private static final Hashtable theMimeTypes = new Hashtable();
 
     /**
      * GMT date formatter
      */
-    private static java.text.SimpleDateFormat gmtFrmt;
+    private static final java.text.SimpleDateFormat gmtFrmt;
 
     /**
      * The distribution licence
      */
-    private static final String LICENCE = "Copyright (C) 2001,2005 by Jarno Elonen <elonen@iki.fi>\n" + "\n" + "Redistribution and use in source and binary forms, with or without\n" + "modification, are permitted provided that the following conditions\n" + "are met:\n" + "\n" + "Redistributions of source code must retain the above copyright notice,\n" + "this list of conditions and the following disclaimer. Redistributions in\n" + "binary form must reproduce the above copyright notice, this list of\n" + "conditions and the following disclaimer in the documentation and/or other\n" + "materials provided with the distribution. The name of the author may not\n" + "be used to endorse or promote products derived from this software without\n" + "specific prior written permission. \n" + " \n"
+    private static final String LICENCE = "Copyright (C) 2001,2005 by Jarno Elonen <elonen@iki.fi>\n" + '\n'
+                                          + "Redistribution and use in source and binary forms, with or without\n" + "modification, are permitted provided that the following conditions\n" + "are met:\n" + '\n'
+                                          + "Redistributions of source code must retain the above copyright notice,\n" + "this list of conditions and the following disclaimer. Redistributions in\n" + "binary form must reproduce the above copyright notice, this list of\n" + "conditions and the following disclaimer in the documentation and/or other\n" + "materials provided with the distribution. The name of the author may not\n" + "be used to endorse or promote products derived from this software without\n" + "specific prior written permission. \n" + " \n"
             + "THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR\n" + "IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES\n" + "OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.\n" + "IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,\n" + "INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT\n" + "NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,\n" + "DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY\n" + "THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n" + "(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\n" + "OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.";
 
     static {
@@ -417,9 +427,17 @@ public class NanoHTTPD {
                     while (true) {
                         // System.out.println(" opening session on <"+ss+">");
                         new HTTPSession(ss.accept());
+
                     }
                 } catch (IOException ioe) {
+
                     ioe.printStackTrace();
+                } finally{
+                    try {
+                        ss.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -531,7 +549,7 @@ public class NanoHTTPD {
                         msg += " &nbsp;<font size=2>(";
                         if (len < 1024)
                             msg += curFile.length() + " bytes";
-                        else if (len < 1024 * 1024)
+                        else if (len < (1024 * 1024))
                             msg += curFile.length() / 1024 + "." + (curFile.length() % 1024 / 10 % 100) + " KB";
                         else
                             msg += curFile.length() / (1024 * 1024) + "." + curFile.length() % (1024 * 1024) / 10 % 100 + " MB";
@@ -593,9 +611,9 @@ public class NanoHTTPD {
         StringTokenizer st = new StringTokenizer(uri, "/ ", true);
         while (st.hasMoreTokens()) {
             String tok = st.nextToken();
-            if (tok.equals("/"))
+            if ("/".equals(tok))
                 newUri += "/";
-            else if (tok.equals(" "))
+            else if (" ".equals(tok))
                 newUri += "%20";
             else {
                 newUri += URLEncoder.encode(tok);

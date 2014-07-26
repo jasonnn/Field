@@ -60,7 +60,11 @@ public class AdvancedText {
                 visitor.visitPathCubicCurveTo(cc[4], cc[5], cc[0], cc[1], cc[2], cc[3]);
             else if (s == PathIterator.SEG_QUADTO) {
 //				visitor.visitPathCubicCurveTo(cc[2], cc[3], (cc[0] - lx) * (2 / 3f) + lx, (cc[1] - ly) * (2 / 3f) + ly, (cc[0] - cc[2]) * (2 / 3f) + cc[2], (cc[1] - cc[3]) * (2 / 3f) + cc[3]);
-				visitor.visitPathCubicCurveTo(cc[2], cc[3], (cc[0] - lx) * (2 / 3f) + lx, (cc[1] - ly) * (2 / 3f) + ly, cc[0]+(cc[2]-cc[0])/3f, cc[1]+(cc[3]-cc[1])/3f);
+				visitor.visitPathCubicCurveTo(cc[2], cc[3],
+                                              ((cc[0] - lx) * (2 / 3f)) + lx,
+                                              ((cc[1] - ly) * (2 / 3f)) + ly,
+                                              cc[0] + ((cc[2] - cc[0]) / 3f),
+                                              cc[1] + ((cc[3] - cc[1]) / 3f));
             } else if (s == PathIterator.SEG_CLOSE) {
                 visitor.visitPathClose();
 			}

@@ -22,9 +22,10 @@ import java.util.List;
 
 public class TextAnnotations {
 
-	static public final VisualElementProperty<Package> textEditorAnnotationPackage = new VisualElementProperty<Package>("__textEditorAnnotationPackage");
+	public static final VisualElementProperty<Package> textEditorAnnotationPackage = new VisualElementProperty<Package>("__textEditorAnnotationPackage");
 
-	static public class Annotation implements iExtensible {
+	public static
+    class Annotation implements iExtensible {
 		Vector4 color = new Vector4(0.5, 0.5, 0.6, 0.3);
 		public String name = "";
 
@@ -155,7 +156,8 @@ public class TextAnnotations {
 		}
 	}
 
-	static public class Package {
+	public static
+    class Package {
 
 		private HashMapOfLists<VisualElementProperty, Annotation> annotations = new HashMapOfLists<VisualElementProperty, Annotation>();
 

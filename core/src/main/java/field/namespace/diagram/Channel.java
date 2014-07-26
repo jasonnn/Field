@@ -14,8 +14,8 @@ public class Channel<T> implements DiagramZero.iChannel<T>, DiagramZero.iMarkerF
 	public static final Comparator leftComparator = new Comparator() {
 
 		public int compare(Object o1, Object o2) {
-			double f1 = o1 instanceof iMarker ? ((iMarker) o1).getTime() : ((Number) o1).doubleValue();
-			double f2 = o2 instanceof iMarker ? ((iMarker) o2).getTime() : ((Number) o2).doubleValue();
+			double f1 = (o1 instanceof iMarker) ? ((iMarker) o1).getTime() : ((Number) o1).doubleValue();
+			double f2 = (o2 instanceof iMarker) ? ((iMarker) o2).getTime() : ((Number) o2).doubleValue();
 
 			if (f2 > f1)
 				return -1;
@@ -88,20 +88,20 @@ public class Channel<T> implements DiagramZero.iChannel<T>, DiagramZero.iMarkerF
 		if (!sliceIsGreedy)
 			return new ChannelFilter(new iMarkerPredicate<T>() {
 				public boolean is(iMarker<? extends T> marker) {
-					return marker.getTime() >= from && marker.getTime() < to;
+					return (marker.getTime() >= from) && (marker.getTime() < to);
 				}
 			}, this) {
 				@Override
 				protected List sublistRootStorage() {
-					int left = Collections.binarySearch(channel.root, new Double(from) - 1, leftComparator);
+					int left = Collections.binarySearch(channel.root, from - 1, leftComparator);
 					if (left < 0)
 						left = -left - 1;
-					int right = Collections.binarySearch(channel.root, new Double(to) + 1, leftComparator);
+					int right = Collections.binarySearch(channel.root, to + 1, leftComparator);
 					if (right < 0)
 						right = -right - 1;
 
 					ArrayList r = new ArrayList();
-					for (int i = left; (i < right + 1 && i < channel.root.size()); i++) {
+					for (int i = left; ((i < (right + 1)) && (i < channel.root.size())); i++) {
 						field.namespace.diagram.Channel.Marker<T> m = channel.root.get(i);
 						if (predicate.is(m)) {
 							r.add(m);
@@ -114,7 +114,7 @@ public class Channel<T> implements DiagramZero.iChannel<T>, DiagramZero.iMarkerF
 
 		return new ChannelFilter(new iMarkerPredicate<T>() {
 			public boolean is(iMarker<? extends T> marker) {
-				return marker.getTime() < to && marker.getTime() + marker.getDuration() > from;
+				return (marker.getTime() < to) && ((marker.getTime() + marker.getDuration()) > from);
 			}
 
 			// can't use fast path sublist
@@ -140,7 +140,7 @@ public class Channel<T> implements DiagramZero.iChannel<T>, DiagramZero.iMarkerF
 
 	protected void add(Marker marker) {
 		int index = 0;
-		if (root.size() == 0)
+		if (root.isEmpty())
 			index = 0;
 		else {
 			int i = Collections.binarySearch(root, marker, leftComparator);
@@ -222,7 +222,7 @@ public class Channel<T> implements DiagramZero.iChannel<T>, DiagramZero.iMarkerF
 				}
 				o = eNext;
 			}
-			for (int i = 0; i < e + 1; i++)
+			for (int i = 0; i < (e + 1); i++)
 				root.get(i).setIndex(i);
 		}
 
@@ -253,7 +253,7 @@ public class Channel<T> implements DiagramZero.iChannel<T>, DiagramZero.iMarkerF
 
 		private BetterWeakHashMap<iChannelNotify, iChannelNotify> wrappedNotifies;
 
-		private aChannelNotify<T> notify;
+		private final aChannelNotify<T> notify;
 
 		public ChannelFilter(final iMarkerPredicate<T> predicate) {
 			this.predicate = predicate;
@@ -714,7 +714,7 @@ public class Channel<T> implements DiagramZero.iChannel<T>, DiagramZero.iMarkerF
 
 		@Override
 		public String toString() {
-			return "m:" + t + "+" + duration + "=" + payload;
+			return "m:" + t + '+' + duration + '=' + payload;
 		}
 
 		public List propagateTo(String tag, Class clazz, Method method, Object... args) {

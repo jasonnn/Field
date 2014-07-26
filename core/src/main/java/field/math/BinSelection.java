@@ -9,7 +9,7 @@ public class BinSelection {
 
 	private float max;
 	private float min;
-	private float width;
+	private final float width;
 	private final List<? extends Number> data;
 
 	static LinkedHashMap<List<? extends Number>, Float> cachedWidths = new LinkedHashMap<List<? extends Number>, Float>() {

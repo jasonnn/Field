@@ -6,13 +6,15 @@ import java.io.*;
 
 public class HijackTerminal {
 
-	static public final String ttypname = "/var/tmp/field_tty";
+	public static final String ttypname = "/var/tmp/field_tty";
 
-	static public void hijackTerminal(boolean forceNew) {
+	public static
+    void hijackTerminal(boolean forceNew) {
 		hijackTerminal(forceNew, 0);
 	}
 
-	static protected void hijackTerminal(boolean forceNew, int c) {
+	protected static
+    void hijackTerminal(boolean forceNew, int c) {
 
 		if (c>4)
 			return;

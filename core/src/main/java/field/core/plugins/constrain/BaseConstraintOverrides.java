@@ -12,7 +12,7 @@ import java.util.Map;
 
 public abstract class BaseConstraintOverrides extends iVisualElementOverrides.DefaultOverride {
 
-	static public final VisualElementProperty<Map<String, iVisualElement>> constraintParameters = new VisualElementProperty<Map<String, iVisualElement>>("constraintParameters");
+	public static final VisualElementProperty<Map<String, iVisualElement>> constraintParameters = new VisualElementProperty<Map<String, iVisualElement>>("constraintParameters");
 
 	private ComplexConstraints cachedComplex;
 
@@ -31,7 +31,7 @@ public abstract class BaseConstraintOverrides extends iVisualElementOverrides.De
 
 	@Override
 	public <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
-		if (source == forElement && prop.equals(constraintParameters))
+		if ((source == forElement) && prop.equals(constraintParameters))
 		{
 			constraintsHaveChanged= true;
 			forElement.setProperty(iVisualElement.dirty, true);
@@ -39,7 +39,8 @@ public abstract class BaseConstraintOverrides extends iVisualElementOverrides.De
 		return super.setProperty(source, prop, to);
 	}
 
-	abstract protected ClConstraint createConstraint(Map<String, iVisualElement> property) ;
+	protected abstract
+    ClConstraint createConstraint(Map<String, iVisualElement> property) ;
 
 	protected void ensureConstraint()
 	{
@@ -68,7 +69,8 @@ public abstract class BaseConstraintOverrides extends iVisualElementOverrides.De
 		return forElement.getProperty(constraintParameters);
 	}
 
-	abstract protected void paint(Rect bounds, boolean visible) ;
+	protected abstract
+    void paint(Rect bounds, boolean visible) ;
 
 
 

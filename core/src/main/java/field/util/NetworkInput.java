@@ -33,7 +33,7 @@ public class NetworkInput implements Runnable {
 
 	public static int DEFAULT_PORT = NetworkOutput.DEFAULT_PORT;
 
-	public final static int THREAD_SLEEP_TIME = 0;
+	public static final int THREAD_SLEEP_TIME = 0;
 
 	protected MulticastSocket inputSocket = null;
 
@@ -126,23 +126,23 @@ public class NetworkInput implements Runnable {
 					// get the name
 					String name = decodeString(buffer, 8);
 					if (debugArrival)
-						System.err.println(" net <" + name + "> : = <" + value + ">");
+						System.err.println(" net <" + name + "> : = <" + value + '>');
 					set(name, value);
 				} else if (dim == -1) {
 					Object[] value = decodeObject(buffer, 4);
 					if (debugArrival)
-						System.err.println(" net <" + value[0] + "> : x = <" + value[1] + "> <" + buffer.length + ">");
+						System.err.println(" net <" + value[0] + "> : x = <" + value[1] + "> <" + buffer.length + '>');
 					set((String) value[0], value[1]);
 
 				} else {
 					VectorN v = new VectorN(dim);
 					for (int i = 0; i < dim; i++) {
-						float val = decode(buffer, 4 + 4 * i);
+						float val = decode(buffer, 4 + (4 * i));
 						v.set(i, val);
 					}
-					String name = decodeString(buffer, 4 + 4 * dim);
+					String name = decodeString(buffer, 4 + (4 * dim));
 					if (debugArrival)
-						System.err.println(" net <" + name + "> := <" + v + ">");
+						System.err.println(" net <" + name + "> := <" + v + '>');
 					set(name, v);
 				}
 				try {
@@ -174,7 +174,7 @@ public class NetworkInput implements Runnable {
 			try {
 				((ObjectHandler) o).handle(name, value);
 			} catch (Throwable t) {
-				System.err.println(" exception thrown in handler <" + name + ">");
+				System.err.println(" exception thrown in handler <" + name + '>');
 				t.printStackTrace();
 			}
 		} else {
@@ -209,7 +209,7 @@ public class NetworkInput implements Runnable {
 			try {
 				((ObjectHandler) o).handle(name, value);
 			} catch (Throwable t) {
-				System.err.println(" exception thrown in handler <" + name + ">");
+				System.err.println(" exception thrown in handler <" + name + '>');
 				t.printStackTrace();
 			}
 		} else {

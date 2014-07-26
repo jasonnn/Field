@@ -115,7 +115,7 @@ public class Diff {
 		/*
 		 * True if southeast corner is on an odd diagonal with respect to the northwest.
 		 */
-		final boolean odd = (fmid - bmid & 1) != 0;
+		final boolean odd = ((fmid - bmid) & 1) != 0;
 
 		fd[fdiagoff + fmid] = xoff;
 		bd[bdiagoff + bmid] = xlim;
@@ -126,7 +126,7 @@ public class Diff {
 
 			/* Extend the top-down search by an edit step in each diagonal. */
 			if (fmin > dmin)
-				fd[fdiagoff + --fmin - 1] = -1;
+				fd[((fdiagoff + --fmin) - 1)] = -1;
 			else
 				++fmin;
 			if (fmax < dmax)
@@ -134,7 +134,7 @@ public class Diff {
 			else
 				--fmax;
 			for (d = fmax; d >= fmin; d -= 2) {
-				int x, y, oldx, tlo = fd[fdiagoff + d - 1], thi = fd[fdiagoff + d + 1];
+				int x, y, oldx, tlo = fd[((fdiagoff + d) - 1)], thi = fd[fdiagoff + d + 1];
 
 				if (tlo >= thi)
 					x = tlo + 1;
@@ -142,13 +142,13 @@ public class Diff {
 					x = thi;
 				oldx = x;
 				y = x - d;
-				while (x < xlim && y < ylim && xv[x] == yv[y]) {
+				while ((x < xlim) && (y < ylim) && (xv[x] == yv[y])) {
 					++x;
 					++y;
 				}
-				if (x - oldx > 20) big_snake = true;
+				if ((x - oldx) > 20) big_snake = true;
 				fd[fdiagoff + d] = x;
-				if (odd && bmin <= d && d <= bmax && bd[bdiagoff + d] <= fd[fdiagoff + d]) {
+				if (odd && (bmin <= d) && (d <= bmax) && (bd[bdiagoff + d] <= fd[fdiagoff + d])) {
 					cost = 2 * c - 1;
 					return d;
 				}
@@ -156,7 +156,7 @@ public class Diff {
 
 			/* Similar extend the bottom-up search. */
 			if (bmin > dmin)
-				bd[bdiagoff + --bmin - 1] = Integer.MAX_VALUE;
+				bd[((bdiagoff + --bmin) - 1)] = Integer.MAX_VALUE;
 			else
 				++bmin;
 			if (bmax < dmax)
@@ -164,7 +164,7 @@ public class Diff {
 			else
 				--bmax;
 			for (d = bmax; d >= bmin; d -= 2) {
-				int x, y, oldx, tlo = bd[bdiagoff + d - 1], thi = bd[bdiagoff + d + 1];
+				int x, y, oldx, tlo = bd[((bdiagoff + d) - 1)], thi = bd[bdiagoff + d + 1];
 
 				if (tlo < thi)
 					x = tlo;
@@ -172,13 +172,13 @@ public class Diff {
 					x = thi - 1;
 				oldx = x;
 				y = x - d;
-				while (x > xoff && y > yoff && xv[x - 1] == yv[y - 1]) {
+				while ((x > xoff) && (y > yoff) && (xv[x - 1] == yv[y - 1])) {
 					--x;
 					--y;
 				}
-				if (oldx - x > 20) big_snake = true;
+				if ((oldx - x) > 20) big_snake = true;
 				bd[bdiagoff + d] = x;
-				if (!odd && fmin <= d && d <= fmax && bd[bdiagoff + d] <= fd[fdiagoff + d]) {
+				if (!odd && (fmin <= d) && (d <= fmax) && (bd[bdiagoff + d] <= fd[fdiagoff + d])) {
 					cost = 2 * c;
 					return d;
 				}
@@ -190,14 +190,18 @@ public class Diff {
 			 * With this heuristic, for files with a constant small density of changes, the algorithm is linear in the file size.
 			 */
 
-			if (c > 200 && big_snake && heuristic) {
+			if ((c > 200) && big_snake && heuristic) {
 				int best = 0;
 				int bestpos = -1;
 
 				for (d = fmax; d >= fmin; d -= 2) {
 					int dd = d - fmid;
-					if ((fd[fdiagoff + d] - xoff) * 2 - dd > 12 * (c + (dd > 0 ? dd : -dd))) {
-						if (fd[fdiagoff + d] * 2 - dd > best && fd[fdiagoff + d] - xoff > 20 && fd[fdiagoff + d] - d - yoff > 20) {
+					if ((((fd[fdiagoff + d] - xoff) * 2) - dd) > (12 * (c + ((dd > 0) ? dd : -dd)))) {
+						if ((((fd[fdiagoff + d] * 2) - dd) > best) && ((fd[fdiagoff + d] - xoff) > 20) && ((fd[fdiagoff
+                                                                                                               + d]
+                                                                                                            - d
+                                                                                                            - yoff)
+                                                                                                           > 20)) {
 							int k;
 							int x = fd[fdiagoff + d];
 
@@ -222,8 +226,10 @@ public class Diff {
 				best = 0;
 				for (d = bmax; d >= bmin; d -= 2) {
 					int dd = d - bmid;
-					if ((xlim - bd[bdiagoff + d]) * 2 + dd > 12 * (c + (dd > 0 ? dd : -dd))) {
-						if ((xlim - bd[bdiagoff + d]) * 2 + dd > best && xlim - bd[bdiagoff + d] > 20 && ylim - (bd[bdiagoff + d] - d) > 20) {
+					if ((((xlim - bd[bdiagoff + d]) * 2) + dd) > (12 * (c + ((dd > 0) ? dd : -dd)))) {
+						if (((((xlim - bd[bdiagoff + d]) * 2) + dd) > best)
+                            && ((xlim - bd[bdiagoff + d]) > 20)
+                            && ((ylim - (bd[bdiagoff + d] - d)) > 20)) {
 							/*
 							 * We have a good enough best diagonal; now insist that it end with a significant snake.
 							 */
@@ -231,7 +237,7 @@ public class Diff {
 							int x = bd[bdiagoff + d];
 
 							for (k = 0; k < 20; k++)
-								if (xvec[x + k] != yvec[x - d + k]) break;
+								if (xvec[x + k] != yvec[((x - d) + k)]) break;
 							if (k == 20) {
 								best = (xlim - bd[bdiagoff + d]) * 2 + dd;
 								bestpos = d;
@@ -259,12 +265,12 @@ public class Diff {
 
 	private void compareseq(int xoff, int xlim, int yoff, int ylim) {
 		/* Slide down the bottom initial diagonal. */
-		while (xoff < xlim && yoff < ylim && xvec[xoff] == yvec[yoff]) {
+		while ((xoff < xlim) && (yoff < ylim) && (xvec[xoff] == yvec[yoff])) {
 			++xoff;
 			++yoff;
 		}
 		/* Slide up the top initial diagonal. */
-		while (xlim > xoff && ylim > yoff && xvec[xlim - 1] == yvec[ylim - 1]) {
+		while ((xlim > xoff) && (ylim > yoff) && (xvec[xlim - 1] == yvec[ylim - 1])) {
 			--xlim;
 			--ylim;
 		}
@@ -309,7 +315,7 @@ public class Diff {
 		filevec[1].discard_confusing_lines(filevec[0]);
 	}
 
-	private boolean inhibit = false;
+	private static final boolean inhibit = false;
 
 	/**
 	 * Adjust inserts/deletes of blank lines to join changes as much as possible.

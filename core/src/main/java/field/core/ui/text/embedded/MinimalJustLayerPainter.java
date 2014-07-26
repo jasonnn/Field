@@ -18,7 +18,8 @@ import java.util.LinkedHashSet;
 
 public class MinimalJustLayerPainter extends MinimalExpandable implements iRegistersMinimalLayerPainter {
 
-	static public class Component_tuple2 extends ProvidedComponent {
+	public static
+    class Component_tuple2 extends ProvidedComponent {
 
 		String name = "Component_just_provider:" + new UID().toString() + ".transient";
 
@@ -57,7 +58,8 @@ public class MinimalJustLayerPainter extends MinimalExpandable implements iRegis
 		}
 	}
 
-	static public class WithWidget {
+	public static
+    class WithWidget {
 		public transient MinimalJustLayerPainter widget;
 
 		public WithWidget() {

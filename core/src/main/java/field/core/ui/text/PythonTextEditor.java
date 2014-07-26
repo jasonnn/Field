@@ -53,7 +53,8 @@ import java.util.zip.ZipEntry;
 @Woven
 public class PythonTextEditor extends BaseTextEditor2 {
 
-	static public class PickledCompletionInformation {
+	public static
+    class PickledCompletionInformation {
 		public List info;
 
 		public PickledCompletionInformation(List info) {
@@ -62,7 +63,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		}
 	}
 
-	static public final HashMap<String, String> knownOperators = new HashMap<String, String>();
+	public static final HashMap<String, String> knownOperators = new HashMap<String, String>();
 	static {
 		knownOperators.put("__mul__", "*");
 		knownOperators.put("__imul__", "*=");
@@ -80,7 +81,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		knownOperators.put("__irshift__", ">>=");
 	}
 
-	static public class ClassRecord {
+	public static
+    class ClassRecord {
 		String firstName;
 
 		String fullName;
@@ -291,7 +293,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		}
 
 		private String indents(int i) {
-			StringBuffer s = new StringBuffer(i * 3);
+			StringBuilder s = new StringBuilder(i * 3);
 			for (int n = 0; n < i; n++)
 				s.append("    ");
 			return s.toString();
@@ -351,7 +353,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		}
 	}
 
-	private static String[] sourceDirs = SystemProperties.getProperty("java.source.paths", "").split(":");
+	private static final String[] sourceDirs = SystemProperties.getProperty("java.source.paths", "").split(":");
 
 	static public String smaller(String t) {
 		return "<font size=-2>" + t.replace("\n", " ").replace("  ", " ").replace("\t", " ").replaceAll("( +)", " ") + "</font>";
@@ -544,7 +546,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 	public void executeHandle() {
 
 		String s = ed.getSelectionText();
-		if (s == null || s.equals("")) {
+		if (s == null || "".equals(s)) {
 			int pos = ed.getCaretOffset();
 			String text = ed.getText();
 			int a = text.lastIndexOf("\n", pos - 1);
@@ -568,7 +570,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
 		String s = ed.getSelectionText();
 		Area area;
-		if (s == null || s.equals("")) {
+		if (s == null || "".equals(s)) {
 			int pos = ed.getCaretOffset();
 			String text = ed.getText();
 			int a = text.lastIndexOf("\n", pos - 1);
@@ -836,7 +838,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
 						doc = doc.trim();
 
-						c.text = "\u03bd  <b>" + e.getKey() + "</b> = " + limit(e.getValue()) + smaller(" a python class ") + ((doc.length() > 0 ? ("- <i>" + limitDocumentation(doc) + "</i>") : ""));
+						c.text = "\u03bd  <b>" + e.getKey() + "</b> = " + limit(e.getValue()) + smaller(" a python class ") + ((!doc.isEmpty()
+                                                                                                                                ? ("- <i>" + limitDocumentation(doc) + "</i>") : ""));
 						c.enabled = true;
 						// c.optionalDocumentation =
 						// convertPythonDoc(doc);
@@ -915,7 +918,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
 			PyObject doc = f.__getattr__("__doc__");
 
-			if (doc != null && !doc.toString().equals("None"))
+			if (doc != null && !"None".equals(doc.toString()))
 				ddoc = "- " + doc.toString();
 
 			s = s.replace("(", "");
@@ -961,7 +964,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 
         // System.out.println(" doc string is <" + ddoc + ">");
 
-		if (doc != null && !doc.toString().equals("None"))
+		if (doc != null && !"None".equals(doc.toString()))
 			ddoc = "- " + doc.toString();
 
 		c.text = "\u1d3e  <b>" + rewriteOperator(f.__name__) + " (</b>" + aa + "<b>) </b> " + smaller(limit(ddoc));
@@ -996,7 +999,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		String ddoc = "";
 
 		PyObject doc = clazz.__getattr__("__doc__");
-		if (doc != null && !doc.toString().equals("None"))
+		if (doc != null && !"None".equals(doc.toString()))
 			ddoc = "- " + doc.toString();
 
 		s = s.replace("(", "");
@@ -1081,7 +1084,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 			} else {
 
 				final String name = p.toString();
-				if (name.indexOf("__") != -1)
+				if (name.contains("__"))
 					continue;
 
 				if (name.startsWith(right) && (!name.startsWith("_") || !publicOnly || knownOperators.containsKey(name))) {
@@ -1256,7 +1259,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 				}
 			}
 
-			if (right.equals("")) {
+			if ("".equals(right)) {
                 PyObject pythonDoc = po.__findattr__("__doc__");
                 if (pythonDoc != null && pythonDoc != Py.None) {
 					Completion cc = new Completion() {
@@ -1327,7 +1330,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		if (ascii == null)
 			return "";
 
-		if (ascii.equals("The most base type")) {
+		if ("The most base type".equals(ascii)) {
 			ascii = "Completions...";
 		}
 
@@ -1576,10 +1579,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
     private static
     String dress(String fullName) {
         int m = fullName.lastIndexOf('.');
-		if (m != -1)
-			return fullName.substring(0, m) + "<b>" + fullName.substring(m) + "</b>";
-		else
-			return fullName.substring(m);
+        if (m == -1) return fullName.substring(m);
+        else return fullName.substring(0, m) + "<b>" + fullName.substring(m) + "</b>";
 
 	}
 
@@ -1817,7 +1818,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 		if (ll.length > 10) {
 			StringBuffer s = new StringBuffer();
 			for (int i = 0; i < 10; i++)
-				s.append(ll[i] + "\n");
+				s.append(ll[i]).append("\n");
 			over = true;
 			source = s.toString();
 		}
@@ -1884,7 +1885,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 						if (comment == null)
 							comment = "";
 
-						c.text = (Modifier.isPublic(m.getModifiers()) ? "\u24d2  " : "\u24d2 <grey>") + ctext + (comment.length() > 0 ? " - " + smaller(limitDocumentation(comment)) : "");
+						c.text = (Modifier.isPublic(m.getModifiers()) ? "\u24d2  " : "\u24d2 <grey>") + ctext + (!comment.isEmpty()
+                                                                                                                 ? " - " + smaller(limitDocumentation(comment)) : "");
 						// c.optionalDocumentation =
 						// convertPythonDoc(comment);
 					} else {
@@ -2123,7 +2125,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 	protected void executePrintHandle() {
 
 		String s = ed.getSelectionText();
-		if (s == null || s.equals("")) {
+		if (s == null || "".equals(s)) {
 			int pos = ed.getCaretOffset();
 			String text = ed.getText();
 			int a = text.lastIndexOf("\n", pos - 1);
@@ -2213,10 +2215,8 @@ public class PythonTextEditor extends BaseTextEditor2 {
 				return true;
 			} else {
 				Object ex2 = Py.tojava((PyObject) ex, Object.class);
-				if (ex2 != ex)
-					return interpretKeyHandleCompletionObject(ex2, after, items, u);
-				else
-					return false;
+                if (ex2 == ex) return false;
+                else return interpretKeyHandleCompletionObject(ex2, after, items, u);
 			}
 		}
 		if (ex instanceof String) {
@@ -2374,7 +2374,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 			List i = ((List) o);
 			String type = (String) i.get(0);
 
-			if (type.equals("field")) {
+			if ("field".equals(type)) {
 
 				final String name = (String) i.get(2);
 				if (name.startsWith(right) && (!publicOnly || !name.startsWith("__"))) {
@@ -2399,7 +2399,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 					comp.add(cc);
 				}
 
-			} else if (type.equals("javamethod")) {
+			} else if ("javamethod".equals(type)) {
 				final String name = (String) i.get(1);
 				if (name.startsWith(right) && (!publicOnly || !name.startsWith("__"))) {
 					Completion cc = new Completion() {
@@ -2426,7 +2426,7 @@ public class PythonTextEditor extends BaseTextEditor2 {
 					comp.add(cc);
 
 				}
-			} else if (type.equals("pythonmethod")) {
+			} else if ("pythonmethod".equals(type)) {
 				final String name = (String) i.get(1);
 				if (name.startsWith(right) && (!publicOnly || !name.startsWith("_"))) {
 					Completion cc = new Completion() {

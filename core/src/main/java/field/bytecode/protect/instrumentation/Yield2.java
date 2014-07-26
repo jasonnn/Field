@@ -141,7 +141,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
         super.visitMethodInsn(opcode, owner, name, desc);
         //System.out.println(" vmi <-:" + opcode + " " + analyzer.locals);
 
-        if (owner.equals("field/bytecode/protect/yield/YieldUtilities") && name.equals("yield")) {
+        if ("field/bytecode/protect/yield/YieldUtilities".equals(owner) && "yield".equals(name)) {
 
             //System.out.println(" inside yield, stack is <" + analyzer.stack + " / " + analyzer.locals + ">");
 
@@ -155,7 +155,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             for (Object o : wasLocals) {
                 n++;
                 //System.out.println(" o = " + o + " " + n);
-                if (o == Opcodes.TOP || n == 1)
+                if ((o == Opcodes.TOP) || (n == 1))
                     continue;
 
                 dup();
@@ -173,7 +173,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
                 else if (o == Opcodes.LONG)
                     this.loadLocal(n - 1, t = ASMType.LONG_TYPE);
                 else
-                    throw new IllegalStateException("unhandled <" + o + ">");
+                    throw new IllegalStateException("unhandled <" + o + '>');
 
                 box(t);
 
@@ -232,7 +232,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
             int off = 1;
             for (Object o : wasLocals) {
                 n++;
-                if (o == Opcodes.TOP || n == 1)
+                if ((o == Opcodes.TOP) || (n == 1))
                     continue;
 
                 dup();
@@ -253,7 +253,7 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
                 } else if (o == Opcodes.LONG) {
                     unbox(t = ASMType.LONG_TYPE);
                 } else
-                    throw new IllegalStateException("unhandled <" + o + ">");
+                    throw new IllegalStateException("unhandled <" + o + '>');
 
                 // if (StandardTrampoline.debug)
                 //System.out.println(" loading back type = <" + o + ">");
@@ -268,9 +268,12 @@ public abstract class Yield2 extends FieldASMGeneratorAdapter implements YieldHa
         yieldNumber++;
     }
 
-    abstract public int yieldIndexFor(String fromName, Object fromThis, String methodName);
+    public abstract
+    int yieldIndexFor(String fromName, Object fromThis, String methodName);
 
-    abstract public Object[] yieldLoad(String fromName, Object fromThis, String methodName);
+    public abstract
+    Object[] yieldLoad(String fromName, Object fromThis, String methodName);
 
-    abstract public Object yieldStore(Object wasReturn, Object[] localStorage, String fromName, Object fromThis, String methodName, int resumeLabel);
+    public abstract
+    Object yieldStore(Object wasReturn, Object[] localStorage, String fromName, Object fromThis, String methodName, int resumeLabel);
 }

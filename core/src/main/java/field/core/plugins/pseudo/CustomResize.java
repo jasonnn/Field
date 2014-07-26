@@ -16,9 +16,10 @@ public class CustomResize {
 		public boolean apply(float x, float y, Vector2 delta, iVisualElement to);
 	}
     
-	static public final VisualElementProperty<iApplyResize> resizer = new VisualElementProperty<iApplyResize>("resizer_");
+	public static final VisualElementProperty<iApplyResize> resizer = new VisualElementProperty<iApplyResize>("resizer_");
     
-	static public boolean applyResize(iVisualElement to, Set<Resize> resize, Vector2 delta) {
+	public static
+    boolean applyResize(iVisualElement to, Set<Resize> resize, Vector2 delta) {
 		Ref<Collector> rr = new Ref<Collector>(null);
 		PseudoPropertiesPlugin.getCollector(to, rr);
 		Collector c = rr.get();

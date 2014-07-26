@@ -38,7 +38,7 @@ public abstract class ExecutionDecoration {
 	public enum Decoration {
 		nothing(null), start(Direction.east), stop(Direction.west);
 
-		private Direction d;
+		private final Direction d;
 
 		Decoration(Direction d) {
 			this.d = d;

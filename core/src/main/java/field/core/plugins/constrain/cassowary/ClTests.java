@@ -17,7 +17,8 @@ public class ClTests extends CL {
 		RND = new Random(123456789);
 	}
 
-	public final static boolean simple1() throws ExCLInternalError, ExCLRequiredFailure {
+	public static final
+    boolean simple1() throws ExCLInternalError, ExCLRequiredFailure {
 		boolean fOkResult = true;
 		ClVariable x = new ClVariable(167);
 		ClVariable y = new ClVariable(2);
@@ -32,7 +33,8 @@ public class ClTests extends CL {
         return (fOkResult);
 	}
 
-	public final static boolean justStay1() throws ExCLInternalError, ExCLRequiredFailure {
+	public static final
+    boolean justStay1() throws ExCLInternalError, ExCLRequiredFailure {
 		boolean fOkResult = true;
 		ClVariable x = new ClVariable(5);
 		ClVariable y = new ClVariable(10);
@@ -46,7 +48,8 @@ public class ClTests extends CL {
         return (fOkResult);
 	}
 
-	public final static boolean addDelete1() throws ExCLInternalError, ExCLRequiredFailure, ExCLConstraintNotFound {
+	public static final
+    boolean addDelete1() throws ExCLInternalError, ExCLRequiredFailure, ExCLConstraintNotFound {
 		boolean fOkResult = true;
 		ClVariable x = new ClVariable("x");
 		ClSimplexSolver solver = new ClSimplexSolver();
@@ -75,7 +78,8 @@ public class ClTests extends CL {
         return (fOkResult);
 	}
 
-	public final static boolean addDelete2() throws ExCLInternalError, ExCLRequiredFailure, ExCLConstraintNotFound, ExCLNonlinearExpression {
+	public static final
+    boolean addDelete2() throws ExCLInternalError, ExCLRequiredFailure, ExCLConstraintNotFound, ExCLNonlinearExpression {
 		boolean fOkResult = true;
 		ClVariable x = new ClVariable("x");
 		ClVariable y = new ClVariable("y");
@@ -102,18 +106,21 @@ public class ClTests extends CL {
         return (fOkResult);
 	}
 
-	public final static boolean casso1() throws ExCLInternalError, ExCLRequiredFailure {
+	public static final
+    boolean casso1() throws ExCLInternalError, ExCLRequiredFailure {
 		boolean fOkResult = true;
 		ClVariable x = new ClVariable("x");
 		ClVariable y = new ClVariable("y");
 		ClSimplexSolver solver = new ClSimplexSolver();
 		solver.addConstraint(new ClLinearInequality(x, CL.LEQ, y)).addConstraint(new ClLinearEquation(y, CL.Plus(x, 3.0))).addConstraint(new ClLinearEquation(x, 10.0, ClStrength.weak)).addConstraint(new ClLinearEquation(y, 10.0, ClStrength.weak));
-		fOkResult = fOkResult && (CL.approx(x, 10.0) && CL.approx(y, 13.0) || CL.approx(x, 7.0) && CL.approx(y, 10.0));
+		fOkResult = fOkResult && ((CL.approx(x, 10.0) && CL.approx(y, 13.0)) || (CL.approx(x, 7.0) && CL.approx(y,
+                                                                                                                10.0)));
         //System.out.println("x == " + x.value() + ", y == " + y.value());
         return (fOkResult);
 	}
 
-	public final static boolean inconsistent1() throws ExCLInternalError, ExCLRequiredFailure {
+	public static final
+    boolean inconsistent1() throws ExCLInternalError, ExCLRequiredFailure {
 		try {
 			ClVariable x = new ClVariable("x");
 			ClSimplexSolver solver = new ClSimplexSolver();
@@ -127,7 +134,8 @@ public class ClTests extends CL {
 		}
 	}
 
-	public final static boolean inconsistent2() throws ExCLInternalError, ExCLRequiredFailure {
+	public static final
+    boolean inconsistent2() throws ExCLInternalError, ExCLRequiredFailure {
 		try {
 			ClVariable x = new ClVariable("x");
 			ClSimplexSolver solver = new ClSimplexSolver();
@@ -141,7 +149,8 @@ public class ClTests extends CL {
 		}
 	}
 
-    public final static boolean multiedit() throws ExCLError {
+    public static final
+    boolean multiedit() throws ExCLError {
         try {
 			boolean fOkResult = true;
 			ClVariable x = new ClVariable("x");
@@ -172,7 +181,8 @@ public class ClTests extends CL {
 		}
 	}
 
-	public final static boolean inconsistent3() throws ExCLInternalError, ExCLRequiredFailure {
+	public static final
+    boolean inconsistent3() throws ExCLInternalError, ExCLRequiredFailure {
 		try {
 			ClVariable w = new ClVariable("w");
 			ClVariable x = new ClVariable("x");
@@ -194,7 +204,8 @@ public class ClTests extends CL {
 		}
 	}
 
-	public final static boolean addDel(int nCns, int nVars, int nResolves) throws ExCLInternalError, ExCLRequiredFailure, ExCLNonlinearExpression, ExCLConstraintNotFound {
+	public static final
+    boolean addDel(int nCns, int nVars, int nResolves) throws ExCLInternalError, ExCLRequiredFailure, ExCLNonlinearExpression, ExCLConstraintNotFound {
 		Timer timer = new Timer();
 		// FIXGJB: from where did .12 come?
 		final double ineqProb = 0.12;
@@ -215,7 +226,7 @@ public class ClTests extends CL {
 		for (j = 0; j < nCns; j++) {
 			// number of variables in this constraint
 			nvs = RandomInRange(1, maxVars);
-			ClLinearExpression expr = new ClLinearExpression(UniformRandomDiscretized() * 20.0 - 10.0);
+			ClLinearExpression expr = new ClLinearExpression((UniformRandomDiscretized() * 20.0) - 10.0);
 			for (k = 0; k < nvs; k++) {
 				coeff = UniformRandomDiscretized() * 10 - 5;
 				int iclv = (int) (UniformRandomDiscretized() * nVars);
@@ -280,16 +291,19 @@ public class ClTests extends CL {
 		return true;
 	}
 
-	public final static double UniformRandomDiscretized() {
+	public static final
+    double UniformRandomDiscretized() {
 		double n = Math.abs(RND.nextInt());
 		return (n / Integer.MAX_VALUE);
 	}
 
-	public final static int RandomInRange(int low, int high) {
-		return (int) UniformRandomDiscretized() * (high - low) + low;
+	public static final
+    int RandomInRange(int low, int high) {
+		return ((int) UniformRandomDiscretized() * (high - low)) + low;
 	}
 
-    public final static void main(String[] args) throws ExCLError {
+    public static final
+    void main(String[] args) throws ExCLError {
         //    try
 		{
 			ClTests clt = new ClTests();
@@ -383,5 +397,5 @@ public class ClTests extends CL {
 		//      }
 	}
 
-	static private Random RND;
+	private static Random RND;
 }

@@ -59,7 +59,7 @@ public class GlassComponent implements iComponent {
 	}
 
 	public float isHit(Event event) {
-		return mousePeers.size()>0 ? Float.POSITIVE_INFINITY :  Float.NEGATIVE_INFINITY;
+		return !mousePeers.isEmpty() ? Float.POSITIVE_INFINITY : Float.NEGATIVE_INFINITY;
 	}
 
 	public boolean isSelected() {
@@ -154,9 +154,10 @@ public class GlassComponent implements iComponent {
 	public void mousePressed(ComponentContainer inside, Event arg0) {
 		if (!arg0.doit) return;
 
-		if (arg0.doit && (arg0.stateMask & Platform.getCommandModifier()) != 0
-				&& (arg0.stateMask & SWT.SHIFT) != 0
-				&& !Platform.isPopupTrigger(arg0)) {
+		if (arg0.doit
+            && ((arg0.stateMask & Platform.getCommandModifier()) != 0)
+            && ((arg0.stateMask & SWT.SHIFT) != 0)
+            && !Platform.isPopupTrigger(arg0)) {
 
 			if (arg0.type == SWT.MouseDown) {
 				duplicator.begin(arg0);

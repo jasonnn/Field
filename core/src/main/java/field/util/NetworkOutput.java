@@ -16,7 +16,7 @@ public class NetworkOutput {
 	public static int DEFAULT_PORT = SystemProperties.getIntProperty("NetworkDoubleProvider.port.output", 1230);
 	public static String DEFAULT_INTERFACE = SystemProperties.getProperty("NetworkDoubleProvider.interface.output", "en0");
 
-	public final static byte TIME_TO_LIVE = 1;
+	public static final byte TIME_TO_LIVE = 1;
 
 	protected DatagramPacket dp;
 
@@ -81,12 +81,12 @@ public class NetworkOutput {
 
 	public void send(String name, VectorN vec) {
 		byte[] buffer = dp.getData();
-		assert vec.dim() * 4 + 4 < buffer.length : vec.dim() + " " + buffer.length;
+		assert ((vec.dim() * 4) + 4) < buffer.length : vec.dim() + " " + buffer.length;
 		encode(buffer, 0, vec.dim());
 		for (int i = 0; i < vec.dim(); i++) {
-            encode(buffer, 4 + 4 * i, vec.get(i));
+            encode(buffer, 4 + (4 * i), vec.get(i));
         }
-		encodeString(buffer, 4 + 4 * vec.dim(), name);
+		encodeString(buffer, 4 + (4 * vec.dim()), name);
 		try {
 			int ttl = outputSocket.getTimeToLive();
 			outputSocket.setTimeToLive(TIME_TO_LIVE);

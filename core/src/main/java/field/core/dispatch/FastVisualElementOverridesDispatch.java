@@ -31,7 +31,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -59,7 +59,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -87,7 +87,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -115,7 +115,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -143,7 +143,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -172,7 +172,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -200,7 +200,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -228,7 +228,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -257,7 +257,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -288,7 +288,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -320,7 +320,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -348,7 +348,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -376,7 +376,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
@@ -404,7 +404,7 @@ public class FastVisualElementOverridesDispatch implements iVisualElementOverrid
 
 		HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
 
-		while (fringe.size() > 0) {
+		while (!fringe.isEmpty()) {
 			iVisualElement next = fringe.remove(0);
 			if (!seen.contains(next)) {
 				iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);

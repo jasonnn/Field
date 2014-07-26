@@ -33,13 +33,15 @@ public abstract class ContextTopology<K, I> {
         this.interfaceClass = interfaceClass;
     }
 
-    abstract public Set<K> childrenOf(K p);
+    public abstract
+    Set<K> childrenOf(K p);
 
     public void delete(K child) {
         throw new IllegalArgumentException(" not implemented (optional delete key)");
     }
 
-    abstract public void deleteChild(K parent, K child);
+    public abstract
+    void deleteChild(K parent, K child);
 
     public K getAt() {
         return at.get();
@@ -53,9 +55,11 @@ public abstract class ContextTopology<K, I> {
         return keyClass;
     }
 
-    abstract public Set<K> parentsOf(K k);
+    public abstract
+    Set<K> parentsOf(K k);
 
-    abstract public K root();
+    public abstract
+    K root();
 
     // returns where
     // we were

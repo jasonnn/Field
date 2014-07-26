@@ -39,8 +39,8 @@ import java.util.Map;
 public class Client implements iLaunchable, iHandlesAttributes, RemoteExecutionService, iUpdateable, iProvidesQueue {
 
 	public PyDictionary globals = new PyDictionary();
-	static public PySystemState state = new PySystemState();
-	static public CompilerFlags cflags = new CompilerFlags();
+	public static PySystemState state = new PySystemState();
+	public static CompilerFlags cflags = new CompilerFlags();
 
 	String returnAddress = null;
 
@@ -117,7 +117,7 @@ public class Client implements iLaunchable, iHandlesAttributes, RemoteExecutionS
 
 	@Override
 	public void update() {
-		if (System.currentTimeMillis() - tick > 1000) {
+		if ((System.currentTimeMillis() - tick) > 1000) {
 			try {
 				Registry registry = LocateRegistry.getRegistry();
 				registry.rebind(id, exported);
@@ -141,7 +141,7 @@ public class Client implements iLaunchable, iHandlesAttributes, RemoteExecutionS
 	public void setAttribute(String name, Object value) {
 		insideUnderscore.put(name, value);
 
-		if (name != null && host != null && name.contains("_host_")) {
+		if ((name != null) && (host != null) && name.contains("_host_")) {
 			try {
 				host.setData(id, name.replace("_host_", ""), value);
 			} catch (RemoteException e) {
@@ -189,14 +189,14 @@ public class Client implements iLaunchable, iHandlesAttributes, RemoteExecutionS
             printout.flush();
 			printerr.flush();
 		} catch (Exception e) {
-			System.err.println("Python threw an exception <" + e + ">");
+			System.err.println("Python threw an exception <" + e + '>');
 
 			try {
 				printerr.write(("Field remote threw an exception\n").getBytes());
 				StringWriter sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw, true));
 				sw.flush();
-				printerr.write((sw.toString() + "\n").getBytes());
+				printerr.write((sw.toString() + '\n').getBytes());
 				printout.flush();
 				printerr.flush();
 			} catch (IOException e1) {

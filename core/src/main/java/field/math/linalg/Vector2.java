@@ -118,9 +118,9 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 		if (key instanceof PyInteger) {
 			return __finditem__(((PyInteger) key).getValue());
 		}
-		int start = ((PySlice) key).start instanceof PyNone ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
-		int stop = ((PySlice) key).stop instanceof PyNone ? 2 : ((PyInteger) ((PySlice) key).stop).getValue();
-		int step = ((PySlice) key).step instanceof PyNone ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
+		int start = (((PySlice) key).start instanceof PyNone) ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
+		int stop = (((PySlice) key).stop instanceof PyNone) ? 2 : ((PyInteger) ((PySlice) key).stop).getValue();
+		int step = (((PySlice) key).step instanceof PyNone) ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
 		List<Float> r = new ArrayList<Float>();
 		for (int i = start; i < stop; i += step) {
 			r.add(getIndex(i));
@@ -132,9 +132,10 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 		if (key instanceof PyInteger) {
 			return __finditem__(((PyInteger) key).getValue());
 		}
-		int start = ((PySlice) key).start instanceof PyNone ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
-		int stop = ((PySlice) key).start instanceof PyNone ? __len__() : ((PyInteger) ((PySlice) key).stop).getValue();
-		int step = ((PySlice) key).start instanceof PyNone ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
+		int start = (((PySlice) key).start instanceof PyNone) ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
+		int stop =
+                (((PySlice) key).start instanceof PyNone) ? __len__() : ((PyInteger) ((PySlice) key).stop).getValue();
+		int step = (((PySlice) key).start instanceof PyNone) ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
 		List<Float> r = new ArrayList<Float>();
 		for (int i = start; i < stop; i += step) {
 			r.add(getIndex(i));
@@ -163,9 +164,11 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 		if (key instanceof PyInteger) {
 			__setitem__(((PyInteger) key).getValue(), value);
 		} else if (key instanceof PySlice) {
-			int start = ((PySlice) key).start instanceof PyNone ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
-			int stop = ((PySlice) key).start instanceof PyNone ? __len__() : ((PyInteger) ((PySlice) key).stop).getValue();
-			int step = ((PySlice) key).start instanceof PyNone ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
+			int start = (((PySlice) key).start instanceof PyNone) ? 0 : ((PyInteger) ((PySlice) key).start).getValue();
+			int stop = (((PySlice) key).start instanceof PyNone)
+                       ? __len__()
+                       : ((PyInteger) ((PySlice) key).stop).getValue();
+			int step = (((PySlice) key).start instanceof PyNone) ? 1 : ((PyInteger) ((PySlice) key).step).getValue();
 			for (int i = start; i < stop; i += step) {
 				PyObject v = null;
 				if (value instanceof PySequence)
@@ -252,7 +255,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	 */
 	public final float signedAngle(Vector2 b) {
 		float angle = angle(b);
-		if(this.x*b.y - this.y*b.x < 0)
+		if(((this.x * b.y) - (this.y * b.x)) < 0)
 			    angle = -angle;
 		return angle;
 	}
@@ -417,7 +420,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	}
 
 	public float distanceFrom(Vector2 b) {
-		return (float) Math.sqrt((x - b.x) * (x - b.x) + (y - b.y) * (y - b.y));
+		return (float) Math.sqrt(((x - b.x) * (x - b.x)) + ((y - b.y) * (y - b.y)));
 	}
 
 	/**
@@ -427,7 +430,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	 *                the other vector
 	 */
 	public final float dot(Vector2 v1) {
-		return (this.x * v1.x + this.y * v1.y);
+		return ((this.x * v1.x) + (this.y * v1.y));
 	}
 
 	/**
@@ -446,11 +449,11 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 		float diff;
 
 		diff = x - t1.x;
-		if ((diff < 0 ? -diff : diff) > epsilon)
+		if (((diff < 0) ? -diff : diff) > epsilon)
 			return false;
 
 		diff = y - t1.y;
-		if ((diff < 0 ? -diff : diff) > epsilon)
+		if (((diff < 0) ? -diff : diff) > epsilon)
 			return false;
 
 		return true;
@@ -469,7 +472,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	public boolean equals(Object t1) {
 		try {
 			Vector2 t2 = (Vector2) t1;
-			return (this.x == t2.x && this.y == t2.y);
+			return ((this.x == t2.x) && (this.y == t2.y));
 		} catch (NullPointerException e2) {
 			return false;
 		} catch (ClassCastException e1) {
@@ -488,7 +491,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	 */
 	public boolean equals(Vector2 t1) {
 		try {
-			return (this.x == t1.x && this.y == t1.y);
+			return ((this.x == t1.x) && (this.y == t1.y));
 		} catch (NullPointerException e2) {
 			return false;
 		}
@@ -582,7 +585,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	 * @return the length of this vector
 	 */
 	public final float length() {
-		return (float) Math.sqrt(this.x * this.x + this.y * this.y);
+		return (float) Math.sqrt((this.x * this.x) + (this.y * this.y));
 	}
 
 	/**
@@ -591,7 +594,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	 * @return the squared length of this vector
 	 */
 	public final float lengthSquared() {
-		return (this.x * this.x + this.y * this.y);
+		return ((this.x * this.x) + (this.y * this.y));
 	}
 
 	public Vector2 lerp(Vector2 a, Vector2 b, float f) {
@@ -601,7 +604,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	}
 
 	public float mag() {
-		return (float) Math.sqrt(x * x + y * y);
+		return (float) Math.sqrt((x * x) + (y * y));
 	}
 
 	public Vector2 max(Vector2 o) {
@@ -656,7 +659,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	public final Vector2 normalize() {
 		float norm;
 
-		float q = (float) Math.sqrt(this.x * this.x + this.y * this.y);
+		float q = (float) Math.sqrt((this.x * this.x) + (this.y * this.y));
 		if (q > 0) {
 			norm = (1.0f / q);
 			this.x *= norm;
@@ -674,7 +677,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	public final void normalize(Vector2 v1) {
 		float norm;
 
-		norm = (float) (1.0 / Math.sqrt(v1.x * v1.x + v1.y * v1.y));
+		norm = (float) (1.0 / Math.sqrt((v1.x * v1.x) + (v1.y * v1.y)));
 		this.x = v1.x * norm;
 		this.y = v1.y * norm;
 	}
@@ -863,7 +866,7 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 	 */
 	@Override
 	public String toString() {
-		return ("(" + this.x + ", " + this.y + ")");
+		return ("(" + this.x + ", " + this.y + ')');
 	}
 
 	public Vector3 toVector3() {
@@ -878,8 +881,8 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 		double s = Math.sin(radians);
 		double c = Math.cos(radians);
 
-		double x = c * this.x - s * this.y;
-		double y = s * this.x + c * this.y;
+		double x = (c * this.x) - (s * this.y);
+		double y = (s * this.x) + (c * this.y);
 
 		this.x = (float) x;
 		this.y = (float) y;
@@ -897,8 +900,9 @@ public class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, 
 		throw new ArrayIndexOutOfBoundsException(key);
 	}
 
-	static public List<Comp> getClassCustomCompletion(String prefix, Object on) {
-		if (prefix.equals("")) {
+	public static
+    List<Comp> getClassCustomCompletion(String prefix, Object on) {
+		if (prefix != null && prefix.isEmpty()) {
 			ArrayList<Comp> c = new ArrayList<Comp>();
 			Comp c0 = new Comp("(0)", "the <i>x</i> component of this Vector2, currently <b>" + ((Vector2) on).x);
 			Comp c1 = new Comp("(1)", "the <i>y</i> component of this Vector2, current <b>" + ((Vector2) on).y);

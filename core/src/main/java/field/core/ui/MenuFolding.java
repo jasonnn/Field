@@ -14,7 +14,8 @@ public class MenuFolding {
 		public Pair<String, iUpdateable> condense(String g1, String n1, iUpdateable u1, String g2, String n2, iUpdateable u2);
 	}
 
-	static public class SameName implements iProduction {
+	public static
+    class SameName implements iProduction {
 
 		public Pair<String, iUpdateable> condense(String g1, String n1, iUpdateable u1, String g2, String n2, iUpdateable u2) {
 			if (n1.equals(n2)) {
@@ -26,7 +27,8 @@ public class MenuFolding {
 	/*
 	 * looks for patterns like " operation on 'banana' " and " operation on 'peach' " and returns "operation on 'banana, peach' "
 	 */
-	static public class SubejctGroupCompositor implements iProduction {
+    public static
+    class SubejctGroupCompositor implements iProduction {
 
 		Pattern p = Pattern.compile("(.*)'(.*)'");
 
@@ -42,13 +44,14 @@ public class MenuFolding {
 
 			if (m1.matches() && m2.matches()) {
 				if (m1.group(1).equals(m2.group(1))) {
-					return new Pair<String, iUpdateable>(m1.group(1) + "'" + m1.group(2) + ", " + m2.group(2) + "'", null);
+					return new Pair<String, iUpdateable>(m1.group(1) + '\'' + m1.group(2) + ", " + m2.group(2) + '\'', null);
 				}
 			}
 			return null;
 		}
 	}
-	static public iUpdateable both(final iUpdateable u1, final iUpdateable u2) {
+	public static
+    iUpdateable both(final iUpdateable u1, final iUpdateable u2) {
 		return new iUpdateable() {
 
 			public void update() {

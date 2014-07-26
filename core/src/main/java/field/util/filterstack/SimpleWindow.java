@@ -39,12 +39,16 @@ public class SimpleWindow implements iFilter<Double, Double>, iProvidesWindowSta
 
 		status = t/duration  > 1 ?  WindowStatus.finished : WindowStatus.ongoing;
 		
-		if (t / duration < middle) {
-			double r = 1.0- height * CubicTools.cubic((float) ((t / duration) / middle), 1, 0, 1, 0);
+		if ((t / duration) < middle) {
+			double r = 1.0 - (height * CubicTools.cubic((float) ((t / duration) / middle), 1, 0, 1, 0));
 			return r;
 		} 
 		else {
-			double r = 1.0-height * CubicTools.cubic((float) Math.min(1, ((t / duration - middle) / (1 - middle))), 0, 1, 0, 1);
+			double r = 1.0 - (height * CubicTools.cubic((float) Math.min(1, ((t / duration - middle) / (1 - middle))),
+                                                        0,
+                                                        1,
+                                                        0,
+                                                        1));
 			return r;
 		}
 		

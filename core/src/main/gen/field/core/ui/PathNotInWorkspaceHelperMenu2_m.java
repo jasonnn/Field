@@ -8,8 +8,8 @@ import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.Method;
 public class PathNotInWorkspaceHelperMenu2_m {
-static public final Method move_m = ReflectionTools.methodOf("move", field.core.ui.PathNotInWorkspaceHelperMenu2.class, java.io.File.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File> move_s = new Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File>(field.core.ui.PathNotInWorkspaceHelperMenu2.class, "move", new Class[]{java.io.File.class});
+public static final Method move_m = ReflectionTools.methodOf("move", field.core.ui.PathNotInWorkspaceHelperMenu2.class, java.io.File.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File> move_s = new Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File>(field.core.ui.PathNotInWorkspaceHelperMenu2.class, "move", new Class[]{java.io.File.class});
 
 public interface move_interface extends iAcceptor<java.io.File>, iFunction<Object ,java.io.File >
 	{
@@ -18,8 +18,8 @@ public interface move_interface extends iAcceptor<java.io.File>, iFunction<Objec
 
 public final move_interface move;
 
-static public final Method copy_m = ReflectionTools.methodOf("copy", field.core.ui.PathNotInWorkspaceHelperMenu2.class, java.io.File.class);
-static public final Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File> copy_s = new Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File>(field.core.ui.PathNotInWorkspaceHelperMenu2.class, "copy", new Class[]{java.io.File.class});
+public static final Method copy_m = ReflectionTools.methodOf("copy", field.core.ui.PathNotInWorkspaceHelperMenu2.class, java.io.File.class);
+public static final Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File> copy_s = new Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File>(field.core.ui.PathNotInWorkspaceHelperMenu2.class, "copy", new Class[]{java.io.File.class});
 
 public interface copy_interface extends iAcceptor<java.io.File>, iFunction<Object ,java.io.File >
 	{

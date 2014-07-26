@@ -82,7 +82,8 @@ public interface iVisualElementOverrides {
 
 	}
 
-	static public class DefaultOverride extends Adaptor implements iDefaultOverride {
+	public static
+    class DefaultOverride extends Adaptor implements iDefaultOverride {
 		public iVisualElement forElement;
 
 		public DefaultOverride() {
@@ -159,15 +160,16 @@ public interface iVisualElementOverrides {
 		}
 	}
 
-	static public interface iDefaultOverride {
+	public static
+    interface iDefaultOverride {
 		public iDefaultOverride setVisualElement(iVisualElement ve);
 	}
 
 	static class MakeDispatchProxy {
 
-		static public int dispatchBackwardCount = 0;
+		public static int dispatchBackwardCount = 0;
 
-		static public int dispatchForwardCount = 0;
+		public static int dispatchForwardCount = 0;
 
 		public iVisualElementOverrides getBackwardsOverrideProxyFor(final iVisualElement element) {
 			final TopologyViewOfGraphNodes<iVisualElement> topView = new TopologyViewOfGraphNodes<iVisualElement>(true);
@@ -222,7 +224,8 @@ public interface iVisualElementOverrides {
 		}
 	}
 
-	static public class Ref<T> extends BaseRef<T> {
+	public static
+    class Ref<T> extends BaseRef<T> {
 		public iVisualElement storageSource;
 
 		public Ref(T to) {
@@ -242,16 +245,16 @@ public interface iVisualElementOverrides {
 
 	}
 
-	static public VisualElementContextTopology topology = new VisualElementContextTopology(null);
+	public static VisualElementContextTopology topology = new VisualElementContextTopology(null);
 
 //	static public iVisualElementOverrides_m backward = new iVisualElementOverrides_m(new Dispatch<iVisualElement, iVisualElementOverrides>(topology).getBackwardsOverrideProxyFor(iVisualElementOverrides.class));
 
-	static public iVisualElementOverrides_m backward = new iVisualElementOverrides_m(new FastVisualElementOverridesDispatch(true));
-	static public iVisualElementOverrides_m forward = new iVisualElementOverrides_m(new FastVisualElementOverridesDispatch(false));
+	public static iVisualElementOverrides_m backward = new iVisualElementOverrides_m(new FastVisualElementOverridesDispatch(true));
+	public static iVisualElementOverrides_m forward = new iVisualElementOverrides_m(new FastVisualElementOverridesDispatch(false));
 
 //	static public iVisualElementOverrides_m forward = new iVisualElementOverrides_m(new Dispatch<iVisualElement, iVisualElementOverrides>(topology).getOverrideProxyFor(iVisualElementOverrides.class));
 //	static public iVisualElementOverrides_m forwardAbove = new iVisualElementOverrides_m(new Dispatch<iVisualElement, iVisualElementOverrides>(topology).getAboveOverrideProxyFor(iVisualElementOverrides.class));
-	static public iVisualElementOverrides_m forwardAbove = new iVisualElementOverrides_m(new FastVisualElementOverridesDispatchAbove(false));
+public static iVisualElementOverrides_m forwardAbove = new iVisualElementOverrides_m(new FastVisualElementOverridesDispatchAbove(false));
 
 	@Mirror
 	public VisitCode added(iVisualElement newSource);

@@ -21,9 +21,9 @@ public class ShaderPreprocessor {
 
 	public class AddExpression implements iExpressionHandler {
 		public String handle(ShaderPreprocessor here, StringStream r, String expression, String[] parameters) throws PreprocessorException {
-			if (parameters.length != 1) throw new PreprocessorException(" bad parameters for add <" + Arrays.asList(parameters) + ">");
+			if (parameters.length != 1) throw new PreprocessorException(" bad parameters for add <" + Arrays.asList(parameters) + '>');
 			iVariable v = here.getVariable(parameters[0]);
-			String b = here.readBlock(r);
+			String b = ShaderPreprocessor.readBlock(r);
 			v.add(b);
 			return "";
 		}
@@ -33,7 +33,7 @@ public class ShaderPreprocessor {
 		public String handle(ShaderPreprocessor here, StringStream r, String expression, String[] parameters) throws PreprocessorException {
 			if (parameters.length != 2) throw new PreprocessorException(" bad parameters for conditional add <" + Arrays.asList(parameters) + ">");
 			iVariable v = here.getVariable(parameters[0]);
-			String t = here.readBlock(r);
+			String t = ShaderPreprocessor.readBlock(r);
 			v.conditionalAdd(parameters[1], t);
 			return "";
 		}
@@ -43,7 +43,7 @@ public class ShaderPreprocessor {
 		public String handle(ShaderPreprocessor here, StringStream r, String expression, String[] parameters) throws PreprocessorException {
 			if (parameters.length != 2) throw new PreprocessorException(" bad parameters for conditional Nadd <" + Arrays.asList(parameters) + ">");
 			iVariable v = here.getVariable(parameters[0]);
-			String t = here.readBlock(r);
+			String t = ShaderPreprocessor.readBlock(r);
 			v.conditionalNAdd(parameters[1], t);
 			return "";
 		}
@@ -134,7 +134,8 @@ public class ShaderPreprocessor {
 		public void setCondition(String condition) throws PreprocessorException;
 	}
 
-	static public class PreprocessorException extends Exception {
+	public static
+    class PreprocessorException extends Exception {
 		public PreprocessorException() {
 		}
 
@@ -280,7 +281,8 @@ public class ShaderPreprocessor {
 		return s;
 	}
 
-	private String nextExpression(StringStream reader) throws IOException {
+	private static
+    String nextExpression(StringStream reader) throws IOException {
 		String skipped = "";
 		while (reader.ready()) {
 			char c = reader.read();
@@ -293,7 +295,8 @@ public class ShaderPreprocessor {
 		return skipped;
 	}
 
-	protected String readBlock(StringStream reader) throws PreprocessorException {
+	protected static
+    String readBlock(StringStream reader) throws PreprocessorException {
 		String skipped = "";
 		while (reader.ready()) {
 			char c = reader.read();
@@ -304,7 +307,7 @@ public class ShaderPreprocessor {
 			}
 		}
 
-		if (!skipped.trim().equals("{")) throw new PreprocessorException(" parse error, junk characters <" + skipped + ">");
+		if (!"{".equals(skipped.trim())) throw new PreprocessorException(" parse error, junk characters <" + skipped + ">");
 
 		int openCount = 1;
 

@@ -50,7 +50,7 @@ public class StereoCamera extends BasicCamera {
 		return io_lookat;
 	}
 
-	static float flipped = (SystemProperties.getIntProperty("stereoEyeFlipped", 0) == 1 ? -1 : 1);
+	static float flipped = ((SystemProperties.getIntProperty("stereoEyeFlipped", 0) == 1) ? -1 : 1);
 	static boolean passive = (SystemProperties.getIntProperty("passiveStereo", 0) == 1);
 
 	double disparityPerDistance = SystemProperties.getDoubleProperty("defaultDisparityPerDistance", 0);
@@ -86,15 +86,20 @@ public class StereoCamera extends BasicCamera {
 			CoreHelpers.glMatrixMode(GL_PROJECTION);
 			CoreHelpers.glLoadIdentity();
 
-			float right = (float) (near * Math.tan((Math.PI * fov / 180f) / 2) * aspect) * frustrumMul;
-			float top = (float) (near * Math.tan((Math.PI * fov / 180f) / 2)) * frustrumMul;
+			float right = (float) (near * Math.tan(((Math.PI * fov) / 180f) / 2) * aspect) * frustrumMul;
+			float top = (float) (near * Math.tan(((Math.PI * fov) / 180f) / 2)) * frustrumMul;
 
 			float x = flipped * io_frustra * FullScreenCanvasSWT.getSide().x;
 
 			if (noStereo)
 				x = 0;
 
-			CoreHelpers.glFrustum(-right + (right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount + x)), right + right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount + x), -top + top * tshift, top + top * tshift, near, far);
+			CoreHelpers.glFrustum(-right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                               * extraAmount) + x)),
+                                  right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                              * extraAmount) + x)),
+                                  -top + (top * tshift),
+                                  top + (top * tshift), near, far);
 
 			CoreHelpers.glMatrixMode(GL_MODELVIEW);
 			projectionDirty = false;
@@ -117,26 +122,46 @@ public class StereoCamera extends BasicCamera {
 			if (noStereo)
 				left.scale(0);
 			float x = flipped * io_frustra * FullScreenCanvasSWT.getSide().x;
-			float right = (float) (near * Math.tan((Math.PI * fov / 180f) / 2) * aspect) * frustrumMul;
+			float right = (float) (near * Math.tan(((Math.PI * fov) / 180f) / 2) * aspect) * frustrumMul;
 
-			CoreHelpers.gluLookAt(position.x + flipped * (io_position.x) * FullScreenCanvasSWT.getSide().x * left.x, position.y + flipped * io_position.y * FullScreenCanvasSWT.getSide().x * left.y, position.z + flipped * io_position.z * FullScreenCanvasSWT.getSide().x * left.z, lookAt.x + flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.x, lookAt.y + flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.y, lookAt.z + flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.z, up.x, up.y, up.z);
+			CoreHelpers.gluLookAt(position.x + (flipped * (io_position.x) * FullScreenCanvasSWT.getSide().x * left.x),
+                                  position.y + (flipped * io_position.y * FullScreenCanvasSWT.getSide().x * left.y),
+                                  position.z + (flipped * io_position.z * FullScreenCanvasSWT.getSide().x * left.z),
+                                  lookAt.x + (flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.x),
+                                  lookAt.y + (flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.y),
+                                  lookAt.z + (flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.z), up.x, up.y, up.z);
 
 			CoreHelpers.glActiveTexture(GL_TEXTURE0);
 			CoreHelpers.glMatrixMode(GL_TEXTURE);
 			CoreHelpers.glLoadIdentity();
 			if (!texture0IsRight)
-				CoreHelpers.gluLookAt(position.x + flipped * io_position.x * FullScreenCanvasSWT.getSide().x * left.x, position.y + flipped * io_position.y * FullScreenCanvasSWT.getSide().x * left.y, position.z + flipped * io_position.z * FullScreenCanvasSWT.getSide().x * left.z, lookAt.x + flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.x, lookAt.y + flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.y, lookAt.z + flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.z, up.x, up.y, up.z);
+				CoreHelpers.gluLookAt(position.x + (flipped * io_position.x * FullScreenCanvasSWT.getSide().x * left.x),
+                                      position.y + (flipped * io_position.y * FullScreenCanvasSWT.getSide().x * left.y),
+                                      position.z + (flipped * io_position.z * FullScreenCanvasSWT.getSide().x * left.z),
+                                      lookAt.x + (flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.x),
+                                      lookAt.y + (flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.y),
+                                      lookAt.z + (flipped * io_lookat * FullScreenCanvasSWT.getSide().x * left.z), up.x, up.y, up.z);
 			else
-				CoreHelpers.gluLookAt(position.x + flipped * io_position.x * 1 * left.x, position.y + flipped * io_position.y * 1 * left.y, position.z + flipped * io_position.z * 1 * left.z, lookAt.x + flipped * io_lookat * 1 * left.x, lookAt.y + flipped * io_lookat * 1 * left.y, lookAt.z + flipped * io_lookat * 1 * left.z, up.x, up.y, up.z);
+				CoreHelpers.gluLookAt(position.x + (flipped * io_position.x * 1 * left.x),
+                                      position.y + (flipped * io_position.y * 1 * left.y),
+                                      position.z + (flipped * io_position.z * 1 * left.z),
+                                      lookAt.x + (flipped * io_lookat * 1 * left.x),
+                                      lookAt.y + (flipped * io_lookat * 1 * left.y),
+                                      lookAt.z + (flipped * io_lookat * 1 * left.z), up.x, up.y, up.z);
 
 			CoreHelpers.glActiveTexture(GL_TEXTURE1);
 			CoreHelpers.glMatrixMode(GL_TEXTURE);
 			CoreHelpers.glLoadIdentity();
 
-			float top = (float) (near * Math.tan((Math.PI * fov / 180f) / 2)) * frustrumMul;
+			float top = (float) (near * Math.tan(((Math.PI * fov) / 180f) / 2)) * frustrumMul;
 
 			x = 0;
-			CoreHelpers.glFrustum(-right + (right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount)), right + right * (rshift + FullScreenCanvasSWT.currentCanvas.extraShiftX * extraAmount), -top + top * tshift, top + top * tshift, near, far);
+			CoreHelpers.glFrustum(-right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                               * extraAmount))),
+                                  right + (right * (rshift + (FullScreenCanvasSWT.currentCanvas.extraShiftX
+                                                              * extraAmount))),
+                                  -top + (top * tshift),
+                                  top + (top * tshift), near, far);
 
 			CoreHelpers.gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
 
@@ -187,7 +212,8 @@ public class StereoCamera extends BasicCamera {
 
 	public StereoNoiseSource randomSource = new StereoNoiseSource();
 
-	static public class StereoNoiseSource {
+	public static
+    class StereoNoiseSource {
 
 		private Random r;
 

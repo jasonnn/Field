@@ -16,14 +16,16 @@ import java.util.List;
  */
 public class CustomToolbar {
 
-	static public Object add(String name, Object callableSomehow, iVisualElement to) {
+	public static
+    Object add(String name, Object callableSomehow, iVisualElement to) {
 		iUpdateable c = callable(callableSomehow);
 		if (c != null)
 			PythonPluginEditor.python_customToolbar.addToList(ArrayList.class, to, new Pair<String, iUpdateable>(name, c));
 		return c;
 	}
 
-	static public void remove(Object o, iVisualElement from) {
+	public static
+    void remove(Object o, iVisualElement from) {
 		List<Pair<String, iUpdateable>> ll = PythonPluginEditor.python_customToolbar.get(from);
 		if (ll != null) {
 			for (Pair<String, iUpdateable> p : ll) {

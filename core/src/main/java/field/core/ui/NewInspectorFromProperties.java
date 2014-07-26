@@ -21,10 +21,10 @@ public class NewInspectorFromProperties {
 		this.inside = inside;
 	}
 
-	static public LinkedHashMap<String, Class<? extends BaseControl>> knownProperties = new LinkedHashMap<String, Class<? extends BaseControl>>();
-	static public LinkedHashMap<String, String> knownAliases = new LinkedHashMap<String, String>();
+	public static LinkedHashMap<String, Class<? extends BaseControl>> knownProperties = new LinkedHashMap<String, Class<? extends BaseControl>>();
+	public static LinkedHashMap<String, String> knownAliases = new LinkedHashMap<String, String>();
 
-	static public List<Triple<String, LinkedHashMap<String, Class<? extends BaseControl>>, Boolean>> activeSets = new ArrayList<Triple<String, LinkedHashMap<String, Class<? extends BaseControl>>, Boolean>>();
+	public static List<Triple<String, LinkedHashMap<String, Class<? extends BaseControl>>, Boolean>> activeSets = new ArrayList<Triple<String, LinkedHashMap<String, Class<? extends BaseControl>>, Boolean>>();
 
 	LinkedHashMap<String, iIO> build = new LinkedHashMap<String, iIO>();
 
@@ -44,7 +44,7 @@ public class NewInspectorFromProperties {
 		ArrayList<iIO> m = new ArrayList<iIO>(build.values());
 		ArrayList<BaseControl> i = new ArrayList<BaseControl>();
 
-		if (m.size() == 0) {
+		if (m.isEmpty()) {
 			m.add(getHeading("Inspector"));
 		}
 		m.add(inside.getMenuItemsIO());
@@ -111,7 +111,7 @@ public class NewInspectorFromProperties {
 
 	public ArrayList<BaseControl> rebuild(List<iVisualElement> sel) {
 
-		if (sel.size() == 0) {
+		if (sel.isEmpty()) {
 			begin();
 			return complete();
 		}
@@ -316,7 +316,9 @@ public class NewInspectorFromProperties {
 			first = true;
 			Map<Object, Object> m = e.payload();
 			for (Entry<Object, Object> o : m.entrySet()) {
-				if (o.getKey() instanceof VisualElementProperty && o.getValue() != null && ((VisualElementProperty) o.getKey()).containsSuffix("i")) {
+				if ((o.getKey() instanceof VisualElementProperty)
+                    && (o.getValue() != null)
+                    && ((VisualElementProperty) o.getKey()).containsSuffix("i")) {
 
 					final VisualElementProperty p = ((VisualElementProperty) o.getKey());
 
@@ -380,7 +382,7 @@ public class NewInspectorFromProperties {
 
 						@Override
 						public Status getStatus() {
-							return p.get(e) != null ? Status.valid : Status.unset;
+							return (p.get(e) != null) ? Status.valid : Status.unset;
 						}
 					};
 
@@ -439,7 +441,8 @@ public class NewInspectorFromProperties {
 		return heading;
 	}
 
-	static public final Class<? extends BaseControl> componentForValue(Object value) {
+	public static final
+    Class<? extends BaseControl> componentForValue(Object value) {
 		if (value instanceof String)
 			return TextControl.class;
 		if (value instanceof Number)

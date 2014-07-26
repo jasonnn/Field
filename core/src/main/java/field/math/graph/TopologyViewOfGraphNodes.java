@@ -7,7 +7,7 @@ import java.util.*;
 
 public class TopologyViewOfGraphNodes<T extends iMutable<T>> implements iSynchronizedTopology<T> {
 
-	private boolean backwards;
+	private final boolean backwards;
 	private boolean everything;
 
 	public TopologyViewOfGraphNodes(boolean backwards) {

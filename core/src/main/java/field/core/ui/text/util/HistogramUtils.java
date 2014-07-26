@@ -13,7 +13,8 @@ public class HistogramUtils {
 	public HistogramUtils() {
 	}
 
-	public Histogram<Number> rebin(Histogram<Number> in, final int numBins) {
+	public static
+    Histogram<Number> rebin(Histogram<Number> in, final int numBins) {
 
 		final Rect bounds = bounds(in);
 		if (bounds.w == 0) bounds.w = 1;
@@ -22,15 +23,15 @@ public class HistogramUtils {
 		final Histogram<Number> out = new Histogram<Number>();
 
 		for (int i = 0; i < numBins; i++) {
-			out.visit(bounds.x + bounds.w * i / (numBins - 1f), 0);
+			out.visit(bounds.x + ((bounds.w * i) / (numBins - 1f)), 0);
 		}
 
 		in.average(new iAverage<Number, Object>(){
 
 			public <X extends Number> void accept(X accept, double weight) {
 				
-				int bin = (int) Math.round(numBins*(accept.floatValue()-bounds.x)/bounds.w);
-				out.visit(bounds.x + bounds.w * bin / (numBins - 1f), (float) weight);
+				int bin = (int) Math.round((numBins * (accept.floatValue() - bounds.x)) / bounds.w);
+				out.visit(bounds.x + ((bounds.w * bin) / (numBins - 1f)), (float) weight);
 			}
 
 			public void begin(int num, double totalWeight) {

@@ -103,7 +103,7 @@ public class ExecutionRuler implements iRuler {
 			{
 				i1.x = from.x-5;
 				i1.y = from.y;
-				i2.x = (from.x-5+toto.x)/2;
+				i2.x = ((from.x - 5) + toto.x)/2;
 				i2.y = (from.y+toto.y)/2;
 			}
 			
@@ -112,19 +112,21 @@ public class ExecutionRuler implements iRuler {
 			path.cubicTo(i1.x, i1.y, i2.x, i2.y, toto.x, toto.y);
 			g.setForeground(new Color(Launcher.display, 255, 128, 0));
 			g.setAlpha(64);
-			g.setLineWidth((int) (scale*5+1));
+			g.setLineWidth((int) ((scale * 5) + 1));
 			g.setLineCap(SWT.CAP_ROUND);
 			g.drawPath(path);
 		}
 
 	}
 
-	private void setForeground(GC g, Vector4 color) {
+	private static
+    void setForeground(GC g, Vector4 color) {
 		g.setForeground(new Color(g.getDevice(), (int) (color.x * 255), (int) (color.y * 255), (int) (color.z * 255)));
 		g.setAlpha((int) (color.w * 255));
 	}
 
-	private void setBackground(GC g, Vector4 color) {
+	private static
+    void setBackground(GC g, Vector4 color) {
 		g.setBackground(new Color(g.getDevice(), (int) (color.x * 255), (int) (color.y * 255), (int) (color.z * 255)));
 		g.setAlpha((int) (color.w * 255));
 	}
@@ -143,7 +145,7 @@ public class ExecutionRuler implements iRuler {
 
 	public void keyEvent(Event e, int caretPosition, int selectionStart, int selectionEnd) {
 
-		if ((e.stateMask & Platform.getCommandModifier()) != 0 && (e.stateMask & SWT.ALT) != 0) {
+		if (((e.stateMask & Platform.getCommandModifier()) != 0) && ((e.stateMask & SWT.ALT) != 0)) {
 
 			if (e.keyCode == SWT.ARROW_LEFT) {
 
@@ -151,9 +153,9 @@ public class ExecutionRuler implements iRuler {
 				// in
 				Area minIs = getMin(caretPosition);
                 //System.out.println(" arrow left it is <" + minIs + ">");
-                if (minIs != null && (e.stateMask & SWT.SHIFT) == 0) {
+                if ((minIs != null) && ((e.stateMask & SWT.SHIFT) == 0)) {
 					executeArea(minIs);
-				} else if (minIs != null && (e.stateMask & SWT.SHIFT) != 0) {
+				} else if ((minIs != null) && ((e.stateMask & SWT.SHIFT) != 0)) {
 					executeAreaSpecial(minIs);
 				}
 			}
@@ -191,23 +193,23 @@ public class ExecutionRuler implements iRuler {
 				for (Area a : areas.areas) {
 					a.update(p);
                     //System.out.println("looking at area <" + a.allocation + " " + a.lineStart + " " + a.lineEnd + "> <" + !a.invalid + ">");
-                    if (a.lineStart <= lfp && a.lineEnd >= lfp && !a.invalid) {
+                    if ((a.lineStart <= lfp) && (a.lineEnd >= lfp) && !a.invalid) {
 						if (a.allocation > alloc) {
 							alloc = a.allocation;
 							minIs = a;
 						}
 					}
 				}
-				if (minIs != null && (e.stateMask & SWT.SHIFT) == 0) {
+				if ((minIs != null) && ((e.stateMask & SWT.SHIFT) == 0)) {
 					executeArea(minIs);
-				} else if (minIs != null && (e.stateMask & SWT.SHIFT) != 0) {
+				} else if ((minIs != null) && ((e.stateMask & SWT.SHIFT) != 0)) {
 					executeAreaSpecial(minIs);
 				}
 			}
 
 		}
 
-		if ((e.stateMask & SWT.CTRL) != 0 && (e.stateMask & SWT.COMMAND) != 0) {
+		if (((e.stateMask & SWT.CTRL) != 0) && ((e.stateMask & SWT.COMMAND) != 0)) {
 
             //System.out.println(" looking for shortcut");
 
@@ -216,12 +218,12 @@ public class ExecutionRuler implements iRuler {
 			for (Area a : areas.areas) {
 				Character c = a.extend.get(ExecutedAreas.keyboardShortcut);
                 //System.out.println(" c is <" + c + "> code is <" + code + " " + (c == null ? -1 : (int) c));
-                if (c != null && (Character.toUpperCase(c)) == code && !a.invalid) {
+                if ((c != null) && ((Character.toUpperCase(c)) == code) && !a.invalid) {
                     candidate.add(a);
 				}
 			}
             //System.out.println(" found <" + candidate + ">");
-            if (candidate.size() == 0)
+            if (candidate.isEmpty())
 				return;
 			if (candidate.size() == 1) {
 				executeArea(candidate.get(0));
@@ -232,7 +234,7 @@ public class ExecutionRuler implements iRuler {
 			Area dIs = null;
 			for (Area a : candidate) {
 				float mz = Float.POSITIVE_INFINITY;
-				if (a.lineStart >= lfp && a.lineEnd <= lfp) {
+				if ((a.lineStart >= lfp) && (a.lineEnd <= lfp)) {
 					mz = (float) (1 - Math.exp(-Math.abs(a.lineEnd - a.lineStart)));
 				} else {
 					mz = Math.min(Math.abs(a.lineStart - lfp), Math.abs(a.lineEnd - lfp));
@@ -245,12 +247,12 @@ public class ExecutionRuler implements iRuler {
 
 			executeArea(dIs);
 
-		} else if ((e.stateMask & SWT.CTRL) != 0 && e.keyCode == 'u') {
+		} else if (((e.stateMask & SWT.CTRL) != 0) && (e.keyCode == 'u')) {
             //System.out.println(" unit test !");
 
 			Area minIs = getMin(caretPosition);
 
-			if (minIs == null && selectionStart == selectionEnd) {
+			if ((minIs == null) && (selectionStart == selectionEnd)) {
 
 				String text = p.getText();
                 int a = text.lastIndexOf('\n', caretPosition - 1);
@@ -297,7 +299,7 @@ public class ExecutionRuler implements iRuler {
 				}
 			}
 
-		} else if ((e.stateMask & SWT.CTRL) != 0 && e.keyCode == 'h') {
+		} else if (((e.stateMask & SWT.CTRL) != 0) && (e.keyCode == 'h')) {
 			Area m = getMin(caretPosition);
 			if (m != null)
 				browseExecutionHistory(m).update();
@@ -312,7 +314,7 @@ public class ExecutionRuler implements iRuler {
 		for (Area a : areas.areas) {
 			a.update(p);
             //System.out.println("looking at area <" + a.allocation + " " + a.lineStart + " " + a.lineEnd + "> <" + !a.invalid + ">");
-            if (a.lineStart <= lfp && a.lineEnd >= lfp && !a.invalid) {
+            if ((a.lineStart <= lfp) && (a.lineEnd >= lfp) && !a.invalid) {
 				if (a.allocation < alloc) {
 					alloc = a.allocation;
 					minIs = a;
@@ -329,7 +331,7 @@ public class ExecutionRuler implements iRuler {
 
 		DragType cd = computeDrag(e);
 		currentDrag = cd;
-		if (currentDrag != null && Platform.isPopupTrigger(e)) {
+		if ((currentDrag != null) && Platform.isPopupTrigger(e)) {
 			popup(e, currentDrag, dragTarget);
 		}
 
@@ -430,7 +432,7 @@ public class ExecutionRuler implements iRuler {
 
 		int last = 0;
 		for (int i = 0; i < splat.length; i++) {
-			if (splat[i].trim().length() == 0)
+			if (splat[i].trim().isEmpty())
 				continue;
 			int pix = p.getLinePixel(i);
 
@@ -441,10 +443,8 @@ public class ExecutionRuler implements iRuler {
 
             Point e = g.textExtent(String.valueOf(i + 1));
 
-			if ((last + 1) / 10 != (i + 1) / 10)
-				g.setAlpha(128);
-			else
-				g.setAlpha(64);
+            if (((last + 1) / 10) == ((i + 1) / 10)) g.setAlpha(64);
+            else g.setAlpha(128);
 
             g.drawString(String.valueOf(i + 1),
                          ruler.getClientArea().width - 5 - e.x,
@@ -462,7 +462,9 @@ public class ExecutionRuler implements iRuler {
 			a.update(p);
 
 			if (!a.invalid) {
-				Path drawBracket = drawBracket(g, a.allocation * 10 + 2, 10, a.lineStart, a.lineEnd, a == currentBest ? 2 : 0.5f, highlighted.contains(a) ? 0.5f : 0);
+				Path drawBracket = drawBracket(g,
+                                               (a.allocation * 10) + 2, 10, a.lineStart, a.lineEnd,
+                                               (a == currentBest) ? 2 : 0.5f, highlighted.contains(a) ? 0.5f : 0);
 
 				if (a.extend.isTrue(ExecutedAreas.isUnitTest, false)) {
 					float[] bounds = new float[4];
@@ -471,31 +473,29 @@ public class ExecutionRuler implements iRuler {
 					font = new Font(g.getDevice(), Constants.defaultFont, 28, SWT.NORMAL);
 					g.setFont(font);
 					Boolean passed = a.extend.get(ExecutedAreas.passedUnitTest);
-					if (passed != null && passed) {
+					if ((passed != null) && passed) {
 						setForeground(g, new Vector4(0, 0.5, 0, 0.75));
-						g.drawString("\u24e4", (int) (bounds[0] + 15), (int) (bounds[1] + bounds[3] / 2 - 13), true);
+						g.drawString("\u24e4", (int) (bounds[0] + 15), (int) ((bounds[1] + (bounds[3] / 2)) - 13), true);
 
 					} else {
 						setForeground(g, new Vector4(1, 0, 0, 0.75));
-						g.drawString("\u24e4", (int) (bounds[0] + 15), (int) (bounds[1] + bounds[3] / 2 - 13), true);
+						g.drawString("\u24e4", (int) (bounds[0] + 15), (int) ((bounds[1] + (bounds[3] / 2)) - 13), true);
 					}
 				}
 
 				Character k = a.extend.get(ExecutedAreas.keyboardShortcut);
 				if (k != null) {
-					drawKeyboardShortcut(g, k, a.allocation * 10 + 2, a.lineStart, a.lineEnd, a == currentBest);
+					drawKeyboardShortcut(g, k, (a.allocation * 10) + 2, a.lineStart, a.lineEnd, a == currentBest);
 				}
 				Object monitor = a.textend.get(new Prop("monitor"));
 				if (monitor != null) {
-					if (!updateMonitor(monitor))
-						a.textend.remove(new Prop("monitor"));
-					else
-						drawMonitor(g, a.allocation * 10 + 2, 10, a.lineStart, a.lineEnd);
+                    if (updateMonitor(monitor)) drawMonitor(g, (a.allocation * 10) + 2, 10, a.lineStart, a.lineEnd);
+                    else a.textend.remove(new Prop("monitor"));
 				}
 
 				OpportinisticSlider slider = a.textend.get(OpportinisticSlider.oSlider);
 				if (slider != null) {
-					drawOpportunisticSlider(slider, g, a.allocation * 10 + 2, a.lineStart, a.lineEnd);
+					drawOpportunisticSlider(slider, g, (a.allocation * 10) + 2, a.lineStart, a.lineEnd);
 				}
 
 			}
@@ -567,7 +567,8 @@ public class ExecutionRuler implements iRuler {
 
 	}
 
-	public boolean updateMonitor(Object monitor) {
+	public static
+    boolean updateMonitor(Object monitor) {
 		if (monitor instanceof PythonGeneratorStack) {
 			return !((PythonGeneratorStack) monitor).isOver();
 		}
@@ -590,7 +591,7 @@ public class ExecutionRuler implements iRuler {
 		if (dragTarget != null) {
 			Rectangle start = rectangleForLine(dragTarget.lineStart);
 			Rectangle end = rectangleForLine(dragTarget.lineEnd);
-			float startX = dragTarget.allocation * 10 + 2;
+			float startX = (dragTarget.allocation * 10) + 2;
 			float midY = (start.y + end.y + end.height) / 2;
 
 			// boolean inside = e.getX() > startX &&
@@ -609,12 +610,12 @@ public class ExecutionRuler implements iRuler {
 		Rectangle start = rectangleForLine(a.lineStart);
 		Rectangle end = rectangleForLine(a.lineEnd);
 
-		float startX = a.allocation * 10 + 2;
+		float startX = (a.allocation * 10) + 2;
 		float midY = (start.y + end.y + end.height) / 2;
 
-		boolean inside = mouseAt2.x > startX && mouseAt.y > start.y && mouseAt.y < (end.y + end.height);
+		boolean inside = (mouseAt2.x > startX) && (mouseAt.y > start.y) && (mouseAt.y < (end.y + end.height));
 		if (inside) {
-			float d = (mouseAt2.x - startX) * (mouseAt2.x - startX) + (mouseAt2.y - midY) * (mouseAt2.y - midY);
+			float d = ((mouseAt2.x - startX) * (mouseAt2.x - startX)) + ((mouseAt2.y - midY) * (mouseAt2.y - midY));
 			float size = Math.abs(end.y - start.y);
 
 			return d + size;
@@ -628,7 +629,7 @@ public class ExecutionRuler implements iRuler {
 		if (histogram == null)
 			return;
 
-		final Vector2 at = a == null ? null : hitPointFor(a, 1);
+		final Vector2 at = (a == null) ? null : hitPointFor(a, 1);
 
 		if (at!=null)		at.x = a.allocation*10+2;
 		
@@ -640,7 +641,8 @@ public class ExecutionRuler implements iRuler {
 				if (accept != null) {
 					float amount = (float) (weight);
 					try {
-						drawBracket(g, accept.allocation * 10 + 2, 10, accept.lineStart, accept.lineEnd, new Vector4(0, 0, 0, amount), new Vector4(0, 0, 0, 0.0), 0.5f);
+						drawBracket(g,
+                                    (accept.allocation * 10) + 2, 10, accept.lineStart, accept.lineEnd, new Vector4(0, 0, 0, amount), new Vector4(0, 0, 0, 0.0), 0.5f);
 
 						if (at != null)
 							drawConnection(g, at, accept, new Vector4(0, 0, 0, amount / 2), (float) (weight));
@@ -676,11 +678,11 @@ public class ExecutionRuler implements iRuler {
 		Rectangle start = rectangleForLine(a.lineStart);
 		Rectangle end = rectangleForLine(a.lineEnd);
 
-		float x = a.allocation * 10 + 2;
+		float x = (a.allocation * 10) + 2;
 		float midY = (start.y + end.y + end.height) / 2;
 
 		float r = 5;
-		Ellipse2D hit = new Ellipse2D.Float(x, midY - r / 2, r, r);
+		Ellipse2D hit = new Ellipse2D.Float(x, midY - (r / 2), r, r);
 
 		setForeground(g, new Vector4(fillColor.x, fillColor.y, fillColor.z, fillColor.w / 3));
 		setBackground(g, new Vector4(fillColor.x, fillColor.y, fillColor.z, fillColor.w / 3));
@@ -698,10 +700,11 @@ public class ExecutionRuler implements iRuler {
 		float midY = (start.y + end.y + end.height) / 2;
 
 		float r = 5;
-		return new Vector2(start.x + r / 2, midY);
+		return new Vector2(start.x + (r / 2), midY);
 	}
 
-	private int lineForPosition(int i, StyledText p) {
+	private static
+    int lineForPosition(int i, StyledText p) {
 		String[] lines = p.getText().split("\n");
 		int at = 0;
 		for (int n = 0; n < lines.length; n++) {
@@ -712,7 +715,8 @@ public class ExecutionRuler implements iRuler {
 		return lines.length;
 	}
 
-	private int positionForLine(int i, StyledText p) {
+	private static
+    int positionForLine(int i, StyledText p) {
 		String[] lines = p.getText().split("\n");
 		int at = 0;
 		for (int n = 0; n < Math.min(lines.length, i); n++) {
@@ -784,8 +788,8 @@ public class ExecutionRuler implements iRuler {
 		
 		float[] bounds = new float[4];
 		bracket.getBounds(bounds);
-		double cx = bounds[0] + bounds[2] / 2;
-		double cy = bounds[1] + bounds[3] / 2;
+		double cx = bounds[0] + (bounds[2] / 2);
+		double cy = bounds[1] + (bounds[3] / 2);
 
 		if (scale != 1) {
 			Transform t = new Transform(g.getDevice());
@@ -820,7 +824,7 @@ public class ExecutionRuler implements iRuler {
 		
 		if (scale == 1) {
 			int r = 5;
-			Ellipse2D hit = new Ellipse2D.Float(x, (start.y + end.y + end.height) / 2 - r / 2, r, r);
+			Ellipse2D hit = new Ellipse2D.Float(x, ((start.y + end.y + end.height) / 2) - (r / 2), r, r);
 
 			setForeground(g, new Vector4(fillColor.x, fillColor.y, fillColor.z, fillColor.w / 3));
 //			g.fillOval((int) x, (int) (start.y + end.y + end.height) / 2 - r / 2, r, r);
@@ -981,11 +985,12 @@ public class ExecutionRuler implements iRuler {
 				}
 			});
 		}
-		if (menu.size() > 0)
+		if (!menu.isEmpty())
 			new SmallMenu().createMenu(menu, ruler.getShell(), null).show(Launcher.display.map(ruler, ruler.getShell(), new Point(e.x, e.y)));
 	}
 
-	private iUpdateable browseExecutionHistory(final Area target) {
+	private static
+    iUpdateable browseExecutionHistory(final Area target) {
 		return null;
 		// TODO swt bettertextselection
 		// return new iUpdateable() {
@@ -1058,7 +1063,8 @@ public class ExecutionRuler implements iRuler {
 		// };
 	}
 
-	static public boolean hasUnitTests(ExecutionRuler ruler) {
+	public static
+    boolean hasUnitTests(ExecutionRuler ruler) {
 		boolean found = false;
 		for (Area a : ruler.areas.areas) {
 			if (a.extend.isTrue(ExecutedAreas.isUnitTest, false)) {
@@ -1087,7 +1093,8 @@ public class ExecutionRuler implements iRuler {
 		return new Rectangle(p2.x, p2.y, 0, h);
 	}
 
-	static public void runAllUnitTests(final ExecutionRuler ruler) {
+	public static
+    void runAllUnitTests(final ExecutionRuler ruler) {
 		for (final Area a : ruler.areas.areas) {
 			if (a.extend.isTrue(ExecutedAreas.isUnitTest, false)) {
 				LocalFuture<Boolean> r = ruler.runAndCheckArea(a);
@@ -1104,7 +1111,8 @@ public class ExecutionRuler implements iRuler {
 		}
 	}
 
-	static public boolean hasUnitTests(iVisualElement element, VisualElementProperty<String> p) {
+	public static
+    boolean hasUnitTests(iVisualElement element, VisualElementProperty<String> p) {
 		Map<String, State> state = element.getProperty(PythonPluginEditor.python_areas);
 		if (state == null)
 			return false;

@@ -24,7 +24,8 @@ import java.util.Map.Entry;
 
 public class FieldPyObjectAdaptor {
 
-	static public class CallableToCallableJavaInstance implements PyObjectAdapter {
+	public static
+    class CallableToCallableJavaInstance implements PyObjectAdapter {
 
 		public CallableToCallableJavaInstance() {
 		}
@@ -39,7 +40,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class CallableAndAttributesToCallableAndAttributesJavaInstance implements PyObjectAdapter {
+	public static
+    class CallableAndAttributesToCallableAndAttributesJavaInstance implements PyObjectAdapter {
 
 		public CallableAndAttributesToCallableAndAttributesJavaInstance() {
 		}
@@ -54,7 +56,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class DictToPyFieldDict extends ClassAdapter {
+	public static
+    class DictToPyFieldDict extends ClassAdapter {
 
 		public DictToPyFieldDict() {
 			super(Dict.class);
@@ -66,7 +69,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class ExtensibleToExtensibleJavaInstance implements PyObjectAdapter {
+	public static
+    class ExtensibleToExtensibleJavaInstance implements PyObjectAdapter {
 
 		public ExtensibleToExtensibleJavaInstance() {
 		}
@@ -81,7 +85,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class HandlesAttributesToPyHandlesAttributes implements PyObjectAdapter {
+	public static
+    class HandlesAttributesToPyHandlesAttributes implements PyObjectAdapter {
 
 		public HandlesAttributesToPyHandlesAttributes() {
 		}
@@ -96,7 +101,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class HasScalarToPyHasScalar implements PyObjectAdapter {
+	public static
+    class HasScalarToPyHasScalar implements PyObjectAdapter {
 
 		public HasScalarToPyHasScalar() {
 		}
@@ -148,7 +154,8 @@ public class FieldPyObjectAdaptor {
 		public void setItem(Object name, Object value);
 	}
 
-	static public class PairToPyTuple extends ClassAdapter {
+	public static
+    class PairToPyTuple extends ClassAdapter {
 
 		public PairToPyTuple() {
 			super(Pair.class);
@@ -165,7 +172,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class PyCallableJavaInstance extends PyObjectDerived {
+	public static
+    class PyCallableJavaInstance extends PyObjectDerived {
 		iCallable contents;
 
 		public PyCallableJavaInstance(iCallable e) {
@@ -188,7 +196,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class PyCallableAndAttributesJavaInstance extends PyObjectDerived {
+	public static
+    class PyCallableAndAttributesJavaInstance extends PyObjectDerived {
 		iHandlesAttributesAndCallable contents;
 
 		public PyCallableAndAttributesJavaInstance(iHandlesAttributesAndCallable e) {
@@ -276,7 +285,8 @@ public class FieldPyObjectAdaptor {
 		}
 	}
 
-	static public class PyExtensibleJavaInstance extends PyObject {
+	public static
+    class PyExtensibleJavaInstance extends PyObject {
 		iExtensible contents;
 		PyObjectDerived instance;
 
@@ -325,7 +335,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class PyFieldDict extends PyObject {
+	public static
+    class PyFieldDict extends PyObject {
 		Dict contents;
 		PyObjectDerived instance;
 
@@ -362,7 +373,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class PyHandlesAttributes extends PyObject {
+	public static
+    class PyHandlesAttributes extends PyObject {
 		iHandlesAttributes contents;
 		PyObjectDerived instance;
 
@@ -429,7 +441,8 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public class PyHasScalar extends PyFloat {
+	public static
+    class PyHasScalar extends PyFloat {
 
 		private final iHasScalar contents;
 		private final PyObjectDerived instance;
@@ -457,9 +470,10 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public Map<String, PyObject> injectedSelfMethods = new HashMap<String, PyObject>();
+	public static Map<String, PyObject> injectedSelfMethods = new HashMap<String, PyObject>();
 
-	static public class PyVisualElement extends PyObject {
+	public static
+    class PyVisualElement extends PyObject {
 		iVisualElement contents;
 
 		PyObjectDerived instance;
@@ -488,7 +502,7 @@ public class FieldPyObjectAdaptor {
 				return __call__();
 			if (args.length == 1)
 				return __call__(args[0]);
-			throw new PyException(Py.TypeError, " PyVisualElement not callable with <" + args.length + "> <" + keywords.length + ">");
+			throw new PyException(Py.TypeError, " PyVisualElement not callable with <" + args.length + "> <" + keywords.length + '>');
 		}
 
 		@Override
@@ -535,7 +549,7 @@ public class FieldPyObjectAdaptor {
 				});
 			}
 
-			if (alt == null || alt == Py.None || alt.__tojava__(Object.class) instanceof VisualElementProperty || name.equals("frame")) {
+			if (alt == null || alt == Py.None || alt.__tojava__(Object.class) instanceof VisualElementProperty || "frame".equals(name)) {
 				Object o = PythonPlugin.getAttr(contents, name);
 
                 //System.out.println(" parent lookup <" + o + ">");
@@ -554,7 +568,7 @@ public class FieldPyObjectAdaptor {
 
 		@Override
 		public void __setattr__(String name, PyObject value) {
-			if (name.equals("frame")) {
+			if ("frame".equals(name)) {
 				contents.getProperty(iVisualElement.overrides).shouldChangeFrame(contents, ((Rect) value.__tojava__(Rect.class)), contents.getFrame(null), true);
 			} else
 				PythonPlugin.setAttr(contents, contents, name, value.__tojava__(Object.class));
@@ -588,7 +602,8 @@ public class FieldPyObjectAdaptor {
 			return contents.hashCode();
 		}
 
-		static public List<Comp> getClassCustomCompletion(String prefix, Object of) {
+		public static
+        List<Comp> getClassCustomCompletion(String prefix, Object of) {
 			PyVisualElement adaptor = ((PyVisualElement) of);
 			List<Comp> c = new ArrayList<Comp>();
 			if (prefix.length() == 0) {
@@ -650,7 +665,8 @@ public class FieldPyObjectAdaptor {
 		}
 	}
 
-	static public class VisualElementToPyVisualElement extends ClassAdapter {
+	public static
+    class VisualElementToPyVisualElement extends ClassAdapter {
 
 		public VisualElementToPyVisualElement() {
 			super(VisualElement.class);
@@ -666,11 +682,11 @@ public class FieldPyObjectAdaptor {
 
 	}
 
-	static public FieldPyObjectAdaptor fieldPyObjectAdaptor;
+	public static FieldPyObjectAdaptor fieldPyObjectAdaptor;
 
 	public static ExtensiblePyObjectAdapter adaptor;
 
-	static protected boolean initialized = false;
+	protected static boolean initialized = false;
 
 	public static void initialize() {
 		

@@ -68,7 +68,7 @@ public class FluidPersistence {
 					@Override
 					public Class realClass(String elementName) {
 						
-						if (elementName.equals("field.core.plugins.drawing.SplineComputingOverride$16"))
+						if ("field.core.plugins.drawing.SplineComputingOverride$16".equals(elementName))
 						{
 							return SplineComputingOverride.PLineList.class;
 						}
@@ -136,7 +136,7 @@ public class FluidPersistence {
 						writer.startNode("children");
 						context.convertAnother(element.getChildren());
 						writer.endNode();
-					} else if (doNot != null && doNot) {
+					} else if ((doNot != null) && doNot) {
 						writer.startNode("aborted");
 						writer.endNode();
 					} else {
@@ -194,7 +194,7 @@ public class FluidPersistence {
 			public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 				FluidPersistence.this.context = context;
 				reader.moveDown();
-				assert reader.getNodeName().equals("uid");
+				assert "uid".equals(reader.getNodeName());
 				String uid = reader.getValue();
 
 				try {
@@ -231,7 +231,7 @@ public class FluidPersistence {
 							return null;
 						
 						reader.moveDown();
-						if (reader.getNodeName().equals("aborted")) {
+						if ("aborted".equals(reader.getNodeName())) {
 							reader.moveUp();
 							return null;
 						}
@@ -441,7 +441,7 @@ public class FluidPersistence {
 
 				} else {
 					Reference<Key> o = (Reference<Key>) Key.internedKeys.get(value);
-					assert o != null : "no key for <" + value + ">";
+					assert o != null : "no key for <" + value + '>';
 					return o.get();
 				}
 			}
@@ -578,7 +578,7 @@ public class FluidPersistence {
 		//beta1
 		e.setValue(PythonUtils.maybeToJava(e.getValue()));
 		if (e.getValue() instanceof PyObject) {
-			warnings.add("warning: property " + e.getKey() + " inside " + element.payload().get(iVisualElement.name) + " is persistent, yet holds " + e.getValue() + " (of class " + e.getValue().getClass() + ")");
+			warnings.add("warning: property " + e.getKey() + " inside " + element.payload().get(iVisualElement.name) + " is persistent, yet holds " + e.getValue() + " (of class " + e.getValue().getClass() + ')');
 			return false;
 		}
 		if (e.getValue() instanceof PyVisualElement)
@@ -611,10 +611,11 @@ public class FluidPersistence {
 		return true;
 	}
 
-	static public int indent = 0;
-	static public String indentString()
+	public static int indent = 0;
+	public static
+    String indentString()
 	{
-		StringBuffer ii = new StringBuffer(indent+1);
+		StringBuilder ii = new StringBuilder(indent+1);
 		for(int i=0;i<indent;i++)
 		{
 			ii.append(' ');

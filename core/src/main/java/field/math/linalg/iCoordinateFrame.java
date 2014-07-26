@@ -22,9 +22,9 @@ public interface iCoordinateFrame {
 	
 	public interface iMutable extends iCoordinateFrame
 	{
-		static public Method method_setRotation = ReflectionTools.methodOf("setRotation", iMutable.class, Quaternion.class);
-		static public Method method_setTranslation = ReflectionTools.methodOf("setTranslation", iMutable.class, Quaternion.class);
-		static public Method method_setScale = ReflectionTools.methodOf("setScale", iMutable.class, Quaternion.class);
+		public static Method method_setRotation = ReflectionTools.methodOf("setRotation", iMutable.class, Quaternion.class);
+		public static Method method_setTranslation = ReflectionTools.methodOf("setTranslation", iMutable.class, Quaternion.class);
+		public static Method method_setScale = ReflectionTools.methodOf("setScale", iMutable.class, Quaternion.class);
 
 		public iMutable setRotation(Quaternion rotation);
 		public iMutable setTranslation(Vector3 translation);

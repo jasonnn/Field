@@ -14,7 +14,8 @@ import java.util.List;
 
 public interface iReferenceAlgorithm {
 
-	static public abstract class BaseReferenceAlgorithm implements iReferenceAlgorithm
+	public abstract static
+    class BaseReferenceAlgorithm implements iReferenceAlgorithm
 	{
 		public List<iVisualElement> evaluate(iVisualElement root, String uniqueReferenceID, String algorithmName, iVisualElement forElement)
 		{
@@ -54,7 +55,8 @@ public interface iReferenceAlgorithm {
 			return ret;
 		}
 
-		abstract protected List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement);
+		protected abstract
+        List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement);
 
 	}
 

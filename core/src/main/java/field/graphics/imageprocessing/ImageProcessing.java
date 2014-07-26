@@ -73,7 +73,8 @@ public class ImageProcessing implements iImageProcessor, iAcceptsSceneListElemen
 		public void setRectRotated(Rect r);
 	}
 
-	static public enum KnownBlendMode {
+	public static
+    enum KnownBlendMode {
 		noBlending(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO), noAlpha(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 
 		public final int sc;
@@ -207,7 +208,8 @@ public class ImageProcessing implements iImageProcessor, iAcceptsSceneListElemen
 	}
 
 	
-	static public TriangleMesh placeOnscreen(BasicSceneList into, iImageProcessor from, int output, Rect r, float width, float height, Vector4 offset, Vector4 mul) {
+	public static
+    TriangleMesh placeOnscreen(BasicSceneList into, iImageProcessor from, int output, Rect r, float width, float height, Vector4 offset, Vector4 mul) {
 		final TriangleMesh mesh = new BasicGeometry.QuadMesh(StandardPass.render);
 		mesh.rebuildTriangle(1);
 		mesh.rebuildVertex(4);
@@ -233,11 +235,13 @@ public class ImageProcessing implements iImageProcessor, iAcceptsSceneListElemen
 
 	
 	
-	static public iReposition placeOnscreen(BasicSceneList into, final iProvider<Integer> from, int output, Rect r, float width, float height, Vector4 offset, Vector4 mul) {
+	public static
+    iReposition placeOnscreen(BasicSceneList into, final iProvider<Integer> from, int output, Rect r, float width, float height, Vector4 offset, Vector4 mul) {
 		return placeOnscreen(into, from, output, r, width, height, offset, mul, false);
 	}
 
-	static public iReposition placeOnscreen(final BasicSceneList into, final iProvider<Integer> from, int output, final Rect r, float width, float height, Vector4 offset, Vector4 mul, final boolean genMip) {
+	public static
+    iReposition placeOnscreen(final BasicSceneList into, final iProvider<Integer> from, int output, final Rect r, float width, float height, Vector4 offset, Vector4 mul, final boolean genMip) {
 		final TriangleMesh mesh = new BasicGeometry.QuadMesh(StandardPass.render);
 		mesh.rebuildTriangle(1);
 		mesh.rebuildVertex(4);
@@ -298,7 +302,8 @@ public class ImageProcessing implements iImageProcessor, iAcceptsSceneListElemen
 		};
 	}
 	
-	static public iReposition placeOnscreen(final BasicSceneList into, final iProvider<Integer> from, final Rect r, float width, float height, final BasicGLSLangProgram onscreenProgram) {
+	public static
+    iReposition placeOnscreen(final BasicSceneList into, final iProvider<Integer> from, final Rect r, float width, float height, final BasicGLSLangProgram onscreenProgram) {
 		final TriangleMesh mesh = new BasicGeometry.QuadMesh(StandardPass.render);
 		mesh.rebuildTriangle(1);
 		mesh.rebuildVertex(4);
@@ -351,7 +356,8 @@ public class ImageProcessing implements iImageProcessor, iAcceptsSceneListElemen
 		};
 	}
 
-	static public iReposition placeOnscreenWithMask(final BasicSceneList into, final iProvider<Integer> from, int output, final Rect r, final float width, final float height, Vector4 offset, Vector4 mul, final boolean genMip, String mask) {
+	public static
+    iReposition placeOnscreenWithMask(final BasicSceneList into, final iProvider<Integer> from, int output, final Rect r, final float width, final float height, Vector4 offset, Vector4 mul, final boolean genMip, String mask) {
 		final TriangleMesh mesh = new BasicGeometry.QuadMesh(StandardPass.render);
 		mesh.rebuildTriangle(1);
 		mesh.rebuildVertex(4);

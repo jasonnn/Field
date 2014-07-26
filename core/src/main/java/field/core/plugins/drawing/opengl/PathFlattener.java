@@ -59,42 +59,42 @@ public class PathFlattener {
 
 	Comparator searchDistance = new Comparator() {
 		public int compare(Object o1, Object o2) {
-			float f1 = o1 instanceof Number ? ((Number) o1).floatValue() : ((Mapping) o1).cumulativeDistanceAtEnd;
-			float f2 = o2 instanceof Number ? ((Number) o2).floatValue() : ((Mapping) o2).cumulativeDistanceAtEnd;
+			float f1 = (o1 instanceof Number) ? ((Number) o1).floatValue() : ((Mapping) o1).cumulativeDistanceAtEnd;
+			float f2 = (o2 instanceof Number) ? ((Number) o2).floatValue() : ((Mapping) o2).cumulativeDistanceAtEnd;
 			return Float.compare(f1, f2);
 		}
 	};
 
 	Comparator searchDot = new Comparator() {
 		public int compare(Object o1, Object o2) {
-			float f1 = o1 instanceof Number ? ((Number) o1).floatValue() : ((Mapping) o1).dotEnd;
-			float f2 = o2 instanceof Number ? ((Number) o2).floatValue() : ((Mapping) o2).dotEnd;
+			float f1 = (o1 instanceof Number) ? ((Number) o1).floatValue() : ((Mapping) o1).dotEnd;
+			float f2 = (o2 instanceof Number) ? ((Number) o2).floatValue() : ((Mapping) o2).dotEnd;
 			return Float.compare(f1, f2);
 		}
 	};
 
 	public float length() {
-		if (mappings.size()==0) return 0;
+		if (mappings.isEmpty()) return 0;
 		return mappings.get(mappings.size() - 1).cumulativeDistanceAtEnd;
 	}
 
 	public float lengthToDot(float length) {
-		int found = Collections.binarySearch((List) mappings, new Float(length), searchDistance);
+		int found = Collections.binarySearch((List) mappings, length, searchDistance);
 		if (found >= 0)
 			return mappings.get(found).dotEnd;
 
 		int leftOf = -found - 1;
 		int rightOf = leftOf - 1;
-		if (leftOf > mappings.size() - 1)
+		if (leftOf > (mappings.size() - 1))
 			return mappings.get(mappings.size() - 1).dotEnd;
 
-		float l1 = rightOf >= 0 ? mappings.get(rightOf).cumulativeDistanceAtEnd : 0;
+		float l1 = (rightOf >= 0) ? mappings.get(rightOf).cumulativeDistanceAtEnd : 0;
 		float l2 = mappings.get(leftOf).cumulativeDistanceAtEnd;
 
 		if (l2 == l1)
 			return mappings.get(leftOf).dotEnd;
 		float x = (length - l1) / (l2 - l1);
-		float de = mappings.get(leftOf).dotStart * (1 - x) + x * mappings.get(leftOf).dotEnd;
+		float de = (mappings.get(leftOf).dotStart * (1 - x)) + (x * mappings.get(leftOf).dotEnd);
 
 		return de;
 	}
@@ -104,7 +104,7 @@ public class PathFlattener {
 //		;//System.out.println(" dot to length <"+dot+">");
 //		;//System.out.println(" mappings :"+mappings);
 		
-		int found = Collections.binarySearch((List) mappings, new Float(dot), searchDot);
+		int found = Collections.binarySearch((List) mappings, dot, searchDot);
 //		;//System.out.println(" found <"+found+">");
 		if (found >= 0)
 			return mappings.get(found).cumulativeDistanceAtEnd;
@@ -114,7 +114,7 @@ public class PathFlattener {
 		
 //		;//System.out.println(" left right <"+leftOf+"> <"+rightOf+">");
 		
-		if (leftOf > mappings.size() - 1)
+		if (leftOf > (mappings.size() - 1))
 			return mappings.get(mappings.size() - 1).cumulativeDistanceAtEnd;
 
 
@@ -126,7 +126,8 @@ public class PathFlattener {
 		if (l2 == l1)
 			return mappings.get(rightOf).cumulativeDistanceAtEnd;
 		float x = (dot - l1) / (l2 - l1);
-		float de = (rightOf>=0 ? mappings.get(rightOf).cumulativeDistanceAtEnd : 0) * (1 - x) + x * mappings.get(leftOf).cumulativeDistanceAtEnd;
+		float de = (((rightOf >= 0) ? mappings.get(rightOf).cumulativeDistanceAtEnd : 0) * (1 - x)) + (x
+                                                                                                       * mappings.get(leftOf).cumulativeDistanceAtEnd);
 
 		return de;
 	}
@@ -137,7 +138,7 @@ public class PathFlattener {
 		m.end = b;
 		m.dotStart = dotStart;
 		m.dotEnd = dotEnd;
-		if (mappings.size() == 0)
+		if (mappings.isEmpty())
 			m.cumulativeDistanceAtEnd = b.distanceFrom(a);
 		else
 			m.cumulativeDistanceAtEnd = b.distanceFrom(a) + mappings.get(mappings.size() - 1).cumulativeDistanceAtEnd;
@@ -156,7 +157,7 @@ public class PathFlattener {
 
 			LineUtils.splitCubicFrame(a, c1 = new Vector2(c1), c2 = new Vector2(c2), b, 0.5f, c12, m, c21, tmp);
 
-			float mp = dotStart + (dotEnd - dotStart) * 0.5f;
+			float mp = dotStart + ((dotEnd - dotStart) * 0.5f);
 
 			emitCubicFrame(dotStart, mp, a, c1, c12, m);
 			emitCubicFrame(mp, dotEnd, m, c21, c2, b);
@@ -165,7 +166,8 @@ public class PathFlattener {
 		}
 	}
 
-	private float flatnessFor(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b) {
+	private static
+    float flatnessFor(Vector2 a, Vector2 c1, Vector2 c2, Vector2 b) {
 		return (float) CubicCurve2D.getFlatness(a.x, a.y, c1.x, c1.y, c2.x, c2.y, b.x, b.y);
 	}
 

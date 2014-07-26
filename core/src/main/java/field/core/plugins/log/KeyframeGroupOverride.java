@@ -35,7 +35,8 @@ import java.util.Map.Entry;
  */
 public class KeyframeGroupOverride extends GroupOverride {
 
-	static public class ChangeSet {
+	public static
+    class ChangeSet {
 		String target;
 
 		LinkedHashMap<Object, SimpleChange> changes = new LinkedHashMap<Object, SimpleChange>();
@@ -50,7 +51,8 @@ public class KeyframeGroupOverride extends GroupOverride {
 			return assemblingLogging.getBlendFor(v);
 		}
 
-		public Dict propertiesFor(SimpleChange s) {
+		public static
+        Dict propertiesFor(SimpleChange s) {
 			if (s.value instanceof PartiallyEvaluatedFunction) {
 				return ((PartiallyEvaluatedFunction) s.value).attributes;
 			}
@@ -150,18 +152,19 @@ public class KeyframeGroupOverride extends GroupOverride {
         start, middle, stop, startstop
     }
 
-	static public final VisualElementProperty<Boolean> keyframeGroupDisabled = new VisualElementProperty<Boolean>("keyframeGroupDisabled");
+	public static final VisualElementProperty<Boolean> keyframeGroupDisabled = new VisualElementProperty<Boolean>("keyframeGroupDisabled");
 
-	static public final VisualElementProperty<PyObject> pythonKeyframeHelp = new VisualElementProperty<PyObject>("kf_");
+	public static final VisualElementProperty<PyObject> pythonKeyframeHelp = new VisualElementProperty<PyObject>("kf_");
 
 	// transient HashMap<iVisualElement, PyObject> keyframeHelp = new
 	// HashMap<iVisualElement, PyObject>();
 
 	// this has to be shared as well as the keyframehelper
 
-	static public final VisualElementProperty<KeyframeGroupOverride> keyframeGroup = new VisualElementProperty<KeyframeGroupOverride>("kfGroup_");
+	public static final VisualElementProperty<KeyframeGroupOverride> keyframeGroup = new VisualElementProperty<KeyframeGroupOverride>("kfGroup_");
 
-	static public LinkedHashMap<String, ChangeSet> getAllChanges(Map<Object, ArrayList<SimpleChange>> changes) {
+	public static
+    LinkedHashMap<String, ChangeSet> getAllChanges(Map<Object, ArrayList<SimpleChange>> changes) {
 		LinkedHashMap<String, ChangeSet> c = new LinkedHashMap();
 		Set<Entry<Object, ArrayList<SimpleChange>>> es = changes.entrySet();
 		for (Entry<Object, ArrayList<SimpleChange>> e : es) {
@@ -302,7 +305,8 @@ public class KeyframeGroupOverride extends GroupOverride {
 		return super.getProperty(source, prop, ref);
 	}
 
-	public float getRawPositionFor(iVisualElement e, float x, Position p) {
+	public static
+    float getRawPositionFor(iVisualElement e, float x, Position p) {
 		Rect f = e.getFrame(null);
 		if (p == Position.start)
 			return (float) f.x;
@@ -382,7 +386,8 @@ public class KeyframeGroupOverride extends GroupOverride {
 		return object;
 	}
 
-	protected boolean automaticallyExecuteAll(iVisualElement source) {
+	protected static
+    boolean automaticallyExecuteAll(iVisualElement source) {
 		return true;
 	}
 
