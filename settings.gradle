@@ -17,3 +17,5 @@ include 'instrumentation-rt'
 
 include 'instrumentation-asm'
 
+include 'instrumentation-aspectj'
+

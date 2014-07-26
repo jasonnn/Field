@@ -50,6 +50,14 @@ project('instrumentation-asm') {
         proj(':util')
     }
 }
+project('instrumentation-aspectj') {
+    dependencies {
+        proj(':core-api')
+        proj(':instrumentation-rt')
+        proj(':asm')
+        proj(':util')
+    }
+}
 project('asm'){
     dependencies{
         proj(':util')

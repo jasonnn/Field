@@ -1,0 +1,11 @@
+buildscript {
+
+    dependencies {
+        classpath fileTree('build-lib')
+    }
+}
+project.ext {
+    aspectjVersion = '1.8.1'
+}
+
+apply plugin: 'aspectj'
