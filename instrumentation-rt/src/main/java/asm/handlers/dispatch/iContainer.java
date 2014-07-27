@@ -1,8 +1,9 @@
 package asm.handlers.dispatch;
 
 
+import field.util.ProxyBuilder;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -13,82 +14,21 @@ interface iContainer {
     public
     List propagateTo(String tag, Class clazz, Method method, Object... args);
 
-//    public static
-//    class MakeProxy {
-//        DispatchOverContainer container = new DispatchOverContainer();
-//
-//        public static
-//        <T> T makeProxyFor(final Class<T> interfase, final iContainer on, final String tag) {
-//            return (T) Proxy.newProxyInstance(on.getClass().getClassLoader(),
-//                                              new Class[]{interfase},
-//                                              new InvocationHandler() {
-//
-//                                                  public
-//                                                  Object invoke(Object proxy, Method method, Object[] args)
-//                                                          throws Throwable {
-//                                                      DispatchOverContainer.dispatch(tag, interfase, method, on, args);
-//                                                      return null;
-//                                                  }
-//                                              });
-//        }
-//    }
-
     public static
-    class DispatchOverContainer {
-        public static
-        void dispatch(String tag, Class clazz, Method method, iContainer on, Object... args) {
-            if (clazz == null) clazz = on.getClass();
-
-            List list = on.propagateTo(tag, clazz, method, args);
-            if (list == null) return;
-
-            for (Object o : list) {
-                if (clazz.isInstance(o)) {
-                    try {
-                        method.invoke(o, args);
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            for (Object o : list) {
-                if (o instanceof iContainer) {
-                    dispatch(tag, clazz, method, (iContainer) o, args);
-                }
-            }
-        }
+    class ProxyGenerator {
+        DispatchOverContainer container = new DispatchOverContainer();
 
         public static
-        void dispatchBackwards(String tag, Class clazz, Method method, iContainer on, Object... args) {
-            if (clazz == null) clazz = on.getClass();
-            List list = on.propagateTo(tag, clazz, method, args);
-            if (list == null) return;
-            for (int i = 0; i < list.size(); i++) {
-                Object o = list.get(list.size() - 1 - i);
-                if (clazz.isInstance(o)) {
-                    try {
-                        method.invoke(o, args);
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
+        <T> T generate(final Class<T> implement, final iContainer on, final String tag) {
+            return ProxyBuilder.proxyFor(implement).withHandler(new InvocationHandler() {
+                @Override
+                public
+                Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    DispatchOverContainer.dispatch(tag, implement, method, on, args);
+                    return null;
                 }
-            }
+            });
 
-            for (int i = 0; i < list.size(); i++) {
-                Object o = list.get(list.size() - 1 - i);
-                if (o instanceof iContainer) {
-                    dispatch(tag, clazz, method, (iContainer) o, args);
-                }
-            }
         }
     }
 

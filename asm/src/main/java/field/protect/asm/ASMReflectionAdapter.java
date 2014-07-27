@@ -7,21 +7,26 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jason on 7/26/14.
  */
 public
 class ASMReflectionAdapter {
-    final HashMap<Pair<ASMMethod, String>, Method> cache = new HashMap<Pair<ASMMethod, String>, Method>();
+    final Map<Pair<ASMMethod, String>, Method> cache = new HashMap<Pair<ASMMethod, String>, Method>();
 
     Pair<ASMMethod, String> ch = new Pair<ASMMethod, String>(null, null);
 
     Method first = null;
 
-
     public
     Method getMethodFor(ClassLoader loader, org.objectweb.asm.commons.Method method, Class onClass, String className) {
+        return getMethodFor(loader, ASMMethod.from(method), onClass, className);
+    }
+
+    public
+    Method getMethodFor(ClassLoader loader, ASMMethod method, Class onClass, String className) {
 
         Method m = getPossibleMethodFor(loader, method, onClass, className);
         if (m == null) {
@@ -48,9 +53,9 @@ class ASMReflectionAdapter {
         return getPossibleMethodFor(loader, ASMMethod.from(method), onClass, className);
     }
 
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
     public
-    Method getPossibleMethodFor(ClassLoader loader, ASMMethod method, Class onClass, String className) {
+    Method getPossibleMethodFor(ClassLoader loader, ASMMethod method, Class<?> onClass, String className) {
 
         ch.left = method;
         ch.right = className;

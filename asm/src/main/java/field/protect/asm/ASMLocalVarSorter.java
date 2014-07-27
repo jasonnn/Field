@@ -28,6 +28,7 @@ package field.protect.asm; /***
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import field.protect.asm.visitors.AbstractMethodVisitor;
 import org.objectweb.asm.*;
 
 /**
@@ -44,7 +45,7 @@ import org.objectweb.asm.*;
  */
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public
-class ASMLocalVarSorter extends MethodVisitor {
+class ASMLocalVarSorter extends AbstractMethodVisitor {
 
     // private static final ASMType OBJECT_TYPE = ASMType.getObjectType("java/lang/Object");
 
@@ -78,33 +79,25 @@ class ASMLocalVarSorter extends MethodVisitor {
     /**
      * Creates a new {@link ASMLocalVarSorter}. <i>Subclasses must not use
      * this constructor</i>. Instead, they must use the
-     * {@link #ASMLocalVarSorter(int, int, String, MethodVisitor)} version.
+     * {@link #ASMLocalVarSorter(int, String, org.objectweb.asm.MethodVisitor)} version.
      *
      * @param access access flags of the adapted method.
      * @param desc   the method's descriptor (see {@link Type Type}).
      * @param mv     the method visitor to which this adapter delegates calls.
      * @throws IllegalStateException If a subclass calls this constructor.
      */
-    public
-    ASMLocalVarSorter(final int access, final String desc, final MethodVisitor mv) {
-        this(Opcodes.ASM5, access, desc, mv);
-        if (getClass() != ASMLocalVarSorter.class) {
-            throw new IllegalStateException();
-        }
-    }
+
 
     /**
      * Creates a new {@link ASMLocalVarSorter}.
-     *
-     * @param api    the ASM API version implemented by this visitor. Must be one
-     *               of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+
      * @param access access flags of the adapted method.
-     * @param desc   the method's descriptor (see {@link Type Type}).
+     * @param desc   the method's descriptor (see {@link org.objectweb.asm.Type Type}).
      * @param mv     the method visitor to which this adapter delegates calls.
      */
-    protected
-    ASMLocalVarSorter(final int api, final int access, final String desc, final MethodVisitor mv) {
-        super(api, mv);
+    public
+    ASMLocalVarSorter(final int access, final String desc, final MethodVisitor mv) {
+        super(mv);
         ASMType[] args = ASMType.getArgumentTypes(desc);
         nextLocal = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
         for (int i = 0; i < args.length; i++) {

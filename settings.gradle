@@ -19,3 +19,5 @@ include 'instrumentation-asm'
 
 include 'instrumentation-aspectj'
 
+include 'bootstrap'
+

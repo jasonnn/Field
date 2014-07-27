@@ -261,7 +261,7 @@ class FieldASMGeneratorAdapter extends ASMLocalVarSorter {
                              final int access,
                              final String name,
                              final String desc) {
-        super(api, access, desc, mv);
+        super(access, desc, mv);
         this.access = access;
         this.returnType = ASMType.getReturnType(desc);
         this.argumentTypes = ASMType.getArgumentTypes(desc);

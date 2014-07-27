@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 
 
 dependencies {
-   // compile project(':annotations')
+    compile 'com.google.guava:guava:17.0'
     compile group:'org.codehaus.groovy', name:'groovy-all', version:'2.3.3'
     compile 'javabuilder:javabuilder:1.0'
     //compile 'com.squareup:javawriter:2.5.0'

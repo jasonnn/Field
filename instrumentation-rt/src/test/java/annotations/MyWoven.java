@@ -8,6 +8,7 @@ import field.bytecode.protect.Woven;
 @Woven
 public
 class MyWoven {
+    int x=1;
     public
     MyWoven() {
     }
@@ -15,6 +16,6 @@ class MyWoven {
     @Woven
     public
     int wovenMethod(int i) {
-        return i + 2;
+        return i + x;
     }
 }

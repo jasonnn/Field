@@ -33,6 +33,16 @@ class ASMMethodCtx {
     }
 
     public
+    ASMMethodCtx set(int access, String name, String desc, String signature, String[] exceptions) {
+        this.access = access;
+        this.name = name;
+        this.desc = desc;
+        this.signature = signature;
+        this.exceptions = exceptions;
+        return this;
+    }
+
+    public
     Map<String, Object> annotation(Class<? extends Annotation> ann) {
         return annotation(ASMType.getDescriptor(ann));
     }
@@ -69,5 +79,10 @@ class ASMMethodCtx {
         to.signature = from.signature;
         to.exceptions = from.exceptions == null ? null : Arrays.copyOf(from.exceptions, from.exceptions.length);
         to.annotations = from.annotations.copy();
+    }
+
+    public
+    void keep() {
+        classCtx.keepMethod(this);
     }
 }

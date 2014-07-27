@@ -5,7 +5,9 @@ import field.util.collect.MapOfMaps;
 import org.objectweb.asm.ClassVisitor;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,7 +21,8 @@ class ASMClassCtx {
     public String superName;
     public String[] interfaces;
     public ClassVisitor cv;
-    public  MapOfMaps<String, String, Object> annotations;
+    public MapOfMaps<String, String, Object> annotations;
+    public List<ASMMethodCtx> collectedMethods = new ArrayList<ASMMethodCtx>(4);
 
     ASMClassCtx(MapOfMaps<String, String, Object> annotations) {
         this.annotations = annotations;
@@ -40,6 +43,23 @@ class ASMClassCtx {
         return annotations.get(desc);
     }
 
+    public
+    ASMMethodCtx newMethod() {
+        ASMMethodCtx newMethod = new ASMMethodCtx(this);
+        // collectedMethods.add(newMethod);
+        return newMethod;
+    }
+
+    public
+    ASMClassCtx set(int access, String name, String signature, String superName, String[] interfaces) {
+        this.access = access;
+        this.name = name;
+        this.signature = signature;
+        this.superName = superName;
+        this.interfaces = interfaces;
+        return this;
+    }
+
     void copyTo(ASMClassCtx other) {
         copy(this, other);
     }
@@ -57,7 +77,18 @@ class ASMClassCtx {
         to.superName = from.superName;
         to.interfaces = from.interfaces == null ? null : Arrays.copyOf(from.interfaces, from.interfaces.length);
         to.cv = from.cv;
-        to.annotations=from.annotations.copy();
+        to.annotations = from.annotations.copy();
+    }
+
+    public
+    ASMMethodCtx newMethod(int access, String name, String desc, String signature, String[] exceptions) {
+        return new ASMMethodCtx(this).set(access, name, desc, signature, exceptions);
+
+    }
+
+    public
+    void keepMethod(ASMMethodCtx asmMethodCtx) {
+        collectedMethods.add(asmMethodCtx);
     }
 
 //    public
