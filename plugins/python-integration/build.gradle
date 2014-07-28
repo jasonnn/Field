@@ -1,0 +1,5 @@
+dependencies{
+    compile 'org.python:jython:2.5.3'
+    compile project(':core-api')
+
+}

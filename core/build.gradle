@@ -65,7 +65,7 @@ dependencies {
     //WARNING: this is big!
     //compile 'org.python:jython-standalone:2.7-b2'
     //TODO this will cause problems at runtime once it gets loaded; it's
-    compile 'org.python:jython:2.7-b2'
+    //compile 'org.python:jython:2.7-b2'
 
     compile 'com.thoughtworks.xstream:xstream:1.4.7'
     //  compile 'com.github.spullara.cli-parser:cli-parser:1.1.2'

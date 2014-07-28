@@ -6,11 +6,15 @@
       <module fileurl="file://$PROJECT_DIR$/annotation-processing/annotation-processing.iml" filepath="$PROJECT_DIR$/annotation-processing/annotation-processing.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotations/annotations.iml" filepath="$PROJECT_DIR$/annotations/annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/asm/asm.iml" filepath="$PROJECT_DIR$/asm/asm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bootstrap/bootstrap.iml" filepath="$PROJECT_DIR$/bootstrap/bootstrap.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-api/core-api.iml" filepath="$PROJECT_DIR$/core-api/core-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/instrumentation-asm/instrumentation-asm.iml" filepath="$PROJECT_DIR$/instrumentation-asm/instrumentation-asm.iml" />
       <module fileurl="file://$PROJECT_DIR$/instrumentation-aspectj/instrumentation-aspectj.iml" filepath="$PROJECT_DIR$/instrumentation-aspectj/instrumentation-aspectj.iml" />
       <module fileurl="file://$PROJECT_DIR$/instrumentation-rt/instrumentation-rt.iml" filepath="$PROJECT_DIR$/instrumentation-rt/instrumentation-rt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/plugins.iml" filepath="$PROJECT_DIR$/plugins/plugins.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/python-integration/python-integration.iml" filepath="$PROJECT_DIR$/plugins/python-integration/python-integration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/scripting/scripting.iml" filepath="$PROJECT_DIR$/plugins/scripting/scripting.iml" />
       <module fileurl="file://$PROJECT_DIR$/util/util.iml" filepath="$PROJECT_DIR$/util/util.iml" />
     </modules>
   </component>

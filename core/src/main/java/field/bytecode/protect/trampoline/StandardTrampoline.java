@@ -32,6 +32,9 @@ import java.util.logging.Logger;
 public
 class StandardTrampoline extends Trampoline2 implements InheritWovenHelper {
     private static final Logger log = Logger.getLogger(StandardTrampoline.class.getName());
+    static {
+        log.setLevel(Level.WARNING);
+    }
 
     public static boolean debug = true;
 

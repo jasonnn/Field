@@ -11,7 +11,9 @@ class UncheckedReflection {
     public static
     Method getDeclaredMethod(Class<?> c, String name, Class... params) {
         try {
-            return c.getDeclaredMethod(name, params);
+            Method m = c.getDeclaredMethod(name, params);
+            m.setAccessible(true);
+            return m;
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

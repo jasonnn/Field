@@ -1,6 +1,7 @@
 rootProject.name = 'Field'
 
 include 'core'
+include 'core-api'
 
 include 'annotations'
 include 'annotation-processing'
@@ -12,7 +13,7 @@ include 'asm'
 //include 'python'
 
 include 'util'
-include 'core-api'
+
 include 'instrumentation-rt'
 
 include 'instrumentation-asm'
@@ -20,4 +21,7 @@ include 'instrumentation-asm'
 include 'instrumentation-aspectj'
 
 include 'bootstrap'
+
+include 'plugins:scripting'
+include 'plugins:python-integration'
 

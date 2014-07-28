@@ -1,0 +1,18 @@
+varying vec4 vertexTexture;
+uniform sampler2DRect texture;
+uniform sampler2DRect textureMask;
+uniform vec4 side;
+
+uniform vec4 offset;
+
+varying vec4 vertexTexture1;
+uniform sampler2D textureNoise;
+
+uniform vec4 fade;
+
+void main()
+{
+	gl_FragColor = texture2DRect(texture, vec2(vertexTexture.s+side.x*side.y, side.z+side.w*vertexTexture.t));
+	gl_FragColor.xyzw = gl_FragColor.xyzw;
+	gl_FragColor.w = 1.0;
+}

@@ -1,5 +1,9 @@
 apply plugin: 'build-dashboard'
+
+
 subprojects {
+    if (name == 'plugins') return
+
     apply plugin: 'java'
     apply plugin: 'project-report'
 
@@ -18,8 +22,8 @@ subprojects {
     }
 }
 
-DependencyHandler.metaClass.proj = {String name ->
-    if(!name.startsWith(':')) name=':'+name
+DependencyHandler.metaClass.proj = { String name ->
+    if (!name.startsWith(':')) name = ':' + name
     compile(project(name)) {
         transitive = false
     }
@@ -34,8 +38,8 @@ project('core') {
     }
 
 }
-project('instrumentation-rt'){
-    dependencies{
+project('instrumentation-rt') {
+    dependencies {
         proj(':core-api')
         proj(':util')
         proj(':asm')
@@ -58,8 +62,8 @@ project('instrumentation-aspectj') {
         proj(':util')
     }
 }
-project('asm'){
-    dependencies{
+project('asm') {
+    dependencies {
         proj(':util')
     }
 }
@@ -67,6 +71,10 @@ project('annotation-processing') {
     dependencies {
         compile project(':annotations')
     }
+}
 
-
+project('bootstrap') {
+    dependencies {
+        runtime project(':core')
+    }
 }

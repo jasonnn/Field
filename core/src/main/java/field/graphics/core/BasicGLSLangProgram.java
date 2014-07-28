@@ -771,9 +771,6 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
             // System.out.println(" url is <" + r + ">");
 
             assert r != null : names[i];
-            if (r == null) {
-                System.err.println(" can't find resource <" + names[i] + '>');
-            }
             f[i] = new File(r.getPath());
         }
         return f;

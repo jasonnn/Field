@@ -13,11 +13,15 @@
             <option value="$PROJECT_DIR$/annotation-processing" />
             <option value="$PROJECT_DIR$/annotations" />
             <option value="$PROJECT_DIR$/asm" />
+            <option value="$PROJECT_DIR$/bootstrap" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core-api" />
             <option value="$PROJECT_DIR$/instrumentation-asm" />
             <option value="$PROJECT_DIR$/instrumentation-aspectj" />
             <option value="$PROJECT_DIR$/instrumentation-rt" />
+            <option value="$PROJECT_DIR$/plugins" />
+            <option value="$PROJECT_DIR$/plugins/python-integration" />
+            <option value="$PROJECT_DIR$/plugins/scripting" />
             <option value="$PROJECT_DIR$/util" />
           </set>
         </option>
