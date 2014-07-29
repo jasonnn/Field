@@ -1,6 +1,6 @@
 package field.core.ui.text.embedded;
 
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
 

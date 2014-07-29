@@ -1,8 +1,8 @@
 package field.core.ui;
 
 import field.core.ui.SmallMenu.BetterPopup;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 
@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
  * @author marc
  */
 public
-class ExtendedMenuMap extends LinkedHashMap<String, iUpdateable> {
+class ExtendedMenuMap extends LinkedHashMap<String, IUpdateable> {
 
     MarkingMenuBuilder builder = new MarkingMenuBuilder();
 

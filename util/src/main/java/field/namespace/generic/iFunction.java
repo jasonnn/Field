@@ -4,7 +4,7 @@ package field.namespace.generic;
 * Created by jason on 7/29/14.
 */
 public
-interface iFunction<t_out, t_in> {
+interface IFunction<I, O> {
     public
-    t_out f(t_in in);
+    O apply(I in);
 }

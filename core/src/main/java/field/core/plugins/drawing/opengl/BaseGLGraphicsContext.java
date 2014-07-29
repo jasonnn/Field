@@ -16,8 +16,8 @@ import field.graphics.core.BasicUtilities;
 import field.graphics.dynamic.DynamicLine;
 import field.graphics.dynamic.DynamicLine_long;
 import field.graphics.dynamic.iDynamicMesh;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IProvider;
 import field.math.linalg.Vector4;
 import field.namespace.generic.ReflectionTools;
 import field.util.collect.tuple.Pair;
@@ -42,11 +42,11 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
 
         List<iDynamicMesh> ret;
 
-        iUpdateable compute;
-        public iUpdateable finalize;
+        IUpdateable compute;
+        public IUpdateable finalize;
 
         public
-        DrawingResult(DrawingResultCode code, iUpdateable up, iDynamicMesh... ret) {
+        DrawingResult(DrawingResultCode code, IUpdateable up, iDynamicMesh... ret) {
             super();
             this.code = code;
             this.ret = Arrays.asList(ret);
@@ -72,11 +72,11 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
 
         iDynamicMesh outputTo_list = ReflectionTools.listProxy(outputTo, iDynamicMesh.class);
 
-        List<iUpdateable> updateTo = new ArrayList<iUpdateable>();
-        List<iUpdateable> finalizeTo = new ArrayList<iUpdateable>();
+        List<IUpdateable> updateTo = new ArrayList<IUpdateable>();
+        List<IUpdateable> finalizeTo = new ArrayList<IUpdateable>();
 
-        iUpdateable updateTo_list = ReflectionTools.listProxy(updateTo, iUpdateable.class);
-        iUpdateable finalizeTo_list = ReflectionTools.listProxy(finalizeTo, iUpdateable.class);
+        IUpdateable updateTo_list = ReflectionTools.listProxy(updateTo, IUpdateable.class);
+        IUpdateable finalizeTo_list = ReflectionTools.listProxy(finalizeTo, IUpdateable.class);
 
         Dict properties;
 
@@ -146,8 +146,8 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
 
                 textureProgram = new BasicGLSLangProgram("content/shaders/glComponentVertex.glslang",
                                                          "content/shaders/glComponentGLSLangFragment.glslang");
-                textureProgram.new SetIntegerUniform("tex", new iProvider.Constant<Integer>(1));
-                textureProgram.new SetIntegerUniform("texture2", new iProvider.Constant<Integer>(0));
+                textureProgram.new SetIntegerUniform("tex", new IProvider.Constant<Integer>(1));
+                textureProgram.new SetIntegerUniform("texture2", new IProvider.Constant<Integer>(0));
                 textureProgram.new SetUniform("mul", new Vector4(1, 1, 1, 1));
                 textureProgram.new SetUniform("add", new Vector4(0, 0, 0, 0));
 
@@ -163,8 +163,8 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
                 // textureProgram = new
                 // BasicGLSLangProgram("content/shaders/TestGLSLangVertex.glslang",
                 // "content/shaders/WhiteFragment.glslang");
-                textureProgram.new SetIntegerUniform("tex", new iProvider.Constant<Integer>(1));
-                textureProgram.new SetIntegerUniform("texture2", new iProvider.Constant<Integer>(0));
+                textureProgram.new SetIntegerUniform("tex", new IProvider.Constant<Integer>(1));
+                textureProgram.new SetIntegerUniform("texture2", new IProvider.Constant<Integer>(0));
                 textureProgram.new SetUniform("mul", new Vector4(1, 1, 1, 1));
                 textureProgram.new SetUniform("add", new Vector4(0, 0, 0, 0));
 
@@ -459,8 +459,8 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
     protected
     InternalLine create(Pair<CachedLine, Dict> p) {
         List<iDynamicMesh> meshes = new ArrayList<iDynamicMesh>();
-        List<iUpdateable> computes = new ArrayList<iUpdateable>();
-        List<iUpdateable> finalize = new ArrayList<iUpdateable>();
+        List<IUpdateable> computes = new ArrayList<IUpdateable>();
+        List<IUpdateable> finalize = new ArrayList<IUpdateable>();
         for (iDrawingAcceptor a : lineAcceptors) {
             try {
                 DrawingResult ret = a.accept(meshes, p.left, p.right);

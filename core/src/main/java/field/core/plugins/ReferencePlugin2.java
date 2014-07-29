@@ -1,10 +1,10 @@
 package field.core.plugins;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.selection.DrawTopology;
 import field.core.plugins.selection.DrawTopology.DefaultDrawer;
-import field.math.graph.iTopology;
+import field.math.graph.ITopology;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -14,17 +14,17 @@ class ReferencePlugin2 extends BaseSimplePlugin {
 
     @Override
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
         super.registeredWith(root);
 
         DrawTopology.addTopologyAsSelectionAxis("<html><font face='gill sans'>Embedded GUI Element <b>References</b></font>",
                                                 root,
-                                                new iTopology<iVisualElement>() {
+                                                new ITopology<IVisualElement>() {
 
                                                     public
-                                                    List<iVisualElement> getChildrenOf(iVisualElement source) {
+                                                    List<IVisualElement> getChildrenOf(IVisualElement source) {
 
-                                                        List<iVisualElement> r = new ArrayList<iVisualElement>();
+                                                        List<IVisualElement> r = new ArrayList<IVisualElement>();
 
                                                         Map<Object, Object> allProperties = source.payload();
                                                         for (Entry<Object, Object> o : new HashMap<Object, Object>(allProperties)
@@ -33,8 +33,8 @@ class ReferencePlugin2 extends BaseSimplePlugin {
                                                                 if (((VisualElementProperty) o.getKey()).getName()
                                                                                                         .startsWith("__minimalReference")) {
                                                                     if (o.getValue() instanceof List) {
-                                                                        List<iVisualElement> connectedTo =
-                                                                                (List<iVisualElement>) o.getValue();
+                                                                        List<IVisualElement> connectedTo =
+                                                                                (List<IVisualElement>) o.getValue();
                                                                         if (connectedTo != null) {
                                                                             r.addAll(connectedTo);
                                                                         }
@@ -47,7 +47,7 @@ class ReferencePlugin2 extends BaseSimplePlugin {
                                                     }
 
                                                     public
-                                                    List<iVisualElement> getParentsOf(iVisualElement of) {
+                                                    List<IVisualElement> getParentsOf(IVisualElement of) {
                                                         return Collections.EMPTY_LIST;
                                                     }
                                                 },

@@ -1,6 +1,6 @@
 package field.core.persistance;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 
 // a tag class for special handling of loading
 public
-class VEList extends ArrayList<iVisualElement> implements List<iVisualElement> {
+class VEList extends ArrayList<IVisualElement> implements List<IVisualElement> {
 
     public
     VEList(VEList list) {
@@ -24,7 +24,7 @@ class VEList extends ArrayList<iVisualElement> implements List<iVisualElement> {
     @NotNull
     @Override
     public
-    Iterator<iVisualElement> iterator() {
+    Iterator<IVisualElement> iterator() {
         scrubNull();
         return super.iterator();
     }

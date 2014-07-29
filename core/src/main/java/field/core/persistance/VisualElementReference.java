@@ -1,13 +1,13 @@
 package field.core.persistance;
 
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 
 public
 class VisualElementReference {
 
     String uid;
-    transient iVisualElement cached;
+    transient IVisualElement cached;
 
     public
     VisualElementReference(String uid) {
@@ -15,13 +15,13 @@ class VisualElementReference {
     }
 
     public
-    VisualElementReference(iVisualElement element) {
+    VisualElementReference(IVisualElement element) {
         this.uid = element.getUniqueID();
         this.cached = element;
     }
 
     public
-    iVisualElement get(iVisualElement root) {
+    IVisualElement get(IVisualElement root) {
         return (cached == null) ? (cached = StandardFluidSheet.findVisualElement(root, uid)) : cached;
     }
 

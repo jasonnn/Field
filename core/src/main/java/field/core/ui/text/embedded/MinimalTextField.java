@@ -1,14 +1,14 @@
 package field.core.ui.text.embedded;
 
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.ui.text.embedded.CustomInsertDrawing.Nub;
 import field.core.ui.text.embedded.CustomInsertDrawing.iAcceptsInsertRenderingContext;
 import field.core.ui.text.embedded.CustomInsertDrawing.iInsertRenderingContext;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
 import field.launch.Launcher;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
@@ -38,7 +38,7 @@ class MinimalTextField extends JTextField implements iOutOfBandDrawing, iAccepts
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             component = new MinimalTextField() {
                 @Override
                 public
@@ -86,7 +86,7 @@ class MinimalTextField extends JTextField implements iOutOfBandDrawing, iAccepts
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             component = new MinimalTextField() {
                 @Override
                 public
@@ -194,7 +194,7 @@ class MinimalTextField extends JTextField implements iOutOfBandDrawing, iAccepts
     void allViewHierarchy(List<Object> into,
                           MinimalTextField from,
                           HashSet<Object> seen,
-                          iFunction<Boolean, Object> predicate) {
+                          IFunction<Object, Boolean> predicate) {
 
         //System.out.println(" all view hierarchy <" + from.insertRenderingContext + ">");
 
@@ -205,7 +205,7 @@ class MinimalTextField extends JTextField implements iOutOfBandDrawing, iAccepts
 
         for (Control cc : controls) {
 
-            if (cc.getData() != null && (predicate == null || predicate.f(cc))) {
+            if (cc.getData() != null && (predicate == null || predicate.apply(cc))) {
                 into.add(cc);
             }
         }
@@ -260,9 +260,9 @@ class MinimalTextField extends JTextField implements iOutOfBandDrawing, iAccepts
             Rect here = this.realBounds();
 
             List<Control> r = new ArrayList<Control>();
-            allViewHierarchy((List) r, this, new HashSet<Object>(), new iFunction<Boolean, Object>() {
+            allViewHierarchy((List) r, this, new HashSet<Object>(), new IFunction<Object, Boolean>() {
                 public
-                Boolean f(Object in) {
+                Boolean apply(Object in) {
 
                     if (!(in instanceof Control)) return false;
 
@@ -635,9 +635,9 @@ class MinimalTextField extends JTextField implements iOutOfBandDrawing, iAccepts
     public
     JEditorPane enclosingPane() {
         List<JEditorPane> r = new ArrayList<JEditorPane>();
-        allViewHierarchy((List) r, this, new HashSet<Object>(), new iFunction<Boolean, Object>() {
+        allViewHierarchy((List) r, this, new HashSet<Object>(), new IFunction<Object, Boolean>() {
             public
-            Boolean f(Object in) {
+            Boolean apply(Object in) {
                 return (in instanceof JEditorPane);
             }
         });
@@ -656,9 +656,9 @@ class MinimalTextField extends JTextField implements iOutOfBandDrawing, iAccepts
             arm = false;
             repaint();
             List<JEditorPane> r = new ArrayList<JEditorPane>();
-            allViewHierarchy((List) r, this, new HashSet<Object>(), new iFunction<Boolean, Object>() {
+            allViewHierarchy((List) r, this, new HashSet<Object>(), new IFunction<Object, Boolean>() {
                 public
-                Boolean f(Object in) {
+                Boolean apply(Object in) {
                     return (in instanceof JEditorPane);
                 }
             });

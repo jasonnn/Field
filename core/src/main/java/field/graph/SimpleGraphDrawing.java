@@ -4,7 +4,7 @@ import field.context.Context.Cobj;
 import field.graph.MotionGraphs.iAxis;
 import field.graph.MotionGraphs.iLayout;
 import field.math.linalg.Vector2;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.Dict.Prop;
 import org.python.core.PyObject;
 
@@ -15,8 +15,8 @@ class SimpleGraphDrawing {
 
     // static public final Prop<iFunction
 
-    public static final Prop<iFunction<Number, Cobj>> extract = new Prop<iFunction<Number, Cobj>>("extract");
-    public static final Prop<iFunction<Number, Double>> filter = new Prop<iFunction<Number, Double>>("filter");
+    public static final Prop<IFunction<Cobj, Number>> extract = new Prop<IFunction<Cobj, Number>>("extract");
+    public static final Prop<IFunction<Double, Number>> filter = new Prop<IFunction<Double, Number>>("filter");
     public static final Prop<Boolean> clampToZero = new Prop<Boolean>("clampToZero");
 
     public static final Prop<Number> max = new Prop<Number>("max");
@@ -53,8 +53,8 @@ class SimpleGraphDrawing {
     class SimpleAxis extends Cobj implements iAxis, iLayout {
 
         protected Prop<Number> dimension;
-        private final iFunction<Number, Cobj> defaultExtract;
-        private final iFunction<Number, Double> defaultFilter;
+        private final IFunction<Cobj, Number> defaultExtract;
+        private final IFunction<Double, Number> defaultFilter;
 
         public
         SimpleAxis(String dimension) {
@@ -68,18 +68,18 @@ class SimpleGraphDrawing {
             setProperty(min, 0);
             setProperty(clampToZero, false);
 
-            defaultExtract = new iFunction<Number, Cobj>() {
+            defaultExtract = new IFunction<Cobj, Number>() {
                 @Override
                 public
-                Number f(Cobj in) {
+                Number apply(Cobj in) {
                     return in.getProperty(SimpleAxis.this.dimension);
                 }
             };
 
-            defaultFilter = new iFunction<Number, Double>() {
+            defaultFilter = new IFunction<Double, Number>() {
                 @Override
                 public
-                Number f(Double in) {
+                Number apply(Double in) {
                     return in;
                 }
             };
@@ -92,11 +92,11 @@ class SimpleGraphDrawing {
             float min = Float.POSITIVE_INFINITY;
             float max = Float.NEGATIVE_INFINITY;
 
-            iFunction<Number, Cobj> e = this.getProperty(extract);
+            IFunction<Cobj, Number> e = this.getProperty(extract);
             if (e == null) e = defaultExtract;
 
             for (Cobj c : property) {
-                Number v = e.f(c);
+                Number v = e.apply(c);
                 if (v.floatValue() < min) min = v.floatValue();
                 if (v.floatValue() > max) max = v.floatValue();
             }
@@ -142,10 +142,10 @@ class SimpleGraphDrawing {
         public
         float map(Cobj x) {
 
-            iFunction<Number, Cobj> e = this.getProperty(extract);
+            IFunction<Cobj, Number> e = this.getProperty(extract);
             if (e == null) e = defaultExtract;
 
-            Number n = e.f(x);
+            Number n = e.apply(x);
             return mapNumber(n.floatValue());
 
         }
@@ -153,7 +153,7 @@ class SimpleGraphDrawing {
         @Override
         public
         float mapNumber(float n) {
-            iFunction<Number, Double> e = this.getProperty(filter);
+            IFunction<Double, Number> e = this.getProperty(filter);
             if (e == null) e = defaultFilter;
 
             float min = getFloat(SimpleGraphDrawing.min, 0);
@@ -164,7 +164,7 @@ class SimpleGraphDrawing {
 
             double p = (n - min) / (max - min);
 
-            float p2 = e.f(p).floatValue();
+            float p2 = e.apply(p).floatValue();
 
             return offset + length * p2;
         }

@@ -2,9 +2,9 @@ package field.graphics.windowing;
 
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicGeometry;
-import field.launch.iUpdateable;
-import field.math.abstraction.iInplaceProvider;
-import field.math.graph.iGraphNode;
+import field.launch.IUpdateable;
+import field.math.abstraction.IInplaceProvider;
+import field.math.graph.IGraphNode;
 import field.math.linalg.*;
 import sunw.io.Serializable;
 
@@ -16,7 +16,7 @@ import java.util.Iterator;
  * @author marc <I>Created on Mar 7, 2003</I>
  */
 public
-class CoordinateFrameCamera implements iUpdateable {
+class CoordinateFrameCamera implements IUpdateable {
 
     public static
     class SavedCamera implements Serializable {
@@ -24,8 +24,8 @@ class CoordinateFrameCamera implements iUpdateable {
         public Vector3 lookAt = new Vector3();
         public Vector3 up = new Vector3();
 
-        transient iInplaceProvider<iCoordinateFrame.iMutable> positionFrame;
-        transient iInplaceProvider<iCoordinateFrame.iMutable> lookAtFrame;
+        transient IInplaceProvider<iCoordinateFrame.iMutable> positionFrame;
+        transient IInplaceProvider<iCoordinateFrame.iMutable> lookAtFrame;
         //static iNamedGroup startSearchFrom;
 
         public
@@ -100,8 +100,8 @@ class CoordinateFrameCamera implements iUpdateable {
     Vector3 resetLookAtTo = new Vector3();
 
     Vector3 resetPositionTo = new Vector3();
-    iInplaceProvider<iCoordinateFrame.iMutable> positionFrame;
-    iInplaceProvider<iCoordinateFrame.iMutable> lookAtFrame;
+    IInplaceProvider<iCoordinateFrame.iMutable> positionFrame;
+    IInplaceProvider<iCoordinateFrame.iMutable> lookAtFrame;
     float alpha = 0;
     float speed = 1;
 
@@ -130,7 +130,7 @@ class CoordinateFrameCamera implements iUpdateable {
     }
 
     public
-    void changeLookAtCoordinateFrame(iInplaceProvider<iCoordinateFrame.iMutable> to) {
+    void changeLookAtCoordinateFrame(IInplaceProvider<iCoordinateFrame.iMutable> to) {
         Vector3 lookAtNow = new Vector3();
         lookInWorld(lookAtNow);
         lookAtFrame = to;
@@ -138,7 +138,7 @@ class CoordinateFrameCamera implements iUpdateable {
     }
 
     public
-    void changePositionCoordinateFrame(iInplaceProvider<iCoordinateFrame.iMutable> to) {
+    void changePositionCoordinateFrame(IInplaceProvider<iCoordinateFrame.iMutable> to) {
         Vector3 positionNow = new Vector3();
         positionInWorld(positionNow);
         positionFrame = to;
@@ -203,7 +203,7 @@ class CoordinateFrameCamera implements iUpdateable {
     }
 
     public
-    iInplaceProvider<iCoordinateFrame.iMutable>[] loadCamera(String called) {
+    IInplaceProvider<iCoordinateFrame.iMutable>[] loadCamera(String called) {
         noOrbit();
         resync();
         SavedCamera camera = (SavedCamera) savedCameras.get(called);
@@ -211,17 +211,17 @@ class CoordinateFrameCamera implements iUpdateable {
         if (camera == null) {
             return null;
         }
-        return new iInplaceProvider[]{camera.lookAtFrame, camera.positionFrame};
+        return new IInplaceProvider[]{camera.lookAtFrame, camera.positionFrame};
     }
 
     public
-    iInplaceProvider<iCoordinateFrame.iMutable>[] loadCameraNoFrameChange(String called) {
+    IInplaceProvider<iCoordinateFrame.iMutable>[] loadCameraNoFrameChange(String called) {
         noOrbit();
         resync();
         SavedCamera camera = (SavedCamera) savedCameras.get(called);
         if (camera != null) {
-            iInplaceProvider<iCoordinateFrame.iMutable> oldp = this.positionFrame;
-            iInplaceProvider<iCoordinateFrame.iMutable> oldl = this.lookAtFrame;
+            IInplaceProvider<iCoordinateFrame.iMutable> oldp = this.positionFrame;
+            IInplaceProvider<iCoordinateFrame.iMutable> oldl = this.lookAtFrame;
             camera.load(this);
             this.positionFrame = oldp;
             this.lookAtFrame = oldl;
@@ -229,7 +229,7 @@ class CoordinateFrameCamera implements iUpdateable {
         if (camera == null) {
             return null;
         }
-        return new iInplaceProvider[]{camera.lookAtFrame, camera.positionFrame};
+        return new IInplaceProvider[]{camera.lookAtFrame, camera.positionFrame};
     }
 
     public
@@ -707,15 +707,15 @@ class CoordinateFrameCamera implements iUpdateable {
     boolean tryChangeLookAtCoordinateFrame(Object o) {
         resync();
         try {
-            if (o instanceof iInplaceProvider) {
-                changeLookAtCoordinateFrame((iInplaceProvider<iCoordinateFrame.iMutable>) o);
+            if (o instanceof IInplaceProvider) {
+                changeLookAtCoordinateFrame((IInplaceProvider<iCoordinateFrame.iMutable>) o);
             }
             else if (o instanceof BasicGeometry.BasicMesh) {
                 changeLookAtCoordinateFrame(((BasicGeometry.BasicMesh) o).getCoordindateFrameProvider());
             }
             else if (o == null) changeLookAtCoordinateFrame(null);
-            else if (o instanceof iGraphNode<?>)
-                tryChangeLookAtCoordinateFrame(((iGraphNode<?>) o).getParents().get(0));
+            else if (o instanceof IGraphNode<?>)
+                tryChangeLookAtCoordinateFrame(((IGraphNode<?>) o).getParents().get(0));
             else return false;
         } catch (ClassCastException ex) {
             return false;
@@ -727,15 +727,15 @@ class CoordinateFrameCamera implements iUpdateable {
     boolean tryChangePositionCoordinateFrame(Object o) {
         resync();
         try {
-            if (o instanceof iInplaceProvider)
-                changePositionCoordinateFrame((iInplaceProvider<iCoordinateFrame.iMutable>) o);
+            if (o instanceof IInplaceProvider)
+                changePositionCoordinateFrame((IInplaceProvider<iCoordinateFrame.iMutable>) o);
             else if (o instanceof BasicGeometry.BasicMesh) {
 
                 changePositionCoordinateFrame(((BasicGeometry.BasicMesh) o).getCoordindateFrameProvider());
             }
             else if (o == null) changePositionCoordinateFrame(null);
-            else if (o instanceof iGraphNode<?>)
-                tryChangeLookAtCoordinateFrame(((iGraphNode<?>) o).getParents().get(0));
+            else if (o instanceof IGraphNode<?>)
+                tryChangeLookAtCoordinateFrame(((IGraphNode<?>) o).getParents().get(0));
             else return false;
         } catch (ClassCastException ex) {
             return false;

@@ -10,7 +10,7 @@ import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.ShaderPreprocessor.PreprocessorException;
 import field.graphics.windowing.FullScreenCanvasSWT;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import field.math.linalg.Matrix4;
 import field.math.linalg.iToFloatArray;
 import field.util.TaskQueue;
@@ -217,7 +217,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
     }
 
     static public
-    class ModelView implements iProvider<Matrix4> {
+    class ModelView implements IProvider<Matrix4> {
         float[] o = new float[16];
 
         Matrix4 m = new Matrix4();
@@ -235,7 +235,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
     }
 
     static public
-    class ModelViewFromCurrentCamera implements iProvider<Matrix4> {
+    class ModelViewFromCurrentCamera implements IProvider<Matrix4> {
         public
         Matrix4 get() {
             return new Matrix4(BasicCamera.currentCamera.modelView);
@@ -243,7 +243,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
     }
 
     static public
-    class PreviousModelViewFromCurrentCamera implements iProvider<Matrix4> {
+    class PreviousModelViewFromCurrentCamera implements IProvider<Matrix4> {
         public
         Matrix4 get() {
             return new Matrix4(BasicCamera.currentCamera.previousModelView == null
@@ -304,7 +304,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
     // }
     //
     static public
-    class ProjectionFromCamera implements iProvider<Matrix4> {
+    class ProjectionFromCamera implements IProvider<Matrix4> {
         private final BasicCamera c;
         float[] o = new float[16];
 
@@ -329,17 +329,17 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
 
     public
     class SetIntegerUniform extends TaskQueue.Task {
-        public iProvider<Integer> value;
+        public IProvider<Integer> value;
         public String name;
 
         public
         SetIntegerUniform(String string, int i) {
-            this(string, new iProvider.Constant<Integer>(i));
+            this(string, new IProvider.Constant<Integer>(i));
             this.name = string;
         }
 
         public
-        SetIntegerUniform(String name, iProvider<Integer> value) {
+        SetIntegerUniform(String name, IProvider<Integer> value) {
             parameterQueue.super();
             this.value = value;
             this.name = name;
@@ -374,19 +374,19 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
     static public
     class SetIntegerUniformElement extends BasicUtilities.OnePassListElement {
 
-        private final iProvider<Integer> to;
+        private final IProvider<Integer> to;
 
         private final String name;
 
         public
-        SetIntegerUniformElement(StandardPass requestPass, String name, iProvider<Integer> to) {
+        SetIntegerUniformElement(StandardPass requestPass, String name, IProvider<Integer> to) {
             super(requestPass, requestPass);
             this.name = name;
             this.to = to;
         }
 
         public
-        SetIntegerUniformElement(String name, iProvider<Integer> to) {
+        SetIntegerUniformElement(String name, IProvider<Integer> to) {
             super(StandardPass.preRender, StandardPass.preRender);
             this.name = name;
             this.to = to;
@@ -423,14 +423,14 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
 
     public
     class SetMatrixUniform extends TaskQueue.Task {
-        public iProvider<Matrix4> value;
+        public IProvider<Matrix4> value;
 
         float[] mm = new float[16];
 
         public String name;
 
         public
-        SetMatrixUniform(String name, iProvider<Matrix4> value) {
+        SetMatrixUniform(String name, IProvider<Matrix4> value) {
             parameterQueue.super();
             this.value = value;
             this.name = name;
@@ -467,7 +467,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
     class PreviousLeftCamera extends SetMatrixUniform {
         public
         PreviousLeftCamera(String name) {
-            super(name, new iProvider<Matrix4>() {
+            super(name, new IProvider<Matrix4>() {
 
                 @Override
                 public
@@ -489,7 +489,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
     class PreviousCenterCamera extends SetMatrixUniform {
         public
         PreviousCenterCamera(String name) {
-            super(name, new iProvider<Matrix4>() {
+            super(name, new IProvider<Matrix4>() {
 
                 @Override
                 public
@@ -510,7 +510,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
     class PreviousRightCamera extends SetMatrixUniform {
         public
         PreviousRightCamera(String name) {
-            super(name, new iProvider<Matrix4>() {
+            super(name, new IProvider<Matrix4>() {
 
                 @Override
                 public
@@ -530,21 +530,21 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements i
     static public
     class SetMatrixUniformElement extends BasicUtilities.OnePassListElement {
 
-        private final iProvider<Matrix4> to;
+        private final IProvider<Matrix4> to;
 
         private final String name;
 
         float[] mm = new float[16];
 
         public
-        SetMatrixUniformElement(StandardPass requestPass, String name, iProvider<Matrix4> to) {
+        SetMatrixUniformElement(StandardPass requestPass, String name, IProvider<Matrix4> to) {
             super(requestPass, requestPass);
             this.name = name;
             this.to = to;
         }
 
         public
-        SetMatrixUniformElement(String name, iProvider<Matrix4> to) {
+        SetMatrixUniformElement(String name, IProvider<Matrix4> to) {
             super(StandardPass.preRender, StandardPass.preRender);
             this.name = name;
             this.to = to;

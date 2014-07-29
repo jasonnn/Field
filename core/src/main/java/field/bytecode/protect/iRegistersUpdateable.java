@@ -1,6 +1,6 @@
 package field.bytecode.protect;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
 /**
  * Created by jason on 7/14/14.
@@ -8,8 +8,8 @@ import field.launch.iUpdateable;
 public
 interface iRegistersUpdateable {
     public
-    void deregisterUpdateable(iUpdateable up);
+    void deregisterUpdateable(IUpdateable up);
 
     public
-    void registerUpdateable(iUpdateable up);
+    void registerUpdateable(IUpdateable up);
 }

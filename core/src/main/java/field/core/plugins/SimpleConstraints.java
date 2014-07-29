@@ -1,15 +1,16 @@
 package field.core.plugins;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.persistance.VisualElementReference;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
+import field.math.graph.IMutableContainer;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.collect.tuple.Pair;
 import field.util.HashMapOfLists;
 import field.util.RectangleAllocator;
@@ -35,7 +36,7 @@ class SimpleConstraints implements iPlugin {
         private final float oy;
 
         public
-        AtPoint(iVisualElement fireOn, iVisualElement inside, iVisualElement control, float ox, float oy) {
+        AtPoint(IVisualElement fireOn, IVisualElement inside, IVisualElement control, float ox, float oy) {
             super(fireOn, inside, control);
             // this.oy = oy;
             // this.ox = ox;
@@ -58,14 +59,14 @@ class SimpleConstraints implements iPlugin {
                                      oldParentFrame.y + y * oldParentFrame.h - oy,
                                      width,
                                      height);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control)
                                                            .shouldChangeFrame(control, newFrame, oldFrame, true);
         }
 
         public
-        AtPoint(iVisualElement fireOn,
-                iVisualElement inside,
-                iVisualElement control,
+        AtPoint(IVisualElement fireOn,
+                IVisualElement inside,
+                IVisualElement control,
                 float x,
                 float y,
                 float width,
@@ -85,13 +86,13 @@ class SimpleConstraints implements iPlugin {
                                      oldParentFrame.y + y * oldParentFrame.h - oy,
                                      width,
                                      height);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control)
                                                            .shouldChangeFrame(control, newFrame, oldFrame, true);
         }
 
         @Override
         protected
-        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
+        boolean doFire(IVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
             Rect oldParentFrame = from.get(root).getFrame(null);
             Rect newFrame = new Rect(oldParentFrame.x + x * oldParentFrame.w - ox,
                                      oldParentFrame.y + y * oldParentFrame.h - oy,
@@ -112,7 +113,7 @@ class SimpleConstraints implements iPlugin {
         float oy;
 
         public
-        AtPointBelow(iVisualElement fireOn, iVisualElement inside, iVisualElement control, float x, float y) {
+        AtPointBelow(IVisualElement fireOn, IVisualElement inside, IVisualElement control, float x, float y) {
             super(fireOn, inside, control);
             // this.oy = oy;
             // this.ox = ox;
@@ -124,7 +125,7 @@ class SimpleConstraints implements iPlugin {
 
         @Override
         protected
-        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
+        boolean doFire(IVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
             Rect oldParentFrame = from.get(root).getFrame(null);
             float delta = (float) ((newRect.y + newRect.h) - (oldRect.y + oldRect.h));
 
@@ -146,9 +147,9 @@ class SimpleConstraints implements iPlugin {
         private final float minWidth;
 
         public
-        AtPointBelowMinWidth(iVisualElement fireOn,
-                             iVisualElement inside,
-                             iVisualElement control,
+        AtPointBelowMinWidth(IVisualElement fireOn,
+                             IVisualElement inside,
+                             IVisualElement control,
                              float x,
                              float y,
                              float minWidth) {
@@ -164,7 +165,7 @@ class SimpleConstraints implements iPlugin {
 
         @Override
         protected
-        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
+        boolean doFire(IVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
             Rect oldParentFrame = from.get(root).getFrame(null);
 
             Rect newFrame = new Rect(oldParentFrame.x,
@@ -186,9 +187,9 @@ class SimpleConstraints implements iPlugin {
         private final VisualElementProperty<RectangleAllocator> allocator;
 
         public
-        RectangleAllocatorConstraint(iVisualElement fireOn,
-                                     iVisualElement from,
-                                     iVisualElement to,
+        RectangleAllocatorConstraint(IVisualElement fireOn,
+                                     IVisualElement from,
+                                     IVisualElement to,
                                      VisualElementProperty<RectangleAllocator> allocator) {
             super(fireOn, from, to);
             this.allocator = allocator;
@@ -196,7 +197,7 @@ class SimpleConstraints implements iPlugin {
 
         @Override
         protected
-        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
+        boolean doFire(IVisualElement root, Rect newRect, Rect oldRect, Rect currentRect) {
             Rect oldParentFrame = from.get(root).getFrame(null);
 
             RectangleAllocator a = allocator.get(from.get(root));
@@ -223,14 +224,14 @@ class SimpleConstraints implements iPlugin {
         boolean inside = false;
 
         public
-        Constraint(iVisualElement fireOn, iVisualElement from, iVisualElement to) {
+        Constraint(IVisualElement fireOn, IVisualElement from, IVisualElement to) {
             this.fireOn = new VisualElementReference(fireOn);
             this.from = new VisualElementReference(from);
             this.to = new VisualElementReference(to);
         }
 
         public
-        boolean fire(iVisualElement root, Rect newRect, Rect oldRect) {
+        boolean fire(IVisualElement root, Rect newRect, Rect oldRect) {
             if (inside) return false;
             inside = true;
 
@@ -241,7 +242,7 @@ class SimpleConstraints implements iPlugin {
             Rect oldCurrentRect = to.get(root).getFrame(null);
             boolean b = doFire(root, newRect, oldRect, currentRect);
             if (b) {
-                new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(to.get(root))
+                new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(to.get(root))
                                                                .shouldChangeFrame(to.get(root),
                                                                                   currentRect,
                                                                                   oldCurrentRect,
@@ -252,11 +253,11 @@ class SimpleConstraints implements iPlugin {
         }
 
         protected abstract
-        boolean doFire(iVisualElement root, Rect newRect, Rect oldRect, Rect currentRect);
+        boolean doFire(IVisualElement root, Rect newRect, Rect oldRect, Rect currentRect);
     }
 
     public
-    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -272,7 +273,7 @@ class SimpleConstraints implements iPlugin {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -293,13 +294,13 @@ class SimpleConstraints implements iPlugin {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             properties = t;
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -310,15 +311,15 @@ class SimpleConstraints implements iPlugin {
     }
 
     public
-    class Overrides extends iVisualElementOverrides.DefaultOverride {
+    class Overrides extends IVisualElementOverrides.DefaultOverride {
         @Override
         public
-        VisitCode deleted(iVisualElement source) {
+        TraversalHint deleted(IVisualElement source) {
 
             constraints.remove(source);
-            Iterator<Entry<iVisualElement, Collection<Constraint>>> i = constraints.entrySet().iterator();
+            Iterator<Entry<IVisualElement, Collection<Constraint>>> i = constraints.entrySet().iterator();
             while (i.hasNext()) {
-                Entry<iVisualElement, Collection<Constraint>> e = i.next();
+                Entry<IVisualElement, Collection<Constraint>> e = i.next();
                 Iterator<Constraint> q = e.getValue().iterator();
                 while (q.hasNext()) {
                     Constraint c = q.next();
@@ -328,19 +329,19 @@ class SimpleConstraints implements iPlugin {
                 }
             }
 
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
         public
-        VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+        TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
             List<Constraint> list = constraints.getList(source);
             if (list != null) {
                 for (Constraint c : list) {
                     c.fire(root, newFrame, oldFrame);
                 }
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
     }
 
@@ -351,13 +352,13 @@ class SimpleConstraints implements iPlugin {
 
     private final field.core.plugins.SimpleConstraints.LocalVisualElement lve;
 
-    private iVisualElement root;
+    private IVisualElement root;
 
     private SelectionGroup<iComponent> group;
 
-    HashMapOfLists<iVisualElement, Constraint> constraints = new HashMapOfLists<iVisualElement, Constraint>();
+    HashMapOfLists<IVisualElement, Constraint> constraints = new HashMapOfLists<IVisualElement, Constraint>();
 
-    iVisualElementOverrides elementOverride;
+    IVisualElementOverrides elementOverride;
 
     Map<Object, Object> properties = new HashMap<Object, Object>();
 
@@ -383,13 +384,13 @@ class SimpleConstraints implements iPlugin {
     }
 
     public
-    iVisualElement getWellKnownVisualElement(String id) {
+    IVisualElement getWellKnownVisualElement(String id) {
         if (id.equals(pluginId)) return lve;
         return null;
     }
 
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
 
         this.root = root;
 
@@ -405,7 +406,7 @@ class SimpleConstraints implements iPlugin {
         // updates? (no,
         // do it in
         // subclass)
-        group = root.getProperty(iVisualElement.selectionGroup);
+        group = root.getProperty(IVisualElement.selectionGroup);
 
         elementOverride = createElementOverrides();
     }
@@ -428,7 +429,7 @@ class SimpleConstraints implements iPlugin {
     }
 
     protected
-    iVisualElementOverrides createElementOverrides() {
+    IVisualElementOverrides createElementOverrides() {
         return new Overrides().setVisualElement(lve);
     }
 

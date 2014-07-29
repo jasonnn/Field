@@ -5,8 +5,8 @@ import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Platform;
 import field.core.Platform.OS;
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.drawing.SplineComputingOverride;
@@ -15,9 +15,9 @@ import field.core.plugins.python.PythonPlugin;
 import field.core.plugins.python.PythonPluginEditor;
 import field.core.plugins.selection.ToolBarFolder;
 import field.core.ui.MacScrollbarHack;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import field.util.collect.tuple.Pair;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -252,7 +252,7 @@ class HelpBrowser extends BaseSimplePlugin {
 
     @Override
     public
-    void registeredWith(final iVisualElement root) {
+    void registeredWith(final IVisualElement root) {
         super.registeredWith(root);
 
         try {
@@ -679,12 +679,12 @@ class HelpBrowser extends BaseSimplePlugin {
     }
 
     public
-    void documentFromElement(final iVisualElement e) {
+    void documentFromElement(final IVisualElement e) {
         if (documentation.get(e) == null) documentation.set(e, e, "");
         PythonPluginEditor.python_customToolbar.addToList(ArrayList.class,
                                                           e,
-                                                          new Pair<String, iUpdateable>("Load document",
-                                                                                        new iUpdateable() {
+                                                          new Pair<String, IUpdateable>("Load document",
+                                                                                        new IUpdateable() {
 
                                                                                             @Override
                                                                                             public
@@ -692,7 +692,7 @@ class HelpBrowser extends BaseSimplePlugin {
                                                                                                 // loadFromElement(e);
 
                                                                                                 browser.setUrl("http://localhost:10010/"
-                                                                                                               + iVisualElement.name
+                                                                                                               + IVisualElement.name
                                                                                                                          .get(e));
 
                                                                                             }
@@ -701,7 +701,7 @@ class HelpBrowser extends BaseSimplePlugin {
 
     @NextUpdate
     public
-    void loadFromElement(iVisualElement e) {
+    void loadFromElement(IVisualElement e) {
         try {
             Object xx = browser.evaluate("return pythonSource");
             // System.out.println(" eval got :" + xx);
@@ -719,7 +719,7 @@ class HelpBrowser extends BaseSimplePlugin {
     }
 
     public static
-    String textFromElement(iVisualElement e) {
+    String textFromElement(IVisualElement e) {
 
         String d = documentation.get(e);
         return textFromMarkdown(d);
@@ -746,7 +746,7 @@ class HelpBrowser extends BaseSimplePlugin {
 
         // System.out.println(" SETTING << " + x + " >>");
 
-        MacScrollbarHack.skipAFrame(iVisualElement.enclosingFrame.get(root).getFrame());
+        MacScrollbarHack.skipAFrame(IVisualElement.enclosingFrame.get(root).getFrame());
         browser.setText(preamble + x + postamble);
     }
 
@@ -772,7 +772,7 @@ class HelpBrowser extends BaseSimplePlugin {
 
     protected
     java.io.InputStream findAndRun(String replace, Properties parms) {
-        iVisualElement found = StandardFluidSheet.findVisualElementWithName(root, replace);
+        IVisualElement found = StandardFluidSheet.findVisualElementWithName(root, replace);
         if (found != null) {
 
             Iterator<String> ss = ((Set) parms.keySet()).iterator();
@@ -822,23 +822,23 @@ class HelpBrowser extends BaseSimplePlugin {
         if (m instanceof PyObject) {
             u = (Callable) ((PyObject) m).__tojava__(Callable.class);
         }
-        else if (m instanceof iUpdateable) {
+        else if (m instanceof IUpdateable) {
             u = new Callable() {
 
                 @Override
                 public
                 Object call() throws Exception {
-                    ((iUpdateable) fm).update();
+                    ((IUpdateable) fm).update();
                     return "(no result)";
                 }
             };
         }
-        else if (m instanceof iProvider) {
+        else if (m instanceof IProvider) {
             u = new Callable() {
                 @Override
                 public
                 Object call() throws Exception {
-                    return ((iProvider) fm).get();
+                    return ((IProvider) fm).get();
                 }
             };
         }

@@ -5,7 +5,7 @@ import field.graphics.core.*;
 import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicGeometry.TriangleMesh;
-import field.math.graph.iMutable;
+import field.math.graph.IMutable;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector3;
 
@@ -432,11 +432,11 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
 
         if (this.getUnderlyingGeometry().getParents().size() != 0) {
 
-            List<? extends iMutable<iSceneListElement>> p =
-                    new ArrayList<iMutable<iSceneListElement>>(this.getUnderlyingGeometry().getParents());
-            Iterator<? extends iMutable<iSceneListElement>> n = p.iterator();
+            List<? extends IMutable<iSceneListElement>> p =
+                    new ArrayList<IMutable<iSceneListElement>>(this.getUnderlyingGeometry().getParents());
+            Iterator<? extends IMutable<iSceneListElement>> n = p.iterator();
             while (n.hasNext()) {
-                iMutable<iSceneListElement> nn = n.next();
+                IMutable<iSceneListElement> nn = n.next();
                 nn.removeChild(this.getUnderlyingGeometry());
             }
 
@@ -548,14 +548,14 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
         }
     }
 
-    private List<iMutable<iSceneListElement>> oldParents;
+    private List<IMutable<iSceneListElement>> oldParents;
 
     public
     void off() {
         if (oldParents != null) return;
 
-        oldParents = new ArrayList<iMutable<iSceneListElement>>(getUnderlyingGeometry().getParents());
-        for (iMutable<iSceneListElement> m : oldParents) {
+        oldParents = new ArrayList<IMutable<iSceneListElement>>(getUnderlyingGeometry().getParents());
+        for (IMutable<iSceneListElement> m : oldParents) {
             m.removeChild(getUnderlyingGeometry());
         }
     }
@@ -563,7 +563,7 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
     public
     void on() {
         if (oldParents == null) return;
-        for (iMutable<iSceneListElement> m : oldParents) {
+        for (IMutable<iSceneListElement> m : oldParents) {
             m.addChild(getUnderlyingGeometry());
         }
         oldParents = null;

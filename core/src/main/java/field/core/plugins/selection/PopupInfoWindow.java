@@ -2,8 +2,8 @@ package field.core.plugins.selection;
 
 import field.core.Constants;
 import field.core.ui.UbiquitousLinks;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -137,7 +137,7 @@ class PopupInfoWindow {
 
         drawerFrame = new JFrame("drawe+" + title) {
 
-            iUpdateable fader = null;
+            IUpdateable fader = null;
 
             boolean fadingIn = false;
 
@@ -160,7 +160,7 @@ class PopupInfoWindow {
             void setVisible(boolean b) {
 
                 if (fader == null) {
-                    Launcher.getLauncher().registerUpdateable(fader = new iUpdateable() {
+                    Launcher.getLauncher().registerUpdateable(fader = new IUpdateable() {
                         public
                         void update() {
                             if (fadingIn) {
@@ -223,7 +223,7 @@ class PopupInfoWindow {
         drawerFrame.setBackground(new Color(0.4f, 0.4f, 0.4f, 0.5f));
         drawerFrame.getRootPane().setBackground(new Color(0.4f, 0.4f, 0.4f, 0.25f));
 
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             public
             void update() {

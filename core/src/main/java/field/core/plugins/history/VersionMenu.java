@@ -2,8 +2,8 @@ package field.core.plugins.history;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.history.GitVersioningQueries.DiffSet;
 import field.core.plugins.history.GitVersioningQueries.Snippet;
 import field.core.plugins.history.GitVersioningQueries.VersionsOfFile;
@@ -12,7 +12,7 @@ import field.core.ui.BetterComboBox;
 import field.core.ui.FieldMenus2;
 import field.core.ui.SmallMenu.iHoverUpdate;
 import field.core.ui.text.PythonTextEditor;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
@@ -26,10 +26,10 @@ class VersionMenu {
     GitVersioningQueries q = new GitVersioningQueries(FieldMenus2.getCanonicalVersioningDir());
     private final BetterComboBox box;
 
-    List<iUpdateable> actions = new ArrayList<iUpdateable>();
+    List<IUpdateable> actions = new ArrayList<IUpdateable>();
     private ArrayList<DiffSet> diffs;
     private final PythonTextEditor editor;
-    private iVisualElement element;
+    private IVisualElement element;
     private VisualElementProperty<String> prop;
     private String originalText;
 
@@ -63,7 +63,7 @@ class VersionMenu {
     }
 
     public
-    void swapIn(final iVisualElement element, VisualElementProperty<String> prop) {
+    void swapIn(final IVisualElement element, VisualElementProperty<String> prop) {
 
         this.element = element;
         this.prop = prop;
@@ -71,7 +71,7 @@ class VersionMenu {
     }
 
     private
-    void doMakeMenu(final iVisualElement element, VisualElementProperty<String> prop) {
+    void doMakeMenu(final IVisualElement element, VisualElementProperty<String> prop) {
 
         Point range = editor.getInputEditor().getSelectionRange();
 
@@ -85,7 +85,7 @@ class VersionMenu {
                     q.versionsForFile(now, sf + '/' + element.getUniqueID() + '/' + prop.getName() + ".property");
             String[] s = new String[v.size()];
             actions.clear();
-            actions.add(new iUpdateable() {
+            actions.add(new IUpdateable() {
                 @Override
                 public
                 void update() {
@@ -97,7 +97,7 @@ class VersionMenu {
                 final VersionsOfFile f = v.get(ii);
                 //System.out.println(" date is :" + f.date);
                 s[ii] = f.date;
-                actions.add(new iUpdateable() {
+                actions.add(new IUpdateable() {
                     @Override
                     public
                     void update() {
@@ -164,7 +164,7 @@ class VersionMenu {
             String sf = PseudoPropertiesPlugin.sheetFolder.get(element);
             String now = prop.get(element);
             List<String> titles = new ArrayList<String>();
-            final List<iUpdateable> actions = new ArrayList<iUpdateable>();
+            final List<IUpdateable> actions = new ArrayList<IUpdateable>();
             final List<VersionsOfFile> v =
                     q.versionsForFile(now, sf + '/' + element.getUniqueID() + '/' + prop.getName() + ".property");
             String ls = "";
@@ -190,7 +190,7 @@ class VersionMenu {
                 }
                 else {
                     titles.add(v.get(ii + 1).date);
-                    actions.add(new iUpdateable() {
+                    actions.add(new IUpdateable() {
 
                         @Override
                         public
@@ -230,12 +230,12 @@ class VersionMenu {
 
     @NextUpdate
     protected
-    void swapInText_next(iVisualElement element, String contents) {
+    void swapInText_next(IVisualElement element, String contents) {
         swapInText(element, contents);
     }
 
     protected
-    void swapInText(iVisualElement element, String contents) {
+    void swapInText(IVisualElement element, String contents) {
     }
 
     private static

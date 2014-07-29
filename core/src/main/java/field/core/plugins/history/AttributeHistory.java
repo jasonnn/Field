@@ -1,7 +1,7 @@
 package field.core.plugins.history;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.history.HistoryExplorerHG.VersionNode;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor2;
@@ -24,14 +24,14 @@ class AttributeHistory {
 
     public static
     class AttributeHistoryAccess implements iHandlesAttributes {
-        private final iVisualElement e;
+        private final IVisualElement e;
 
         private final HistoryExplorerHG hg;
 
         HashMap<String, WeakReference<AttributeHistory>> cache = new HashMap<String, WeakReference<AttributeHistory>>();
 
         public
-        AttributeHistoryAccess(HistoryExplorerHG hg, iVisualElement e) {
+        AttributeHistoryAccess(HistoryExplorerHG hg, IVisualElement e) {
             this.hg = hg;
             this.e = e;
         }
@@ -84,7 +84,7 @@ class AttributeHistory {
 
 
     public
-    AttributeHistory(HistoryExplorerHG ex, iVisualElement e, VisualElementProperty propertyName) {
+    AttributeHistory(HistoryExplorerHG ex, IVisualElement e, VisualElementProperty propertyName) {
         Set<VersionNode> versions = HistoryExplorerHG.buildHistoryGraph(ex.getSheetPrefix()
                                                                         + e.getUniqueID()
                                                                         + '/'

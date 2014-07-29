@@ -1,9 +1,9 @@
 package field.core.plugins.log;
 
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.plugins.log.AssemblingLogging.iUndoable;
 import field.core.plugins.log.Logging.iLoggingEvent;
 import field.core.plugins.selection.PopupInfoWindow;
@@ -90,14 +90,14 @@ class ElementInvocationLogging {
     public static
     class DidGetLocalVariableByAutoExecution implements iLoggingEvent, iSuspendedContext {
 
-        private final iVisualElement element;
+        private final IVisualElement element;
         public final transient Object got;
         private final String gotText;
         private StackTrace stack;
         String name;
 
         public
-        DidGetLocalVariableByAutoExecution(String name, iVisualElement target, Object got) {
+        DidGetLocalVariableByAutoExecution(String name, IVisualElement target, Object got) {
             this.name = name;
             this.element = target;
             this.got = got;
@@ -169,7 +169,7 @@ class ElementInvocationLogging {
     public static
     class DidGetProperty implements iLoggingEvent, iProvidesContextStack {
         private StackTrace stack;
-        private final iVisualElement element;
+        private final IVisualElement element;
         private final VisualElementProperty p;
         transient Object value;
         transient LinkedHashSet<iLoggingEvent> sus = new LinkedHashSet<iLoggingEvent>();
@@ -312,13 +312,13 @@ class ElementInvocationLogging {
     class DidSetProperty implements iLoggingEvent, iProvidesContextStack, iUndoable {
         private StackTrace stack;
         private final VisualElementProperty p;
-        private final iVisualElement element;
+        private final IVisualElement element;
         private final Object newvalue;
         private final Object oldvalue;
         transient LinkedHashSet<iLoggingEvent> sus = new LinkedHashSet<iLoggingEvent>();
 
         public
-        DidSetProperty(VisualElementProperty p, iVisualElement on, Object newvalue, Object oldvalue) {
+        DidSetProperty(VisualElementProperty p, IVisualElement on, Object newvalue, Object oldvalue) {
             if (storeStackTraces) stack = new StackTrace();
 
             this.p = p;
@@ -395,11 +395,11 @@ class ElementInvocationLogging {
 
     public static
     class ElementExecutionBegin implements iLoggingEvent, iSuspendedContext, iProvidesContextStack {
-        public iVisualElement element;
+        public IVisualElement element;
         private StackTrace stack;
 
         public
-        ElementExecutionBegin(iVisualElement element) {
+        ElementExecutionBegin(IVisualElement element) {
             super();
             this.element = element;
 
@@ -463,11 +463,11 @@ class ElementInvocationLogging {
 
     public static
     class ElementExecutionEnd implements iLoggingEvent, iSuspendedContext, iProvidesContextStack {
-        public iVisualElement element;
+        public IVisualElement element;
         private StackTrace stack;
 
         public
-        ElementExecutionEnd(iVisualElement element) {
+        ElementExecutionEnd(IVisualElement element) {
             super();
             this.element = element;
             if (storeStackTraces) stack = new StackTrace();
@@ -527,11 +527,11 @@ class ElementInvocationLogging {
 
     public static
     class ElementExecutionFocusBegin implements iLoggingEvent, iSuspendedContext {
-        public iVisualElement element;
+        public IVisualElement element;
         private StackTrace stack;
 
         public
-        ElementExecutionFocusBegin(iVisualElement element) {
+        ElementExecutionFocusBegin(IVisualElement element) {
             super();
             this.element = element;
             if (storeStackTraces) stack = new StackTrace();
@@ -588,11 +588,11 @@ class ElementInvocationLogging {
 
     public static
     class ElementExecutionFocusEnd implements iLoggingEvent, iSuspendedContext {
-        public iVisualElement element;
+        public IVisualElement element;
         private StackTrace stack;
 
         public
-        ElementExecutionFocusEnd(iVisualElement element) {
+        ElementExecutionFocusEnd(IVisualElement element) {
             super();
             this.element = element;
             if (storeStackTraces) stack = new StackTrace();
@@ -647,13 +647,13 @@ class ElementInvocationLogging {
     public static
     class ElementTextFragmentWasExecuted implements iLoggingEvent, iProvidesContextStack {
         public final String text;
-        public final iVisualElement element;
+        public final IVisualElement element;
         public StackTrace stack;
 
         LinkedHashSet<iLoggingEvent> sus = new LinkedHashSet<iLoggingEvent>();
 
         public
-        ElementTextFragmentWasExecuted(String text, iVisualElement e) {
+        ElementTextFragmentWasExecuted(String text, IVisualElement e) {
             this.text = text;
             this.element = e;
             if (storeStackTraces) stack = new StackTrace();
@@ -782,7 +782,7 @@ class ElementInvocationLogging {
     public static
     class MakeAutoExecutionTarget implements iLoggingEvent, iProvidesContextStack {
 
-        private final iVisualElement element;
+        private final IVisualElement element;
         private final transient Object got;
         private final String gotText;
         private StackTrace stack;
@@ -791,7 +791,7 @@ class ElementInvocationLogging {
         LinkedHashSet<iLoggingEvent> sus = new LinkedHashSet<iLoggingEvent>();
 
         public
-        MakeAutoExecutionTarget(String name, iVisualElement target, Object got) {
+        MakeAutoExecutionTarget(String name, IVisualElement target, Object got) {
             this.name = name;
             this.element = target;
             this.got = got;
@@ -883,14 +883,14 @@ class ElementInvocationLogging {
     public static
     class WillGetLocalVariableByAutoExecution implements iLoggingEvent, iSuspendedContext, iProvidesContextStack {
 
-        private final iVisualElement element;
+        private final IVisualElement element;
         private StackTrace stack;
         String name;
 
         LinkedHashSet<iLoggingEvent> sus = new LinkedHashSet<iLoggingEvent>();
 
         public
-        WillGetLocalVariableByAutoExecution(String name, iVisualElement target) {
+        WillGetLocalVariableByAutoExecution(String name, IVisualElement target) {
             this.name = name;
             this.element = target;
             if (storeStackTraces) stack = new StackTrace();
@@ -959,7 +959,7 @@ class ElementInvocationLogging {
 
     public static
     String dress(Object o) {
-        if (o instanceof iVisualElement) return SelectionSetDriver.nameFor((iVisualElement) o);
+        if (o instanceof IVisualElement) return SelectionSetDriver.nameFor((IVisualElement) o);
         return safeText(String.valueOf(o));
     }
 
@@ -969,17 +969,17 @@ class ElementInvocationLogging {
     }
 
     static
-    String describeElement(iVisualElement e) {
+    String describeElement(IVisualElement e) {
         if (e == null) return "\u2014\u2014unavailable\u2014\u2014";
-        String name = e.getProperty(iVisualElement.name);
+        String name = e.getProperty(IVisualElement.name);
         if (name == null) return "no name";
         return name;
     }
 
     public static
-    String describeElementLink(iVisualElement e) {
+    String describeElementLink(IVisualElement e) {
         if (e == null) return "\u2014\u2014unavailable\u2014\u2014";
-        String name = e.getProperty(iVisualElement.name);
+        String name = e.getProperty(IVisualElement.name);
         if (name == null) name = "no name";
 
         return UbiquitousLinks.link("<b>" + name + "</b>",

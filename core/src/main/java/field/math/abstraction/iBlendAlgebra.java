@@ -1,7 +1,7 @@
 package field.math.abstraction;
 
 public
-interface iBlendAlgebra<T> {
+interface IBlendAlgebra<T> {
 
     public
     T blendRepresentation_multiply(float by, T input);

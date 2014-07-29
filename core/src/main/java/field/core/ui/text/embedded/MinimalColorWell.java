@@ -2,15 +2,15 @@ package field.core.ui.text.embedded;
 
 import field.bytecode.protect.Woven;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.ui.SmallMenu;
 import field.core.ui.text.embedded.CustomInsertDrawing.iAcceptsInsertRenderingContext;
 import field.core.ui.text.embedded.CustomInsertDrawing.iInsertRenderingContext;
 import field.core.ui.text.embedded.CustomInsertSystem.ExecutesWhat;
 import field.core.ui.text.embedded.CustomInsertSystem.ExecutesWhen;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.linalg.Vector4;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -42,14 +42,14 @@ class MinimalColorWell extends JComponent implements iAcceptsInsertRenderingCont
     class Component extends ProvidedComponent {
 
         protected Vector4 value = new Vector4(0, 0, 0, 01.0f);
-        public transient iUpdateable notify;
+        public transient IUpdateable notify;
 
         protected ExecutesWhen when = null;
         protected ExecutesWhat what = null;
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             super.deserialize(inside);
 
             if (when == null) when = ExecutesWhen.never;
@@ -103,14 +103,14 @@ class MinimalColorWell extends JComponent implements iAcceptsInsertRenderingCont
     public static
     class Component255 extends ProvidedComponent {
         protected Vector4 value = new Vector4(0, 0, 0, 01.0f);
-        public transient iUpdateable notify;
+        public transient IUpdateable notify;
 
         protected ExecutesWhen when = ExecutesWhen.never;
         protected ExecutesWhat what = ExecutesWhat.line;
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             super.deserialize(inside);
             component = new MinimalColorWell() {
                 @Override
@@ -305,16 +305,16 @@ class MinimalColorWell extends JComponent implements iAcceptsInsertRenderingCont
 
         if (Platform.isPopupTrigger(e)) {
 
-            LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
+            LinkedHashMap<String, IUpdateable> menu = new LinkedHashMap<String, IUpdateable>();
             menu.put("Auto execute: when", null);
-            menu.put((when == ExecutesWhen.always ? "!" : "") + "  always", new iUpdateable() {
+            menu.put((when == ExecutesWhen.always ? "!" : "") + "  always", new IUpdateable() {
 
                 public
                 void update() {
                     when = ExecutesWhen.always;
                 }
             });
-            menu.put((when == ExecutesWhen.never ? "!" : "") + "  never", new iUpdateable() {
+            menu.put((when == ExecutesWhen.never ? "!" : "") + "  never", new IUpdateable() {
 
                 public
                 void update() {
@@ -323,21 +323,21 @@ class MinimalColorWell extends JComponent implements iAcceptsInsertRenderingCont
             });
 
             menu.put("Auto execute: what", null);
-            menu.put((what == ExecutesWhat.line ? "!" : "") + "  this line", new iUpdateable() {
+            menu.put((what == ExecutesWhat.line ? "!" : "") + "  this line", new IUpdateable() {
 
                 public
                 void update() {
                     what = ExecutesWhat.line;
                 }
             });
-            menu.put((what == ExecutesWhat.enclosingBlock ? "!" : "") + "  enclosing block", new iUpdateable() {
+            menu.put((what == ExecutesWhat.enclosingBlock ? "!" : "") + "  enclosing block", new IUpdateable() {
 
                 public
                 void update() {
                     what = ExecutesWhat.enclosingBlock;
                 }
             });
-            menu.put((what == ExecutesWhat.everything ? "!" : "") + "  everything", new iUpdateable() {
+            menu.put((what == ExecutesWhat.everything ? "!" : "") + "  everything", new IUpdateable() {
 
                 public
                 void update() {

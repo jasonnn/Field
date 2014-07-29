@@ -3,7 +3,7 @@ package field.util.filterstack;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.AliasedParameter;
 import field.bytecode.protect.annotations.Aliases;
-import field.math.abstraction.iFilter;
+import field.math.abstraction.IFilter;
 
 /**
  * alpha, beta, gamma?
@@ -48,11 +48,11 @@ class Unit<T> {
 
     protected T lastTotalOutput;
 
-    protected iFilter<Double, Double> alpha;
+    protected IFilter<Double, Double> alpha;
 
-    protected iFilter<Double, Double> beta;
+    protected IFilter<Double, Double> beta;
 
-    protected iFilter<Double, Double> gamma;
+    protected IFilter<Double, Double> gamma;
 
     @AliasedParameter
     protected FilterStack<T> filterStack;

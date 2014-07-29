@@ -1,21 +1,21 @@
 package field.context;
 
 import field.context.Generator.Channel;
-import field.launch.iUpdateable;
-import field.math.abstraction.iDoubleProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IDoubleProvider;
 
 public abstract
-class Horizon<X> implements iUpdateable {
+class Horizon<X> implements IUpdateable {
 
 
     protected Channel<X> c;
-    private final iDoubleProvider time;
+    private final IDoubleProvider time;
     private double history;
 
     double previous = Double.NEGATIVE_INFINITY;
 
     public
-    Horizon(Channel<X> c, iDoubleProvider time) {
+    Horizon(Channel<X> c, IDoubleProvider time) {
         this.c = c;
         this.time = time;
     }

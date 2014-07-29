@@ -1,7 +1,7 @@
 package field.core.plugins.selection;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.selection.SelectionSetDriver.iSelectionPredicate;
 import field.core.windowing.components.DraggableComponent;
@@ -31,15 +31,15 @@ class ComputedSelectionSets {
         }
 
         public
-        void begin(Set<iVisualElement> everything,
-                   Set<iVisualElement> currentlySelected,
-                   Set<iVisualElement> previousCache) {
+        void begin(Set<IVisualElement> everything,
+                   Set<IVisualElement> currentlySelected,
+                   Set<IVisualElement> previousCache) {
         }
 
         public
-        boolean is(iVisualElement e) {
-            iComponent component = iVisualElement.localView.get(e);
-            iVisualElementOverrides overrides = iVisualElement.overrides.get(e);
+        boolean is(IVisualElement e) {
+            iComponent component = IVisualElement.localView.get(e);
+            IVisualElementOverrides overrides = IVisualElement.overrides.get(e);
             for (Class c : this.c) {
                 if (c.isInstance(overrides)) return true;
             }
@@ -64,14 +64,14 @@ class ComputedSelectionSets {
         }
 
         public
-        void begin(Set<iVisualElement> everything,
-                   Set<iVisualElement> currentlySelected,
-                   Set<iVisualElement> previousCache) {
+        void begin(Set<IVisualElement> everything,
+                   Set<IVisualElement> currentlySelected,
+                   Set<IVisualElement> previousCache) {
         }
 
         public
-        boolean is(iVisualElement e) {
-            iComponent component = iVisualElement.localView.get(e);
+        boolean is(IVisualElement e) {
+            iComponent component = IVisualElement.localView.get(e);
             for (Class c : this.c) {
                 if (c.isInstance(component)) return true;
             }
@@ -82,15 +82,15 @@ class ComputedSelectionSets {
     public static
     class ByClass_computedSpline implements iSelectionPredicate {
         public
-        void begin(Set<iVisualElement> everything,
-                   Set<iVisualElement> currentlySelected,
-                   Set<iVisualElement> previousCache) {
+        void begin(Set<IVisualElement> everything,
+                   Set<IVisualElement> currentlySelected,
+                   Set<IVisualElement> previousCache) {
         }
 
         public
-        boolean is(iVisualElement e) {
-            iComponent component = iVisualElement.localView.get(e);
-            iVisualElementOverrides overrides = iVisualElement.overrides.get(e);
+        boolean is(IVisualElement e) {
+            iComponent component = IVisualElement.localView.get(e);
+            IVisualElementOverrides overrides = IVisualElement.overrides.get(e);
             return component instanceof PlainDraggableComponent && overrides instanceof SplineComputingOverride;
         }
     }
@@ -98,34 +98,34 @@ class ComputedSelectionSets {
     public static
     class ByClass_plainPython implements iSelectionPredicate {
         public
-        void begin(Set<iVisualElement> everything,
-                   Set<iVisualElement> currentlySelected,
-                   Set<iVisualElement> previousCache) {
+        void begin(Set<IVisualElement> everything,
+                   Set<IVisualElement> currentlySelected,
+                   Set<IVisualElement> previousCache) {
         }
 
         public
-        boolean is(iVisualElement e) {
-            iComponent component = iVisualElement.localView.get(e);
-            iVisualElementOverrides overrides = iVisualElement.overrides.get(e);
+        boolean is(IVisualElement e) {
+            iComponent component = IVisualElement.localView.get(e);
+            IVisualElementOverrides overrides = IVisualElement.overrides.get(e);
             return component instanceof DraggableComponent
-                   && overrides instanceof iVisualElementOverrides.DefaultOverride;
+                   && overrides instanceof IVisualElementOverrides.DefaultOverride;
         }
     }
 
 
     public static
     class CurrentlySelected implements iSelectionPredicate {
-        private Set<iVisualElement> currentlySelected;
+        private Set<IVisualElement> currentlySelected;
 
         public
-        void begin(Set<iVisualElement> everything,
-                   Set<iVisualElement> currentlySelected,
-                   Set<iVisualElement> previousCache) {
+        void begin(Set<IVisualElement> everything,
+                   Set<IVisualElement> currentlySelected,
+                   Set<IVisualElement> previousCache) {
             this.currentlySelected = currentlySelected;
         }
 
         public
-        boolean is(iVisualElement e) {
+        boolean is(IVisualElement e) {
             return currentlySelected.contains(e);
         }
     }
@@ -135,22 +135,22 @@ class ComputedSelectionSets {
         private final Set<String> saved;
 
         public
-        Saved(Set<iVisualElement> saved) {
+        Saved(Set<IVisualElement> saved) {
             super();
             this.saved = new HashSet<String>();
-            for (iVisualElement v : saved) {
+            for (IVisualElement v : saved) {
                 this.saved.add(v.getUniqueID());
             }
         }
 
         public
-        void begin(Set<iVisualElement> everything,
-                   Set<iVisualElement> currentlySelected,
-                   Set<iVisualElement> previousCache) {
+        void begin(Set<IVisualElement> everything,
+                   Set<IVisualElement> currentlySelected,
+                   Set<IVisualElement> previousCache) {
         }
 
         public
-        boolean is(iVisualElement e) {
+        boolean is(IVisualElement e) {
             return saved.contains(e.getUniqueID());
         }
     }

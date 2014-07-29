@@ -1,7 +1,7 @@
 package field.namespace.diagram;
 
-import field.launch.iUpdateable;
-import field.math.abstraction.iDoubleProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IDoubleProvider;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import java.util.List;
  *         Created on Dec 20, 2004 \u2014 bus to boston
  */
 public abstract
-class Horizon implements iUpdateable {
+class Horizon implements IUpdateable {
 
     protected float alpha = 0.95f;
 
@@ -45,7 +45,7 @@ class Horizon implements iUpdateable {
 
     protected double lastSliceEndsAt = 0;
 
-    protected iDoubleProvider nowClock;
+    protected IDoubleProvider nowClock;
 
     protected DiagramZero.iChannel outputStream;
 
@@ -56,19 +56,19 @@ class Horizon implements iUpdateable {
     boolean noReadAhead = false;
 
     public
-    Horizon(iDoubleProvider nowClock, DiagramZero.iChannel outputStream) {
+    Horizon(IDoubleProvider nowClock, DiagramZero.iChannel outputStream) {
         this.nowClock = nowClock;
         this.outputStream = outputStream;
 
     }
 
     public
-    iDoubleProvider getClockSource() {
+    IDoubleProvider getClockSource() {
         return this.nowClock;
     }
 
     public
-    Horizon setClockSource(iDoubleProvider clockSource) {
+    Horizon setClockSource(IDoubleProvider clockSource) {
         this.nowClock = clockSource;
         return this;
     }

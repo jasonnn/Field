@@ -16,8 +16,8 @@ import field.graphics.dynamic.DynamicLine;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.SubLine;
 import field.graphics.dynamic.iDynamicMesh;
-import field.launch.iUpdateable;
-import field.math.abstraction.iMetric;
+import field.launch.IUpdateable;
+import field.math.abstraction.IMetric;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.util.collect.tuple.Pair;
@@ -243,7 +243,7 @@ class SimplePDFLineDrawing {
         public
         PlainPDFLine(BasePDFGraphicsContext context) {
             this.context = context;
-            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
+            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new IMetric<Vector4, Vector4>() {
                 public
                 float distance(Vector4 from, Vector4 to) {
                     if (from == null || to == null) return 0;
@@ -255,7 +255,7 @@ class SimplePDFLineDrawing {
         }
 
         public
-        DrawingResult accept(List<iUpdateable> soFar, final CachedLine line, final Dict properties) {
+        DrawingResult accept(List<IUpdateable> soFar, final CachedLine line, final Dict properties) {
             if (!properties.isTrue(iLinearGraphicsContext.stroked, true)) return null;
 
             Vector4 color = null;
@@ -265,7 +265,7 @@ class SimplePDFLineDrawing {
                 if (color.w < 0.001) return null;
             }
 
-            return new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            return new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
 
                 public
                 void update() {
@@ -421,7 +421,7 @@ class SimplePDFLineDrawing {
         public
         SimplePDFFill(BasePDFGraphicsContext context) {
             this.context = context;
-            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
+            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new IMetric<Vector4, Vector4>() {
                 public
                 float distance(Vector4 from, Vector4 to) {
                     if (from == null || to == null) return 0;
@@ -433,7 +433,7 @@ class SimplePDFLineDrawing {
         }
 
         public
-        DrawingResult accept(List<iUpdateable> soFar, final CachedLine line, final Dict properties) {
+        DrawingResult accept(List<IUpdateable> soFar, final CachedLine line, final Dict properties) {
             if (!properties.isTrue(iLinearGraphicsContext.filled, false)) return null;
             if (properties.isTrue(iLinearGraphicsContext.needVertexShading, false)) return null;
 
@@ -486,7 +486,7 @@ class SimplePDFLineDrawing {
 
             };
 
-            fillEmitter.addTrackedProperty(iLinearGraphicsContext.fillColor_v, new iMetric<Vector4, Vector4>() {
+            fillEmitter.addTrackedProperty(iLinearGraphicsContext.fillColor_v, new IMetric<Vector4, Vector4>() {
                 public
                 float distance(Vector4 from, Vector4 to) {
                     if (from == null || to == null) return 0;
@@ -496,7 +496,7 @@ class SimplePDFLineDrawing {
                 }
             });
 
-            return new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            return new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
 
                 public
                 void update() {
@@ -577,7 +577,7 @@ class SimplePDFLineDrawing {
         }
 
         public
-        DrawingResult accept(List<iUpdateable> soFar, final CachedLine line, final Dict properties) {
+        DrawingResult accept(List<IUpdateable> soFar, final CachedLine line, final Dict properties) {
 
             if (!properties.isTrue(iLinearGraphicsContext.pointed, false)) return null;
 
@@ -585,7 +585,7 @@ class SimplePDFLineDrawing {
 
             unitSquare = null;
 
-            DrawingResult res = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult res = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
 
                 public
                 void update() {
@@ -733,7 +733,7 @@ class SimplePDFLineDrawing {
         }
 
         public
-        DrawingResult accept(List<iUpdateable> soFar, final CachedLine line, final Dict properties) {
+        DrawingResult accept(List<IUpdateable> soFar, final CachedLine line, final Dict properties) {
 
             if (!properties.isTrue(iLinearGraphicsContext.pointed, false)) return null;
 
@@ -741,7 +741,7 @@ class SimplePDFLineDrawing {
 
             unitSquare = null;
 
-            DrawingResult res = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult res = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
 
                 public
                 void update() {
@@ -952,7 +952,7 @@ class SimplePDFLineDrawing {
         public
         SynthGradientPDFFill(BasePDFGraphicsContext context) {
             this.context = context;
-            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
+            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new IMetric<Vector4, Vector4>() {
                 public
                 float distance(Vector4 from, Vector4 to) {
                     if (from == null || to == null) return 0;
@@ -964,7 +964,7 @@ class SimplePDFLineDrawing {
         }
 
         public
-        DrawingResult accept(List<iUpdateable> soFar, final CachedLine line, final Dict properties) {
+        DrawingResult accept(List<IUpdateable> soFar, final CachedLine line, final Dict properties) {
             if (!properties.isTrue(iLinearGraphicsContext.filled, false)) return null;
             if (!properties.isTrue(iLinearGraphicsContext.needVertexShading, false)) return null;
 
@@ -1034,7 +1034,7 @@ class SimplePDFLineDrawing {
 
             };
 
-            fillEmitter.addTrackedProperty(iLinearGraphicsContext.fillColor_v, new iMetric<Vector4, Vector4>() {
+            fillEmitter.addTrackedProperty(iLinearGraphicsContext.fillColor_v, new IMetric<Vector4, Vector4>() {
                 public
                 float distance(Vector4 from, Vector4 to) {
                     if (from == null || to == null) return 0;
@@ -1044,7 +1044,7 @@ class SimplePDFLineDrawing {
                 }
             });
 
-            return new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            return new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 public
                 void update() {
                     if (!context.isLayer(line)) return;

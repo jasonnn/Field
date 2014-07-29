@@ -1,7 +1,7 @@
 package field.core.ui.text.referencealgorithms;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.ui.text.embedded.iReferenceAlgorithm.BaseReferenceAlgorithm;
 import field.math.linalg.Vector2;
 
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 
 public
-class Called extends BaseReferenceAlgorithm implements Comparator<iVisualElement> {
+class Called extends BaseReferenceAlgorithm implements Comparator<IVisualElement> {
 
     private final Pattern pattern;
 
@@ -26,15 +26,15 @@ class Called extends BaseReferenceAlgorithm implements Comparator<iVisualElement
 
     @Override
     protected
-    List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement) {
-        ArrayList<iVisualElement> r = new ArrayList<iVisualElement>();
+    List<IVisualElement> doEvaluation(IVisualElement root, List<IVisualElement> old, IVisualElement forElement) {
+        ArrayList<IVisualElement> r = new ArrayList<IVisualElement>();
 
-        List<iVisualElement> all = allVisualElements(root);
+        List<IVisualElement> all = allVisualElements(root);
 
         center = forElement.getFrame(null).midpoint2();
 
-        for (iVisualElement v : all) {
-            if (pattern.matcher(v.getProperty(iVisualElement.name)).matches()) r.add(v);
+        for (IVisualElement v : all) {
+            if (pattern.matcher(v.getProperty(IVisualElement.name)).matches()) r.add(v);
         }
 
         Collections.sort(r, this);
@@ -45,7 +45,7 @@ class Called extends BaseReferenceAlgorithm implements Comparator<iVisualElement
     Rect tFrame = new Rect(0, 0, 0, 0);
 
     public
-    int compare(iVisualElement o1, iVisualElement o2) {
+    int compare(IVisualElement o1, IVisualElement o2) {
         float d1 = o1.getFrame(tFrame).midpoint2().distanceFrom(center);
         float d2 = o2.getFrame(tFrame).midpoint2().distanceFrom(center);
         return d2 < d1 ? 1 : -1;

@@ -1,7 +1,7 @@
 package field.core.ui.text.referencealgorithms;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.ui.text.embedded.iReferenceAlgorithm.BaseReferenceAlgorithm;
 import field.math.linalg.Vector2;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 
 public
-class Explicit extends BaseReferenceAlgorithm implements Comparator<iVisualElement> {
+class Explicit extends BaseReferenceAlgorithm implements Comparator<IVisualElement> {
 
 
     private Vector2 center;
@@ -26,7 +26,7 @@ class Explicit extends BaseReferenceAlgorithm implements Comparator<iVisualEleme
     }
 
     public
-    int compare(iVisualElement o1, iVisualElement o2) {
+    int compare(IVisualElement o1, IVisualElement o2) {
         float d1 = o1.getFrame(tFrame).midpoint2().distanceFrom(center);
         float d2 = o2.getFrame(tFrame).midpoint2().distanceFrom(center);
         return (d2 < d1) ? 1 : -1;
@@ -34,13 +34,13 @@ class Explicit extends BaseReferenceAlgorithm implements Comparator<iVisualEleme
 
     @Override
     protected
-    List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement) {
-        ArrayList<iVisualElement> r = new ArrayList<iVisualElement>();
+    List<IVisualElement> doEvaluation(IVisualElement root, List<IVisualElement> old, IVisualElement forElement) {
+        ArrayList<IVisualElement> r = new ArrayList<IVisualElement>();
 
-        List<iVisualElement> all = allVisualElements(root);
+        List<IVisualElement> all = allVisualElements(root);
 
 
-        for (iVisualElement v : all) {
+        for (IVisualElement v : all) {
             if (v.getUniqueID().equals(hiddenUID)) r.add(v);
         }
 

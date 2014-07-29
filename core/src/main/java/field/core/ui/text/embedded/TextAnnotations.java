@@ -1,8 +1,8 @@
 package field.core.ui.text.embedded;
 
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.util.FieldPyObjectAdaptor.iExtensible;
 import field.math.linalg.Vector4;
 import field.util.Dict;
@@ -190,7 +190,7 @@ class TextAnnotations {
     }
 
     public
-    void swapIn(iVisualElement e, Document d, VisualElementProperty property) {
+    void swapIn(IVisualElement e, Document d, VisualElementProperty property) {
 
         this.property = property;
 //		try {
@@ -213,7 +213,7 @@ class TextAnnotations {
     }
 
     public
-    void swapOut(iVisualElement e) {
+    void swapOut(IVisualElement e) {
 //		;//System.out.println(" setting annotation package to <" + pack.getAnnotations(property) + ">");
         textEditorAnnotationPackage.set(e, e, pack);
         for (Annotation a : pack.getAnnotations(property)) {

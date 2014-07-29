@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.opengl;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.execution.PythonScriptingSystem;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.ui.SmallMenu;
@@ -9,7 +9,7 @@ import field.core.ui.SmallMenu.BetterPopup;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.RootComponent.iMousePeer;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.util.collect.tuple.Pair;
 import field.util.Dict;
 import field.util.Dict.Prop;
@@ -72,21 +72,21 @@ class LineInteraction implements iMousePeer {
         }
 
         public
-        void popupMenu(Event event, Map<String, iUpdateable> source) {
+        void popupMenu(Event event, Map<String, IUpdateable> source) {
 
             // this might not actually be a map<string,
             // iUpdateable>, we might have something from Python
-            LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
+            LinkedHashMap<String, IUpdateable> menu = new LinkedHashMap<String, IUpdateable>();
 
-            Set<Entry<String, iUpdateable>> es = source.entrySet();
-            for (Entry<String, iUpdateable> e : es) {
+            Set<Entry<String, IUpdateable>> es = source.entrySet();
+            for (Entry<String, IUpdateable> e : es) {
 
                 Object u = e.getValue();
 
                 if (u != null) {
-                    final iUpdateable c = PythonUtils.installed.toUpdateable(u);
+                    final IUpdateable c = PythonUtils.installed.toUpdateable(u);
 
-                    iUpdateable c2 = new iUpdateable() {
+                    IUpdateable c2 = new IUpdateable() {
 
                         public
                         void update() {
@@ -377,8 +377,8 @@ class LineInteraction implements iMousePeer {
     Promise enter(CachedLine cc) {
         if (cc.properties != null) {
             Object o = cc.properties.get(iLinearGraphicsContext.source);
-            if (!(o instanceof iVisualElement)) return null;
-            iVisualElement source = (iVisualElement) o;
+            if (!(o instanceof IVisualElement)) return null;
+            IVisualElement source = (IVisualElement) o;
             if (source == null) return null;
             PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(source);
             Promise p = pss.promiseForKey(source);

@@ -3,8 +3,8 @@
  */
 package field.core.windowing.components;
 
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ class MainSelectionGroup implements SelectionGroup<iComponent> {
 
     public
     MainSelectionGroup() {
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             Set<iComponent> lastSelection = new HashSet<iComponent>();
 

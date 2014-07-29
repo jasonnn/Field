@@ -4,7 +4,7 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Constants;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.help.ContextualHelp;
 import field.core.plugins.help.HelpBrowser;
 import field.core.plugins.selection.SelectionSetUI;
@@ -12,9 +12,9 @@ import field.core.plugins.selection.ToolBarFolder;
 import field.core.ui.GraphNodeToTreeFancy;
 import field.core.ui.UbiquitousLinks;
 import field.core.util.ExecuteCommand;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
 import field.util.HashMapOfLists;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 public
 class PluginList {
 
-    private final iVisualElement root;
+    private final IVisualElement root;
     private final SelectionSetUI selectionUI;
 
     public
@@ -301,17 +301,17 @@ class PluginList {
     }
 
     public
-    PluginList(iVisualElement root, ToolBarFolder parent) {
+    PluginList(IVisualElement root, ToolBarFolder parent) {
         this.root = root;
 
         selectionUI = new SelectionSetUI("icons/cog_32x32.png", parent) {
 
             @Override
             protected
-            LinkedHashMap<String, iUpdateable> getMenuItems() {
-                LinkedHashMap<String, iUpdateable> u = new LinkedHashMap<String, iUpdateable>();
+            LinkedHashMap<String, IUpdateable> getMenuItems() {
+                LinkedHashMap<String, IUpdateable> u = new LinkedHashMap<String, IUpdateable>();
                 u.put("Extending Field", null);
-                u.put(" \u271A  Add jar/directory to classpath", new iUpdateable() {
+                u.put(" \u271A  Add jar/directory to classpath", new IUpdateable() {
                     public
                     void update() {
 
@@ -340,7 +340,7 @@ class PluginList {
 
                     }
                 });
-                u.put(" \u271A  Add directory full of jars to classpath", new iUpdateable() {
+                u.put(" \u271A  Add directory full of jars to classpath", new IUpdateable() {
                     public
                     void update() {
 
@@ -369,7 +369,7 @@ class PluginList {
 
                     }
                 });
-                u.put(" \u21e5 Copy jar into application extensions directory", new iUpdateable() {
+                u.put(" \u21e5 Copy jar into application extensions directory", new IUpdateable() {
                     public
                     void update() {
 
@@ -387,7 +387,7 @@ class PluginList {
 
                     }
                 });
-                u.put(" \u21e5 Copy jar into user extensions directory", new iUpdateable() {
+                u.put(" \u21e5 Copy jar into user extensions directory", new IUpdateable() {
                     public
                     void update() {
 
@@ -405,7 +405,7 @@ class PluginList {
 
                     }
                 });
-                u.put(" \u271A  Add directory to Python library", new iUpdateable() {
+                u.put(" \u271A  Add directory to Python library", new IUpdateable() {
                     public
                     void update() {
 
@@ -432,7 +432,7 @@ class PluginList {
 
                     }
                 });
-                u.put(" \u271A  Add jar/directory to source search path", new iUpdateable() {
+                u.put(" \u271A  Add jar/directory to source search path", new IUpdateable() {
                     public
                     void update() {
                         File f = getFile("Add Source Jar / Directory", true, new String[]{".jar", ".jar_"});
@@ -484,7 +484,7 @@ class PluginList {
 
             @Override
             protected
-            void popUpMenu(Event ev, LinkedHashMap<String, iUpdateable> m) {
+            void popUpMenu(Event ev, LinkedHashMap<String, IUpdateable> m) {
 
                 final TreeItem[] path = tree.getSelection();
 
@@ -499,13 +499,13 @@ class PluginList {
                     }
                 }
 
-                LinkedHashMap<String, iUpdateable> was = new LinkedHashMap<String, iUpdateable>(m);
+                LinkedHashMap<String, IUpdateable> was = new LinkedHashMap<String, IUpdateable>(m);
                 m.clear();
 
                 if (found) {
                     m.put("Modify", null);
                     m.put("\u26aa " + (((PluginOrExtensionNode) path[0].getData()).isEnabled() ? "Disable" : "Enable"),
-                          new iUpdateable() {
+                          new IUpdateable() {
 
                               public
                               void update() {
@@ -515,7 +515,7 @@ class PluginList {
                                   }
                               }
                           });
-                    m.put("\u26aa Reveal in Finder", new iUpdateable() {
+                    m.put("\u26aa Reveal in Finder", new IUpdateable() {
                         public
                         void update() {
                             for (TreeItem pp : path) {
@@ -623,7 +623,7 @@ class PluginList {
 
     @NextUpdate(delay = 3)
     private
-    void installHelpBrowser(final iVisualElement root) {
+    void installHelpBrowser(final IVisualElement root) {
         HelpBrowser h = HelpBrowser.helpBrowser.get(root);
         ContextualHelp ch = h.getContextualHelp();
         ch.addContextualHelpForWidget("plugins",
@@ -689,7 +689,7 @@ class PluginList {
     File getFile(String title, final boolean b, final String[] strings) {
 
         if (b) {
-            DirectoryDialog d = new DirectoryDialog(iVisualElement.enclosingFrame.get(root).getFrame(), SWT.SHEET);
+            DirectoryDialog d = new DirectoryDialog(IVisualElement.enclosingFrame.get(root).getFrame(), SWT.SHEET);
             String name = d.open();
 
             if (name != null) return new File(name);
@@ -698,7 +698,7 @@ class PluginList {
         }
         else {
 
-            FileDialog d = new FileDialog(iVisualElement.enclosingFrame.get(root).getFrame(), SWT.SHEET);
+            FileDialog d = new FileDialog(IVisualElement.enclosingFrame.get(root).getFrame(), SWT.SHEET);
             d.setOverwrite(false);
             String name = d.open();
 

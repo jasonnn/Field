@@ -12,14 +12,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import field.core.StandardFluidSheet;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.Mixins;
 import field.core.dispatch.Mixins.iMixinProxy;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.iDefaultOverride;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.iDefaultOverride;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLineCompression;
@@ -40,7 +40,7 @@ class FluidPersistence {
     public
     interface iWellKnownElementResolver {
         public
-        iVisualElement getWellKnownElement(String uid);
+        IVisualElement getWellKnownElement(String uid);
     }
 
     public
@@ -49,9 +49,9 @@ class FluidPersistence {
 
     private final XStream stream;
 
-    private Set<iVisualElement> created;
+    private Set<IVisualElement> created;
 
-    private Set<iVisualElement> saved;
+    private Set<IVisualElement> saved;
 
     protected UnmarshallingContext context;
 
@@ -112,13 +112,13 @@ class FluidPersistence {
 
             public
             boolean canConvert(Class type) {
-                return iVisualElement.class.isAssignableFrom(type);
+                return IVisualElement.class.isAssignableFrom(type);
             }
 
             public
             void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
                 try {
-                    iVisualElement element = (iVisualElement) source;
+                    IVisualElement element = (IVisualElement) source;
                     writer.startNode("uid");
                     writer.setValue(element.getUniqueID());
                     writer.endNode();
@@ -126,7 +126,7 @@ class FluidPersistence {
                     indent++;
                     //System.out.println(indentString()+" >>>>>>>>> saving element <"+element.getUniqueID()+"> <"+element+">");
 
-                    Boolean doNot = element.getProperty(iVisualElement.doNotSave);
+                    Boolean doNot = element.getProperty(IVisualElement.doNotSave);
                     if (element.getUniqueID().startsWith("//")) {
                         // that's
                         // it,
@@ -148,7 +148,7 @@ class FluidPersistence {
                         writer.endNode();
                     }
                     else {
-                        saved.add((iVisualElement) source);
+                        saved.add((IVisualElement) source);
 
                         writer.startNode("class");
                         context.convertAnother(element.getClass());
@@ -165,7 +165,7 @@ class FluidPersistence {
                         Iterator<Entry<Object, Object>> i = properties.entrySet().iterator();
                         while (i.hasNext()) {
                             Entry<Object, Object> e = i.next();
-                            if (((iVisualElement.VisualElementProperty<?>) e.getKey()).getName().endsWith("_"))
+                            if (((IVisualElement.VisualElementProperty<?>) e.getKey()).getName().endsWith("_"))
                                 i.remove();
                             else if (!checkProperty(element, e)) {
                                 i.remove();
@@ -207,22 +207,22 @@ class FluidPersistence {
                 try {
                     reader.moveUp();
                     if (uid.startsWith("//")) {
-                        iVisualElement ve = resolver.getWellKnownElement(uid);
+                        IVisualElement ve = resolver.getWellKnownElement(uid);
                         if (ve == null) return null;
 
                         reader.moveDown();
-                        List<iVisualElement> parents = (List) context.convertAnother(ve, List.class);
+                        List<IVisualElement> parents = (List) context.convertAnother(ve, List.class);
                         reader.moveUp();
                         reader.moveDown();
-                        List<iVisualElement> children = (List) context.convertAnother(ve, List.class);
+                        List<IVisualElement> children = (List) context.convertAnother(ve, List.class);
                         reader.moveUp();
 
-                        for (iVisualElement e : parents) {
+                        for (IVisualElement e : parents) {
                             if (e != null) if (!e.getChildren().contains(ve)) {
                                 e.addChild(ve);
                             }
                         }
-                        for (iVisualElement e : children) {
+                        for (IVisualElement e : children) {
                             if (e != null) if (!ve.getChildren().contains(e)) {
                                 ve.addChild(e);
                             }
@@ -242,7 +242,7 @@ class FluidPersistence {
                         Class c = (Class) context.convertAnother(null, Class.class);
                         reader.moveUp();
 
-                        iVisualElement ve = (iVisualElement) c.newInstance();
+                        IVisualElement ve = (IVisualElement) c.newInstance();
 
                         reader.moveDown();
                         Map<Object, Object> properties = null;
@@ -264,20 +264,20 @@ class FluidPersistence {
                         if (properties != null) ve.setPayload(properties);
 
                         reader.moveDown();
-                        List<iVisualElement> parents = (List) context.convertAnother(ve, List.class);
+                        List<IVisualElement> parents = (List) context.convertAnother(ve, List.class);
                         reader.moveUp();
                         reader.moveDown();
-                        List<iVisualElement> children = (List) context.convertAnother(ve, List.class);
+                        List<IVisualElement> children = (List) context.convertAnother(ve, List.class);
                         reader.moveUp();
 
-                        for (iVisualElement e : parents) {
+                        for (IVisualElement e : parents) {
                             if (e != null) {
                                 if (!e.getChildren().contains(ve)) {
                                     e.addChild(ve);
                                 }
                             }
                         }
-                        for (iVisualElement e : children) {
+                        for (IVisualElement e : children) {
                             if (e != null) {
                                 if (!ve.getChildren().contains(e)) {
                                     ve.addChild(e);
@@ -335,7 +335,7 @@ class FluidPersistence {
                     iComponent o = (iComponent) c.newInstance();
 
                     reader.moveDown();
-                    iVisualElement ve = (iVisualElement) context.convertAnother(o, iVisualElement.class);
+                    IVisualElement ve = (IVisualElement) context.convertAnother(o, IVisualElement.class);
                     reader.moveUp();
 
                     if (ve != null) o.setVisualElement(ve);
@@ -354,7 +354,7 @@ class FluidPersistence {
 
             public
             boolean canConvert(Class type) {
-                return iVisualElementOverrides.iDefaultOverride.class.isAssignableFrom(type);
+                return IVisualElementOverrides.iDefaultOverride.class.isAssignableFrom(type);
             }
 
             public
@@ -363,7 +363,7 @@ class FluidPersistence {
                 context.convertAnother(source.getClass());
                 writer.endNode();
                 writer.startNode("element");
-                context.convertAnother(((iVisualElementOverrides.DefaultOverride) source).forElement);
+                context.convertAnother(((IVisualElementOverrides.DefaultOverride) source).forElement);
                 writer.endNode();
             }
 
@@ -383,7 +383,7 @@ class FluidPersistence {
                 reader.moveUp();
 
                 reader.moveDown();
-                iVisualElement ve = (iVisualElement) context.convertAnother(def, iVisualElement.class);
+                IVisualElement ve = (IVisualElement) context.convertAnother(def, IVisualElement.class);
                 def.setVisualElement(ve);
                 reader.moveUp();
                 return def;
@@ -549,7 +549,7 @@ class FluidPersistence {
     }
 
     public
-    ObjectInputStream getObjectInputStream(Reader reader, Set<iVisualElement> created) {
+    ObjectInputStream getObjectInputStream(Reader reader, Set<IVisualElement> created) {
         warnings.clear();
         this.created = created;
         try {
@@ -561,7 +561,7 @@ class FluidPersistence {
     }
 
     public
-    ObjectOutputStream getObjectOutputStream(Writer delegate, Set<iVisualElement> saved) {
+    ObjectOutputStream getObjectOutputStream(Writer delegate, Set<IVisualElement> saved) {
 
         warnings.clear();
         this.saved = saved;
@@ -582,10 +582,10 @@ class FluidPersistence {
     <T> T xmlDuplicate(T object) {
         try {
             StringWriter sw = new StringWriter();
-            ObjectOutputStream s = getObjectOutputStream(sw, new HashSet<iVisualElement>());
+            ObjectOutputStream s = getObjectOutputStream(sw, new HashSet<IVisualElement>());
             s.writeObject(object);
             s.close();
-            ObjectInputStream i = getObjectInputStream(new StringReader(sw.toString()), new HashSet<iVisualElement>());
+            ObjectInputStream i = getObjectInputStream(new StringReader(sw.toString()), new HashSet<IVisualElement>());
             Object object2 = i.readObject();
             i.close();
             return (T) object2;
@@ -598,14 +598,14 @@ class FluidPersistence {
     }
 
     protected
-    boolean checkProperty(iVisualElement element, Entry<Object, Object> e) {
+    boolean checkProperty(IVisualElement element, Entry<Object, Object> e) {
         //beta1
         e.setValue(PythonUtils.maybeToJava(e.getValue()));
         if (e.getValue() instanceof PyObject) {
             warnings.add("warning: property "
                          + e.getKey()
                          + " inside "
-                         + element.payload().get(iVisualElement.name)
+                         + element.payload().get(IVisualElement.name)
                          + " is persistent, yet holds "
                          + e.getValue()
                          + " (of class "
@@ -616,12 +616,12 @@ class FluidPersistence {
         if (e.getValue() instanceof PyVisualElement) {
             return checkVisualElementReference((VisualElementProperty) e.getKey(),
                                                element,
-                                               (iVisualElement) ((PyVisualElement) e.getValue()).__tojava__(VisualElement.class));
+                                               (IVisualElement) ((PyVisualElement) e.getValue()).__tojava__(VisualElement.class));
         }
-        if (e.getValue() instanceof iVisualElement) {
+        if (e.getValue() instanceof IVisualElement) {
             return checkVisualElementReference((VisualElementProperty) e.getKey(),
                                                element,
-                                               (iVisualElement) e.getValue());
+                                               (IVisualElement) e.getValue());
         }
 
 
@@ -636,15 +636,15 @@ class FluidPersistence {
     }
 
     private
-    boolean checkVisualElementReference(VisualElementProperty p, iVisualElement inside, iVisualElement potential) {
-        List<iVisualElement> possible = StandardFluidSheet.allVisualElements(inside);
+    boolean checkVisualElementReference(VisualElementProperty p, IVisualElement inside, IVisualElement potential) {
+        List<IVisualElement> possible = StandardFluidSheet.allVisualElements(inside);
         if (!possible.contains(potential)) {
             warnings.add("warning: property "
                          + p
                          + " inside "
-                         + inside.payload().get(iVisualElement.name)
+                         + inside.payload().get(IVisualElement.name)
                          + " is persistent, yet holds a cross sheet reference to "
-                         + potential.payload().get(iVisualElement.name));
+                         + potential.payload().get(IVisualElement.name));
             return false;
         }
         return true;

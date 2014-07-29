@@ -5,9 +5,9 @@ import field.internal.UncheckedReflection;
 import java.lang.reflect.Method;
 
 public
-interface iUpdateable {
+interface IUpdateable {
 
-    public static final Method UPDATE_METHOD = UncheckedReflection.getDeclaredMethod(iUpdateable.class, "update");
+    public static final Method UPDATE_METHOD = UncheckedReflection.getDeclaredMethod(IUpdateable.class, "update");
 
 
     public

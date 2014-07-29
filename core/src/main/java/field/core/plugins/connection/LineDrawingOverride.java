@@ -3,11 +3,11 @@ package field.core.plugins.connection;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.drawing.SimpleArrows;
 import field.core.plugins.drawing.opengl.CachedLine;
@@ -20,12 +20,13 @@ import field.core.plugins.python.PythonPluginEditor;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
-import field.launch.iUpdateable;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.launch.IUpdateable;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.namespace.generic.Bind;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.collect.tuple.Pair;
 import org.eclipse.swt.widgets.Event;
 
@@ -44,23 +45,23 @@ class LineDrawingOverride extends DefaultOverride {
 
     @Override
     public
-    DefaultOverride setVisualElement(iVisualElement ve) {
+    DefaultOverride setVisualElement(IVisualElement ve) {
 //		iVisualElement.doNotSave.set(ve, ve, true);
         return super.setVisualElement(ve);
     }
 
     public
-    VisitCode deleted(iVisualElement source) {
+    TraversalHint deleted(IVisualElement source) {
 
         if ((source == from()) || (source == to())) {
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).deleted(forElement);
-            for (iVisualElement ve : new ArrayList<iVisualElement>((Collection<iVisualElement>) forElement.getParents())) {
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).deleted(forElement);
+            for (IVisualElement ve : new ArrayList<IVisualElement>((Collection<IVisualElement>) forElement.getParents())) {
                 ve.removeChild(forElement);
             }
         }
         else if (source == forElement) {
-            iVisualElement f = from();
-            iVisualElement t = to();
+            IVisualElement f = from();
+            IVisualElement t = to();
 
             if ((f != null) && (t != null)) {
                 Subelements s = (Subelements) PseudoPropertiesPlugin.subelements.get(f);
@@ -71,17 +72,17 @@ class LineDrawingOverride extends DefaultOverride {
     }
 
     protected
-    iVisualElement from() {
+    IVisualElement from() {
         VisualElementReference p = this.forElement.getProperty(lineDrawing_from);
         if (p == null) {
             return null;
         }
-        iVisualElement r = p.get(forElement);
+        IVisualElement r = p.get(forElement);
         return r;
     }
 
     protected
-    iVisualElement to() {
+    IVisualElement to() {
         VisualElementReference p = this.forElement.getProperty(lineDrawing_to);
         if (p == null) {
             return null;
@@ -91,13 +92,13 @@ class LineDrawingOverride extends DefaultOverride {
 
     @Override
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
         if (source == forElement) {
-            iVisualElement f = from();
-            iVisualElement t = to();
+            IVisualElement f = from();
+            IVisualElement t = to();
             if ((f == null) || (t == null)) {
                 needsDeletion();
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
             Rect fr = f.getFrame(null);
@@ -105,7 +106,7 @@ class LineDrawingOverride extends DefaultOverride {
 
             if ((fr == null) || (tr == null)) {
                 needsDeletion();
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
             final Vector2 tm = tr.midpoint2();
@@ -117,11 +118,11 @@ class LineDrawingOverride extends DefaultOverride {
                                     new Vector2(fr.x + fr.w / 2, fr.y - o),
                                     new Vector2(fr.x + fr.w / 2, fr.y + fr.h + o)};
 
-            Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new iFunction<Double, Vector2>() {
+            Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new IFunction<Vector2, Double>() {
 
                 @Override
                 public
-                Double f(Vector2 in) {
+                Double apply(Vector2 in) {
                     return (double) in.distanceFrom(tm);
                 }
             });
@@ -129,12 +130,12 @@ class LineDrawingOverride extends DefaultOverride {
             CachedLine c = new CachedLine();
             c.getInput().moveTo(fromPosition.x, fromPosition.y);
 
-            SelectionGroup<iComponent> selected = iVisualElement.selectionGroup.get(source);
+            SelectionGroup<iComponent> selected = IVisualElement.selectionGroup.get(source);
             boolean isSelected =
-                    selected.getSelection().contains(iVisualElement.localView.get(source))
+                    selected.getSelection().contains(IVisualElement.localView.get(source))
                     || selected.getSelection()
-                               .contains(iVisualElement.localView.get(t))
-                    || selected.getSelection().contains(iVisualElement.localView.get(f));
+                               .contains(IVisualElement.localView.get(t))
+                    || selected.getSelection().contains(IVisualElement.localView.get(f));
 
             Vector2 tm2 = lineToRect(fromPosition, tm, tr);
 
@@ -152,7 +153,7 @@ class LineDrawingOverride extends DefaultOverride {
             int w = 4;
             if (new LineUtils().isIntersecting(c, new Rect(event.x - w, event.y - w, w * 2, w * 2))) {
                 is.set(true);
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
 
         }
@@ -161,19 +162,19 @@ class LineDrawingOverride extends DefaultOverride {
 
     @Override
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
         return super.menuItemsFor(source, items);
     }
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         if (source == forElement) {
-            iVisualElement f = from();
-            iVisualElement t = to();
+            IVisualElement f = from();
+            IVisualElement t = to();
             if (f == null || t == null) {
                 needsDeletion();
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
             Rect fr = f.getFrame(null);
@@ -181,7 +182,7 @@ class LineDrawingOverride extends DefaultOverride {
 
             if (fr == null || tr == null) {
                 needsDeletion();
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
             final Vector2 tm = tr.midpoint2();
@@ -193,11 +194,11 @@ class LineDrawingOverride extends DefaultOverride {
                                     new Vector2(fr.x + (fr.w / 2), fr.y - o),
                                     new Vector2(fr.x + fr.w / 2, fr.y + fr.h + o)};
 
-            Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new iFunction<Double, Vector2>() {
+            Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new IFunction<Vector2, Double>() {
 
                 @Override
                 public
-                Double f(Vector2 in) {
+                Double apply(Vector2 in) {
                     return (double) in.distanceFrom(tm);
                 }
             });
@@ -205,12 +206,12 @@ class LineDrawingOverride extends DefaultOverride {
             CachedLine c = new CachedLine();
             c.getInput().moveTo(fromPosition.x, fromPosition.y);
 
-            SelectionGroup<iComponent> selected = iVisualElement.selectionGroup.get(source);
+            SelectionGroup<iComponent> selected = IVisualElement.selectionGroup.get(source);
             boolean isSelected =
-                    selected.getSelection().contains(iVisualElement.localView.get(source))
+                    selected.getSelection().contains(IVisualElement.localView.get(source))
                     || selected.getSelection()
-                               .contains(iVisualElement.localView.get(t))
-                    || selected.getSelection().contains(iVisualElement.localView.get(f));
+                               .contains(IVisualElement.localView.get(t))
+                    || selected.getSelection().contains(IVisualElement.localView.get(f));
 
             Vector2 tm2 = lineToRect(fromPosition, tm, tr);
 
@@ -270,7 +271,7 @@ class LineDrawingOverride extends DefaultOverride {
                    isSelected ? new Vector4(0, 0, 0.0, 0.25f) : new Vector4(0, 0, 0.0, 0.25f));
             GLComponentWindow.currentContext.submitLine(c2, c2.getProperties());
 
-            if (selected.getSelection().contains(iVisualElement.localView.get(source))) {
+            if (selected.getSelection().contains(IVisualElement.localView.get(source))) {
                 CachedLine r = new CachedLine();
                 r.getInput().moveTo(fromPosition.x, fromPosition.y);
                 r.getInput().lineTo(fromPosition.x, tm2.y);
@@ -286,7 +287,7 @@ class LineDrawingOverride extends DefaultOverride {
                 Vector2 m = new Cursor(c2).forwardT(0.5f).position();
                 text.getInput().moveTo(m.x + 0, m.y + 5);
                 text.getInput()
-                    .setPointAttribute(iLinearGraphicsContext.text_v, forElement.getProperty(iVisualElement.name));
+                    .setPointAttribute(iLinearGraphicsContext.text_v, forElement.getProperty(IVisualElement.name));
                 text.getInput().setPointAttribute(iLinearGraphicsContext.alignment_v, 0f);
                 text.getInput()
                     .setPointAttribute(iLinearGraphicsContext.font_v, new Font(Constants.defaultFont, 0, 11));

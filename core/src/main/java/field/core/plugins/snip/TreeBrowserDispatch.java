@@ -9,7 +9,7 @@ import field.graphics.core.BasicFrameBuffers.DoubleFrameBuffer;
 import field.graphics.core.BasicFrameBuffers.SingleFrameBuffer;
 import field.graphics.core.BasicSceneList;
 import field.graphics.windowing.FullScreenCanvasSWT;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.HashMapOfLists;
 import org.python.core.PyFunction;
 
@@ -37,10 +37,10 @@ class TreeBrowserDispatch {
     }
 
     static {
-        textFor.register(Object.class, "tostring", new iFunction<Object, Object>() {
+        textFor.register(Object.class, "tostring", new IFunction<Object, Object>() {
             @Override
             public
-            Object f(Object in) {
+            Object apply(Object in) {
 
                 if (in instanceof iLabelled) return ((iLabelled) in).getLabel();
 
@@ -67,11 +67,11 @@ class TreeBrowserDispatch {
             }
         });
 
-        childrenOf.register(Object.class, "list", new iFunction<Object, Object>() {
+        childrenOf.register(Object.class, "list", new IFunction<Object, Object>() {
 
             @Override
             public
-            Object f(Object in) {
+            Object apply(Object in) {
 
                 System.out.println(" -- " + in + " -- :" + (in instanceof Iterable));
 
@@ -89,10 +89,10 @@ class TreeBrowserDispatch {
             }
         });
 
-        childrenOf.register(Object.class, "sc", new iFunction<Object, Object>() {
+        childrenOf.register(Object.class, "sc", new IFunction<Object, Object>() {
             @Override
             public
-            Object f(final Object in) {
+            Object apply(final Object in) {
 
                 if (in instanceof iLabelled) {
                     return ((iLabelled) in).getChildren();
@@ -229,7 +229,7 @@ class TreeBrowserDispatch {
     }
 
     public
-    void register(Class c, String name, iFunction<Object, Object> f) {
+    void register(Class c, String name, IFunction<Object, Object> f) {
         List<PythonCallableMap> m = dispatch.getList(c);
         if (m == null) {
             dispatch.put(c, m = new ArrayList<PythonCallableMap>());

@@ -4,8 +4,8 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Constants;
 import field.core.Platform;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
@@ -219,9 +219,9 @@ class SmallMenu {
                     // "> <" + m + "> <" + ss.length + "> <"
                     // + event.item + ">");
                     done();
-                    if (d instanceof iUpdateable) {
+                    if (d instanceof IUpdateable) {
                         fired = true;
-                        ((iUpdateable) d).update();
+                        ((IUpdateable) d).update();
                     }
                     event.doit = false;
                 }
@@ -257,9 +257,9 @@ class SmallMenu {
                     shell.setVisible(false);
                     Object d = (m == null) ? null : m.getData();
                     done();
-                    if (d instanceof iUpdateable) {
+                    if (d instanceof IUpdateable) {
                         fired = true;
-                        ((iUpdateable) d).update();
+                        ((IUpdateable) d).update();
                     }
                 }
             });
@@ -288,9 +288,9 @@ class SmallMenu {
                         // +
                         // d + ">");
                         done();
-                        if (d instanceof iUpdateable) {
+                        if (d instanceof IUpdateable) {
                             fired = true;
-                            ((iUpdateable) d).update();
+                            ((IUpdateable) d).update();
                         }
                         event.doit = false;
                     }
@@ -520,7 +520,7 @@ class SmallMenu {
             shell.setCapture(true);
         }
 
-        public iUpdateable doneHook = null;
+        public IUpdateable doneHook = null;
         private iHoverUpdate hu;
 
         protected
@@ -566,11 +566,11 @@ class SmallMenu {
     }
 
     public static
-    class Submenu implements iUpdateable {
-        public LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
+    class Submenu implements IUpdateable {
+        public LinkedHashMap<String, IUpdateable> menu = new LinkedHashMap<String, IUpdateable>();
 
         public
-        Submenu(LinkedHashMap<String, iUpdateable> menu) {
+        Submenu(LinkedHashMap<String, IUpdateable> menu) {
             super();
             this.menu = menu;
         }
@@ -581,7 +581,7 @@ class SmallMenu {
     }
 
     public static
-    class Documentation implements iUpdateable {
+    class Documentation implements IUpdateable {
 
         private final String documentation;
 
@@ -603,28 +603,28 @@ class SmallMenu {
     }
 
     public
-    BetterPopup createMenu(LinkedHashMap<String, iUpdateable> items,
+    BetterPopup createMenu(LinkedHashMap<String, IUpdateable> items,
                            Decorations parent,
                            final iKeystrokeUpdate keystrokeUpdate) {
         return createMenu(items, parent, keystrokeUpdate, null);
     }
 
     public static
-    BetterPopup createMenu(LinkedHashMap<String, iUpdateable> items,
+    BetterPopup createMenu(LinkedHashMap<String, IUpdateable> items,
                            Decorations parent,
                            final iKeystrokeUpdate keystrokeUpdate,
                            iHoverUpdate hoverUpdate) {
 
-        Iterator<Entry<String, iUpdateable>> i = items.entrySet().iterator();
+        Iterator<Entry<String, IUpdateable>> i = items.entrySet().iterator();
 
         final BetterPopup menu = new BetterPopup(parent, keystrokeUpdate).setHoverUpdate(hoverUpdate);
 
         int num = 0;
 
         while (i.hasNext()) {
-            Entry<String, iUpdateable> e = i.next();
+            Entry<String, IUpdateable> e = i.next();
             String name = e.getKey();
-            final iUpdateable act = e.getValue();
+            final IUpdateable act = e.getValue();
 
             if (num++ > 250) break;
 

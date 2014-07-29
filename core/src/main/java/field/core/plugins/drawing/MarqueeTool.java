@@ -5,9 +5,9 @@ import field.bytecode.protect.annotations.InQueue;
 import field.bytecode.protect.iProvidesQueue;
 import field.bytecode.protect.iRegistersUpdateable;
 import field.core.StandardFluidSheet;
+import field.core.dispatch.IVisualElement;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.ComponentDrawingUtils;
 import field.core.windowing.components.RootComponent;
@@ -32,7 +32,7 @@ import java.util.Set;
 public
 class MarqueeTool implements iMousePeer, iProvidesQueue, iPaintPeer {
 
-    private final iVisualElement root;
+    private final IVisualElement root;
 
     private Vector2 mouseDownAt;
 
@@ -40,14 +40,14 @@ class MarqueeTool implements iMousePeer, iProvidesQueue, iPaintPeer {
 
     private DynamicLine line;
 
-    private List<iVisualElement> allElements;
+    private List<IVisualElement> allElements;
 
-    Set<iVisualElement> currentSelectedSet = new HashSet<iVisualElement>();
+    Set<IVisualElement> currentSelectedSet = new HashSet<IVisualElement>();
 
     TaskQueue queue = new TaskQueue();
 
     public
-    MarqueeTool(iVisualElement root) {
+    MarqueeTool(IVisualElement root) {
         this.root = root;
     }
 
@@ -110,7 +110,7 @@ class MarqueeTool implements iMousePeer, iProvidesQueue, iPaintPeer {
 
         Rect r2 = new Rect(0, 0, 0, 0);
 
-        for (iVisualElement e : allElements) {
+        for (IVisualElement e : allElements) {
             e.getFrame(r2);
 
             if (r2.overlaps(r)) {

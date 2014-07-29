@@ -8,8 +8,8 @@ import field.core.Platform.OS;
 import field.core.ui.SimpleVoronoi.Pnt;
 import field.core.ui.SmallMenu.BetterPopup;
 import field.core.util.HTMLLabelTools;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.linalg.Vector2;
 import field.namespace.generic.ReflectionTools;
 import org.eclipse.swt.SWT;
@@ -79,7 +79,7 @@ class PopupMarkingArea {
         private final LinkedHashMap menu;
 
         public
-        MenuArea(String label, LinkedHashMap<String, iUpdateable> menu, Vector2 labelAt, iUpdateable mainCallback) {
+        MenuArea(String label, LinkedHashMap<String, IUpdateable> menu, Vector2 labelAt, IUpdateable mainCallback) {
             this.label = label;
             this.menu = menu;
             this.labelAt = labelAt;
@@ -238,7 +238,7 @@ class PopupMarkingArea {
             Point m = Launcher.display.map((Control) e.widget, shell, new Point(e.x, e.y));
             //System.out.println(" popping up <" + e + ">");
 
-            pop.doneHook = new iUpdateable() {
+            pop.doneHook = new IUpdateable() {
                 @Override
                 public
                 void update() {
@@ -271,7 +271,7 @@ class PopupMarkingArea {
             pop = new SmallMenu().createMenu(menu, shell, null);
             Point m = Launcher.display.map(null, shell, new Point(x, y));
 
-            pop.doneHook = new iUpdateable() {
+            pop.doneHook = new IUpdateable() {
 
                 @Override
                 public
@@ -288,7 +288,7 @@ class PopupMarkingArea {
             shell.redraw();
         }
 
-        iUpdateable callback;
+        IUpdateable callback;
 
         public
         Region getTextArea() {
@@ -312,7 +312,7 @@ class PopupMarkingArea {
     }
 
     private Point mouseAt;
-    private final iUpdateable timer;
+    private final IUpdateable timer;
 
     MenuArea hoverToOpen = null;
     boolean hoverFast = false;
@@ -328,8 +328,8 @@ class PopupMarkingArea {
     static public
     class PopMenuSpec {
         public Position position;
-        public LinkedHashMap<String, iUpdateable> menu;
-        public iUpdateable mainCallback;
+        public LinkedHashMap<String, IUpdateable> menu;
+        public IUpdateable mainCallback;
         public String mainLabel;
 
         public boolean initiallyOpen = false;
@@ -337,8 +337,8 @@ class PopupMarkingArea {
 
         public
         PopMenuSpec(Position position,
-                    LinkedHashMap<String, iUpdateable> menu,
-                    iUpdateable mainCallback,
+                    LinkedHashMap<String, IUpdateable> menu,
+                    IUpdateable mainCallback,
                     String mainLabel) {
             super();
             this.position = position;
@@ -351,7 +351,7 @@ class PopupMarkingArea {
         PopMenuSpec copy() {
 
             PopMenuSpec r =
-                    new PopMenuSpec(position, new LinkedHashMap<String, iUpdateable>(menu), mainCallback, mainLabel);
+                    new PopMenuSpec(position, new LinkedHashMap<String, IUpdateable>(menu), mainCallback, mainLabel);
             r.initiallyOpen = initiallyOpen;
             r.solo = solo;
 
@@ -523,7 +523,7 @@ class PopupMarkingArea {
         Launcher.display.addFilter(SWT.MouseUp, f);
         Launcher.display.addFilter(SWT.MouseMove, f);
 
-        timer = new iUpdateable() {
+        timer = new IUpdateable() {
 
             int sameFor = 0;
             MenuArea last = null;
@@ -705,14 +705,14 @@ class PopupMarkingArea {
     }
 
     private
-    LinkedHashMap<String, iUpdateable> wrap(LinkedHashMap<String, iUpdateable> menu) {
+    LinkedHashMap<String, IUpdateable> wrap(LinkedHashMap<String, IUpdateable> menu) {
         if (menu == null) return null;
 
-        LinkedHashMap<String, iUpdateable> ret = new LinkedHashMap<String, iUpdateable>();
-        Set<Entry<String, iUpdateable>> es = menu.entrySet();
-        for (final Entry<String, iUpdateable> e : es) {
+        LinkedHashMap<String, IUpdateable> ret = new LinkedHashMap<String, IUpdateable>();
+        Set<Entry<String, IUpdateable>> es = menu.entrySet();
+        for (final Entry<String, IUpdateable> e : es) {
 
-            ret.put(e.getKey(), e.getValue() == null ? null : new iUpdateable() {
+            ret.put(e.getKey(), e.getValue() == null ? null : new IUpdateable() {
 
                 public
                 void update() {
@@ -790,7 +790,7 @@ class PopupMarkingArea {
                 e.printStackTrace();
             }
 
-            Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+            Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
                 @Override
                 public

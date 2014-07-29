@@ -3,11 +3,11 @@ package field.core.execution;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.mRun;
 import field.core.StandardFluidSheet;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.OfferedAlignment;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -17,10 +17,11 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.PlainDraggableComponent;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.abstraction.IProvider;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.util.collect.tuple.Pair;
@@ -40,7 +41,7 @@ import java.util.*;
  * @author marc
  */
 public
-class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
+class TemporalSliderOverrides extends IVisualElementOverrides.DefaultOverride {
     public static final VisualElementProperty<TimeSystem> currentTimeSystem =
             new VisualElementProperty<TimeSystem>("currentTimeSystem_");
 
@@ -49,13 +50,13 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
 
     public static
     Pair<VisualElement, BasicRunner> newLocalTemporalSlider(String token,
-                                                            iVisualElement root,
+                                                            IVisualElement root,
                                                             float x,
                                                             PyFunction function) {
         return newLocalTemporalSlider(token,
                                       root,
                                       x,
-                                      (iProvider) new PythonUtils().providerObject(function,
+                                      (IProvider) new PythonUtils().providerObject(function,
                                                                                    (CapturedEnvironment) PythonInterface
                                                                                                                  .getPythonInterface()
                                                                                                                  .getVariable("_environment")));
@@ -63,25 +64,25 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
 
     public static
     Pair<VisualElement, BasicRunner> newLocalTemporalSliderFromFunction(String token,
-                                                                        iVisualElement root,
+                                                                        IVisualElement root,
                                                                         float x,
                                                                         PyFunction function) {
         return newLocalTemporalSlider(token,
                                       root,
                                       x,
-                                      (iProvider) new PythonUtils().providerObject(function,
+                                      (IProvider) new PythonUtils().providerObject(function,
                                                                                    (CapturedEnvironment) PythonInterface
                                                                                                                  .getPythonInterface()
                                                                                                                  .getVariable("_environment")));
     }
 
-    protected transient iProvider<Collection<iVisualElement>> subsets;
+    protected transient IProvider<Collection<IVisualElement>> subsets;
 
     public static
     Pair<VisualElement, BasicRunner> newLocalTemporalSlider(String token,
-                                                            iVisualElement root,
+                                                            IVisualElement root,
                                                             float x,
-                                                            final iProvider<Collection<iVisualElement>> include) {
+                                                            final IProvider<Collection<IVisualElement>> include) {
         //System.out.println(" new local temporal slider <" + include + " " + Arrays.asList(include.getClass().getInterfaces()) + ">");
         new Exception().printStackTrace();
 
@@ -104,7 +105,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
             Collection allPythonScriptingElements() {
                 Collection allPromises = parentPss.allPythonScriptingElements();
                 ArrayList a = new ArrayList();
-                Collection<iVisualElement> included = include.get();
+                Collection<IVisualElement> included = include.get();
                 for (Object o : allPromises) {
                     if (included.contains(parentPss.reversePromises.get(o))) {
                         a.add(o);
@@ -128,7 +129,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
         };
 
         PythonPlugin.python_source.set(created.left, created.left, "");
-        iVisualElement.name.set(created.left, created.left, token);
+        IVisualElement.name.set(created.left, created.left, token);
 
         final BasicRunner runner = new BasicRunner(pss, x);
 
@@ -137,7 +138,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
 
     public static
     Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> newTemporalSlider(String token,
-                                                                                              iVisualElement root) {
+                                                                                              IVisualElement root) {
         final Triple<VisualElement, PlainDraggableComponent, TemporalSliderOverrides> created =
                 VisualElement.createWithToken(token,
                                               root,
@@ -147,8 +148,8 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
                                               TemporalSliderOverrides.class);
         created.left.setFrame(new Rect(-1, 0, 0, 0));
 
-        iVisualElement.name.set(created.left, created.left, "timeSlider");
-        root.setProperty(iVisualElement.timeSlider, created.left);
+        IVisualElement.name.set(created.left, created.left, "timeSlider");
+        root.setProperty(IVisualElement.timeSlider, created.left);
 
         return created;
     }
@@ -166,7 +167,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
         created.left.setFrame(new Rect(1, 0, 0, 0));
         final BasicRunner runner =
                 new BasicRunner(sheet.getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem), 1);
-        Cont.linkWith(sheet, iUpdateable.UPDATE_METHOD, new mRun<StandardFluidSheet>(iUpdateable.UPDATE_METHOD) {
+        Cont.linkWith(sheet, IUpdateable.UPDATE_METHOD, new mRun<StandardFluidSheet>(IUpdateable.UPDATE_METHOD) {
             float last = 1;
 
             public
@@ -179,7 +180,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
             }
         });
 
-        sheet.getRoot().setProperty(iVisualElement.timeSlider, created.left);
+        sheet.getRoot().setProperty(IVisualElement.timeSlider, created.left);
 
         return created;
     }
@@ -190,7 +191,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
 
     boolean forwardsToTimeSystem = true;
 
-    iUpdateable timeSliderToFrame;
+    IUpdateable timeSliderToFrame;
 
     public
     void drivenByTimeSystem(final Ref<TimeSystem> r) {
@@ -225,32 +226,32 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
 
     @Override
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
         if (source == forElement) {
             Rect frame = forElement.getFrame(null);
             if (frame.x - 5 <= event.x && frame.x + frame.w + 5 >= event.x) is.set(true);
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     @Override
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
-        iVisualElementOverrides dp = new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement);
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
+        IVisualElementOverrides dp = new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement);
         final Ref<TimeSystem> r = new Ref<TimeSystem>(null);
         dp.getProperty(forElement, currentTimeSystem, r);
         if (r.get() != null) {
 
             items.put("Temporal Slider", null);
             if (forwardsToTimeSystem) {
-                items.put(" make time system drive temporal slider", new iUpdateable() {
+                items.put(" make time system drive temporal slider", new IUpdateable() {
                     public
                     void update() {
                         forwardsToTimeSystem = false;
                         Launcher.getLauncher().registerUpdateable(getTimeSliderToFrame());
                     }
                 });
-                items.put(" synchronize time system, then make time system drive temporal slider", new iUpdateable() {
+                items.put(" synchronize time system, then make time system drive temporal slider", new IUpdateable() {
                     public
                     void update() {
                         drivenByTimeSystem(r);
@@ -258,14 +259,14 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
                 });
             }
             else {
-                items.put(" make temporal slider drive time system", new iUpdateable() {
+                items.put(" make temporal slider drive time system", new IUpdateable() {
                     public
                     void update() {
                         forwardsToTimeSystem = true;
                         Launcher.getLauncher().deregisterUpdateable(getTimeSliderToFrame());
                     }
                 });
-                items.put(" synchronize temporal slider, make temporal slider drive time system", new iUpdateable() {
+                items.put(" synchronize temporal slider, make temporal slider drive time system", new IUpdateable() {
                     public
                     void update() {
                         driveTimeSystem(r);
@@ -280,7 +281,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
 
         if (source == forElement) {
 
@@ -295,14 +296,14 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
 
             boolean selected = false;
 
-            SelectionGroup<iComponent> selgroup = iVisualElement.selectionGroup.get(source);
+            SelectionGroup<iComponent> selgroup = IVisualElement.selectionGroup.get(source);
             if (selgroup == null) {
                 //System.out.println(" warning selgroup is null for <" + source + ">");
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
             Set<iComponent> selection = selgroup.getSelection();
             for (iComponent s : selection) {
-                iVisualElement e = s.getVisualElement();
+                IVisualElement e = s.getVisualElement();
                 if (e != null && e.equals(source)) selected = true;
             }
             if (selected) {
@@ -320,7 +321,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
                     text.getInput()
                         .setPointAttribute(iLinearGraphicsContext.text_v,
                                            "  t=" + ff.valueToString(bounds.x) + (subsets != null ? ("  ("
-                                                                                                     + forElement.getProperty(iVisualElement.name)
+                                                                                                     + forElement.getProperty(IVisualElement.name)
                                                                                                      + ')') : ""));
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -336,12 +337,12 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
             }
 
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     @Override
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
 
         Number mx = maximumTime.get(source);
         Number mi = minimumTime.get(source);
@@ -354,8 +355,8 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
             newFrame.h = 0;
 
             OfferedAlignment.alignment_doNotParticipate.set(source, source, true);
-            iVisualElementOverrides dp =
-                    new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement);
+            IVisualElementOverrides dp =
+                    new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement);
             Ref<TimeSystem> r = new Ref<TimeSystem>(null);
             dp.getProperty(forElement, currentTimeSystem, r);
 
@@ -370,7 +371,7 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
         }
 
         if (source == forElement && !newFrame.equals(oldFrame)) {
-            forElement.setProperty(iVisualElement.dirty, true);
+            forElement.setProperty(IVisualElement.dirty, true);
             cl = null;
         }
 
@@ -399,11 +400,11 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
         // true);
 
         if (subsets != null) {
-            Collection<iVisualElement> contents = subsets.get();
+            Collection<IVisualElement> contents = subsets.get();
 
             Rect x = null;
-            for (iVisualElement v : contents) {
-                if (v != forElement && v.getProperty(iVisualElement.name) != null) {
+            for (IVisualElement v : contents) {
+                if (v != forElement && v.getProperty(IVisualElement.name) != null) {
                     x = Rect.union(v.getFrame(null), x);
                 }
             }
@@ -463,10 +464,10 @@ class TemporalSliderOverrides extends iVisualElementOverrides.DefaultOverride {
     }
 
     protected
-    iUpdateable getTimeSliderToFrame() {
-        return timeSliderToFrame == null ? timeSliderToFrame = new iUpdateable() {
-            iVisualElementOverrides dp =
-                    new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement);
+    IUpdateable getTimeSliderToFrame() {
+        return timeSliderToFrame == null ? timeSliderToFrame = new IUpdateable() {
+            IVisualElementOverrides dp =
+                    new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement);
 
             public
             void update() {

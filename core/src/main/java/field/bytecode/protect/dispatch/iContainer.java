@@ -1,6 +1,6 @@
 package field.bytecode.protect.dispatch;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.InvocationHandler;
@@ -98,7 +98,7 @@ interface iContainer {
     }
 
     public
-    interface iContainerUpdateable extends iContainer, iUpdateable {
+    interface iContainerUpdateable extends iContainer, IUpdateable {
         public static final Method method_update = ReflectionTools.methodOf("update", iContainerUpdateable.class);
     }
 

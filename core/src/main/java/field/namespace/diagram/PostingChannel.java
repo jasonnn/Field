@@ -6,7 +6,7 @@ import field.bytecode.protect.annotations.Inside;
 import field.bytecode.protect.annotations.InsideParameter;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.mRun;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.namespace.diagram.DiagramZero.*;
 
 import java.lang.ref.WeakReference;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Woven
 public
-class PostingChannel<T> implements iChannel<T>, iUpdateable {
+class PostingChannel<T> implements iChannel<T>, IUpdateable {
 
     public static
     class ContingentMarker<T, Q> extends mRun<PostingChannel<T>> {
@@ -41,7 +41,7 @@ class PostingChannel<T> implements iChannel<T>, iUpdateable {
         @SuppressWarnings("unchecked")
         public
         ContingentMarker(PostingChannel<? super T> postTo, Object token, iMarker<? extends Q> contingentOn, T payload) {
-            super(iUpdateable.UPDATE_METHOD);
+            super(IUpdateable.UPDATE_METHOD);
             this.token = token;
             this.contingentOn = contingentOn;
             this.payload = payload;
@@ -106,7 +106,7 @@ class PostingChannel<T> implements iChannel<T>, iUpdateable {
 
         public
         PostAlways(PostingChannel<T> postTo, iChannel<T> channelToPost) {
-            super(iUpdateable.UPDATE_METHOD);
+            super(IUpdateable.UPDATE_METHOD);
             this.channelToPost = channelToPost;
 
             ref = new WeakReference<PostingChannel<T>>(postTo);

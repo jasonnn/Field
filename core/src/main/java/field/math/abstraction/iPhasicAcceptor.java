@@ -1,7 +1,7 @@
 package field.math.abstraction;
 
 public
-interface iPhasicAcceptor<T> extends iAcceptor<T> {
+interface IPhasicAcceptor<T> extends IAcceptor<T> {
 
     public
     void begin();

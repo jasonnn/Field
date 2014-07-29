@@ -1,6 +1,6 @@
 package field.math.abstraction;
 
 public
-interface iProviderAcceptor<T> extends iProvider<T>, iAcceptor<T> {
+interface IProviderAcceptor<T> extends IProvider<T>, IAcceptor<T> {
 
 }

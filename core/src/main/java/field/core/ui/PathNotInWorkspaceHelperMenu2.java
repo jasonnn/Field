@@ -5,7 +5,7 @@ import field.bytecode.protect.annotations.Mirror;
 import field.core.plugins.history.HGVersioningSystem;
 import field.core.plugins.history.VersioningSystem;
 import field.core.util.ExecuteCommand;
-import field.math.abstraction.iAcceptor;
+import field.math.abstraction.IAcceptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -86,7 +86,7 @@ class PathNotInWorkspaceHelperMenu2 {
     }
 
     private static
-    File uniqName(Shell fc, String filename, iAcceptor<File> acceptor) {
+    File uniqName(Shell fc, String filename, IAcceptor<File> acceptor) {
 
         String name = new File(filename).getName();
         if (!name.endsWith(".field")) name = name + ".field";

@@ -7,7 +7,7 @@ package field.math.abstraction;
  * @see iObjectProvider
  */
 public
-interface iInplaceProvider<T> {
+interface IInplaceProvider<T> {
     public
     T get(T o);
 }

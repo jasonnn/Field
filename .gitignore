@@ -29,3 +29,4 @@ Thumbs.db
 
 # Manifest files generated on the fly manually (__local) or by launch scripts (__transient):
 Contents/extensions/__*.mf
+build

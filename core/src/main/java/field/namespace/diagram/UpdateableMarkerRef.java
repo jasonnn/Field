@@ -1,6 +1,6 @@
 package field.namespace.diagram;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.namespace.diagram.DiagramZero.iMarker;
 import field.namespace.diagram.DiagramZero.iMarkerNotify;
 import field.namespace.diagram.DiagramZero.iMarkerRef;
@@ -12,7 +12,7 @@ import java.util.LinkedHashSet;
 
 
 public
-class UpdateableMarkerRef<T> implements iMarkerRef<T>, iUpdateable {
+class UpdateableMarkerRef<T> implements iMarkerRef<T>, IUpdateable {
 
     private iMarkerNotify<T> no;
 

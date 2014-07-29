@@ -3,9 +3,9 @@ package field.core.persistance;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PhantomFluidSheet;
 import field.core.ui.FieldMenus2;
 import field.core.util.AppleScript;
@@ -144,15 +144,15 @@ class PackageTools {
     }
 
     public static
-    File newTempFileWithSelected(iVisualElement root, String suggestedName) {
-        FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
+    File newTempFileWithSelected(IVisualElement root, String suggestedName) {
+        FluidCopyPastePersistence copier = IVisualElement.copyPaste.get(root);
 
-        SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(root);
+        SelectionGroup<iComponent> group = IVisualElement.selectionGroup.get(root);
 
         Set<iComponent> c = group.getSelection();
-        Set<iVisualElement> v = new LinkedHashSet<iVisualElement>();
+        Set<IVisualElement> v = new LinkedHashSet<IVisualElement>();
         for (iComponent cc : c) {
-            iVisualElement vv = cc.getVisualElement();
+            IVisualElement vv = cc.getVisualElement();
             if (vv != null) v.add(vv);
         }
 
@@ -160,14 +160,14 @@ class PackageTools {
     }
 
     public static
-    File newTempFileWithSet(String suggestedName, FluidCopyPastePersistence copier, Set<iVisualElement> v) {
+    File newTempFileWithSet(String suggestedName, FluidCopyPastePersistence copier, Set<IVisualElement> v) {
         //System.out.println(" output is <" + v + ">");
 
         File tmpFile = null;
         try {
             tmpFile = File.createTempFile("fieldtmp_", ".fieldpackage");
             Writer temp = new BufferedWriter(new FileWriter(tmpFile));
-            HashSet<iVisualElement> savedOut = new HashSet<iVisualElement>();
+            HashSet<IVisualElement> savedOut = new HashSet<IVisualElement>();
             ObjectOutputStream oos = copier.getObjectOutputStream(temp, savedOut, v);
             try {
                 oos.writeObject(suggestedName);
@@ -203,24 +203,24 @@ class PackageTools {
     }
 
     public static
-    void importFieldPackage(iVisualElement root, String filename) {
-        FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
+    void importFieldPackage(IVisualElement root, String filename) {
+        FluidCopyPastePersistence copier = IVisualElement.copyPaste.get(root);
 
-        SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
+        SelectionGroup<iComponent> selectionGroup = IVisualElement.selectionGroup.get(root);
         selectionGroup.deselectAll();
 
-        HashSet<iVisualElement> all = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+        HashSet<IVisualElement> all = new HashSet<IVisualElement>(StandardFluidSheet.allVisualElements(root));
 
         try {
-            HashSet<iVisualElement> ongoing = new HashSet<iVisualElement>();
+            HashSet<IVisualElement> ongoing = new HashSet<IVisualElement>();
             ObjectInputStream ois =
                     copier.getObjectInputStream(new BufferedReader(new FileReader(filename)), ongoing, all);
             String suggestedFilename = (String) ois.readObject();
             Object in = ois.readObject();
             ois.close();
 
-            for (iVisualElement o : ongoing) {
-                iVisualElement.localView.get(o).setSelected(true);
+            for (IVisualElement o : ongoing) {
+                IVisualElement.localView.get(o).setSelected(true);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -230,16 +230,16 @@ class PackageTools {
     }
 
     public static
-    void importFieldPackage(iVisualElement root, String filename, Vector2 centerOn) {
-        FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
+    void importFieldPackage(IVisualElement root, String filename, Vector2 centerOn) {
+        FluidCopyPastePersistence copier = IVisualElement.copyPaste.get(root);
 
-        SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
+        SelectionGroup<iComponent> selectionGroup = IVisualElement.selectionGroup.get(root);
         selectionGroup.deselectAll();
 
-        HashSet<iVisualElement> all = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+        HashSet<IVisualElement> all = new HashSet<IVisualElement>(StandardFluidSheet.allVisualElements(root));
 
         try {
-            HashSet<iVisualElement> ongoing = new HashSet<iVisualElement>();
+            HashSet<IVisualElement> ongoing = new HashSet<IVisualElement>();
             ObjectInputStream ois =
                     copier.getObjectInputStream(new BufferedReader(new FileReader(filename)), ongoing, all);
             String suggestedFilename = (String) ois.readObject();
@@ -247,13 +247,13 @@ class PackageTools {
             ois.close();
 
             Vector2 offsetBy = new Vector2();
-            for (iVisualElement o : ongoing) {
-                iVisualElement.localView.get(o).setSelected(true);
+            for (IVisualElement o : ongoing) {
+                IVisualElement.localView.get(o).setSelected(true);
                 offsetBy.add(o.getFrame(null).midpoint2());
             }
             offsetBy.scale(1f / ongoing.size());
 
-            for (iVisualElement o : ongoing) {
+            for (IVisualElement o : ongoing) {
                 Rect f = o.getFrame(null);
                 f.x += centerOn.x - offsetBy.x;
                 f.y += centerOn.y - offsetBy.y;

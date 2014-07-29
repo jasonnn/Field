@@ -1,8 +1,8 @@
 package field.core.plugins.constrain.constraints;
 
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.constrain.BaseConstraintOverrides;
 import field.core.plugins.constrain.ComplexConstraints;
 import field.core.plugins.constrain.ComplexConstraints.VariablesForRect;
@@ -15,7 +15,8 @@ import field.core.plugins.drawing.opengl.iLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.iComponent;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
@@ -30,7 +31,7 @@ class HorizontalTopToTopConstraint extends BaseConstraintOverrides {
 
     @Override
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
         if (source == forElement) {
             if (geometry != null) {
                 boolean m = LineUtils.hitTest(geometry, new Vector2(event.x, event.y), 15);
@@ -38,25 +39,25 @@ class HorizontalTopToTopConstraint extends BaseConstraintOverrides {
                 else is.set(false);
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     private
     Boolean isSelected() {
-        iComponent v = forElement.getProperty(iVisualElement.localView);
+        iComponent v = forElement.getProperty(IVisualElement.localView);
         if (v != null) return v.isSelected();
         return false;
     }
 
     @Override
     protected
-    ClConstraint createConstraint(Map<String, iVisualElement> property) {
+    ClConstraint createConstraint(Map<String, IVisualElement> property) {
 
         ComplexConstraints cc = getComplexConstraintsPlugin();
         assert cc != null;
         if (cc == null) return null;
-        iVisualElement left = property.get("left");
-        iVisualElement right = property.get("right");
+        IVisualElement left = property.get("left");
+        IVisualElement right = property.get("right");
 
         assert left != null : property;
         assert right != null : property;
@@ -84,9 +85,9 @@ class HorizontalTopToTopConstraint extends BaseConstraintOverrides {
 
         geometry = cl;
 
-        Map<String, iVisualElement> parameters = getConstraintParameters();
-        iVisualElement left = parameters.get("left");
-        iVisualElement right = parameters.get("right");
+        Map<String, IVisualElement> parameters = getConstraintParameters();
+        IVisualElement left = parameters.get("left");
+        IVisualElement right = parameters.get("right");
         assert left != null : parameters;
         assert right != null : parameters;
 

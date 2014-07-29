@@ -4,7 +4,7 @@ import field.core.execution.BasicRunner.Delegate;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.launch.SystemProperties;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import org.python.core.*;
 
 import java.util.ArrayList;
@@ -335,8 +335,8 @@ class InterpretPythonAsDelegate {
                                             boolean forwards,
                                             Object ret,
                                             final boolean noDefaultBackwards) {
-                if (ret instanceof iProvider) {
-                    final iProvider f = (iProvider) ret;
+                if (ret instanceof IProvider) {
+                    final IProvider f = (IProvider) ret;
 
                     return new Delegate() {
 

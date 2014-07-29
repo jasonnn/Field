@@ -1,16 +1,16 @@
 package field.core.ui.text.util;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.plugins.python.PythonPluginEditor;
 import field.core.windowing.components.DraggableComponent;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGLSLangProgram.BasicGLSLangElement;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.util.collect.tuple.Pair;
 import field.util.collect.tuple.Triple;
 
@@ -29,7 +29,7 @@ class EchoOndiskFile {
     }
 
     public static
-    void echoShaderFiles(iVisualElement root, String prefix, final BasicGLSLangProgram program, int startat) {
+    void echoShaderFiles(IVisualElement root, String prefix, final BasicGLSLangProgram program, int startat) {
         List<BasicGLSLangElement> p = program.getPrograms();
         int n = startat;
         for (BasicGLSLangElement pp : p) {
@@ -39,15 +39,15 @@ class EchoOndiskFile {
 
             if ((f != null) && (f.length != 0)) {
                 final EchoOndiskFile[] ee = {null};
-                EchoOndiskFile e = new EchoOndiskFile(root, f[0].getAbsolutePath(), n, new iUpdateable() {
+                EchoOndiskFile e = new EchoOndiskFile(root, f[0].getAbsolutePath(), n, new IUpdateable() {
                     public
                     void update() {
                         program.reload();
-                        iVisualElement.dirty.set(ee[0].created.left, ee[0].created.left, true);
+                        IVisualElement.dirty.set(ee[0].created.left, ee[0].created.left, true);
                     }
                 });
                 ee[0] = e;
-                iVisualElement.name.set(e.created.left,
+                IVisualElement.name.set(e.created.left,
                                         e.created.left,
                                         prefix + '(' + pp.isFragment + ") :" + f[0].getName());
             }
@@ -75,11 +75,11 @@ class EchoOndiskFile {
     private final Triple<VisualElement, DraggableComponent, DefaultOverride> created;
     private final String filename;
 
-    private final iVisualElement root;
+    private final IVisualElement root;
 
     @SuppressWarnings("unchecked")
     public
-    EchoOndiskFile(iVisualElement root, String filename, int n, final iUpdateable onSync) {
+    EchoOndiskFile(IVisualElement root, String filename, int n, final IUpdateable onSync) {
 
         this.root = root;
         this.filename = filename;
@@ -89,12 +89,12 @@ class EchoOndiskFile {
                                                 new Rect(30, 100 + (n * 40), 30, 30),
                                                 VisualElement.class,
                                                 DraggableComponent.class,
-                                                iVisualElementOverrides.DefaultOverride.class);
+                                                IVisualElementOverrides.DefaultOverride.class);
         VisualElement.name.set(created.left, created.left, filename);
         PythonPluginEditor.python_customToolbar.addToList(ArrayList.class,
                                                           created.left,
-                                                          new Pair<String, iUpdateable>("sync from filesystem",
-                                                                                        new iUpdateable() {
+                                                          new Pair<String, IUpdateable>("sync from filesystem",
+                                                                                        new IUpdateable() {
                                                                                             public
                                                                                             void update() {
                                                                                                 syncFromFilesystem();
@@ -103,8 +103,8 @@ class EchoOndiskFile {
 
         PythonPluginEditor.python_customToolbar.addToList(ArrayList.class,
                                                           created.left,
-                                                          new Pair<String, iUpdateable>("sync to filesystem and update",
-                                                                                        new iUpdateable() {
+                                                          new Pair<String, IUpdateable>("sync to filesystem and update",
+                                                                                        new IUpdateable() {
                                                                                             public
                                                                                             void update() {
                                                                                                 //System.out.println(" syncing to file system");

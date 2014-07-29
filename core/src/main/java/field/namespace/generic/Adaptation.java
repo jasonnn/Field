@@ -1,7 +1,7 @@
 package field.namespace.generic;
 
-import field.math.abstraction.iFloatProvider;
-import field.math.graph.iTopology;
+import field.math.abstraction.IFloatProvider;
+import field.math.graph.ITopology;
 import field.math.graph.visitors.TopologySearching;
 import field.math.graph.visitors.TopologySearching.AStarMetric;
 import field.math.graph.visitors.TopologySearching.TopologyAStarSearch;
@@ -29,8 +29,8 @@ class Adaptation {
 
         Class represents;
 
-        LinkedHashMap<Class, Triple<Node, iFloatProvider, iAdaptor>> edges =
-                new LinkedHashMap<Class, Triple<Node, iFloatProvider, iAdaptor>>();
+        LinkedHashMap<Class, Triple<Node, IFloatProvider, iAdaptor>> edges =
+                new LinkedHashMap<Class, Triple<Node, IFloatProvider, iAdaptor>>();
 
         public
         Node(Class from) {
@@ -48,13 +48,13 @@ class Adaptation {
 
     HashMap<Class, Node> nodes = new HashMap<Class, Node>();
 
-    HashMap<Pair<Class, Class>, List<Triple<Node, iFloatProvider, iAdaptor>>> cached;
+    HashMap<Pair<Class, Class>, List<Triple<Node, IFloatProvider, iAdaptor>>> cached;
 
-    iTopology<Node> nodeTopology = new iTopology<Node>() {
+    ITopology<Node> nodeTopology = new ITopology<Node>() {
         public
         List<Node> getChildrenOf(Node of) {
             ArrayList<Node> al = new ArrayList<Node>(of.edges.size());
-            for (Triple<Node, iFloatProvider, iAdaptor> t : of.edges.values()) {
+            for (Triple<Node, IFloatProvider, iAdaptor> t : of.edges.values()) {
                 al.add(t.left);
             }
             return al;
@@ -69,7 +69,7 @@ class Adaptation {
     AStarMetric<Node> nodeMetric = new AStarMetric<Node>() {
         public
         double distance(Node from, Node to) {
-            Triple<Node, iFloatProvider, iAdaptor> n = from.edges.get(to.represents);
+            Triple<Node, IFloatProvider, iAdaptor> n = from.edges.get(to.represents);
             if (from.represents.equals(to.represents)) return 0;
             if (n == null) return 1e4;
             return n.middle.evaluate();
@@ -95,11 +95,11 @@ class Adaptation {
         // find start node;
         Class c = from.getClass();
 
-        List<Triple<Node, iFloatProvider, iAdaptor>> toCache = null;
+        List<Triple<Node, IFloatProvider, iAdaptor>> toCache = null;
 
         if (cached != null) {
             Pair<Class, Class> find = new Pair<Class, Class>(c, to);
-            List<Triple<Node, iFloatProvider, iAdaptor>> found = cached.get(find);
+            List<Triple<Node, IFloatProvider, iAdaptor>> found = cached.get(find);
 
             toCache = found;
         }
@@ -154,10 +154,10 @@ class Adaptation {
             if (bestRoute == null) {
                 return null;
             }
-            toCache = new ArrayList<Triple<Node, iFloatProvider, iAdaptor>>();
+            toCache = new ArrayList<Triple<Node, IFloatProvider, iAdaptor>>();
             Node root = bestRoute.get(0);
             for (int i = 1; i < bestRoute.size(); i++) {
-                Triple<Node, iFloatProvider, iAdaptor> edge = root.edges.get(bestRoute.get(i).represents);
+                Triple<Node, IFloatProvider, iAdaptor> edge = root.edges.get(bestRoute.get(i).represents);
                 toCache.add(edge);
                 root = edge.left;
             }
@@ -169,7 +169,7 @@ class Adaptation {
         }
 
         Object o = from;
-        for (Triple<Node, iFloatProvider, iAdaptor> cc : toCache) {
+        for (Triple<Node, IFloatProvider, iAdaptor> cc : toCache) {
             o = cc.right.adapt(o.getClass(), cc.left.represents, o);
         }
 
@@ -178,16 +178,16 @@ class Adaptation {
     }
 
     public
-    <X, Y> void declare(Class<X> from, Class<Y> to, iAdaptor<X, Y> adaptor, iFloatProvider f) {
+    <X, Y> void declare(Class<X> from, Class<Y> to, iAdaptor<X, Y> adaptor, IFloatProvider f) {
         Node nf = getNodeFor(from, true);
         Node nt = getNodeFor(to, true);
 
-        nf.edges.put(to, new Triple<Node, iFloatProvider, iAdaptor>(nt, f, adaptor));
+        nf.edges.put(to, new Triple<Node, IFloatProvider, iAdaptor>(nt, f, adaptor));
     }
 
     public
     Adaptation doCaching() {
-        cached = new HashMap<Pair<Class, Class>, List<Triple<Node, iFloatProvider, iAdaptor>>>();
+        cached = new HashMap<Pair<Class, Class>, List<Triple<Node, IFloatProvider, iAdaptor>>>();
         return this;
     }
 

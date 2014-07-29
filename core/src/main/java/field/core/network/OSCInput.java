@@ -3,7 +3,7 @@
  */
 package field.core.network;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.BaseMath;
 import field.namespace.generic.ReflectionTools;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * @author marc
  */
 public
-class OSCInput implements iUpdateable {
+class OSCInput implements IUpdateable {
 
     public static int max_packet_size = 20000;
     public static int num_buffers = 5;

@@ -1,6 +1,6 @@
 package field.math.abstraction;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -10,15 +10,15 @@ import java.util.WeakHashMap;
 
 
 public abstract
-class WhiteBlock implements iUpdateable {
+class WhiteBlock implements IUpdateable {
 
     // output to input
-    WeakHashMap<MappedProvider, iFloatProvider> map = new WeakHashMap<MappedProvider, iFloatProvider>();
+    WeakHashMap<MappedProvider, IFloatProvider> map = new WeakHashMap<MappedProvider, IFloatProvider>();
 
     boolean needEvaluate = true;
 
     public
-    iFloatProvider map(iFloatProvider input) {
+    IFloatProvider map(IFloatProvider input) {
         MappedProvider provider = new MappedProvider();
         needEvaluate = true;
 
@@ -30,10 +30,10 @@ class WhiteBlock implements iUpdateable {
     void update() {
 
         MappedProvider[] values = new MappedProvider[map.size()];
-        Iterator<Entry<MappedProvider, iFloatProvider>> i = map.entrySet().iterator();
+        Iterator<Entry<MappedProvider, IFloatProvider>> i = map.entrySet().iterator();
         int n = 0;
         while (i.hasNext()) {
-            Entry<MappedProvider, iFloatProvider> e = i.next();
+            Entry<MappedProvider, IFloatProvider> e = i.next();
             values[n] = e.getKey();
             values[n].rawValue = e.getValue().evaluate();
             n++;
@@ -71,7 +71,7 @@ class WhiteBlock implements iUpdateable {
     void filter(MappedProvider provider, int i, int length, float max, float min, float median);
 
     public
-    class MappedProvider implements iFloatProvider, Comparable<MappedProvider> {
+    class MappedProvider implements IFloatProvider, Comparable<MappedProvider> {
         float value;
 
         float rawValue;
@@ -90,22 +90,22 @@ class WhiteBlock implements iUpdateable {
 
     public static
     class StandardWhite extends WhiteBlock {
-        private final iFloatProvider robustAmount;
+        private final IFloatProvider robustAmount;
 
-        private final iFloatProvider robustPower;
+        private final IFloatProvider robustPower;
 
-        private final iFloatProvider meanPower;
+        private final IFloatProvider meanPower;
 
-        private final iFloatProvider min;
+        private final IFloatProvider min;
 
-        private final iFloatProvider max;
+        private final IFloatProvider max;
 
         public
-        StandardWhite(iFloatProvider robustAmount,
-                      iFloatProvider robustPower,
-                      iFloatProvider meanPower,
-                      iFloatProvider min,
-                      iFloatProvider max) {
+        StandardWhite(IFloatProvider robustAmount,
+                      IFloatProvider robustPower,
+                      IFloatProvider meanPower,
+                      IFloatProvider min,
+                      IFloatProvider max) {
             this.robustAmount = robustAmount;
             this.robustPower = robustPower;
             this.meanPower = meanPower;
@@ -137,11 +137,11 @@ class WhiteBlock implements iUpdateable {
 
     public
     void debugToString(PrintStream out) {
-        Iterator<Entry<MappedProvider, iFloatProvider>> i = map.entrySet().iterator();
+        Iterator<Entry<MappedProvider, IFloatProvider>> i = map.entrySet().iterator();
         int n = 0;
         out.println(" white block <" + this.getClass() + "> has <" + map.size() + '>');
         while (i.hasNext()) {
-            Entry<MappedProvider, iFloatProvider> e = i.next();
+            Entry<MappedProvider, IFloatProvider> e = i.next();
             out.println(e.getKey().rawValue + " -> " + e.getKey().value + " (" + e.getValue() + ')');
         }
     }

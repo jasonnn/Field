@@ -3,17 +3,17 @@ package field.math.abstraction;
 import java.util.Set;
 
 public
-interface iMetric<t_from, t_to> {
+interface IMetric<t_from, t_to> {
 
     public
     float distance(t_from from, t_to to);
 
     public static
-    class Maximum<T> implements iMetric<Set<T>, Set<T>> {
-        private final iMetric<T, T> t;
+    class Maximum<T> implements IMetric<Set<T>, Set<T>> {
+        private final IMetric<T, T> t;
 
         public
-        Maximum(iMetric<T, T> t) {
+        Maximum(IMetric<T, T> t) {
             this.t = t;
         }
 
@@ -34,11 +34,11 @@ interface iMetric<t_from, t_to> {
     }
 
     public static
-    class Minimum<T> implements iMetric<Set<T>, Set<T>> {
-        private final iMetric<T, T> t;
+    class Minimum<T> implements IMetric<Set<T>, Set<T>> {
+        private final IMetric<T, T> t;
 
         public
-        Minimum(iMetric<T, T> t) {
+        Minimum(IMetric<T, T> t) {
             this.t = t;
         }
 
@@ -59,11 +59,11 @@ interface iMetric<t_from, t_to> {
     }
 
     public static
-    class Average<T> implements iMetric<Set<T>, Set<T>> {
-        private final iMetric<T, T> t;
+    class Average<T> implements IMetric<Set<T>, Set<T>> {
+        private final IMetric<T, T> t;
 
         public
-        Average(iMetric<T, T> t) {
+        Average(IMetric<T, T> t) {
             this.t = t;
         }
 

@@ -164,7 +164,7 @@ class EigenStructure {
                 for (iq = ip + 1; iq < n; ++iq) {
                     g = 100.0 * Math.abs(a[ip][iq]);
 
-					/* After four sweeps, skip the rotation if the off-diagonal element is small */
+					/* After four sweeps, SKIP the rotation if the off-diagonal element is small */
 					/* This test is taken directly from the text and looks a little suspect to me... */
 
                     if (i > 3 && g < EPS) a[ip][iq] = 0.0;

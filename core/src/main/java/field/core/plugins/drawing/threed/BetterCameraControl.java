@@ -6,7 +6,7 @@ import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.Projector;
 import field.graphics.core.BasicCamera.State;
 import field.graphics.core.BasicSceneList;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.IntersectionPrimatives;
 import field.math.linalg.IntersectionPrimatives.LinePointIntersectionInfo;
@@ -26,7 +26,7 @@ import java.util.List;
  * @author marc
  */
 public
-class BetterCameraControl implements iUpdateable {
+class BetterCameraControl implements IUpdateable {
 
     private final BasicSceneList list;
 
@@ -84,7 +84,7 @@ class BetterCameraControl implements iUpdateable {
     }
 
     public
-    void transitionToState(final State in, final BasicCamera on, final int over, final iUpdateable post) {
+    void transitionToState(final State in, final BasicCamera on, final int over, final IUpdateable post) {
 
         q.new Task() {
 

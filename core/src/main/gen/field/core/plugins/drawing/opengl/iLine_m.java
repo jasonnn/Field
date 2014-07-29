@@ -1,78 +1,74 @@
 package field.core.plugins.drawing.opengl;
 
-import field.bytecode.apt.Mirroring;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.namespace.generic.Bind.iFunction;
+import field.bytecode.mirror.impl.MirrorNoReturnMethod;
+import field.bytecode.mirror.impl.MirrorNoReturnNoArgsMethod;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.Method;
 
 public
 class iLine_m {
-    public static final Method moveTo_m =
-            ReflectionTools.methodOf("moveTo", field.core.plugins.drawing.opengl.iLine.class, float.class, float.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> moveTo_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class,
-                                                                                                  "moveTo",
-                                                                                                  new Class[]{float.class,
-                                                                                                              float.class});
+    public static final Method moveTo_m = ReflectionTools.methodOf("moveTo", iLine.class, float.class, float.class);
+
+    public static final MirrorNoReturnMethod<iLine, Object[]> moveTo_s =
+            new MirrorNoReturnMethod<iLine, Object[]>(iLine.class, "moveTo", float.class, float.class);
 
     public
-    interface moveTo_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface moveTo_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void moveTo(final float p0, final float p1);
 
         public
-        iUpdateable updateable(final float p0, final float p1);
+        IUpdateable updateable(final float p0, final float p1);
     }
 
     public final moveTo_interface moveTo;
 
-    public static final Method lineTo_m =
-            ReflectionTools.methodOf("lineTo", field.core.plugins.drawing.opengl.iLine.class, float.class, float.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> lineTo_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class,
-                                                                                                  "lineTo",
-                                                                                                  new Class[]{float.class,
-                                                                                                              float.class});
+    public static final Method lineTo_m = ReflectionTools.methodOf("lineTo", iLine.class, float.class, float.class);
+
+    public static final MirrorNoReturnMethod<iLine, Object[]> lineTo_s =
+            new MirrorNoReturnMethod<iLine, Object[]>(iLine.class, "lineTo", float.class, float.class);
 
     public
-    interface lineTo_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface lineTo_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void lineTo(final float p0, final float p1);
 
         public
-        iUpdateable updateable(final float p0, final float p1);
+        IUpdateable updateable(final float p0, final float p1);
     }
 
     public final lineTo_interface lineTo;
 
     public static final Method cubicTo_m = ReflectionTools.methodOf("cubicTo",
-                                                                    field.core.plugins.drawing.opengl.iLine.class,
+                                                                    iLine.class,
                                                                     float.class,
                                                                     float.class,
                                                                     float.class,
                                                                     float.class,
                                                                     float.class,
                                                                     float.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]> cubicTo_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class,
-                                                                                                  "cubicTo",
-                                                                                                  new Class[]{float.class,
-                                                                                                              float.class,
-                                                                                                              float.class,
-                                                                                                              float.class,
-                                                                                                              float.class,
-                                                                                                              float.class});
+
+    public static final MirrorNoReturnMethod<iLine, Object[]> cubicTo_s =
+            new MirrorNoReturnMethod<iLine, Object[]>(iLine.class,
+                                                      "cubicTo",
+                                                      float.class,
+                                                      float.class,
+                                                      float.class,
+                                                      float.class,
+                                                      float.class,
+                                                      float.class);
 
     public
-    interface cubicTo_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface cubicTo_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void cubicTo(final float p0, final float p1, final float p2, final float p3, final float p4, final float p5);
 
         public
-        iUpdateable updateable(final float p0,
+        IUpdateable updateable(final float p0,
                                final float p1,
                                final float p2,
                                final float p3,
@@ -83,41 +79,41 @@ class iLine_m {
     public final cubicTo_interface cubicTo;
 
     public static final Method setPointAttribute_m = ReflectionTools.methodOf("setPointAttribute",
-                                                                              field.core.plugins.drawing.opengl.iLine.class,
+                                                                              iLine.class,
                                                                               field.util.Dict.Prop.class,
                                                                               Object.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>
-            setPointAttribute_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.plugins.drawing.opengl.iLine, Object[]>(field.core.plugins.drawing.opengl.iLine.class,
-                                                                                                  "setPointAttribute",
-                                                                                                  new Class[]{field.util.Dict.Prop.class,
-                                                                                                              Object.class});
+
+    public static final MirrorNoReturnMethod<iLine, Object[]> setPointAttribute_s =
+            new MirrorNoReturnMethod<iLine, Object[]>(iLine.class,
+                                                      "setPointAttribute",
+                                                      field.util.Dict.Prop.class,
+                                                      Object.class);
 
     public
-    interface setPointAttribute_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface setPointAttribute_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void setPointAttribute(final field.util.Dict.Prop p0, final Object p1);
 
         public
-        iUpdateable updateable(final field.util.Dict.Prop p0, final Object p1);
+        IUpdateable updateable(final field.util.Dict.Prop p0, final Object p1);
     }
 
     public final setPointAttribute_interface setPointAttribute;
 
-    public static final Method close_m =
-            ReflectionTools.methodOf("close", field.core.plugins.drawing.opengl.iLine.class);
-    public static final Mirroring.MirrorNoReturnNoArgsMethod<field.core.plugins.drawing.opengl.iLine> close_s =
-            new Mirroring.MirrorNoReturnNoArgsMethod<field.core.plugins.drawing.opengl.iLine>(field.core.plugins.drawing.opengl.iLine.class,
-                                                                                              "close");
+    public static final Method close_m = ReflectionTools.methodOf("close", iLine.class);
 
-    public final iUpdateable close;
+    public static final MirrorNoReturnNoArgsMethod<iLine> close_s = new MirrorNoReturnNoArgsMethod<iLine>(iLine.class,
+                                                                                                          "close");
+
+    public final IUpdateable close;
 
     public
     iLine_m(final iLine x) {
         moveTo = new moveTo_interface() {
 
-            iAcceptor a = moveTo_s.acceptor(x);
-            iFunction f = moveTo_s.function(x);
+            IAcceptor a = moveTo_s.acceptor(x);
+
+            IFunction f = moveTo_s.function(x);
 
 
             public
@@ -126,19 +122,19 @@ class iLine_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final float p0, final float p1) {
-                return new iUpdateable() {
+            IUpdateable updateable(final float p0, final float p1) {
+                return new IUpdateable() {
                     public
                     void update() {
                         moveTo(p0, p1);
@@ -149,8 +145,9 @@ class iLine_m {
 
         lineTo = new lineTo_interface() {
 
-            iAcceptor a = lineTo_s.acceptor(x);
-            iFunction f = lineTo_s.function(x);
+            IAcceptor a = lineTo_s.acceptor(x);
+
+            IFunction f = lineTo_s.function(x);
 
 
             public
@@ -159,19 +156,19 @@ class iLine_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final float p0, final float p1) {
-                return new iUpdateable() {
+            IUpdateable updateable(final float p0, final float p1) {
+                return new IUpdateable() {
                     public
                     void update() {
                         lineTo(p0, p1);
@@ -182,8 +179,9 @@ class iLine_m {
 
         cubicTo = new cubicTo_interface() {
 
-            iAcceptor a = cubicTo_s.acceptor(x);
-            iFunction f = cubicTo_s.function(x);
+            IAcceptor a = cubicTo_s.acceptor(x);
+
+            IFunction f = cubicTo_s.function(x);
 
 
             public
@@ -197,24 +195,24 @@ class iLine_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final float p0,
+            IUpdateable updateable(final float p0,
                                    final float p1,
                                    final float p2,
                                    final float p3,
                                    final float p4,
                                    final float p5) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         cubicTo(p0, p1, p2, p3, p4, p5);
@@ -225,8 +223,9 @@ class iLine_m {
 
         setPointAttribute = new setPointAttribute_interface() {
 
-            iAcceptor a = setPointAttribute_s.acceptor(x);
-            iFunction f = setPointAttribute_s.function(x);
+            IAcceptor a = setPointAttribute_s.acceptor(x);
+
+            IFunction f = setPointAttribute_s.function(x);
 
 
             public
@@ -235,19 +234,19 @@ class iLine_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.util.Dict.Prop p0, final Object p1) {
-                return new iUpdateable() {
+            IUpdateable updateable(final field.util.Dict.Prop p0, final Object p1) {
+                return new IUpdateable() {
                     public
                     void update() {
                         setPointAttribute(p0, p1);

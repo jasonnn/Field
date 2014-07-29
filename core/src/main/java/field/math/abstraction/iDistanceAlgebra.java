@@ -1,7 +1,7 @@
 package field.math.abstraction;
 
 public
-interface iDistanceAlgebra<T> {
+interface IDistanceAlgebra<T> {
 
     public
     float distanceFrom(T from1, T from2);

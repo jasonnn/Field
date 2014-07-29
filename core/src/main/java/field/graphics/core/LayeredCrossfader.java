@@ -3,7 +3,7 @@ package field.graphics.core;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.BasicFrameBuffers.iDisplayable;
 import field.graphics.windowing.FullScreenCanvasSWT;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ class LayeredCrossfader {
         a = new LayeredFrameBuffer(width, height, layers, true);
         b = new LayeredFrameBuffer(width, height, layers, true);
 
-        canvas.getPostQueue().addUpdateable(new iUpdateable() {
+        canvas.getPostQueue().addUpdateable(new IUpdateable() {
 
             @Override
             public
@@ -69,7 +69,7 @@ class LayeredCrossfader {
 
         // attach a program and quad that copies buffer to a and b
 
-        buffer.getSceneList().add(StandardPass.preTransform).register("__layered_cf__" + this, new iUpdateable() {
+        buffer.getSceneList().add(StandardPass.preTransform).register("__layered_cf__" + this, new IUpdateable() {
 
             @Override
             public

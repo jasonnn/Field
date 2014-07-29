@@ -6,7 +6,8 @@ import field.bytecode.protect.iProvidesQueue;
 import field.bytecode.protect.iRegistersUpdateable;
 import field.math.graph.visitors.GraphNodeSearching;
 import field.math.graph.visitors.GraphNodeSearching.GraphNodeVisitor_depthFirst;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.graph.visitors.TopologySearching;
 import field.math.graph.visitors.TopologySearching.TopologyAStarSearch;
 import field.math.graph.visitors.TopologySearching.TopologyVisitor_directedDepthFirst;
@@ -173,7 +174,7 @@ class TopologyMerging {
             GraphNodeVisitor_depthFirst<T> app = new GraphNodeSearching.GraphNodeVisitor_depthFirst<T>(true) {
                 @Override
                 protected
-                VisitCode visit(T n) {
+                TraversalHint visit(T n) {
 
                     if (isEnd(n, stack)) {
                         // dead
@@ -193,7 +194,7 @@ class TopologyMerging {
                             eliminate(substack);
                         }
                     }
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
 
                 }
 
@@ -236,10 +237,10 @@ class TopologyMerging {
     public abstract static
     class ExtractBorderOf<T> {
 
-        private final iTopology<T> top;
+        private final ITopology<T> top;
 
         public
-        ExtractBorderOf(iTopology<T> top) {
+        ExtractBorderOf(ITopology<T> top) {
             this.top = top;
         }
 
@@ -254,12 +255,12 @@ class TopologyMerging {
                         new TopologySearching.TopologyVisitory_depthFirst<T>(true, top) {
                             @Override
                             protected
-                            VisitCode visit(T n) {
-                                if (!unseen.contains(n)) return VisitCode.skip;
-                                if (!isBorder(n)) return VisitCode.skip;
+                            TraversalHint visit(T n) {
+                                if (!unseen.contains(n)) return StandardTraversalHint.SKIP;
+                                if (!isBorder(n)) return StandardTraversalHint.SKIP;
                                 ll.add(n);
                                 unseen.remove(n);
-                                return VisitCode.cont;
+                                return StandardTraversalHint.CONTINUE;
                             }
                         }.apply(all.get(i));
                     }
@@ -312,14 +313,14 @@ class TopologyMerging {
                     new GraphNodeSearching.GraphNodeVisitor_depthFirst<T>(true) {
                         @Override
                         protected
-                        VisitCode visit(T n) {
+                        TraversalHint visit(T n) {
                             if (!catagoryFor(n).equals(catagory)) {
                                 fringe.add(n);
                                 Collections.reverse(domain);
-                                return VisitCode.skip;
+                                return StandardTraversalHint.SKIP;
                             }
                             domain.add(n);
-                            return VisitCode.cont;
+                            return StandardTraversalHint.CONTINUE;
                         }
                     }.apply(t);
                     if (domain.size() > 1) {
@@ -368,12 +369,12 @@ class TopologyMerging {
 
     public static
     class LineChaser<T> {
-        private final iTopology<T> t;
+        private final ITopology<T> t;
 
         ArrayList<List<T>> lines = new ArrayList<List<T>>();
 
         public
-        LineChaser(iTopology<T> t) {
+        LineChaser(ITopology<T> t) {
             this.t = t;
         }
 
@@ -397,15 +398,15 @@ class TopologyMerging {
 
                     @Override
                     protected
-                    VisitCode visit(T n) {
+                    TraversalHint visit(T n) {
                         s.add(n);
-                        if (n == startAt) return VisitCode.cont;
+                        if (n == startAt) return StandardTraversalHint.CONTINUE;
                         if (t.getChildrenOf(building.get(0)).contains(n)) building.add(0, n);
                         else if (t.getChildrenOf(building.get(building.size() - 1)).contains(n)) building.add(n);
                         else {
-                            return VisitCode.stop;
+                            return StandardTraversalHint.STOP;
                         }
-                        return VisitCode.cont;
+                        return StandardTraversalHint.CONTINUE;
 
                     }
                 };
@@ -631,14 +632,14 @@ class TopologyMerging {
     public abstract static
     class MakeSinglyConnected_biconnectedTopology<T> {
 
-        private final iTopology<T> topology;
+        private final ITopology<T> topology;
 
         T r1;
 
         T r2;
 
         public
-        MakeSinglyConnected_biconnectedTopology(iTopology<T> topology) {
+        MakeSinglyConnected_biconnectedTopology(ITopology<T> topology) {
             this.topology = topology;
         }
 
@@ -745,9 +746,9 @@ class TopologyMerging {
         GraphNodeVisitor_depthFirst<T> gather = new GraphNodeSearching.GraphNodeVisitor_depthFirst<T>(true) {
             @Override
             protected
-            VisitCode visit(T n) {
+            TraversalHint visit(T n) {
                 gathering[0].add(n);
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
         }.setClearSeenOnExit(false);
 
@@ -769,7 +770,7 @@ class TopologyMerging {
     }
 
     public static
-    <T> List<List<T>> extractDomainsBiConnected(List<T> all, iTopology<T> top) {
+    <T> List<List<T>> extractDomainsBiConnected(List<T> all, ITopology<T> top) {
         List<List<T>> ret = new ArrayList<List<T>>();
         final List[] gathering = {null};
 
@@ -779,9 +780,9 @@ class TopologyMerging {
                 new TopologySearching.TopologyVisitory_depthFirst<T>(true, top) {
                     @Override
                     protected
-                    VisitCode visit(T n) {
+                    TraversalHint visit(T n) {
                         gathering[0].add(n);
-                        return VisitCode.cont;
+                        return StandardTraversalHint.CONTINUE;
                     }
                 }.setSetCleanOnExit(false);
 

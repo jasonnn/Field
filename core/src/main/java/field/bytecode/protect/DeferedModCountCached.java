@@ -7,7 +7,7 @@ import field.bytecode.protect.cache.ModCountArrayWrapper;
 import field.bytecode.protect.cache.ModCountCache;
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public final
-class DeferedModCountCached extends DeferCallingFast implements iFunction<Object, ModCountArrayWrapper> {
+class DeferedModCountCached extends DeferCallingFast implements IFunction<ModCountArrayWrapper, Object> {
 
     ModCountCache<ModCountArrayWrapper, Object> cache =
             new ModCountCache<ModCountArrayWrapper, Object>(new ModCountArrayWrapper(null));
@@ -77,7 +77,7 @@ class DeferedModCountCached extends DeferCallingFast implements iFunction<Object
     }
 
     public
-    Object f(ModCountArrayWrapper in) {
+    Object apply(ModCountArrayWrapper in) {
         try {
             Object object = original.invoke(originalTarget, ongoingArgs);
             return object;

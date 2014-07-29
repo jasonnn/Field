@@ -17,69 +17,51 @@ class Bind {
 
     // will have to wait until we can refactor this into filter
 
-    public
-    interface iFunction<t_out, t_in> {
-        public
-        t_out f(t_in in);
-    }
-
-    public
-    interface iFunction2<t_out, t_in1, t_in2> {
-        public
-        t_out f(t_in1 in, t_in2 in2);
-    }
-
-    public
-    interface iOutput<t_out> {
-        public
-        t_out get();
-    }
-
     public static
-    <A, B, C> iFunction<A, C> bind(final iFunction<A, B> two, final iFunction<B, C> one) {
-        return new iFunction<A, C>() {
+    <A, B, C> IFunction<C, A> bind(final IFunction<B, A> two, final IFunction<C, B> one) {
+        return new IFunction<C, A>() {
             public
-            A f(C in) {
-                B b = one.f(in);
-                A a = two.f(b);
+            A apply(C in) {
+                B b = one.apply(in);
+                A a = two.apply(b);
                 return a;
             }
         };
     }
 
     public static
-    <A, B> iOutput<A> bind(final iFunction<A, B> on, final iOutput<B> in) {
-        return new iOutput<A>() {
+    <A, B> IOutput<A> bind(final IFunction<B, A> on, final IOutput<B> in) {
+        return new IOutput<A>() {
             public
             A get() {
-                return on.f(in.get());
+                return on.apply(in.get());
             }
         };
     }
 
     public static
-    <A, B, C> iFunction<A, C> bind(final iOutput<iFunction<A, B>> two, final iOutput<iFunction<B, C>> one) {
-        return new iFunction<A, C>() {
+    <A, B, C> IFunction<C, A> bind(final IOutput<IFunction<B, A>> two, final IOutput<IFunction<C, B>> one) {
+        return new IFunction<C, A>() {
             public
-            A f(C in) {
-                return two.get().f(one.get().f(in));
+            A apply(C in) {
+                return two.get().apply(one.get().apply(in));
             }
         };
     }
 
     public static
-    <A, B, C> iFunction<A, C> bind(final iOutput<iFunction<A, B>> two, final iFunction<B, C> one) {
-        return new iFunction<A, C>() {
+    <A, B, C> IFunction<C, A> bind(final IOutput<IFunction<B, A>> two, final IFunction<C, B> one) {
+        return new IFunction<C, A>() {
             public
-            A f(C in) {
-                return two.get().f(one.f(in));
+            A apply(C in) {
+                return two.get().apply(one.apply(in));
             }
         };
     }
 
     public static
-    <A> iOutput<A> offset(final A a) {
-        return new iOutput<A>() {
+    <A> IOutput<A> offset(final A a) {
+        return new IOutput<A>() {
             public
             A get() {
                 return a;
@@ -88,11 +70,11 @@ class Bind {
     }
 
     public static
-    <A, B> iFunction<A, B> call(Class<? extends A> out, final Method m, final Object on, Class<? extends B> ini) {
-        return new iFunction<A, B>() {
+    <A, B> IFunction<B, A> call(Class<? extends A> out, final Method m, final Object on, Class<? extends B> ini) {
+        return new IFunction<B, A>() {
             @SuppressWarnings("unchecked")
             public
-            A f(B in) {
+            A apply(B in) {
                 try {
                     return (A) m.invoke(on, in);
                 } catch (IllegalArgumentException e) {
@@ -110,14 +92,14 @@ class Bind {
     }
 
     public static
-    <A, B, C> iFunction<A, Pair<B, C>> call(Class<? extends A> out,
+    <A, B, C> IFunction<Pair<B, C>, A> call(Class<? extends A> out,
                                             final Method m,
                                             Class<? extends B> onClass,
                                             Class<? extends C> paramClass) {
-        return new iFunction<A, Pair<B, C>>() {
+        return new IFunction<Pair<B, C>, A>() {
             @SuppressWarnings("unchecked")
             public
-            A f(Pair<B, C> in) {
+            A apply(Pair<B, C> in) {
                 try {
                     return (A) m.invoke(in.left, in.right);
                 } catch (IllegalArgumentException e) {
@@ -135,22 +117,22 @@ class Bind {
     }
 
     public static
-    <B, C> iFunction<Pair<B, C>, B> wrap(final iFunction<C, B> w) {
-        return new iFunction<Pair<B, C>, B>() {
+    <B, C> IFunction<B, Pair<B, C>> wrap(final IFunction<B, C> w) {
+        return new IFunction<B, Pair<B, C>>() {
             public
-            Pair<B, C> f(B in) {
-                C c = w.f(in);
+            Pair<B, C> apply(B in) {
+                C c = w.apply(in);
                 return new Pair<B, C>(in, c);
             }
         };
     }
 
     public static
-    <A, B> iFunction<A, B> call(Class<? extends A> out, final Method m, Class<? extends B> ini) {
-        return new iFunction<A, B>() {
+    <A, B> IFunction<B, A> call(Class<? extends A> out, final Method m, Class<? extends B> ini) {
+        return new IFunction<B, A>() {
             @SuppressWarnings("unchecked")
             public
-            A f(B in) {
+            A apply(B in) {
                 try {
                     return (A) m.invoke(in);
                 } catch (IllegalArgumentException e) {
@@ -168,13 +150,13 @@ class Bind {
     }
 
     public static
-    <A, B> iFunction<A, B> multipleApply(final iFunction<A, B> function, final int num) {
-        return new iFunction<A, B>() {
+    <A, B> IFunction<B, A> multipleApply(final IFunction<B, A> function, final int num) {
+        return new IFunction<B, A>() {
             public
-            A f(B in) {
+            A apply(B in) {
                 A a = null;
                 for (int i = 0; i < num; i++) {
-                    A l = function.f(in);
+                    A l = function.apply(in);
                     if (l != null) {
                         a = l;
                     }
@@ -185,13 +167,13 @@ class Bind {
     }
 
     public static
-    <A, B> iFunction<A, B> callAll(final List<iFunction<A, B>> of) {
-        return new iFunction<A, B>() {
+    <A, B> IFunction<B, A> callAll(final List<IFunction<B, A>> of) {
+        return new IFunction<B, A>() {
             public
-            A f(B in) {
+            A apply(B in) {
                 A r = null;
-                for (iFunction<A, B> f : of) {
-                    r = f.f(in);
+                for (IFunction<B, A> f : of) {
+                    r = f.apply(in);
                 }
                 return r;
             }
@@ -199,14 +181,14 @@ class Bind {
     }
 
     public static
-    <A, B> iFunction<A, B> collapseAll(final List<iFunction<A, B>> of, final iFunction<A, Pair<A, A>> over) {
-        return new iFunction<A, B>() {
+    <A, B> IFunction<B, A> collapseAll(final List<IFunction<B, A>> of, final IFunction<Pair<A, A>, A> over) {
+        return new IFunction<B, A>() {
             public
-            A f(B in) {
+            A apply(B in) {
                 A r = null;
-                for (iFunction<A, B> f : of) {
-                    A r2 = f.f(in);
-                    r = over.f(new Pair<A, A>(r, r2));
+                for (IFunction<B, A> f : of) {
+                    A r2 = f.apply(in);
+                    r = over.apply(new Pair<A, A>(r, r2));
                 }
                 return r;
             }
@@ -216,8 +198,8 @@ class Bind {
     // odd monads
 
     public static
-    <T> iOutput<T> randomOf(final List<T> of) {
-        return new iOutput<T>() {
+    <T> IOutput<T> randomOf(final List<T> of) {
+        return new IOutput<T>() {
             public
             T get() {
                 int index = (int) (Math.random() * of.size());
@@ -229,12 +211,12 @@ class Bind {
     // util
 
     public static
-    <T> T argMax(Collection<T> t, iFunction<? extends Number, T> f) {
+    <T> T argMax(Collection<T> t, IFunction<T, ? extends Number> f) {
         double v = Double.NEGATIVE_INFINITY;
         T best = null;
 
         for (T tt : t) {
-            Number m = f.f(tt);
+            Number m = f.apply(tt);
             if (m.doubleValue() > v) {
                 v = m.doubleValue();
                 best = tt;
@@ -245,12 +227,12 @@ class Bind {
     }
 
     public static
-    <T> T argMin(Collection<T> t, iFunction<? extends Number, T> f) {
+    <T> T argMin(Collection<T> t, IFunction<T, ? extends Number> f) {
         double v = Double.POSITIVE_INFINITY;
         T best = null;
 
         for (T tt : t) {
-            Number m = f.f(tt);
+            Number m = f.apply(tt);
             if (m.doubleValue() < v) {
                 v = m.doubleValue();
                 best = tt;
@@ -261,12 +243,12 @@ class Bind {
     }
 
     public static
-    <T> Number max(Collection<T> t, iFunction<? extends Number, T> f) {
+    <T> Number max(Collection<T> t, IFunction<T, ? extends Number> f) {
         double v = Double.NEGATIVE_INFINITY;
         Number best = null;
 
         for (T tt : t) {
-            Number m = f.f(tt);
+            Number m = f.apply(tt);
             if (m.doubleValue() > v) {
                 v = m.doubleValue();
                 best = m;
@@ -277,12 +259,12 @@ class Bind {
     }
 
     public static
-    <T> Number min(Collection<T> t, iFunction<? extends Number, T> f) {
+    <T> Number min(Collection<T> t, IFunction<T, ? extends Number> f) {
         double v = Double.POSITIVE_INFINITY;
         Number best = null;
 
         for (T tt : t) {
-            Number m = f.f(tt);
+            Number m = f.apply(tt);
             if (m.doubleValue() < v) {
                 v = m.doubleValue();
                 best = m;
@@ -293,7 +275,7 @@ class Bind {
     }
 
     public static
-    <T> int indexMin(Collection<T> t, iFunction<? extends Number, T> f) {
+    <T> int indexMin(Collection<T> t, IFunction<T, ? extends Number> f) {
 
         double v = Double.POSITIVE_INFINITY;
         int best = 0;
@@ -301,7 +283,7 @@ class Bind {
         int i = 0;
         for (T tt : t) {
 
-            Number m = f.f(tt);
+            Number m = f.apply(tt);
             if (m.doubleValue() < v) {
                 v = m.doubleValue();
                 best = i;

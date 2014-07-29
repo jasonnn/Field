@@ -3,10 +3,10 @@ package field.core.plugins.constrain;
 import field.bytecode.protect.annotations.GenerateMethods;
 import field.bytecode.protect.annotations.Mirror;
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.SimpleConstraints.Constraint;
 import field.core.plugins.constrain.cassowary.*;
 import field.core.plugins.drawing.BasicDrawingPlugin;
@@ -17,9 +17,10 @@ import field.core.plugins.python.PythonPluginEditor;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
+import field.math.graph.IMutableContainer;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.collect.tuple.Pair;
 import field.util.SimpleHashQueue;
 
@@ -30,7 +31,7 @@ import java.util.Set;
 public
 class ComplexConstraints implements iPlugin {
     public
-    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -46,7 +47,7 @@ class ComplexConstraints implements iPlugin {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -67,13 +68,13 @@ class ComplexConstraints implements iPlugin {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             properties = t;
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -84,10 +85,10 @@ class ComplexConstraints implements iPlugin {
     }
 
     public
-    class Overrides extends iVisualElementOverrides.DefaultOverride {
+    class Overrides extends IVisualElementOverrides.DefaultOverride {
         @Override
         public
-        VisitCode deleted(iVisualElement source) {
+        TraversalHint deleted(IVisualElement source) {
             if (offeredConstraint.containsKey(source)) {
                 ClConstraint m = offeredConstraint.remove(source);
                 if (m != null) {
@@ -103,13 +104,13 @@ class ComplexConstraints implements iPlugin {
             }
             if (participatesInConstraints.containsKey(source)) {
                 VariablesForRect m = participatesInConstraints.remove(source);
-                List<iVisualElement> a = StandardFluidSheet.allVisualElements(root);
-                Set<iVisualElement> needsDeleting = new HashSet<iVisualElement>();
+                List<IVisualElement> a = StandardFluidSheet.allVisualElements(root);
+                Set<IVisualElement> needsDeleting = new HashSet<IVisualElement>();
 
-                for (iVisualElement v : a) {
-                    Map<String, iVisualElement> cp = v.getProperty(BaseConstraintOverrides.constraintParameters);
+                for (IVisualElement v : a) {
+                    Map<String, IVisualElement> cp = v.getProperty(BaseConstraintOverrides.constraintParameters);
                     if (cp != null) {
-                        for (iVisualElement v2 : cp.values()) {
+                        for (IVisualElement v2 : cp.values()) {
                             if (v2 == source) {
                                 needsDeleting.add(v);
                             }
@@ -117,7 +118,7 @@ class ComplexConstraints implements iPlugin {
                     }
                 }
 
-                for (iVisualElement v : needsDeleting) {
+                for (IVisualElement v : needsDeleting) {
                     PythonPluginEditor.delete(v, v);
                 }
             }
@@ -127,7 +128,7 @@ class ComplexConstraints implements iPlugin {
 
         @Override
         public
-        <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+        <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
             if (prop == BasicDrawingPlugin.frameManipulationBegin) {
                 // ;//System.out.println(" frame manip begin <" +
                 // to + ">");
@@ -163,8 +164,8 @@ class ComplexConstraints implements iPlugin {
 
         @Override
         public
-        VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-            if (inLoop) return VisitCode.cont;
+        TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+            if (inLoop) return StandardTraversalHint.CONTINUE;
 
             if (participatesInConstraints.get(source) != null) {
 
@@ -187,13 +188,13 @@ class ComplexConstraints implements iPlugin {
                 }
             }
 
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
     }
 
     public static
     class VariablesForRect {
-        public iVisualElement rect;
+        public IVisualElement rect;
 
         public ClVariable variableX;
 
@@ -211,7 +212,7 @@ class ComplexConstraints implements iPlugin {
 
     private final LocalVisualElement lve;
 
-    private iVisualElement root;
+    private IVisualElement root;
 
     // every constraint is represented by a visualelement (for interaction,
     // deletion etc...)
@@ -222,13 +223,13 @@ class ComplexConstraints implements iPlugin {
 
     ClSimplexSolver solver = new ClSimplexSolver();
 
-    HashMap<iVisualElement, VariablesForRect> participatesInConstraints =
-            new HashMap<iVisualElement, VariablesForRect>();
-    HashMap<iVisualElement, ClConstraint> offeredConstraint = new LinkedHashMap<iVisualElement, ClConstraint>();
+    HashMap<IVisualElement, VariablesForRect> participatesInConstraints =
+            new HashMap<IVisualElement, VariablesForRect>();
+    HashMap<IVisualElement, ClConstraint> offeredConstraint = new LinkedHashMap<IVisualElement, ClConstraint>();
 
     CachedLine constraints_thickLineCL;
 
-    HashSet<iVisualElement> currentlyMoving = new HashSet<iVisualElement>();
+    HashSet<IVisualElement> currentlyMoving = new HashSet<IVisualElement>();
 
     SimpleHashQueue preEditQueue = new SimpleHashQueue();
 
@@ -242,7 +243,7 @@ class ComplexConstraints implements iPlugin {
 
     boolean inLoop = false;
 
-    iVisualElementOverrides elementOverride;
+    IVisualElementOverrides elementOverride;
 
     Map<Object, Object> properties = new HashMap<Object, Object>();
 
@@ -256,7 +257,7 @@ class ComplexConstraints implements iPlugin {
     }
 
     public
-    ClConstraint getConstraintForElement(iVisualElement ve) {
+    ClConstraint getConstraintForElement(IVisualElement ve) {
         return offeredConstraint.get(ve);
     }
 
@@ -266,7 +267,7 @@ class ComplexConstraints implements iPlugin {
     }
 
     public
-    VariablesForRect getVariablesFor(iVisualElement ve) {
+    VariablesForRect getVariablesFor(IVisualElement ve) {
         VariablesForRect r = participatesInConstraints.get(ve);
 
         if (r == null) {
@@ -353,13 +354,13 @@ class ComplexConstraints implements iPlugin {
     }
 
     public
-    iVisualElement getWellKnownVisualElement(String id) {
+    IVisualElement getWellKnownVisualElement(String id) {
         if (id.equals(pluginId)) return lve;
         return null;
     }
 
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
 
         this.root = root;
         solver.setAutosolve(false);
@@ -369,11 +370,11 @@ class ComplexConstraints implements iPlugin {
 
         lve.setProperty(complexConstraints_plugin, this);
         // register for selection updates? (no, do it in subclass)
-        group = root.getProperty(iVisualElement.selectionGroup);
+        group = root.getProperty(IVisualElement.selectionGroup);
 
         elementOverride = createElementOverrides();
 
-        GLComponentWindow window = root.getProperty(iVisualElement.enclosingFrame);
+        GLComponentWindow window = root.getProperty(IVisualElement.enclosingFrame);
     }
 
     public
@@ -401,7 +402,7 @@ class ComplexConstraints implements iPlugin {
     }
 
     public
-    void setConstraintForElement(iVisualElement ve, ClConstraint nc) {
+    void setConstraintForElement(IVisualElement ve, ClConstraint nc) {
         try {
             ClConstraint c = getConstraintForElement(ve);
 
@@ -476,7 +477,7 @@ class ComplexConstraints implements iPlugin {
     }
 
     protected
-    iVisualElementOverrides createElementOverrides() {
+    IVisualElementOverrides createElementOverrides() {
         return new Overrides() {
         }.setVisualElement(lve);
     }
@@ -490,7 +491,7 @@ class ComplexConstraints implements iPlugin {
                              roundy(r.variableH.value()));
         Rect oldRect = r.rect.getFrame(null);
         if (!rect.equals(oldRect)) {
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r.rect)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r.rect)
                                                            .shouldChangeFrame(r.rect, rect, oldRect, true);
         }
     }

@@ -13,7 +13,7 @@
 package field.math.linalg;
 
 import field.core.ui.text.protect.ClassDocumentationProtect.Comp;
-import field.math.abstraction.iBlendable;
+import field.math.abstraction.IBlendable;
 import field.math.util.CubicTools;
 import org.python.core.*;
 
@@ -26,7 +26,7 @@ import java.util.List;
  * point x,y coordinates.
  */
 public
-class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, iBlendable<Vector2> {
+class Vector2 implements java.io.Serializable, Cloneable, iToFloatArray, IBlendable<Vector2> {
 
     static final long serialVersionUID = 9011180388985266884L;
 

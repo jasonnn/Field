@@ -6,7 +6,7 @@ import java.util.*;
 
 
 public
-class TopologyViewOfGraphNodes<T extends iMutable<T>> implements iSynchronizedTopology<T> {
+class TopologyViewOfGraphNodes<T extends IMutable<T>> implements ISynchronizedTopology<T> {
 
     private final boolean backwards;
     private boolean everything;
@@ -30,35 +30,35 @@ class TopologyViewOfGraphNodes<T extends iMutable<T>> implements iSynchronizedTo
 
     public
     void begin() {
-        ReflectionTools.apply(notes, iMutableTopology.method_begin);
+        ReflectionTools.apply(notes, IMutableTopology.method_begin);
     }
 
     public
     void end() {
-        ReflectionTools.apply(notes, iMutableTopology.method_end);
+        ReflectionTools.apply(notes, IMutableTopology.method_end);
     }
 
     public
     void addChild(T from, T to) {
         from.addChild(to);
-        ReflectionTools.apply(notes, iMutableTopology.method_addChild, from, to);
+        ReflectionTools.apply(notes, IMutableTopology.method_addChild, from, to);
     }
 
     public
     void removeChild(T from, T to) {
         from.removeChild(to);
-        ReflectionTools.apply(notes, iMutableTopology.method_removeChild, from, to);
+        ReflectionTools.apply(notes, IMutableTopology.method_removeChild, from, to);
     }
 
-    Set<iMutableTopology<? super T>> notes = new LinkedHashSet<iMutableTopology<? super T>>();
+    Set<IMutableTopology<? super T>> notes = new LinkedHashSet<IMutableTopology<? super T>>();
 
     public
-    void registerNotify(iMutableTopology<? super T> here) {
+    void registerNotify(IMutableTopology<? super T> here) {
         notes.add(here);
     }
 
     public
-    void deregisterNotify(iMutableTopology<? super T> here) {
+    void deregisterNotify(IMutableTopology<? super T> here) {
         notes.remove(here);
     }
 

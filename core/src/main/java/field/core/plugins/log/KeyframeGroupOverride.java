@@ -1,9 +1,9 @@
 package field.core.plugins.log;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.execution.iExecutesPromise;
@@ -18,8 +18,9 @@ import field.core.plugins.python.PythonPluginEditor;
 import field.core.ui.text.BaseTextEditor2;
 import field.core.ui.text.BaseTextEditor2.Completion;
 import field.core.ui.text.PythonTextEditor.EditorExecutionInterface;
-import field.math.abstraction.iFloatProvider;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.abstraction.IFloatProvider;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.Dict;
 import org.python.core.PyObject;
 
@@ -96,7 +97,7 @@ class KeyframeGroupOverride extends GroupOverride {
     class GroupPromiseExecution implements iExecutesPromise {
 
         public
-        void addActive(iFloatProvider timeProvider, Promise p) {
+        void addActive(IFloatProvider timeProvider, Promise p) {
         }
 
         public
@@ -115,13 +116,13 @@ class KeyframeGroupOverride extends GroupOverride {
         LinkedHashMap<String, ChangeSet> changes = new LinkedHashMap();
 
         public
-        float getPositionFor(iVisualElement e, float x, Position p) {
+        float getPositionFor(IVisualElement e, float x, Position p) {
             float pp = KeyframeGroupOverride.this.getPositionFor(e, x, p);
             return pp;
         }
 
         public
-        int indexOf(List<iVisualElement> e, iVisualElement q) {
+        int indexOf(List<IVisualElement> e, IVisualElement q) {
             for (int i = 0; i < e.size(); i++) {
                 if (e.get(i) == q) return i;
             }
@@ -129,9 +130,9 @@ class KeyframeGroupOverride extends GroupOverride {
         }
 
         public
-        float weight(iVisualElement e, float x, Position p) {
+        float weight(IVisualElement e, float x, Position p) {
 
-            List<iVisualElement> m = sortedMembers(p);
+            List<IVisualElement> m = sortedMembers(p);
             int at = indexOf(m, e);
 
             float center = getPositionFor(e, x, p);
@@ -195,18 +196,18 @@ class KeyframeGroupOverride extends GroupOverride {
 
     transient boolean inside = false;
 
-    transient HashMap<iVisualElement, ArrayList<SimpleChange>> changeSets =
-            new HashMap<iVisualElement, ArrayList<SimpleChange>>();
+    transient HashMap<IVisualElement, ArrayList<SimpleChange>> changeSets =
+            new HashMap<IVisualElement, ArrayList<SimpleChange>>();
 
-    transient HashSet<iVisualElement> clean = new HashSet<iVisualElement>();
+    transient HashSet<IVisualElement> clean = new HashSet<IVisualElement>();
 
     transient AssemblingLogging assemblingLogging = new AssemblingLogging();
 
     public
-    HashMap<iVisualElement, ArrayList<SimpleChange>> getChanges() {
-        HashMap<iVisualElement, ArrayList<SimpleChange>> ret = new HashMap<iVisualElement, ArrayList<SimpleChange>>();
+    HashMap<IVisualElement, ArrayList<SimpleChange>> getChanges() {
+        HashMap<IVisualElement, ArrayList<SimpleChange>> ret = new HashMap<IVisualElement, ArrayList<SimpleChange>>();
 
-        for (iVisualElement e : (Collection<iVisualElement>) forElement.getParents()) {
+        for (IVisualElement e : (Collection<IVisualElement>) forElement.getParents()) {
             if (clean.contains(e)) {
                 ret.put(e, changeSets.get(e));
             }
@@ -252,8 +253,8 @@ class KeyframeGroupOverride extends GroupOverride {
     }
 
     public
-    float getPositionFor(iVisualElement e, float x, Position p) {
-        List<iVisualElement> s = sortedMembers(p);
+    float getPositionFor(IVisualElement e, float x, Position p) {
+        List<IVisualElement> s = sortedMembers(p);
         if (s.size() < 2) return getRawPositionFor(e, x, p);
         float minA = (float) (s.get(0).getFrame(null).x - 5);
         Rect end = s.get(s.size() - 1).getFrame(null);
@@ -268,14 +269,14 @@ class KeyframeGroupOverride extends GroupOverride {
 
     @Override
     public
-    <T> VisitCode getProperty(final iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+    <T> TraversalHint getProperty(final IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
 
         if (isChild(source)) {
 
             if (prop == iExecutesPromise.promiseExecution) {
                 if (inside) return super.getProperty(source, prop, ref);
                 ref.set((T) new GroupPromiseExecution());
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
             else if (prop == PythonPluginEditor.editorExecutionInterface) {
 
@@ -329,7 +330,7 @@ class KeyframeGroupOverride extends GroupOverride {
     }
 
     public static
-    float getRawPositionFor(iVisualElement e, float x, Position p) {
+    float getRawPositionFor(IVisualElement e, float x, Position p) {
         Rect f = e.getFrame(null);
         if (p == Position.start) return (float) f.x;
         if (p == Position.stop) return (float) (f.x + f.w);
@@ -345,7 +346,7 @@ class KeyframeGroupOverride extends GroupOverride {
 
     @Override
     public
-    <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+    <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
         if (isChild(source) && prop.equals(PythonPlugin.python_source)) {
             clean.remove(source);
         }
@@ -354,7 +355,7 @@ class KeyframeGroupOverride extends GroupOverride {
 
     @Override
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
         if (!newFrame.equals(oldFrame)) {
             if (isChild(source)) {
                 SplineComputingOverride.fireChange(forElement);
@@ -364,12 +365,12 @@ class KeyframeGroupOverride extends GroupOverride {
     }
 
     public
-    List<iVisualElement> sortedMembers(final Position p) {
-        List<iVisualElement> c = new ArrayList<iVisualElement>((List<iVisualElement>) forElement.getParents());
-        Collections.sort(c, new Comparator<iVisualElement>() {
+    List<IVisualElement> sortedMembers(final Position p) {
+        List<IVisualElement> c = new ArrayList<IVisualElement>((List<IVisualElement>) forElement.getParents());
+        Collections.sort(c, new Comparator<IVisualElement>() {
 
             public
-            int compare(iVisualElement o1, iVisualElement o2) {
+            int compare(IVisualElement o1, IVisualElement o2) {
                 float p1 = getRawPositionFor(o1, o1.getFrame(null).midPoint().x, p);
                 float p2 = getRawPositionFor(o2, o2.getFrame(null).midPoint().x, p);
                 return Float.compare(p1, p2);
@@ -379,7 +380,7 @@ class KeyframeGroupOverride extends GroupOverride {
     }
 
     private
-    PyObject ensureHelper(iVisualElement source) {
+    PyObject ensureHelper(IVisualElement source) {
         PyObject k = source.getProperty(pythonKeyframeHelp);
         if (k == null) {
             k = newHelper(source);
@@ -389,23 +390,23 @@ class KeyframeGroupOverride extends GroupOverride {
     }
 
     private
-    void executeChildGroup(iVisualElement e) {
+    void executeChildGroup(IVisualElement e) {
         inside = true;
         try {
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).beginExecution(e);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).endExecution(e);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).beginExecution(e);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).endExecution(e);
         } finally {
             inside = false;
         }
     }
 
     private
-    boolean isChild(iVisualElement source) {
+    boolean isChild(IVisualElement source) {
         return forElement.getParents().contains(source);
     }
 
     private
-    PyObject newHelper(iVisualElement source) {
+    PyObject newHelper(IVisualElement source) {
         PythonInterface.getPythonInterface().setVariable("__x0", source);
         PythonInterface.getPythonInterface().setVariable("__x1", assemblingLogging);
         PyObject object = PythonInterface.getPythonInterface()
@@ -415,7 +416,7 @@ class KeyframeGroupOverride extends GroupOverride {
     }
 
     protected static
-    boolean automaticallyExecuteAll(iVisualElement source) {
+    boolean automaticallyExecuteAll(IVisualElement source) {
         return true;
     }
 
@@ -423,8 +424,8 @@ class KeyframeGroupOverride extends GroupOverride {
     void executeThis() {
         inside = true;
         try {
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).beginExecution(forElement);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).endExecution(forElement);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).beginExecution(forElement);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).endExecution(forElement);
         } finally {
             inside = false;
         }

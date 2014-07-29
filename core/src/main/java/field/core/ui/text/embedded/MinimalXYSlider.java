@@ -2,15 +2,15 @@ package field.core.ui.text.embedded;
 
 import field.core.Constants;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.ui.SmallMenu;
 import field.core.ui.text.embedded.CustomInsertSystem.ExecutesWhat;
 import field.core.ui.text.embedded.CustomInsertSystem.ExecutesWhen;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.BaseMath;
-import field.math.abstraction.iAcceptor;
+import field.math.abstraction.IAcceptor;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.namespace.key.OKey;
@@ -29,7 +29,7 @@ class MinimalXYSlider extends MinimalExpandable {
     public static
     class Component_tuple extends ProvidedComponent {
 
-        public transient iUpdateable notify;
+        public transient IUpdateable notify;
 
         protected ExecutesWhen when;
 
@@ -39,7 +39,7 @@ class MinimalXYSlider extends MinimalExpandable {
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             super.deserialize(inside);
 
             component = new MinimalXYSlider() {
@@ -325,23 +325,23 @@ class MinimalXYSlider extends MinimalExpandable {
 
     protected
     void popup(MouseEvent e) {
-        LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
+        LinkedHashMap<String, IUpdateable> menu = new LinkedHashMap<String, IUpdateable>();
         menu.put("Auto execute: when", null);
-        menu.put((when == ExecutesWhen.always ? "!" : "") + "  always", new iUpdateable() {
+        menu.put((when == ExecutesWhen.always ? "!" : "") + "  always", new IUpdateable() {
 
             public
             void update() {
                 when = ExecutesWhen.always;
             }
         });
-        menu.put((when == ExecutesWhen.onMouseUp ? "!" : "") + "  on mouse up", new iUpdateable() {
+        menu.put((when == ExecutesWhen.onMouseUp ? "!" : "") + "  on mouse up", new IUpdateable() {
 
             public
             void update() {
                 when = ExecutesWhen.onMouseUp;
             }
         });
-        menu.put((when == ExecutesWhen.never ? "!" : "") + "  never", new iUpdateable() {
+        menu.put((when == ExecutesWhen.never ? "!" : "") + "  never", new IUpdateable() {
 
             public
             void update() {
@@ -350,21 +350,21 @@ class MinimalXYSlider extends MinimalExpandable {
         });
 
         menu.put("Auto execute: what", null);
-        menu.put((what == ExecutesWhat.line ? "!" : "") + "  this line", new iUpdateable() {
+        menu.put((what == ExecutesWhat.line ? "!" : "") + "  this line", new IUpdateable() {
 
             public
             void update() {
                 what = ExecutesWhat.line;
             }
         });
-        menu.put((what == ExecutesWhat.enclosingBlock ? "!" : "") + "  enclosing block", new iUpdateable() {
+        menu.put((what == ExecutesWhat.enclosingBlock ? "!" : "") + "  enclosing block", new IUpdateable() {
 
             public
             void update() {
                 what = ExecutesWhat.enclosingBlock;
             }
         });
-        menu.put((what == ExecutesWhat.everything ? "!" : "") + "  everything", new iUpdateable() {
+        menu.put((what == ExecutesWhat.everything ? "!" : "") + "  everything", new IUpdateable() {
 
             public
             void update() {
@@ -410,11 +410,11 @@ class MinimalXYSlider extends MinimalExpandable {
             final float nx = x / (float) this.getBounds().width;
             final float ny = y / (float) this.getBounds().height;
 
-            newInterpolationThread(100, new iAcceptor<Integer>() {
+            newInterpolationThread(100, new IAcceptor<Integer>() {
 
                 @Override
                 public
-                iAcceptor<Integer> set(Integer to) {
+                IAcceptor<Integer> set(Integer to) {
                     float alpha = to / 100f;
 
                     float nnx = sx + (nx - sx) * alpha;

@@ -1,11 +1,11 @@
 package field.math.util;
 
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iHasScalar;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IHasScalar;
 import field.math.linalg.Vector4;
 
 public
-class ComplexCubicFloat implements iBlendable<ComplexCubicFloat>, iHasScalar {
+class ComplexCubicFloat implements IBlendable<ComplexCubicFloat>, IHasScalar {
 
     public
     enum TangentType {

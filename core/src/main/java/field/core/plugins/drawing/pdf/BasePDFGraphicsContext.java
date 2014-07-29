@@ -6,11 +6,11 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
 import field.bytecode.protect.annotations.GenerateMethods;
 import field.bytecode.protect.annotations.Mirror;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.GLComponentWindow;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.util.Dict;
@@ -36,10 +36,10 @@ class BasePDFGraphicsContext extends iLinearGraphicsContext {
     class DrawingResult {
         DrawingResultCode code;
 
-        iUpdateable compute;
+        IUpdateable compute;
 
         public
-        DrawingResult(DrawingResultCode code, iUpdateable up) {
+        DrawingResult(DrawingResultCode code, IUpdateable up) {
             super();
             this.code = code;
             this.compute = up;
@@ -54,7 +54,7 @@ class BasePDFGraphicsContext extends iLinearGraphicsContext {
     public
     interface iDrawingAcceptor {
         public
-        DrawingResult accept(List<iUpdateable> soFar, CachedLine line, Dict properties);
+        DrawingResult accept(List<IUpdateable> soFar, CachedLine line, Dict properties);
     }
 
     public String layersOn = ".*";
@@ -263,7 +263,7 @@ class BasePDFGraphicsContext extends iLinearGraphicsContext {
     protected
     void draw(CachedLine key, Dict dd) {
 
-        List<iUpdateable> computes = new ArrayList<iUpdateable>();
+        List<IUpdateable> computes = new ArrayList<IUpdateable>();
         for (iDrawingAcceptor a : acceptors) {
             DrawingResult ret = a.accept(computes, key, dd);
             if (ret != null) {
@@ -289,7 +289,7 @@ class BasePDFGraphicsContext extends iLinearGraphicsContext {
 
         if (computes.size() == 0) return;
 
-        for (iUpdateable u : computes)
+        for (IUpdateable u : computes)
             u.update();
 
     }

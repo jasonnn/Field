@@ -1,11 +1,11 @@
 package field.core.plugins.python;
 
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem;
 import field.core.execution.PythonScriptingSystem.DerivativePromise;
@@ -30,12 +30,13 @@ import field.graphics.core.BasicGeometry;
 import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.iDynamicMesh;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
+import field.math.graph.IMutableContainer;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
 import field.math.graph.visitors.GraphNodeSearching;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
-import field.namespace.generic.Bind.iFunction;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
+import field.namespace.generic.IFunction;
 import field.util.collect.tuple.Pair;
 import field.util.ANSIColorUtils;
 import org.python.core.Py;
@@ -44,30 +45,30 @@ import org.python.core.PyObject;
 
 import java.util.*;
 
-import static field.core.dispatch.iVisualElementOverrides.forward;
-import static field.core.dispatch.iVisualElementOverrides.topology;
+import static field.core.dispatch.IVisualElementOverrides.forward;
+import static field.core.dispatch.IVisualElementOverrides.topology;
 
 public
 class PythonPlugin implements iPlugin {
 
     public
     class CapturedEnvironment {
-        private final iVisualElement element;
-        HashMap<String, iUpdateable> exitHandler = new HashMap<String, iUpdateable>();
-        HashMap<String, iUpdateable> transientExitHandler = new HashMap<String, iUpdateable>();
+        private final IVisualElement element;
+        HashMap<String, IUpdateable> exitHandler = new HashMap<String, IUpdateable>();
+        HashMap<String, IUpdateable> transientExitHandler = new HashMap<String, IUpdateable>();
 
         public
-        CapturedEnvironment(iVisualElement element) {
+        CapturedEnvironment(IVisualElement element) {
             this.element = element;
         }
 
         public
-        void addExitHandler(String key, iUpdateable updateable) {
+        void addExitHandler(String key, IUpdateable updateable) {
             exitHandler.put(key, updateable);
         }
 
         public
-        void addTransientHandler(String key, iUpdateable updateable) {
+        void addTransientHandler(String key, IUpdateable updateable) {
             transientExitHandler.put(key, updateable);
         }
 
@@ -85,10 +86,10 @@ class PythonPlugin implements iPlugin {
 
         public
         void exit() {
-            for (iUpdateable e : exitHandler.values()) {
+            for (IUpdateable e : exitHandler.values()) {
                 e.update();
             }
-            for (iUpdateable e : transientExitHandler.values()) {
+            for (IUpdateable e : transientExitHandler.values()) {
                 e.update();
             }
             transientExitHandler.clear();
@@ -104,10 +105,10 @@ class PythonPlugin implements iPlugin {
 
         public
         void runExit() {
-            for (iUpdateable e : exitHandler.values()) {
+            for (IUpdateable e : exitHandler.values()) {
                 e.update();
             }
-            for (iUpdateable e : transientExitHandler.values()) {
+            for (IUpdateable e : transientExitHandler.values()) {
                 e.update();
             }
             transientExitHandler.clear();
@@ -126,23 +127,23 @@ class PythonPlugin implements iPlugin {
     public
     class LocalPromise implements Promise, DerivativePromise {
 
-        public final iVisualElement element;
+        public final IVisualElement element;
 
         public Stack<CapturedEnvironment> ongoingEnvironments = new Stack<CapturedEnvironment>();
 
-        private final iVisualElementOverrides forward;
+        private final IVisualElementOverrides forward;
 
-        private final iVisualElementOverrides backward;
+        private final IVisualElementOverrides backward;
 
         int isExecutionCount = 0;
 
         VisualElementProperty<String> property = python_source;
 
         public
-        LocalPromise(iVisualElement element) {
+        LocalPromise(IVisualElement element) {
             this.element = element;
-            forward = new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(element);
-            backward = new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(element);
+            forward = new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(element);
+            backward = new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(element);
         }
 
         public
@@ -212,8 +213,8 @@ class PythonPlugin implements iPlugin {
         public
         String getText() {
             String s = property.get(element);
-            iFunction<String, String> f = python_sourceFilter.get(element);
-            if (f != null) s = f.f(s);
+            IFunction<String, String> f = python_sourceFilter.get(element);
+            if (f != null) s = f.apply(s);
 
             if (s == null) s = "";
             return s;
@@ -222,13 +223,13 @@ class PythonPlugin implements iPlugin {
         @Override
         public
         String toString() {
-            return element.getProperty(iVisualElement.name);
+            return element.getProperty(IVisualElement.name);
         }
 
         public
         void willExecute() {
             backward.setProperty(element, python_isExecuting, new Ref<Boolean>(true));
-            backward.setProperty(element, iVisualElement.dirty, new Ref<Boolean>(true));
+            backward.setProperty(element, IVisualElement.dirty, new Ref<Boolean>(true));
             isExecutionCount++;
             Logging.external();
             if (Logging.enabled()) Logging.logging.addEvent(new ElementExecutionBegin(element));
@@ -254,7 +255,7 @@ class PythonPlugin implements iPlugin {
             if (isExecutionCount < 0) isExecutionCount = 0;
             if (isExecutionCount == 0) {
                 backward.setProperty(element, python_isExecuting, new Ref<Boolean>(false));
-                backward.setProperty(element, iVisualElement.dirty, new Ref<Boolean>(false));
+                backward.setProperty(element, IVisualElement.dirty, new Ref<Boolean>(false));
             }
         }
 
@@ -268,7 +269,7 @@ class PythonPlugin implements iPlugin {
     }
 
     public
-    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -285,7 +286,7 @@ class PythonPlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -306,13 +307,13 @@ class PythonPlugin implements iPlugin {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             properties = t;
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -323,29 +324,29 @@ class PythonPlugin implements iPlugin {
     }
 
     public
-    class Overrides extends iVisualElementOverrides.DefaultOverride {
+    class Overrides extends IVisualElementOverrides.DefaultOverride {
         private TriangleMesh triangles;
 
         private iDynamicMesh triangle;
 
         @Override
         public
-        VisitCode added(iVisualElement newSource) {
+        TraversalHint added(IVisualElement newSource) {
 
             informationFor(newSource);
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
         public
-        VisitCode deleted(iVisualElement source) {
+        TraversalHint deleted(IVisualElement source) {
             deleteElement(source);
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
         public
-        VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+        TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
 
             // is
             // it
@@ -413,7 +414,7 @@ class PythonPlugin implements iPlugin {
         VisualElementReference connectedTo;
 
         public
-        UnacknowledgedError(String when, Throwable cause, iVisualElement inside, iVisualElement parent) {
+        UnacknowledgedError(String when, Throwable cause, IVisualElement inside, IVisualElement parent) {
             this.when = when;
             this.cause = cause;
             this.parent = parent == null ? null : new VisualElementReference(parent);
@@ -444,8 +445,8 @@ class PythonPlugin implements iPlugin {
     public static final VisualElementProperty<Globals> python_globals =
             new VisualElementProperty<Globals>("python_globals_");
 
-    public static final VisualElementProperty<iFunction<String, String>> python_sourceFilter =
-            new VisualElementProperty<iFunction<String, String>>("python_sourceFilter");
+    public static final VisualElementProperty<IFunction<String, String>> python_sourceFilter =
+            new VisualElementProperty<IFunction<String, String>>("python_sourceFilter");
 
     public static final VisualElementProperty<Map<String, field.core.ui.text.rulers.ExecutedAreas.State>> python_areas =
             new VisualElementProperty<Map<String, field.core.ui.text.rulers.ExecutedAreas.State>>("python_areas");
@@ -468,12 +469,12 @@ class PythonPlugin implements iPlugin {
     }
 
     public static
-    Object getAttr(iVisualElement from, iVisualElement to, String name) {
+    Object getAttr(IVisualElement from, IVisualElement to, String name) {
         name = externalPropertyNameToInternalName(name);
 
         // ;//System.out.println(" get attr <"+from+" "+to+" "+name+">");
 
-        VisualElementProperty<Object> n = new iVisualElement.VisualElementProperty<Object>(name);
+        VisualElementProperty<Object> n = new IVisualElement.VisualElementProperty<Object>(name);
         Ref<Object> r = new Ref<Object>(null);
 
         topology.begin(to);
@@ -485,14 +486,14 @@ class PythonPlugin implements iPlugin {
     }
 
     public static
-    Object getAttr(iVisualElement from, String name) {
+    Object getAttr(IVisualElement from, String name) {
         return getAttr(from, from, name);
     }
 
     public static
-    Object getLocalProperty(iVisualElement of, String name) {
+    Object getLocalProperty(IVisualElement of, String name) {
         name = externalPropertyNameToInternalName(name);
-        VisualElementProperty<Object> n = new iVisualElement.VisualElementProperty<Object>(name);
+        VisualElementProperty<Object> n = new IVisualElement.VisualElementProperty<Object>(name);
         return of.getProperty(n);
     }
 
@@ -516,15 +517,15 @@ class PythonPlugin implements iPlugin {
     }
 
     public static
-    List<String> listAttr(iVisualElement from, iVisualElement to) {
+    List<String> listAttr(IVisualElement from, IVisualElement to) {
 
         final List<String> rr = new ArrayList<String>();
 
-        new GraphNodeSearching.GraphNodeVisitor_depthFirst<iVisualElement>(true) {
+        new GraphNodeSearching.GraphNodeVisitor_depthFirst<IVisualElement>(true) {
 
             @Override
             protected
-            VisitCode visit(iVisualElement from) {
+            TraversalHint visit(IVisualElement from) {
                 Map<Object, Object> q = from.payload();
                 for (Map.Entry<Object, Object> e : q.entrySet()) {
                     if (e.getKey() instanceof VisualElementProperty) {
@@ -533,7 +534,7 @@ class PythonPlugin implements iPlugin {
                     }
 
                 }
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
         }.apply(from);
@@ -542,14 +543,14 @@ class PythonPlugin implements iPlugin {
     }
 
     public static
-    void redraw(iVisualElement o) {
-        o.setProperty(iVisualElement.dirty, true);
+    void redraw(IVisualElement o) {
+        o.setProperty(IVisualElement.dirty, true);
     }
 
     public static
-    void setAttr(iVisualElement from, iVisualElement to, String name, Object value) {
+    void setAttr(IVisualElement from, IVisualElement to, String name, Object value) {
         name = externalPropertyNameToInternalName(name);
-        VisualElementProperty<Object> n = new iVisualElement.VisualElementProperty<Object>(name);
+        VisualElementProperty<Object> n = new IVisualElement.VisualElementProperty<Object>(name);
         n.set(to, to, value);
 
         // topology.begin(from);
@@ -559,9 +560,9 @@ class PythonPlugin implements iPlugin {
     }
 
     public static
-    void setAttr(iVisualElement to, String name, Object value) {
+    void setAttr(IVisualElement to, String name, Object value) {
         name = externalPropertyNameToInternalName(name);
-        VisualElementProperty<Object> n = new iVisualElement.VisualElementProperty<Object>(name);
+        VisualElementProperty<Object> n = new IVisualElement.VisualElementProperty<Object>(name);
 
         // topology.begin(to);
         // backward.setProperty.setProperty(to, n, new
@@ -578,11 +579,11 @@ class PythonPlugin implements iPlugin {
 
     protected SelectionGroup<iComponent> group;
 
-    protected iVisualElement root;
+    protected IVisualElement root;
 
-    protected Stack<iVisualElement> stackOfPythonPositionablesExecuting = new Stack<iVisualElement>();
+    protected Stack<IVisualElement> stackOfPythonPositionablesExecuting = new Stack<IVisualElement>();
 
-    HashMap<iVisualElement, Object> cachedAttributeAccess = new HashMap<iVisualElement, Object>();
+    HashMap<IVisualElement, Object> cachedAttributeAccess = new HashMap<IVisualElement, Object>();
 
     Stack<Object> attributeDicts = new Stack<Object>();
 
@@ -594,12 +595,12 @@ class PythonPlugin implements iPlugin {
 
     HashMap<String, PythonTextualInformation> database = new HashMap<String, PythonTextualInformation>();
 
-    HashMap<iVisualElement, PythonScriptingSystem.Promise> promises =
-            new HashMap<iVisualElement, PythonScriptingSystem.Promise>();
+    HashMap<IVisualElement, PythonScriptingSystem.Promise> promises =
+            new HashMap<IVisualElement, PythonScriptingSystem.Promise>();
 
     Map<Object, Object> properties = new HashMap<Object, Object>();
 
-    iVisualElementOverrides elementOverride;
+    IVisualElementOverrides elementOverride;
 
     public
     PythonPlugin() {
@@ -616,13 +617,13 @@ class PythonPlugin implements iPlugin {
     }
 
     public
-    iVisualElement getWellKnownVisualElement(String id) {
+    IVisualElement getWellKnownVisualElement(String id) {
         if (id.equals(pluginId)) return lve;
         return null;
     }
 
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
 
         this.root = root;
 
@@ -645,7 +646,7 @@ class PythonPlugin implements iPlugin {
         // updates? (no,
         // do it in
         // subclass)
-        group = root.getProperty(iVisualElement.selectionGroup);
+        group = root.getProperty(IVisualElement.selectionGroup);
 
         elementOverride = createElementOverrides();
 
@@ -669,12 +670,12 @@ class PythonPlugin implements iPlugin {
     }
 
     private
-    iGlobalTrap globalTrapFor(iVisualElement element) {
+    iGlobalTrap globalTrapFor(IVisualElement element) {
         return globals.globalTrapFor(element);
     }
 
     protected
-    CapturedEnvironment configurePythonEnvironment(iVisualElement element) {
+    CapturedEnvironment configurePythonEnvironment(IVisualElement element) {
         final Object rwas = PythonInterface.getPythonInterface().getVariable("_r");
         final Object swas = PythonInterface.getPythonInterface().getVariable("_self");
         PythonInterface.getPythonInterface().setVariable("_self", element);
@@ -691,9 +692,9 @@ class PythonPlugin implements iPlugin {
 
         final String modWas = PythonInterface.getPythonInterface().getModuleName();
         PythonInterface.getPythonInterface()
-                       .setModuleName(element.getProperty(iVisualElement.name) + '[' + element.getUniqueID());
+                       .setModuleName(element.getProperty(IVisualElement.name) + '[' + element.getUniqueID());
 
-        capenv.exitHandler.put("restore _r", new iUpdateable() {
+        capenv.exitHandler.put("restore _r", new IUpdateable() {
             public
             void update() {
                 PythonInterface.getPythonInterface().setVariable("_r", rwas);
@@ -711,7 +712,7 @@ class PythonPlugin implements iPlugin {
     }
 
     protected
-    void configurePythonPostEnvironment(iVisualElement element) {
+    void configurePythonPostEnvironment(IVisualElement element) {
         PythonInterface.getPythonInterface().popGlobalTrap();
 
         if (environments.size() > 0) {
@@ -729,19 +730,19 @@ class PythonPlugin implements iPlugin {
     }
 
     protected
-    iVisualElementOverrides createElementOverrides() {
+    IVisualElementOverrides createElementOverrides() {
         return new Overrides().setVisualElement(lve);
     }
 
     protected
-    void deleteElement(iVisualElement element) {
+    void deleteElement(IVisualElement element) {
 
         //System.out.println(" delete element <" + element.getUniqueID() + "> database is <" + database + ">");
 
         database.remove(element.getUniqueID());
         Promise p = promises.get(element);
         Ref<PythonScriptingSystem> pss = new Ref<PythonScriptingSystem>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(element)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(element)
                                                        .getProperty(element,
                                                                     PythonScriptingSystem.pythonScriptingSystem,
                                                                     pss);
@@ -749,7 +750,7 @@ class PythonPlugin implements iPlugin {
     }
 
     protected
-    Object getAttributesForElement(iVisualElement element) {
+    Object getAttributesForElement(IVisualElement element) {
         Object object = cachedAttributeAccess.get(element);
         if (object == null) {
             PythonInterface.getPythonInterface().setVariable("__f", element);
@@ -763,14 +764,14 @@ class PythonPlugin implements iPlugin {
 
     protected
     void handleExceptionThrownDuringRunning(String when,
-                                            iVisualElement element,
-                                            iVisualElement parentElement,
+                                            IVisualElement element,
+                                            IVisualElement parentElement,
                                             Throwable t) {
 
     }
 
     protected
-    PythonTextualInformation informationFor(iVisualElement element) {
+    PythonTextualInformation informationFor(IVisualElement element) {
 
         PythonTextualInformation information = database.get(element.getUniqueID());
 
@@ -783,12 +784,12 @@ class PythonPlugin implements iPlugin {
     }
 
     protected
-    Promise newPromiseFor(iVisualElement element) {
+    Promise newPromiseFor(IVisualElement element) {
         return new LocalPromise(element);
     }
 
     protected
-    PythonTextualInformation newPythonTextualInformation(iVisualElement element) {
+    PythonTextualInformation newPythonTextualInformation(IVisualElement element) {
         PythonTextualInformation info = new PythonTextualInformation();
         info.uid = element.getUniqueID();
 
@@ -811,7 +812,7 @@ class PythonPlugin implements iPlugin {
     }
 
     protected
-    Promise promiseFor(iVisualElement element) {
+    Promise promiseFor(IVisualElement element) {
         Promise p = promises.get(element);
         if (p == null) {
             promises.put(element, p = newPromiseFor(element));

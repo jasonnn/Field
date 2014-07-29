@@ -1,6 +1,6 @@
 package field.core.network;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -22,7 +22,7 @@ import java.nio.channels.DatagramChannel;
  */
 
 public
-class UDPNIOListener implements iUpdateable, Runnable {
+class UDPNIOListener implements IUpdateable, Runnable {
     protected DatagramChannel channel;
     protected ByteBuffer[] buffers;
     protected int numBuffers;

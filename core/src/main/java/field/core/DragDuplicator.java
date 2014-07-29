@@ -2,8 +2,8 @@ package field.core;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.persistance.FluidCopyPastePersistence;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.MainSelectionGroup;
@@ -25,16 +25,16 @@ public
 class DragDuplicator {
 
     private final MainSelectionGroup group;
-    private final iVisualElement root;
+    private final IVisualElement root;
 
     public
-    DragDuplicator(MainSelectionGroup group, iVisualElement root) {
+    DragDuplicator(MainSelectionGroup group, IVisualElement root) {
         this.group = group;
         this.root = root;
     }
 
     boolean isDragging = false;
-    private HashSet<iVisualElement> ongoing;
+    private HashSet<IVisualElement> ongoing;
 
     Vector2 at = new Vector2();
 
@@ -44,9 +44,9 @@ class DragDuplicator {
 
 
         Set<iComponent> c = group.getSelection();
-        Set<iVisualElement> v = new LinkedHashSet<iVisualElement>();
+        Set<IVisualElement> v = new LinkedHashSet<IVisualElement>();
         for (iComponent cc : c) {
-            iVisualElement vv = cc.getVisualElement();
+            IVisualElement vv = cc.getVisualElement();
             if (vv != null) v.add(vv);
         }
 
@@ -60,18 +60,18 @@ class DragDuplicator {
                              .setCursor(Launcher.display.getSystemCursor(SWT.CURSOR_HAND));
 
 
-            FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
+            FluidCopyPastePersistence copier = IVisualElement.copyPaste.get(root);
 
             StringWriter temp = new StringWriter();
-            HashSet<iVisualElement> savedOut = new HashSet<iVisualElement>();
+            HashSet<IVisualElement> savedOut = new HashSet<IVisualElement>();
             ObjectOutputStream oos = copier.getObjectOutputStream(temp, savedOut, v);
             try {
                 oos.writeObject(v);
                 oos.close();
 
-                HashSet<iVisualElement> all = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+                HashSet<IVisualElement> all = new HashSet<IVisualElement>(StandardFluidSheet.allVisualElements(root));
 
-                ongoing = new HashSet<iVisualElement>();
+                ongoing = new HashSet<IVisualElement>();
                 ObjectInputStream ois =
                         copier.getObjectInputStream(new StringReader(temp.getBuffer().toString()), ongoing, all);
                 Object in = ois.readObject();
@@ -102,7 +102,7 @@ class DragDuplicator {
         at.x = event.x;
         at.y = event.y;
 
-        for (iVisualElement v : ongoing) {
+        for (IVisualElement v : ongoing) {
             Rect f = v.getFrame(null);
             f.x += deltaX;
             f.y += deltaY;

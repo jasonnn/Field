@@ -10,11 +10,10 @@ import field.graphics.core.Base.iGeometry;
 import field.graphics.core.Base.iLongGeometry;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.launch.SystemProperties;
-import field.math.abstraction.iInplaceProvider;
+import field.math.abstraction.IInplaceProvider;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Matrix4;
 import field.math.linalg.Vector3;
-import field.math.linalg.iCoordinateFrame;
 import field.math.linalg.iCoordinateFrame.iMutable;
 import field.namespace.generic.ReflectionTools;
 import field.util.TaskQueue;
@@ -73,20 +72,20 @@ class BasicGeometry {
 
         protected boolean isNative = true;
 
-        iInplaceProvider<iCoordinateFrame.iMutable> transform;
+        IInplaceProvider<iMutable> transform;
 
         CoordinateFrame coordinateFrameNow = new CoordinateFrame();
 
         public float drawFraction = 1f;
 
         public
-        BasicMesh(iInplaceProvider<iCoordinateFrame.iMutable> coordinateFrame) {
+        BasicMesh(IInplaceProvider<iMutable> coordinateFrame) {
             super(StandardPass.render, StandardPass.render);
             this.transform = coordinateFrame;
         }
 
         public
-        BasicMesh(iInplaceProvider<iCoordinateFrame.iMutable> coordinateFrame, Base.StandardPass pass) {
+        BasicMesh(IInplaceProvider<iMutable> coordinateFrame, Base.StandardPass pass) {
             super(pass, pass);
             this.transform = coordinateFrame;
         }
@@ -104,7 +103,7 @@ class BasicGeometry {
          * @return iInplaceProvider<iCoordinateFrame.iMutable>
          */
         public
-        iInplaceProvider<iCoordinateFrame.iMutable> getCoordindateFrameProvider() {
+        IInplaceProvider<iMutable> getCoordindateFrameProvider() {
             return transform;
         }
 
@@ -205,7 +204,7 @@ class BasicGeometry {
          * @param frame
          */
         public
-        void setCoordindateFrameProvider(iInplaceProvider<iCoordinateFrame.iMutable> frame) {
+        void setCoordindateFrameProvider(IInplaceProvider<iMutable> frame) {
             transform = frame;
         }
 
@@ -277,7 +276,7 @@ class BasicGeometry {
         float width = 3;
 
         public
-        LineList(iInplaceProvider<iCoordinateFrame.iMutable> coordinateFrame) {
+        LineList(IInplaceProvider<iMutable> coordinateFrame) {
             super(coordinateFrame);
         }
 
@@ -442,7 +441,7 @@ class BasicGeometry {
         private boolean fakeAa;
 
         public
-        LineList_long(iInplaceProvider<iCoordinateFrame.iMutable> coordinateFrame) {
+        LineList_long(IInplaceProvider<iMutable> coordinateFrame) {
             super(coordinateFrame);
         }
 
@@ -641,7 +640,7 @@ class BasicGeometry {
         boolean ff = true;
 
         public
-        QuadMesh(iInplaceProvider<iCoordinateFrame.iMutable> coordinateFrame) {
+        QuadMesh(IInplaceProvider<iMutable> coordinateFrame) {
             super(coordinateFrame);
             if (CoreHelpers.isCore)
                 throw new IllegalStateException(" quads are not supported on OpenGL 3.2 core, convert to triangles ");
@@ -871,7 +870,7 @@ class BasicGeometry {
         }
 
         public
-        TriangleMesh(iInplaceProvider<iCoordinateFrame.iMutable> coordinateFrame) {
+        TriangleMesh(IInplaceProvider<iMutable> coordinateFrame) {
             super(coordinateFrame);
         }
 
@@ -963,7 +962,7 @@ class BasicGeometry {
         }
 
         public
-        iInplaceProvider<iCoordinateFrame.iMutable> getCoordinateProvider() {
+        IInplaceProvider<iMutable> getCoordinateProvider() {
             return transform;
         }
 
@@ -1676,7 +1675,7 @@ class BasicGeometry {
         }
 
         public
-        TriangleMesh_long(iInplaceProvider<iMutable> coordinateFrame) {
+        TriangleMesh_long(IInplaceProvider<iMutable> coordinateFrame) {
             super(coordinateFrame);
         }
 
@@ -1738,7 +1737,7 @@ class BasicGeometry {
         boolean ff = true;
 
         public
-        QuadMesh_long(iInplaceProvider<iCoordinateFrame.iMutable> coordinateFrame) {
+        QuadMesh_long(IInplaceProvider<iMutable> coordinateFrame) {
             super(coordinateFrame);
 
             if (CoreHelpers.isCore)

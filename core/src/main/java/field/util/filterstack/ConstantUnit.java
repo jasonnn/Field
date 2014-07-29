@@ -1,6 +1,6 @@
 package field.util.filterstack;
 
-import field.math.abstraction.iFilter;
+import field.math.abstraction.IFilter;
 
 public
 class ConstantUnit<T> extends Unit<T> {
@@ -20,19 +20,19 @@ class ConstantUnit<T> extends Unit<T> {
     }
 
     public
-    ConstantUnit<T> setAlpha(iFilter<Double, Double> alpha) {
+    ConstantUnit<T> setAlpha(IFilter<Double, Double> alpha) {
         this.alpha = alpha;
         return this;
     }
 
     public
-    ConstantUnit<T> setBeta(iFilter<Double, Double> beta) {
+    ConstantUnit<T> setBeta(IFilter<Double, Double> beta) {
         this.beta = beta;
         return this;
     }
 
     public
-    ConstantUnit<T> setGamma(iFilter<Double, Double> gamma) {
+    ConstantUnit<T> setGamma(IFilter<Double, Double> gamma) {
         this.gamma = gamma;
         return this;
     }

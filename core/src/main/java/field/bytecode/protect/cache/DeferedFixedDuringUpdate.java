@@ -2,8 +2,8 @@ package field.bytecode.protect.cache;
 
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -36,7 +36,7 @@ class DeferedFixedDuringUpdate extends DeferCallingFast {
                              String signature,
                              HashMap<String, Object> parameters) {
         super(name, access, method, delegate, to, signature, parameters);
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             public
             void update() {

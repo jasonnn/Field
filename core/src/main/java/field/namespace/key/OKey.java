@@ -1,13 +1,13 @@
 package field.namespace.key;
 
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import field.namespace.context.SimpleContextTopology;
 
 /**
  * @author marc
  */
 public
-class OKey<T> extends CKey implements iProvider<T> {
+class OKey<T> extends CKey implements IProvider<T> {
 
     final Object nothing = new Object();
 

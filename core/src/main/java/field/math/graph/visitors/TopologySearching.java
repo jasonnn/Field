@@ -2,8 +2,9 @@ package field.math.graph.visitors;
 
 import field.math.BaseMath;
 import field.math.BaseMath.MutableFloat;
-import field.math.graph.iTopology;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.ITopology;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.collect.tuple.Pair;
 
 import java.util.*;
@@ -78,7 +79,7 @@ class TopologySearching {
 
     public static
     class TopologyAStarSearch<T> {
-        private final iTopology<T> topology;
+        private final ITopology<T> topology;
 
         private final AStarMetric<T> metric;
 
@@ -91,7 +92,7 @@ class TopologySearching {
         HashSet<T> avoid = new HashSet<T>();
 
         public
-        TopologyAStarSearch(iTopology<T> topology, AStarMetric<T> metric) {
+        TopologyAStarSearch(ITopology<T> topology, AStarMetric<T> metric) {
             this.topology = topology;
             this.metric = metric;
         }
@@ -287,7 +288,7 @@ class TopologySearching {
         }
 
         public
-        void apply(iTopology<T> top, T root) {
+        void apply(ITopology<T> top, T root) {
             seen.clear();
             _apply(top, root, fringe, fringe2);
         }
@@ -301,10 +302,10 @@ class TopologySearching {
         }
 
         private
-        void _apply(iTopology<T> top, T root, LinkedHashSet<T> localFringe, LinkedHashSet<T> tempFringe) {
-            VisitCode code = visit(root);
-            if (code == VisitCode.stop) return;
-            if (code == VisitCode.skip) {
+        void _apply(ITopology<T> top, T root, LinkedHashSet<T> localFringe, LinkedHashSet<T> tempFringe) {
+            TraversalHint code = visit(root);
+            if (code == StandardTraversalHint.STOP) return;
+            if (code == StandardTraversalHint.SKIP) {
                 return;
             }
 
@@ -316,9 +317,9 @@ class TopologySearching {
             while (!fringe.isEmpty()) {
                 for (T t : fringe) {
                     if (!avoidLoops || !seen.contains(t)) {
-                        VisitCode vc = visit(t);
-                        if (vc == VisitCode.stop) return;
-                        if (vc == VisitCode.skip) {
+                        TraversalHint vc = visit(t);
+                        if (vc == StandardTraversalHint.STOP) return;
+                        if (vc == StandardTraversalHint.SKIP) {
                         }
                         else {
                             List<T> childrenOf = top.getChildrenOf(t);
@@ -351,7 +352,7 @@ class TopologySearching {
         }
 
         protected abstract
-        VisitCode visit(T root);
+        TraversalHint visit(T root);
     }
 
     public abstract static
@@ -360,12 +361,12 @@ class TopologySearching {
 
         private final boolean avoidLoops;
 
-        private final iTopology<T> topology;
+        private final ITopology<T> topology;
 
         protected Stack<T> stack = new Stack<T>();
 
         public
-        TopologyVisitor_directedDepthFirst(boolean avoidLoops, iTopology<T> topology) {
+        TopologyVisitor_directedDepthFirst(boolean avoidLoops, ITopology<T> topology) {
             this.avoidLoops = avoidLoops;
             this.topology = topology;
         }
@@ -373,9 +374,9 @@ class TopologySearching {
         public
         void apply(T root) {
             stack.push(root);
-            VisitCode code = visit(root);
-            if (code == VisitCode.stop) return;
-            if (code == VisitCode.skip) {
+            TraversalHint code = visit(root);
+            if (code == StandardTraversalHint.STOP) return;
+            if (code == StandardTraversalHint.SKIP) {
                 stack.pop();
                 return;
             }
@@ -394,23 +395,23 @@ class TopologySearching {
         }
 
         protected
-        VisitCode _apply(List<T> c) {
+        TraversalHint _apply(List<T> c) {
             ArrayList<T> cs = new ArrayList<T>(c);
             Collections.sort(cs, this);
             for (T n : cs) {
                 if (!avoidLoops || !seen.contains(n)) {
                     if (avoidLoops) seen.add(n);
                     stack.push(n);
-                    VisitCode code = visit(n);
-                    if (code == VisitCode.stop) return VisitCode.stop;
-                    if (code != VisitCode.skip) {
-                        VisitCode vc = _apply(topology.getChildrenOf(n));
-                        if (vc == VisitCode.stop) return VisitCode.stop;
+                    TraversalHint code = visit(n);
+                    if (code == StandardTraversalHint.STOP) return StandardTraversalHint.STOP;
+                    if (code != StandardTraversalHint.SKIP) {
+                        TraversalHint vc = _apply(topology.getChildrenOf(n));
+                        if (vc == StandardTraversalHint.STOP) return StandardTraversalHint.STOP;
                     }
                     exit(stack.pop());
                 }
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         protected
@@ -426,7 +427,7 @@ class TopologySearching {
         }
 
         protected abstract
-        VisitCode visit(T n);
+        TraversalHint visit(T n);
     }
 
     public abstract static
@@ -467,21 +468,21 @@ class TopologySearching {
             return this;
         }
 
-        protected iTopology<T> top;
+        protected ITopology<T> top;
 
         public
         TopologyVisitor_longDirectedBreadthFirst() {
         }
 
         public
-        void apply(iTopology<T> top, List<T> name) {
+        void apply(ITopology<T> top, List<T> name) {
             seen.clear();
             this.top = top;
             _apply(top, name);
         }
 
         public
-        void apply(iTopology<T> top, T name) {
+        void apply(ITopology<T> top, T name) {
             seen.clear();
             this.top = top;
             _apply(top, Collections.singletonList(name));
@@ -501,8 +502,8 @@ class TopologySearching {
         }
 
         private
-        void _apply(iTopology<T> top, List<T> lroot) {
-            VisitCode code;
+        void _apply(ITopology<T> top, List<T> lroot) {
+            TraversalHint code;
             fringe.clear();
             for (T root : lroot) {
                 Key rootK = new Key();
@@ -512,8 +513,8 @@ class TopologySearching {
                 seen.put(root, 0f);
                 code = visit(rootK);
 
-                if (code == VisitCode.stop) return;
-                if (code == VisitCode.skip) {
+                if (code == StandardTraversalHint.STOP) return;
+                if (code == StandardTraversalHint.SKIP) {
                 }
                 else fringe.add(rootK);
             }
@@ -523,8 +524,8 @@ class TopologySearching {
                 T r = k.path.get(k.path.size() - 1);
 
                 code = visit(k);
-                if (code == VisitCode.stop) return;
-                if (code == VisitCode.skip) {
+                if (code == StandardTraversalHint.STOP) return;
+                if (code == StandardTraversalHint.SKIP) {
                     if (doShortPath != null) {
                         float ad = doShortPath.distance;
                         T end = doShortPath.path.get(doShortPath.path.size() - 1);
@@ -589,12 +590,12 @@ class TopologySearching {
         float distance(T root, T t);
 
         protected abstract
-        VisitCode visit(Key k);
+        TraversalHint visit(Key k);
     }
 
     public abstract static
     class TopologyVisitor_treeBreadthFirst<T> {
-        protected final iTopology<T> t;
+        protected final ITopology<T> t;
 
         protected HashMap<T, T> parented = new HashMap<T, T>();
 
@@ -607,7 +608,7 @@ class TopologySearching {
         boolean all = false;
 
         public
-        TopologyVisitor_treeBreadthFirst(iTopology<T> t) {
+        TopologyVisitor_treeBreadthFirst(ITopology<T> t) {
             this.t = t;
         }
 
@@ -630,8 +631,8 @@ class TopologySearching {
 
         public
         void apply(T root) {
-            VisitCode r = visit(root);
-            if (r == VisitCode.cont) {
+            TraversalHint r = visit(root);
+            if (r == StandardTraversalHint.CONTINUE) {
                 parented.put(root, null);
 
                 List<T> children = t.getChildrenOf(root);
@@ -681,10 +682,10 @@ class TopologySearching {
 
                 for (T c : currentFringe) {
 
-                    VisitCode code = visit(c);
+                    TraversalHint code = visit(c);
 
-                    if (code == VisitCode.stop) return;
-                    if (code == VisitCode.skip) {
+                    if (code == StandardTraversalHint.STOP) return;
+                    if (code == StandardTraversalHint.SKIP) {
                     }
                     else {
                         List<T> l = t.getChildrenOf(c);
@@ -708,7 +709,7 @@ class TopologySearching {
         }
 
         protected abstract
-        VisitCode visit(T c);
+        TraversalHint visit(T c);
 
         protected
         void visitFringe(HashSet<T> nextFringe) {
@@ -719,7 +720,7 @@ class TopologySearching {
     class TopologyVisitory_depthFirst<T> {
         private final boolean avoidLoops;
 
-        private final iTopology<T> topology;
+        private final ITopology<T> topology;
 
         protected HashSet<T> seen = new HashSet<T>();
 
@@ -728,7 +729,7 @@ class TopologySearching {
         boolean setCleanOnExit = true;
 
         public
-        TopologyVisitory_depthFirst(boolean avoidLoops, iTopology<T> topology) {
+        TopologyVisitory_depthFirst(boolean avoidLoops, ITopology<T> topology) {
             this.avoidLoops = avoidLoops;
             this.topology = topology;
         }
@@ -736,9 +737,9 @@ class TopologySearching {
         public
         void apply(T root) {
             stack.push(root);
-            VisitCode code = visit(root);
-            if (code == VisitCode.stop) return;
-            if (code == VisitCode.skip) {
+            TraversalHint code = visit(root);
+            if (code == StandardTraversalHint.STOP) return;
+            if (code == StandardTraversalHint.SKIP) {
                 stack.pop();
                 return;
             }
@@ -760,21 +761,21 @@ class TopologySearching {
         }
 
         protected
-        VisitCode _apply(List<T> c) {
+        TraversalHint _apply(List<T> c) {
             for (T n : c) {
                 if (!avoidLoops || !seen.contains(n)) {
                     if (avoidLoops) seen.add(n);
                     stack.push(n);
-                    VisitCode code = visit(n);
-                    if (code == VisitCode.stop) return VisitCode.stop;
-                    if (code != VisitCode.skip) {
-                        VisitCode vc = _apply(topology.getChildrenOf(n));
-                        if (vc == VisitCode.stop) return VisitCode.stop;
+                    TraversalHint code = visit(n);
+                    if (code == StandardTraversalHint.STOP) return StandardTraversalHint.STOP;
+                    if (code != StandardTraversalHint.SKIP) {
+                        TraversalHint vc = _apply(topology.getChildrenOf(n));
+                        if (vc == StandardTraversalHint.STOP) return StandardTraversalHint.STOP;
                     }
                     exit(stack.pop());
                 }
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         protected
@@ -790,7 +791,7 @@ class TopologySearching {
         }
 
         protected abstract
-        VisitCode visit(T n);
+        TraversalHint visit(T n);
     }
 
     public static
@@ -813,14 +814,14 @@ class TopologySearching {
     }
 
     public static
-    <T> List<T> allBelow(T root, iTopology<T> topology) {
+    <T> List<T> allBelow(T root, ITopology<T> topology) {
         final ArrayList<T> r = new ArrayList<T>();
         new TopologyVisitory_depthFirst<T>(true, topology) {
             @Override
             protected
-            VisitCode visit(T n) {
+            TraversalHint visit(T n) {
                 r.add(n);
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
         }.apply(root);
         return r;

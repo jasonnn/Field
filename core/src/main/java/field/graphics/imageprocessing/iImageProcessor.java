@@ -2,7 +2,7 @@ package field.graphics.imageprocessing;
 
 import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicUtilities;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 
 public
 interface iImageProcessor {
@@ -11,7 +11,7 @@ interface iImageProcessor {
     void addChild(iSceneListElement e);
 
     public abstract
-    iProvider<Integer> getOutput(int num);
+    IProvider<Integer> getOutput(int num);
 
     public abstract
     BasicUtilities.TwoPassElement getOutputElement(int num);

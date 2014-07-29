@@ -1,7 +1,7 @@
 package field.core.windowing.components;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.LineUtils;
 import field.core.plugins.drawing.opengl.iLine;
@@ -9,7 +9,7 @@ import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.GLComponentWindow;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 
@@ -63,7 +63,7 @@ class ExecutionDecoration {
     Vector2 downAt = null;
 
     public
-    iFunction<Boolean, iComponent> down(Event event) {
+    IFunction<iComponent, Boolean> down(Event event) {
         if ((event.stateMask & SWT.ALL) != 0) {
             downAt = new Vector2(event.x, event.y);
             if (isExecuting()) {
@@ -74,13 +74,13 @@ class ExecutionDecoration {
             else {
                 // need to defer this a frame to see if we end
                 // up "isExecuting"
-                return new iFunction<Boolean, iComponent>() {
+                return new IFunction<iComponent, Boolean>() {
                     public
-                    Boolean f(iComponent d) {
+                    Boolean apply(iComponent d) {
                         if (isExecuting()) {
                             decoration = Decoration.start;
                             armed = false;
-                            iVisualElement.dirty.set(d.getVisualElement(), d.getVisualElement(), true);
+                            IVisualElement.dirty.set(d.getVisualElement(), d.getVisualElement(), true);
                         }
                         else {
                         }

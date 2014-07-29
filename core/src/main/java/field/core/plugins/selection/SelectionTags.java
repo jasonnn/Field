@@ -1,8 +1,8 @@
 package field.core.plugins.selection;
 
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor.iHandlesFindItem;
@@ -29,10 +29,10 @@ class SelectionTags implements iHandlesAttributes, iHandlesFindItem {
         FieldPyObjectAdaptor2.isHandlesFindItem(SelectionTags.class);
     }
 
-    private final iVisualElement root;
+    private final IVisualElement root;
 
     public
-    SelectionTags(iVisualElement root) {
+    SelectionTags(IVisualElement root) {
         this.root = root;
     }
 
@@ -56,7 +56,7 @@ class SelectionTags implements iHandlesAttributes, iHandlesFindItem {
         }
         else exp = Py.tojava((PyObject) object, String.class);
 
-        List<iVisualElement> found = findElementsWithExpression(exp);
+        List<IVisualElement> found = findElementsWithExpression(exp);
 
         PythonInterface.getPythonInterface().setVariable("__tmpFinderValue", found);
         return PythonInterface.getPythonInterface().eval("all(__tmpFinderValue)");
@@ -64,11 +64,11 @@ class SelectionTags implements iHandlesAttributes, iHandlesFindItem {
     }
 
     private
-    List<iVisualElement> findElementsWithExpression(String exp) {
-        List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
+    List<IVisualElement> findElementsWithExpression(String exp) {
+        List<IVisualElement> all = StandardFluidSheet.allVisualElements(root);
         Pattern m = Pattern.compile(exp);
-        List<iVisualElement> foundList = new ArrayList<iVisualElement>();
-        for (iVisualElement a : all) {
+        List<IVisualElement> foundList = new ArrayList<IVisualElement>();
+        for (IVisualElement a : all) {
             String g = selectionTag.get(a);
             if (g == null) g = "unset";
             boolean found = m.matcher(g).find();

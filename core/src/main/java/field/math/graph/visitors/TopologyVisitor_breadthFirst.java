@@ -1,6 +1,8 @@
 package field.math.graph.visitors;
 
-import field.math.graph.iTopology;
+import field.math.graph.ITopology;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,7 +28,7 @@ class TopologyVisitor_breadthFirst<T> {
     }
 
     public
-    void apply(iTopology<T> top, T root) {
+    void apply(ITopology<T> top, T root) {
         seen.clear();
         fringe.clear();
         _apply(top, root, fringe, fringe2);
@@ -38,10 +40,10 @@ class TopologyVisitor_breadthFirst<T> {
     }
 
     private
-    void _apply(iTopology<T> top, T root, LinkedHashSet<T> localFringe, LinkedHashSet<T> tempFringe) {
-        GraphNodeSearching.VisitCode code = visit(root);
-        if (code == GraphNodeSearching.VisitCode.stop) return;
-        if (code == GraphNodeSearching.VisitCode.skip) {
+    void _apply(ITopology<T> top, T root, LinkedHashSet<T> localFringe, LinkedHashSet<T> tempFringe) {
+        TraversalHint code = visit(root);
+        if (code == StandardTraversalHint.STOP) return;
+        if (code == StandardTraversalHint.SKIP) {
             return;
         }
 
@@ -52,9 +54,9 @@ class TopologyVisitor_breadthFirst<T> {
         while (!fringe.isEmpty()) {
             for (T t : maybeWrap(fringe)) {
                 if (!avoidLoops || !seen.contains(t)) {
-                    GraphNodeSearching.VisitCode vc = visit(t);
-                    if (vc == GraphNodeSearching.VisitCode.stop) return;
-                    if (vc == GraphNodeSearching.VisitCode.skip) {
+                    TraversalHint vc = visit(t);
+                    if (vc == StandardTraversalHint.STOP) return;
+                    if (vc == StandardTraversalHint.SKIP) {
                     }
                     else {
                         List<T> childrenOf = top.getChildrenOf(t);
@@ -79,7 +81,7 @@ class TopologyVisitor_breadthFirst<T> {
     }
 
     protected abstract
-    GraphNodeSearching.VisitCode visit(T root);
+    TraversalHint visit(T root);
 
     protected
     void visitFringe(Collection<T> fringe) {

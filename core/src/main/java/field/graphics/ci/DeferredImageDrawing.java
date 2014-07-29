@@ -1,6 +1,6 @@
 package field.graphics.ci;
 
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.DrawingResult;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.DrawingResultCode;
@@ -19,7 +19,7 @@ import field.graphics.core.BasicContextManager;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.When;
 import field.graphics.dynamic.iDynamicMesh;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
@@ -506,7 +506,7 @@ class DeferredImageDrawing {
         DrawingResult accept(List<iDynamicMesh> soFar, final CachedLine line, final Dict properties) {
             if (!properties.isTrue(containsDeferredImages, false)) return null;
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 private final Vector4 black = new Vector4(1, 1, 1, 1f);
 
                 public
@@ -521,7 +521,7 @@ class DeferredImageDrawing {
                             When w = ((BasicGLSLangProgram) context.getVertexProgram()).getWhen();
                             final PythonCallableMap m = w.getMap(StandardPass.render);
 
-                            m.register("o" + System.identityHashCode(e), new iUpdateable() {
+                            m.register("o" + System.identityHashCode(e), new IUpdateable() {
 
                                 @Override
                                 public

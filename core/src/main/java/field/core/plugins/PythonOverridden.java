@@ -1,14 +1,15 @@
 package field.core.plugins;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.dispatch.iVisualElementOverrides_m;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
-import field.launch.iUpdateable;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
-import field.namespace.generic.Bind.iFunction;
+import field.launch.IUpdateable;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
+import field.namespace.generic.IFunction;
 import field.util.Dict;
 import field.util.HashMapOfLists;
 import org.python.core.Py;
@@ -104,7 +105,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    VisitCode added(iVisualElement newSource) {
+    TraversalHint added(IVisualElement newSource) {
         Method method = iVisualElementOverrides_m.added_m;
         Object[] args = {newSource};
         String methodName = "added";
@@ -114,7 +115,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    VisitCode beginExecution(iVisualElement source) {
+    TraversalHint beginExecution(IVisualElement source) {
         Method method = iVisualElementOverrides_m.beginExecution_m;
         Object[] args = {source};
         String methodName = "beginExecution";
@@ -124,7 +125,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    VisitCode deleted(iVisualElement source) {
+    TraversalHint deleted(IVisualElement source) {
         Method method = iVisualElementOverrides_m.deleted_m;
         Object[] args = {source};
         String methodName = "deleted";
@@ -134,7 +135,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    <T> VisitCode deleteProperty(iVisualElement source, VisualElementProperty<T> prop) {
+    <T> TraversalHint deleteProperty(IVisualElement source, VisualElementProperty<T> prop) {
         Method method = iVisualElementOverrides_m.deleteProperty_m;
         Object[] args = {source, prop};
         String methodName = "deleteProperty";
@@ -144,7 +145,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    VisitCode endExecution(iVisualElement source) {
+    TraversalHint endExecution(IVisualElement source) {
         Method method = iVisualElementOverrides_m.endExecution_m;
         Object[] args = {source};
         String methodName = "endExecution";
@@ -154,7 +155,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
         Method method = iVisualElementOverrides_m.getProperty_m;
         Object[] args = {source, prop, ref};
         String methodName = "getProperty";
@@ -164,7 +165,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    VisitCode handleKeyboardEvent(iVisualElement newSource, org.eclipse.swt.widgets.Event event) {
+    TraversalHint handleKeyboardEvent(IVisualElement newSource, org.eclipse.swt.widgets.Event event) {
         Method method = iVisualElementOverrides_m.handleKeyboardEvent_m;
         Object[] args = {newSource, event};
         String methodName = "handleKeyboardEvent";
@@ -174,7 +175,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
         Method method = iVisualElementOverrides_m.menuItemsFor_m;
         Object[] args = {source, items};
         String methodName = "menuItemsFor";
@@ -184,7 +185,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         Method method = iVisualElementOverrides_m.paintNow_m;
         Object[] args = {source, bounds, visible};
         String methodName = "paintNow";
@@ -200,7 +201,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+    <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
         Method method = iVisualElementOverrides_m.setProperty_m;
         Object[] args = {source, prop, to};
         String methodName = "setProperty";
@@ -210,7 +211,7 @@ class PythonOverridden extends DefaultOverride {
 
     @Override
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
         Method method = iVisualElementOverrides_m.shouldChangeFrame_m;
         Object[] args = {source, newFrame, oldFrame, now};
         String methodName = "shouldChangeFrame";
@@ -219,17 +220,17 @@ class PythonOverridden extends DefaultOverride {
     }
 
     private
-    VisitCode call(Method method, Object[] args, String methodName) {
+    TraversalHint call(Method method, Object[] args, String methodName) {
         Collection<Callable> c = methods.get(methodName);
-        if (c == null || c.size() == 0) return VisitCode.cont;
+        if (c == null || c.size() == 0) return StandardTraversalHint.CONTINUE;
 
         HashMap<Callable, Throwable> faulted = null;
         for (Callable cc : c) {
             try {
                 Object r = cc.call(method, args);
 
-                if (r == VisitCode.stop) return VisitCode.stop;
-                if (r == VisitCode.stop) return VisitCode.skip;
+                if (r == StandardTraversalHint.STOP) return StandardTraversalHint.STOP;
+                if (r == StandardTraversalHint.STOP) return StandardTraversalHint.SKIP;
                 if (r == removeMe) faulted.put(cc, null);
 
             } catch (Throwable t) {
@@ -244,7 +245,7 @@ class PythonOverridden extends DefaultOverride {
                 methods.remove(methodName, f);
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public static
@@ -298,7 +299,7 @@ class PythonOverridden extends DefaultOverride {
     }
 
     public static
-    Callable callableForUpdatable(String name, final iUpdateable up) {
+    Callable callableForUpdatable(String name, final IUpdateable up) {
         return new Callable(null, name) {
             @Override
             public
@@ -315,13 +316,13 @@ class PythonOverridden extends DefaultOverride {
     }
 
     public static
-    Callable callableForFunction(String name, final iFunction f) {
+    Callable callableForFunction(String name, final IFunction f) {
         return new Callable(f, name) {
 
             @Override
             public
             Object call(Method m, Object[] args) {
-                return f.f(args[0]);
+                return f.apply(args[0]);
             }
         };
     }

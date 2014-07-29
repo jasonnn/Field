@@ -2,8 +2,8 @@ package field.core.plugins.drawing;
 
 import field.core.Constants;
 import field.core.plugins.selection.ToolBarFolder;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.util.AutoPersist;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -77,7 +77,7 @@ class ToolPalette2 {
 
         if (toolBarPaletteInspector.getShell() != null) toolBarPaletteInspector.getShell().setMinimumSize(300, 200);
 
-        ToolItem a = toolBarPaletteInspector.add(tool.getIcon(), description, new iUpdateable() {
+        ToolItem a = toolBarPaletteInspector.add(tool.getIcon(), description, new IUpdateable() {
 
             @Override
             public

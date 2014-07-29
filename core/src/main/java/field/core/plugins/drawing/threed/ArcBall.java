@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.threed;
 
 import field.core.Platform;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -13,7 +13,7 @@ import field.core.windowing.components.RootComponent.iPaintPeer;
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.State;
 import field.graphics.core.BasicSceneList;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.*;
 import field.util.Dict.Prop;
 import org.eclipse.swt.SWT;
@@ -62,7 +62,7 @@ class ArcBall implements iMousePeer, iPaintPeer {
         on.setState(in);
 
         if (!out.equals(in)) {
-            bcc.transitionToState(out, on, 100, new iUpdateable() {
+            bcc.transitionToState(out, on, 100, new IUpdateable() {
 
                 public
                 void update() {
@@ -89,7 +89,7 @@ class ArcBall implements iMousePeer, iPaintPeer {
         on.setState(in);
 
         if (!out.equals(in)) {
-            bcc.transitionToState(out, on, 100, new iUpdateable() {
+            bcc.transitionToState(out, on, 100, new IUpdateable() {
 
                 public
                 void update() {
@@ -307,7 +307,7 @@ class ArcBall implements iMousePeer, iPaintPeer {
             State f = bcc.frameAll(on.getState());
             //System.out.println(" from <" + on.getState() + " -> " + f + ">");
             arg0.doit = false;
-            bcc.transitionToState(f, on, 100, new iUpdateable() {
+            bcc.transitionToState(f, on, 100, new IUpdateable() {
 
                 public
                 void update() {
@@ -415,7 +415,7 @@ class ArcBall implements iMousePeer, iPaintPeer {
         out.reorthogonalizeUp();
         //System.out.println(" up is :" + out.up);
 
-        bcc.transitionToState(out, on, 100, new iUpdateable() {
+        bcc.transitionToState(out, on, 100, new IUpdateable() {
 
             public
             void update() {
@@ -469,7 +469,7 @@ class ArcBall implements iMousePeer, iPaintPeer {
             out.reorthogonalizeUp();
         }
 
-        bcc.transitionToState(out, on, 100, new iUpdateable() {
+        bcc.transitionToState(out, on, 100, new IUpdateable() {
 
             public
             void update() {

@@ -4,9 +4,9 @@ import ca.odell.glazedlists.*;
 import ca.odell.glazedlists.ObservableElementList.Connector;
 import ca.odell.glazedlists.event.ListEventListener;
 import ca.odell.glazedlists.matchers.Matcher;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -98,13 +98,13 @@ class Generator {
         // }
 
         public
-        Channel<X> filter(final iFunction<Boolean, X> mm) {
+        Channel<X> filter(final IFunction<X, Boolean> mm) {
             FilterList<X> fl = new FilterList<X>(e, new Matcher<X>() {
 
                 @Override
                 public
                 boolean matches(X item) {
-                    return mm.f(item);
+                    return mm.apply(item);
                 }
             });
             Channel<X> m = new Channel<X>(t, fl);
@@ -354,7 +354,7 @@ class Generator {
 
     static protected
     void finalizeOnMainThread(final List<EventList> needingDisposal) {
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             @Override
             public

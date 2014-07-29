@@ -11,11 +11,11 @@ import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.iDynamicMesh;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.Dict;
 import field.util.Dict.Prop;
 import org.eclipse.swt.widgets.Event;
@@ -31,13 +31,13 @@ class SimpleWebpageDrawing {
 
     public static final Prop<String> browser_url = new Prop<String>("browser_url");
     public static final Prop<TextureBackedWebBrowser> browser = new Prop<TextureBackedWebBrowser>("browser");
-    public static final Prop<iFunction<Vector3, Vector2>> browser_pageToSpace =
-            new Prop<iFunction<Vector3, Vector2>>("browser_pageToSpace");
+    public static final Prop<IFunction<Vector2, Vector3>> browser_pageToSpace =
+            new Prop<IFunction<Vector2, Vector3>>("browser_pageToSpace");
     public static final Prop<Vector2> browser_dimensions = new Prop<Vector2>("browser_dimensions");
 
     final DynamicMesh mesh = DynamicMesh.unshadedMesh();
     private BaseGLGraphicsContext installedContext;
-    private iUpdateable refreshHandle;
+    private IUpdateable refreshHandle;
     private final boolean useRect;
 
     public
@@ -58,7 +58,7 @@ class SimpleWebpageDrawing {
 
             final TextureBackedWebBrowser[] browser = {null};
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
 
                 String lastURL = null;
                 boolean first = true;
@@ -312,15 +312,15 @@ class SimpleWebpageDrawing {
                 }
 
                 private
-                iFunction<Vector3, Vector2> newPageToSpace(final Vector3 v,
+                IFunction<Vector2, Vector3> newPageToSpace(final Vector3 v,
                                                            final Vector3 right,
                                                            final Vector3 down,
                                                            final Vector2 dim) {
-                    return new iFunction<Vector3, Vector2>() {
+                    return new IFunction<Vector2, Vector3>() {
 
                         @Override
                         public
-                        Vector3 f(Vector2 in) {
+                        Vector3 apply(Vector2 in) {
                             float x = in.x / dim.x;
                             float y = in.y / dim.y;
 
@@ -331,7 +331,7 @@ class SimpleWebpageDrawing {
                 }
             });
 
-            result.finalize = new iUpdateable() {
+            result.finalize = new IUpdateable() {
 
                 @Override
                 public
@@ -366,7 +366,7 @@ class SimpleWebpageDrawing {
     }
 
     public
-    SimpleWebpageDrawing setRefreshHandle(iUpdateable u) {
+    SimpleWebpageDrawing setRefreshHandle(IUpdateable u) {
         refreshHandle = u;
         return this;
     }

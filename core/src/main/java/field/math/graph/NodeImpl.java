@@ -1,7 +1,7 @@
 package field.math.graph;
 
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -12,16 +12,16 @@ import java.util.List;
 
 @HiddenInAutocomplete
 public
-class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
+class NodeImpl<C extends IMutable<C>> implements IMutable<C>, Serializable {
 
     static final long serialVersionUID = -4300376251521807702L;
 
 
     protected List<C> children = new ArrayList<C>();
-    protected List<iMutable<C>> parents = new ArrayList<iMutable<C>>();
+    protected List<IMutable<C>> parents = new ArrayList<IMutable<C>>();
 
-    protected transient LinkedHashSet<WeakReference<iNotification<iMutable<C>>>> notes =
-            new LinkedHashSet<WeakReference<iNotification<iMutable<C>>>>();
+    protected transient LinkedHashSet<WeakReference<INotification<IMutable<C>>>> notes =
+            new LinkedHashSet<WeakReference<INotification<IMutable<C>>>>();
 
     protected boolean reverseInsertionOrder = false;
 
@@ -33,8 +33,8 @@ class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
         newChild.notifyAddParent(this);
         boolean cleanNeeded = false;
 
-        for (WeakReference<iNotification<iMutable<C>>> n : new ArrayList<WeakReference<iNotification<iMutable<C>>>>(notes)) {
-            iNotification<iMutable<C>> note = n.get();
+        for (WeakReference<INotification<IMutable<C>>> n : new ArrayList<WeakReference<INotification<IMutable<C>>>>(notes)) {
+            INotification<IMutable<C>> note = n.get();
             if (note != null) note.newRelationship(this, newChild);
             else cleanNeeded = true;
         }
@@ -46,13 +46,13 @@ class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
     }
 
     private
-    void clean(LinkedHashSet<WeakReference<iNotification<iMutable<C>>>> notes2) {
-        Iterator<WeakReference<iNotification<iMutable<C>>>> w = notes2.iterator();
+    void clean(LinkedHashSet<WeakReference<INotification<IMutable<C>>>> notes2) {
+        Iterator<WeakReference<INotification<IMutable<C>>>> w = notes2.iterator();
         while (w.hasNext()) if (w.next().get() == null) w.remove();
     }
 
     public
-    void notifyAddParent(iMutable<C> newParent) {
+    void notifyAddParent(IMutable<C> newParent) {
         parents.add(newParent);
     }
 
@@ -62,8 +62,8 @@ class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
         children.remove(newChild);
         newChild.notifyRemoveParent(this);
         boolean cleanNeeded = false;
-        for (WeakReference<iNotification<iMutable<C>>> n : new ArrayList<WeakReference<iNotification<iMutable<C>>>>(notes)) {
-            iNotification<iMutable<C>> note = n.get();
+        for (WeakReference<INotification<IMutable<C>>> n : new ArrayList<WeakReference<INotification<IMutable<C>>>>(notes)) {
+            INotification<IMutable<C>> note = n.get();
             if (note != null) note.deletedRelationship(this, newChild);
             else cleanNeeded = true;
         }
@@ -77,13 +77,13 @@ class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
     }
 
     public
-    void removeMatching(iFunction<Boolean, C> cc) {
+    void removeMatching(IFunction<C, Boolean> cc) {
         for (C c : new ArrayList<C>(children))
-            if (cc.f(c)) removeChild(c);
+            if (cc.apply(c)) removeChild(c);
     }
 
     public
-    void notifyRemoveParent(iMutable<C> newParent) {
+    void notifyRemoveParent(IMutable<C> newParent) {
         parents.remove(newParent);
     }
 
@@ -94,8 +94,8 @@ class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
         changeCount++;
         boolean cleanNeeded = false;
         if (changeCount == 1)
-            for (WeakReference<iNotification<iMutable<C>>> n : new ArrayList<WeakReference<iNotification<iMutable<C>>>>(notes)) {
-                iNotification<iMutable<C>> nn = n.get();
+            for (WeakReference<INotification<IMutable<C>>> n : new ArrayList<WeakReference<INotification<IMutable<C>>>>(notes)) {
+                INotification<IMutable<C>> nn = n.get();
                 if (nn != null) nn.beginChange();
                 else cleanNeeded = true;
             }
@@ -107,8 +107,8 @@ class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
         changeCount--;
         boolean cleanNeeded = false;
         if (changeCount == 0)
-            for (WeakReference<iNotification<iMutable<C>>> n : new ArrayList<WeakReference<iNotification<iMutable<C>>>>(notes)) {
-                iNotification<iMutable<C>> nn = n.get();
+            for (WeakReference<INotification<IMutable<C>>> n : new ArrayList<WeakReference<INotification<IMutable<C>>>>(notes)) {
+                INotification<IMutable<C>> nn = n.get();
                 if (nn != null) nn.endChange();
                 else cleanNeeded = true;
             }
@@ -116,7 +116,7 @@ class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
     }
 
     public
-    List<? extends iMutable<C>> getParents() {
+    List<? extends IMutable<C>> getParents() {
         return parents;
     }
 
@@ -126,7 +126,7 @@ class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
     }
 
     public
-    void registerListener(iNotification<iMutable<C>> note) {
+    void registerListener(INotification<IMutable<C>> note) {
         notes.add(new MWeakReference(note));
     }
 
@@ -154,13 +154,13 @@ class NodeImpl<C extends iMutable<C>> implements iMutable<C>, Serializable {
     }
 
     public
-    void deregisterListener(iNotification<iMutable<C>> note) {
-        Iterator<WeakReference<iNotification<iMutable<C>>>> w = notes.iterator();
+    void deregisterListener(INotification<IMutable<C>> note) {
+        Iterator<WeakReference<INotification<IMutable<C>>>> w = notes.iterator();
         while (w.hasNext()) if (w.next().get() == note) w.remove();
     }
 
     public
-    void catchupListener(iNotification<iMutable<C>> note) {
+    void catchupListener(INotification<IMutable<C>> note) {
         for (C c : children) {
             note.newRelationship(this, c);
         }

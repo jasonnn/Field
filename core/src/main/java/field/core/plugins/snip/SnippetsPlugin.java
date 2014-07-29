@@ -3,8 +3,8 @@ package field.core.plugins.snip;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.history.TextSearching;
 import field.core.plugins.history.TextSearching.iProvidesSearchTerms;
@@ -16,10 +16,11 @@ import field.core.windowing.components.SelectionGroup.iSelectionChanged;
 import field.core.windowing.components.iComponent;
 import field.core.windowing.overlay.OverlayAnimationManager;
 import field.launch.Launcher;
+import field.math.graph.IMutable;
+import field.math.graph.IMutableContainer;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutable;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.collect.tuple.Pair;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -45,8 +46,7 @@ class SnippetsPlugin extends BaseSimplePlugin {
             new VisualElementProperty<SnippetsPlugin>("snippets");
 
     public static
-    class Snippet extends NodeImpl<Snippet> implements iProvidesSearchTerms,
-                                                       field.math.graph.iMutableContainer<String, Snippet> {
+    class Snippet extends NodeImpl<Snippet> implements iProvidesSearchTerms, IMutableContainer<String, Snippet> {
 
         protected String text;
         protected boolean multiline;
@@ -70,7 +70,7 @@ class SnippetsPlugin extends BaseSimplePlugin {
         }
 
         public
-        iMutable duplicate() {
+        IMutable duplicate() {
             if (annotation != null && annotation.isEmpty()) return new Snippet(text);
             return new Snippet(text, annotation, subgroupname);
         }
@@ -89,7 +89,7 @@ class SnippetsPlugin extends BaseSimplePlugin {
         }
 
         public
-        field.math.graph.iMutableContainer<String, Snippet> setPayload(String t) {
+        IMutableContainer<String, Snippet> setPayload(String t) {
             text = t;
             multiline = text.trim().contains("\n");
             return this;
@@ -140,17 +140,17 @@ class SnippetsPlugin extends BaseSimplePlugin {
 
     private SelectionGroup<iComponent> group;
 
-    public static final List<iFunction<Boolean, Pair<URL, SnippetsPlugin>>> urlHandlers =
-            new ArrayList<iFunction<Boolean, Pair<URL, SnippetsPlugin>>>();
+    public static final List<IFunction<Pair<URL, SnippetsPlugin>, Boolean>> urlHandlers =
+            new ArrayList<IFunction<Pair<URL, SnippetsPlugin>, Boolean>>();
 
     public static
-    void addURLHandler(iFunction<Boolean, Pair<URL, SnippetsPlugin>> f) {
+    void addURLHandler(IFunction<Pair<URL, SnippetsPlugin>, Boolean> f) {
         urlHandlers.add(f);
     }
 
     @Override
     public
-    void registeredWith(final iVisualElement root) {
+    void registeredWith(final IVisualElement root) {
         ToolBarFolder parent = ToolBarFolder.currentFolder;
         super.registeredWith(root);
 
@@ -179,7 +179,7 @@ class SnippetsPlugin extends BaseSimplePlugin {
 
                     // snippetUI.setFlash("copied \u279d");
 
-                    OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(root),
+                    OverlayAnimationManager.notifyTextOnWindow(IVisualElement.enclosingFrame.get(root),
                                                                "Copied snippet",
                                                                null,
                                                                1,
@@ -227,7 +227,7 @@ class SnippetsPlugin extends BaseSimplePlugin {
 
         root.setProperty(snippets, this);
 
-        group = root.getProperty(iVisualElement.selectionGroup);
+        group = root.getProperty(IVisualElement.selectionGroup);
 
         group.registerNotification(new iSelectionChanged<iComponent>() {
             public
@@ -235,9 +235,9 @@ class SnippetsPlugin extends BaseSimplePlugin {
                 LinkedHashSet<iComponent> c = new LinkedHashSet<iComponent>();
                 for (iComponent cc : selected) {
                     if (cc.getVisualElement() != null) {
-                        String forms = cc.getVisualElement().getProperty(iVisualElement.name)
+                        String forms = cc.getVisualElement().getProperty(IVisualElement.name)
                                        + "\n_self.find[\""
-                                       + cc.getVisualElement().getProperty(iVisualElement.name)
+                                       + cc.getVisualElement().getProperty(IVisualElement.name)
                                        + "\"]";
                         addText(forms, "selected", new String[]{"element name", "element search"}, "alternative form");
                     }
@@ -374,7 +374,7 @@ class SnippetsPlugin extends BaseSimplePlugin {
     }
 
     public static
-    void addText(iVisualElement context, String text) {
+    void addText(IVisualElement context, String text) {
         SnippetsPlugin plugin = snippets.get(context);
         if (plugin != null) {
             plugin.addText(text);
@@ -382,7 +382,7 @@ class SnippetsPlugin extends BaseSimplePlugin {
     }
 
     public static
-    void addText(iVisualElement context, String text, String annotation, String groupname) {
+    void addText(IVisualElement context, String text, String annotation, String groupname) {
         SnippetsPlugin plugin = snippets.get(context);
         if (plugin != null) {
             plugin.addText(text, annotation, groupname);
@@ -390,7 +390,7 @@ class SnippetsPlugin extends BaseSimplePlugin {
     }
 
     public static
-    void addText(iVisualElement context, String text, String annotation, String[] subannotation, String groupname) {
+    void addText(IVisualElement context, String text, String annotation, String[] subannotation, String groupname) {
         SnippetsPlugin plugin = snippets.get(context);
         if (plugin != null) {
             plugin.addText(text, annotation, subannotation, groupname);

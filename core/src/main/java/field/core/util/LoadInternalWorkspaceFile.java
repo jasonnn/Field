@@ -1,8 +1,8 @@
 package field.core.util;
 
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.history.HGTools;
 import field.core.plugins.history.HGVersioningSystem;
 import field.core.plugins.history.VersioningSystem;
@@ -17,7 +17,7 @@ class LoadInternalWorkspaceFile {
     class Shadow {
         public String internalFile;
         public VisualElementProperty property;
-        public iVisualElement inside;
+        public IVisualElement inside;
 
         public
         void copyToProperty() {
@@ -161,7 +161,7 @@ class LoadInternalWorkspaceFile {
 
     public
     void copyPlainTextToProperty(String filename,
-                                 iVisualElement targetElement,
+                                 IVisualElement targetElement,
                                  VisualElementProperty<String> targetProperty) throws IOException {
         if (targetProperty.containsSuffix("v")) {
             VersioningSystem vs = StandardFluidSheet.versioningSystem.get(targetElement);
@@ -173,7 +173,7 @@ class LoadInternalWorkspaceFile {
     }
 
     public static
-    Object getOriginalText(iVisualElement targetElement, VisualElementProperty<String> targetProperty) {
+    Object getOriginalText(IVisualElement targetElement, VisualElementProperty<String> targetProperty) {
         VersioningSystem vs = StandardFluidSheet.versioningSystem.get(targetElement);
         Object o = new HGTools(vs).getOriginatingCopyFor(targetElement.getUniqueID()
                                                          + '/'
@@ -188,7 +188,7 @@ class LoadInternalWorkspaceFile {
     }
 
     public
-    String loadPlainText(String name, boolean createIfNecessary, iVisualElement e) throws IOException {
+    String loadPlainText(String name, boolean createIfNecessary, IVisualElement e) throws IOException {
 
         File f = new File(internalRepositoryRoot + name);
         if (createIfNecessary) {
@@ -210,7 +210,7 @@ class LoadInternalWorkspaceFile {
     }
 
     public
-    Shadow newShadow(String filename, iVisualElement inside, String property) throws IOException {
+    Shadow newShadow(String filename, IVisualElement inside, String property) throws IOException {
         String source = loadPlainText(filename, true, inside);
 
         VisualElementProperty<String> p = new VisualElementProperty<String>(property);
@@ -226,7 +226,7 @@ class LoadInternalWorkspaceFile {
 
     public
     String performThreeWayMerge(String filename,
-                                iVisualElement targetElement,
+                                IVisualElement targetElement,
                                 VisualElementProperty<String> targetProperty) throws IOException {
         String currentProperty = targetProperty.get(targetElement);
         String currentFile = loadPlainText(filename);

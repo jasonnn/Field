@@ -4,15 +4,16 @@ import field.core.execution.PythonInterface;
 import field.core.plugins.log.ElementInvocationLogging.iProvidesContextStack;
 import field.core.plugins.log.Logging.iLoggingEvent;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.iLaunchable;
-import field.launch.iUpdateable;
-import field.math.abstraction.iBlendAlgebra;
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IBlendAlgebra;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IProvider;
 import field.math.graph.NodeImpl;
 import field.math.graph.visitors.GraphNodeSearching;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.namespace.generic.ReflectionTools;
@@ -589,7 +590,7 @@ class AssemblingLogging extends InvocationLogging {
     public static
     class PartiallyEvaluatedFunction {
         Object evalautedTo;
-        transient iProvider<Object> function;
+        transient IProvider<Object> function;
         transient CapturedEnvironment env;
 
         Dict attributes = new Dict();
@@ -597,7 +598,7 @@ class AssemblingLogging extends InvocationLogging {
         public
         PartiallyEvaluatedFunction(Object j, final PyFunction f) {
             evalautedTo = j;
-            function = new iProvider<Object>() {
+            function = new IProvider<Object>() {
                 public
                 Object get() {
                     if (env != null) env.enter();
@@ -827,16 +828,16 @@ class AssemblingLogging extends InvocationLogging {
             }
         });
 
-        blendings.add(new iBlendSupport<iBlendAlgebra>() {
+        blendings.add(new iBlendSupport<IBlendAlgebra>() {
 
             public
-            iBlendAlgebra blend(List<iBlendAlgebra> t, List<Number> weights) {
+            IBlendAlgebra blend(List<IBlendAlgebra> t, List<Number> weights) {
                 if (t.size() == 0) return null;
-                iBlendAlgebra a = t.get(0);
+                IBlendAlgebra a = t.get(0);
                 Object z = a.blendRepresentation_newZero();
                 Iterator<Number> w = weights.iterator();
                 float tot = 0;
-                for (iBlendAlgebra b : t) {
+                for (IBlendAlgebra b : t) {
                     Number ww = w.next();
                     z = b.blendRepresentation_add(z,
                                                   b.blendRepresentation_multiply(ww.floatValue(),
@@ -844,12 +845,12 @@ class AssemblingLogging extends InvocationLogging {
                                                   z);
                     tot += ww.floatValue();
                 }
-                return (iBlendAlgebra) a.blendRepresentation_multiply(1 / tot, z);
+                return (IBlendAlgebra) a.blendRepresentation_multiply(1 / tot, z);
             }
 
             public
             boolean isBlendSupported(Object o) {
-                return o instanceof iBlendable;
+                return o instanceof IBlendable;
             }
 
         });
@@ -1092,9 +1093,9 @@ class AssemblingLogging extends InvocationLogging {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LinkNode>(false) {
                 @Override
                 protected
-                VisitCode visit(LinkNode n) {
+                TraversalHint visit(LinkNode n) {
                     //System.out.println(spaces(stack.size() * 3) + " node <" + n + ">");
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
             }.apply(a);
         //System.out.println(" linearizing leaves ... ");
@@ -1102,7 +1103,7 @@ class AssemblingLogging extends InvocationLogging {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LinkNode>(false) {
                 @Override
                 protected
-                VisitCode visit(LinkNode n) {
+                TraversalHint visit(LinkNode n) {
                     if (n.link.type == LinkType.set) {
                         Move m = linearize(n);
                     }
@@ -1112,7 +1113,7 @@ class AssemblingLogging extends InvocationLogging {
                     else if (n.getChildren().size() == 0) {
                         Move m = linearize(n);
                     }
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
             }.apply(a);
     }
@@ -1171,7 +1172,7 @@ class AssemblingLogging extends InvocationLogging {
     void install() {
 
         if (!installed) {
-            Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+            Launcher.getLauncher().registerUpdateable(new IUpdateable() {
                 public
                 void update() {
 
@@ -1464,8 +1465,8 @@ class AssemblingLogging extends InvocationLogging {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LinkNode>(false) {
                 @Override
                 protected
-                VisitCode visit(LinkNode n) {
-                    if (n.consumed) return VisitCode.cont;
+                TraversalHint visit(LinkNode n) {
+                    if (n.consumed) return StandardTraversalHint.CONTINUE;
 
                     if (n.link.type == LinkType.set) {
                         Move m = linearize(n);
@@ -1479,7 +1480,7 @@ class AssemblingLogging extends InvocationLogging {
                         Move m = linearize(n);
                         moves.add(m);
                     }
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
             }.apply(a);
 

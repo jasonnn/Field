@@ -1,7 +1,7 @@
 package field.math.abstraction;
 
 public
-interface iTemporalFunction<T> {
+interface ITemporalFunction<T> {
     public
     T get(float alpha);
 

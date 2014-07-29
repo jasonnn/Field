@@ -1,6 +1,6 @@
 package field.core.plugins.autoexecute;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.execution.PythonInterface;
 import field.core.execution.ScriptingInterface.iGlobalTrap;
 import field.core.plugins.drawing.SplineComputingOverride;
@@ -18,46 +18,46 @@ import java.util.Map.Entry;
 public
 class Globals {
 
-    HashMap<String, iVisualElement> potentialDeclarations = new HashMap<String, iVisualElement>() {
+    HashMap<String, IVisualElement> potentialDeclarations = new HashMap<String, IVisualElement>() {
         protected
-        java.util.Collection<iVisualElement> newList() {
+        java.util.Collection<IVisualElement> newList() {
             return new LinkedHashSet();
         }
     };
     LinkedHashSet<String> knownMultipleDeclarations = new LinkedHashSet<String>();
 
-    HashMap<String, iVisualElement> knownDeclarations = new HashMap<String, iVisualElement>() {
+    HashMap<String, IVisualElement> knownDeclarations = new HashMap<String, IVisualElement>() {
         protected
-        java.util.Collection<iVisualElement> newList() {
+        java.util.Collection<IVisualElement> newList() {
             return new LinkedHashSet();
         }
     };
 
-    HashMapOfLists<String, iVisualElement> recordedUses = new HashMapOfLists<String, iVisualElement>() {
+    HashMapOfLists<String, IVisualElement> recordedUses = new HashMapOfLists<String, IVisualElement>() {
         protected
-        java.util.Collection<iVisualElement> newList() {
+        java.util.Collection<IVisualElement> newList() {
             return new LinkedHashSet();
         }
     };
 
     Object nothing = new Object();
 
-    Stack<iVisualElement> running = new Stack<iVisualElement>();
+    Stack<IVisualElement> running = new Stack<IVisualElement>();
 
     public
     Globals() {
     }
 
     public
-    void declare(iVisualElement e, String name) {
+    void declare(IVisualElement e, String name) {
         knownDeclarations.put(name, e);
     }
 
     public
-    List<String> getPotentialDefinedBy(iVisualElement oneThing) {
+    List<String> getPotentialDefinedBy(IVisualElement oneThing) {
         List<String> r = new ArrayList<String>();
-        Set<Entry<String, iVisualElement>> es = potentialDeclarations.entrySet();
-        for (Entry<String, iVisualElement> e : es) {
+        Set<Entry<String, IVisualElement>> es = potentialDeclarations.entrySet();
+        for (Entry<String, IVisualElement> e : es) {
             if (e.getValue().equals(oneThing)) {
                 r.add(e.getKey());
             }
@@ -66,35 +66,35 @@ class Globals {
     }
 
     public
-    List<Pair<String, iVisualElement>> getUsedBy(iVisualElement oneThing) {
-        Collection<Pair<String, iVisualElement>> r = new LinkedHashSet<Pair<String, iVisualElement>>();
-        Set<Entry<String, Collection<iVisualElement>>> m = recordedUses.entrySet();
-        for (Entry<String, Collection<iVisualElement>> e : m) {
-            for (iVisualElement v : e.getValue()) {
+    List<Pair<String, IVisualElement>> getUsedBy(IVisualElement oneThing) {
+        Collection<Pair<String, IVisualElement>> r = new LinkedHashSet<Pair<String, IVisualElement>>();
+        Set<Entry<String, Collection<IVisualElement>>> m = recordedUses.entrySet();
+        for (Entry<String, Collection<IVisualElement>> e : m) {
+            for (IVisualElement v : e.getValue()) {
                 if (v.equals(oneThing)) {
-                    r.add(new Pair<String, iVisualElement>(e.getKey(), knownDeclarations.get(e.getKey())));
+                    r.add(new Pair<String, IVisualElement>(e.getKey(), knownDeclarations.get(e.getKey())));
                 }
             }
         }
-        return new ArrayList<Pair<String, iVisualElement>>(r);
+        return new ArrayList<Pair<String, IVisualElement>>(r);
     }
 
     public
-    HashMapOfLists<String, iVisualElement> getUsedDefinedBy(iVisualElement oneThing) {
-        HashMapOfLists<String, iVisualElement> r = new HashMapOfLists<String, iVisualElement>() {
+    HashMapOfLists<String, IVisualElement> getUsedDefinedBy(IVisualElement oneThing) {
+        HashMapOfLists<String, IVisualElement> r = new HashMapOfLists<String, IVisualElement>() {
             @Override
             protected
-            Collection<iVisualElement> newList() {
-                return new LinkedHashSet<iVisualElement>();
+            Collection<IVisualElement> newList() {
+                return new LinkedHashSet<IVisualElement>();
             }
         };
 
-        Set<Entry<String, iVisualElement>> es = knownDeclarations.entrySet();
-        for (Entry<String, iVisualElement> e : es) {
+        Set<Entry<String, IVisualElement>> es = knownDeclarations.entrySet();
+        for (Entry<String, IVisualElement> e : es) {
             if (e.getValue().equals(oneThing)) {
                 String m = e.getKey();
 
-                Collection<iVisualElement> q = recordedUses.get(m);
+                Collection<IVisualElement> q = recordedUses.get(m);
                 if (q == null) q = Collections.EMPTY_LIST;
 
                 r.addAllToList(m, q);
@@ -104,24 +104,24 @@ class Globals {
     }
 
     public
-    iVisualElement getExistingDefinitionFor(String name) {
+    IVisualElement getExistingDefinitionFor(String name) {
         return knownDeclarations.get(name);
     }
 
     public
-    iVisualElement getPotentialDefinitionFor(String name) {
+    IVisualElement getPotentialDefinitionFor(String name) {
         return potentialDeclarations.get(name);
     }
 
     public
-    List<iVisualElement> getUses(String name) {
-        Collection<iVisualElement> rr = recordedUses.get(name);
+    List<IVisualElement> getUses(String name) {
+        Collection<IVisualElement> rr = recordedUses.get(name);
         if (rr == null) return null;
-        return new ArrayList<iVisualElement>(rr);
+        return new ArrayList<IVisualElement>(rr);
     }
 
     public
-    iGlobalTrap globalTrapFor(final iVisualElement e) {
+    iGlobalTrap globalTrapFor(final IVisualElement e) {
         return new iGlobalTrap() {
 
             public
@@ -133,7 +133,7 @@ class Globals {
                     return actuallyIs;
                 }
                 if (actuallyIs == null) {
-                    iVisualElement willExec = knownDeclarations.get(name);
+                    IVisualElement willExec = knownDeclarations.get(name);
                     if (willExec != null) {
                         if (Logging.enabled())
                             Logging.logging.addEvent(new ElementInvocationLogging.WillGetLocalVariableByAutoExecution(name,
@@ -191,8 +191,8 @@ class Globals {
     }
 
     protected
-    Object trapAutoExec(iVisualElement e, String name) {
-        iVisualElement known = knownDeclarations.get(name);
+    Object trapAutoExec(IVisualElement e, String name) {
+        IVisualElement known = knownDeclarations.get(name);
         if (known != null) {
             if (!running.contains(known)) {
                 running.add(known);
@@ -227,7 +227,7 @@ class Globals {
 
                     PythonInterface.getPythonInterface()
                                    .print("Automatically executing "
-                                          + known.getProperty(iVisualElement.name)
+                                          + known.getProperty(IVisualElement.name)
                                           + "' to resolve '"
                                           + name
                                           + "'\n");
@@ -274,7 +274,7 @@ class Globals {
                     //System.out.println(" executed and now we get <" + now + ">");
                     if (now == null) {
                         System.err.println(" warning: tried to execute <"
-                                           + iVisualElement.name.get(known)
+                                           + IVisualElement.name.get(known)
                                            + "> in order to declare a <"
                                            + name
                                            + "> but got nothing");
@@ -291,7 +291,7 @@ class Globals {
                     }
                     return now;
                 } finally {
-                    iVisualElement a = running.pop();
+                    IVisualElement a = running.pop();
                     assert a == known;
                 }
             }
@@ -303,9 +303,9 @@ class Globals {
     }
 
     protected
-    void trapDeclareInside(iVisualElement e, String name, Object to) {
+    void trapDeclareInside(IVisualElement e, String name, Object to) {
         if (!knownMultipleDeclarations.contains(name)) {
-            iVisualElement x = potentialDeclarations.put(name, e);
+            IVisualElement x = potentialDeclarations.put(name, e);
             if ((x != e) && (x != null)) {
                 potentialDeclarations.remove(name);
                 knownMultipleDeclarations.add(name);
@@ -314,12 +314,12 @@ class Globals {
     }
 
     protected
-    void trapFinalizeDeclaration(iVisualElement e, String name, Object actuallyIs) {
+    void trapFinalizeDeclaration(IVisualElement e, String name, Object actuallyIs) {
         if (knownMultipleDeclarations.contains(name)) return;
 
-        iVisualElement declaredBy = potentialDeclarations.get(name);
+        IVisualElement declaredBy = potentialDeclarations.get(name);
         if (declaredBy != e) {
-            iVisualElement allready = knownDeclarations.get(name);
+            IVisualElement allready = knownDeclarations.get(name);
             if (allready == null) {
 
                 if (Logging.enabled())

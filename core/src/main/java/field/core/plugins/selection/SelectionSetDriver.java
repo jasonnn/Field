@@ -10,10 +10,10 @@ import field.core.Constants;
 import field.core.Platform;
 import field.core.Platform.OS;
 import field.core.StandardFluidSheet;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.Mixins.iMixinProxy;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.MakeDispatchProxy;
+import field.core.dispatch.IVisualElementOverrides.MakeDispatchProxy;
 import field.core.persistance.FluidCopyPastePersistence;
 import field.core.persistance.PackageTools;
 import field.core.plugins.autoexecute.Globals;
@@ -26,9 +26,10 @@ import field.core.ui.GraphNodeToTree;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.*;
 import field.core.windowing.components.SelectionGroup.iSelectionChanged;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.graph.iTopology;
+import field.math.graph.IMutableContainer;
+import field.math.graph.ITopology;
 import field.math.linalg.Vector2;
 import field.math.util.CubicTools;
 import field.namespace.generic.ReflectionTools;
@@ -55,7 +56,7 @@ public
 class SelectionSetDriver {
 
     public static
-    class TravelTo implements iUpdateable {
+    class TravelTo implements IUpdateable {
         private final GLComponentWindow window;
         private final Vector2 center;
         private final Vector2 scale;
@@ -130,7 +131,7 @@ class SelectionSetDriver {
     public
     interface iExtendedSelectionAxis extends iSelectionAxis {
         public
-        void selectionChanged(Set<iVisualElement> s);
+        void selectionChanged(Set<IVisualElement> s);
 
         public
         void start();
@@ -142,8 +143,8 @@ class SelectionSetDriver {
     public
     interface iSelectionAxis {
         public
-        void constructNodesForSelected(Set<iVisualElement> everything,
-                                       iVisualElement oneThning,
+        void constructNodesForSelected(Set<IVisualElement> everything,
+                                       IVisualElement oneThning,
                                        SelectionSetNode parent);
 
         public
@@ -153,17 +154,17 @@ class SelectionSetDriver {
     public
     interface iSelectionPredicate {
         public
-        void begin(Set<iVisualElement> everything,
-                   Set<iVisualElement> currentlySelected,
-                   Set<iVisualElement> previousCache);
+        void begin(Set<IVisualElement> everything,
+                   Set<IVisualElement> currentlySelected,
+                   Set<IVisualElement> previousCache);
 
         public
-        boolean is(iVisualElement e);
+        boolean is(IVisualElement e);
     }
 
     public static
     class SelectionSet {
-        private transient Set<iVisualElement> cached;
+        private transient Set<IVisualElement> cached;
 
         Set<String> cachedUID = new HashSet<String>();
 
@@ -179,9 +180,9 @@ class SelectionSetDriver {
         }
 
         public
-        Set<iVisualElement> getCached(iVisualElement root) {
+        Set<IVisualElement> getCached(IVisualElement root) {
             if (cached == null) {
-                cached = new HashSet<iVisualElement>();
+                cached = new HashSet<IVisualElement>();
                 for (String s : cachedUID) {
                     cached.add(StandardFluidSheet.findVisualElement(root, s));
                 }
@@ -190,10 +191,10 @@ class SelectionSetDriver {
         }
 
         public
-        void setCached(Set<iVisualElement> cached) {
+        void setCached(Set<IVisualElement> cached) {
             this.cached = cached;
             cachedUID.clear();
-            for (iVisualElement e : cached) {
+            for (IVisualElement e : cached) {
                 cachedUID.add(e.getUniqueID());
             }
         }
@@ -211,7 +212,7 @@ class SelectionSetDriver {
     }
 
     public static
-    class SelectionSetNode extends field.math.graph.NodeImpl<SelectionSetNode> implements field.math.graph.iMutableContainer<SelectionSet, SelectionSetNode> {
+    class SelectionSetNode extends field.math.graph.NodeImpl<SelectionSetNode> implements IMutableContainer<SelectionSet, SelectionSetNode> {
         public SelectionSetModifer modifier = SelectionSetModifer.or;
 
         private SelectionSet set;
@@ -314,15 +315,15 @@ class SelectionSetDriver {
     }
 
     public static
-    String nameFor(iVisualElement e) {
+    String nameFor(IVisualElement e) {
 
         // if (e == root)
         // return "sheet";
 
         try {
 
-            String name = e.getProperty(iVisualElement.name);
-            iVisualElementOverrides overrides = e.getProperty(iVisualElement.overrides);
+            String name = e.getProperty(IVisualElement.name);
+            IVisualElementOverrides overrides = e.getProperty(IVisualElement.overrides);
             String overname;
             if (overrides instanceof iMixinProxy) {
                 List m = ((iMixinProxy) overrides).getCallList();
@@ -334,7 +335,7 @@ class SelectionSetDriver {
             }
             else overname = overrides.getClass().getSimpleName();
 
-            iComponent view = e.getProperty(iVisualElement.localView);
+            iComponent view = e.getProperty(IVisualElement.localView);
             if (view == null) {
             }
             else if (view.getClass().equals(DraggableComponent.class) || view.getClass()
@@ -356,7 +357,7 @@ class SelectionSetDriver {
         return "<font size=-3 color='#" + Constants.defaultTreeColorDim + "'>" + text + "</font>";
     }
 
-    private final iVisualElement root;
+    private final IVisualElement root;
 
     private final SelectionSetUI selectionUI;
 
@@ -395,11 +396,11 @@ class SelectionSetDriver {
 
     boolean suspendSelectionProcessing = false;
 
-    ArrayList<Set<iVisualElement>> previousSelectionSet = new ArrayList<Set<iVisualElement>>();
+    ArrayList<Set<IVisualElement>> previousSelectionSet = new ArrayList<Set<IVisualElement>>();
 
-    Set<iVisualElement> currentSelectionSet = new HashSet<iVisualElement>();
+    Set<IVisualElement> currentSelectionSet = new HashSet<IVisualElement>();
 
-    Set<iVisualElement> everyElement = new HashSet<iVisualElement>();
+    Set<IVisualElement> everyElement = new HashSet<IVisualElement>();
 
     private SelectionSetNode viewSelectionNode;
 
@@ -408,7 +409,7 @@ class SelectionSetDriver {
     private GraphNodeToTree graphNodeToTree;
 
     public
-    SelectionSetDriver(final iVisualElement root, ToolBarFolder parent) {
+    SelectionSetDriver(final IVisualElement root, ToolBarFolder parent) {
         this.root = root;
 
         selectionUI = new SelectionSetUI("icons/move_32x32.png", parent) {
@@ -432,14 +433,14 @@ class SelectionSetDriver {
 
             @Override
             protected
-            LinkedHashMap<String, iUpdateable> getMenuItems() {
+            LinkedHashMap<String, IUpdateable> getMenuItems() {
 
-                LinkedHashMap<String, iUpdateable> ret = new LinkedHashMap<String, iUpdateable>();
+                LinkedHashMap<String, IUpdateable> ret = new LinkedHashMap<String, IUpdateable>();
                 if (currentSelectionSet.size() > 0) {
                     ret.put("Operations on currently selected element" + (currentSelectionSet.size() > 1 ? "s" : ""),
                             null);
 
-                    ret.put("make a <b>new selection set</b>", new iUpdateable() {
+                    ret.put("make a <b>new selection set</b>", new IUpdateable() {
                         public
                         void update() {
 
@@ -487,20 +488,20 @@ class SelectionSetDriver {
                         }
                     });
 
-                    ret.put("<b>duplicate</b> these elements", new iUpdateable() {
+                    ret.put("<b>duplicate</b> these elements", new IUpdateable() {
                         public
                         void update() {
 
-                            FluidCopyPastePersistence copier = iVisualElement.copyPaste.get(root);
+                            FluidCopyPastePersistence copier = IVisualElement.copyPaste.get(root);
 
                             StringWriter temp = new StringWriter();
-                            HashSet<iVisualElement> savedOut = new HashSet<iVisualElement>();
+                            HashSet<IVisualElement> savedOut = new HashSet<IVisualElement>();
                             ObjectOutputStream oos = copier.getObjectOutputStream(temp, savedOut, currentSelectionSet);
                             try {
                                 oos.writeObject(currentSelectionSet);
                                 oos.close();
 
-                                everyElement = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+                                everyElement = new HashSet<IVisualElement>(StandardFluidSheet.allVisualElements(root));
                                 ObjectInputStream ois =
                                         copier.getObjectInputStream(new StringReader(temp.getBuffer().toString()),
                                                                     savedOut,
@@ -514,7 +515,7 @@ class SelectionSetDriver {
                             }
                         }
                     });
-                    ret.put("<b>save</b> these elements as a new sheet", new iUpdateable() {
+                    ret.put("<b>save</b> these elements as a new sheet", new IUpdateable() {
                         public
                         void update() {
                             // TODO swt file chooser
@@ -613,13 +614,13 @@ class SelectionSetDriver {
                         }
                     });
 
-                    ret.put("create a <b>clipboard package</b>", new iUpdateable() {
+                    ret.put("create a <b>clipboard package</b>", new IUpdateable() {
 
                         public
                         void update() {
 
-                            iVisualElement element = currentSelectionSet.iterator().next();
-                            String name = element.getProperty(iVisualElement.name);
+                            IVisualElement element = currentSelectionSet.iterator().next();
+                            String name = element.getProperty(IVisualElement.name);
                             File tmp = PackageTools.newTempFileWithSelected(root, name);
                             PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
 
@@ -633,7 +634,7 @@ class SelectionSetDriver {
                 }
                 ret.put("Operations on view", null);
 
-                ret.put("Save view (zoom and translation)", new iUpdateable() {
+                ret.put("Save view (zoom and translation)", new IUpdateable() {
 
                     public
                     void update() {
@@ -680,22 +681,22 @@ class SelectionSetDriver {
 
             @Override
             protected
-            void popUpMenu(Event ev, LinkedHashMap<String, iUpdateable> items) {
+            void popUpMenu(Event ev, LinkedHashMap<String, IUpdateable> items) {
 
                 TreeItem[] path = tree.getSelection();
 
                 if (path != null) if (path.length > 0) {
-                    Set<iVisualElement> newSelectionSet = new HashSet<iVisualElement>();
-                    everyElement = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+                    Set<IVisualElement> newSelectionSet = new HashSet<IVisualElement>();
+                    everyElement = new HashSet<IVisualElement>(StandardFluidSheet.allVisualElements(root));
                     if (path != null) {
 
-                        HashSet<iVisualElement> here = new HashSet<iVisualElement>();
+                        HashSet<IVisualElement> here = new HashSet<IVisualElement>();
                         for (TreeItem p : path) {
                             SelectionSet n = (SelectionSet) p.getData();
 
                             if (n != null) {
                                 n.predicate.begin(everyElement, currentSelectionSet, n.getCached(root));
-                                for (iVisualElement e : everyElement) {
+                                for (IVisualElement e : everyElement) {
                                     if (n.predicate.is(e)) {
                                         here.add(e);
                                     }
@@ -703,7 +704,7 @@ class SelectionSetDriver {
 
                             }
                         }
-                        for (iVisualElement e : here)
+                        for (IVisualElement e : here)
                             new MakeDispatchProxy().getOverrideProxyFor(e).menuItemsFor(e, items);
 
                     }
@@ -714,12 +715,12 @@ class SelectionSetDriver {
         };
 
         selectionUI.setWaterText("Selection");
-        group = root.getProperty(iVisualElement.selectionGroup);
+        group = root.getProperty(IVisualElement.selectionGroup);
 
         selectionAxes.add(new iSelectionAxis() {
             public
-            void constructNodesForSelected(Set<iVisualElement> everything,
-                                           iVisualElement oneThning,
+            void constructNodesForSelected(Set<IVisualElement> everything,
+                                           IVisualElement oneThning,
                                            SelectionSetNode parent) {
                 return;
             }
@@ -796,15 +797,15 @@ class SelectionSetDriver {
 
         selectionAxes.add(new iSelectionAxis() {
             public
-            void constructNodesForSelected(Set<iVisualElement> everything,
-                                           iVisualElement oneThing,
+            void constructNodesForSelected(Set<IVisualElement> everything,
+                                           IVisualElement oneThing,
                                            SelectionSetNode parent) {
 
                 Globals globals = PythonPlugin.python_globals.get(oneThing);
                 if (globals != null) {
                     List<String> potential = globals.getPotentialDefinedBy(oneThing);
-                    HashMapOfLists<String, iVisualElement> used = globals.getUsedDefinedBy(oneThing);
-                    List<Pair<String, iVisualElement>> usedInside = globals.getUsedBy(oneThing);
+                    HashMapOfLists<String, IVisualElement> used = globals.getUsedDefinedBy(oneThing);
+                    List<Pair<String, IVisualElement>> usedInside = globals.getUsedBy(oneThing);
                     for (String q : used.keySet()) {
                         potential.remove(q);
                     }
@@ -822,40 +823,40 @@ class SelectionSetDriver {
                         p1.addChild(new SelectionSetNode(null, q, SelectionSetNodeType.label));
                     }
 
-                    for (Map.Entry<String, Collection<iVisualElement>> q : used.entrySet()) {
+                    for (Map.Entry<String, Collection<IVisualElement>> q : used.entrySet()) {
                         SelectionSetNode ll = new SelectionSetNode(null, q.getKey(), SelectionSetNodeType.label);
                         p2.addChild(ll);
 
-                        for (final iVisualElement eq : q.getValue()) {
+                        for (final IVisualElement eq : q.getValue()) {
                             ll.addChild(new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
 
                                 public
-                                void begin(Set<iVisualElement> everything,
-                                           Set<iVisualElement> currentlySelected,
-                                           Set<iVisualElement> previousCache) {
+                                void begin(Set<IVisualElement> everything,
+                                           Set<IVisualElement> currentlySelected,
+                                           Set<IVisualElement> previousCache) {
                                 }
 
                                 public
-                                boolean is(iVisualElement e) {
+                                boolean is(IVisualElement e) {
                                     return e == eq;
                                 }
                             }, " \u21e2 used variable \u2014 " + nameFor(eq)), null, SelectionSetNodeType.saved));
                         }
                     }
-                    for (final Pair<String, iVisualElement> q : usedInside) {
+                    for (final Pair<String, IVisualElement> q : usedInside) {
                         SelectionSetNode ll = new SelectionSetNode(null, q.left, SelectionSetNodeType.label);
                         p3.addChild(ll);
 
                         ll.addChild(new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
 
                             public
-                            void begin(Set<iVisualElement> everything,
-                                       Set<iVisualElement> currentlySelected,
-                                       Set<iVisualElement> previousCache) {
+                            void begin(Set<IVisualElement> everything,
+                                       Set<IVisualElement> currentlySelected,
+                                       Set<IVisualElement> previousCache) {
                             }
 
                             public
-                            boolean is(iVisualElement e) {
+                            boolean is(IVisualElement e) {
                                 return e == q.right;
                             }
                         }, " \u21e2 declared by \u2014 " + nameFor(q.right)), null, SelectionSetNodeType.saved));
@@ -1034,16 +1035,16 @@ class SelectionSetDriver {
         DrawTopology.addTopologyAsSelectionAxis(this,
                                                 "<html><b>Super / Sub-element</b> ",
                                                 root,
-                                                new iTopology<iVisualElement>() {
+                                                new ITopology<IVisualElement>() {
 
                                                     public
-                                                    List<iVisualElement> getChildrenOf(iVisualElement of) {
+                                                    List<IVisualElement> getChildrenOf(IVisualElement of) {
                                                         return of.getChildren();
                                                     }
 
                                                     public
-                                                    List<iVisualElement> getParentsOf(iVisualElement of) {
-                                                        return (List<iVisualElement>) of.getParents();
+                                                    List<IVisualElement> getParentsOf(IVisualElement of) {
+                                                        return (List<IVisualElement>) of.getParents();
                                                     }
                                                 },
                                                 new DefaultDrawer(),
@@ -1059,7 +1060,7 @@ class SelectionSetDriver {
 
     @NextUpdate(delay = 3)
     private
-    void installHelpBrowser(final iVisualElement root) {
+    void installHelpBrowser(final IVisualElement root) {
         HelpBrowser h = HelpBrowser.helpBrowser.get(root);
         ContextualHelp ch = h.getContextualHelp();
         ch.addContextualHelpForWidget("selection",
@@ -1085,21 +1086,21 @@ class SelectionSetDriver {
                             new SelectionSetNode(new SelectionSet(select, name), null, SelectionSetNodeType.computed);
                     classSelectionNode.addChild(node);
 
-                    ArrayList<iVisualElement> q = new ArrayList<iVisualElement>();
+                    ArrayList<IVisualElement> q = new ArrayList<IVisualElement>();
                     q.addAll(everyElement);
                     sortByName(q);
 
-                    for (final iVisualElement e : q) {
+                    for (final IVisualElement e : q) {
                         if (select.is(e))
                             node.addChild(new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
                                 public
-                                void begin(Set<iVisualElement> everything,
-                                           Set<iVisualElement> currentlySelected,
-                                           Set<iVisualElement> previousCache) {
+                                void begin(Set<IVisualElement> everything,
+                                           Set<IVisualElement> currentlySelected,
+                                           Set<IVisualElement> previousCache) {
                                 }
 
                                 public
-                                boolean is(iVisualElement ex) {
+                                boolean is(IVisualElement ex) {
                                     return e == ex;
                                 }
                             }, nameFor(e)), null, SelectionSetNodeType.saved));
@@ -1129,21 +1130,21 @@ class SelectionSetDriver {
                             new SelectionSetNode(new SelectionSet(select, name), null, SelectionSetNodeType.computed);
                     classSelectionNode.addChild(node);
 
-                    ArrayList<iVisualElement> q = new ArrayList<iVisualElement>();
+                    ArrayList<IVisualElement> q = new ArrayList<IVisualElement>();
                     q.addAll(everyElement);
                     sortByName(q);
 
-                    for (final iVisualElement e : q) {
+                    for (final IVisualElement e : q) {
                         if (select.is(e))
                             node.addChild(new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
                                 public
-                                void begin(Set<iVisualElement> everything,
-                                           Set<iVisualElement> currentlySelected,
-                                           Set<iVisualElement> previousCache) {
+                                void begin(Set<IVisualElement> everything,
+                                           Set<IVisualElement> currentlySelected,
+                                           Set<IVisualElement> previousCache) {
                                 }
 
                                 public
-                                boolean is(iVisualElement ex) {
+                                boolean is(IVisualElement ex) {
                                     return e == ex;
                                 }
                             }, nameFor(e)), null, SelectionSetNodeType.saved));
@@ -1169,21 +1170,21 @@ class SelectionSetDriver {
                             new SelectionSetNode(new SelectionSet(select, name), null, SelectionSetNodeType.computed);
                     classSelectionNode.addChild(node);
 
-                    ArrayList<iVisualElement> q = new ArrayList<iVisualElement>();
+                    ArrayList<IVisualElement> q = new ArrayList<IVisualElement>();
                     q.addAll(everyElement);
                     sortByName(q);
 
-                    for (final iVisualElement e : q) {
+                    for (final IVisualElement e : q) {
                         if (select.is(e))
                             node.addChild(new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
                                 public
-                                void begin(Set<iVisualElement> everything,
-                                           Set<iVisualElement> currentlySelected,
-                                           Set<iVisualElement> previousCache) {
+                                void begin(Set<IVisualElement> everything,
+                                           Set<IVisualElement> currentlySelected,
+                                           Set<IVisualElement> previousCache) {
                                 }
 
                                 public
-                                boolean is(iVisualElement ex) {
+                                boolean is(IVisualElement ex) {
                                     return e == ex;
                                 }
                             }, nameFor(e)), null, SelectionSetNodeType.saved));
@@ -1226,21 +1227,21 @@ class SelectionSetDriver {
     }
 
     public
-    ArrayList<iVisualElement> getSelectionByName(String expression) {
+    ArrayList<IVisualElement> getSelectionByName(String expression) {
         List<SelectionSetNode> c = savedSelectionNode.getChildren();
-        Set<iVisualElement> r = new HashSet<iVisualElement>();
+        Set<IVisualElement> r = new HashSet<IVisualElement>();
         for (int i = 0; i < c.size(); i++) {
 
             if (c.get(i).set.name.matches(expression)) {
                 c.get(i).set.predicate.begin(everyElement, currentSelectionSet, c.get(i).set.cached);
-                for (iVisualElement e : everyElement) {
+                for (IVisualElement e : everyElement) {
                     if (c.get(i).set.predicate.is(e)) {
                         r.add(e);
                     }
                 }
             }
         }
-        return new ArrayList<iVisualElement>(r);
+        return new ArrayList<IVisualElement>(r);
     }
 
     @NextUpdate(delay = 5)
@@ -1297,9 +1298,9 @@ class SelectionSetDriver {
                 return "nothing selected";
             }
             if (selected.size() == 1) {
-                iVisualElement v = selected.iterator().next().getVisualElement();
+                IVisualElement v = selected.iterator().next().getVisualElement();
                 if (v != null) {
-                    String name = v.getProperty(iVisualElement.name);
+                    String name = v.getProperty(IVisualElement.name);
                     if (name == null) return "unnamed element";
                     return "element '" + shorter(name) + "'";
                 }
@@ -1312,9 +1313,9 @@ class SelectionSetDriver {
                 LinkedHashSet<iComponent> toRemove = new LinkedHashSet<iComponent>();
 
                 for (iComponent c : selected) {
-                    iVisualElement v = c.getVisualElement();
+                    IVisualElement v = c.getVisualElement();
                     if (v != null) {
-                        String name = v.getProperty(iVisualElement.name);
+                        String name = v.getProperty(IVisualElement.name);
                         if (name != null && !"untitled".equals(name)) names.add(name);
                     }
                     else {
@@ -1358,20 +1359,20 @@ class SelectionSetDriver {
 
     @NextUpdate(delay = 2)
     protected static
-    void markOnly(Set<iVisualElement> currentSet, Set<iVisualElement> newSet) {
+    void markOnly(Set<IVisualElement> currentSet, Set<IVisualElement> newSet) {
         // suspendSelectionProcessing = true;
         try {
-            for (iVisualElement c : currentSet) {
-                iComponent component = iVisualElement.localView.get(c);
-                SelectionGroup<iComponent> group = iVisualElement.markingGroup.get(c);
+            for (IVisualElement c : currentSet) {
+                iComponent component = IVisualElement.localView.get(c);
+                SelectionGroup<iComponent> group = IVisualElement.markingGroup.get(c);
                 if (group != null) {
                     group.deselectAll();
                 }
             }
 
-            for (iVisualElement n : newSet) {
-                iComponent component = iVisualElement.localView.get(n);
-                SelectionGroup<iComponent> group = iVisualElement.markingGroup.get(n);
+            for (IVisualElement n : newSet) {
+                iComponent component = IVisualElement.localView.get(n);
+                SelectionGroup<iComponent> group = IVisualElement.markingGroup.get(n);
                 if (component != null && group != null) {
                     group.addToSelection(component);
 
@@ -1392,7 +1393,7 @@ class SelectionSetDriver {
         for (SelectionSetNode n : new ArrayList<SelectionSetNode>(rootModel.getChildren()))
             rootModel.removeChild(n);
 
-        everyElement = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+        everyElement = new HashSet<IVisualElement>(StandardFluidSheet.allVisualElements(root));
 
         // add current selection (if selected), this is
         // special, and
@@ -1416,16 +1417,16 @@ class SelectionSetDriver {
                                                             null,
                                                             SelectionSetNodeType.computed));
 
-            for (final iVisualElement ce : currentSelectionSet) {
+            for (final IVisualElement ce : currentSelectionSet) {
                 SelectionSetNode p = new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
                     public
-                    void begin(Set<iVisualElement> everything,
-                               Set<iVisualElement> currentlySelected,
-                               Set<iVisualElement> previousCache) {
+                    void begin(Set<IVisualElement> everything,
+                               Set<IVisualElement> currentlySelected,
+                               Set<IVisualElement> previousCache) {
                     }
 
                     public
-                    boolean is(iVisualElement ex) {
+                    boolean is(IVisualElement ex) {
                         return ce == ex;
                     }
                 }, nameFor(ce)), null, SelectionSetNodeType.saved);
@@ -1485,20 +1486,20 @@ class SelectionSetDriver {
                                                          null,
                                                          SelectionSetNodeType.computed);
             classSelectionNode.addChild(node);
-            ArrayList<iVisualElement> q = new ArrayList<iVisualElement>();
+            ArrayList<IVisualElement> q = new ArrayList<IVisualElement>();
             q.addAll(everyElement);
             sortByName(q);
 
-            for (final iVisualElement e : q) {
+            for (final IVisualElement e : q) {
                 if (plainPython.is(e)) node.addChild(new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
                     public
-                    void begin(Set<iVisualElement> everything,
-                               Set<iVisualElement> currentlySelected,
-                               Set<iVisualElement> previousCache) {
+                    void begin(Set<IVisualElement> everything,
+                               Set<IVisualElement> currentlySelected,
+                               Set<IVisualElement> previousCache) {
                     }
 
                     public
-                    boolean is(iVisualElement ex) {
+                    boolean is(IVisualElement ex) {
                         return e == ex;
                     }
                 }, nameFor(e)), null, SelectionSetNodeType.saved));
@@ -1514,21 +1515,21 @@ class SelectionSetDriver {
                                                          SelectionSetNodeType.computed);
             classSelectionNode.addChild(node);
 
-            ArrayList<iVisualElement> q = new ArrayList<iVisualElement>();
+            ArrayList<IVisualElement> q = new ArrayList<IVisualElement>();
             q.addAll(everyElement);
             sortByName(q);
 
-            for (final iVisualElement e : q) {
+            for (final IVisualElement e : q) {
                 if (computedSpline.is(e))
                     node.addChild(new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
                         public
-                        void begin(Set<iVisualElement> everything,
-                                   Set<iVisualElement> currentlySelected,
-                                   Set<iVisualElement> previousCache) {
+                        void begin(Set<IVisualElement> everything,
+                                   Set<IVisualElement> currentlySelected,
+                                   Set<IVisualElement> previousCache) {
                         }
 
                         public
-                        boolean is(iVisualElement ex) {
+                        boolean is(IVisualElement ex) {
                             return e == ex;
                         }
                     }, nameFor(e)), null, SelectionSetNodeType.saved));
@@ -1568,16 +1569,16 @@ class SelectionSetDriver {
     }
 
     private
-    void selectOnly(Set<iVisualElement> currentSet, Set<iVisualElement> newSet) {
+    void selectOnly(Set<IVisualElement> currentSet, Set<IVisualElement> newSet) {
         // suspendSelectionProcessing = true;
         try {
 
-            previousSelectionSet.add(new HashSet<iVisualElement>(currentSet));
+            previousSelectionSet.add(new HashSet<IVisualElement>(currentSet));
             if (previousSelectionSet.size() > 10) previousSelectionSet.remove(0);
 
-            for (iVisualElement c : currentSet) {
-                iComponent component = iVisualElement.localView.get(c);
-                SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(c);
+            for (IVisualElement c : currentSet) {
+                iComponent component = IVisualElement.localView.get(c);
+                SelectionGroup<iComponent> group = IVisualElement.selectionGroup.get(c);
                 if (group != null) group.deselectAll();
             }
 
@@ -1596,10 +1597,10 @@ class SelectionSetDriver {
             final Vector2 center = new Vector2();
             int num = 0;
 
-            for (iVisualElement n : newSet) {
+            for (IVisualElement n : newSet) {
                 if (!currentSet.contains(n)) {
-                    iComponent component = iVisualElement.localView.get(n);
-                    SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(n);
+                    iComponent component = IVisualElement.localView.get(n);
+                    SelectionGroup<iComponent> group = IVisualElement.selectionGroup.get(n);
                     if (component != null && group != null) {
                         group.addToSelection(component);
                         component.setSelected(true);
@@ -1610,8 +1611,8 @@ class SelectionSetDriver {
             }
             if (num > 0) {
                 center.scale(1f / num);
-                iVisualElement a = newSet.iterator().next();
-                final GLComponentWindow window = iVisualElement.enclosingFrame.get(a);
+                IVisualElement a = newSet.iterator().next();
+                final GLComponentWindow window = IVisualElement.enclosingFrame.get(a);
                 Point size = window.getFrame().getSize();
 
                 center.x -= size.x / 2;
@@ -1626,17 +1627,17 @@ class SelectionSetDriver {
     }
 
     static public
-    void travelTo(Set<iVisualElement> e) {
+    void travelTo(Set<IVisualElement> e) {
         final Vector2 center = new Vector2();
         int num = 0;
-        for (iVisualElement c : e) {
-            SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(c);
+        for (IVisualElement c : e) {
+            SelectionGroup<iComponent> group = IVisualElement.selectionGroup.get(c);
             if (group != null) group.deselectAll();
         }
 
-        for (iVisualElement n : e) {
-            iComponent component = iVisualElement.localView.get(n);
-            SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(n);
+        for (IVisualElement n : e) {
+            iComponent component = IVisualElement.localView.get(n);
+            SelectionGroup<iComponent> group = IVisualElement.selectionGroup.get(n);
             if (component != null && group != null) {
                 group.addToSelection(component);
                 component.setSelected(true);
@@ -1646,8 +1647,8 @@ class SelectionSetDriver {
         }
         if (num > 0) {
             center.scale(1f / num);
-            iVisualElement a = e.iterator().next();
-            final GLComponentWindow window = iVisualElement.enclosingFrame.get(a);
+            IVisualElement a = e.iterator().next();
+            final GLComponentWindow window = IVisualElement.enclosingFrame.get(a);
             Point size = window.getFrame().getSize();
 
             center.x -= size.x / 2;
@@ -1660,16 +1661,16 @@ class SelectionSetDriver {
     }
 
     private
-    void selectOnly_old(Set<iVisualElement> currentSet, Set<iVisualElement> newSet) {
+    void selectOnly_old(Set<IVisualElement> currentSet, Set<IVisualElement> newSet) {
         // suspendSelectionProcessing = true;
         try {
 
-            previousSelectionSet.add(new HashSet<iVisualElement>(currentSet));
+            previousSelectionSet.add(new HashSet<IVisualElement>(currentSet));
             if (previousSelectionSet.size() > 10) previousSelectionSet.remove(0);
 
-            for (iVisualElement c : currentSet) {
-                iComponent component = iVisualElement.localView.get(c);
-                SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(c);
+            for (IVisualElement c : currentSet) {
+                iComponent component = IVisualElement.localView.get(c);
+                SelectionGroup<iComponent> group = IVisualElement.selectionGroup.get(c);
                 if (group != null) group.deselectAll();
             }
 
@@ -1684,10 +1685,10 @@ class SelectionSetDriver {
 			 * group.removeFromSelection(component);
 			 * component.setSelected(false); } } }
 			 */
-            for (iVisualElement n : newSet) {
+            for (IVisualElement n : newSet) {
                 if (!currentSet.contains(n)) {
-                    iComponent component = iVisualElement.localView.get(n);
-                    SelectionGroup<iComponent> group = iVisualElement.selectionGroup.get(n);
+                    iComponent component = IVisualElement.localView.get(n);
+                    SelectionGroup<iComponent> group = IVisualElement.selectionGroup.get(n);
                     if (component != null && group != null) {
                         group.addToSelection(component);
                         component.setSelected(true);
@@ -1700,10 +1701,10 @@ class SelectionSetDriver {
     }
 
     private
-    boolean selectsAny(Set<iVisualElement> set, iSelectionPredicate pred) {
+    boolean selectsAny(Set<IVisualElement> set, iSelectionPredicate pred) {
 
         pred.begin(set, currentSelectionSet, null);
-        for (iVisualElement e : set) {
+        for (IVisualElement e : set) {
             if (pred.is(e)) return true;
         }
         return false;
@@ -1716,16 +1717,16 @@ class SelectionSetDriver {
     }
 
     private static
-    void sortByName(ArrayList<iVisualElement> q) {
+    void sortByName(ArrayList<IVisualElement> q) {
 
-        Collections.sort(q, new Comparator<iVisualElement>() {
+        Collections.sort(q, new Comparator<IVisualElement>() {
             public
-            int compare(iVisualElement o1, iVisualElement o2) {
+            int compare(IVisualElement o1, IVisualElement o2) {
 
                 // System.out.println(" compare <"+o1+" , "+o2+">");
 
-                String n1 = o1.getProperty(iVisualElement.name);
-                String n2 = o2.getProperty(iVisualElement.name);
+                String n1 = o1.getProperty(IVisualElement.name);
+                String n2 = o2.getProperty(IVisualElement.name);
                 if (n1 == null && n2 == null) return 0;
                 if (n1 == null) return 1;
                 if (n2 == null) return -1;
@@ -1737,7 +1738,7 @@ class SelectionSetDriver {
     protected
     void axisBackwards() {
         if (previousSelectionSet.size() > 0) {
-            Set<iVisualElement> old = previousSelectionSet.remove(previousSelectionSet.size() - 1);
+            Set<IVisualElement> old = previousSelectionSet.remove(previousSelectionSet.size() - 1);
             selectOnly(currentSelectionSet, old);
             previousSelectionSet.remove(previousSelectionSet.size() - 1);
         }
@@ -1752,8 +1753,8 @@ class SelectionSetDriver {
     protected
     void changeSelectedPaths(TreeItem[] path) {
 
-        Set<iVisualElement> newSelectionSet = new HashSet<iVisualElement>();
-        everyElement = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+        Set<IVisualElement> newSelectionSet = new HashSet<IVisualElement>();
+        everyElement = new HashSet<IVisualElement>(StandardFluidSheet.allVisualElements(root));
         if (path != null) {
 
             for (TreeItem p : path) {
@@ -1773,8 +1774,8 @@ class SelectionSetDriver {
 
                     if (n != null) {
                         n.predicate.begin(everyElement, currentSelectionSet, n.getCached(root));
-                        HashSet<iVisualElement> here = new HashSet<iVisualElement>();
-                        for (iVisualElement e : everyElement) {
+                        HashSet<IVisualElement> here = new HashSet<IVisualElement>();
+                        for (IVisualElement e : everyElement) {
                             if (n.predicate.is(e)) {
                                 here.add(e);
                             }
@@ -1803,9 +1804,9 @@ class SelectionSetDriver {
             return;
         }
 
-        Set<iVisualElement> newSelectionSet = new HashSet<iVisualElement>();
+        Set<IVisualElement> newSelectionSet = new HashSet<IVisualElement>();
         for (iComponent c : selected) {
-            iVisualElement ve = c.getVisualElement();
+            IVisualElement ve = c.getVisualElement();
             if (ve != null) newSelectionSet.add(ve);
         }
 
@@ -1835,8 +1836,8 @@ class SelectionSetDriver {
         // System.out.println(" mark selected paths <" +
         // Arrays.asList(pp) + ">");
 
-        Set<iVisualElement> newSelectionSet = new HashSet<iVisualElement>();
-        everyElement = new HashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+        Set<IVisualElement> newSelectionSet = new HashSet<IVisualElement>();
+        everyElement = new HashSet<IVisualElement>(StandardFluidSheet.allVisualElements(root));
 
         // System.out.println(" all <" + everyElement + ">");
 
@@ -1848,8 +1849,8 @@ class SelectionSetDriver {
                 // System.out.println(" node <" + n + ">");
                 if (n != null) {
                     n.predicate.begin(everyElement, currentSelectionSet, n.getCached(root));
-                    HashSet<iVisualElement> here = new HashSet<iVisualElement>();
-                    for (iVisualElement e : everyElement) {
+                    HashSet<IVisualElement> here = new HashSet<IVisualElement>();
+                    for (IVisualElement e : everyElement) {
                         if (n.predicate.is(e)) {
                             here.add(e);
                         }

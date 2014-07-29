@@ -6,7 +6,7 @@ import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.graphics.core.Base.*;
 import field.graphics.core.BasicGeometry.Instance;
 import field.graphics.core.BasicGeometry.TriangleMesh;
@@ -17,14 +17,14 @@ import field.graphics.core.BasicUtilities.OnePassListElement;
 import field.graphics.imageprocessing.ImageProcessing.TextureWrapper;
 import field.graphics.imageprocessing.ImageProcessing.iReposition;
 import field.graphics.windowing.FullScreenCanvasSWT;
+import field.launch.IUpdateable;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
 import field.math.BaseMath;
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iFloatProvider;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IFloatProvider;
+import field.math.abstraction.IProvider;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutable;
+import field.math.graph.IMutable;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Matrix4;
 import field.math.linalg.Vector3;
@@ -109,7 +109,7 @@ class BasicFrameBuffers {
     public static
     interface iHasTexture {
         public
-        iProvider<Integer> getOutput();
+        IProvider<Integer> getOutput();
     }
 
     public static
@@ -1005,8 +1005,8 @@ class BasicFrameBuffers {
         }
 
         public
-        iProvider<Integer> getFBOOutput(final int out) {
-            return new iProvider<Integer>() {
+        IProvider<Integer> getFBOOutput(final int out) {
+            return new IProvider<Integer>() {
                 @Override
                 public
                 Integer get() {
@@ -1016,7 +1016,7 @@ class BasicFrameBuffers {
         }
 
         public
-        iAcceptor<Number> addFadePlane(final Vector4 color1, final Vector4 color2) {
+        IAcceptor<Number> addFadePlane(final Vector4 color1, final Vector4 color2) {
             final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
@@ -1103,13 +1103,13 @@ class BasicFrameBuffers {
 
             rootSceneList.addChild(mesh);
 
-            return new iAcceptor<Number>() {
+            return new IAcceptor<Number>() {
 
                 float last = -1;
 
                 @Override
                 public
-                iAcceptor<Number> set(Number to) {
+                IAcceptor<Number> set(Number to) {
                     if (to.floatValue() != last) {
                         mesh.aux(Base.color0_id, 4)
                             .put(new float[]{color1.x,
@@ -1153,7 +1153,7 @@ class BasicFrameBuffers {
         }
 
         public
-        void addFadePlane(iFloatProvider amount1, Vector4 color1, iFloatProvider amount2, Vector4 color2) {
+        void addFadePlane(IFloatProvider amount1, Vector4 color1, IFloatProvider amount2, Vector4 color2) {
             final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
@@ -1365,7 +1365,7 @@ class BasicFrameBuffers {
         void copyToVBO(final TriangleMesh mesh, final int aux, final boolean first) {
             sceneList.add(StandardPass.preDisplay)
                      .register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux + ' ' + first,
-                               new iUpdateable() {
+                               new IUpdateable() {
                                    @Override
                                    public
                                    void update() {
@@ -1403,8 +1403,8 @@ class BasicFrameBuffers {
         }
 
         public
-        iProvider<Integer> getOutput(final int num) {
-            return new iProvider<Integer>() {
+        IProvider<Integer> getOutput(final int num) {
+            return new IProvider<Integer>() {
                 public
                 Integer get() {
                     return tex[num];
@@ -1774,7 +1774,7 @@ class BasicFrameBuffers {
         }
 
         public
-        void addFadePlane(iFloatProvider amount1, Vector4 color1, iFloatProvider amount2, Vector4 color2) {
+        void addFadePlane(IFloatProvider amount1, Vector4 color1, IFloatProvider amount2, Vector4 color2) {
             final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
@@ -1963,8 +1963,8 @@ class BasicFrameBuffers {
         }
 
         public
-        iProvider<Integer> getOutput(final int num) {
-            return new iProvider<Integer>() {
+        IProvider<Integer> getOutput(final int num) {
+            return new IProvider<Integer>() {
                 public
                 Integer get() {
                     return tex[num];
@@ -2209,7 +2209,7 @@ class BasicFrameBuffers {
             onscreenProgram.new SetUniform("offset", offset);
             onscreenProgram.new SetUniform("mul", mul);
             onscreenProgram.addChild(mesh);
-            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, new iProvider<Integer>() {
+            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, new IProvider<Integer>() {
 
                 public
                 Integer get() {
@@ -2643,8 +2643,8 @@ class BasicFrameBuffers {
         }
 
         public
-        iProvider<Integer> getFBO() {
-            return new iProvider<Integer>() {
+        IProvider<Integer> getFBO() {
+            return new IProvider<Integer>() {
                 public
                 Integer get() {
                     return flip ? fbo[0] : fbo[1];
@@ -2653,8 +2653,8 @@ class BasicFrameBuffers {
         }
 
         public
-        iProvider<Integer> getTexture() {
-            return new iProvider<Integer>() {
+        IProvider<Integer> getTexture() {
+            return new IProvider<Integer>() {
                 public
                 Integer get() {
                     return flip ? tex[0] : tex[1];
@@ -3057,7 +3057,7 @@ class BasicFrameBuffers {
             onscreenProgram.new SetUniform("offset", offset);
             onscreenProgram.new SetUniform("mul", mul);
             onscreenProgram.addChild(mesh);
-            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, new iProvider<Integer>() {
+            onscreenProgram.addChild(new TextureWrapper(genMip, useRect, new IProvider<Integer>() {
 
                 public
                 Integer get() {
@@ -3373,8 +3373,8 @@ class BasicFrameBuffers {
 
         @Override
         public
-        iProvider<Integer> getOutput() {
-            return new iProvider<Integer>() {
+        IProvider<Integer> getOutput() {
+            return new IProvider<Integer>() {
 
                 @Override
                 public
@@ -3496,8 +3496,8 @@ class BasicFrameBuffers {
 
         @Override
         public
-        iProvider<Integer> getOutput() {
-            return new iProvider<Integer>() {
+        IProvider<Integer> getOutput() {
+            return new IProvider<Integer>() {
 
                 @Override
                 public
@@ -3534,7 +3534,7 @@ class BasicFrameBuffers {
 
         @Override
         public
-        iProvider<Integer> getOutput() {
+        IProvider<Integer> getOutput() {
             return b.getOutput();
         }
 
@@ -3838,7 +3838,7 @@ class BasicFrameBuffers {
         }
 
         public
-        iAcceptor<Number> addFadePlane() {
+        IAcceptor<Number> addFadePlane() {
             final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.transform);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
@@ -3888,7 +3888,7 @@ class BasicFrameBuffers {
 
             rootSceneList.addChild(mesh);
 
-            return new iAcceptor<Number>() {
+            return new IAcceptor<Number>() {
 
                 float last = -1;
 
@@ -3896,7 +3896,7 @@ class BasicFrameBuffers {
 
                 @Override
                 public
-                iAcceptor<Number> set(Number to) {
+                IAcceptor<Number> set(Number to) {
                     if (to.floatValue() != last) mesh.aux(Base.color0_id, 4)
                                                      .put(new float[]{0,
                                                                       0,
@@ -3923,7 +3923,7 @@ class BasicFrameBuffers {
         public
         void copyToVBO(final TriangleMesh mesh, final int aux) {
             sceneList.add(StandardPass.preDisplay)
-                     .register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux, new iUpdateable() {
+                     .register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux, new IUpdateable() {
                          @Override
                          public
                          void update() {
@@ -3950,7 +3950,7 @@ class BasicFrameBuffers {
         void copyToNullTexture(final NullTexture nt) {
 
             sceneList.add(StandardPass.preDisplay)
-                     .register("__copyToNullTexture__" + System.identityHashCode(nt), new iUpdateable() {
+                     .register("__copyToNullTexture__" + System.identityHashCode(nt), new IUpdateable() {
                          @Override
                          public
                          void update() {
@@ -3965,7 +3965,7 @@ class BasicFrameBuffers {
         void copyToNullTextureOnce(final NullTexture nt) {
 
             final String name = "__copyToNullTexture__" + System.identityHashCode(nt);
-            sceneList.add(StandardPass.preDisplay).register(name, new iUpdateable() {
+            sceneList.add(StandardPass.preDisplay).register(name, new IUpdateable() {
                 @Override
                 public
                 void update() {
@@ -4015,8 +4015,8 @@ class BasicFrameBuffers {
         }
 
         public
-        iProvider<Integer> getOutput() {
-            return new iProvider<Integer>() {
+        IProvider<Integer> getOutput() {
+            return new IProvider<Integer>() {
                 public
                 Integer get() {
                     return tex[0];
@@ -4446,7 +4446,7 @@ class BasicFrameBuffers {
 
         @Override
         public
-        void notifyAddParent(iMutable<iSceneListElement> newParent) {
+        void notifyAddParent(IMutable<iSceneListElement> newParent) {
             super.notifyAddParent(newParent);
             renderPass.add(((iSceneListElement) newParent).requestPass(requestPass));
         }

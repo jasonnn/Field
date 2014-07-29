@@ -1,7 +1,7 @@
 package field.core.ui.text.referencealgorithms;
 
+import field.core.dispatch.IVisualElement;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
 import field.core.ui.text.embedded.iReferenceAlgorithm;
 import field.math.linalg.Vector3;
 import field.namespace.generic.ReflectionTools;
@@ -19,21 +19,21 @@ class Above extends iReferenceAlgorithm.BaseReferenceAlgorithm {
 
     @Override
     protected
-    List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement) {
-        ArrayList<iVisualElement> r = new ArrayList<iVisualElement>();
+    List<IVisualElement> doEvaluation(IVisualElement root, List<IVisualElement> old, IVisualElement forElement) {
+        ArrayList<IVisualElement> r = new ArrayList<IVisualElement>();
 
-        List<iVisualElement> all = allVisualElements(root);
+        List<IVisualElement> all = allVisualElements(root);
 
-        iVisualElement.Rect frame = forElement.getFrame(null);
+        IVisualElement.Rect frame = forElement.getFrame(null);
 
 
         final Vector3 targetPoint = frame.relativize(atPoint);
-        iVisualElement best = ReflectionTools.argMin(all, new Object() {
+        IVisualElement best = ReflectionTools.argMin(all, new Object() {
             public
-            float distance(iVisualElement e) {
+            float distance(IVisualElement e) {
 
                 if (e instanceof VisualElement) {
-                    iVisualElement.Rect otherFrame = e.getFrame(null);
+                    IVisualElement.Rect otherFrame = e.getFrame(null);
                     Vector3 m = otherFrame.midPoint();
 
                     m.sub(targetPoint);

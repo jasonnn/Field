@@ -1,6 +1,6 @@
 package field.bytecode.protect.dispatch;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.Method;
@@ -233,7 +233,7 @@ class Cont implements DispatchProvider {
     }
 
     public static
-    void wrap(Object inside, Method on, final iUpdateable enter, final iUpdateable exit) {
+    void wrap(Object inside, Method on, final IUpdateable enter, final IUpdateable exit) {
         Cont.linkWith(inside, on, new Run() {
 
             public

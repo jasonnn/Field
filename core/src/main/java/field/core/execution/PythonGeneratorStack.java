@@ -1,8 +1,8 @@
 package field.core.execution;
 
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import field.util.PythonUtils;
 import org.python.core.*;
 
@@ -69,10 +69,10 @@ import java.util.Stack;
  */
 
 public
-class PythonGeneratorStack implements iUpdateable {
+class PythonGeneratorStack implements IUpdateable {
     protected static
-    iProvider<Object> wrapGenerator(final PyGenerator top) {
-        return new iProvider() {
+    IProvider<Object> wrapGenerator(final PyGenerator top) {
+        return new IProvider() {
             public
             Object get() {
                 return top.__iternext__();
@@ -93,14 +93,14 @@ class PythonGeneratorStack implements iUpdateable {
     boolean first = true;
 
     public
-    PythonGeneratorStack(iProvider top) {
+    PythonGeneratorStack(IProvider top) {
         stack = new Stack();
         stack.push(top);
         Launcher.getLauncher().registerUpdateable(this);
     }
 
     public
-    PythonGeneratorStack(iProvider top, List addTo) {
+    PythonGeneratorStack(IProvider top, List addTo) {
         this.addTo = addTo;
         stack = new Stack();
         stack.push(top);
@@ -161,7 +161,7 @@ class PythonGeneratorStack implements iUpdateable {
 
                 // ret = ((PyGenerator)
                 // stack.peek()).__iternext__();
-                Object oret = ret = ((iProvider) stack.peek()).get();
+                Object oret = ret = ((IProvider) stack.peek()).get();
                 ret = PythonUtils.maybeToJava(ret);
 
                 // beta1
@@ -192,7 +192,7 @@ class PythonGeneratorStack implements iUpdateable {
                     stack.push(wrapGenerator((PyGenerator) ret));
                     return evaluate();
                 }
-                else if (ret instanceof iProvider) {
+                else if (ret instanceof IProvider) {
                     stack.push(ret);
                 }
                 else if (ret instanceof PyTuple) {
@@ -202,8 +202,8 @@ class PythonGeneratorStack implements iUpdateable {
                             PyGenerator g = (PyGenerator) t.__getitem__(i);
                             newPythonGeneratorStack(wrapGenerator(g), subUpdateables);
                         }
-                        else if (t.__getitem__(i) instanceof iProvider) {
-                            iProvider g = (iProvider) t.__getitem__(i);
+                        else if (t.__getitem__(i) instanceof IProvider) {
+                            IProvider g = (IProvider) t.__getitem__(i);
                             newPythonGeneratorStack(g, subUpdateables);
                         }
                     }
@@ -272,8 +272,8 @@ class PythonGeneratorStack implements iUpdateable {
     }
 
     private
-    iProvider<Object> wrapFunction(final PyFunction top) {
-        return new iProvider() {
+    IProvider<Object> wrapFunction(final PyFunction top) {
+        return new IProvider() {
             public
             Object get() {
                 PyObject c = top.__call__();
@@ -286,8 +286,8 @@ class PythonGeneratorStack implements iUpdateable {
     }
 
     private
-    iProvider<Object> wrapMethod(final PyMethod top) {
-        return new iProvider() {
+    IProvider<Object> wrapMethod(final PyMethod top) {
+        return new IProvider() {
             public
             Object get() {
                 PyObject c = top.__call__();
@@ -327,7 +327,7 @@ class PythonGeneratorStack implements iUpdateable {
     }
 
     protected
-    void newPythonGeneratorStack(iProvider g, List subUpdateables2) {
+    void newPythonGeneratorStack(IProvider g, List subUpdateables2) {
         new PythonGeneratorStack(g, subUpdateables2);
     }
 

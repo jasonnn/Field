@@ -5,7 +5,7 @@ import field.bytecode.protect.annotations.InQueue;
 import field.bytecode.protect.iProvidesQueue;
 import field.bytecode.protect.iRegistersUpdateable;
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.log.AssemblingLogging.Link;
 import field.core.plugins.log.AssemblingLogging.LinkType;
 import field.core.plugins.log.AssemblingLogging.MoveEvent;
@@ -14,7 +14,8 @@ import field.core.plugins.log.ElementInvocationLogging.*;
 import field.core.plugins.log.Logging.*;
 import field.core.plugins.selection.SelectionSetDriver;
 import field.math.graph.visitors.GraphNodeSearching;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.PythonUtils;
 import field.util.TaskQueue;
 
@@ -35,7 +36,7 @@ class TranscriptViewing {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false) {
                 @Override
                 protected
-                VisitCode visit(LoggingEventModel n) {
+                TraversalHint visit(LoggingEventModel n) {
 
                     // check
                     // to
@@ -62,7 +63,7 @@ class TranscriptViewing {
                         }
                     }
 
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
             }.apply(root);
             q.update();
@@ -98,7 +99,7 @@ class TranscriptViewing {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false) {
                 @Override
                 protected
-                VisitCode visit(LoggingEventModel n) {
+                TraversalHint visit(LoggingEventModel n) {
 
                     // check
                     // to
@@ -137,7 +138,7 @@ class TranscriptViewing {
                         }
                     }
 
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
             }.apply(root);
             q.update();
@@ -173,9 +174,9 @@ class TranscriptViewing {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false) {
                 @Override
                 protected
-                VisitCode visit(LoggingEventModel n) {
+                TraversalHint visit(LoggingEventModel n) {
 
-                    iVisualElement currentFocus = null;
+                    IVisualElement currentFocus = null;
                     LoggingEventModel currentIntermediate = null;
 
                     // check
@@ -198,17 +199,17 @@ class TranscriptViewing {
                         if (c.node instanceof iProvidesContextStack) {
                             LinkedHashSet<iLoggingEvent> context =
                                     ((iProvidesContextStack) c.node).getSuspendedContext();
-                            iVisualElement newFocus = null;
+                            IVisualElement newFocus = null;
                             boolean isFragment = true;
 
                             for (iLoggingEvent cc : context) {
 
                                 if (cc instanceof ElementExecutionBegin) {
-                                    newFocus = (iVisualElement) ((ElementExecutionBegin) cc).getToken();
+                                    newFocus = (IVisualElement) ((ElementExecutionBegin) cc).getToken();
                                     isFragment = false;
                                 }
                                 if (cc instanceof ElementExecutionFocusBegin) {
-                                    newFocus = (iVisualElement) ((ElementExecutionFocusBegin) cc).getToken();
+                                    newFocus = (IVisualElement) ((ElementExecutionFocusBegin) cc).getToken();
                                 }
                             }
 
@@ -236,7 +237,7 @@ class TranscriptViewing {
                         }
                     }
 
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
             }.apply(root);
             q.update();
@@ -316,7 +317,7 @@ class TranscriptViewing {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
                 @Override
                 protected
-                VisitCode visit(LoggingEventModel n) {
+                TraversalHint visit(LoggingEventModel n) {
 
                     if (n.node instanceof MoveEvent) {
                         MoveEvent m = ((MoveEvent) n.node);
@@ -348,7 +349,7 @@ class TranscriptViewing {
                         }
                     }
 
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
             }.apply(root);
             q.update();
@@ -450,7 +451,7 @@ class TranscriptViewing {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
                 @Override
                 protected
-                VisitCode visit(LoggingEventModel n) {
+                TraversalHint visit(LoggingEventModel n) {
 
                     //System.out.println(" filtering node " + n.node + " " + (n.node == null ? null : n.node.getClass()));
 
@@ -506,7 +507,7 @@ class TranscriptViewing {
                         parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
                     }
 
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
             }.apply(root);
 
@@ -544,7 +545,7 @@ class TranscriptViewing {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
                 @Override
                 protected
-                VisitCode visit(LoggingEventModel n) {
+                TraversalHint visit(LoggingEventModel n) {
 
                     //System.out.println(" filtering node " + n.node + " " + (n.node == null ? null : n.node.getClass()));
 
@@ -585,7 +586,7 @@ class TranscriptViewing {
                         parent.addChild(new LoggingEventModel(LoggingEventType.replayable, n.node, n.label));
                     }
 
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
 
                 private
@@ -630,10 +631,10 @@ class TranscriptViewing {
             new GraphNodeSearching.GraphNodeVisitor_depthFirst<LoggingEventModel>(false, false) {
                 @Override
                 protected
-                VisitCode visit(LoggingEventModel n) {
+                TraversalHint visit(LoggingEventModel n) {
 
                     if (n.getParents().size() > 0) flat.add(n);
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
             }.apply(root);
 
@@ -687,7 +688,7 @@ class TranscriptViewing {
                     while (!currentContext.equals(aca)) {
                         iLoggingEvent added = aca.get(currentContext.size());
                         Object tok = ((iSuspendedContext) added).getToken();
-                        if (tok instanceof iVisualElement) tok = SelectionSetDriver.nameFor((iVisualElement) tok);
+                        if (tok instanceof IVisualElement) tok = SelectionSetDriver.nameFor((IVisualElement) tok);
                         LoggingEventModel newParent = new LoggingEventModel(LoggingEventType.informative,
                                                                             null,
                                                                             "<HTML><font color='#"

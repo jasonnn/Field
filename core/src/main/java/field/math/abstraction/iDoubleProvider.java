@@ -4,12 +4,12 @@ package field.math.abstraction;
  * Interface for a class that provides a double
  */
 public
-interface iDoubleProvider {
+interface IDoubleProvider {
     public
     double evaluate();
 
     public static
-    class Constant implements iDoubleProvider {
+    class Constant implements IDoubleProvider {
 
         private double constant;
 
@@ -31,14 +31,14 @@ interface iDoubleProvider {
     }
 
     public static
-    class Monotonoic implements iDoubleProvider {
+    class Monotonoic implements IDoubleProvider {
 
-        private final iDoubleProvider in;
+        private final IDoubleProvider in;
 
         double last = Double.NEGATIVE_INFINITY;
 
         public
-        Monotonoic(iDoubleProvider in) {
+        Monotonoic(IDoubleProvider in) {
             this.in = in;
         }
 
@@ -50,13 +50,13 @@ interface iDoubleProvider {
     }
 
     public static
-    class FromFilter implements iDoubleProvider {
-        private final iFilter<Double, Double> filter;
+    class FromFilter implements IDoubleProvider {
+        private final IFilter<Double, Double> filter;
 
-        private final iDoubleProvider input;
+        private final IDoubleProvider input;
 
         public
-        FromFilter(iFilter<Double, Double> filter, iDoubleProvider input) {
+        FromFilter(IFilter<Double, Double> filter, IDoubleProvider input) {
             this.filter = filter;
             this.input = input;
         }
@@ -68,13 +68,13 @@ interface iDoubleProvider {
     }
 
     public static
-    class Offset implements iDoubleProvider {
-        private final iDoubleProvider from;
+    class Offset implements IDoubleProvider {
+        private final IDoubleProvider from;
 
         private final float amount;
 
         public
-        Offset(iDoubleProvider from, float amount) {
+        Offset(IDoubleProvider from, float amount) {
             this.from = from;
             this.amount = amount;
         }

@@ -1,7 +1,7 @@
 package field.core.plugins.drawing;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
@@ -32,7 +32,7 @@ class OverDrawing {
 
 
     public
-    OverDrawing(iVisualElement root, GLComponentWindow window, BaseGLGraphicsContext context) {
+    OverDrawing(IVisualElement root, GLComponentWindow window, BaseGLGraphicsContext context) {
         this.window = window;
         this.context = context;
         overdraw.set(root, root, this);

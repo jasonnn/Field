@@ -2,22 +2,22 @@ package field.graphics.ci;
 
 import field.core.Constants;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.python.PythonPlugin;
 import field.core.ui.SmallMenu;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
 import field.core.ui.text.embedded.MinimalExpandable;
 import field.core.windowing.GLComponentWindow;
 import field.graphics.ci.MiniDraggable.SubControl;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.BaseMath;
 import field.math.BinSelection;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.math.util.Histogram;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.namespace.key.OKey;
 import field.util.PythonUtils;
 import org.eclipse.swt.graphics.Point;
@@ -73,7 +73,7 @@ class MinimalStatsBox extends MinimalExpandable {
 
             if (autoSwap)
                 PythonPlugin.ongoingEnvironment.addTransientHandler(String.valueOf(System.identityHashCode(this)),
-                                                                    new iUpdateable() {
+                                                                    new IUpdateable() {
 
                                                                         public
                                                                         void update() {
@@ -206,7 +206,7 @@ class MinimalStatsBox extends MinimalExpandable {
         String name;
 
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
 
             name = "Component:" + new UID().toString() + ".transient";
 
@@ -661,11 +661,11 @@ class MinimalStatsBox extends MinimalExpandable {
                 g2.draw(p);
 
                 p = new GeneralPath();
-                iFunction<Number, Number> ff = new iFunction<Number, Number>() {
+                IFunction<Number, Number> ff = new IFunction<Number, Number>() {
 
                     @Override
                     public
-                    Number f(Number in) {
+                    Number apply(Number in) {
                         return state.remap(in.floatValue());
                     }
                 };
@@ -867,10 +867,10 @@ class MinimalStatsBox extends MinimalExpandable {
 
     private
     void popup(MouseEvent e) {
-        LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
+        LinkedHashMap<String, IUpdateable> menu = new LinkedHashMap<String, IUpdateable>();
 
         menu.put("Statistics Update", null);
-        menu.put((state.autoSwap ? "!" : "") + "\u21ba update <b>automatically</b>", new iUpdateable() {
+        menu.put((state.autoSwap ? "!" : "") + "\u21ba update <b>automatically</b>", new IUpdateable() {
             public
             void update() {
                 state.autoSwap = true;
@@ -878,7 +878,7 @@ class MinimalStatsBox extends MinimalExpandable {
                 irc.getControl().redraw();
             }
         });
-        menu.put((!state.autoSwap ? "!" : "") + "\u21ba update <b>explicitly</b>", new iUpdateable() {
+        menu.put((!state.autoSwap ? "!" : "") + "\u21ba update <b>explicitly</b>", new IUpdateable() {
             public
             void update() {
                 state.autoSwap = false;
@@ -886,7 +886,7 @@ class MinimalStatsBox extends MinimalExpandable {
                 irc.getControl().redraw();
             }
         });
-        menu.put("\u21ba update <b>now</b> ", new iUpdateable() {
+        menu.put("\u21ba update <b>now</b> ", new IUpdateable() {
             public
             void update() {
                 state.swap();
@@ -896,7 +896,7 @@ class MinimalStatsBox extends MinimalExpandable {
 
         menu.put("History Size (currently " + state.maxHistorySize + " items)", null);
         menu.put("  \u2191 Increase history to <b>" + (int) (state.maxHistorySize * 1.5) + "</b> items",
-                 new iUpdateable() {
+                 new IUpdateable() {
 
                      public
                      void update() {
@@ -904,28 +904,28 @@ class MinimalStatsBox extends MinimalExpandable {
                      }
                  });
         menu.put("  \u2193 Decrease history to <b>" + (int) (state.maxHistorySize * 0.666) + "</b> items",
-                 new iUpdateable() {
+                 new IUpdateable() {
 
                      public
                      void update() {
                          state.maxHistorySize *= 0.66;
                      }
                  });
-        menu.put((state.maxHistorySize == 200 ? "!" : "") + "\u02d1 <b>200</b> items", new iUpdateable() {
+        menu.put((state.maxHistorySize == 200 ? "!" : "") + "\u02d1 <b>200</b> items", new IUpdateable() {
 
             public
             void update() {
                 state.maxHistorySize = 200;
             }
         });
-        menu.put((state.maxHistorySize == 100 ? "!" : "") + "\u02d1 <b>100</b> items", new iUpdateable() {
+        menu.put((state.maxHistorySize == 100 ? "!" : "") + "\u02d1 <b>100</b> items", new IUpdateable() {
 
             public
             void update() {
                 state.maxHistorySize = 100;
             }
         });
-        menu.put((state.maxHistorySize == 50 ? "!" : "") + "\u02d1 <b>50</b> items", new iUpdateable() {
+        menu.put((state.maxHistorySize == 50 ? "!" : "") + "\u02d1 <b>50</b> items", new IUpdateable() {
 
             public
             void update() {
@@ -950,14 +950,14 @@ class MinimalStatsBox extends MinimalExpandable {
 //		});
 
         menu.put("Input tracking", null);
-        menu.put((state.inputRangeLocked ? "!" : "") + "\u2016 <b>Lock input</b> range", new iUpdateable() {
+        menu.put((state.inputRangeLocked ? "!" : "") + "\u2016 <b>Lock input</b> range", new IUpdateable() {
 
             public
             void update() {
                 state.inputRangeLocked = true;
             }
         });
-        menu.put((!state.inputRangeLocked ? "!" : "") + "\u21AD <b>Fit input</b> range to data", new iUpdateable() {
+        menu.put((!state.inputRangeLocked ? "!" : "") + "\u21AD <b>Fit input</b> range to data", new IUpdateable() {
 
             public
             void update() {

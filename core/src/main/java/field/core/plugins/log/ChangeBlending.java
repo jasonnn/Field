@@ -1,7 +1,7 @@
 package field.core.plugins.log;
 
 import field.core.plugins.log.AssemblingLogging.SimpleChange;
-import field.math.abstraction.iBlendable;
+import field.math.abstraction.IBlendable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,17 +128,17 @@ class ChangeBlending {
     public
     ChangeBlending() {
 
-        blenders.add(new iBlendSupport<iBlendable>() {
+        blenders.add(new iBlendSupport<IBlendable>() {
 
             public
             boolean isBlendSupported(Object o) {
-                return o instanceof iBlendable;
+                return o instanceof IBlendable;
             }
 
             public
-            iBlendable blend(iBlendable a, iBlendable b, float alpha) {
-                iBlendable q = (iBlendable) a.blendRepresentation_newZero();
-                return (iBlendable) q.lerp(a, b, alpha);
+            IBlendable blend(IBlendable a, IBlendable b, float alpha) {
+                IBlendable q = (IBlendable) a.blendRepresentation_newZero();
+                return (IBlendable) q.lerp(a, b, alpha);
             }
         });
 

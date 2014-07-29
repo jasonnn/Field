@@ -1,12 +1,12 @@
 package field.util.filterstack;
 
-import field.math.abstraction.iFilter;
+import field.math.abstraction.IFilter;
 import field.math.util.CubicTools;
 import field.util.filterstack.Unit.WindowStatus;
 import field.util.filterstack.Unit.iProvidesWindowStatus;
 
 public
-class SimpleWindow implements iFilter<Double, Double>, iProvidesWindowStatus {
+class SimpleWindow implements IFilter<Double, Double>, iProvidesWindowStatus {
 
     protected double duration;
     protected double middle;

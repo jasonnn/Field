@@ -10,14 +10,14 @@ import field.graphics.core.Base.iPass;
 import field.graphics.core.Base.iSceneListElement;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.graphics.windowing.FullScreenCanvasSWT.StereoSide;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFloatProvider;
-import field.math.graph.iMutable;
+import field.launch.IUpdateable;
+import field.math.abstraction.IFloatProvider;
+import field.math.graph.IMutable;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Quaternion;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.Method;
@@ -50,10 +50,10 @@ class BasicUtilities {
 
         private float o;
 
-        private final iFloatProvider f;
+        private final IFloatProvider f;
 
         public
-        ChangeLineWidth(String name, iFloatProvider f) {
+        ChangeLineWidth(String name, IFloatProvider f) {
             super(name, StandardPass.preTransform, StandardPass.preDisplay);
             this.f = f;
         }
@@ -315,7 +315,7 @@ class BasicUtilities {
 
         @Override
         public
-        void notifyAddParent(iMutable<iSceneListElement> list) {
+        void notifyAddParent(IMutable<iSceneListElement> list) {
             super.notifyAddParent(list);
             for (int i = 0; i < one.length; i++)
                 one[i].notifyAddParent(list);
@@ -864,7 +864,7 @@ class BasicUtilities {
 
         @Override
         public
-        void notifyAddParent(iMutable<iSceneListElement> newParent) {
+        void notifyAddParent(IMutable<iSceneListElement> newParent) {
             super.notifyAddParent(newParent);
             renderPass.add(((iSceneListElement) newParent).requestPass(requestPass));
         }
@@ -922,7 +922,7 @@ class BasicUtilities {
 
         boolean skipIfEmpty = false;
 
-        iFunction<Boolean, OnePassListElement> guard;
+        IFunction<OnePassListElement, Boolean> guard;
 
         public
         OnePassListElement(Base.StandardPass parentPass, Base.StandardPass ourPass) {
@@ -933,7 +933,7 @@ class BasicUtilities {
 
         @Override
         public
-        void notifyAddParent(iMutable<iSceneListElement> newParent) {
+        void notifyAddParent(IMutable<iSceneListElement> newParent) {
             super.notifyAddParent(newParent);
             renderPass.add(((iSceneListElement) newParent).requestPass(requestPass));
         }
@@ -954,7 +954,7 @@ class BasicUtilities {
             if ((p == null) || (renderPass.contains(p))) {
                 if (skipIfEmpty && this.getChildren().size() == 0) return;
 
-                if (guard != null && !guard.f(this)) {
+                if (guard != null && !guard.apply(this)) {
 
                     visible = false;
                     return;
@@ -1010,7 +1010,7 @@ class BasicUtilities {
         }
 
         public
-        void setGaurd(iFunction<Boolean, OnePassListElement> guard) {
+        void setGaurd(IFunction<OnePassListElement, Boolean> guard) {
             this.guard = guard;
         }
     }
@@ -1090,10 +1090,10 @@ class BasicUtilities {
 
     static public
     class SepEnableBlending extends OnePassElement {
-        private final iFloatProvider alpha;
+        private final IFloatProvider alpha;
 
         public
-        SepEnableBlending(iFloatProvider alpha) {
+        SepEnableBlending(IFloatProvider alpha) {
             super(StandardPass.preRender);
             this.alpha = alpha;
         }
@@ -1597,7 +1597,7 @@ class BasicUtilities {
      */
 
     static public
-    class ToggleWrapper extends BasicSceneList implements iSceneListElement, iUpdateable {
+    class ToggleWrapper extends BasicSceneList implements iSceneListElement, IUpdateable {
 
         protected iSceneListElement one;
 
@@ -1613,7 +1613,7 @@ class BasicUtilities {
 
         @Override
         public
-        void notifyAddParent(iMutable<iSceneListElement> list) {
+        void notifyAddParent(IMutable<iSceneListElement> list) {
             super.notifyAddParent(list);
             one.notifyAddParent(list);
             two.notifyAddParent(list);
@@ -1660,7 +1660,7 @@ class BasicUtilities {
 
         @Override
         public
-        void notifyAddParent(iMutable<iSceneListElement> newParent) {
+        void notifyAddParent(IMutable<iSceneListElement> newParent) {
             super.notifyAddParent(newParent);
 
             preRender.add(((iSceneListElement) newParent).requestPass(prePass));

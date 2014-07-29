@@ -1,7 +1,7 @@
 package field.graph;
 
 import field.math.linalg.Vector3;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.collect.tuple.Pair;
 
 import java.util.Collection;
@@ -55,7 +55,7 @@ class SimpleGraphLayout {
     }
 
     public
-    void layout(Object root, iFunction<Collection<Object>, Object> connected) {
+    void layout(Object root, IFunction<Object, Collection<Object>> connected) {
 
         r = new HashMap<Object, Vector3>();
         edgeTypes = new HashMap<Pair<Object, Object>, SimpleGraphLayout.EdgeType>();
@@ -65,7 +65,7 @@ class SimpleGraphLayout {
         r.put(root, new Vector3());
         nodeTypes.put(root, NodeType.root);
 
-        Collection<Object> level1 = connected.f(root);
+        Collection<Object> level1 = connected.apply(root);
 
         layoutLevel1(root, level1, connected);
 
@@ -78,7 +78,7 @@ class SimpleGraphLayout {
     float topScale = 1;
 
     protected
-    void layoutLevel1(Object root, Collection<Object> level1, iFunction<Collection<Object>, Object> connected) {
+    void layoutLevel1(Object root, Collection<Object> level1, IFunction<Object, Collection<Object>> connected) {
 
         if (level1.size() == 0) return;
 
@@ -96,7 +96,7 @@ class SimpleGraphLayout {
 
             edgeTypes.put(new Pair<Object, Object>(root, o), EdgeType.root_level1);
 
-            layoutLevel2(o, connected.f(o), at, at, connected);
+            layoutLevel2(o, connected.apply(o), at, at, connected);
 
             delta.rotateBy((float) (topScale * Math.PI * 2.0 / level1.size()));
 
@@ -109,7 +109,7 @@ class SimpleGraphLayout {
                       Collection<Object> f,
                       Vector3 at,
                       Vector3 dir,
-                      iFunction<Collection<Object>, Object> connected) {
+                      IFunction<Object, Collection<Object>> connected) {
 
         Vector3 forward = new Vector3(dir).rotateBy((float) (-Math.PI / 2)).normalize().scale(d2);
 
@@ -139,7 +139,7 @@ class SimpleGraphLayout {
                 r.put(o, at2);
                 nodeTypes.put(o, NodeType.level2);
 
-                Collection<Object> next = connected.f(o);
+                Collection<Object> next = connected.apply(o);
                 Iterator<Object> fff = next.iterator();
                 while (fff.hasNext()) {
                     Object oo = fff.next();

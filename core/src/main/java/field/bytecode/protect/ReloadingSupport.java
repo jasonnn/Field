@@ -1,7 +1,7 @@
 package field.bytecode.protect;
 
 import field.bytecode.protect.trampoline.Trampoline2;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -61,7 +61,7 @@ class ReloadingSupport {
 
     public
     class ReloadingDomain {
-        public iFunction<Boolean, String> matcher;
+        public IFunction<String, Boolean> matcher;
 
         public LinkedHashMap<String, Class> loaded = new LinkedHashMap<String, Class>();
 
@@ -70,7 +70,7 @@ class ReloadingSupport {
         public int priority;
 
         public
-        void reload(iFunction<Object, Class> reloadHook) throws ClassNotFoundException {
+        void reload(IFunction<Class, Object> reloadHook) throws ClassNotFoundException {
             newLoader(this);
             Set<Entry<String, Class>> es = loaded.entrySet();
             for (Entry<String, Class> e : es) {
@@ -81,7 +81,7 @@ class ReloadingSupport {
             }
             for (Entry<String, Class> e : es) {
                 Class<?> c = loader.loadClass(e.getKey(), true);
-                reloadHook.f(c);
+                reloadHook.apply(c);
             }
         }
 
@@ -94,11 +94,11 @@ class ReloadingSupport {
         ReloadingDomain dom = new ReloadingDomain();
 
         final Pattern p = Pattern.compile(regex);
-        dom.matcher = new iFunction<Boolean, String>() {
+        dom.matcher = new IFunction<String, Boolean>() {
 
             @Override
             public
-            Boolean f(String in) {
+            Boolean apply(String in) {
                 return p.matcher(in).matches();
             }
 
@@ -130,7 +130,7 @@ class ReloadingSupport {
 
         synchronized (domains) {
             for (ReloadingDomain d : domains) {
-                Boolean nn = d.matcher.f(name);
+                Boolean nn = d.matcher.apply(name);
 
                 if (nn) {
                     Class cc = d.loaded.get(name);
@@ -166,7 +166,7 @@ class ReloadingSupport {
 
                 if (super.should(name)) return true;
 
-                Boolean m = d.matcher.f(name);
+                Boolean m = d.matcher.apply(name);
                 if (m) {
                     byte[] b = Trampoline2.bytesForClass(Trampoline2.trampoline.getClassLoader(), name);
                     map.put(name, b);

@@ -2,8 +2,8 @@ package field.core.plugins.python;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.PlainDraggableComponent;
@@ -33,7 +33,7 @@ class OnSheetSwing {
 
         @Override
         public
-        PlainDraggableComponent setVisualElement(iVisualElement element) {
+        PlainDraggableComponent setVisualElement(IVisualElement element) {
 
             this.componentToRender = panel;
 
@@ -120,7 +120,7 @@ class OnSheetSwing {
                 // the top left
                 // corner
                 // correct)
-                GLComponentWindow frame = iVisualElement.enclosingFrame.get(getVisualElement());
+                GLComponentWindow frame = IVisualElement.enclosingFrame.get(getVisualElement());
                 Rect bounds = this.getBounds();
                 Vector2 topLeft = new Vector2(bounds.x, bounds.y);
                 frame.transformDrawingToWindow(topLeft);
@@ -167,22 +167,22 @@ class OnSheetSwing {
     }
 
     public static
-    void upgrade(iVisualElement e) {
+    void upgrade(IVisualElement e) {
 
-        iComponent c = iVisualElement.localView.get(e);
+        iComponent c = IVisualElement.localView.get(e);
         //System.out.println(" upgrading a <" + e + "> from <" + c + ">");
         if (c instanceof Wrap) return;
         if (c == null) return;
 
         //System.out.println(" something doing");
 
-        iVisualElement.enclosingFrame.get(e).getRoot().removeComponent(c);
+        IVisualElement.enclosingFrame.get(e).getRoot().removeComponent(c);
 
         Wrap w = new Wrap();
         w.setVisualElement(e);
-        iVisualElement.localView.set(e, e, w);
+        IVisualElement.localView.set(e, e, w);
 
-        iVisualElement.enclosingFrame.get(e).getRoot().addComponent(w);
+        IVisualElement.enclosingFrame.get(e).getRoot().addComponent(w);
     }
 
 }

@@ -4,7 +4,7 @@ import field.bytecode.protect.trampoline.ClassLoadedNotification;
 import field.bytecode.protect.trampoline.Trampoline2;
 import field.core.Platform;
 import field.core.execution.PythonInterface;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
@@ -27,7 +27,7 @@ class BetterPythonConstructors implements ClassLoadedNotification {
     public
     void notify(final Class loaded) {
 
-        field.launch.Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        field.launch.Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             @Override
             public

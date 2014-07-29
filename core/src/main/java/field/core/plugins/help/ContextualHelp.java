@@ -2,10 +2,10 @@ package field.core.plugins.help;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -32,7 +32,7 @@ class ContextualHelp {
     ContextualHelp(HelpBrowser helpBrowser) {
         this.helpBrowser = helpBrowser;
 
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             @Override
             public
@@ -85,10 +85,10 @@ class ContextualHelp {
 
         String lastString = "";
 
-        iProvider<String> contents;
+        IProvider<String> contents;
 
         public
-        Context(int inContext, iProvider<String> contents) {
+        Context(int inContext, IProvider<String> contents) {
             super();
             this.inContext = inContext;
             this.contents = contents;
@@ -97,9 +97,9 @@ class ContextualHelp {
     }
 
     public static
-    iProvider<String> providerForStaticMarkdownResource(final String name) {
+    IProvider<String> providerForStaticMarkdownResource(final String name) {
         final File m = new File(HelpBrowser.documentationDirectory + name);
-        return new iProvider<String>() {
+        return new IProvider<String>() {
 
             @Override
             public
@@ -127,7 +127,7 @@ class ContextualHelp {
     }
 
     public
-    void addContextualHelpForWidget(final String name, final Widget w, iProvider<String> help, final int duration) {
+    void addContextualHelpForWidget(final String name, final Widget w, IProvider<String> help, final int duration) {
         if (help == null) return;
         final Context c = new Context(0, help);
         contexts.put(name, c);
@@ -146,7 +146,7 @@ class ContextualHelp {
     }
 
     public
-    void addContextualHelpForToolItem(String name, final ToolItem w, iProvider<String> help, final int duration) {
+    void addContextualHelpForToolItem(String name, final ToolItem w, IProvider<String> help, final int duration) {
         if (help == null) return;
         final Context c = new Context(0, help);
         contexts.put(name, c);

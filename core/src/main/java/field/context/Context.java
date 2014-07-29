@@ -4,10 +4,10 @@ import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.core.util.FieldPyObjectAdaptor.iCallable_keywords;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor.iHandlesDeletionOfAttributes;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
-import field.namespace.generic.Bind.iFunction;
-import field.namespace.generic.Bind.iFunction2;
+import field.launch.IUpdateable;
+import field.math.abstraction.IProvider;
+import field.namespace.generic.IFunction;
+import field.namespace.generic.IFunction2;
 import field.util.Dict;
 import field.util.Dict.Prop;
 import org.jetbrains.annotations.NotNull;
@@ -157,8 +157,8 @@ class Context {
             T q = properties.get(p);
 
             if (q == null && allowComputedProperties) {
-                Prop<iFunction2<T, Cobj, Cobj>> c = new Prop<iFunction2<T, Cobj, Cobj>>("compute_" + p.getName());
-                iFunction2<T, Cobj, Cobj> q2 = properties.get(c);
+                Prop<IFunction2<Cobj, Cobj, T>> c = new Prop<IFunction2<Cobj, Cobj, T>>("compute_" + p.getName());
+                IFunction2<Cobj, Cobj, T> q2 = properties.get(c);
                 if (q2 != null) {
                     return q2.f(this, _start.get());
                 }
@@ -191,7 +191,7 @@ class Context {
 
         @HiddenInAutocomplete
         public
-        <T> T find(iProvider<T> defaultValue, String... names) {
+        <T> T find(IProvider<T> defaultValue, String... names) {
             for (String n : names) {
                 Object v = getAttribute(n);
                 if (v != null) return (T) v;
@@ -302,7 +302,7 @@ class Context {
             else if (name.startsWith("compute_")) {
                 allowComputedProperties = true;
                 if (value instanceof PyFunction) {
-                    setProperty(new Prop(name), ((PyFunction) value).__tojava__(iFunction2.class));
+                    setProperty(new Prop(name), ((PyFunction) value).__tojava__(IFunction2.class));
                 }
                 else setProperty(new Prop(name), value);
             }
@@ -580,14 +580,14 @@ class Context {
          * true
          */
         public
-        Collection findAll(final iFunction<Boolean, Cobj> predicate) {
+        Collection findAll(final IFunction<Cobj, Boolean> predicate) {
             final ArrayList<Cobj> tt = new ArrayList<Cobj>();
             depthFirst(new iVisitor() {
 
                 @Override
                 public
                 void visit(Cobj c) {
-                    Object x = predicate.f(c);
+                    Object x = predicate.apply(c);
                     if (x != null) {
                         if ((Boolean) x) tt.add(c);
                         if (x instanceof Number && ((Number) x).intValue() > 0) tt.add(c);
@@ -850,7 +850,7 @@ class Context {
     }
 
     static public abstract
-    class UpdatableCobj extends Cobj implements iUpdateable {
+    class UpdatableCobj extends Cobj implements IUpdateable {
 
     }
 
@@ -858,17 +858,17 @@ class Context {
     static public
     class UpdatableCobjAsFunction extends UpdatableCobj {
 
-        private final iFunction<Object, UpdatableCobj> u;
+        private final IFunction<UpdatableCobj, Object> u;
 
         public
-        UpdatableCobjAsFunction(iFunction<Object, UpdatableCobj> u) {
+        UpdatableCobjAsFunction(IFunction<UpdatableCobj, Object> u) {
             this.u = u;
         }
 
         @Override
         public
         void update() {
-            u.f(this);
+            u.apply(this);
         }
     }
 

@@ -2,10 +2,10 @@ package field.core.execution;
 
 import field.core.Constants;
 import field.core.Platform.OS;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.GLComponentWindow;
@@ -15,9 +15,11 @@ import field.graphics.core.TextSystem;
 import field.graphics.core.TextSystem.RectangularLabel;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.iDynamicMesh;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.abstraction.IInplaceProvider;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
@@ -38,7 +40,7 @@ import static org.lwjgl.opengl.GL13.*;
  * @author marc
  */
 public
-class TimeMarker extends iVisualElementOverrides.DefaultOverride {
+class TimeMarker extends IVisualElementOverrides.DefaultOverride {
 
     public static final VisualElementProperty<String> keyboardShortcut =
             new VisualElementProperty<String>("keyboardShortcut_i");
@@ -48,7 +50,7 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 
     public static final VisualElementProperty<Integer> isRealtime = new VisualElementProperty<Integer>("isRealtime_i");
 
-    public static HashMap<iVisualElement, iUpdateable> ongoing = new HashMap<iVisualElement, iUpdateable>();
+    public static HashMap<IVisualElement, IUpdateable> ongoing = new HashMap<IVisualElement, IUpdateable>();
 
     private RectangularLabel label;
 
@@ -64,7 +66,7 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 
     @Override
     public
-    VisitCode added(iVisualElement newSource) {
+    TraversalHint added(IVisualElement newSource) {
 
         String kb = newSource.getProperty(keyboardShortcut);
         if (kb == null) {
@@ -85,12 +87,12 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 
     @Override
     public
-    VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
+    TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event) {
 
         //System.out.println(" handle2 keyboad event called <" + event + ">");
-        if (event == null) return VisitCode.cont;
+        if (event == null) return StandardTraversalHint.CONTINUE;
 
-        if (!event.doit) return VisitCode.cont;
+        if (!event.doit) return StandardTraversalHint.CONTINUE;
 
         if (newSource == forElement) {
             char c = event.character;
@@ -108,22 +110,22 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
                 event.doit = false;
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     @Override
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
         if (source == forElement) {
             Rect frame = forElement.getFrame(null);
             if (((frame.x - 5) <= event.x) && ((frame.x + frame.w + 5) >= event.x)) is.set(true);
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
 
         if (source == forElement) {
 
@@ -149,12 +151,12 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
             String kb = source.getProperty(keyboardShortcut);
 
             assert kb != null : " huh?";
-            String printName = source.getProperty(iVisualElement.name) + " : " + kb;
+            String printName = source.getProperty(IVisualElement.name) + " : " + kb;
 
             printName = "<html><i><font size=+0 face='"
                         + Constants.defaultFont
                         + "'>"
-                        + source.getProperty(iVisualElement.name)
+                        + source.getProperty(IVisualElement.name)
                         + "</font></i> <font face='"
                         + Constants.defaultFont
                         + "' size="
@@ -176,7 +178,7 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
                 label.setFont(new Font(Constants.defaultFont, Font.PLAIN, 1).deriveFont(15f));
                 label.resetTextAsLabel(printName, 1, 1, 1, 1f, 0, 0, 0.0f, 1);
                 labelTriangles =
-                        new BasicGeometry.TriangleMesh(new field.math.abstraction.iInplaceProvider<iMutable>() {
+                        new BasicGeometry.TriangleMesh(new IInplaceProvider<iMutable>() {
                             public
                             iMutable get(iMutable o) {
                                 return new CoordinateFrame();
@@ -218,12 +220,12 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
             glActiveTexture(GL_TEXTURE0);
 
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     @Override
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
         if (source == forElement) {
             newFrame.w = 25;
         }
@@ -245,9 +247,9 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
         box.getProperties().put(iLinearGraphicsContext.color, new Vector4(0, 0, 0, 0.1f));
         box.getProperties().put(iLinearGraphicsContext.filled, true);
 
-        if (iVisualElement.selectionGroup.get(this.forElement)
+        if (IVisualElement.selectionGroup.get(this.forElement)
                                          .getSelection()
-                                         .contains(iVisualElement.localView.get(this.forElement))) {
+                                         .contains(IVisualElement.localView.get(this.forElement))) {
             box.getProperties().put(iLinearGraphicsContext.strokeColor, new Vector4(0, 0, 0, 0.85f));
             box.getProperties().put(iLinearGraphicsContext.thickness, 2f);
 
@@ -271,16 +273,16 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 
     protected
     void executeWithoutModifiers(Event event, char c) {
-        final Ref<iVisualElement> r = new Ref<iVisualElement>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
-                                                       .getProperty(forElement, iVisualElement.timeSlider, r);
+        final Ref<IVisualElement> r = new Ref<IVisualElement>(null);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+                                                       .getProperty(forElement, IVisualElement.timeSlider, r);
         if (r.get() != null) {
-            iUpdateable u = ongoing.get(r.get());
+            IUpdateable u = ongoing.get(r.get());
             Launcher.getLauncher().deregisterUpdateable(u);
 
             int over = 100;
             Ref<Object> r2 = new Ref<Object>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                            .getProperty(forElement, transitionDuration, r2);
             if (r2.get() != null) over = ((Number) r2.get()).intValue();
 
@@ -290,7 +292,7 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
                 final int fover = over;
                 final long timeNow = System.currentTimeMillis();
 
-                u = new iUpdateable() {
+                u = new IUpdateable() {
 
                     long lastTime = timeNow;
 
@@ -319,7 +321,7 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
                         localRect.x = to;
 
                         r.get()
-                         .getProperty(iVisualElement.overrides)
+                         .getProperty(IVisualElement.overrides)
                          .shouldChangeFrame(r.get(), localRect, r.get().getFrame(null), true);
 
 
@@ -334,7 +336,7 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
 
                 final int fover = over;
 
-                u = new iUpdateable() {
+                u = new IUpdateable() {
                     float t = 0;
 
                     float startAt = (float) r.get().getFrame(null).x;
@@ -354,7 +356,7 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
                         localRect.x = to;
 
                         r.get()
-                         .getProperty(iVisualElement.overrides)
+                         .getProperty(IVisualElement.overrides)
                          .shouldChangeFrame(r.get(), localRect, r.get().getFrame(null), true);
 
                         if (t >= fover) {
@@ -374,20 +376,20 @@ class TimeMarker extends iVisualElementOverrides.DefaultOverride {
     protected
     void executeWithShift(Event event, char c) {
 
-        Ref<iVisualElement> r = new Ref<iVisualElement>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
-                                                       .getProperty(forElement, iVisualElement.timeSlider, r);
+        Ref<IVisualElement> r = new Ref<IVisualElement>(null);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+                                                       .getProperty(forElement, IVisualElement.timeSlider, r);
 
         //System.out.println(" execute with mask ");
 
         if (r.get() != null) {
-            iUpdateable u = ongoing.remove(r.get());
+            IUpdateable u = ongoing.remove(r.get());
             if (u != null) Launcher.getLauncher().deregisterUpdateable(u);
 
 //			r.get().setFrame(forElement.getFrame(null));
 
             r.get()
-             .getProperty(iVisualElement.overrides)
+             .getProperty(IVisualElement.overrides)
              .shouldChangeFrame(r.get(), forElement.getFrame(null), r.get().getFrame(null), true);
 
         }

@@ -1,13 +1,13 @@
 package field.core.ui;
 
 import com.thoughtworks.xstream.XStream;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin;
 import field.core.ui.SmallMenu.BetterPopup;
 import field.core.ui.SmallMenu.iKeystrokeUpdate;
 import field.core.windowing.GLComponentWindow;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
 import field.util.collect.tuple.Pair;
 import field.util.XStreamUtil;
 import org.eclipse.swt.SWT;
@@ -29,11 +29,11 @@ import java.util.List;
 public
 class NewTemplates {
 
-    private final iVisualElement root;
+    private final IVisualElement root;
     public String templateFolder;
 
     public
-    NewTemplates(iVisualElement root) {
+    NewTemplates(IVisualElement root) {
         this.root = root;
         templateFolder = PseudoPropertiesPlugin.workspaceFolder.get(root) + "/templates/";
         if (!new File(templateFolder).exists()) new File(templateFolder).mkdir();
@@ -83,8 +83,8 @@ class NewTemplates {
     }
 
     public
-    BetterPopup completionsFor(String left, iKeystrokeUpdate u, final iAcceptor<String> inserter) {
-        LinkedHashMap<String, iUpdateable> up = new LinkedHashMap<String, iUpdateable>();
+    BetterPopup completionsFor(String left, iKeystrokeUpdate u, final IAcceptor<String> inserter) {
+        LinkedHashMap<String, IUpdateable> up = new LinkedHashMap<String, IUpdateable>();
         up.put("<b>" + left + "</b>", null);
         up.put("Templates", null);
         List<Pair<String, String>> all = getAllTemplates();
@@ -104,7 +104,7 @@ class NewTemplates {
             if (a.left.startsWith(left)) {
 
                 final String text = "\u1d40 <b>" + a.left + "</b> \u2014 <i>" + trim(a.right) + "</i>";
-                up.put(text, new iUpdateable() {
+                up.put(text, new IUpdateable() {
                     public
                     void update() {
                         inserter.set(a.left);
@@ -114,21 +114,21 @@ class NewTemplates {
         }
 
         if (all.isEmpty()) {
-            up.put("<i>(no templates are installed, right click on a selected box to make one)</i>", new iUpdateable() {
+            up.put("<i>(no templates are installed, right click on a selected box to make one)</i>", new IUpdateable() {
                 public
                 void update() {
                 }
             });
         }
         else if (up.size() == 2) {
-            up.put("(no templates start with <b>'" + left + "'</b>)", new iUpdateable() {
+            up.put("(no templates start with <b>'" + left + "'</b>)", new IUpdateable() {
                 public
                 void update() {
                 }
             });
         }
 
-        GLComponentWindow r = iVisualElement.enclosingFrame.get(root);
+        GLComponentWindow r = IVisualElement.enclosingFrame.get(root);
 
         return new SmallMenu().createMenu(up, r.getFrame(), u);
     }
@@ -140,7 +140,7 @@ class NewTemplates {
     }
 
     public
-    void getTemplateName(final Point at, final iAcceptor<String> result) {
+    void getTemplateName(final Point at, final IAcceptor<String> result) {
         final String[] left = {""};
         final BetterPopup[] completions = {null};
         completions[0] = completionsFor(left[0], new iKeystrokeUpdate() {

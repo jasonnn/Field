@@ -1,12 +1,12 @@
 package field.core.execution;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.execution.PythonScriptingSystem.Runner;
 import field.core.plugins.log.ElementInvocationLogging.ElementTextWasExecuted;
 import field.core.plugins.log.Logging;
 import field.launch.SystemProperties;
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 
 import java.util.*;
 
@@ -38,8 +38,8 @@ class BasicRunner extends Runner implements iExecutesPromise {
         void stop(float t, Promise p, boolean forwards);
     }
 
-    public static final iVisualElement.VisualElementProperty<BasicRunner> basicRunner =
-            new iVisualElement.VisualElementProperty<BasicRunner>("basicRunner_");
+    public static final IVisualElement.VisualElementProperty<BasicRunner> basicRunner =
+            new IVisualElement.VisualElementProperty<BasicRunner>("basicRunner_");
 
     protected static
     Delegate createDelegateForPromise_static(float t, Promise p, boolean forwards, boolean noDefaultBackwards) {
@@ -143,7 +143,7 @@ class BasicRunner extends Runner implements iExecutesPromise {
     }
 
     public
-    void addActive(iFloatProvider timeProvider, Promise p) {
+    void addActive(IFloatProvider timeProvider, Promise p) {
 
         if (!filter(p)) return;
         if (runningDelegates.get(p) != null) {
@@ -163,7 +163,7 @@ class BasicRunner extends Runner implements iExecutesPromise {
     public
     boolean continueToBeActive(float t, Promise p, boolean forwards) {
         if (!filter(p)) return true;
-        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        t = timeDelegates.get(p) != null ? ((IFloatProvider) timeDelegates.get(p)).evaluate() : t;
 
         Delegate delegate;
         if (continueToBeActiveCanCreate) {
@@ -220,7 +220,7 @@ class BasicRunner extends Runner implements iExecutesPromise {
     public
     void jumpStop(float t, Promise p, boolean forwards) {
         if (!filter(p)) return;
-        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        t = timeDelegates.get(p) != null ? ((IFloatProvider) timeDelegates.get(p)).evaluate() : t;
         Delegate delegate = delegateForPromise(t, p, forwards);
         if (delegate != null) delegate.jumpStop(rewriteTime(t, p), p, forwards);
         runningDelegates.remove(p);
@@ -228,7 +228,7 @@ class BasicRunner extends Runner implements iExecutesPromise {
 
     public
     void removeActive(float t, Promise p) {
-        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        t = timeDelegates.get(p) != null ? ((IFloatProvider) timeDelegates.get(p)).evaluate() : t;
         stop(t, p, true);
         alsoActive.remove(p);
         active.remove(p);
@@ -246,7 +246,7 @@ class BasicRunner extends Runner implements iExecutesPromise {
             return;
         }
 
-        float t = ((iFloatProvider) timeDelegates.remove(p)).evaluate();
+        float t = ((IFloatProvider) timeDelegates.remove(p)).evaluate();
 
         removeActive(t, p);
 
@@ -257,7 +257,7 @@ class BasicRunner extends Runner implements iExecutesPromise {
     public
     void start(float t, Promise p, boolean forwards) {
         if (!filter(p)) return;
-        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        t = timeDelegates.get(p) != null ? ((IFloatProvider) timeDelegates.get(p)).evaluate() : t;
         Delegate delegate = delegateForPromise(t, p, forwards);
 
         if (delegate != null) {
@@ -272,7 +272,7 @@ class BasicRunner extends Runner implements iExecutesPromise {
         if (!filter(p)) return;
         if (dontStartAndStopSkipped) return;
 
-        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        t = timeDelegates.get(p) != null ? ((IFloatProvider) timeDelegates.get(p)).evaluate() : t;
         try {
             PythonInterface.getPythonInterface().setVariable("_jump", true);
             PythonInterface.getPythonInterface().setVariable("_backwards", !forwards);
@@ -288,7 +288,7 @@ class BasicRunner extends Runner implements iExecutesPromise {
     public
     void stop(float t, Promise p, boolean forwards) {
         if (!filter(p)) return;
-        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        t = timeDelegates.get(p) != null ? ((IFloatProvider) timeDelegates.get(p)).evaluate() : t;
         Delegate delegate = (Delegate) runningDelegates.get(p);
         if (delegate != null) delegate.stop(rewriteTime(t, p), p, forwards);
         runningDelegates.remove(p);
@@ -375,7 +375,7 @@ class BasicRunner extends Runner implements iExecutesPromise {
 
     protected
     Delegate delegateForPromise(float t, Promise p, boolean forwards) {
-        t = timeDelegates.get(p) != null ? ((iFloatProvider) timeDelegates.get(p)).evaluate() : t;
+        t = timeDelegates.get(p) != null ? ((IFloatProvider) timeDelegates.get(p)).evaluate() : t;
         Delegate ret = (Delegate) runningDelegates.get(p);
         if (ret == null) {
             return createDelegateForPromise(t, p, forwards, noDefaultBackwards);

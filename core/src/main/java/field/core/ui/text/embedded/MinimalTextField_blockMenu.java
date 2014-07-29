@@ -2,8 +2,8 @@ package field.core.ui.text.embedded;
 
 import field.core.Constants;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.execution.PythonInterface;
 import field.core.plugins.python.PythonPlugin;
 import field.core.ui.PopupTextBox;
@@ -13,10 +13,10 @@ import field.core.ui.text.embedded.CustomInsertDrawing.Nub;
 import field.core.ui.text.embedded.CustomInsertDrawing.iAcceptsInsertRenderingContext;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
 import field.core.util.FieldPyObjectAdaptor.iExtensible;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iPhasicAcceptor;
+import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IPhasicAcceptor;
 import field.util.collect.tuple.Pair;
 import field.namespace.key.OKey;
 import field.util.Dict;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 public
-class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcceptor<Object>,
+class MinimalTextField_blockMenu extends MinimalTextField implements IPhasicAcceptor<Object>,
                                                                      iAcceptsInsertRenderingContext {
 
     public static
@@ -46,7 +46,7 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             component = new MinimalTextField_blockMenu() {
                 @Override
                 public
@@ -155,7 +155,7 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
 
         @Override
         public
-        void deserialize(final iVisualElement inside) {
+        void deserialize(final IVisualElement inside) {
             if (name == null) name = "Component_transformBlockStart:" + new UID().toString() + ".transient";
             component = new MinimalTextField_blockMenu() {
                 @Override
@@ -176,14 +176,14 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
 
                 @Override
                 protected
-                Map<String, iUpdateable> callMenu(PyObject painter) {
+                Map<String, IUpdateable> callMenu(PyObject painter) {
                     PythonInterface.getPythonInterface().setVariable("_self", inside);
                     PythonPlugin.toolsModule.__dict__.__setitem__("_self", Py.java2py(inside));
                     PyObject[] args = {Py.java2py(new OKeyByName(name, null))};
                     PyObject o = painter.__call__(args);
                     if (o == null) return null;
                     if (o.equals(Py.None)) return null;
-                    return (Map<String, iUpdateable>) o.__tojava__(Object.class);
+                    return (Map<String, IUpdateable>) o.__tojava__(Object.class);
                 }
 
                 @Override
@@ -370,7 +370,7 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
     }
 
     public
-    iAcceptor set(Object to) {
+    IAcceptor set(Object to) {
 
         if (to instanceof Number) {
             float f = ((Number) to).floatValue();
@@ -533,7 +533,7 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
     }
 
     protected
-    Map<String, iUpdateable> callMenu(PyObject menu) {
+    Map<String, IUpdateable> callMenu(PyObject menu) {
         return null;
     }
 
@@ -549,11 +549,11 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
             new PopupTextBox.Modal().getString(new java.awt.Point(loc.x, loc.y),
                                                "label: ",
                                                getText(),
-                                               new iAcceptor<String>() {
+                                               new IAcceptor<String>() {
 
                                                    @Override
                                                    public
-                                                   iAcceptor<String> set(String to) {
+                                                   IAcceptor<String> set(String to) {
 
                                                        MinimalTextField_blockMenu.this.setText(to);
                                                        if (inside != null) {
@@ -568,7 +568,7 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
 
         if (Platform.isPopupTrigger(e)) {
 
-            Map<String, iUpdateable> additional = null;
+            Map<String, IUpdateable> additional = null;
 
             try {
                 Object method = PythonInterface.getPythonInterface().getVariable(name(this.getText()));
@@ -588,13 +588,13 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
                 ee.printStackTrace();
             }
 
-            LinkedHashMap<String, iUpdateable> items = new LinkedHashMap<String, iUpdateable>();
+            LinkedHashMap<String, IUpdateable> items = new LinkedHashMap<String, IUpdateable>();
 
             if (additional != null) {
                 items.put("Menu for '" + name(getText()) + "'", null);
-                Set<Entry<String, iUpdateable>> ex = additional.entrySet();
-                for (final Entry<String, iUpdateable> ee : ex) {
-                    items.put(ee.getKey(), new iUpdateable() {
+                Set<Entry<String, IUpdateable>> ex = additional.entrySet();
+                for (final Entry<String, IUpdateable> ee : ex) {
+                    items.put(ee.getKey(), new IUpdateable() {
 
                         public
                         void update() {
@@ -626,7 +626,7 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
                         // System.out.println(name+" <"+d+">");
 
                         items.put(" \u223d  <b>" + name + "</b> \u2014 <i>" + d.replace("\n", " ").trim() + "</i>",
-                                  new iUpdateable() {
+                                  new IUpdateable() {
 
                                       public
                                       void update() {
@@ -654,7 +654,7 @@ class MinimalTextField_blockMenu extends MinimalTextField implements iPhasicAcce
             if (knownTextTransforms.size() > 0) {
                 items.put("Available transforms, from knownTextTransforms", null);
                 for (final Pair<String, String> s : knownTextTransforms) {
-                    items.put(" \u223d  <b>" + s.left + "</b> \u2014 <i>" + s.right + "</i>", new iUpdateable() {
+                    items.put(" \u223d  <b>" + s.left + "</b> \u2014 <i>" + s.right + "</i>", new IUpdateable() {
 
                         public
                         void update() {

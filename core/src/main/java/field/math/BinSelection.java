@@ -1,6 +1,6 @@
 package field.math;
 
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -75,10 +75,10 @@ class BinSelection {
     }
 
     public
-    float evaluate(float d, iFunction<Number, Number> nn) {
+    float evaluate(float d, IFunction<Number, Number> nn) {
         float z = 0;
         for (Number dat : data) {
-            z += gauss(d - nn.f(dat.floatValue()).floatValue(), width);
+            z += gauss(d - nn.apply(dat.floatValue()).floatValue(), width);
         }
         return z / data.size();
     }

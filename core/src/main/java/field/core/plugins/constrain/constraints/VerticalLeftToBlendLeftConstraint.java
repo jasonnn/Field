@@ -1,8 +1,8 @@
 package field.core.plugins.constrain.constraints;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.constrain.BaseConstraintOverrides;
 import field.core.plugins.constrain.ComplexConstraints;
 import field.core.plugins.constrain.ComplexConstraints.VariablesForRect;
@@ -29,21 +29,21 @@ class VerticalLeftToBlendLeftConstraint extends BaseConstraintOverrides {
 
     private
     Boolean isSelected() {
-        iComponent v = forElement.getProperty(iVisualElement.localView);
+        iComponent v = forElement.getProperty(IVisualElement.localView);
         if (v != null) return v.isSelected();
         return false;
     }
 
     @Override
     protected
-    ClConstraint createConstraint(Map<String, iVisualElement> property) {
+    ClConstraint createConstraint(Map<String, IVisualElement> property) {
 
         ComplexConstraints cc = getComplexConstraintsPlugin();
         assert cc != null;
         if (cc == null) return null;
-        iVisualElement left = property.get("left");
-        iVisualElement rightA = property.get("rightA");
-        iVisualElement rightB = property.get("rightB");
+        IVisualElement left = property.get("left");
+        IVisualElement rightA = property.get("rightA");
+        IVisualElement rightB = property.get("rightB");
         assert left != null : property;
         assert rightA != null : property;
 
@@ -86,10 +86,10 @@ class VerticalLeftToBlendLeftConstraint extends BaseConstraintOverrides {
         CachedLine cl = new CachedLine();
         iLine line = cl.getInput();
 
-        Map<String, iVisualElement> parameters = getConstraintParameters();
-        iVisualElement left = parameters.get("left");
-        iVisualElement rightA = parameters.get("rightA");
-        iVisualElement rightB = parameters.get("rightB");
+        Map<String, IVisualElement> parameters = getConstraintParameters();
+        IVisualElement left = parameters.get("left");
+        IVisualElement rightA = parameters.get("rightA");
+        IVisualElement rightB = parameters.get("rightB");
         assert left != null : parameters;
         assert rightA != null : parameters;
 

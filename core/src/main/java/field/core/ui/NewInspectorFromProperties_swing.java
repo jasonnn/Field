@@ -1,13 +1,13 @@
 package field.core.ui;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.python.Action;
 import field.core.plugins.python.OutputInsertsOnSheet;
 import field.core.ui.NewInspector.*;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.Vector4;
 import field.util.collect.tuple.Triple;
 
@@ -88,7 +88,7 @@ class NewInspectorFromProperties_swing {
     }
 
     public
-    List<Inspected> rebuild(List<iVisualElement> sel) {
+    List<Inspected> rebuild(List<IVisualElement> sel) {
 
         if (sel.isEmpty()) {
             begin();
@@ -99,19 +99,19 @@ class NewInspectorFromProperties_swing {
 
         Inspected<String, InfoControl> heading = getHeading("Basic");
         add(heading);
-        for (final iVisualElement e : sel) {
+        for (final IVisualElement e : sel) {
             Inspected<String, TextControl> name = new Inspected<String, TextControl>() {
 
                 @Override
                 public
                 String getValue() {
-                    return iVisualElement.name.get(e);
+                    return IVisualElement.name.get(e);
                 }
 
                 @Override
                 public
                 void setValue(String s) {
-                    iVisualElement.name.set(e, e, s);
+                    IVisualElement.name.set(e, e, s);
                 }
 
                 @Override
@@ -140,10 +140,10 @@ class NewInspectorFromProperties_swing {
                     Rect f = e.getFrame(null);
                     f.x = s;
 
-                    iVisualElementOverrides.topology.begin(e);
-                    iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
-                    iVisualElementOverrides.topology.end(e);
-                    iVisualElement.dirty.set(e, e, true);
+                    IVisualElementOverrides.topology.begin(e);
+                    IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
+                    IVisualElementOverrides.topology.end(e);
+                    IVisualElement.dirty.set(e, e, true);
                 }
 
                 @Override
@@ -171,10 +171,10 @@ class NewInspectorFromProperties_swing {
                     Rect f = e.getFrame(null);
                     f.y = s;
 
-                    iVisualElementOverrides.topology.begin(e);
-                    iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
-                    iVisualElementOverrides.topology.end(e);
-                    iVisualElement.dirty.set(e, e, true);
+                    IVisualElementOverrides.topology.begin(e);
+                    IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
+                    IVisualElementOverrides.topology.end(e);
+                    IVisualElement.dirty.set(e, e, true);
                 }
 
                 @Override
@@ -203,10 +203,10 @@ class NewInspectorFromProperties_swing {
                     Rect f = e.getFrame(null);
                     f.w = s;
 
-                    iVisualElementOverrides.topology.begin(e);
-                    iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
-                    iVisualElementOverrides.topology.end(e);
-                    iVisualElement.dirty.set(e, e, true);
+                    IVisualElementOverrides.topology.begin(e);
+                    IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
+                    IVisualElementOverrides.topology.end(e);
+                    IVisualElement.dirty.set(e, e, true);
                 }
 
                 @Override
@@ -236,10 +236,10 @@ class NewInspectorFromProperties_swing {
                     Rect f = e.getFrame(null);
                     f.h = s;
 
-                    iVisualElementOverrides.topology.begin(e);
-                    iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
-                    iVisualElementOverrides.topology.end(e);
-                    iVisualElement.dirty.set(e, e, true);
+                    IVisualElementOverrides.topology.begin(e);
+                    IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
+                    IVisualElementOverrides.topology.end(e);
+                    IVisualElement.dirty.set(e, e, true);
                 }
 
                 @Override
@@ -490,12 +490,12 @@ class NewInspectorFromProperties_swing {
     }
 
     private static
-    void setPopupMenu(JComponent editor, final VisualElementProperty p, final iVisualElement e) {
+    void setPopupMenu(JComponent editor, final VisualElementProperty p, final IVisualElement e) {
 
-        LinkedHashMap<String, iUpdateable> pop = new LinkedHashMap<String, iUpdateable>();
+        LinkedHashMap<String, IUpdateable> pop = new LinkedHashMap<String, IUpdateable>();
 
         pop.put("Property", null);
-        pop.put("  Put property editor on canvas", new iUpdateable() {
+        pop.put("  Put property editor on canvas", new IUpdateable() {
 
             @Override
             public

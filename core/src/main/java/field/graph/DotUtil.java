@@ -2,7 +2,7 @@ package field.graph;
 
 import field.core.util.ExecuteCommand;
 import field.math.linalg.Vector2;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 
 import java.io.*;
 import java.util.Collection;
@@ -47,8 +47,8 @@ class DotUtil {
     public static
     void writeDot(String file,
                   Collection nodes,
-                  iFunction<Collection<Object>, Object> connected,
-                  iFunction<String, Object> names) throws IOException {
+                  IFunction<Object, Collection<Object>> connected,
+                  IFunction<Object, String> names) throws IOException {
 
         BufferedWriter w = new BufferedWriter(new FileWriter(new File(file)));
 
@@ -56,9 +56,9 @@ class DotUtil {
 
         w.append("graph G {\n");
         for (Object n : nodes) {
-            String nn = names.f(n);
-            for (Object m : connected.f(n)) {
-                String mm = names.f(m);
+            String nn = names.apply(n);
+            for (Object m : connected.apply(n)) {
+                String mm = names.apply(m);
 
                 w.append(nn).append(" -- ").append(mm).append(";\n");
             }
@@ -71,8 +71,8 @@ class DotUtil {
     public static
     HashMap<String, Vector2> dot(String executable,
                                  Collection nodes,
-                                 iFunction<Collection<Object>, Object> connected,
-                                 iFunction<String, Object> names) throws IOException {
+                                 IFunction<Object, Collection<Object>> connected,
+                                 IFunction<Object, String> names) throws IOException {
         String fn = File.createTempFile("field", ".dot").getAbsolutePath();
         String fnOut = File.createTempFile("field", "_out.dot").getAbsolutePath();
 

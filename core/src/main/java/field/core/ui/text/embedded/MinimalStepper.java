@@ -1,11 +1,11 @@
 package field.core.ui.text.embedded;
 
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import field.namespace.key.OKey;
 
 import javax.swing.*;
@@ -20,16 +20,16 @@ class MinimalStepper extends JComponent {
 
     public static
     class Component_Stepper extends ProvidedComponent {
-        private transient iProvider value;
+        private transient IProvider value;
         String name = "Component_iFloatProvider:" + new UID().toString() + ".transient";
         OKey localKey;
         boolean go = false;
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             go = false;
-            value = new iProvider() {
+            value = new IProvider() {
 
                 public
                 Object get() {
@@ -50,7 +50,7 @@ class MinimalStepper extends JComponent {
                 }
 
                 public
-                iProvider set(String caption) {
+                IProvider set(String caption) {
                     ((MinimalStepper) component).caption = caption;
                     component.repaint();
                     return this;
@@ -99,7 +99,7 @@ class MinimalStepper extends JComponent {
 
     int width = 40;
 
-    iUpdateable auto = null;
+    IUpdateable auto = null;
 
     boolean executed = false;
 
@@ -253,7 +253,7 @@ class MinimalStepper extends JComponent {
 
             arm = true;
             repaint();
-            if (auto == null) Launcher.getLauncher().registerUpdateable(auto = new iUpdateable() {
+            if (auto == null) Launcher.getLauncher().registerUpdateable(auto = new IUpdateable() {
 
                 public
                 void update() {

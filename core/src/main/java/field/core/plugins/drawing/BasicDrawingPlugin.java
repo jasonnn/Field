@@ -3,11 +3,11 @@ package field.core.plugins.drawing;
 import field.core.Platform;
 import field.core.Platform.OS;
 import field.core.StandardFluidSheet;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.plugins.PluginList;
 import field.core.plugins.constrain.ComplexConstraints;
@@ -25,11 +25,12 @@ import field.core.windowing.components.DraggableComponent.Resize;
 import field.core.windowing.components.*;
 import field.core.windowing.components.RootComponent.iPaintPeer;
 import field.core.windowing.components.SelectionGroup.iSelectionChanged;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
-import field.namespace.generic.Bind.iFunction;
+import field.math.graph.IMutableContainer;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 import field.util.collect.tuple.Pair;
 import field.util.collect.tuple.Triple;
@@ -53,10 +54,10 @@ class BasicDrawingPlugin implements iPlugin {
             new VisualElementProperty<Number>("allwaysConstrain");
 
     static {
-        SnippetsPlugin.addURLHandler(new iFunction<Boolean, Pair<URL, SnippetsPlugin>>() {
+        SnippetsPlugin.addURLHandler(new IFunction<Pair<URL, SnippetsPlugin>, Boolean>() {
 
             public
-            Boolean f(Pair<URL, SnippetsPlugin> in) {
+            Boolean apply(Pair<URL, SnippetsPlugin> in) {
                 boolean s = in.left.getPath().endsWith(".svg");
                 if (s) {
                     String forms = in.left.getPath()
@@ -74,10 +75,10 @@ class BasicDrawingPlugin implements iPlugin {
         String[] images = {".jpg", ".tif", ".tiff", ".psd", ".png"};
         for (final String i : images) {
 
-            SnippetsPlugin.addURLHandler(new iFunction<Boolean, Pair<URL, SnippetsPlugin>>() {
+            SnippetsPlugin.addURLHandler(new IFunction<Pair<URL, SnippetsPlugin>, Boolean>() {
 
                 public
-                Boolean f(Pair<URL, SnippetsPlugin> in) {
+                Boolean apply(Pair<URL, SnippetsPlugin> in) {
                     boolean s = in.left.getPath().endsWith(i);
                     if (s) {
                         String forms = in.left.getPath() + '\n' + "ii = image(\"" + in.left.toExternalForm() + "\")";
@@ -124,17 +125,17 @@ class BasicDrawingPlugin implements iPlugin {
     public
     interface iDragParticipant {
         public
-        void beginDrag(Set<Resize> resizeType, iVisualElement element, Rect originalRect, int modifiers);
+        void beginDrag(Set<Resize> resizeType, IVisualElement element, Rect originalRect, int modifiers);
 
         public
         void endDrag(Set<Resize> reseizeType,
-                     iVisualElement element,
+                     IVisualElement element,
                      Rect inOutRect,
                      boolean createConstraint,
                      int modifiers);
 
         public
-        void interpretRect(iVisualElement element, Rect originalRect, Rect currentRect);
+        void interpretRect(IVisualElement element, Rect originalRect, Rect currentRect);
 
         public
         boolean needsRepainting();
@@ -144,7 +145,7 @@ class BasicDrawingPlugin implements iPlugin {
     }
 
     public
-    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -160,7 +161,7 @@ class BasicDrawingPlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -181,13 +182,13 @@ class BasicDrawingPlugin implements iPlugin {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             properties = t;
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -198,25 +199,25 @@ class BasicDrawingPlugin implements iPlugin {
     }
 
     public
-    class Overrides extends iVisualElementOverrides.DefaultOverride {
+    class Overrides extends IVisualElementOverrides.DefaultOverride {
         @Override
         public
-        VisitCode deleted(iVisualElement source) {
+        TraversalHint deleted(IVisualElement source) {
 
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
         public
-        VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
+        TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event) {
 
             // TODO swt
 
-            if (event == null) return VisitCode.cont;
+            if (event == null) return StandardTraversalHint.CONTINUE;
             if (event.character == '0' && event.type == SWT.KeyDown && event.doit) {
                 if (tick) {
                     tick = false;
-                    GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
+                    GLComponentWindow frame = IVisualElement.enclosingFrame.get(root);
                     frame.disableRepaintNow();
                 }
             }
@@ -249,7 +250,7 @@ class BasicDrawingPlugin implements iPlugin {
                 }
 
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
             //
             // if (event.getKeyCode() == KeyEvent.VK_F3) {
             // if (tick) {
@@ -276,16 +277,16 @@ class BasicDrawingPlugin implements iPlugin {
 
         @Override
         public
-        VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+        TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
 
             items.put("Drawing", null);
-            items.put(" \u301c\tCreate a <b>new spline drawer</b> here ///P///", new iUpdateable() {
+            items.put(" \u301c\tCreate a <b>new spline drawer</b> here ///P///", new IUpdateable() {
                 private GLComponentWindow frame;
 
                 public
                 void update() {
 
-                    frame = iVisualElement.enclosingFrame.get(root);
+                    frame = IVisualElement.enclosingFrame.get(root);
 
                     Rect bounds = new Rect(30, 30, 50, 50);
                     if (frame != null) {
@@ -304,13 +305,13 @@ class BasicDrawingPlugin implements iPlugin {
                 }
             });
 
-            items.put(" \u301c\tCreate new <b>3d</b> spline drawer here ", new iUpdateable() {
+            items.put(" \u301c\tCreate new <b>3d</b> spline drawer here ", new IUpdateable() {
                 private GLComponentWindow frame;
 
                 public
                 void update() {
 
-                    frame = iVisualElement.enclosingFrame.get(root);
+                    frame = IVisualElement.enclosingFrame.get(root);
 
                     Rect bounds = new Rect(30, 30, 500, 500);
                     if (frame != null) {
@@ -334,7 +335,7 @@ class BasicDrawingPlugin implements iPlugin {
 
         @Override
         public
-        <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+        <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
             if (prop == frameManipulationBegin) {
 
                 if ((Platform.getOS() == OS.mac && Toolkit.getDefaultToolkit()
@@ -360,7 +361,7 @@ class BasicDrawingPlugin implements iPlugin {
                 dragParticipants_list.stopAll();
 
             }
-            else if (prop.equals(iVisualElement.hasFocusLock)) {
+            else if (prop.equals(IVisualElement.hasFocusLock)) {
                 // TODO swt lock selection
                 // Object x = ((Ref<Object>) to).get();
                 // if (x != null && ((x instanceof Number &&
@@ -376,11 +377,11 @@ class BasicDrawingPlugin implements iPlugin {
 
         @Override
         public
-        VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+        TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
 
             dragParticipants_list.interpretRect(source, oldFrame, newFrame);
 
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
     }
 
@@ -397,7 +398,7 @@ class BasicDrawingPlugin implements iPlugin {
 
     private final LocalVisualElement lve;
 
-    private iVisualElement root;
+    private IVisualElement root;
 
     private SelectionGroup<iComponent> group;
 
@@ -413,7 +414,7 @@ class BasicDrawingPlugin implements iPlugin {
     }
 
     public static
-    boolean shouldConstrain(iVisualElement source) {
+    boolean shouldConstrain(IVisualElement source) {
         Number m = allwaysConstrain.get(source);
         return m == null ? false : m.floatValue() > 0;
     }
@@ -430,7 +431,7 @@ class BasicDrawingPlugin implements iPlugin {
 
     iDragParticipant dragParticipants_list = ReflectionTools.listProxy(dragParticipants, iDragParticipant.class);
 
-    iVisualElementOverrides elementOverride;
+    IVisualElementOverrides elementOverride;
 
     Map<Object, Object> properties = new HashMap<Object, Object>();
 
@@ -464,13 +465,13 @@ class BasicDrawingPlugin implements iPlugin {
     }
 
     public
-    iVisualElement getWellKnownVisualElement(String id) {
+    IVisualElement getWellKnownVisualElement(String id) {
         if (id.equals(pluginId)) return lve;
         return null;
     }
 
     public
-    void registeredWith(final iVisualElement root) {
+    void registeredWith(final IVisualElement root) {
 
         PythonInterface.getPythonInterface().execString("from field.core.plugins.drawing.opengl import CachedLine");
         PythonInterface.getPythonInterface().execString("from field.core.plugins.drawing.opengl import Cursor");
@@ -485,12 +486,12 @@ class BasicDrawingPlugin implements iPlugin {
         root.addChild(lve);
 
         lve.setProperty(simpleConstraints_plugin, this);
-        group = root.getProperty(iVisualElement.selectionGroup);
+        group = root.getProperty(IVisualElement.selectionGroup);
 
         elementOverride = createElementOverrides();
 
         GLComponentWindow frame;
-        frame = iVisualElement.enclosingFrame.get(root);
+        frame = IVisualElement.enclosingFrame.get(root);
 
         installedContext = new BaseGLGraphicsContext(frame.getSceneList(), false);
         installedContext.install(frame);
@@ -526,12 +527,12 @@ class BasicDrawingPlugin implements iPlugin {
         new OverDrawing(root, frame, installedContext);
 
         new SimpleTextDrawing(false).installInto(installedContext);
-        new SimpleWebpageDrawing(true).installInto(installedContext).setRefreshHandle(new iUpdateable() {
+        new SimpleWebpageDrawing(true).installInto(installedContext).setRefreshHandle(new IUpdateable() {
 
             @Override
             public
             void update() {
-                iVisualElement.enclosingFrame.get(root).requestRepaint();
+                IVisualElement.enclosingFrame.get(root).requestRepaint();
             }
         });
         sld = new SimpleLineDrawing();
@@ -559,7 +560,7 @@ class BasicDrawingPlugin implements iPlugin {
 
         dragParticipants.add(new OfferedAlignment(root));
 
-        rootComponent = iVisualElement.rootComponent.get(root);
+        rootComponent = IVisualElement.rootComponent.get(root);
         rootComponent.addPaintPeer(new iPaintPeer() {
             public
             void paint(RootComponent inside) {
@@ -586,30 +587,30 @@ class BasicDrawingPlugin implements iPlugin {
 
         group.registerNotification(new iSelectionChanged<iComponent>() {
 
-            Set<iVisualElement> currentSelection = new LinkedHashSet<iVisualElement>();
+            Set<IVisualElement> currentSelection = new LinkedHashSet<IVisualElement>();
 
             public
             void selectionChanged(Set<iComponent> selected) {
 
-                Set<iVisualElement> currentAll =
-                        new LinkedHashSet<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+                Set<IVisualElement> currentAll =
+                        new LinkedHashSet<IVisualElement>(StandardFluidSheet.allVisualElements(root));
 
-                Set<iVisualElement> sel = new LinkedHashSet<iVisualElement>();
+                Set<IVisualElement> sel = new LinkedHashSet<IVisualElement>();
                 try {
                     for (iComponent c : selected) {
-                        iVisualElement ve = c.getVisualElement();
+                        IVisualElement ve = c.getVisualElement();
                         if (ve != null) {
                             sel.add(ve);
                         }
                     }
 
-                    for (iVisualElement n : currentSelection) {
+                    for (IVisualElement n : currentSelection) {
                         if (!sel.contains(n) && currentAll.contains(n)) {
                             deselected(n);
                         }
                     }
 
-                    for (iVisualElement n : sel) {
+                    for (IVisualElement n : sel) {
                         if (!currentSelection.contains(n) && currentAll.contains(n)) {
                             selected(n);
                         }
@@ -621,7 +622,7 @@ class BasicDrawingPlugin implements iPlugin {
             }
 
             private
-            void deselected(iVisualElement n) {
+            void deselected(IVisualElement n) {
 
                 try {
                     PythonCallableMap callback = selectionStateCallback.get(n);
@@ -632,7 +633,7 @@ class BasicDrawingPlugin implements iPlugin {
             }
 
             private
-            void selected(iVisualElement n) {
+            void selected(IVisualElement n) {
                 try {
                     PythonCallableMap callback = selectionStateCallback.get(n);
                     if (callback != null) callback.invoke(n, true);
@@ -648,7 +649,7 @@ class BasicDrawingPlugin implements iPlugin {
         // selectionSets.addNotibleComponentClass(SwingBridgeComponent.class,
         // "Swing components");
 
-        GlassComponent glassComponent = iVisualElement.glassComponent.get(root);
+        GlassComponent glassComponent = IVisualElement.glassComponent.get(root);
 
         LineInteraction lineInteraction = new LineInteraction();
         glassComponent.addTransparentMousePeer(lineInteraction);
@@ -685,7 +686,7 @@ class BasicDrawingPlugin implements iPlugin {
                 needs = needs | dragParticipants.get(i).needsRepainting();
             }
             if (needs) {
-                iVisualElement.enclosingFrame.get(root).getRoot().requestRedisplay();
+                IVisualElement.enclosingFrame.get(root).getRoot().requestRedisplay();
             }
         }
 
@@ -693,7 +694,7 @@ class BasicDrawingPlugin implements iPlugin {
     }
 
     protected
-    iVisualElementOverrides createElementOverrides() {
+    IVisualElementOverrides createElementOverrides() {
         return new Overrides() {
         }.setVisualElement(lve);
     }

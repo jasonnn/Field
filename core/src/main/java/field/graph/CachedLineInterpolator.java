@@ -4,7 +4,7 @@ import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.plugins.drawing.opengl.LineUtils;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
-import field.math.abstraction.iAcceptor;
+import field.math.abstraction.IAcceptor;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
@@ -19,7 +19,7 @@ public
 class CachedLineInterpolator {
 
     public
-    class BlendEvent implements iAcceptor<Float> {
+    class BlendEvent implements IAcceptor<Float> {
 
         private final Event ec;
         private final CachedLine ca;
@@ -37,7 +37,7 @@ class CachedLineInterpolator {
 
         @Override
         public
-        iAcceptor<Float> set(Float to) {
+        IAcceptor<Float> set(Float to) {
             if (ec.args != null) {
                 Event ea = ca.events.get(ia);
                 Event eb = cb.events.get(ib);
@@ -204,7 +204,7 @@ class CachedLineInterpolator {
         private final CachedLine material;
         private final List<CachedLine> materialL;
 
-        List<iAcceptor<Float>> doBlend = new ArrayList<iAcceptor<Float>>();
+        List<IAcceptor<Float>> doBlend = new ArrayList<IAcceptor<Float>>();
         private final CachedLine b;
 
         public
@@ -242,7 +242,7 @@ class CachedLineInterpolator {
 
             if (alpha >= 1) return Collections.singletonList(b);
 
-            for (iAcceptor<Float> aa : doBlend)
+            for (IAcceptor<Float> aa : doBlend)
                 aa.set(alpha);
 
             material.getProperties().put(iLinearGraphicsContext.forceNew, 1);
@@ -281,7 +281,7 @@ class CachedLineInterpolator {
     }
 
     protected
-    void propertyBlend(List<iAcceptor<Float>> doBlend, Dict dict_a, Dict dict_b, Dict dict_c) {
+    void propertyBlend(List<IAcceptor<Float>> doBlend, Dict dict_a, Dict dict_b, Dict dict_c) {
         Map<Prop, Object> localPropA = dict_a.getMap();
         Map<Prop, Object> localPropB = dict_b.getMap();
 
@@ -295,21 +295,21 @@ class CachedLineInterpolator {
 
             seen.add(ee.getKey());
 
-            iAcceptor<Float> bb = blendFor(dict_c, ee.getKey(), aee, bee);
+            IAcceptor<Float> bb = blendFor(dict_c, ee.getKey(), aee, bee);
             if (bb != null) doBlend.add(bb);
         }
 
         es = localPropA.entrySet();
         for (Entry<Prop, Object> ee : es) {
             if (!seen.contains(ee.getKey())) {
-                iAcceptor<Float> bb = blendFor(dict_c, ee.getKey(), null, ee.getValue());
+                IAcceptor<Float> bb = blendFor(dict_c, ee.getKey(), null, ee.getValue());
                 if (bb != null) doBlend.add(bb);
             }
         }
     }
 
     protected
-    void propertyBlend(List<iAcceptor<Float>> doBlend, CachedLine ca, int ia, CachedLine cb, int ib, Dict dict_c) {
+    void propertyBlend(List<IAcceptor<Float>> doBlend, CachedLine ca, int ia, CachedLine cb, int ib, Dict dict_c) {
 
         Map<Prop, Object> localPropA = ca.events.get(Math.min(ia, ca.events.size() - 1)).getAttributes().getMap();
         Map<Prop, Object> localPropB = cb.events.get(Math.min(ib, cb.events.size() - 1)).getAttributes().getMap();
@@ -324,7 +324,7 @@ class CachedLineInterpolator {
 
             seen.add(ee.getKey());
 
-            iAcceptor<Float> bb = blendFor(dict_c, ee.getKey(), ca, ia, cb, ib);
+            IAcceptor<Float> bb = blendFor(dict_c, ee.getKey(), ca, ia, cb, ib);
             if (bb != null) doBlend.add(bb);
         }
 
@@ -332,23 +332,23 @@ class CachedLineInterpolator {
         for (Entry<Prop, Object> ee : es) {
             if (!seen.contains(ee.getKey())) {
 //				iAcceptor<Float> bb = blendFor(dict_c, ee.getKey(), null, ee.getValue());
-                iAcceptor<Float> bb = blendFor(dict_c, ee.getKey(), ca, ia, cb, ib);
+                IAcceptor<Float> bb = blendFor(dict_c, ee.getKey(), ca, ia, cb, ib);
                 if (bb != null) doBlend.add(bb);
             }
         }
     }
 
     private
-    iAcceptor<Float> blendFor(final Dict dict_c, final Prop key, final Object left, final Object right) {
+    IAcceptor<Float> blendFor(final Dict dict_c, final Prop key, final Object left, final Object right) {
 
         if (left == null || right == null) // todo
             return null;
 
         if (left instanceof Vector4 && right instanceof Vector4) {
-            return new iAcceptor<Float>() {
+            return new IAcceptor<Float>() {
                 @Override
                 public
-                iAcceptor<Float> set(Float to) {
+                IAcceptor<Float> set(Float to) {
 
                     dict_c.put(key, new Vector4().lerp((Vector4) left, (Vector4) right, to));
 
@@ -357,10 +357,10 @@ class CachedLineInterpolator {
             };
         }
         if ((left instanceof Vector3) && (right instanceof Vector3)) {
-            return new iAcceptor<Float>() {
+            return new IAcceptor<Float>() {
                 @Override
                 public
-                iAcceptor<Float> set(Float to) {
+                IAcceptor<Float> set(Float to) {
 
                     dict_c.put(key, new Vector3().lerp((Vector3) left, (Vector3) right, to));
 
@@ -369,10 +369,10 @@ class CachedLineInterpolator {
             };
         }
         if ((left instanceof Vector2) && (right instanceof Vector2)) {
-            return new iAcceptor<Float>() {
+            return new IAcceptor<Float>() {
                 @Override
                 public
-                iAcceptor<Float> set(Float to) {
+                IAcceptor<Float> set(Float to) {
 
                     dict_c.put(key, new Vector2().lerp((Vector2) left, (Vector2) right, to));
 
@@ -381,10 +381,10 @@ class CachedLineInterpolator {
             };
         }
         if ((left instanceof Number) && (right instanceof Number)) {
-            return new iAcceptor<Float>() {
+            return new IAcceptor<Float>() {
                 @Override
                 public
-                iAcceptor<Float> set(Float to) {
+                IAcceptor<Float> set(Float to) {
 
                     dict_c.put(key, ((Number) left).floatValue() * (1 - to) + to * ((Number) right).floatValue());
 
@@ -400,7 +400,7 @@ class CachedLineInterpolator {
     }
 
     private
-    iAcceptor<Float> blendFor(final Dict dict_c,
+    IAcceptor<Float> blendFor(final Dict dict_c,
                               final Prop key,
                               final CachedLine ca,
                               final int ia,
@@ -414,10 +414,10 @@ class CachedLineInterpolator {
             return null;
 
         if (left instanceof Vector4 && right instanceof Vector4) {
-            return new iAcceptor<Float>() {
+            return new IAcceptor<Float>() {
                 @Override
                 public
-                iAcceptor<Float> set(Float to) {
+                IAcceptor<Float> set(Float to) {
 
                     Object left = ca.events.get(ia).getAttributes().get(key);
                     Object right = cb.events.get(ib).getAttributes().get(key);
@@ -429,10 +429,10 @@ class CachedLineInterpolator {
             };
         }
         if ((left instanceof Vector3) && (right instanceof Vector3)) {
-            return new iAcceptor<Float>() {
+            return new IAcceptor<Float>() {
                 @Override
                 public
-                iAcceptor<Float> set(Float to) {
+                IAcceptor<Float> set(Float to) {
 
                     Object left = ca.events.get(ia).getAttributes().get(key);
                     Object right = cb.events.get(ib).getAttributes().get(key);
@@ -444,10 +444,10 @@ class CachedLineInterpolator {
             };
         }
         if ((left instanceof Vector2) && (right instanceof Vector2)) {
-            return new iAcceptor<Float>() {
+            return new IAcceptor<Float>() {
                 @Override
                 public
-                iAcceptor<Float> set(Float to) {
+                IAcceptor<Float> set(Float to) {
 
                     Object left = ca.events.get(ia).getAttributes().get(key);
                     Object right = cb.events.get(ib).getAttributes().get(key);
@@ -459,10 +459,10 @@ class CachedLineInterpolator {
             };
         }
         if ((left instanceof Number) && (right instanceof Number)) {
-            return new iAcceptor<Float>() {
+            return new IAcceptor<Float>() {
                 @Override
                 public
-                iAcceptor<Float> set(Float to) {
+                IAcceptor<Float> set(Float to) {
 
                     Object left = ca.events.get(ia).getAttributes().get(key);
                     Object right = cb.events.get(ib).getAttributes().get(key);

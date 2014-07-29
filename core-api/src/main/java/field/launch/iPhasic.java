@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 
 public
-interface iPhasic extends iUpdateable, iInside {
+interface iPhasic extends IUpdateable, iInside {
 
     public static final Method method_begin = UncheckedReflection.getDeclaredMethod(iPhasic.class,"begin");
     public static final Method method_end = UncheckedReflection.getDeclaredMethod(iPhasic.class,"end");

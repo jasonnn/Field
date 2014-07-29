@@ -1,13 +1,13 @@
 package field.core.ui;
 
 import field.bytecode.protect.Woven;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.ui.SmallMenu.iKeystrokeUpdate;
 import field.core.windowing.GLComponentWindow;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
+import field.math.abstraction.IAcceptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.KeyListener;
@@ -160,7 +160,7 @@ class PopupTextBox {
     public static
     class Modal {
         static public
-        void getString(Point at, String label, String def, final iAcceptor<String> result) {
+        void getString(Point at, String label, String def, final IAcceptor<String> result) {
             new PopupTextBox(def, at, label) {
                 @Override
                 protected
@@ -171,7 +171,7 @@ class PopupTextBox {
         }
 
         static public
-        void getStringOrCancel(Point at, String label, String def, final iAcceptor<String> result) {
+        void getStringOrCancel(Point at, String label, String def, final IAcceptor<String> result) {
             new PopupTextBox(def, at, label) {
                 @Override
                 protected
@@ -185,8 +185,8 @@ class PopupTextBox {
         void getStringOrCancel(Point at,
                                String label,
                                String def,
-                               final iAcceptor<String> result,
-                               final iUpdateable onCancel) {
+                               final IAcceptor<String> result,
+                               final IUpdateable onCancel) {
             new PopupTextBox(def, at, label) {
                 @Override
                 protected
@@ -202,7 +202,7 @@ class PopupTextBox {
         }
 
         static public
-        void getFloat(Point at, String label, float def, final iAcceptor<Float> result) {
+        void getFloat(Point at, String label, float def, final IAcceptor<Float> result) {
             new PopupTextBox(String.valueOf(def), at, label) {
                 @Override
                 protected
@@ -224,7 +224,7 @@ class PopupTextBox {
         }
 
         static public
-        void getInteger(Point at, String label, float def, final iAcceptor<Integer> result) {
+        void getInteger(Point at, String label, float def, final IAcceptor<Integer> result) {
             new PopupTextBox(String.valueOf(def), at, label) {
                 @Override
                 protected
@@ -246,9 +246,9 @@ class PopupTextBox {
         }
 
         static public
-        Point elementAt(iVisualElement e) {
+        Point elementAt(IVisualElement e) {
             Rect frame = e.getFrame(null);
-            GLComponentWindow window = iVisualElement.enclosingFrame.get(e);
+            GLComponentWindow window = IVisualElement.enclosingFrame.get(e);
             if (window == null) return new Point((int) frame.x, (int) frame.y);
 
             float sx = window.getXScale();

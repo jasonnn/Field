@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.embedded;
 
-import field.bytecode.apt.Mirroring.MirrorNoReturnMethod;
-import field.core.dispatch.iVisualElement;
+import field.bytecode.mirror.impl.MirrorNoReturnMethod;
+import field.core.dispatch.IVisualElement;
 import field.core.execution.PythonScriptingSystem;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.plugins.drawing.opengl.*;
@@ -226,7 +226,7 @@ class EmbeddedInteraction {
               Vector2 vector2,
               Event arg0) {
 
-        iVisualElement inside = l.getProperties().get(iLinearGraphicsContext.source);
+        IVisualElement inside = l.getProperties().get(iLinearGraphicsContext.source);
 
         Promise promise = null;
         if (inside != null) {

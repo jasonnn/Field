@@ -5,7 +5,7 @@ package field.math.graph;
 
 
 public
-interface iMutableContainer<T, P extends iMutable<P>> extends iMutable<P>, iGraphNode.iContainer<T, P> {
+interface IMutableContainer<T, P extends IMutable<P>> extends IMutable<P>, IContainer<T, P> {
     public
-    iMutableContainer<T, P> setPayload(T t);
+    IMutableContainer<T, P> setPayload(T t);
 }

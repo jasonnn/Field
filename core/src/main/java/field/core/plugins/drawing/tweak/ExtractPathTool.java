@@ -1,6 +1,6 @@
 package field.core.plugins.drawing.tweak;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.tweak.AbsoluteTool.AbsoluteNodeDescription;
 import field.core.plugins.drawing.tweak.TweakSplineCodeGen.BaseTool;
@@ -9,8 +9,8 @@ import field.core.plugins.drawing.tweak.TweakSplineCodeGen.iResult;
 import field.core.plugins.drawing.tweak.TweakSplineUI.MouseInfo;
 import field.core.plugins.drawing.tweak.TweakSplineUI.SelectedVertex;
 import field.core.ui.PopupTextBox;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -57,7 +57,7 @@ class ExtractPathTool extends BaseTool {
                 }
 
                 public
-                void toProperties(iVisualElement e, Map<String, Object> soFar) {
+                void toProperties(IVisualElement e, Map<String, Object> soFar) {
                 }
             };
         }
@@ -74,15 +74,15 @@ class ExtractPathTool extends BaseTool {
 
     @Override
     public
-    void populateParameters(iVisualElement inside, final iUpdateable continuation) {
+    void populateParameters(IVisualElement inside, final IUpdateable continuation) {
         // fixme, not that uniq
         PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(inside),
                                      "name for extraction :",
                                      "extracted path " + (uniq++),
-                                     new iAcceptor<String>() {
+                                     new IAcceptor<String>() {
 
                                          public
-                                         iAcceptor<String> set(String to) {
+                                         IAcceptor<String> set(String to) {
                                              name = to;
                                              continuation.update();
                                              return this;

@@ -1,6 +1,6 @@
 package field.namespace.key;
 
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 import field.namespace.context.SimpleContextTopology;
 
 
@@ -8,7 +8,7 @@ import field.namespace.context.SimpleContextTopology;
  * @author marc
  */
 public
-class FKey extends CKey implements iFloatProvider {
+class FKey extends CKey implements IFloatProvider {
     public
     FKey(String s) {
         super(s);
@@ -33,7 +33,7 @@ class FKey extends CKey implements iFloatProvider {
     }
 
     public
-    FKey defaults(final iFloatProvider f) {
+    FKey defaults(final IFloatProvider f) {
         executionStack.add(new Defaults(new Phi() {
             public
             float ret() {

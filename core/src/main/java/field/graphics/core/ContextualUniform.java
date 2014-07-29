@@ -3,7 +3,7 @@ package field.graphics.core;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import field.util.collect.tuple.Pair;
 
 import java.util.ArrayList;
@@ -130,7 +130,7 @@ class ContextualUniform {
     }
 
     public static
-    class Multivalue<T> implements iProvider<T> {
+    class Multivalue<T> implements IProvider<T> {
         List<Matches<T>> matchers = new ArrayList<Matches<T>>();
 
         T defaultValue;
@@ -159,7 +159,7 @@ class ContextualUniform {
     }
 
     public static
-    class FlatContextualValue implements iProvider<Object> {
+    class FlatContextualValue implements IProvider<Object> {
         LinkedHashMap<String, Object> values = new LinkedHashMap<String, Object>();
 
         Object defaultValue = null;

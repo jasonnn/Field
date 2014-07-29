@@ -5,11 +5,11 @@ import field.bytecode.protect.annotations.NewThread;
 import field.core.Constants;
 import field.core.Platform;
 import field.core.Platform.OS;
+import field.core.dispatch.IVisualElement;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.persistance.FluidCopyPastePersistence;
 import field.core.persistance.FluidStreamParser;
 import field.core.persistance.PackageTools;
@@ -22,9 +22,9 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.DraggableComponent;
 import field.core.windowing.components.iComponent;
 import field.core.windowing.overlay.OverlayAnimationManager;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
 import field.math.linalg.Vector2;
 import field.util.collect.tuple.Pair;
 import field.util.collect.tuple.Triple;
@@ -343,7 +343,7 @@ class ElementFileSystemTree {
         private final DropTarget target;
 
         public
-        SheetDropSupport(final Canvas canvas, final iVisualElement root) {
+        SheetDropSupport(final Canvas canvas, final IVisualElement root) {
             target = new DropTarget(canvas, DND.DROP_COPY | DND.DROP_DEFAULT);
             target.setTransfer(new Transfer[]{transfer, FileTransfer.getInstance()});
             target.addDropListener(new DropTargetListener() {
@@ -360,7 +360,7 @@ class ElementFileSystemTree {
                     //System.out.println(" -- drop-- :" + event.data);
 
                     if (event.data instanceof String[]) {
-                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        GLComponentWindow gk = IVisualElement.enclosingFrame.get(root);
                         Vector2 a = new Vector2(event.x * gk.getXScale() + gk.getXTranslation(),
                                                 event.y * gk.getXScale() + gk.getYTranslation());
 
@@ -380,13 +380,13 @@ class ElementFileSystemTree {
                         Pair<File, Pair<String, HashMap<String, Object>>> p =
                                 (Pair<File, Pair<String, HashMap<String, Object>>>) event.data;
 
-                        HashSet<iVisualElement> loaded =
+                        HashSet<IVisualElement> loaded =
                                 FluidCopyPastePersistence.copyFromNonloaded(Collections.singleton(p.right.left),
                                                                             p.left.getAbsolutePath(),
                                                                             root,
-                                                                            iVisualElement.copyPaste.get(root));
+                                                                            IVisualElement.copyPaste.get(root));
                         Vector2 center = new Vector2();
-                        for (iVisualElement ee : loaded) {
+                        for (IVisualElement ee : loaded) {
                             Rect f = ee.getFrame(null);
                             center.add(f.midpoint2());
                         }
@@ -394,7 +394,7 @@ class ElementFileSystemTree {
 
                         //System.out.println(" event is <" + event.x + " " + event.y + "> center is " + center + " of " + loaded);
 
-                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        GLComponentWindow gk = IVisualElement.enclosingFrame.get(root);
                         Vector2 a = new Vector2(event.x * gk.getXScale() + gk.getXTranslation(),
                                                 event.y * gk.getXScale() + gk.getYTranslation());
 
@@ -404,7 +404,7 @@ class ElementFileSystemTree {
 //						a.x -= 40;
 //						a.y -= 40;
 
-                        for (iVisualElement ee : loaded) {
+                        for (IVisualElement ee : loaded) {
                             Rect f = ee.getFrame(null);
                             f.x += -center.x + a.x;
                             f.y += -center.y + a.y;
@@ -419,15 +419,15 @@ class ElementFileSystemTree {
 
                     }
                     else if (event.data instanceof File) {
-                        HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(null,
+                        HashSet<IVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(null,
                                                                                                      ((File) event.data)
                                                                                                              .getAbsolutePath()
                                                                                                      + "/sheet.xml",
                                                                                                      root,
-                                                                                                     iVisualElement.copyPaste
+                                                                                                     IVisualElement.copyPaste
                                                                                                              .get(root));
                         Vector2 center = new Vector2();
-                        for (iVisualElement ee : loaded) {
+                        for (IVisualElement ee : loaded) {
                             Rect f = ee.getFrame(null);
                             center.add(f.midpoint2());
                         }
@@ -435,7 +435,7 @@ class ElementFileSystemTree {
 
                         //System.out.println(" event is <" + event.x + " " + event.y + "> center is " + center + " of " + loaded);
 
-                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        GLComponentWindow gk = IVisualElement.enclosingFrame.get(root);
                         Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas()
                                                                                            .getParent()
                                                                                            .getBounds().x)
@@ -443,7 +443,7 @@ class ElementFileSystemTree {
                                                 (event.y - gk.getFrame().getBounds().y) * gk.getXScale()
                                                 + gk.getYTranslation());
 
-                        for (iVisualElement ee : loaded) {
+                        for (IVisualElement ee : loaded) {
                             Rect f = ee.getFrame(null);
                             f.x += -center.x + a.x;
                             f.y += -center.y + a.y;
@@ -458,7 +458,7 @@ class ElementFileSystemTree {
 
                     }
                     else if (event.data instanceof Triple) {
-                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        GLComponentWindow gk = IVisualElement.enclosingFrame.get(root);
                         Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas()
                                                                                            .getParent()
                                                                                            .getBounds().x)
@@ -482,15 +482,15 @@ class ElementFileSystemTree {
                                                                  "Set property '"
                                                                  + ((Triple<File, String, Object>) event.data).middle
                                                                  + "' in '"
-                                                                 + iVisualElement.name.get(hut.getVisualElement())
+                                                                 + IVisualElement.name.get(hut.getVisualElement())
                                                                  + "'",
                                                                  null);
 
-                            iVisualElement.dirty.set(hut.getVisualElement(), hut.getVisualElement(), true);
+                            IVisualElement.dirty.set(hut.getVisualElement(), hut.getVisualElement(), true);
                         }
                     }
                     else if (event.data instanceof TemplateMarker) {
-                        GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                        GLComponentWindow gk = IVisualElement.enclosingFrame.get(root);
                         Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas()
                                                                                            .getParent()
                                                                                            .getBounds().x)
@@ -512,7 +512,7 @@ class ElementFileSystemTree {
                     if (lastInternalDragSelection != null) {
                         //System.out.println(" data : " + lastInternalDragSelection[0].getData());
                         if (lastInternalDragSelection[0].getData() instanceof Triple) {
-                            GLComponentWindow gk = iVisualElement.enclosingFrame.get(root);
+                            GLComponentWindow gk = IVisualElement.enclosingFrame.get(root);
                             Vector2 a = new Vector2((event.x - gk.getFrame().getBounds().x - gk.getCanvas()
                                                                                                .getParent()
                                                                                                .getBounds().x)
@@ -575,7 +575,7 @@ class ElementFileSystemTree {
         }
 
         protected static
-        void importFile(String s, iVisualElement root, Vector2 a) {
+        void importFile(String s, IVisualElement root, Vector2 a) {
 
             try {
 
@@ -679,7 +679,7 @@ class ElementFileSystemTree {
 
         System.out.println(" final map " + properties.keySet());
 
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             @Override
             public

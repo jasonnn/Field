@@ -1,10 +1,10 @@
 package field.core.plugins;
 
-import field.core.dispatch.iVisualElement;
-import field.launch.iUpdateable;
+import field.core.dispatch.IVisualElement;
+import field.launch.IUpdateable;
 
 public
-interface iPlugin extends iUpdateable {
+interface iPlugin extends IUpdateable {
 
     public
     void close();
@@ -13,10 +13,10 @@ interface iPlugin extends iUpdateable {
     Object getPersistanceInformation();
 
     public
-    iVisualElement getWellKnownVisualElement(String id);
+    IVisualElement getWellKnownVisualElement(String id);
 
     public
-    void registeredWith(iVisualElement root);
+    void registeredWith(IVisualElement root);
 
     public
     void setPersistanceInformation(Object o);

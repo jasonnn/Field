@@ -3,7 +3,7 @@ package field.core.plugins.drawing.pdf;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
 import com.lowagie.text.pdf.*;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.math.linalg.Vector2;
 
 import java.io.FileOutputStream;

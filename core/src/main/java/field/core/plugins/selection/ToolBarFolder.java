@@ -5,8 +5,8 @@ import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Platform;
 import field.core.Platform.OS;
 import field.core.windowing.GLComponentWindow;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.namespace.generic.ReflectionTools;
 import field.util.AutoPersist;
 import org.eclipse.swt.SWT;
@@ -303,7 +303,7 @@ class ToolBarFolder {
     }
 
     public
-    ToolItem add(final Image icon, final Control c, final iUpdateable u) {
+    ToolItem add(final Image icon, final Control c, final IUpdateable u) {
 
         ToolItem toolItem = new ToolItem(toolbar, SWT.FLAT | SWT.RADIO | SWT.NO_FOCUS);
         toolItem.setImage(icon);

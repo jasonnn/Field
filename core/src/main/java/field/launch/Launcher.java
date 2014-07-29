@@ -34,19 +34,19 @@ class Launcher {
     protected static Launcher launcher = null;
     static List<iOpenFileHandler> openFileHandlers = new ArrayList<iOpenFileHandler>();
     public Thread mainThread = null;
-    protected List<iUpdateable> updateables = Collections.synchronizedList(new ArrayList<iUpdateable>());
-    protected List<iUpdateable> postUpdateables = Collections.synchronizedList(new ArrayList<iUpdateable>());
-    protected Set<iUpdateable> paused = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
-    protected Set<iUpdateable> willPause = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
-    protected Set<iUpdateable> willUnPause = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
-    protected Set<iUpdateable> willRemove = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
-    protected Set<iUpdateable> willAdd = Collections.synchronizedSet(new LinkedHashSet<iUpdateable>());
-    protected iUpdateable currentUpdating;
+    protected List<IUpdateable> updateables = Collections.synchronizedList(new ArrayList<IUpdateable>());
+    protected List<IUpdateable> postUpdateables = Collections.synchronizedList(new ArrayList<IUpdateable>());
+    protected Set<IUpdateable> paused = Collections.synchronizedSet(new LinkedHashSet<IUpdateable>());
+    protected Set<IUpdateable> willPause = Collections.synchronizedSet(new LinkedHashSet<IUpdateable>());
+    protected Set<IUpdateable> willUnPause = Collections.synchronizedSet(new LinkedHashSet<IUpdateable>());
+    protected Set<IUpdateable> willRemove = Collections.synchronizedSet(new LinkedHashSet<IUpdateable>());
+    protected Set<IUpdateable> willAdd = Collections.synchronizedSet(new LinkedHashSet<IUpdateable>());
+    protected IUpdateable currentUpdating;
     protected boolean isPaused = false;
     boolean dying = false;
     double interval = SystemProperties.getDoubleProperty("timer.interval", 0.01f);
     List<iExceptionHandler> exceptionHandlers = new ArrayList<iExceptionHandler>();
-    List<iUpdateable> shutdown = new ArrayList<iUpdateable>();
+    List<IUpdateable> shutdown = new ArrayList<IUpdateable>();
     private iContinuation continuation;
     private Runnable timer;
 
@@ -167,12 +167,12 @@ class Launcher {
     }
 
     public
-    void deregisterUpdateable(iUpdateable up) {
+    void deregisterUpdateable(IUpdateable up) {
         getWillRemove().add(up);
     }
 
     public
-    boolean isRegisteredUpdateable(iUpdateable up) {
+    boolean isRegisteredUpdateable(IUpdateable up) {
         return getUpdateables().contains(up) || getPaused().contains(up);
     }
 
@@ -183,12 +183,12 @@ class Launcher {
      * @param target - the <code>iUpdateable</code> which will be updated.
      */
     public
-    void registerUpdateable(iUpdateable target) {
+    void registerUpdateable(IUpdateable target) {
         getWillAdd().add(target);
     }
 
     public
-    void addPostUpdateable(iUpdateable target) {
+    void addPostUpdateable(IUpdateable target) {
         postUpdateables.add(target);
     }
 
@@ -204,13 +204,13 @@ class Launcher {
      *                      by this parameter.
      */
     public
-    void registerUpdateable(final iUpdateable target, final int updateDivisor) {
+    void registerUpdateable(final IUpdateable target, final int updateDivisor) {
         // The anonymous class used here wraps the
         // update target and implements
         // the logic necessary to support updating at a
         // specified frequency
         // relative to the main timer.
-        registerUpdateable(new iUpdateable() {
+        registerUpdateable(new IUpdateable() {
             int tick = 0;
 
             public
@@ -268,7 +268,7 @@ class Launcher {
                         in++;
                         try {
                             if (in == 1) for (int i = 0; i < getUpdateables().size(); i++) {
-                                iUpdateable up = getUpdateables().get(i);
+                                IUpdateable up = getUpdateables().get(i);
                                 if (!getPaused().contains(up)) try {
                                     setCurrentUpdating(up);
 
@@ -301,7 +301,7 @@ class Launcher {
                     getWillRemove().clear();
                     getWillAdd().clear();
 
-                    for (iUpdateable u : new ArrayList<iUpdateable>(postUpdateables)) {
+                    for (IUpdateable u : new ArrayList<IUpdateable>(postUpdateables)) {
                         u.update();
                     }
                 }
@@ -330,17 +330,17 @@ class Launcher {
     }
 
     protected
-    iUpdateable getCurrentUpdating() {
+    IUpdateable getCurrentUpdating() {
         return currentUpdating;
     }
 
     protected
-    void setCurrentUpdating(iUpdateable currentUpdating) {
+    void setCurrentUpdating(IUpdateable currentUpdating) {
         this.currentUpdating = currentUpdating;
     }
 
     protected
-    Set<iUpdateable> getPaused() {
+    Set<IUpdateable> getPaused() {
         return paused;
     }
 
@@ -349,7 +349,7 @@ class Launcher {
 //    }
 
     protected
-    List<iUpdateable> getUpdateables() {
+    List<IUpdateable> getUpdateables() {
         return updateables;
     }
 
@@ -358,7 +358,7 @@ class Launcher {
 //    }
 
     protected
-    Set<iUpdateable> getWillAdd() {
+    Set<IUpdateable> getWillAdd() {
         return willAdd;
     }
 
@@ -367,7 +367,7 @@ class Launcher {
 //    }
 
     protected
-    Set<iUpdateable> getWillPause() {
+    Set<IUpdateable> getWillPause() {
         return willPause;
     }
 
@@ -376,7 +376,7 @@ class Launcher {
 //    }
 
     protected
-    Set<iUpdateable> getWillRemove() {
+    Set<IUpdateable> getWillRemove() {
         return willRemove;
     }
 
@@ -385,7 +385,7 @@ class Launcher {
 //    }
 
     protected
-    Set<iUpdateable> getWillUnPause() {
+    Set<IUpdateable> getWillUnPause() {
         return willUnPause;
     }
 
@@ -394,8 +394,8 @@ class Launcher {
 //    }
 
     public
-    void nextCycle(final iUpdateable updateable) {
-        registerUpdateable(new iUpdateable() {
+    void nextCycle(final IUpdateable updateable) {
+        registerUpdateable(new IUpdateable() {
 
             public
             void update() {
@@ -410,7 +410,7 @@ class Launcher {
 
         shuttingDown = true;
         //System.out.println(" running down ");
-        for (iUpdateable u : shutdown) {
+        for (IUpdateable u : shutdown) {
             u.update();
         }
 
@@ -424,12 +424,12 @@ class Launcher {
     }
 
     public
-    void addShutdown(iUpdateable u) {
+    void addShutdown(IUpdateable u) {
         shutdown.add(u);
     }
 
     public
-    void removeShutdownHook(iUpdateable shutdownhook) {
+    void removeShutdownHook(IUpdateable shutdownhook) {
         shutdown.remove(shutdownhook);
     }
 

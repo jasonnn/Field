@@ -6,10 +6,10 @@ import java.lang.reflect.Method;
 
 
 public
-interface iAcceptor<T> {
+interface IAcceptor<T> {
 
-    public static final Method method_set = ReflectionTools.methodOf("set", iAcceptor.class, Object.class);
+    public static final Method SET_METHOD = ReflectionTools.methodOf("set", IAcceptor.class, Object.class);
 
     public
-    iAcceptor<T> set(T to);
+    IAcceptor<T> set(T to);
 }

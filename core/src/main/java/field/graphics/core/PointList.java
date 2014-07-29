@@ -6,7 +6,7 @@ import field.core.windowing.GLComponentWindow;
 import field.graphics.core.Base.iGeometry;
 import field.graphics.core.BasicGeometry.VertexBuffer;
 import field.launch.SystemProperties;
-import field.math.abstraction.iInplaceProvider;
+import field.math.abstraction.IInplaceProvider;
 import field.math.linalg.iCoordinateFrame.iMutable;
 
 import java.nio.FloatBuffer;
@@ -40,7 +40,7 @@ class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
     float size = 5;
 
     public
-    PointList(iInplaceProvider<iMutable> coordinateFrame) {
+    PointList(IInplaceProvider<iMutable> coordinateFrame) {
         super(coordinateFrame);
         rebuildVertex(0);
         rebuildTriangle(0);

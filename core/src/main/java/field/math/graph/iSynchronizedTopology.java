@@ -1,12 +1,10 @@
 package field.math.graph;
 
-import field.math.graph.iTopology.iMutableTopology;
-
 import java.util.List;
 
 
 public
-interface iSynchronizedTopology<T> extends iMutableTopology<T> {
+interface ISynchronizedTopology<T> extends IMutableTopology<T> {
     public
     void added(T t);
 

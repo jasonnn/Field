@@ -8,11 +8,11 @@ import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.trampoline.Trampoline2;
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner;
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner.iCombiner;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.*;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.persistance.FluidCopyPastePersistence;
@@ -50,15 +50,16 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.WindowSpaceBox;
 import field.core.windowing.components.*;
 import field.core.windowing.overlay.OverlayAnimationManager;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IFloatProvider;
 import field.math.graph.NodeImpl;
 import field.math.graph.TopologyViewOfGraphNodes;
-import field.math.graph.iMutableContainer;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.IMutableContainer;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
@@ -86,13 +87,13 @@ import java.util.regex.Pattern;
 
 @Woven
 public
-class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVisualElementRoot {
+class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVisualElementRoot {
 
     public static final VisualElementProperty<String> keyboardShortcut =
             new VisualElementProperty<String>("keyboardShortcut");
 
     public
-    class RootSheetElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class RootSheetElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -109,7 +110,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) StandardFluidSheet.this;
             Object o = rootProperties.get(p);
             return (T) o;
@@ -130,12 +131,12 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             rootProperties.put(p, to);
             return this;
         }
@@ -162,87 +163,87 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     protected static int uniq = 0;
 
     public static
-    List<iVisualElement> allVisualElements(iVisualElement root) {
-        final List<iVisualElement> ret = new ArrayList<iVisualElement>();
-        new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+    List<IVisualElement> allVisualElements(IVisualElement root) {
+        final List<IVisualElement> ret = new ArrayList<IVisualElement>();
+        new TopologyVisitor_breadthFirst<IVisualElement>(true) {
             @Override
             protected
-            VisitCode visit(iVisualElement n) {
+            TraversalHint visit(IVisualElement n) {
                 ret.add(n);
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
-        }.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+        }.apply(new TopologyViewOfGraphNodes<IVisualElement>(false).setEverything(true), root);
         return ret;
     }
 
     public static
-    iVisualElement findVisualElement(iVisualElement root, final String s) {
-        final iVisualElement[] ans = new iVisualElement[1];
+    IVisualElement findVisualElement(IVisualElement root, final String s) {
+        final IVisualElement[] ans = new IVisualElement[1];
 
-        TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+        TopologyVisitor_breadthFirst<IVisualElement> search = new TopologyVisitor_breadthFirst<IVisualElement>(true) {
             @Override
             protected
-            VisitCode visit(iVisualElement n) {
+            TraversalHint visit(IVisualElement n) {
                 if (n.getUniqueID().equals(s)) {
                     ans[0] = n;
-                    return VisitCode.stop;
+                    return StandardTraversalHint.STOP;
                 }
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
         };
 
-        search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+        search.apply(new TopologyViewOfGraphNodes<IVisualElement>(false).setEverything(true), root);
         return ans[0];
     }
 
     public static
-    iVisualElement findVisualElementWithName(iVisualElement root, final String pattern) {
+    IVisualElement findVisualElementWithName(IVisualElement root, final String pattern) {
 
         final Pattern p = Pattern.compile(pattern);
 
-        final iVisualElement[] ans = new iVisualElement[1];
+        final IVisualElement[] ans = new IVisualElement[1];
 
-        TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+        TopologyVisitor_breadthFirst<IVisualElement> search = new TopologyVisitor_breadthFirst<IVisualElement>(true) {
             @Override
             protected
-            VisitCode visit(iVisualElement n) {
-                String name = n.getProperty(iVisualElement.name);
+            TraversalHint visit(IVisualElement n) {
+                String name = n.getProperty(IVisualElement.name);
                 if ((name != null) && p.matcher(name).matches()) {
                     ans[0] = n;
-                    return VisitCode.stop;
+                    return StandardTraversalHint.STOP;
                 }
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
         };
 
-        search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+        search.apply(new TopologyViewOfGraphNodes<IVisualElement>(false).setEverything(true), root);
         return ans[0];
     }
 
     public static
-    List<iVisualElement> findVisualElementWithNameExpression(iVisualElement root, final String pattern) {
+    List<IVisualElement> findVisualElementWithNameExpression(IVisualElement root, final String pattern) {
 
         final Pattern p = Pattern.compile(pattern);
 
-        final List<iVisualElement> ans = new ArrayList<iVisualElement>();
+        final List<IVisualElement> ans = new ArrayList<IVisualElement>();
 
-        TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+        TopologyVisitor_breadthFirst<IVisualElement> search = new TopologyVisitor_breadthFirst<IVisualElement>(true) {
             @Override
             protected
-            VisitCode visit(iVisualElement n) {
-                String name = n.getProperty(iVisualElement.name);
+            TraversalHint visit(IVisualElement n) {
+                String name = n.getProperty(IVisualElement.name);
                 if ((name != null) && p.matcher(name).matches()) {
                     ans.add(n);
                 }
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
         };
 
-        search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+        search.apply(new TopologyViewOfGraphNodes<IVisualElement>(false).setEverything(true), root);
         return ans;
     }
 
@@ -292,7 +293,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
 
         sheet.registerPlugin(new TreeBrowserPlugin());
 
-        sheet.rootSheetElement.setProperty(iVisualElement.toolPalette2, new ToolPalette2());
+        sheet.rootSheetElement.setProperty(IVisualElement.toolPalette2, new ToolPalette2());
         registerExtendedPlugins(sheet);
 
         ((SashForm) sheet.window.leftComp1).setWeights(new int[]{4, 4, 1});
@@ -320,7 +321,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             e.printStackTrace();
         }
 
-        Launcher.getLauncher().addShutdown(sheet.shutdownhook = new iUpdateable() {
+        Launcher.getLauncher().addShutdown(sheet.shutdownhook = new IUpdateable() {
 
             @Override
             public
@@ -396,11 +397,11 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
 
     private final FluidCopyPastePersistence copyPastePersisence;
 
-    private iUpdateable shutdownhook;
+    private IUpdateable shutdownhook;
 
     private String filename;
 
-    protected iVisualElement rootSheetElement;
+    protected IVisualElement rootSheetElement;
 
     protected HashMap<Object, Object> rootProperties = new HashMap<Object, Object>();
 
@@ -450,17 +451,17 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         rootSheetElement = new RootSheetElement();
         window.setEditorSpaceHelper(this.rootSheetElement);
 
-        r1.setOverrides(new Dispatch<iVisualElement, iVisualElementOverrides>(iVisualElementOverrides.topology).getOverrideProxyFor(rootSheetElement,
-                                                                                                                                    iVisualElementOverrides.class));
+        r1.setOverrides(new Dispatch<IVisualElement, IVisualElementOverrides>(IVisualElementOverrides.topology).getOverrideProxyFor(rootSheetElement,
+                                                                                                                                    IVisualElementOverrides.class));
 
-        rootSheetElement.setProperty(iVisualElement.enclosingFrame, window);
-        rootSheetElement.setProperty(iVisualElement.rootComponent, r1);
-        rootSheetElement.setProperty(iVisualElement.localView, null);
-        rootSheetElement.setProperty(iVisualElement.sheetView, this);
+        rootSheetElement.setProperty(IVisualElement.enclosingFrame, window);
+        rootSheetElement.setProperty(IVisualElement.rootComponent, r1);
+        rootSheetElement.setProperty(IVisualElement.localView, null);
+        rootSheetElement.setProperty(IVisualElement.sheetView, this);
         GlobalKeyboardShortcuts gks = new GlobalKeyboardShortcuts();
         rootSheetElement.setProperty(GlobalKeyboardShortcuts.shortcuts, gks);
         gks.add(new GlobalKeyboardShortcuts.Shortcut('s', Platform.getCommandModifier(), Platform.getCommandModifier()),
-                new iUpdateable() {
+                new IUpdateable() {
 
                     @Override
                     public
@@ -474,9 +475,9 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             public
             boolean matches(char c, int code, int state) {
                 if ((state & Platform.getCommandModifier()) != 0) {
-                    List<iVisualElement> e = allVisualElements(getRoot());
+                    List<IVisualElement> e = allVisualElements(getRoot());
                     String match = String.valueOf(Character.toLowerCase(c));
-                    for (iVisualElement ee : e) {
+                    for (IVisualElement ee : e) {
                         String s = ee.getProperty(keyboardShortcut);
 
                         if (s != null) {
@@ -491,7 +492,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                 }
                 return false;
             }
-        }, new iUpdateable() {
+        }, new IUpdateable() {
 
             @Override
             public
@@ -503,16 +504,16 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         // rootSheetElement.setProperty(iVisualElement.
         // toolPalette,
         // new ToolPalette());
-        rootSheetElement.setProperty(iVisualElement.selectionGroup, group);
-        rootSheetElement.setProperty(iVisualElement.markingGroup, markingGroup);
-        rootSheetElement.setProperty(iVisualElement.name, "((sheet root))");
+        rootSheetElement.setProperty(IVisualElement.selectionGroup, group);
+        rootSheetElement.setProperty(IVisualElement.markingGroup, markingGroup);
+        rootSheetElement.setProperty(IVisualElement.name, "((sheet root))");
 
         copyPastePersisence = new FluidCopyPastePersistence(new FluidPersistence.iWellKnownElementResolver() {
             public
-            iVisualElement getWellKnownElement(String uid) {
+            IVisualElement getWellKnownElement(String uid) {
                 if (uid.equals(rootSheetElement_uid)) return rootSheetElement;
                 for (iPlugin p : plugins) {
-                    iVisualElement ve = p.getWellKnownVisualElement(uid);
+                    IVisualElement ve = p.getWellKnownVisualElement(uid);
                     if (ve != null) {
                         return ve;
                     }
@@ -531,12 +532,12 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             }
 
             public
-            void endCopy(iVisualElement newCopy, iVisualElement old) {
+            void endCopy(IVisualElement newCopy, IVisualElement old) {
                 StandardFluidSheet.this.endCopy(newCopy, old);
             }
         });
 
-        iVisualElement.copyPaste.set(rootSheetElement, rootSheetElement, copyPastePersisence);
+        IVisualElement.copyPaste.set(rootSheetElement, rootSheetElement, copyPastePersisence);
 
         pss = new PythonScriptingSystem() {
             @Override
@@ -545,7 +546,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                 Iterator n = ret.iterator();
                 while (n.hasNext()) {
                     Promise nn = (Promise) n.next();
-                    iVisualElement elem = (iVisualElement) pss.keyForPromise(nn);
+                    IVisualElement elem = (IVisualElement) pss.keyForPromise(nn);
                     Boolean m = elem.getProperty(WindowSpaceBox.isWindowSpace);
                     if ((m != null) && m) {
                         n.remove();
@@ -557,7 +558,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             @Override
             protected
             boolean filter(Promise p) {
-                iVisualElement v = (iVisualElement) system.keyForPromise(p);
+                IVisualElement v = (IVisualElement) system.keyForPromise(p);
                 if (v == null) return false;
                 return iExecutesPromise.promiseExecution.get(v) == this;
             }
@@ -596,7 +597,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         rootSheetElement.setProperty(PythonScriptingSystem.pythonScriptingSystem, pss);
         rootSheetElement.setProperty(iExecutesPromise.promiseExecution, basicRunner);
         rootSheetElement.setProperty(BasicRunner.basicRunner, basicRunner);
-        rootSheetElement.setProperty(iVisualElement.multithreadedRunner, multiThreadedRunner);
+        rootSheetElement.setProperty(IVisualElement.multithreadedRunner, multiThreadedRunner);
 
         this.vs = vs;
         rootSheetElement.setProperty(versioningSystem, vs);
@@ -604,10 +605,10 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         UbiquitousLinks.sheets.add(this);
 
         GlassComponent g1 = new GlassComponent(r1, dragDuplicator = new DragDuplicator(group, rootSheetElement));
-        rootSheetElement.setProperty(iVisualElement.glassComponent, g1);
+        rootSheetElement.setProperty(IVisualElement.glassComponent, g1);
         window.getRoot().addComponent(g1);
 
-        rootSheetElement.setProperty(iVisualElement.name, "root");
+        rootSheetElement.setProperty(IVisualElement.name, "root");
 
         HashMap<String, Object> c1 = SystemProperties.getProperties();
         for (Entry<String, Object> e : c1.entrySet()) {
@@ -617,40 +618,40 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public
-    VisitCode added(iVisualElement newSource) {
-        iComponent component = newSource.getProperty(iVisualElement.localView);
+    TraversalHint added(IVisualElement newSource) {
+        iComponent component = newSource.getProperty(IVisualElement.localView);
 
         if (component != null) window.getRoot().addComponent(component);
         else {
             System.err.println(" !!!!!!!!! no component for <" + newSource + "> !!!!!!!!!!!!");
         }
 
-        if (iVisualElement.isRenderer.getBoolean(newSource, false))
+        if (IVisualElement.isRenderer.getBoolean(newSource, false))
             iExecutesPromise.promiseExecution.set(newSource, newSource, multiThreadedRunner);
 
         window.getRoot().requestRedisplay();
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    void addToSheet(iVisualElement newSource) {
+    void addToSheet(IVisualElement newSource) {
         newSource.addChild(rootSheetElement);
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newSource).added(newSource);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource).added(newSource);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newSource).added(newSource);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource).added(newSource);
     }
 
-    ThreadLocal<LinkedHashSet<iVisualElement>> inprogress = new ThreadLocal<LinkedHashSet<iVisualElement>>() {
+    ThreadLocal<LinkedHashSet<IVisualElement>> inprogress = new ThreadLocal<LinkedHashSet<IVisualElement>>() {
         @Override
         public
-        LinkedHashSet<iVisualElement> get() {
-            return new LinkedHashSet<iVisualElement>();
+        LinkedHashSet<IVisualElement> get() {
+            return new LinkedHashSet<IVisualElement>();
         }
     };
 
     public
-    VisitCode beginExecution(final iVisualElement source) {
+    TraversalHint beginExecution(final IVisualElement source) {
 
-        if (inprogress.get().contains(source)) return VisitCode.stop;
+        if (inprogress.get().contains(source)) return StandardTraversalHint.STOP;
 
         System.out.println(" inprogress <" + inprogress.get() + '>');
         inprogress.get().add(source);
@@ -668,7 +669,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                 ((PythonPluginEditor) p).getEditor()
                                         .getInput()
                                         .append("Running '")
-                                        .append(source.getProperty(iVisualElement.name))
+                                        .append(source.getProperty(IVisualElement.name))
                                         .append('\'');
             } catch (IOException e) {
                 e.printStackTrace();
@@ -696,7 +697,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             // aren't)
 
             if (promise != null) {
-                runner.addActive(new iFloatProvider() {
+                runner.addActive(new IFloatProvider() {
 
                     public
                     float evaluate() {
@@ -713,9 +714,9 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
 
             SnippetsPlugin.addText(source,
                                    "_self.find[\""
-                                   + source.getProperty(iVisualElement.name)
+                                   + source.getProperty(IVisualElement.name)
                                    + "\"].begin()\n_self.begin()\n_self.end()\n_self.find[\""
-                                   + source.getProperty(iVisualElement.name)
+                                   + source.getProperty(IVisualElement.name)
                                    + "\"].end()",
                                    "element started",
                                    new String[]{"start running an element",
@@ -724,7 +725,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                                                 "STOP running an element"},
                                    "alternative form");
 
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         } finally {
             inprogress.get().remove(source);
         }
@@ -745,8 +746,8 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public
-    VisitCode deleted(iVisualElement source) {
-        iComponent component = source.getProperty(iVisualElement.localView);
+    TraversalHint deleted(IVisualElement source) {
+        iComponent component = source.getProperty(IVisualElement.localView);
         if (component != null) window.getRoot().removeComponent(component);
         window.getRoot().requestRedisplay();
 
@@ -754,14 +755,14 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             vs.notifyElementDeleted(source);
         }
 
-        group.removeFromSelection(source.getProperty(iVisualElement.localView));
-        markingGroup.removeFromSelection(source.getProperty(iVisualElement.localView));
+        group.removeFromSelection(source.getProperty(IVisualElement.localView));
+        markingGroup.removeFromSelection(source.getProperty(IVisualElement.localView));
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    <T> VisitCode deleteProperty(iVisualElement source, VisualElementProperty<T> prop) {
+    <T> TraversalHint deleteProperty(IVisualElement source, VisualElementProperty<T> prop) {
         if (source == rootSheetElement) {
             VisualElementProperty<T> a = prop.getAliasedTo();
             while (a != null) {
@@ -777,21 +778,21 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             }
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode endExecution(iVisualElement source) {
+    TraversalHint endExecution(IVisualElement source) {
 
         Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                        .getProperty(source,
                                                                     PythonScriptingSystem.pythonScriptingSystem,
                                                                     refPss);
         assert refPss.get() != null;
 
         Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                        .getProperty(source,
                                                                     iExecutesPromise.promiseExecution,
                                                                     refRunner);
@@ -803,7 +804,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             refRunner.get().removeActive(p);
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
@@ -812,7 +813,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public
-    <T> VisitCode getProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> property, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> property, Ref<T> ref) {
         if (rootProperties.containsKey(property)) {
             VisualElementProperty<T> a = property.getAliasedTo();
             while (a != null) {
@@ -824,11 +825,11 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
 
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    iVisualElement getRoot() {
+    IVisualElement getRoot() {
         return rootSheetElement;
     }
 
@@ -838,19 +839,19 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public
-    VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
+    TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event) {
 
-        if (event == null) return VisitCode.cont;
+        if (event == null) return StandardTraversalHint.CONTINUE;
 
-        if (!event.doit) return VisitCode.cont;
+        if (!event.doit) return StandardTraversalHint.CONTINUE;
 
         if (tick && (event.type == SWT.KeyDown) && (event.character == 'n')) {
 
             tick = false;
-            List<iVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
-            iVisualElement ee = getRoot();
+            List<IVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
+            IVisualElement ee = getRoot();
             boolean exclusive = false;
-            for (iVisualElement a : all) {
+            for (IVisualElement a : all) {
                 Boolean f = a.getProperty(PythonPluginEditor.python_isDefaultGroup);
                 if ((f != null) && f) {
                     Boolean ex = a.getProperty(PythonPluginEditor.python_isDefaultGroupExclusive);
@@ -860,7 +861,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                 }
             }
 
-            GLComponentWindow frame = iVisualElement.enclosingFrame.get(getRoot());
+            GLComponentWindow frame = IVisualElement.enclosingFrame.get(getRoot());
 
             Rect bounds = new Rect(30, 30, 60, 60);
             if (frame != null) {
@@ -893,10 +894,10 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         }
         else if (tick && (event.type == SWT.KeyDown) && (event.character == 'p')) {
             tick = false;
-            List<iVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
-            iVisualElement ee = getRoot();
+            List<IVisualElement> all = StandardFluidSheet.allVisualElements(getRoot());
+            IVisualElement ee = getRoot();
             boolean exclusive = false;
-            for (iVisualElement a : all) {
+            for (IVisualElement a : all) {
                 Boolean f = a.getProperty(PythonPluginEditor.python_isDefaultGroup);
                 if ((f != null) && f) {
                     Boolean ex = a.getProperty(PythonPluginEditor.python_isDefaultGroupExclusive);
@@ -905,7 +906,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                     break;
                 }
             }
-            GLComponentWindow frame = iVisualElement.enclosingFrame.get(getRoot());
+            GLComponentWindow frame = IVisualElement.enclosingFrame.get(getRoot());
 
             Rect bounds = new Rect(30, 30, 50, 50);
             if (frame != null) {
@@ -978,12 +979,12 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                  && ((event.character == SWT.BS) || (event.character == SWT.DEL))
                  && ((event.stateMask & Platform.getCommandModifier()) != 0)) {
             Set<iComponent> c = group.getSelection();
-            HashSet<iVisualElement> toDelete = new HashSet<iVisualElement>();
+            HashSet<IVisualElement> toDelete = new HashSet<IVisualElement>();
             for (iComponent cc : c) {
-                iVisualElement v = cc.getVisualElement();
+                IVisualElement v = cc.getVisualElement();
                 if (v != null) toDelete.add(v);
             }
-            for (iVisualElement v : toDelete) {
+            for (IVisualElement v : toDelete) {
                 VisualElement.delete(this.getRoot(), v);
             }
         }
@@ -991,11 +992,11 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
 
             // System.out.println(" opening space menu ...");
 
-            HashSet<iVisualElement> sel = selectionOrOver();
+            HashSet<IVisualElement> sel = selectionOrOver();
 
-            if (sel.isEmpty()) return VisitCode.cont;
+            if (sel.isEmpty()) return StandardTraversalHint.CONTINUE;
 
-            iComponent c = iVisualElement.localView.get(sel.iterator().next());
+            iComponent c = IVisualElement.localView.get(sel.iterator().next());
 
             // iComponent c = window.getRoot().hit(window, new
             // Vector2(locationInScreenp.x, locationInScreenp.y));
@@ -1003,7 +1004,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             // System.out.println(" comp is <" + c + ">");
 
             if (c != null) {
-                final iVisualElement v = c.getVisualElement();
+                final IVisualElement v = c.getVisualElement();
 
                 // System.out.println(" v is <" + v + ">");
                 if (newSource == v) {
@@ -1013,7 +1014,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                     FastVisualElementOverridesPropertyCombiner<MarkingMenuBuilder, MarkingMenuBuilder> combiner =
                             new FastVisualElementOverridesPropertyCombiner<MarkingMenuBuilder, MarkingMenuBuilder>(false);
                     MarkingMenuBuilder marker = combiner.getProperty(newSource,
-                                                                     iVisualElement.spaceMenu,
+                                                                     IVisualElement.spaceMenu,
                                                                      new iCombiner<MarkingMenuBuilder, MarkingMenuBuilder>() {
 
                                                                          public
@@ -1043,14 +1044,14 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                     if (marker != null) {
                         if (marker.insertCopyPasteItems) {
                             group.deselectAll();
-                            iVisualElement.localView.get(v).setSelected(true);
-                            group.addToSelection(iVisualElement.localView.get(v));
+                            IVisualElement.localView.get(v).setSelected(true);
+                            group.addToSelection(IVisualElement.localView.get(v));
                             insertCopyPasteMenuItems(rootSheetElement, group, marker.getMap());
                         }
 
                         if (marker.insertDeleteItem) {
-                            Map<String, iUpdateable> m = marker.getMap();
-                            m.put("   \u232b  <b>delete</b> element ///meta BACK_SPACE///", new iUpdateable() {
+                            Map<String, IUpdateable> m = marker.getMap();
+                            m.put("   \u232b  <b>delete</b> element ///meta BACK_SPACE///", new IUpdateable() {
                                 public
                                 void update() {
                                     PythonPluginEditor.delete(v, rootSheetElement);
@@ -1090,13 +1091,13 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         }
         else if ((event.type == SWT.KeyDown) && (event.keyCode == SWT.PAGE_UP) && tick) {
             tick = false;
-            HashSet<iVisualElement> s = selectionOrOver();
+            HashSet<IVisualElement> s = selectionOrOver();
 
             // System.out.println(" selection or over is <" + s +
             // ">");
 
             if (!s.isEmpty()) {
-                for (iVisualElement ss : s) {
+                for (IVisualElement ss : s) {
                     Beginner beginner = PseudoPropertiesPlugin.begin.get(ss);
                     beginner.call(new Object[]{});
                 }
@@ -1104,13 +1105,13 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         }
         else if ((event.type == SWT.KeyDown) && (event.keyCode == SWT.PAGE_DOWN) && tick) {
             tick = false;
-            HashSet<iVisualElement> s = selectionOrOver();
+            HashSet<IVisualElement> s = selectionOrOver();
 
             // System.out.println(" selection or over is <" + s +
             // ">");
 
             if (!s.isEmpty()) {
-                for (iVisualElement ss : s) {
+                for (IVisualElement ss : s) {
                     Ender beginner = PseudoPropertiesPlugin.end.get(ss);
                     beginner.call(new Object[]{});
                 }
@@ -1160,15 +1161,15 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             }
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     private
-    HashSet<iVisualElement> selectionOrOver() {
+    HashSet<IVisualElement> selectionOrOver() {
 
         // System.out.println(" inside selection or over ");
 
-        HashSet<iVisualElement> sel = new HashSet<iVisualElement>();
+        HashSet<IVisualElement> sel = new HashSet<IVisualElement>();
 
         Point locationInScreenp = Launcher.display.getCursorLocation();
 
@@ -1195,14 +1196,14 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         // System.out.println(" hit :" + cc);
 
         if (cc != null) {
-            iVisualElement v = cc.getVisualElement();
+            IVisualElement v = cc.getVisualElement();
             if (v != null) sel.add(v);
         }
 
         Set<iComponent> c = group.getSelection();
-        HashSet<iVisualElement> sel2 = new HashSet<iVisualElement>();
+        HashSet<IVisualElement> sel2 = new HashSet<IVisualElement>();
         for (iComponent ccc : c) {
-            iVisualElement v = ccc.getVisualElement();
+            IVisualElement v = ccc.getVisualElement();
             if (v != null) sel2.add(v);
         }
 
@@ -1213,12 +1214,12 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public
-    VisitCode inspectablePropertiesFor(iVisualElement source, List<Prop> properties) {
-        return VisitCode.cont;
+    TraversalHint inspectablePropertiesFor(IVisualElement source, List<Prop> properties) {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
         //
         //
         // ;//System.out.println(" \n\n is hit "+event+" "+event.type+" \n\n");
@@ -1237,12 +1238,12 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
         // else if (event.type == SWT.MouseUp)
         // dragDuplicator.end(event);
         //
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
     void load(Reader reader) {
-        LinkedHashSet<iVisualElement> created = new LinkedHashSet<iVisualElement>();
+        LinkedHashSet<IVisualElement> created = new LinkedHashSet<IVisualElement>();
         synchronized (Launcher.lock) {
 
             try {
@@ -1266,11 +1267,11 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                     objectInputStream.readObject();
                 }
 
-                iVisualElement oldRoot = (iVisualElement) objectInputStream.readObject();
+                IVisualElement oldRoot = (IVisualElement) objectInputStream.readObject();
 
                 VersioningSystem system = vs;
                 if (system != null) {
-                    for (iVisualElement ve : created) {
+                    for (IVisualElement ve : created) {
                         if (SystemProperties.getIntProperty("noCommit", 0) == 0)
                             system.synchronizeElementWithFileStructure(ve);
                     }
@@ -1314,11 +1315,11 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             // this.added(ve);
             // }
 
-            for (iVisualElement ve : created) {
-                iVisualElementOverrides.topology.begin(ve);
-                iVisualElementOverrides.backward.added.f(ve);
-                iVisualElementOverrides.forward.added.f(ve);
-                iVisualElementOverrides.topology.end(ve);
+            for (IVisualElement ve : created) {
+                IVisualElementOverrides.topology.begin(ve);
+                IVisualElementOverrides.backward.added.apply(ve);
+                IVisualElementOverrides.forward.added.apply(ve);
+                IVisualElementOverrides.topology.end(ve);
             }
         }
     }
@@ -1343,18 +1344,18 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
 
         if (Platform.isLinux()) insertFileMenuItems(rootSheetElement, group, items);
 
         insertCopyPasteMenuItems(rootSheetElement, group, items);
 
-        final HashSet<iVisualElement> o = selectionOrOver();
+        final HashSet<IVisualElement> o = selectionOrOver();
         if (!o.isEmpty()) {
             items.put("Templating", null);
             // System.out.println(" selection or over is <" + o +
             // ">");
-            items.put("\u1d40 <b>Make element" + ((o.size() > 1) ? "s" : "") + " into template</b>", new iUpdateable() {
+            items.put("\u1d40 <b>Make element" + ((o.size() > 1) ? "s" : "") + " into template</b>", new IUpdateable() {
 
                 public
                 void update() {
@@ -1370,17 +1371,17 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                     PopupTextBox.Modal.getStringOrCancel(new java.awt.Point(x.x, x.y),
                                                          "Template name",
                                                          "personal.something",
-                                                         new iAcceptor<String>() {
+                                                         new IAcceptor<String>() {
                                                              public
-                                                             iAcceptor<String> set(final String to) {
+                                                             IAcceptor<String> set(final String to) {
 
                                                                  PopupTextBox.Modal.getStringOrCancel(new java.awt.Point(x.x,
                                                                                                                          x.y),
                                                                                                       "Template description",
                                                                                                       "",
-                                                                                                      new iAcceptor<String>() {
+                                                                                                      new IAcceptor<String>() {
                                                                                                           public
-                                                                                                          iAcceptor<String> set(String to2) {
+                                                                                                          IAcceptor<String> set(String to2) {
 
                                                                                                               // System.out.println(" here is the make <"
                                                                                                               // +
@@ -1431,15 +1432,15 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             });
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    void insertFileMenuItems(final iVisualElement rootSheetElement,
+    void insertFileMenuItems(final IVisualElement rootSheetElement,
                              MainSelectionGroup group,
-                             Map<String, iUpdateable> items) {
+                             Map<String, IUpdateable> items) {
         items.put("File", null);
-        items.put("\t<b>New File...</b>", new iUpdateable() {
+        items.put("\t<b>New File...</b>", new IUpdateable() {
 
             @Override
             public
@@ -1448,7 +1449,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                 FieldMenus2.fieldMenus.doNewFile();
             }
         });
-        items.put("\t<b>Save</b>", new iUpdateable() {
+        items.put("\t<b>Save</b>", new IUpdateable() {
 
             @Override
             public
@@ -1456,7 +1457,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                 saveNow();
             }
         });
-        items.put("\t<b>Save As...</b>", new iUpdateable() {
+        items.put("\t<b>Save As...</b>", new IUpdateable() {
 
             @Override
             public
@@ -1468,22 +1469,22 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public static
-    void insertCopyPasteMenuItems(final iVisualElement rootSheetElement,
+    void insertCopyPasteMenuItems(final IVisualElement rootSheetElement,
                                   MainSelectionGroup group,
-                                  Map<String, iUpdateable> items) {
+                                  Map<String, IUpdateable> items) {
         boolean header = false;
         if (!group.getSelection().isEmpty()) {
             if (!header) {
                 items.put("Clipboard", null);
                 header = true;
             }
-            items.put(" \u2397 <b>Copy</b> elements ///meta C///", new iUpdateable() {
+            items.put(" \u2397 <b>Copy</b> elements ///meta C///", new IUpdateable() {
 
                 public
                 void update() {
                     File tmp = PackageTools.newTempFileWithSelected(rootSheetElement, "copied");
                     PackageTools.copyFileReferenceToClipboard(tmp.getAbsolutePath());
-                    OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(rootSheetElement),
+                    OverlayAnimationManager.notifyTextOnWindow(IVisualElement.enclosingFrame.get(rootSheetElement),
                                                                "Copied to clipboard",
                                                                null,
                                                                1,
@@ -1499,7 +1500,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                 header = true;
             }
 
-            items.put(" \u2398 <b>Paste</b> elements ///meta V///", new iUpdateable() {
+            items.put(" \u2398 <b>Paste</b> elements ///meta V///", new IUpdateable() {
 
                 public
                 void update() {
@@ -1517,7 +1518,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
                         else {
                         }
 
-                        OverlayAnimationManager.notifyTextOnWindow(iVisualElement.enclosingFrame.get(rootSheetElement),
+                        OverlayAnimationManager.notifyTextOnWindow(IVisualElement.enclosingFrame.get(rootSheetElement),
                                                                    "Pasted from clipboard",
                                                                    null,
                                                                    1,
@@ -1531,7 +1532,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         if ((getRoot().getParents().size() <= 1) && drawTick) {
             drawTick = false;
 
@@ -1573,12 +1574,12 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
 
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode prepareForSave() {
-        return VisitCode.cont;
+    TraversalHint prepareForSave() {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
@@ -1603,15 +1604,15 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
 
         // System.out.println(" b ");
 
-        iVisualElementOverrides.topology.begin(rootSheetElement);
-        iVisualElementOverrides.forward.prepareForSave.update();
-        iVisualElementOverrides.backward.prepareForSave.update();
-        iVisualElementOverrides.topology.end(rootSheetElement);
+        IVisualElementOverrides.topology.begin(rootSheetElement);
+        IVisualElementOverrides.forward.prepareForSave.update();
+        IVisualElementOverrides.backward.prepareForSave.update();
+        IVisualElementOverrides.topology.end(rootSheetElement);
 
         // System.out.println(" c ");
 
         try {
-            Set<iVisualElement> saved = new HashSet<iVisualElement>();
+            Set<IVisualElement> saved = new HashSet<IVisualElement>();
             FluidPersistence pp = getPersistence(1);
             // System.out.println(" -- e");
             ObjectOutputStream objectOutputStream = pp.getObjectOutputStream(writer, saved);
@@ -1670,15 +1671,15 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
 
         // System.out.println(" b ");
 
-        iVisualElementOverrides.topology.begin(rootSheetElement);
-        iVisualElementOverrides.forward.prepareForSave.update();
-        iVisualElementOverrides.backward.prepareForSave.update();
-        iVisualElementOverrides.topology.end(rootSheetElement);
+        IVisualElementOverrides.topology.begin(rootSheetElement);
+        IVisualElementOverrides.forward.prepareForSave.update();
+        IVisualElementOverrides.backward.prepareForSave.update();
+        IVisualElementOverrides.topology.end(rootSheetElement);
 
         // System.out.println(" c ");
 
         try {
-            Set<iVisualElement> saved = new HashSet<iVisualElement>();
+            Set<IVisualElement> saved = new HashSet<IVisualElement>();
             FluidPersistence pp = getPersistence(1);
             // System.out.println(" -- e");
             ObjectOutputStream objectOutputStream =
@@ -1735,7 +1736,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     public
     void saveNow() {
         saveNowPart1();
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             int m = 0;
 
@@ -1761,7 +1762,7 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public
-    <T> VisitCode setProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> property, Ref<T> to) {
+    <T> TraversalHint setProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> property, Ref<T> to) {
 
         if (/* rootProperties.containsKey(property) || */source == getRoot()) {
             VisualElementProperty<T> a = property.getAliasedTo();
@@ -1780,12 +1781,12 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
             }
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-        return VisitCode.cont;
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+        return StandardTraversalHint.CONTINUE;
     }
 
     @DispatchOverTopology(topology = Cont.class)
@@ -1814,32 +1815,32 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     public static
-    void _debugPrintGraph(iVisualElement newCopy, String indent, HashSet<iVisualElement> seen) {
+    void _debugPrintGraph(IVisualElement newCopy, String indent, HashSet<IVisualElement> seen) {
         // System.out.println(indent + "<" + newCopy + " / " +
         // newCopy.hashCode() + ">");
         if (seen.contains(newCopy)) return;
         seen.add(newCopy);
-        List<iVisualElement> cc = newCopy.getChildren();
+        List<IVisualElement> cc = newCopy.getChildren();
         if (!cc.isEmpty()) {
             // System.out.println(indent + "  children:");
-            for (iVisualElement c : cc) {
+            for (IVisualElement c : cc) {
                 _debugPrintGraph(c, indent + "     ", seen);
             }
         }
 
-        List<iVisualElement> pp = (List<iVisualElement>) newCopy.getParents();
+        List<IVisualElement> pp = (List<IVisualElement>) newCopy.getParents();
         if (!pp.isEmpty()) {
             // System.out.println(indent + "  parents:");
-            for (iVisualElement c : pp) {
+            for (IVisualElement c : pp) {
                 _debugPrintGraph(c, indent + "     ", seen);
             }
         }
     }
 
     public static
-    void debugPrintGraph(iVisualElement newCopy) {
+    void debugPrintGraph(IVisualElement newCopy) {
 
-        HashSet<iVisualElement> seen = new HashSet<iVisualElement>();
+        HashSet<IVisualElement> seen = new HashSet<IVisualElement>();
         _debugPrintGraph(newCopy, "  ", seen);
     }
 
@@ -1847,10 +1848,10 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     FluidPersistence getPersistence(int version) {
         return new FluidPersistence(new FluidPersistence.iWellKnownElementResolver() {
             public
-            iVisualElement getWellKnownElement(String uid) {
+            IVisualElement getWellKnownElement(String uid) {
                 if (uid.equals(rootSheetElement_uid)) return rootSheetElement;
                 for (iPlugin p : plugins) {
-                    iVisualElement ve = p.getWellKnownVisualElement(uid);
+                    IVisualElement ve = p.getWellKnownVisualElement(uid);
                     if (ve != null) {
                         return ve;
                     }
@@ -1910,16 +1911,16 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
     }
 
     protected
-    void endCopy(iVisualElement newCopy, iVisualElement old) {
+    void endCopy(IVisualElement newCopy, IVisualElement old) {
 
         // debugPrintGraph(newCopy);
 
-        iVisualElementOverrides.topology.begin(newCopy);
+        IVisualElementOverrides.topology.begin(newCopy);
         try {
-            iVisualElementOverrides.forward.added.added(newCopy);
-            iVisualElementOverrides.backward.added.added(newCopy);
+            IVisualElementOverrides.forward.added.added(newCopy);
+            IVisualElementOverrides.backward.added.added(newCopy);
         } finally {
-            iVisualElementOverrides.topology.end(newCopy);
+            IVisualElementOverrides.topology.end(newCopy);
         }
 
         if (vs == null) {
@@ -1957,10 +1958,10 @@ class StandardFluidSheet implements iVisualElementOverrides, iUpdateable, iHasVi
 
         // System.out.println(" about to go templates !");
 
-        templates.getTemplateName(new Point(x.x, x.y), new iAcceptor<String>() {
+        templates.getTemplateName(new Point(x.x, x.y), new IAcceptor<String>() {
 
             public
-            iAcceptor<String> set(String to) {
+            IAcceptor<String> set(String to) {
                 // System.out.println(" importing <" + to +
                 // ">");
                 // x.x +=

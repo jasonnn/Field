@@ -1,10 +1,10 @@
 package field.core;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 
 public
 interface iHasVisualElementRoot {
     public
-    iVisualElement getRoot();
+    IVisualElement getRoot();
 
 }

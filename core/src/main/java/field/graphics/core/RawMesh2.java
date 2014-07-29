@@ -2,7 +2,7 @@ package field.graphics.core;
 
 import field.graphics.core.MeshBlast.Frame;
 import field.graphics.core.MeshBlast.Header;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import field.math.linalg.*;
 import field.util.PythonUtils;
 import field.util.TaskQueue;
@@ -44,7 +44,7 @@ class RawMesh2 extends BasicUtilities.OnePassListElement {
 
     protected boolean elementBufferNeedsReconstruction = true;
 
-    protected iProvider<iCoordinateFrame> inFrame = null;
+    protected IProvider<iCoordinateFrame> inFrame = null;
 
     boolean first = true;
 
@@ -76,13 +76,13 @@ class RawMesh2 extends BasicUtilities.OnePassListElement {
     protected HashMap<Integer, Frame> frame = new HashMap<Integer, Frame>();
 
     public
-    void setCoordinateFrame(iProvider<iCoordinateFrame> inFrame) {
+    void setCoordinateFrame(IProvider<iCoordinateFrame> inFrame) {
         this.inFrame = inFrame;
     }
 
     public
     void setCoordinateFrame(iCoordinateFrame inFrame) {
-        this.inFrame = new iProvider.Constant<iCoordinateFrame>(inFrame);
+        this.inFrame = new IProvider.Constant<iCoordinateFrame>(inFrame);
     }
 
     public
@@ -279,13 +279,13 @@ class RawMesh2 extends BasicUtilities.OnePassListElement {
     }
 
     public
-    void setInFrame(iProvider<iCoordinateFrame> inFrame) {
+    void setInFrame(IProvider<iCoordinateFrame> inFrame) {
         this.inFrame = inFrame;
     }
 
     public
     void setInFrame(final iCoordinateFrame inFrame) {
-        this.inFrame = new iProvider<iCoordinateFrame>() {
+        this.inFrame = new IProvider<iCoordinateFrame>() {
 
             public
             iCoordinateFrame get() {

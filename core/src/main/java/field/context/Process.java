@@ -1,9 +1,9 @@
 package field.context;
 
 import field.context.Generator.Channel;
-import field.launch.iUpdateable;
-import field.math.abstraction.iDoubleProvider;
-import field.math.abstraction.iProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IDoubleProvider;
+import field.math.abstraction.IProvider;
 import org.python.core.Py;
 import org.python.core.PyException;
 import org.python.core.PyGenerator;
@@ -11,14 +11,14 @@ import org.python.core.PyGenerator;
 import java.util.Collection;
 
 public abstract
-class Process<X> implements iUpdateable {
+class Process<X> implements IUpdateable {
 
-    protected final iDoubleProvider time;
+    protected final IDoubleProvider time;
     protected final double lookahead;
     protected Channel<X> output;
 
     public
-    Process(iDoubleProvider time, double lookahead, Channel<X> output) {
+    Process(IDoubleProvider time, double lookahead, Channel<X> output) {
         this.time = time;
         this.lookahead = lookahead;
         this.output = output;
@@ -62,23 +62,23 @@ class Process<X> implements iUpdateable {
     public static
     class ProviderProcess<X> extends Process<X> {
 
-        private iProvider p;
+        private IProvider p;
         public double now;
 
         public
-        ProviderProcess(iDoubleProvider time, double lookahead, Channel<X> output) {
+        ProviderProcess(IDoubleProvider time, double lookahead, Channel<X> output) {
             super(time, lookahead, output);
         }
 
         public
-        ProviderProcess<X> set(iProvider p) {
+        ProviderProcess<X> set(IProvider p) {
             this.p = p;
             return this;
         }
 
         public
         ProviderProcess<X> set(final PyGenerator p) {
-            this.p = new iProvider() {
+            this.p = new IProvider() {
 
                 boolean first = true;
 

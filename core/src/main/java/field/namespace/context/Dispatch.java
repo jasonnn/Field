@@ -1,7 +1,7 @@
 package field.namespace.context;
 
-import field.math.graph.iTopology;
-import field.math.graph.visitors.GraphNodeSearching;
+import field.math.graph.ITopology;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.namespace.dispatch.DispatchOverTopology;
 import field.util.ProxyBuilder;
 
@@ -20,7 +20,7 @@ class Dispatch<K, I> {
 
     final ContextTopology<K, I> topology;
 
-    final iTopology<K> topBackwards = new iTopology<K>() {
+    final ITopology<K> topBackwards = new ITopology<K>() {
         public
         List<K> getChildrenOf(K of) {
             Collection<K> pp = topology.parentsOf(of);
@@ -37,7 +37,7 @@ class Dispatch<K, I> {
 
     };
 
-    final iTopology<K> top = new iTopology<K>() {
+    final ITopology<K> top = new ITopology<K>() {
         public
         List<K> getChildrenOf(K of) {
             Collection<K> pp = topology.childrenOf(of);
@@ -67,14 +67,14 @@ class Dispatch<K, I> {
     public
     Collection dispatchBackward(final Method m, Object... args) {
         DispatchOverTopology<K>.Raw rawBackwards = getRawBackwards();
-        GraphNodeSearching.VisitCode o = rawBackwards.dispatch(m, topology.getAt(), args);
+        TraversalHint o = rawBackwards.dispatch(m, topology.getAt(), args);
         return rawBackwards.returns();
     }
 
     public
     Collection dispatchBackward(K startingFrom, final Method m, Object... args) {
         DispatchOverTopology<K>.Raw rawBackwards = getRawBackwards();
-        GraphNodeSearching.VisitCode o = rawBackwards.dispatch(m, startingFrom, args);
+        TraversalHint o = rawBackwards.dispatch(m, startingFrom, args);
         return rawBackwards.returns();
     }
 
@@ -89,21 +89,21 @@ class Dispatch<K, I> {
             }
         };
 
-        GraphNodeSearching.VisitCode o = rawBackwards.dispatch(m, startingFrom, args);
+        TraversalHint o = rawBackwards.dispatch(m, startingFrom, args);
         return rawBackwards.returns();
     }
 
     public
     Collection dispatchForward(final Method m, Object... args) {
         DispatchOverTopology<K>.Raw raw = getRaw();
-        GraphNodeSearching.VisitCode o = raw.dispatch(m, topology.getAt(), args);
+        TraversalHint o = raw.dispatch(m, topology.getAt(), args);
         return raw.returns();
     }
 
     public
     Collection dispatchForward(K startingFrom, final Method m, Object... args) {
         DispatchOverTopology<K>.Raw raw = getRaw();
-        GraphNodeSearching.VisitCode o = raw.dispatch(m, startingFrom, args);
+        TraversalHint o = raw.dispatch(m, startingFrom, args);
         return raw.returns();
     }
 
@@ -118,7 +118,7 @@ class Dispatch<K, I> {
             }
         };
 
-        GraphNodeSearching.VisitCode o = raw.dispatch(m, startingFrom, args);
+        TraversalHint o = raw.dispatch(m, startingFrom, args);
         return raw.returns();
     }
 
@@ -154,7 +154,7 @@ class Dispatch<K, I> {
                 method = arg1;
                 arg1.setAccessible(true);
                 DispatchOverTopology<K>.Raw rawBackwards = getRawBackwards();
-                GraphNodeSearching.VisitCode o = rawBackwards.dispatch(arg1, topology.getAt(), arg2);
+                TraversalHint o = rawBackwards.dispatch(arg1, topology.getAt(), arg2);
                 return o;
             }
         });
@@ -178,7 +178,7 @@ class Dispatch<K, I> {
                 method = arg1;
                 arg1.setAccessible(true);
                 DispatchOverTopology<K>.Raw rawBackwards = getRawBackwards();
-                GraphNodeSearching.VisitCode o = rawBackwards.dispatch(arg1, startAt, arg2);
+                TraversalHint o = rawBackwards.dispatch(arg1, startAt, arg2);
                 return o;
             }
         });

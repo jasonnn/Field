@@ -1,8 +1,8 @@
 package field.core.windowing;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.iComponent;
 import field.math.linalg.Vector2;
@@ -24,14 +24,14 @@ class WindowSpaceBox {
         this.window = window;
     }
 
-    HashMap<iVisualElement, Rect> frozen = new HashMap<iVisualElement, Rect>();
+    HashMap<IVisualElement, Rect> frozen = new HashMap<IVisualElement, Rect>();
     private Vector4 frozenAt;
 
     public
     void freeze() {
         ComponentContainer root = window.getRoot();
 
-        frozen = new HashMap<iVisualElement, iVisualElement.Rect>();
+        frozen = new HashMap<IVisualElement, IVisualElement.Rect>();
         frozenAt =
                 new Vector4(window.getXScale(), window.getYScale(), window.getXTranslation(), window.getYTranslation());
 
@@ -45,11 +45,11 @@ class WindowSpaceBox {
 
         if (thawAt.equals(frozenAt)) return;
 
-        for (Map.Entry<iVisualElement, Rect> e : frozen.entrySet()) {
+        for (Map.Entry<IVisualElement, Rect> e : frozen.entrySet()) {
             Rect r = transform(e.getValue(), frozenAt, thawAt);
 
             e.getKey()
-             .getProperty(iVisualElement.overrides)
+             .getProperty(IVisualElement.overrides)
              .shouldChangeFrame(e.getKey(), r, e.getKey().getFrame(null), true);
         }
         window.requestRepaint();
@@ -79,7 +79,7 @@ class WindowSpaceBox {
 
     protected
     void doFreeze(iComponent root) {
-        iVisualElement x = root.getVisualElement();
+        IVisualElement x = root.getVisualElement();
         if (x != null && isWindowSpace.getBoolean(x, false)) {
             frozen.put(x, x.getFrame(null));
         }

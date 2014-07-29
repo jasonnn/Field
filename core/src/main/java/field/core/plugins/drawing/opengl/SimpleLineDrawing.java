@@ -10,13 +10,13 @@ import field.graphics.core.Base.StandardPass;
 import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.core.BasicUtilities.EnableDepthTestWrap;
 import field.graphics.dynamic.*;
-import field.launch.iUpdateable;
-import field.math.abstraction.iMetric;
+import field.launch.IUpdateable;
+import field.math.abstraction.IMetric;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.Dict;
 import field.util.Dict.Prop;
 
@@ -51,7 +51,7 @@ class SimpleLineDrawing {
             final DynamicLine_long outputLine =
                     getCachedLineForWidth(context, Math.min(20, Math.max(widthFor(context, properties) * 10, 5)));
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 public
                 void update() {
                     // copySource
@@ -153,7 +153,7 @@ class SimpleLineDrawing {
 
             fillEmitter.setWidingRule(wr);
 
-            fillEmitter.addTrackedProperty(iLinearGraphicsContext.fillColor_v, new iMetric<Vector4, Vector4>() {
+            fillEmitter.addTrackedProperty(iLinearGraphicsContext.fillColor_v, new IMetric<Vector4, Vector4>() {
                 public
                 float distance(Vector4 from, Vector4 to) {
                     if ((from == null) || (to == null)) return 0;
@@ -165,7 +165,7 @@ class SimpleLineDrawing {
 
             drawInto(line, properties, outputLine, context, fillEmitter);
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 int seen = 0;
 
                 public
@@ -308,7 +308,7 @@ class SimpleLineDrawing {
 
             if (shaderAttributes != null) {
                 fillEmitter.clearTrackedProperties();
-                fillEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
+                fillEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new IMetric<Vector4, Vector4>() {
                     public
                     float distance(Vector4 from, Vector4 to) {
                         if ((from == null) || (to == null)) return 0;
@@ -320,7 +320,7 @@ class SimpleLineDrawing {
                 Set<Entry<String, Number>> es = shaderAttributes.entrySet();
                 int q = 2;
                 for (Entry<String, Number> e : es) {
-                    fillEmitter.addTrackedProperty(new Prop(e.getKey()), new iMetric() {
+                    fillEmitter.addTrackedProperty(new Prop(e.getKey()), new IMetric() {
                         public
                         float distance(Object from, Object to) {
                             return 0;
@@ -332,7 +332,7 @@ class SimpleLineDrawing {
             else {
                 extendedAttributes = null;
                 fillEmitter.clearTrackedProperties();
-                fillEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
+                fillEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new IMetric<Vector4, Vector4>() {
                     public
                     float distance(Vector4 from, Vector4 to) {
                         if ((from == null) || (to == null)) return 0;
@@ -346,7 +346,7 @@ class SimpleLineDrawing {
 
             drawInto(line, properties, outputLine, context, fillEmitter);
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 int seen = 0;
 
                 CoordinateFrame prevTransform = (transform == null) ? null : transform.duplicate();
@@ -428,7 +428,7 @@ class SimpleLineDrawing {
         public
         PlainGLLineDefault(BaseGLGraphicsContext context) {
             this.context = context;
-            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
+            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new IMetric<Vector4, Vector4>() {
                 public
                 float distance(Vector4 from, Vector4 to) {
                     if ((from == null) || (to == null)) return 0;
@@ -469,7 +469,7 @@ class SimpleLineDrawing {
             final boolean disabledSkipCache = properties.isTrue(iLinearGraphicsContext.slow, false);
 
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
 
                 int seen = 0;
                 CoordinateFrame prevTransform = (transform == null) ? null : transform.duplicate();
@@ -539,7 +539,7 @@ class SimpleLineDrawing {
             // final DynamicPointlist
             // outputLine =
             // DynamicPointlist.unshadedPoints(context.getVertexProgram());
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 Vector4 black = new Vector4(0, 0, 0, 1);
 
                 public
@@ -636,7 +636,7 @@ class SimpleLineDrawing {
             // final DynamicPointlist
             // outputLine =
             // DynamicPointlist.unshadedPoints(context.getVertexProgram());
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 Vector4 black = new Vector4(0, 0, 0, 1);
 
                 public
@@ -780,7 +780,7 @@ class SimpleLineDrawing {
 
             };
 
-            fillEmitter.addTrackedProperty(iLinearGraphicsContext.fillColor_v, new iMetric<Vector4, Vector4>() {
+            fillEmitter.addTrackedProperty(iLinearGraphicsContext.fillColor_v, new IMetric<Vector4, Vector4>() {
                 public
                 float distance(Vector4 from, Vector4 to) {
                     if (from == null || to == null) return 0;
@@ -794,7 +794,7 @@ class SimpleLineDrawing {
 
             // ;//System.out.println(" PLine system computed a fil of length <"+fillEmitter.mesh.getUnderlyingGeometry().numVertex()+" "+fillEmitter.mesh.getUnderlyingGeometry().numTriangle()+">");
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 public
                 void update() {
 
@@ -896,7 +896,7 @@ class SimpleLineDrawing {
 
     static Vector2 zOffset = new Vector2();
 
-    public static iFunction<Vector3, Vector3> thisCamera;
+    public static IFunction<Vector3, Vector3> thisCamera;
 
     public
     class Plain3dLine implements iDrawingAcceptor<CachedLine> {
@@ -989,7 +989,7 @@ class SimpleLineDrawing {
         public
         Plain3dLine(BaseGLGraphicsContext context) {
             this.context = context;
-            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
+            lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new IMetric<Vector4, Vector4>() {
                 public
                 float distance(Vector4 from, Vector4 to) {
                     if (from == null || to == null) return 0;
@@ -1013,7 +1013,7 @@ class SimpleLineDrawing {
 
             if (shaderAttributes != null) {
                 lineEmitter.clearTrackedProperties();
-                lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
+                lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new IMetric<Vector4, Vector4>() {
                     public
                     float distance(Vector4 from, Vector4 to) {
                         if (from == null || to == null) return 0;
@@ -1025,7 +1025,7 @@ class SimpleLineDrawing {
                 Set<Entry<String, Number>> es = shaderAttributes.entrySet();
                 int q = 2;
                 for (Entry<String, Number> e : es) {
-                    lineEmitter.addTrackedProperty(new Prop(e.getKey()), new iMetric() {
+                    lineEmitter.addTrackedProperty(new Prop(e.getKey()), new IMetric() {
                         public
                         float distance(Object from, Object to) {
                             return 0;
@@ -1037,7 +1037,7 @@ class SimpleLineDrawing {
             else {
                 extendedAttributes = null;
                 lineEmitter.clearTrackedProperties();
-                lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new iMetric<Vector4, Vector4>() {
+                lineEmitter.addTrackedProperty(iLinearGraphicsContext.strokeColor_v, new IMetric<Vector4, Vector4>() {
                     public
                     float distance(Vector4 from, Vector4 to) {
                         if (from == null || to == null) return 0;
@@ -1046,7 +1046,7 @@ class SimpleLineDrawing {
                     }
                 });
             }
-            iFunction<Vector3, Vector3> camera = properties.get(iLinearGraphicsContext.camera);
+            IFunction<Vector3, Vector3> camera = properties.get(iLinearGraphicsContext.camera);
 
             float opacityMul = 1;
             Number o = line.getProperties().get(iLinearGraphicsContext.totalOpacity);
@@ -1071,7 +1071,7 @@ class SimpleLineDrawing {
 
             // ;//System.out.println(" PLine system computed a line of length <"+subLine.getUnderlyingGeometry().numVertex()+" "+subLine.getUnderlyingGeometry().numTriangle()+">");
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
 
                 int seen = 0;
 
@@ -1407,7 +1407,7 @@ class SimpleLineDrawing {
     public static
     Vector3 camera(Vector3 a) {
         if (thisCamera != null) {
-            return thisCamera.f(a);
+            return thisCamera.apply(a);
         }
         return new Vector3(a.x + zOffset.x * a.z, a.y + zOffset.y * a.z, a.z);
     }

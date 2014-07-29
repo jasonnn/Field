@@ -1,12 +1,12 @@
 package field.core.plugins.connection;
 
 import field.core.StandardFluidSheet;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.iPlugin;
 import field.core.plugins.python.PythonPluginEditor;
@@ -16,10 +16,11 @@ import field.core.windowing.components.PlainComponent;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
 import field.core.windowing.overlay.OverlayAnimationManager;
-import field.math.abstraction.iAcceptor;
+import field.math.abstraction.IAcceptor;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.IMutableContainer;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.collect.tuple.Pair;
 import field.util.collect.tuple.Triple;
 
@@ -36,7 +37,7 @@ public
 class Connections implements iPlugin {
 
     public
-    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -52,7 +53,7 @@ class Connections implements iPlugin {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p.equals(overrides)) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -73,13 +74,13 @@ class Connections implements iPlugin {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             properties = t;
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -90,16 +91,16 @@ class Connections implements iPlugin {
     }
 
     public
-    class Overrides extends iVisualElementOverrides.DefaultOverride {
+    class Overrides extends IVisualElementOverrides.DefaultOverride {
         @Override
         public
-        VisitCode deleted(iVisualElement source) {
+        TraversalHint deleted(IVisualElement source) {
             if (connections.containsKey(source.getUniqueID())) {
-                iVisualElement removed = connections.remove(source.getUniqueID());
+                IVisualElement removed = connections.remove(source.getUniqueID());
                 PythonPluginEditor.delete(removed, root);
             }
 
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
     }
 
@@ -110,11 +111,11 @@ class Connections implements iPlugin {
 
     public static int uniq;
 
-    public Map<String, iVisualElement> connections = new HashMap<String, iVisualElement>();
+    public Map<String, IVisualElement> connections = new HashMap<String, IVisualElement>();
 
-    private final iVisualElement rootElement;
+    private final IVisualElement rootElement;
 
-    private iVisualElement root;
+    private IVisualElement root;
 
 
     private LocalVisualElement lve;
@@ -128,7 +129,7 @@ class Connections implements iPlugin {
     Map<Object, Object> properties = new HashMap<Object, Object>();
 
     public
-    Connections(StandardFluidSheet sheet, iVisualElement rootElement) {
+    Connections(StandardFluidSheet sheet, IVisualElement rootElement) {
         uniq++;
         this.sheet = sheet;
         this.rootElement = rootElement;
@@ -157,34 +158,34 @@ class Connections implements iPlugin {
 //	}
 
     public
-    <T extends iVisualElementOverrides.DefaultOverride> iVisualElement connect(final iVisualElement from,
-                                                                               final iVisualElement to,
+    <T extends IVisualElementOverrides.DefaultOverride> IVisualElement connect(final IVisualElement from,
+                                                                               final IVisualElement to,
                                                                                Class<T> connective,
                                                                                boolean askforname) {
         final Triple<VisualElement, PlainComponent, T> c1 =
                 VisualElement.create(new Rect(30, 30, 30, 30), VisualElement.class, PlainComponent.class, connective);
 
         c1.left.addChild(rootElement);
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(c1.left).added(c1.left);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(c1.left).added(c1.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(c1.left).added(c1.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(c1.left).added(c1.left);
 
         LineDrawingOverride.lineDrawing_to.set(c1.left, c1.left, new VisualElementReference(to));
         LineDrawingOverride.lineDrawing_from.set(c1.left, c1.left, new VisualElementReference(from));
 
-        final GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
+        final GLComponentWindow frame = IVisualElement.enclosingFrame.get(root);
 
         if (askforname) PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(c1.left),
                                                      "name :",
                                                      '\''
-                                                     + iVisualElement.name.get(from)
+                                                     + IVisualElement.name.get(from)
                                                      + "' to '"
-                                                     + iVisualElement.name.get(to)
+                                                     + IVisualElement.name.get(to)
                                                      + '\'',
-                                                     new iAcceptor<String>() {
+                                                     new IAcceptor<String>() {
                                                          public
-                                                         iAcceptor<String> set(String x) {
-                                                             iVisualElement.name.set(c1.left, c1.left, x);
-                                                             iVisualElement.dirty.set(c1.left, c1.left, true);
+                                                         IAcceptor<String> set(String x) {
+                                                             IVisualElement.name.set(c1.left, c1.left, x);
+                                                             IVisualElement.dirty.set(c1.left, c1.left, true);
 
                                                              if (frame != null) {
                                                                  OverlayAnimationManager.notifyAsText(from,
@@ -199,12 +200,12 @@ class Connections implements iPlugin {
                                                          }
                                                      });
         else {
-            iVisualElement.name.set(c1.left,
+            IVisualElement.name.set(c1.left,
                                     c1.left,
                                     '\''
-                                    + from.getProperty(iVisualElement.name)
+                                    + from.getProperty(IVisualElement.name)
                                     + "'->'"
-                                    + to.getProperty(iVisualElement.name)
+                                    + to.getProperty(IVisualElement.name)
                                     + '\'');
         }
 
@@ -219,14 +220,14 @@ class Connections implements iPlugin {
     }
 
     public
-    iVisualElement getWellKnownVisualElement(String id) {
+    IVisualElement getWellKnownVisualElement(String id) {
         if (id.equals(pluginId)) return lve;
         return null;
     }
 
 
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
 
         this.root = root;
 
@@ -237,7 +238,7 @@ class Connections implements iPlugin {
         root.addChild(lve);
 
         // register for selection updates? (no, do it in subclass)
-        group = root.getProperty(iVisualElement.selectionGroup);
+        group = root.getProperty(IVisualElement.selectionGroup);
 
         elementOverride = createElementOverrides();
         elementOverride.setVisualElement(lve);
@@ -250,13 +251,13 @@ class Connections implements iPlugin {
             if (p.left.equals(pluginId + "version_1")) {
                 // need to go through and find those elements
                 for (String s : p.right) {
-                    iVisualElement element = StandardFluidSheet.findVisualElement(root, s);
+                    IVisualElement element = StandardFluidSheet.findVisualElement(root, s);
                     if (element == null) {
                     }
                     else {
                         connections.put(s, element);
 
-                        iVisualElementOverrides over = element.getProperty(iVisualElement.overrides);
+                        IVisualElementOverrides over = element.getProperty(IVisualElement.overrides);
                     }
                 }
             }
@@ -265,7 +266,7 @@ class Connections implements iPlugin {
 
     public
     void update() {
-        if (connections == null) connections = new HashMap<String, iVisualElement>();
+        if (connections == null) connections = new HashMap<String, IVisualElement>();
     }
 
     protected

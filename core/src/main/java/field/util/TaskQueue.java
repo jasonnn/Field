@@ -6,8 +6,8 @@ import field.bytecode.protect.iRegistersUpdateable;
 import field.core.plugins.PythonOverridden;
 import field.core.plugins.PythonOverridden.Callable;
 import field.core.util.FieldPyObjectAdaptor.iCallable;
+import field.launch.IUpdateable;
 import field.launch.iPhasic;
-import field.launch.iUpdateable;
 import org.python.core.Py;
 import org.python.core.PyFunction;
 import org.python.core.PyObject;
@@ -23,18 +23,18 @@ import java.util.*;
  */
 
 public
-class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCallable {
+class TaskQueue implements IUpdateable, iRegistersUpdateable, iContainer, iCallable {
 
     public static
     class Gate extends Task {
-        private final iUpdateable up;
+        private final IUpdateable up;
 
         private final boolean touch;
 
         boolean con = true;
 
         public
-        Gate(TaskQueue in, iUpdateable up, boolean touch) {
+        Gate(TaskQueue in, IUpdateable up, boolean touch) {
             in.super();
             this.up = up;
             this.touch = touch;
@@ -124,7 +124,7 @@ class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCalla
     public
     class Updateable extends Task implements iPhasic {
 
-        iUpdateable u;
+        IUpdateable u;
 
         boolean first = true;
 
@@ -169,7 +169,7 @@ class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCalla
         }
 
         public
-        Updateable(iUpdateable u) {
+        Updateable(IUpdateable u) {
             this.u = u;
         }
 
@@ -268,10 +268,10 @@ class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCalla
 
     protected Object lock = new Object();
 
-    HashMap<iUpdateable, Updateable> upMap = new HashMap<iUpdateable, Updateable>();
+    HashMap<IUpdateable, Updateable> upMap = new HashMap<IUpdateable, Updateable>();
 
     public
-    void addUpdateable(iUpdateable updateable) {
+    void addUpdateable(IUpdateable updateable) {
         Updateable up = new Updateable(updateable);
         upMap.put(updateable, up);
     }
@@ -284,7 +284,7 @@ class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCalla
     }
 
     public
-    void deregisterUpdateable(iUpdateable up) {
+    void deregisterUpdateable(IUpdateable up) {
         removeUpdateable(up);
     }
 
@@ -341,7 +341,7 @@ class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCalla
     }
 
     public
-    Task queueSingleUpdate(final iUpdateable u) {
+    Task queueSingleUpdate(final IUpdateable u) {
         return new Task() {
             @Override
             protected
@@ -352,7 +352,7 @@ class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCalla
     }
 
     public
-    void registerUpdateable(final iUpdateable up) {
+    void registerUpdateable(final IUpdateable up) {
         Updateable task = new Updateable(up);
         upMap.put(up, task);
     }
@@ -365,7 +365,7 @@ class TaskQueue implements iUpdateable, iRegistersUpdateable, iContainer, iCalla
     }
 
     public
-    void removeUpdateable(iUpdateable view) {
+    void removeUpdateable(IUpdateable view) {
         Updateable up = upMap.remove(view);
 
         if (up != null) up.remove();

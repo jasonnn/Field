@@ -2,22 +2,22 @@ package field.core.ui.text.rulers;
 
 import field.core.Constants;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonGeneratorStack;
 import field.core.plugins.python.PythonPluginEditor;
 import field.core.ui.SmallMenu;
 import field.core.ui.text.rulers.ExecutedAreas.Area;
 import field.core.ui.text.rulers.ExecutedAreas.State;
 import field.core.util.LocalFuture;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
+import field.math.abstraction.IAcceptor;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.math.util.Histogram;
 import field.math.util.iAverage;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.Dict.Prop;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -291,9 +291,9 @@ class ExecutionRuler implements iRuler {
                         runAndReviseArea(minIs);
                     }
                     else {
-                        runAndCheckArea(minIs).addContinuation(new iAcceptor<Boolean>() {
+                        runAndCheckArea(minIs).addContinuation(new IAcceptor<Boolean>() {
                             public
-                            iAcceptor<Boolean> set(Boolean to) {
+                            IAcceptor<Boolean> set(Boolean to) {
                                 fminIs.extend.put(ExecutedAreas.passedUnitTest, to);
                                 p.redraw();
                                 return null;
@@ -924,7 +924,7 @@ class ExecutionRuler implements iRuler {
     }
 
     protected
-    void executeAreaAndRewrite(Area minIs, iFunction<String, String> up) {
+    void executeAreaAndRewrite(Area minIs, IFunction<String, String> up) {
     }
 
     public
@@ -956,24 +956,24 @@ class ExecutionRuler implements iRuler {
 
     protected
     void popup(MouseEvent e, DragType dt, final Area target) {
-        LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
+        LinkedHashMap<String, IUpdateable> menu = new LinkedHashMap<String, IUpdateable>();
         if (target != null) {
             menu.put("Operations on Area", null);
-            menu.put("  \u232b <b>Delete Area</b>", new iUpdateable() {
+            menu.put("  \u232b <b>Delete Area</b>", new IUpdateable() {
                 public
                 void update() {
                     areas.deleteArea(target);
                     p.redraw();
                 }
             });
-            menu.put("  \u2190 <b>Promote</b> area ", new iUpdateable() {
+            menu.put("  \u2190 <b>Promote</b> area ", new IUpdateable() {
                 public
                 void update() {
                     areas.promote(target);
                     p.redraw();
                 }
             });
-            menu.put("  \u2328 Assign <b>keyboard shortcut</b>", new iUpdateable() {
+            menu.put("  \u2328 Assign <b>keyboard shortcut</b>", new IUpdateable() {
                 public
                 void update() {
 
@@ -1007,12 +1007,12 @@ class ExecutionRuler implements iRuler {
             menu.put("Unit testing", null);
             boolean isTest = target.extend.isTrue(ExecutedAreas.isUnitTest, false);
             if (isTest) {
-                menu.put(" \u24e4 <b>Run</b> unit test ///control U///", new iUpdateable() {
+                menu.put(" \u24e4 <b>Run</b> unit test ///control U///", new IUpdateable() {
                     public
                     void update() {
-                        runAndCheckArea(target).addContinuation(new iAcceptor<Boolean>() {
+                        runAndCheckArea(target).addContinuation(new IAcceptor<Boolean>() {
                             public
-                            field.math.abstraction.iAcceptor<Boolean> set(Boolean to) {
+                            IAcceptor<Boolean> set(Boolean to) {
                                 target.extend.put(ExecutedAreas.passedUnitTest, to);
                                 p.redraw();
                                 return this;
@@ -1020,7 +1020,7 @@ class ExecutionRuler implements iRuler {
                         });
                     }
                 });
-                menu.put(" \u24e4 Run & <b>revise</b> unit test ///shift control U///", new iUpdateable() {
+                menu.put(" \u24e4 Run & <b>revise</b> unit test ///shift control U///", new IUpdateable() {
                     public
                     void update() {
                         runAndReviseArea(target);
@@ -1028,7 +1028,7 @@ class ExecutionRuler implements iRuler {
                         p.redraw();
                     }
                 });
-                menu.put(" \u24e4 <b>Forget</b> unit test", new iUpdateable() {
+                menu.put(" \u24e4 <b>Forget</b> unit test", new IUpdateable() {
                     public
                     void update() {
                         target.extend.put(ExecutedAreas.isUnitTest, false);
@@ -1037,7 +1037,7 @@ class ExecutionRuler implements iRuler {
                 });
             }
             else {
-                menu.put(" \u24e4 Make <b>new unit test</b> ///control U///", new iUpdateable() {
+                menu.put(" \u24e4 Make <b>new unit test</b> ///control U///", new IUpdateable() {
 
                     public
                     void update() {
@@ -1058,7 +1058,7 @@ class ExecutionRuler implements iRuler {
                 menu.put("Unit testing", null);
             }
 
-            menu.put(" \u24ca Run <b>all unit tests</b> in this element", new iUpdateable() {
+            menu.put(" \u24ca Run <b>all unit tests</b> in this element", new IUpdateable() {
 
                 public
                 void update() {
@@ -1066,7 +1066,7 @@ class ExecutionRuler implements iRuler {
                 }
             });
 
-            menu.put(" \u24ca <b>Revise all</b> unit tests in this element", new iUpdateable() {
+            menu.put(" \u24ca <b>Revise all</b> unit tests in this element", new IUpdateable() {
 
                 public
                 void update() {
@@ -1079,7 +1079,7 @@ class ExecutionRuler implements iRuler {
                     }
                 }
             });
-            menu.put(" \u24ca <b>Forget all</b> unit tests in this element", new iUpdateable() {
+            menu.put(" \u24ca <b>Forget all</b> unit tests in this element", new IUpdateable() {
 
                 public
                 void update() {
@@ -1097,7 +1097,7 @@ class ExecutionRuler implements iRuler {
     }
 
     private static
-    iUpdateable browseExecutionHistory(final Area target) {
+    IUpdateable browseExecutionHistory(final Area target) {
         return null;
         // TODO swt bettertextselection
         // return new iUpdateable() {
@@ -1207,10 +1207,10 @@ class ExecutionRuler implements iRuler {
         for (final Area a : ruler.areas.areas) {
             if (a.extend.isTrue(ExecutedAreas.isUnitTest, false)) {
                 LocalFuture<Boolean> r = ruler.runAndCheckArea(a);
-                r.addContinuation(new iAcceptor<Boolean>() {
+                r.addContinuation(new IAcceptor<Boolean>() {
 
                     public
-                    iAcceptor<Boolean> set(Boolean to) {
+                    IAcceptor<Boolean> set(Boolean to) {
                         a.extend.put(ExecutedAreas.passedUnitTest, to);
                         ruler.p.redraw();
                         return this;
@@ -1222,7 +1222,7 @@ class ExecutionRuler implements iRuler {
     }
 
     public static
-    boolean hasUnitTests(iVisualElement element, VisualElementProperty<String> p) {
+    boolean hasUnitTests(IVisualElement element, VisualElementProperty<String> p) {
         Map<String, State> state = element.getProperty(PythonPluginEditor.python_areas);
         if (state == null) return false;
         State a = state.get(p.getName());
@@ -1238,7 +1238,7 @@ class ExecutionRuler implements iRuler {
     }
 
     public static
-    int hasFailingTests(iVisualElement element, VisualElementProperty<String> p) {
+    int hasFailingTests(IVisualElement element, VisualElementProperty<String> p) {
         Map<String, State> state = element.getProperty(PythonPluginEditor.python_areas);
         if (state == null) return 0;
         State a = state.get(p.getName());

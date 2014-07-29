@@ -1,10 +1,10 @@
 package field.core.plugins.drawing.align;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.plugins.constrain.BaseConstraintOverrides;
 import field.core.plugins.constrain.constraints.VerticalLeftToLeftConstraint;
 import field.core.plugins.drawing.OfferedAlignment;
@@ -67,7 +67,7 @@ class VerticalLeftToLeftAlign extends PointOffering {
 
     @Override
     protected
-    Vector2 connectionPoint(iVisualElement source, Vector2 sourcePoint, iVisualElement target, Rect targetRect) {
+    Vector2 connectionPoint(IVisualElement source, Vector2 sourcePoint, IVisualElement target, Rect targetRect) {
 
         if (distance(sourcePoint, targetRect) < snap) {
             if (forbidSmallTargets() && targetRect.w < 25) return null;
@@ -80,17 +80,17 @@ class VerticalLeftToLeftAlign extends PointOffering {
 
     @Override
     protected
-    void createConstraint(iVisualElement root, iVisualElement from, iVisualElement to) {
+    void createConstraint(IVisualElement root, IVisualElement from, IVisualElement to) {
 
         Class<? extends DefaultOverride> cc = getConstraintClass();
         if (cc != null) {
-            Triple<VisualElement, PlainDraggableComponent, ? extends iVisualElementOverrides.DefaultOverride> created =
+            Triple<VisualElement, PlainDraggableComponent, ? extends IVisualElementOverrides.DefaultOverride> created =
                     VisualElement.create(new Rect(10, 10, 10, 10),
                                          VisualElement.class,
                                          PlainDraggableComponent.class,
                                          cc);
 
-            Map<String, iVisualElement> parameters = new HashMap<String, iVisualElement>();
+            Map<String, IVisualElement> parameters = new HashMap<String, IVisualElement>();
             parameters.put("left", from);
             parameters.put("right", to);
 
@@ -98,10 +98,10 @@ class VerticalLeftToLeftAlign extends PointOffering {
 
             created.left.addChild(root);
 
-            iVisualElementOverrides.topology.begin(created.left);
-            iVisualElementOverrides.forward.added.f(created.left);
-            iVisualElementOverrides.backward.added.f(created.left);
-            iVisualElementOverrides.topology.end(created.left);
+            IVisualElementOverrides.topology.begin(created.left);
+            IVisualElementOverrides.forward.added.apply(created.left);
+            IVisualElementOverrides.backward.added.apply(created.left);
+            IVisualElementOverrides.topology.end(created.left);
         }
     }
 
@@ -121,7 +121,7 @@ class VerticalLeftToLeftAlign extends PointOffering {
     }
 
     protected
-    Class<? extends iVisualElementOverrides.DefaultOverride> getConstraintClass() {
+    Class<? extends IVisualElementOverrides.DefaultOverride> getConstraintClass() {
         return VerticalLeftToLeftConstraint.class;
     }
 
@@ -159,8 +159,8 @@ class VerticalLeftToLeftAlign extends PointOffering {
     iDrawable newDrawableFor(float bestScore,
                              final Set<Vector2> best,
                              Vector2 originalPoint,
-                             LinkedHashMap<iVisualElement, Rect> current,
-                             iVisualElement element,
+                             LinkedHashMap<IVisualElement, Rect> current,
+                             IVisualElement element,
                              Rect originalRect,
                              final Rect currentRect,
                              Rect newRect) {

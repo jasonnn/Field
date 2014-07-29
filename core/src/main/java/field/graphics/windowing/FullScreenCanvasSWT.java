@@ -17,9 +17,9 @@ import field.graphics.core.*;
 import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicUtilities.Clear;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
 import field.math.BaseMath;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
@@ -64,11 +64,9 @@ import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
-import java.util.List;
-
 @Woven
 public
-class FullScreenCanvasSWT implements iUpdateable, iThreedDrawingSurface, iAcceptsSceneListElement {
+class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAcceptsSceneListElement {
 
     @HiddenInAutocomplete
     public static final Method method_beforeFlush = ReflectionTools.methodOf("beforeFlush", FullScreenCanvasSWT.class);

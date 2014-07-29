@@ -4,7 +4,7 @@ import asm.handlers.dispatch.Apply;
 import asm.handlers.dispatch.DispatchProvider;
 import asm.handlers.dispatch.ReturnCode;
 import asm.handlers.dispatch.Run;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.namespace.generic.ReflectionTools;
 import field.protect.asm.ASMReflectionAdapter;
 
@@ -239,7 +239,7 @@ class Cont implements DispatchProvider {
     }
 
     public static
-    void wrap(Object inside, Method on, final iUpdateable enter, final iUpdateable exit) {
+    void wrap(Object inside, Method on, final IUpdateable enter, final IUpdateable exit) {
         Cont.linkWith(inside, on, new Run() {
 
             public

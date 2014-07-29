@@ -1,6 +1,8 @@
 package field.math.graph.visitors;
 
-import field.math.graph.iTopology;
+import field.math.graph.ITopology;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.collect.tuple.Pair;
 import field.util.HashMapOfLists;
 
@@ -14,7 +16,7 @@ class TopologyVisitor_cachingTreeBreadthFirst<T> {
 
     public HashMapOfLists<T, Pair<T, List<T>>> knownPaths = new HashMapOfLists<T, Pair<T, List<T>>>();
 
-    private final iTopology<T> t;
+    private final ITopology<T> t;
 
     HashMap<T, T> parented = new HashMap<T, T>();
 
@@ -25,7 +27,7 @@ class TopologyVisitor_cachingTreeBreadthFirst<T> {
     HashSet<T> nextFringe = new LinkedHashSet<T>();
 
     public
-    TopologyVisitor_cachingTreeBreadthFirst(iTopology<T> t) {
+    TopologyVisitor_cachingTreeBreadthFirst(ITopology<T> t) {
         this.t = t;
     }
 
@@ -106,12 +108,12 @@ class TopologyVisitor_cachingTreeBreadthFirst<T> {
 
             for (T c : currentFringe) {
                 synchronized (this.getClass()) {
-                    GraphNodeSearching.VisitCode code = visit(c);
+                    TraversalHint code = visit(c);
 
-                    if (code == GraphNodeSearching.VisitCode.stop) {
+                    if (code == StandardTraversalHint.STOP) {
                         return;
                     }
-                    if (code == GraphNodeSearching.VisitCode.skip) {
+                    if (code == StandardTraversalHint.SKIP) {
                     }
                     else {
                         List<T> l = t.getChildrenOf(c);
@@ -155,7 +157,7 @@ class TopologyVisitor_cachingTreeBreadthFirst<T> {
     }
 
     protected abstract
-    GraphNodeSearching.VisitCode visit(T c);
+    TraversalHint visit(T c);
 
     protected
     void visitFringe(HashSet<T> nextFringe) {

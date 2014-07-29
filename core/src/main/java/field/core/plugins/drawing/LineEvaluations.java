@@ -1,6 +1,6 @@
 package field.core.plugins.drawing;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.plugins.drawing.opengl.Intersections;
@@ -26,7 +26,7 @@ class LineEvaluations {
             CachedLine mm = on.getProperties().get(iLinearGraphicsContext.offsetedLine);
             if (mm == null) {
 
-                iVisualElement source = on.getProperties().get(iLinearGraphicsContext.source);
+                IVisualElement source = on.getProperties().get(iLinearGraphicsContext.source);
 
                 if (source == null) {
                     throw new IllegalArgumentException(" line is offset but not source");

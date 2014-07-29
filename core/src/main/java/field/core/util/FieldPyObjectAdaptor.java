@@ -1,16 +1,16 @@
 package field.core.util;
 
 import field.core.StandardFluidSheet.RootSheetElement;
+import field.core.dispatch.IVisualElement;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin;
 import field.core.plugins.python.PythonPlugin;
 import field.core.ui.text.PythonTextEditor;
 import field.core.ui.text.protect.ClassDocumentationProtect.Comp;
-import field.math.abstraction.iHasScalar;
+import field.math.abstraction.IHasScalar;
 import field.util.collect.tuple.Pair;
 import field.util.Dict;
 import field.util.Dict.Prop;
@@ -125,12 +125,12 @@ class FieldPyObjectAdaptor {
 
         public
         PyObject adapt(Object o) {
-            return new PyHasScalar((iHasScalar) o);
+            return new PyHasScalar((IHasScalar) o);
         }
 
         public
         boolean canAdapt(Object o) {
-            return o instanceof iHasScalar;
+            return o instanceof IHasScalar;
         }
 
     }
@@ -199,7 +199,7 @@ class FieldPyObjectAdaptor {
         }
 
         public
-        PairToPyTuple(Class<? extends iVisualElement> c) {
+        PairToPyTuple(Class<? extends IVisualElement> c) {
             super(c);
         }
 
@@ -508,11 +508,11 @@ class FieldPyObjectAdaptor {
     public static
     class PyHasScalar extends PyFloat {
 
-        private final iHasScalar contents;
+        private final IHasScalar contents;
         private final PyObjectDerived instance;
 
         public
-        PyHasScalar(iHasScalar e) {
+        PyHasScalar(IHasScalar e) {
             super(e.getDoubleValue());
             this.contents = e;
             instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
@@ -542,12 +542,12 @@ class FieldPyObjectAdaptor {
 
     public static
     class PyVisualElement extends PyObject {
-        iVisualElement contents;
+        IVisualElement contents;
 
         PyObjectDerived instance;
 
         public
-        PyVisualElement(iVisualElement e) {
+        PyVisualElement(IVisualElement e) {
             this.contents = e;
             instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);
         }
@@ -646,7 +646,7 @@ class FieldPyObjectAdaptor {
         public
         void __setattr__(String name, PyObject value) {
             if ("frame".equals(name)) {
-                contents.getProperty(iVisualElement.overrides)
+                contents.getProperty(IVisualElement.overrides)
                         .shouldChangeFrame(contents,
                                            ((Rect) value.__tojava__(Rect.class)),
                                            contents.getFrame(null),
@@ -658,7 +658,7 @@ class FieldPyObjectAdaptor {
         @Override
         public
         PyString __str__() {
-            return new PyString("!ve: " + contents.getProperty(iVisualElement.name));
+            return new PyString("!ve: " + contents.getProperty(IVisualElement.name));
         }
 
         @Override
@@ -673,7 +673,7 @@ class FieldPyObjectAdaptor {
             if (ob_other == null) return false;
             if (!(ob_other instanceof PyVisualElement || ob_other instanceof VisualElement)) return false;
             if (ob_other instanceof PyVisualElement) return ((PyVisualElement) ob_other).contents.equals(contents);
-            if (ob_other instanceof iVisualElement) return ob_other.equals(contents);
+            if (ob_other instanceof IVisualElement) return ob_other.equals(contents);
             return false;
         }
 
@@ -691,7 +691,7 @@ class FieldPyObjectAdaptor {
                 c.add(new Comp("<h3>The <i>_self</i> variable and other visual element references<hr noshade='none'></h3><div class='wellspacedblack'><i>_self</i> is a special variable that refers to this <i>visual element</i> (i.e. box). It gives you read and write access to <i>properties</i> which are stored in this element or it's parents. A great many things in Field are properties, and understanding them is often the key to managing the power of many visual elements or customizing the behavior of Field.</div>"));
             }
             else {
-                String name = iVisualElement.name.get(adaptor.contents);
+                String name = IVisualElement.name.get(adaptor.contents);
                 if (name == null) name = "unnamed element";
                 c.add(new Comp("<h3><i><font color='#555555' >\u2014\u2014</font> "
                                + name
@@ -716,7 +716,7 @@ class FieldPyObjectAdaptor {
 
         private static
         void addPropertiesByInspection(String prefix,
-                                       iVisualElement visualElement,
+                                       IVisualElement visualElement,
                                        List<Comp> c,
                                        Map<Object, Object> set,
                                        String groupname) {
@@ -739,11 +739,11 @@ class FieldPyObjectAdaptor {
                     c.addAll(sub);
                 }
             }
-            List<iVisualElement> childern = visualElement.getChildren();
+            List<IVisualElement> childern = visualElement.getChildren();
             if (c != null) {
-                for (iVisualElement vv : childern) {
+                for (IVisualElement vv : childern) {
                     Map<Object, Object> setp = vv.payload();
-                    String name = vv.getProperty(iVisualElement.name);
+                    String name = vv.getProperty(IVisualElement.name);
                     if (name == null) name = vv.getClass().getName();
                     addPropertiesByInspection(prefix, vv, c, setp, "Set in parent <b>" + name + "</b>");
                 }
@@ -760,13 +760,13 @@ class FieldPyObjectAdaptor {
         }
 
         public
-        VisualElementToPyVisualElement(Class<? extends iVisualElement> c) {
+        VisualElementToPyVisualElement(Class<? extends IVisualElement> c) {
             super(c);
         }
 
         public
         PyObject adapt(Object o) {
-            return new PyVisualElement((iVisualElement) o);
+            return new PyVisualElement((IVisualElement) o);
         }
 
     }

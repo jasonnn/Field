@@ -3,9 +3,9 @@ package field.util.filterstack;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.Aliasing;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
-import field.launch.iUpdateable;
-import field.math.abstraction.iDoubleProvider;
-import field.math.abstraction.iProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IDoubleProvider;
+import field.math.abstraction.IProvider;
 import field.util.filterstack.Unit.WindowStatus;
 import field.util.filterstack.Unit.iProvidesWindowStatus;
 
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Woven
 public abstract
-class FilterStack<T> implements iUpdateable, iProvider<T>, iHandlesAttributes {
+class FilterStack<T> implements IUpdateable, IProvider<T>, iHandlesAttributes {
 
     public
     interface iSelectPosition<T> {
@@ -28,9 +28,9 @@ class FilterStack<T> implements iUpdateable, iProvider<T>, iHandlesAttributes {
         after, before, end, start, anywhere, nothere
     }
 
-    private final iProvider<T> input;
+    private final IProvider<T> input;
 
-    private final iDoubleProvider clock;
+    private final IDoubleProvider clock;
 
     LinkedHashMap<String, Unit<T>> lookupStack = new LinkedHashMap<String, Unit<T>>();
 
@@ -41,7 +41,7 @@ class FilterStack<T> implements iUpdateable, iProvider<T>, iHandlesAttributes {
     double time;
 
     public
-    FilterStack(iProvider<T> input, iDoubleProvider clock) {
+    FilterStack(IProvider<T> input, IDoubleProvider clock) {
         this.input = input;
         this.clock = clock;
     }

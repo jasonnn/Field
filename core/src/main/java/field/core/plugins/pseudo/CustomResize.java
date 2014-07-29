@@ -1,8 +1,8 @@
 package field.core.plugins.pseudo;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin.Collector;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.math.linalg.Vector2;
@@ -16,14 +16,14 @@ class CustomResize {
     public
     interface iApplyResize {
         public
-        boolean apply(float x, float y, Vector2 delta, iVisualElement to);
+        boolean apply(float x, float y, Vector2 delta, IVisualElement to);
     }
 
     public static final VisualElementProperty<iApplyResize> resizer =
             new VisualElementProperty<iApplyResize>("resizer_");
 
     public static
-    boolean applyResize(iVisualElement to, Set<Resize> resize, Vector2 delta) {
+    boolean applyResize(IVisualElement to, Set<Resize> resize, Vector2 delta) {
         Ref<Collector> rr = new Ref<Collector>(null);
         PseudoPropertiesPlugin.getCollector(to, rr);
         Collector c = rr.get();

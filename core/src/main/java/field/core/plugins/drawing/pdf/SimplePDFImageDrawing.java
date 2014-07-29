@@ -4,7 +4,7 @@ import com.lowagie.text.BadElementException;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfGState;
 import com.lowagie.text.pdf.PdfName;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -12,7 +12,7 @@ import field.core.plugins.drawing.pdf.BasePDFGraphicsContext.DrawingResult;
 import field.core.plugins.drawing.pdf.BasePDFGraphicsContext.DrawingResultCode;
 import field.core.plugins.drawing.pdf.BasePDFGraphicsContext.iDrawingAcceptor;
 import field.graphics.ci.CoreImageCanvasUtils.Image;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
@@ -36,10 +36,10 @@ class SimplePDFImageDrawing {
         }
 
         public
-        DrawingResult accept(List<iUpdateable> soFar, final CachedLine line, final Dict properties) {
+        DrawingResult accept(List<IUpdateable> soFar, final CachedLine line, final Dict properties) {
             if (!properties.isTrue(iLinearGraphicsContext.containsImages, false)) return null;
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 private final Vector4 black = new Vector4(1, 1, 1, 1f);
 
                 public

@@ -3,13 +3,14 @@ package field.core.dispatch;
 import field.bytecode.protect.BaseRef;
 import field.bytecode.protect.annotations.GenerateMethods;
 import field.bytecode.protect.annotations.Mirror;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.log.ElementInvocationLogging;
 import field.core.plugins.log.Logging;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.graph.TopologyViewOfGraphNodes;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.namespace.dispatch.DispatchOverTopology;
 import field.util.Dict.Prop;
 import org.eclipse.swt.widgets.Event;
@@ -22,85 +23,85 @@ import java.util.Map;
 
 @GenerateMethods
 public
-interface iVisualElementOverrides {
+interface IVisualElementOverrides {
 
     static
-    class Adaptor implements iVisualElementOverrides {
+    class Adaptor implements IVisualElementOverrides {
         public
-        VisitCode added(iVisualElement newSource) {
-            return VisitCode.cont;
+        TraversalHint added(IVisualElement newSource) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode beginExecution(iVisualElement source) {
-            return VisitCode.cont;
+        TraversalHint beginExecution(IVisualElement source) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode deleted(iVisualElement source) {
-            return VisitCode.cont;
+        TraversalHint deleted(IVisualElement source) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        <T> VisitCode deleteProperty(iVisualElement source, VisualElementProperty<T> prop) {
-            return VisitCode.cont;
+        <T> TraversalHint deleteProperty(IVisualElement source, VisualElementProperty<T> prop) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode endExecution(iVisualElement source) {
-            return VisitCode.cont;
+        TraversalHint endExecution(IVisualElement source) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        <T> VisitCode getProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> prop, Ref<T> ref) {
-            return VisitCode.cont;
+        <T> TraversalHint getProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> prop, Ref<T> ref) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
-            return VisitCode.cont;
+        TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode inspectablePropertiesFor(iVisualElement source, List<Prop> properties) {
-            return VisitCode.cont;
+        TraversalHint inspectablePropertiesFor(IVisualElement source, List<Prop> properties) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
-            return VisitCode.cont;
+        TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
-            return VisitCode.cont;
+        TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
-            return VisitCode.cont;
+        TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode prepareForSave() {
-            return VisitCode.cont;
+        TraversalHint prepareForSave() {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        <T> VisitCode setProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> prop, Ref<T> to) {
-            return VisitCode.cont;
+        <T> TraversalHint setProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> prop, Ref<T> to) {
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-            return VisitCode.cont;
+        TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+            return StandardTraversalHint.CONTINUE;
         }
 
     }
 
     public static
     class DefaultOverride extends Adaptor implements iDefaultOverride {
-        public iVisualElement forElement;
+        public IVisualElement forElement;
 
         public
         DefaultOverride() {
@@ -108,16 +109,16 @@ interface iVisualElementOverrides {
 
         @Override
         public
-        VisitCode deleted(iVisualElement source) {
+        TraversalHint deleted(IVisualElement source) {
             if (source == forElement) {
                 source.dispose();
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
         public
-        <T> VisitCode deleteProperty(iVisualElement source, VisualElementProperty<T> prop) {
+        <T> TraversalHint deleteProperty(IVisualElement source, VisualElementProperty<T> prop) {
             if (source == forElement) {
                 VisualElementProperty<T> a = prop.getAliasedTo();
                 while (a != null) {
@@ -127,12 +128,12 @@ interface iVisualElementOverrides {
 
                 forElement.deleteProperty(prop);
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
         public
-        <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+        <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
             if ((ref.to == null || (source == forElement)) && forElement != null) {
 
                 VisualElementProperty<T> a = prop.getAliasedTo();
@@ -146,12 +147,12 @@ interface iVisualElementOverrides {
                     ref.set(property, forElement);
                 }
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
         public
-        <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+        <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
             if (source == forElement) {
                 VisualElementProperty<T> a = prop.getAliasedTo();
                 while (a != null) {
@@ -165,30 +166,30 @@ interface iVisualElementOverrides {
                                                                                                             forElement.getProperty(prop)));
                 forElement.setProperty(prop, to.get());
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         public
-        DefaultOverride setVisualElement(iVisualElement ve) {
+        DefaultOverride setVisualElement(IVisualElement ve) {
             forElement = ve;
             return this;
         }
 
         @Override
         public
-        VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+        TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
             if (source == forElement) {
                 forElement.setFrame(newFrame);
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
     }
 
     public static
     interface iDefaultOverride {
         public
-        iDefaultOverride setVisualElement(iVisualElement ve);
+        iDefaultOverride setVisualElement(IVisualElement ve);
     }
 
     static
@@ -199,23 +200,23 @@ interface iVisualElementOverrides {
         public static int dispatchForwardCount = 0;
 
         public
-        iVisualElementOverrides getBackwardsOverrideProxyFor(final iVisualElement element) {
-            final TopologyViewOfGraphNodes<iVisualElement> topView = new TopologyViewOfGraphNodes<iVisualElement>(true);
+        IVisualElementOverrides getBackwardsOverrideProxyFor(final IVisualElement element) {
+            final TopologyViewOfGraphNodes<IVisualElement> topView = new TopologyViewOfGraphNodes<IVisualElement>(true);
 
-            return (iVisualElementOverrides) Proxy.newProxyInstance(element.getClass().getClassLoader(),
-                                                                    new Class[]{iVisualElementOverrides.class},
+            return (IVisualElementOverrides) Proxy.newProxyInstance(element.getClass().getClassLoader(),
+                                                                    new Class[]{IVisualElementOverrides.class},
                                                                     new InvocationHandler() {
 
-                                                                        DispatchOverTopology<iVisualElement> dispatch =
-                                                                                new DispatchOverTopology<iVisualElement>(topView);
+                                                                        DispatchOverTopology<IVisualElement> dispatch =
+                                                                                new DispatchOverTopology<IVisualElement>(topView);
 
-                                                                        DispatchOverTopology<iVisualElement>.Raw raw =
+                                                                        DispatchOverTopology<IVisualElement>.Raw raw =
                                                                                 dispatch.new Raw(true) {
                                                                                     @Override
                                                                                     public
-                                                                                    Object getObject(iVisualElement e) {
+                                                                                    Object getObject(IVisualElement e) {
                                                                                         dispatchBackwardCount++;
-                                                                                        return e.getProperty(iVisualElement.overrides);
+                                                                                        return e.getProperty(IVisualElement.overrides);
                                                                                     }
 
                                                                                 };
@@ -225,7 +226,7 @@ interface iVisualElementOverrides {
                                                                                       Method arg1,
                                                                                       Object[] arg2) throws Throwable {
 
-                                                                            VisitCode o =
+                                                                            TraversalHint o =
                                                                                     raw.dispatch(arg1, element, arg2);
 
                                                                             return o;
@@ -234,24 +235,24 @@ interface iVisualElementOverrides {
         }
 
         public
-        iVisualElementOverrides getOverrideProxyFor(final iVisualElement element) {
-            final TopologyViewOfGraphNodes<iVisualElement> topView = new TopologyViewOfGraphNodes<iVisualElement>();
+        IVisualElementOverrides getOverrideProxyFor(final IVisualElement element) {
+            final TopologyViewOfGraphNodes<IVisualElement> topView = new TopologyViewOfGraphNodes<IVisualElement>();
 
-            return (iVisualElementOverrides) Proxy.newProxyInstance(element.getClass().getClassLoader(),
-                                                                    new Class[]{iVisualElementOverrides.class},
+            return (IVisualElementOverrides) Proxy.newProxyInstance(element.getClass().getClassLoader(),
+                                                                    new Class[]{IVisualElementOverrides.class},
                                                                     new InvocationHandler() {
 
-                                                                        DispatchOverTopology<iVisualElement> dispatch =
-                                                                                new DispatchOverTopology<iVisualElement>(topView);
+                                                                        DispatchOverTopology<IVisualElement> dispatch =
+                                                                                new DispatchOverTopology<IVisualElement>(topView);
 
-                                                                        DispatchOverTopology<iVisualElement>.Raw raw =
+                                                                        DispatchOverTopology<IVisualElement>.Raw raw =
                                                                                 dispatch.new Raw(true) {
                                                                                     @Override
                                                                                     public
-                                                                                    Object getObject(iVisualElement e) {
+                                                                                    Object getObject(IVisualElement e) {
                                                                                         dispatchForwardCount++;
-                                                                                        iVisualElementOverrides o =
-                                                                                                e.getProperty(iVisualElement.overrides);
+                                                                                        IVisualElementOverrides o =
+                                                                                                e.getProperty(IVisualElement.overrides);
                                                                                         return o;
                                                                                     }
 
@@ -263,7 +264,7 @@ interface iVisualElementOverrides {
                                                                                       Method arg1,
                                                                                       Object[] arg2) throws Throwable {
                                                                             arg1.setAccessible(true);
-                                                                            VisitCode o =
+                                                                            TraversalHint o =
                                                                                     raw.dispatch(arg1, element, arg2);
                                                                             return o;
                                                                         }
@@ -273,7 +274,7 @@ interface iVisualElementOverrides {
 
     public static
     class Ref<T> extends BaseRef<T> {
-        public iVisualElement storageSource;
+        public IVisualElement storageSource;
 
         public
         Ref(T to) {
@@ -281,12 +282,12 @@ interface iVisualElementOverrides {
         }
 
         public
-        iVisualElement getStorageSource() {
+        IVisualElement getStorageSource() {
             return storageSource;
         }
 
         public
-        Ref<T> set(T to, iVisualElement storedBy) {
+        Ref<T> set(T to, IVisualElement storedBy) {
             this.to = to;
             this.storageSource = storedBy;
             unset = false;
@@ -311,58 +312,58 @@ interface iVisualElementOverrides {
 
     @Mirror
     public
-    VisitCode added(iVisualElement newSource);
+    TraversalHint added(IVisualElement newSource);
 
     @Mirror
     public
-    VisitCode beginExecution(iVisualElement source);
+    TraversalHint beginExecution(IVisualElement source);
 
     @Mirror
     public
-    VisitCode deleted(iVisualElement source);
+    TraversalHint deleted(IVisualElement source);
 
     @Mirror
     public
-    <T> VisitCode deleteProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> prop);
+    <T> TraversalHint deleteProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> prop);
 
     @Mirror
     public
-    VisitCode endExecution(iVisualElement source);
+    TraversalHint endExecution(IVisualElement source);
 
     @Mirror
     public
-    <T> VisitCode getProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> prop, Ref<T> ref);
+    <T> TraversalHint getProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> prop, Ref<T> ref);
 
     @Mirror
     public
-    VisitCode handleKeyboardEvent(iVisualElement newSource, Event event);
+    TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event);
 
     @Mirror
     public
-    VisitCode inspectablePropertiesFor(iVisualElement source, List<Prop> properties);
+    TraversalHint inspectablePropertiesFor(IVisualElement source, List<Prop> properties);
 
     @Mirror
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is);
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is);
 
     @Mirror
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items);
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items);
 
     @Mirror
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible);
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible);
 
     @Mirror
     public
-    VisitCode prepareForSave();
+    TraversalHint prepareForSave();
 
     @Mirror
     public
-    <T> VisitCode setProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> prop, Ref<T> to);
+    <T> TraversalHint setProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> prop, Ref<T> to);
 
     @Mirror
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now);
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now);
 
 }

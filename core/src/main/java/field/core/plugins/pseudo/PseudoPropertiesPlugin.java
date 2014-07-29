@@ -3,12 +3,12 @@ package field.core.plugins.pseudo;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner;
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner.iCombiner;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.execution.PythonInterface;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.history.HGVersioningSystem;
@@ -18,8 +18,9 @@ import field.core.plugins.python.PythonPlugin;
 import field.core.util.FieldPyObjectAdaptor.iCallable;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor.iHandlesFindItem;
-import field.math.graph.iMutable;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.IMutable;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.WorkspaceDirectory;
 import org.jetbrains.annotations.NotNull;
 import org.python.core.Py;
@@ -42,10 +43,10 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
     public
     class Finder implements iHandlesAttributes, iHandlesFindItem {
 
-        private final List<iVisualElement> all;
+        private final List<IVisualElement> all;
 
         public
-        Finder(List<iVisualElement> all) {
+        Finder(List<IVisualElement> all) {
             this.all = all;
         }
 
@@ -61,7 +62,7 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
 
             if ((object == null) || (object == Py.None)) return all;
             String r = object.toString();
-            List<iVisualElement> found = StandardFluidSheet.findVisualElementWithNameExpression(root, r);
+            List<IVisualElement> found = StandardFluidSheet.findVisualElementWithNameExpression(root, r);
             PythonInterface.getPythonInterface().setVariable("__tmpFinderValue", found);
 
             return PythonInterface.getPythonInterface().eval("wl(__tmpFinderValue)");
@@ -85,11 +86,11 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
     public static
     class Framer {
 
-        private final iVisualElement on;
+        private final IVisualElement on;
         private Rect r;
 
         public
-        Framer(iVisualElement on, Rect r) {
+        Framer(IVisualElement on, Rect r) {
             this.on = on;
             this.r = r;
         }
@@ -126,32 +127,32 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
         void setH(double x) {
             Rect was = new Rect(0, 0, 0, 0).setValue(r);
             r.h = x;
-            on.getProperty(iVisualElement.overrides).shouldChangeFrame(on, r, was, true);
-            on.setProperty(iVisualElement.dirty, true);
+            on.getProperty(IVisualElement.overrides).shouldChangeFrame(on, r, was, true);
+            on.setProperty(IVisualElement.dirty, true);
         }
 
         public
         void setW(double x) {
             Rect was = new Rect(0, 0, 0, 0).setValue(r);
             r.w = x;
-            on.getProperty(iVisualElement.overrides).shouldChangeFrame(on, r, was, true);
-            on.setProperty(iVisualElement.dirty, true);
+            on.getProperty(IVisualElement.overrides).shouldChangeFrame(on, r, was, true);
+            on.setProperty(IVisualElement.dirty, true);
         }
 
         public
         void setX(double x) {
             Rect was = new Rect(0, 0, 0, 0).setValue(r);
             r.x = x;
-            on.getProperty(iVisualElement.overrides).shouldChangeFrame(on, r, was, true);
-            on.setProperty(iVisualElement.dirty, true);
+            on.getProperty(IVisualElement.overrides).shouldChangeFrame(on, r, was, true);
+            on.setProperty(IVisualElement.dirty, true);
         }
 
         public
         void setY(double x) {
             Rect was = new Rect(0, 0, 0, 0).setValue(r);
             r.y = x;
-            on.getProperty(iVisualElement.overrides).shouldChangeFrame(on, r, was, true);
-            on.setProperty(iVisualElement.dirty, true);
+            on.getProperty(IVisualElement.overrides).shouldChangeFrame(on, r, was, true);
+            on.setProperty(IVisualElement.dirty, true);
         }
 
         @Override
@@ -166,7 +167,7 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
 
         @Override
         public
-        <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+        <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
             if (!properties.contains(prop)) return super.getProperty(source, prop, ref);
 
             if (prop.equals(frame)) return getFrame(source, ref);
@@ -193,7 +194,7 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
     }
 
     public static
-    VisitCode getDataFolder(iVisualElement source, Ref<String> r) {
+    TraversalHint getDataFolder(IVisualElement source, Ref<String> r) {
 
         String w = WorkspaceDirectory.dir[0];
         String d = w + "/data";
@@ -210,28 +211,28 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
         if (!p.endsWith("/")) p = p + "/";
         r.set(p);
 
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getWorkspaceFolder(iVisualElement source, Ref<String> r) {
+    TraversalHint getWorkspaceFolder(IVisualElement source, Ref<String> r) {
         String w = WorkspaceDirectory.dir[0];
         if (!w.endsWith("/")) w = w + "/";
         r.set(w);
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public static
-    VisitCode getSheetFolder(iVisualElement source, Ref<String> r) {
+    TraversalHint getSheetFolder(IVisualElement source, Ref<String> r) {
         VersioningSystem vs = StandardFluidSheet.versioningSystem.get(source);
         if (vs != null) {
             r.set(vs.getSheetPathName().replace("sheet.xml", "") + "/");
         }
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public static
-    VisitCode getSheetDataFolder(iVisualElement source, Ref<String> r) {
+    TraversalHint getSheetDataFolder(IVisualElement source, Ref<String> r) {
         getSheetFolder(source, r);
         String w = r.get();
         String d = w + "/data";
@@ -247,16 +248,16 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
         String p = dataDir.getAbsolutePath();
         if (!p.endsWith("/")) p = p + "/";
         r.set(p);
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public static
     class SuperPropertier implements iHandlesAttributes {
 
-        private final iVisualElement on;
+        private final IVisualElement on;
 
         public
-        SuperPropertier(iVisualElement on) {
+        SuperPropertier(IVisualElement on) {
             this.on = on;
         }
 
@@ -286,10 +287,10 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
     public static
     class Wherer implements iHandlesAttributes {
 
-        private final iVisualElement from;
+        private final IVisualElement from;
 
         public
-        Wherer(iVisualElement from) {
+        Wherer(IVisualElement from) {
             this.from = from;
         }
 
@@ -319,32 +320,32 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
     public static
     class Collector implements iHandlesAttributes {
 
-        private final iVisualElement from;
+        private final IVisualElement from;
         FastVisualElementOverridesPropertyCombiner<Object, List<Object>> combine =
                 new FastVisualElementOverridesPropertyCombiner<Object, List<Object>>(false) {
                     protected
-                    java.util.Collection<? extends iVisualElement> sort(java.util.List<? extends field.math.graph.iMutable<iVisualElement>> parents) {
+                    java.util.Collection<? extends IVisualElement> sort(java.util.List<? extends IMutable<IVisualElement>> parents) {
 
-                        ArrayList<iMutable<iVisualElement>> a =
-                                new ArrayList<field.math.graph.iMutable<iVisualElement>>(parents);
-                        Collections.sort(a, new Comparator<iMutable<iVisualElement>>() {
+                        ArrayList<IMutable<IVisualElement>> a =
+                                new ArrayList<IMutable<IVisualElement>>(parents);
+                        Collections.sort(a, new Comparator<IMutable<IVisualElement>>() {
 
                             @Override
                             public
-                            int compare(iMutable<iVisualElement> o1, iMutable<iVisualElement> o2) {
-                                if (o1 == null || ((iVisualElement) o1).getFrame(null) == null) return -1;
-                                if (o2 == null || ((iVisualElement) o2).getFrame(null) == null) return 1;
+                            int compare(IMutable<IVisualElement> o1, IMutable<IVisualElement> o2) {
+                                if (o1 == null || ((IVisualElement) o1).getFrame(null) == null) return -1;
+                                if (o2 == null || ((IVisualElement) o2).getFrame(null) == null) return 1;
 
 
-                                float dy = (float) Math.abs(((iVisualElement) o1).getFrame(null).y
-                                                            - ((iVisualElement) o2).getFrame(null).y);
-                                float dx = (float) Math.abs(((iVisualElement) o1).getFrame(null).x
-                                                            - ((iVisualElement) o2).getFrame(null).x);
+                                float dy = (float) Math.abs(((IVisualElement) o1).getFrame(null).y
+                                                            - ((IVisualElement) o2).getFrame(null).y);
+                                float dx = (float) Math.abs(((IVisualElement) o1).getFrame(null).x
+                                                            - ((IVisualElement) o2).getFrame(null).x);
 
-                                if (dy > dx) return Double.compare(((iVisualElement) o1).getFrame(null).y,
-                                                                   ((iVisualElement) o2).getFrame(null).y);
-                                else return Double.compare(((iVisualElement) o1).getFrame(null).x,
-                                                           ((iVisualElement) o2).getFrame(null).x);
+                                if (dy > dx) return Double.compare(((IVisualElement) o1).getFrame(null).y,
+                                                                   ((IVisualElement) o2).getFrame(null).y);
+                                else return Double.compare(((IVisualElement) o1).getFrame(null).x,
+                                                           ((IVisualElement) o2).getFrame(null).x);
                             }
                         });
                         return (Collection) a;
@@ -352,7 +353,7 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
                 };
 
         public
-        Collector(iVisualElement from) {
+        Collector(IVisualElement from) {
             this.from = from;
         }
 
@@ -461,10 +462,10 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
     public static
     class Actioner implements iHandlesAttributes {
 
-        private final iVisualElement from;
+        private final IVisualElement from;
 
         public
-        Actioner(iVisualElement from) {
+        Actioner(IVisualElement from) {
             this.from = from;
         }
 
@@ -497,21 +498,21 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
     }
 
     public static
-    class Subelements implements iHandlesFindItem, List<iVisualElement> {
+    class Subelements implements iHandlesFindItem, List<IVisualElement> {
 
-        protected final iVisualElement from;
+        protected final IVisualElement from;
 
-        List<iVisualElement> current;
+        List<IVisualElement> current;
 
         public
-        Subelements(iVisualElement from) {
+        Subelements(IVisualElement from) {
             this.from = from;
             refresh();
         }
 
         protected
         void refresh() {
-            current = (List<iVisualElement>) from.getParents();
+            current = (List<IVisualElement>) from.getParents();
         }
 
         @Override
@@ -522,46 +523,46 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
         }
 
         public
-        boolean add(iVisualElement e) {
+        boolean add(IVisualElement e) {
             connect(e);
             refresh();
             return true;
         }
 
         public
-        void add(int index, iVisualElement element) {
+        void add(int index, IVisualElement element) {
 
             connect(element);
             refresh();
         }
 
         protected
-        void connect(iVisualElement element) {
+        void connect(IVisualElement element) {
             element.addChild(from);
         }
 
         public
-        boolean addAll(Collection<? extends iVisualElement> c) {
-            for (iVisualElement v : c)
+        boolean addAll(Collection<? extends IVisualElement> c) {
+            for (IVisualElement v : c)
                 add(v);
             return true;
         }
 
         public
-        boolean addAll(int index, Collection<? extends iVisualElement> c) {
-            for (iVisualElement v : c)
+        boolean addAll(int index, Collection<? extends IVisualElement> c) {
+            for (IVisualElement v : c)
                 add(v);
             return true;
         }
 
         public
         void clear() {
-            for (iVisualElement v : new ArrayList<iVisualElement>(current))
+            for (IVisualElement v : new ArrayList<IVisualElement>(current))
                 disconnect(v);
         }
 
         protected
-        void disconnect(iVisualElement v) {
+        void disconnect(IVisualElement v) {
             v.removeChild(from);
         }
 
@@ -576,7 +577,7 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
         }
 
         public
-        iVisualElement get(int index) {
+        IVisualElement get(int index) {
             return current.get(index);
         }
 
@@ -592,7 +593,7 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
 
         @NotNull
         public
-        Iterator<iVisualElement> iterator() {
+        Iterator<IVisualElement> iterator() {
             return current.iterator();
         }
 
@@ -603,26 +604,26 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
 
         @NotNull
         public
-        ListIterator<iVisualElement> listIterator() {
+        ListIterator<IVisualElement> listIterator() {
             return current.listIterator();
         }
 
         @NotNull
         public
-        ListIterator<iVisualElement> listIterator(int index) {
+        ListIterator<IVisualElement> listIterator(int index) {
             return current.listIterator(index);
         }
 
         public
         boolean remove(Object o) {
-            disconnect((iVisualElement) o);
+            disconnect((IVisualElement) o);
             refresh();
             return true;
         }
 
         public
-        iVisualElement remove(int index) {
-            iVisualElement r = current.get(index);
+        IVisualElement remove(int index) {
+            IVisualElement r = current.get(index);
             disconnect(current.get(index));
             refresh();
             return r;
@@ -641,8 +642,8 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
         }
 
         public
-        iVisualElement set(int index, iVisualElement element) {
-            iVisualElement a = current.get(index);
+        IVisualElement set(int index, IVisualElement element) {
+            IVisualElement a = current.get(index);
             remove(a);
             add(index, element);
             return a;
@@ -655,7 +656,7 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
 
         @NotNull
         public
-        List<iVisualElement> subList(int fromIndex, int toIndex) {
+        List<IVisualElement> subList(int fromIndex, int toIndex) {
             return current.subList(fromIndex, toIndex);
         }
 
@@ -674,8 +675,8 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
         public
         Object getItem(Object object) {
             if (object instanceof Number) return get(((Number) object).intValue());
-            for (iVisualElement e : current) {
-                String nn = e.getProperty(iVisualElement.name);
+            for (IVisualElement e : current) {
+                String nn = e.getProperty(IVisualElement.name);
                 if (nn != null && nn.equals(object)) return e;
             }
             return null;
@@ -697,7 +698,7 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
         }
 
         public
-        List<iVisualElement> values() {
+        List<IVisualElement> values() {
             return this;
         }
 
@@ -707,7 +708,7 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
     class Superelements extends Subelements {
 
         public
-        Superelements(iVisualElement from) {
+        Superelements(IVisualElement from) {
             super(from);
         }
 
@@ -725,13 +726,13 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
         }
 
         protected
-        void connect(iVisualElement element) {
+        void connect(IVisualElement element) {
             from.addChild(element);
         }
 
         @Override
         protected
-        void disconnect(iVisualElement v) {
+        void disconnect(IVisualElement v) {
             from.removeChild(v);
         }
 
@@ -745,19 +746,19 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
 
     public static
     class Ender implements iCallable {
-        private final iVisualElement source;
+        private final IVisualElement source;
 
         public
-        Ender(iVisualElement source) {
+        Ender(IVisualElement source) {
             this.source = source;
         }
 
         public
         Object call(Object[] args) {
             if (args.length == 0) {
-                iVisualElement old = iVisualElementOverrides.topology.setAt(source);
-                iVisualElementOverrides.forward.endExecution.endExecution(source);
-                iVisualElementOverrides.topology.setAt(old);
+                IVisualElement old = IVisualElementOverrides.topology.setAt(source);
+                IVisualElementOverrides.forward.endExecution.endExecution(source);
+                IVisualElementOverrides.topology.setAt(old);
             }
             return Py.None;
         }
@@ -771,19 +772,19 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
 
     public static
     class Beginner implements iCallable {
-        private final iVisualElement source;
+        private final IVisualElement source;
 
         public
-        Beginner(iVisualElement source) {
+        Beginner(IVisualElement source) {
             this.source = source;
         }
 
         public
         Object call(Object[] args) {
             if (args.length == 0) {
-                iVisualElement old = iVisualElementOverrides.topology.setAt(source);
-                iVisualElementOverrides.forward.beginExecution.beginExecution(source);
-                iVisualElementOverrides.topology.setAt(old);
+                IVisualElement old = IVisualElementOverrides.topology.setAt(source);
+                IVisualElementOverrides.forward.beginExecution.beginExecution(source);
+                IVisualElementOverrides.topology.setAt(old);
             }
             return Py.None;
         }
@@ -796,12 +797,12 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
     }
 
     public static final VisualElementProperty<Rect> frame = new VisualElementProperty<Rect>("frame");
-    public static final VisualElementProperty<Map<String, iVisualElement>> subelements =
-            new VisualElementProperty<Map<String, iVisualElement>>("subelements");
-    public static final VisualElementProperty<Map<String, iVisualElement>> superelements =
-            new VisualElementProperty<Map<String, iVisualElement>>("superelements");
-    public static final VisualElementProperty<iVisualElement> root_ = new VisualElementProperty<iVisualElement>("root");
-    public static final VisualElementProperty<iVisualElement> all = new VisualElementProperty<iVisualElement>("all");
+    public static final VisualElementProperty<Map<String, IVisualElement>> subelements =
+            new VisualElementProperty<Map<String, IVisualElement>>("subelements");
+    public static final VisualElementProperty<Map<String, IVisualElement>> superelements =
+            new VisualElementProperty<Map<String, IVisualElement>>("superelements");
+    public static final VisualElementProperty<IVisualElement> root_ = new VisualElementProperty<IVisualElement>("root");
+    public static final VisualElementProperty<IVisualElement> all = new VisualElementProperty<IVisualElement>("all");
     public static final VisualElementProperty<Object> find = new VisualElementProperty<Object>("find");
     public static final VisualElementProperty<List> collect = new VisualElementProperty<List>("collect");
     public static final VisualElementProperty<Wherer> where = new VisualElementProperty<Wherer>("where");
@@ -838,84 +839,84 @@ class PseudoPropertiesPlugin extends BaseSimplePlugin {
                                                                                                collect}));
 
     public
-    VisitCode getAll(iVisualElement source, Ref t) {
+    TraversalHint getAll(IVisualElement source, Ref t) {
         t.set(StandardFluidSheet.allVisualElements(root));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getFinder(iVisualElement source, Ref t) {
+    TraversalHint getFinder(IVisualElement source, Ref t) {
         t.set(new Finder(StandardFluidSheet.allVisualElements(root)));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getFrame(iVisualElement source, Ref t) {
+    TraversalHint getFrame(IVisualElement source, Ref t) {
         t.set(new Framer(source, source.getFrame(null)));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public static
-    VisitCode getCollector(iVisualElement source, Ref t) {
+    TraversalHint getCollector(IVisualElement source, Ref t) {
         t.set(new Collector(source));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getRoot(iVisualElement source, Ref t) {
+    TraversalHint getRoot(IVisualElement source, Ref t) {
         t.set(root);
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getSubelements(iVisualElement source, Ref t) {
+    TraversalHint getSubelements(IVisualElement source, Ref t) {
         t.set(new Subelements(source));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getSuperelements(iVisualElement source, Ref t) {
+    TraversalHint getSuperelements(IVisualElement source, Ref t) {
         t.set(new Superelements(source));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     private
-    Map<String, iVisualElement> buildMap(List<iVisualElement> children) {
-        HashMap<String, iVisualElement> m = new HashMap<String, iVisualElement>();
-        for (iVisualElement v : children) {
-            m.put(v.getProperty(iVisualElement.name), v);
+    Map<String, IVisualElement> buildMap(List<IVisualElement> children) {
+        HashMap<String, IVisualElement> m = new HashMap<String, IVisualElement>();
+        for (IVisualElement v : children) {
+            m.put(v.getProperty(IVisualElement.name), v);
         }
         return m;
     }
 
     public
-    VisitCode getSuperpropertier(iVisualElement source, Ref t) {
+    TraversalHint getSuperpropertier(IVisualElement source, Ref t) {
         t.set(new SuperPropertier(source));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getWherer(iVisualElement source, Ref t) {
+    TraversalHint getWherer(IVisualElement source, Ref t) {
         t.set(new Wherer(source));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getBeginner(iVisualElement source, Ref t) {
+    TraversalHint getBeginner(IVisualElement source, Ref t) {
         t.set(new Beginner(source));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getEnder(iVisualElement source, Ref t) {
+    TraversalHint getEnder(IVisualElement source, Ref t) {
         t.set(new Ender(source));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     public
-    VisitCode getActioner(iVisualElement source, Ref t) {
+    TraversalHint getActioner(IVisualElement source, Ref t) {
         t.set(new Actioner(source));
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     @Override

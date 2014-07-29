@@ -3,22 +3,22 @@ package field.math.graph;
 import java.util.List;
 
 public
-interface iMutable<P extends iMutable<P>> extends iGraphNode<P> {
+interface IMutable<P extends IMutable<P>> extends IGraphNode<P> {
 
     public
-    List<? extends iMutable<P>> getParents();
+    List<? extends IMutable<P>> getParents();
 
     public
     void addChild(P newChild);
 
     public
-    void notifyAddParent(iMutable<P> newParent);
+    void notifyAddParent(IMutable<P> newParent);
 
     public
     void removeChild(P newChild);
 
     public
-    void notifyRemoveParent(iMutable<P> newParent);
+    void notifyRemoveParent(IMutable<P> newParent);
 
     public
     void beginChange();
@@ -27,11 +27,11 @@ interface iMutable<P extends iMutable<P>> extends iGraphNode<P> {
     void endChange();
 
     public
-    void registerListener(iNotification<iMutable<P>> note);
+    void registerListener(INotification<IMutable<P>> note);
 
     public
-    void deregisterListener(iNotification<iMutable<P>> note);
+    void deregisterListener(INotification<IMutable<P>> note);
 
     public
-    void catchupListener(iNotification<iMutable<P>> note);
+    void catchupListener(INotification<IMutable<P>> note);
 }

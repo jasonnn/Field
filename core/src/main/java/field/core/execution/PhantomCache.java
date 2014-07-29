@@ -1,7 +1,7 @@
 package field.core.execution;
 
 import field.core.execution.PhantomFluidSheet.iPhasicForElement;
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 
 import java.util.HashMap;
 
@@ -16,7 +16,7 @@ class PhantomCache {
     }
 
     public
-    iPhasicForElement phasicForElement(String simpleSheetReference, iFloatProvider prov, boolean local) {
+    iPhasicForElement phasicForElement(String simpleSheetReference, IFloatProvider prov, boolean local) {
         String[] ref = simpleSheetReference.split("\\?");
 
         if (!ref[0].endsWith("sheet.xml")) ref[0] = ref[0] + "/sheet.xml";

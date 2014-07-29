@@ -1,7 +1,7 @@
 package field.graphics.core;
 
-import field.math.abstraction.iInplaceProvider;
-import field.math.graph.iMutable;
+import field.math.abstraction.IInplaceProvider;
+import field.math.graph.IMutable;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Quaternion;
 import field.math.linalg.Vector3;
@@ -137,7 +137,7 @@ class Base {
      * this is an interface for something that can go into a multipass scene list
      */
     public
-    interface iSceneListElement extends iMutable<iSceneListElement> {
+    interface iSceneListElement extends IMutable<iSceneListElement> {
         public
         iPass requestPass(iPass pass);
 
@@ -169,7 +169,7 @@ class Base {
      */
 
     public
-    interface iTransform extends iMutable<iTransform>, iInplaceProvider<iCoordinateFrame.iMutable>, iChangable {
+    interface iTransform extends IMutable<iTransform>, IInplaceProvider<iCoordinateFrame.iMutable>, iChangable {
         /**
          * this will not reflect non-committed changes to the transform controllers, or any other transform controller further up the chain. hence the name, 'committed' it may, however, change during the rendering pass process (this is from iCoordinateFrameProvider
          */
@@ -277,7 +277,7 @@ class Base {
         Map auxBuffers();
 
         public
-        iInplaceProvider<field.math.linalg.iCoordinateFrame.iMutable> getCoordinateProvider();
+        IInplaceProvider<iCoordinateFrame.iMutable> getCoordinateProvider();
     }
 
     public
@@ -313,7 +313,7 @@ class Base {
 
         // this bone is this transform
         public
-        void setBone(int boneIndex, iInplaceProvider<iCoordinateFrame.iMutable> frame);
+        void setBone(int boneIndex, IInplaceProvider<iCoordinateFrame.iMutable> frame);
 
         // we've finished setting the weights for this vertex
         public

@@ -1,7 +1,8 @@
 package field.namespace.dispatch;
 
-import field.math.graph.iTopology;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.ITopology;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -30,12 +31,12 @@ class DispatchOverTopology<T> {
 
         @Override
         protected
-        VisitCode visit(T root) {
+        TraversalHint visit(T root) {
             try {
                 Object r = getMethod(root).invoke(root, args);
                 if (!((Boolean) r)) {
                     ret = false;
-                    return VisitCode.stop;
+                    return StandardTraversalHint.STOP;
                 }
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(e);
@@ -44,7 +45,7 @@ class DispatchOverTopology<T> {
             } catch (InvocationTargetException e) {
                 throw new IllegalArgumentException(e);
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
     }
 
@@ -61,15 +62,15 @@ class DispatchOverTopology<T> {
 
         @Override
         protected
-        VisitCode interpretReturn(Object invoke) {
-            if (retint == ReturnInterpretation.always) return VisitCode.cont;
+        TraversalHint interpretReturn(Object invoke) {
+            if (retint == ReturnInterpretation.always) return StandardTraversalHint.CONTINUE;
 
-            if (retint == ReturnInterpretation.untilNotNull) return (invoke != null) ? VisitCode.stop : VisitCode.cont;
-            if (retint == ReturnInterpretation.untilNull) return (invoke != null) ? VisitCode.cont : VisitCode.stop;
-            if (retint == ReturnInterpretation.skipNotNull) return (invoke != null) ? VisitCode.skip : VisitCode.cont;
-            if (retint == ReturnInterpretation.skipNull) return (invoke != null) ? VisitCode.cont : VisitCode.skip;
+            if (retint == ReturnInterpretation.untilNotNull) return (invoke != null) ? StandardTraversalHint.STOP : StandardTraversalHint.CONTINUE;
+            if (retint == ReturnInterpretation.untilNull) return (invoke != null) ? StandardTraversalHint.CONTINUE : StandardTraversalHint.STOP;
+            if (retint == ReturnInterpretation.skipNotNull) return (invoke != null) ? StandardTraversalHint.SKIP : StandardTraversalHint.CONTINUE;
+            if (retint == ReturnInterpretation.skipNull) return (invoke != null) ? StandardTraversalHint.CONTINUE : StandardTraversalHint.SKIP;
 
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
     }
@@ -100,12 +101,12 @@ class DispatchOverTopology<T> {
 
         @Override
         protected
-        VisitCode visit(T root) {
+        TraversalHint visit(T root) {
             try {
                 Object r = getMethod(root).invoke(root, args);
                 if (((Boolean) r)) {
                     ret = true;
-                    return VisitCode.stop;
+                    return StandardTraversalHint.STOP;
                 }
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(e);
@@ -114,12 +115,12 @@ class DispatchOverTopology<T> {
             } catch (InvocationTargetException e) {
                 throw new IllegalArgumentException(e);
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
     }
 
     public
-    class Raw extends RawBase<VisitCode> {
+    class Raw extends RawBase<TraversalHint> {
         public
         Raw(boolean avoidLoops) {
             super(avoidLoops);
@@ -127,7 +128,7 @@ class DispatchOverTopology<T> {
 
         @Override
         protected
-        VisitCode interpretReturn(VisitCode invoke) {
+        TraversalHint interpretReturn(TraversalHint invoke) {
             return invoke;
         }
     }
@@ -145,7 +146,7 @@ class DispatchOverTopology<T> {
 
         @Override
         public
-        void apply(iTopology<T> top, T root) {
+        void apply(ITopology<T> top, T root) {
             allret = new ArrayList<R>();
             super.apply(top, root);
         }
@@ -162,9 +163,9 @@ class DispatchOverTopology<T> {
         }
 
         protected
-        VisitCode interpretReturn(R invoke) {
-            if (invoke instanceof VisitCode) return ((VisitCode) invoke);
-            return VisitCode.cont;
+        TraversalHint interpretReturn(R invoke) {
+            if (invoke instanceof TraversalHint) return ((TraversalHint) invoke);
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
@@ -183,17 +184,17 @@ class DispatchOverTopology<T> {
 
         @Override
         protected
-        VisitCode visit(T root) {
+        TraversalHint visit(T root) {
             try {
                 Object o = getObject(root);
                 if (o == null) {
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
 
                 preamble(o, args);
                 Method m = getMethod(root);
                 R rr = (R) m.invoke(o, args);
-                VisitCode r = interpretReturn(rr);
+                TraversalHint r = interpretReturn(rr);
                 postamble(o, args, rr);
                 if (trace) ret = rr;
                 return r;
@@ -323,12 +324,12 @@ class DispatchOverTopology<T> {
 
         @Override
         protected
-        VisitCode visit(T root) {
+        TraversalHint visit(T root) {
             try {
                 Object r = getMethod(root).invoke(root, args);
                 if (r != null) {
                     ret.add((R) r);
-                    return VisitCode.stop;
+                    return StandardTraversalHint.STOP;
                 }
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(e);
@@ -337,14 +338,14 @@ class DispatchOverTopology<T> {
             } catch (InvocationTargetException e) {
                 throw new IllegalArgumentException(e);
             }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
     }
 
-    private final iTopology<T> topology;
+    private final ITopology<T> topology;
 
     public
-    DispatchOverTopology(iTopology<T> topology) {
+    DispatchOverTopology(ITopology<T> topology) {
         this.topology = topology;
     }
 

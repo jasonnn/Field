@@ -4,15 +4,15 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.Yield;
 import field.bytecode.protect.yield.YieldUtilities;
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin;
 import field.core.windowing.GLComponentWindow;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.util.collect.tuple.Triple;
@@ -27,8 +27,8 @@ class ExecutionGesture {
 
     boolean going = false;
 
-    ArrayList<Triple<iVisualElement, Vector2, Vector2>> ordering =
-            new ArrayList<Triple<iVisualElement, Vector2, Vector2>>();
+    ArrayList<Triple<IVisualElement, Vector2, Vector2>> ordering =
+            new ArrayList<Triple<IVisualElement, Vector2, Vector2>>();
 
     public
     void paint() {
@@ -79,7 +79,7 @@ class ExecutionGesture {
 
 
         int i = 1;
-        for (Triple<iVisualElement, Vector2, Vector2> gt : ordering) {
+        for (Triple<IVisualElement, Vector2, Vector2> gt : ordering) {
             {
                 CachedLine d = new CachedLine();
                 d.getInput().moveTo(((gt.middle.x * 3) + gt.right.x) / 4, ((gt.middle.y * 3) + gt.right.y) / 4);
@@ -157,16 +157,16 @@ class ExecutionGesture {
         GLComponentWindow.getCurrentWindow(null).requestRepaint();
 
 
-        final ArrayList<Triple<iVisualElement, Vector2, Vector2>> ordering2 =
-                new ArrayList<Triple<iVisualElement, Vector2, Vector2>>(ordering);
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        final ArrayList<Triple<IVisualElement, Vector2, Vector2>> ordering2 =
+                new ArrayList<Triple<IVisualElement, Vector2, Vector2>>(ordering);
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             @Woven
             @Yield
             public
             void update() {
 
-                for (Triple<iVisualElement, Vector2, Vector2> gt : ordering2) {
+                for (Triple<IVisualElement, Vector2, Vector2> gt : ordering2) {
                     PseudoPropertiesPlugin.begin.get(gt.left).call(new Object[]{});
                     YieldUtilities.yield(null);
                 }
@@ -222,10 +222,10 @@ class ExecutionGesture {
         iComponent h = GLComponentWindow.getCurrentWindow(null).getRoot().hit(e);
 
         if (h != null) {
-            iVisualElement vv = h.getVisualElement();
+            IVisualElement vv = h.getVisualElement();
             if (vv != null) {
                 if (ordering.isEmpty() || (ordering.get(ordering.size() - 1).left != vv)) {
-                    ordering.add(new Triple<iVisualElement, Vector2, Vector2>(vv,
+                    ordering.add(new Triple<IVisualElement, Vector2, Vector2>(vv,
                                                                               new Vector2(arg0.x, arg0.y),
                                                                               new Vector2(arg0.x, arg0.y)));
                 }

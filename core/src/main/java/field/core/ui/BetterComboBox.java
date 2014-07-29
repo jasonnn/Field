@@ -2,8 +2,8 @@ package field.core.ui;
 
 import field.core.ui.SmallMenu.BetterPopup;
 import field.core.ui.SmallMenu.iHoverUpdate;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -85,14 +85,14 @@ class BetterComboBox {
                 //System.out.println(" -- making menu complete ");
 
                 try {
-                    LinkedHashMap<String, iUpdateable> map = new LinkedHashMap<String, iUpdateable>();
+                    LinkedHashMap<String, IUpdateable> map = new LinkedHashMap<String, IUpdateable>();
                     if (titleText != null) {
                         map.put(titleText, null);
                     }
                     for (int n = 0; n < BetterComboBox.this.labels.length; n++) {
                         final int fn = n;
                         map.put(((n == currentlySelected) ? "!" : "") + BetterComboBox.this.labels[n],
-                                new iUpdateable() {
+                                new IUpdateable() {
 
                                     @Override
                                     public

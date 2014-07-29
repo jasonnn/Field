@@ -2,9 +2,9 @@ package field.core.plugins.log;
 
 import field.core.execution.PythonInterface;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
+import field.math.abstraction.IAcceptor;
 import field.namespace.generic.ReflectionTools;
 import field.util.PythonUtils;
 import org.python.core.*;
@@ -85,7 +85,7 @@ class SimpleExtendedAssignment extends InvocationLogging {
                     final CapturedEnvironment env =
                             (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment");
 
-                    Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+                    Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
                         float t = 0;
 
@@ -144,9 +144,9 @@ class SimpleExtendedAssignment extends InvocationLogging {
 
                     PyGenerator g = ((PyGenerator) value);
 
-                    new PythonUtils().stackPrePost(g, new iAcceptor<Object>() {
+                    new PythonUtils().stackPrePost(g, new IAcceptor<Object>() {
                         public
-                        iAcceptor<Object> set(Object to) {
+                        IAcceptor<Object> set(Object to) {
 
                             if (to == null || to == Py.None) return this;
 
@@ -190,9 +190,9 @@ class SimpleExtendedAssignment extends InvocationLogging {
 
                     PySequence g = ((PySequence) value);
 
-                    new PythonUtils().stackPrePost(null, g, new iAcceptor<PyObject>() {
+                    new PythonUtils().stackPrePost(null, g, new IAcceptor<PyObject>() {
                         public
-                        iAcceptor<PyObject> set(PyObject to) {
+                        IAcceptor<PyObject> set(PyObject to) {
 
                             if (to == null || to == Py.None) return this;
 

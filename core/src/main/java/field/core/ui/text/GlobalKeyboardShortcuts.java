@@ -2,8 +2,8 @@ package field.core.ui.text;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.launch.iUpdateable;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.launch.IUpdateable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.widgets.Event;
@@ -54,7 +54,7 @@ class GlobalKeyboardShortcuts {
         }
     }
 
-    HashMap<Shortcut, iUpdateable> cuts = new HashMap<Shortcut, iUpdateable>();
+    HashMap<Shortcut, IUpdateable> cuts = new HashMap<Shortcut, IUpdateable>();
 
     public
     GlobalKeyboardShortcuts() {
@@ -62,13 +62,13 @@ class GlobalKeyboardShortcuts {
     }
 
     public
-    void add(Shortcut s, iUpdateable u) {
+    void add(Shortcut s, IUpdateable u) {
         cuts.put(s, u);
     }
 
     public
     boolean fire(Event e) {
-        for (Map.Entry<Shortcut, iUpdateable> c : cuts.entrySet()) {
+        for (Map.Entry<Shortcut, IUpdateable> c : cuts.entrySet()) {
             if (c.getKey().matches(e.character, e.keyCode, e.stateMask)) {
                 c.getValue().update();
                 return true;
@@ -80,7 +80,7 @@ class GlobalKeyboardShortcuts {
     @NextUpdate
     public
     boolean fire(KeyEvent e) {
-        for (Map.Entry<Shortcut, iUpdateable> c : cuts.entrySet()) {
+        for (Map.Entry<Shortcut, IUpdateable> c : cuts.entrySet()) {
             if (c.getKey()
                  .matches(e.getKeyChar(), -1, (e.isShiftDown() ? SWT.SHIFT : 0) | (e.isMetaDown() ? SWT.COMMAND : 0))) {
                 c.getValue().update();
@@ -92,7 +92,7 @@ class GlobalKeyboardShortcuts {
 
     public
     boolean fire(VerifyEvent e) {
-        for (Map.Entry<Shortcut, iUpdateable> c : cuts.entrySet()) {
+        for (Map.Entry<Shortcut, IUpdateable> c : cuts.entrySet()) {
             if (c.getKey().matches(e.character, e.keyCode, e.stateMask)) {
                 c.getValue().update();
                 return true;

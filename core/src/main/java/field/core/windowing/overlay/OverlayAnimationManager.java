@@ -4,13 +4,13 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.Yield;
 import field.bytecode.protect.yield.YieldUtilities;
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.LineUtils;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.GLComponentWindow;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import field.math.linalg.Vector4;
 import field.util.TaskQueue;
 
@@ -25,19 +25,19 @@ public
 class OverlayAnimationManager {
 
     public static
-    void notifyAsText(final iVisualElement root, String to, Rect rect) {
-        final GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
+    void notifyAsText(final IVisualElement root, String to, Rect rect) {
+        final GLComponentWindow frame = IVisualElement.enclosingFrame.get(root);
         if (frame != null) {
             OverlayAnimationManager.notifyTextOnWindow(frame, to, rect, 1, new Vector4(1, 1, 1, 0.15f));
         }
     }
 
     public static
-    void requestRepaint(iVisualElement root) {
+    void requestRepaint(IVisualElement root) {
     }
 
     public static
-    void warnAsText(iVisualElement root, String to, Rect rect) {
+    void warnAsText(IVisualElement root, String to, Rect rect) {
     }
 
 
@@ -55,7 +55,7 @@ class OverlayAnimationManager {
     public
     void fadeUpAndDown(final List<CachedLine> draw, final int fadeInOver, final int remainFor, final int fadeOutOver) {
 
-        final iProvider<Object> p = new iProvider<Object>() {
+        final IProvider<Object> p = new IProvider<Object>() {
             @Woven
             @Yield
             public
@@ -119,7 +119,7 @@ class OverlayAnimationManager {
                                final int remainFor,
                                final int fadeOutOver) {
 
-        final iProvider<Object> p = new iProvider<Object>() {
+        final IProvider<Object> p = new IProvider<Object>() {
             @Woven
             @Yield
             public

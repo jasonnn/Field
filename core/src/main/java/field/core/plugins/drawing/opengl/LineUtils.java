@@ -1,6 +1,6 @@
 package field.core.plugins.drawing.opengl;
 
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.plugins.drawing.tweak.TweakSplineUI.SubSelection;
 import field.core.plugins.drawing.tweak.Visitors;

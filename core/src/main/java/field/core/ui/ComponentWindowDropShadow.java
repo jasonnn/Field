@@ -8,7 +8,8 @@ import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.core.TextSystem;
 import field.graphics.core.TextSystem.AribitraryComponent;
 import field.graphics.dynamic.DynamicMesh;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
+import field.math.abstraction.IInplaceProvider;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.iCoordinateFrame.iMutable;
 import field.math.linalg.iToFloatArray;
@@ -39,7 +40,7 @@ class ComponentWindowDropShadow {
     public
     ComponentWindowDropShadow(final GLComponentWindow inside, TextSystem text) {
         this.inside = inside;
-        inside.getPostQueue().addUpdateable(new iUpdateable() {
+        inside.getPostQueue().addUpdateable(new IUpdateable() {
             public
             void update() {
                 ComponentWindowDropShadow.this.paintNow();
@@ -51,7 +52,7 @@ class ComponentWindowDropShadow {
         } catch (NullPointerException e) {
 
         }
-        labelTriangles = new BasicGeometry.TriangleMesh(new field.math.abstraction.iInplaceProvider<iMutable>() {
+        labelTriangles = new BasicGeometry.TriangleMesh(new IInplaceProvider<iMutable>() {
             public
             iMutable get(iMutable o) {
                 return new CoordinateFrame();

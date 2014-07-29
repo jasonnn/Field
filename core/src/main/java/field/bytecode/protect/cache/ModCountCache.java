@@ -1,6 +1,6 @@
 package field.bytecode.protect.cache;
 
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 
 import java.util.List;
 import java.util.WeakHashMap;
@@ -16,7 +16,7 @@ class ModCountCache<T, V> {
 
     WeakHashMap<T, CacheRecord<V>> cache = new WeakHashMap<T, CacheRecord<V>>();
 
-    private final iFunction<V, T> defaultOr;
+    private final IFunction<T, V> defaultOr;
 
     public
     ModCountCache(iGetModCount<T> modCount) {
@@ -25,7 +25,7 @@ class ModCountCache<T, V> {
     }
 
     public
-    ModCountCache(iGetModCount<T> modCount, iFunction<V, T> defaultOr) {
+    ModCountCache(iGetModCount<T> modCount, IFunction<T, V> defaultOr) {
         this.modCount = modCount;
         this.defaultOr = defaultOr;
     }
@@ -56,10 +56,10 @@ class ModCountCache<T, V> {
 
 
     public
-    V get(T t, iFunction<V, T> or) {
+    V get(T t, IFunction<T, V> or) {
         CacheRecord<V> r = cache.get(t);
         if (r == null) {
-            V v = or.f(t);
+            V v = or.apply(t);
             r = new CacheRecord<V>();
             r.value = v;
             r.atCount = modCount.countFor(t);
@@ -70,7 +70,7 @@ class ModCountCache<T, V> {
         int nmc = modCount.countFor(t);
         if (r.atCount != nmc) {
             r.atCount = nmc;
-            r.value = or.f(t);
+            r.value = or.apply(t);
         }
 
         return r.value;
@@ -80,7 +80,7 @@ class ModCountCache<T, V> {
     V get(T t) {
         CacheRecord<V> r = cache.get(t);
         if (r == null) {
-            V v = defaultOr.f(t);
+            V v = defaultOr.apply(t);
             r = new CacheRecord<V>();
             r.value = v;
             r.atCount = modCount.countFor(t);
@@ -91,7 +91,7 @@ class ModCountCache<T, V> {
         int nmc = modCount.countFor(t);
         if (r.atCount != nmc) {
             r.atCount = nmc;
-            r.value = defaultOr.f(t);
+            r.value = defaultOr.apply(t);
         }
 
         return r.value;

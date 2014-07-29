@@ -1,10 +1,11 @@
 package field.core.plugins.history;
 
 import field.bytecode.protect.Woven;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.history.HGTools.HGLog;
 import field.math.graph.visitors.GraphNodeSearching;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.namespace.diagram.Channel;
 import field.namespace.diagram.Channel.Marker;
 import field.util.diff.ChannelDifferences;
@@ -149,7 +150,7 @@ class HistoryExplorerHG {
         new GraphNodeSearching.GraphNodeVisitor_depthFirst<VersionNode>(false) {
             @Override
             protected
-            VisitCode visit(VersionNode n) {
+            TraversalHint visit(VersionNode n) {
 
 //				;//System.out.println(" at <"+n+">");
 
@@ -184,7 +185,7 @@ class HistoryExplorerHG {
 
                 ret.put(n, vert);
 
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
         }.apply(root);

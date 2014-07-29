@@ -7,9 +7,9 @@ import field.core.execution.PhantomFluidSheet;
 import field.core.persistance.PackageTools;
 import field.core.plugins.log.Logging;
 import field.core.util.ExecuteCommand;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
 import field.util.WorkspaceDirectory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -46,7 +46,7 @@ class FieldMenus2 {
 
         if (Platform.getOS() == OS.mac && false) {
             CocoaUIEnhancer enhancer = new CocoaUIEnhancer("Field");
-            enhancer.hookApplicationMenu(Launcher.display, new iUpdateable() {
+            enhancer.hookApplicationMenu(Launcher.display, new IUpdateable() {
 
                 @Override
                 public
@@ -58,7 +58,7 @@ class FieldMenus2 {
                     mb.open();
 
                 }
-            }, new iUpdateable() {
+            }, new IUpdateable() {
 
                 @Override
                 public

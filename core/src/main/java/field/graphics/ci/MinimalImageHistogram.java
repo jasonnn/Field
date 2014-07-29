@@ -1,13 +1,13 @@
 package field.graphics.ci;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.ui.text.embedded.CustomInsertSystem;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
 import field.core.ui.text.embedded.CustomInsertSystem.iPossibleComponent;
 import field.graphics.ci.MiniDraggable.SubControl;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFilter;
+import field.launch.IUpdateable;
+import field.math.abstraction.IFilter;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.namespace.key.OKey;
@@ -28,7 +28,7 @@ class MinimalImageHistogram extends JComponent {
     public static
     class Component extends ProvidedComponent {
 
-        public transient iUpdateable notify;
+        public transient IUpdateable notify;
 
         ImageHistogramState state;
 
@@ -38,7 +38,7 @@ class MinimalImageHistogram extends JComponent {
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
 
             name = "Component:" + new UID().toString() + ".transient";
 
@@ -92,7 +92,7 @@ class MinimalImageHistogram extends JComponent {
     }
 
     public static
-    class ImageHistogramState implements Serializable, iFilter<Float, Float> {
+    class ImageHistogramState implements Serializable, IFilter<Float, Float> {
         private static final long serialVersionUID = 1L;
         float blackIn = 0;
         float greyIn = 0.5f;

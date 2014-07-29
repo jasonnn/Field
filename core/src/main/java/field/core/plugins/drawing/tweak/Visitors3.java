@@ -105,7 +105,7 @@ class Visitors3 {
                 int nextIndexToSet = 0;
 
                 if (currentEvent.method.equals(iLine_m.moveTo_m)) {
-                    // skip forward to find any close
+                    // SKIP forward to find any close
 
                     boolean found = false;
                     int foundAt = 0;

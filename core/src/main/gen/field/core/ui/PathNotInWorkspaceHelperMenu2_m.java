@@ -1,49 +1,50 @@
 package field.core.ui;
 
-import field.bytecode.apt.Mirroring;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.namespace.generic.Bind.iFunction;
+import field.bytecode.mirror.impl.MirrorNoReturnMethod;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 public
 class PathNotInWorkspaceHelperMenu2_m {
     public static final Method move_m =
             ReflectionTools.methodOf("move", field.core.ui.PathNotInWorkspaceHelperMenu2.class, java.io.File.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File>
+    public static final MirrorNoReturnMethod<PathNotInWorkspaceHelperMenu2, File>
             move_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File>(field.core.ui.PathNotInWorkspaceHelperMenu2.class,
+            new MirrorNoReturnMethod<PathNotInWorkspaceHelperMenu2, File>(field.core.ui.PathNotInWorkspaceHelperMenu2.class,
                                                                                                           "move",
                                                                                                           new Class[]{java.io.File.class});
 
     public
-    interface move_interface extends iAcceptor<java.io.File>, iFunction<Object, java.io.File> {
+    interface move_interface extends IAcceptor<File>, IFunction<File, Object> {
         public
         void move(final java.io.File p0);
 
         public
-        iUpdateable updateable(final java.io.File p0);
+        IUpdateable updateable(final java.io.File p0);
     }
 
     public final move_interface move;
 
     public static final Method copy_m =
             ReflectionTools.methodOf("copy", field.core.ui.PathNotInWorkspaceHelperMenu2.class, java.io.File.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File>
+    public static final MirrorNoReturnMethod<PathNotInWorkspaceHelperMenu2, File>
             copy_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.ui.PathNotInWorkspaceHelperMenu2, java.io.File>(field.core.ui.PathNotInWorkspaceHelperMenu2.class,
+            new MirrorNoReturnMethod<PathNotInWorkspaceHelperMenu2, File>(field.core.ui.PathNotInWorkspaceHelperMenu2.class,
                                                                                                           "copy",
                                                                                                           new Class[]{java.io.File.class});
 
     public
-    interface copy_interface extends iAcceptor<java.io.File>, iFunction<Object, java.io.File> {
+    interface copy_interface extends IAcceptor<File>, IFunction<File, Object> {
         public
         void copy(final java.io.File p0);
 
         public
-        iUpdateable updateable(final java.io.File p0);
+        IUpdateable updateable(final java.io.File p0);
     }
 
     public final copy_interface copy;
@@ -52,8 +53,8 @@ class PathNotInWorkspaceHelperMenu2_m {
     PathNotInWorkspaceHelperMenu2_m(final PathNotInWorkspaceHelperMenu2 x) {
         move = new move_interface() {
 
-            iAcceptor a = move_s.acceptor(x);
-            iFunction f = move_s.function(x);
+            IAcceptor a = move_s.acceptor(x);
+            IFunction f = move_s.function(x);
 
 
             public
@@ -62,19 +63,19 @@ class PathNotInWorkspaceHelperMenu2_m {
             }
 
             public
-            iAcceptor<java.io.File> set(java.io.File p) {
+            IAcceptor<File> set(java.io.File p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(java.io.File p) {
-                return f.f(p);
+            Object apply(java.io.File p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final java.io.File p0) {
-                return new iUpdateable() {
+            IUpdateable updateable(final java.io.File p0) {
+                return new IUpdateable() {
                     public
                     void update() {
                         move(p0);
@@ -85,8 +86,8 @@ class PathNotInWorkspaceHelperMenu2_m {
 
         copy = new copy_interface() {
 
-            iAcceptor a = copy_s.acceptor(x);
-            iFunction f = copy_s.function(x);
+            IAcceptor a = copy_s.acceptor(x);
+            IFunction f = copy_s.function(x);
 
 
             public
@@ -95,19 +96,19 @@ class PathNotInWorkspaceHelperMenu2_m {
             }
 
             public
-            iAcceptor<java.io.File> set(java.io.File p) {
+            IAcceptor<File> set(java.io.File p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(java.io.File p) {
-                return f.f(p);
+            Object apply(java.io.File p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final java.io.File p0) {
-                return new iUpdateable() {
+            IUpdateable updateable(final java.io.File p0) {
+                return new IUpdateable() {
                     public
                     void update() {
                         copy(p0);

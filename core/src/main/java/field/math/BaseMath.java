@@ -1,7 +1,7 @@
 package field.math;
 
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IFloatProvider;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.iToFloatArray;
@@ -345,9 +345,8 @@ class BaseMath {
      * @author marc
      */
     public static
-    class MutableFloat extends Number implements iFloatProvider,
-                                                 Comparable<Number>,
-                                                 iBlendable<MutableFloat>,
+    class MutableFloat extends Number implements IFloatProvider,
+                                                 Comparable<Number>, IBlendable<MutableFloat>,
                                                  iToFloatArray {
 
         private static final long serialVersionUID = 1L;
@@ -479,11 +478,11 @@ class BaseMath {
     }
 
     public static
-    class MutableFloatFromProvider extends Number implements iFloatProvider {
-        public iFloatProvider of;
+    class MutableFloatFromProvider extends Number implements IFloatProvider {
+        public IFloatProvider of;
 
         public
-        MutableFloatFromProvider(iFloatProvider of) {
+        MutableFloatFromProvider(IFloatProvider of) {
             this.of = of;
 
         }

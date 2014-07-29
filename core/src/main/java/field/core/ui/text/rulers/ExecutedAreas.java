@@ -3,8 +3,7 @@ package field.core.ui.text.rulers;
 import field.core.ui.text.rulers.StyledTextPositionSystem.Position;
 import field.math.BaseMath.MutableFloat;
 import field.math.util.Histogram;
-import field.namespace.generic.Bind;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools.Pair;
 import field.util.Dict;
 import field.util.Dict.Prop;
@@ -402,9 +401,9 @@ class ExecutedAreas {
 
     private
     void scrub(Histogram<Area> t) {
-        iFunction<Boolean, Pair<Area, Number>> f = new Bind.iFunction<Boolean, Pair<Area, Number>>() {
+        IFunction<Pair<Area, Number>, Boolean> f = new IFunction<Pair<Area, Number>, Boolean>() {
             public
-            Boolean f(Pair<Area, Number> in) {
+            Boolean apply(Pair<Area, Number> in) {
                 if (in.left == null) return true;
                 if (in.left.invalid) return true;
                 if (in.right.floatValue() < 0.25f && in.left.lastSeenAt < clock - 20) return true;

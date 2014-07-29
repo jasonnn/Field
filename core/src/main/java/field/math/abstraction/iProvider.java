@@ -1,6 +1,6 @@
 package field.math.abstraction;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.InvocationHandler;
@@ -11,17 +11,17 @@ import java.util.Deque;
 
 
 public
-interface iProvider<T> {
+interface IProvider<T> {
     public static
-    class BufferedOne<T> implements iProvider<T> {
-        private final iProvider<T> in;
+    class BufferedOne<T> implements IProvider<T> {
+        private final IProvider<T> in;
 
         T last = null;
 
         boolean first = true;
 
         public
-        BufferedOne(iProvider<T> in) {
+        BufferedOne(IProvider<T> in) {
             this.in = in;
         }
 
@@ -39,8 +39,8 @@ interface iProvider<T> {
     }
 
     public static
-    class BufferedOneUpdate<T> implements iProvider<T>, iUpdateable {
-        private final iProvider<T> in;
+    class BufferedOneUpdate<T> implements IProvider<T>, IUpdateable {
+        private final IProvider<T> in;
 
         T last = null;
 
@@ -51,7 +51,7 @@ interface iProvider<T> {
         boolean needsSwap = false;
 
         public
-        BufferedOneUpdate(iProvider<T> in) {
+        BufferedOneUpdate(IProvider<T> in) {
             this.in = in;
         }
 
@@ -78,8 +78,8 @@ interface iProvider<T> {
     }
 
     public
-    class BufferedTwo<T> implements iProvider<T> {
-        private final iProvider<T> in;
+    class BufferedTwo<T> implements IProvider<T> {
+        private final IProvider<T> in;
 
         T last = null;
         T last2 = null;
@@ -90,7 +90,7 @@ interface iProvider<T> {
         boolean skip = false;
 
         public
-        BufferedTwo(iProvider<T> in) {
+        BufferedTwo(IProvider<T> in) {
             this.in = in;
         }
 
@@ -120,8 +120,8 @@ interface iProvider<T> {
     }
 
     public
-    class BufferedN<T> implements iProvider<T> {
-        private final iProvider<T> in;
+    class BufferedN<T> implements IProvider<T> {
+        private final IProvider<T> in;
 
         Deque<T> dec = new ArrayDeque<T>();
         int first = 0;
@@ -129,7 +129,7 @@ interface iProvider<T> {
         private final int n;
 
         public
-        BufferedN(iProvider<T> in, int n) {
+        BufferedN(IProvider<T> in, int n) {
             this.in = in;
             this.n = n;
         }
@@ -148,7 +148,7 @@ interface iProvider<T> {
     }
 
     static public
-    class Constant<T> implements iProvider<T>, iAcceptor<T> {
+    class Constant<T> implements IProvider<T>, IAcceptor<T> {
         T t;
 
         public
@@ -179,7 +179,7 @@ interface iProvider<T> {
     }
 
     static public
-    class FieldProvider<T> implements iProvider<T> {
+    class FieldProvider<T> implements IProvider<T> {
         private final java.lang.reflect.Field field;
 
         private final Object from;
@@ -217,8 +217,8 @@ interface iProvider<T> {
     }
 
     static public
-    class HasChanged<T> implements iProvider<T> {
-        private final iProvider<T> to;
+    class HasChanged<T> implements IProvider<T> {
+        private final IProvider<T> to;
 
         boolean needsLoad = true;
 
@@ -227,7 +227,7 @@ interface iProvider<T> {
         T now = null;
 
         public
-        HasChanged(iProvider<T> to) {
+        HasChanged(IProvider<T> to) {
             this.to = to;
         }
 
@@ -269,7 +269,7 @@ interface iProvider<T> {
     static public
     class ProxyProvider<T> {
         public static
-        <T> T makeProxyFor(Class<T> clazz, final iProvider<? extends T> p) {
+        <T> T makeProxyFor(Class<T> clazz, final IProvider<? extends T> p) {
             return (T) Proxy.newProxyInstance(p.getClass().getClassLoader(),
                                               new Class[]{clazz},
                                               new InvocationHandler() {
@@ -286,13 +286,13 @@ interface iProvider<T> {
     // this can be used to make a provider look like what it provides (see also the caching "Up"
 
     public static
-    class SerializationBarrier<T> implements iProvider<T> {
+    class SerializationBarrier<T> implements IProvider<T> {
         public T last;
 
-        transient private final iProvider<T> through;
+        transient private final IProvider<T> through;
 
         public
-        SerializationBarrier(iProvider<T> through) {
+        SerializationBarrier(IProvider<T> through) {
             this.through = through;
         }
 

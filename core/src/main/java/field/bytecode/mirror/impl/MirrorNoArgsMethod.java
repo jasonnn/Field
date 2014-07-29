@@ -3,8 +3,8 @@ package field.bytecode.mirror.impl;
 import field.bytecode.mirror.IBoundNoArgsMethod;
 import field.bytecode.mirror.IMethodFunction;
 import field.launch.IUpdateable;
-import field.namespace.generic.ReflectionTools;
 import field.namespace.generic.IFunction;
+import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,17 +13,22 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
-* Created by jason on 7/29/14.
-*/
+ * Created by jason on 7/29/14.
+ */
 public
-class MirrorNoArgsMethod<t_class, t_returns> implements IMethodFunction<t_class, Object, t_returns>,
+class MirrorNoArgsMethod<t_class, t_returns> extends AbstractMirrorMethod implements IMethodFunction<t_class, Void, t_returns>,
                                                         IFunction<t_class, t_returns> {
-    protected Method method;
+
+
+    public
+    MirrorNoArgsMethod(Method m) {
+        super(m);
+    }
 
     public
     MirrorNoArgsMethod(Class on, String name) {
-        method = ReflectionTools.methodOf(name, on);
-        method.setAccessible(true);
+        this(ReflectionTools.methodOf(name, on));
+
     }
 
     public
@@ -44,7 +49,7 @@ class MirrorNoArgsMethod<t_class, t_returns> implements IMethodFunction<t_class,
     public
     <A extends t_class> IBoundNoArgsMethod<Collection<? extends t_returns>> bind(final Collection<A> to) {
 
-        final IFunction<Object, Collection<? extends t_returns>> ff = function(to);
+        final IFunction<Void, Collection<? extends t_returns>> ff = function(to);
         return new IBoundNoArgsMethod<Collection<? extends t_returns>>() {
             public
             Collection<? extends t_returns> get() {
@@ -70,22 +75,22 @@ class MirrorNoArgsMethod<t_class, t_returns> implements IMethodFunction<t_class,
     }
 
     public
-    <A extends t_class> IFunction<Object, t_returns> function(final A to) {
-        return new IFunction<Object, t_returns>() {
+    <A extends t_class> IFunction<Void, t_returns> function(final A to) {
+        return new IFunction<Void, t_returns>() {
             @SuppressWarnings("unchecked")
             public
-            t_returns apply(Object in) {
+            t_returns apply(Void in) {
                 return (t_returns) invoke(to, in);
             }
         };
     }
 
     public
-    <A extends t_class> IFunction<Object, Collection<? extends t_returns>> function(final Collection<A> to) {
-        return new IFunction<Object, Collection<? extends t_returns>>() {
+    <A extends t_class> IFunction<Void, Collection<? extends t_returns>> function(final Collection<A> to) {
+        return new IFunction<Void, Collection<? extends t_returns>>() {
             @SuppressWarnings("unchecked")
             public
-            Collection<? extends t_returns> apply(Object in) {
+            Collection<? extends t_returns> apply(Void in) {
                 // fixme,
                 // this
                 // could
@@ -94,7 +99,8 @@ class MirrorNoArgsMethod<t_class, t_returns> implements IMethodFunction<t_class,
                 // one
                 // stage
                 // earlier
-                if (to.isEmpty()) return Collections.EMPTY_LIST;
+                if (to.isEmpty())
+                    return Collections.EMPTY_LIST;
                 if (to.size() == 1)
                     return (Collection<? extends t_returns>) Collections.singletonList(invoke(to.iterator().next(),
                                                                                               in));
@@ -135,8 +141,10 @@ class MirrorNoArgsMethod<t_class, t_returns> implements IMethodFunction<t_class,
     protected
     <A> Object invoke(final A to, final Object... with) {
         try {
-            if ((with.length == 1) && (with[0] instanceof Object[])) return method.invoke(to, (Object[]) with[0]);
-            else return method.invoke(to, with);
+            if ((with.length == 1) && (with[0] instanceof Object[]))
+                return method.invoke(to, (Object[]) with[0]);
+            else
+                return method.invoke(to, with);
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException(e);
         } catch (InvocationTargetException e) {

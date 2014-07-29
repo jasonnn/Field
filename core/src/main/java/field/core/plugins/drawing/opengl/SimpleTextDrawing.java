@@ -11,7 +11,7 @@ import field.graphics.core.TextSystem;
 import field.graphics.core.TextSystem.RectangularLabel;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.iDynamicMesh;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.Quaternion;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
@@ -44,7 +44,7 @@ class SimpleTextDrawing {
         DrawingResult accept(List<iDynamicMesh> soFar, final CachedLine line, final Dict properties) {
             if (!properties.isTrue(iLinearGraphicsContext.containsText, false)) return null;
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 private final Vector4 black = new Vector4(0, 0, 0, 1f);
 
                 float scale = 1;
@@ -239,7 +239,7 @@ class SimpleTextDrawing {
         DrawingResult accept(List<iDynamicMesh> soFar, final CachedLine line, final Dict properties) {
             if (!properties.isTrue(iLinearGraphicsContext.containsMultilineText, false)) return null;
 
-            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new iUpdateable() {
+            DrawingResult result = new DrawingResult(DrawingResultCode.cont, new IUpdateable() {
                 private final Vector4 black = new Vector4(0, 0, 0, 1f);
 
                 float scale = 1;

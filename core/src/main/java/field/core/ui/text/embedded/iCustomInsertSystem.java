@@ -2,7 +2,7 @@ package field.core.ui.text.embedded;
 
 //import javax.swing.text.DefaultStyledDocument;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.util.collect.tuple.Pair;
 import org.eclipse.swt.custom.StyledText;
 
@@ -28,6 +28,6 @@ interface iCustomInsertSystem {
     String swapInText(Pair<String, Object> text);
 
     public
-    void updateAllStyles(StyledText document, iVisualElement inside);
+    void updateAllStyles(StyledText document, IVisualElement inside);
 
 }

@@ -1,6 +1,6 @@
 package field.core.plugins.drawing.opengl;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.execution.PythonInterface;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
@@ -19,10 +19,10 @@ import java.util.List;
 public
 class LateExecutingDrawing {
 
-    HashMap<Pair<iVisualElement, Object>, CachedLine> knownLines =
-            new HashMap<Pair<iVisualElement, Object>, CachedLine>();
-    HashMap<Pair<iVisualElement, Object>, CachedLine.Event> knownEvents =
-            new HashMap<Pair<iVisualElement, Object>, CachedLine.Event>();
+    HashMap<Pair<IVisualElement, Object>, CachedLine> knownLines =
+            new HashMap<Pair<IVisualElement, Object>, CachedLine>();
+    HashMap<Pair<IVisualElement, Object>, CachedLine.Event> knownEvents =
+            new HashMap<Pair<IVisualElement, Object>, CachedLine.Event>();
 
     public static
     class WrappedObject {
@@ -46,10 +46,10 @@ class LateExecutingDrawing {
     void scanLine(CachedLine line, Dict properties) {
         Object named = properties.get(iLinearGraphicsContext.name);
         if (named != null) {
-            iVisualElement s = properties.get(iLinearGraphicsContext.source);
+            IVisualElement s = properties.get(iLinearGraphicsContext.source);
             if (s != null) {
-                knownLines.put(new Pair<iVisualElement, Object>(s, named), line);
-                knownLines.put(new Pair<iVisualElement, Object>(null, named), line);
+                knownLines.put(new Pair<IVisualElement, Object>(s, named), line);
+                knownLines.put(new Pair<IVisualElement, Object>(null, named), line);
             }
         }
 
@@ -59,10 +59,10 @@ class LateExecutingDrawing {
             if (e.attributes != null) {
                 Object name = e.attributes.get(iLinearGraphicsContext.name_v);
                 if (name != null) {
-                    iVisualElement s = properties.get(iLinearGraphicsContext.source);
+                    IVisualElement s = properties.get(iLinearGraphicsContext.source);
                     if (s != null) {
-                        knownEvents.put(new Pair<iVisualElement, Object>(s, name), e);
-                        knownEvents.put(new Pair<iVisualElement, Object>(null, name), e);
+                        knownEvents.put(new Pair<IVisualElement, Object>(s, name), e);
+                        knownEvents.put(new Pair<IVisualElement, Object>(null, name), e);
                     }
                 }
 
@@ -129,14 +129,14 @@ class LateExecutingDrawing {
     }
 
     public
-    CachedLine.Event findEvent(iVisualElement ev, Object r) {
-        Event e = knownEvents.get(new Pair<iVisualElement, Object>(ev, r));
+    CachedLine.Event findEvent(IVisualElement ev, Object r) {
+        Event e = knownEvents.get(new Pair<IVisualElement, Object>(ev, r));
         return e;
     }
 
     public
-    CachedLine findLine(iVisualElement e, String name) {
-        return knownLines.get(new Pair<iVisualElement, Object>(e, name));
+    CachedLine findLine(IVisualElement e, String name) {
+        return knownLines.get(new Pair<IVisualElement, Object>(e, name));
     }
 
     public

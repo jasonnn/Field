@@ -1,18 +1,18 @@
 package field.math.linalg;
 
 import field.math.BaseMath.MutableFloat;
-import field.math.abstraction.iFloatProvider;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IFloatProvider;
+import field.math.abstraction.IProvider;
 
 public
-interface iToFloatArray extends iProvider<float[]> {
+interface iToFloatArray extends IProvider<float[]> {
 
     public static
     class Provided implements iToFloatArray {
-        private final iProvider<? extends iToFloatArray> p;
+        private final IProvider<? extends iToFloatArray> p;
 
         public
-        Provided(iProvider<? extends iToFloatArray> p) {
+        Provided(IProvider<? extends iToFloatArray> p) {
             this.p = p;
         }
 
@@ -25,12 +25,12 @@ interface iToFloatArray extends iProvider<float[]> {
 
     public static
     class ProvidedMul implements iToFloatArray {
-        private final iProvider<? extends iToFloatArray> p;
+        private final IProvider<? extends iToFloatArray> p;
 
-        private final iFloatProvider by;
+        private final IFloatProvider by;
 
         public
-        ProvidedMul(iProvider<? extends iToFloatArray> p, iFloatProvider by) {
+        ProvidedMul(IProvider<? extends iToFloatArray> p, IFloatProvider by) {
             this.p = p;
             this.by = by;
         }

@@ -1,7 +1,7 @@
 package field.core.plugins.snip;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.BaseSimplePlugin;
 
 public
@@ -20,7 +20,7 @@ class TreeBrowserPlugin extends BaseSimplePlugin {
 
     @Override
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
         super.registeredWith(root);
 
         tree = new TreeBrowser();

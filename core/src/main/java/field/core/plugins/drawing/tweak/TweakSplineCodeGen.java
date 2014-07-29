@@ -1,12 +1,12 @@
 package field.core.plugins.drawing.tweak;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.plugins.drawing.tweak.TweakSplineUI.MouseInfo;
 import field.core.plugins.drawing.tweak.TweakSplineUI.SelectedVertex;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -45,7 +45,7 @@ class TweakSplineCodeGen {
         String toExpression();
 
         public
-        void toProperties(iVisualElement e, Map<String, Object> soFar);
+        void toProperties(IVisualElement e, Map<String, Object> soFar);
     }
 
     public static final iResult abort = new iResult() {
@@ -61,7 +61,7 @@ class TweakSplineCodeGen {
         }
 
         public
-        void toProperties(iVisualElement e, Map<String, Object> soFar) {
+        void toProperties(IVisualElement e, Map<String, Object> soFar) {
         }
     };
 
@@ -86,7 +86,7 @@ class TweakSplineCodeGen {
         }
 
         public
-        iResult obtainExpressions(iVisualElement e,
+        iResult obtainExpressions(IVisualElement e,
                                   List<CachedLine> index,
                                   final List<SelectedVertex> selected,
                                   MouseInfo mi) {
@@ -163,7 +163,7 @@ outer:
                 }
 
                 public
-                void toProperties(iVisualElement e, Map<String, Object> soFar) {
+                void toProperties(IVisualElement e, Map<String, Object> soFar) {
                     soFar.putAll(property);
                 }
             };
@@ -186,7 +186,7 @@ outer:
         }
 
         public
-        String assembleExpression(iVisualElement e,
+        String assembleExpression(IVisualElement e,
                                   iResult nd,
                                   ArrayList<iResult> coordDescriptions,
                                   Map<String, Object> property,
@@ -220,14 +220,14 @@ outer:
         }
 
         public
-        void populateParameters(iVisualElement inside, iUpdateable continuation) {
+        void populateParameters(IVisualElement inside, IUpdateable continuation) {
             continuation.update();
         }
 
     }
 
     public static
-    String uniqProperty(iVisualElement e, Map<String, Object> p) {
+    String uniqProperty(IVisualElement e, Map<String, Object> p) {
         String base = "_tweakProperty";
         int n = 0;
         while (e.getProperty(new VisualElementProperty(base + n)) != null || (p != null && p.containsKey(base + n)))

@@ -4,9 +4,9 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Platform;
 import field.core.Platform.OS;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.selection.ToolBarFolder;
 import field.core.ui.MacScrollbarHack;
 import field.core.ui.SmallMenu;
@@ -28,10 +28,10 @@ import field.core.util.LocalFuture;
 import field.core.util.PythonCallableMap;
 import field.core.windowing.BetterSash;
 import field.core.windowing.GLComponentWindow;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 import field.util.AutoPersist;
 import org.eclipse.swt.SWT;
@@ -61,7 +61,7 @@ public
 class BaseTextEditor2 {
 
     public abstract static
-    class Completion implements iUpdateable {
+    class Completion implements IUpdateable {
         public String text;
 
         public boolean enabled;
@@ -426,13 +426,13 @@ class BaseTextEditor2 {
             }
 
             public
-            iVisualElement getThisBox() {
+            IVisualElement getThisBox() {
                 return BaseTextEditor2.this.getThisBox();
             }
 
             @Override
             protected
-            iVisualElement getRoot() {
+            IVisualElement getRoot() {
                 return BaseTextEditor2.this.getRoot();
             }
 
@@ -444,7 +444,7 @@ class BaseTextEditor2 {
 
             @Override
             protected
-            void navigateTo(iVisualElement thisBox, VisualElementProperty p, ArrayList<Found> ff) {
+            void navigateTo(IVisualElement thisBox, VisualElementProperty p, ArrayList<Found> ff) {
                 BaseTextEditor2.this.navigateTo(thisBox, p, ff.get(0).start, ff.get(0).end);
             }
 
@@ -916,7 +916,7 @@ class BaseTextEditor2 {
             public
             void handleEvent(Event event) {
                 if (Platform.isPopupTrigger(event)) {
-                    LinkedHashMap<String, iUpdateable> items = getActionOutputMenu();
+                    LinkedHashMap<String, IUpdateable> items = getActionOutputMenu();
                     BetterPopup m = new SmallMenu().createMenu(items, edOut.getShell(), null);
                     m.show(Launcher.display.map(edOut, edOut.getShell(), new Point(event.x, event.y)));
                 }
@@ -946,7 +946,7 @@ class BaseTextEditor2 {
             }
 
             protected
-            void executeAreaAndRewrite(Area minIs, field.namespace.generic.Bind.iFunction<String, String> up) {
+            void executeAreaAndRewrite(Area minIs, IFunction<String, String> up) {
                 BaseTextEditor2.this.executeAreaAndRewrite(minIs, up);
             }
 
@@ -1098,12 +1098,12 @@ class BaseTextEditor2 {
     }
 
     protected
-    void navigateTo(iVisualElement box, VisualElementProperty prop, int start, int end) {
+    void navigateTo(IVisualElement box, VisualElementProperty prop, int start, int end) {
 
     }
 
     protected
-    iVisualElement getRoot() {
+    IVisualElement getRoot() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -1115,7 +1115,7 @@ class BaseTextEditor2 {
     }
 
     public
-    iVisualElement getThisBox() {
+    IVisualElement getThisBox() {
         return null;
     }
 
@@ -1323,29 +1323,29 @@ class BaseTextEditor2 {
         return actionsOutput;
     }
 
-    LinkedHashMap<String, iUpdateable> actionMenu = null;
+    LinkedHashMap<String, IUpdateable> actionMenu = null;
 
     protected
-    LinkedHashMap<String, iUpdateable> getActionMenu() {
+    LinkedHashMap<String, IUpdateable> getActionMenu() {
         return actionMenu;
     }
 
-    LinkedHashMap<String, iUpdateable> actionOutputMenu = null;
+    LinkedHashMap<String, IUpdateable> actionOutputMenu = null;
 
     private BetterPopup menu;
 
     protected
-    LinkedHashMap<String, iUpdateable> getActionOutputMenu() {
+    LinkedHashMap<String, IUpdateable> getActionOutputMenu() {
         return actionOutputMenu;
     }
 
     public
-    void setActionMenu(LinkedHashMap<String, iUpdateable> actionMenu) {
+    void setActionMenu(LinkedHashMap<String, IUpdateable> actionMenu) {
         this.actionMenu = actionMenu;
     }
 
     public
-    void setOutputActionMenu(LinkedHashMap<String, iUpdateable> actionMenu) {
+    void setOutputActionMenu(LinkedHashMap<String, IUpdateable> actionMenu) {
         this.actionOutputMenu = actionMenu;
     }
 
@@ -1414,7 +1414,7 @@ class BaseTextEditor2 {
 
         if (completions.size() == 0) return;
 
-        LinkedHashMap<String, iUpdateable> insert = new LinkedHashMap<String, iUpdateable>();
+        LinkedHashMap<String, IUpdateable> insert = new LinkedHashMap<String, IUpdateable>();
 
         boolean optionalYes = completions.size() < 4;
 
@@ -1439,7 +1439,7 @@ class BaseTextEditor2 {
         }
 
         menu = new SmallMenu().createMenu(insert, frame, ks);
-        menu.doneHook = new iUpdateable() {
+        menu.doneHook = new IUpdateable() {
 
             @Override
             public
@@ -1535,7 +1535,7 @@ class BaseTextEditor2 {
     }
 
     private
-    void completionsForFilename(final String string, LinkedHashMap<String, iUpdateable> completions) {
+    void completionsForFilename(final String string, LinkedHashMap<String, IUpdateable> completions) {
 
         int lastSlash = string.lastIndexOf('/');
         String left;
@@ -1562,7 +1562,7 @@ class BaseTextEditor2 {
             completions.put((f.isDirectory() ? "\u2208 <b>" : "\u2802 <i>") + f.getName() + (f.isDirectory()
                                                                                              ? "</b>"
                                                                                              : "</i>"),
-                            new iUpdateable() {
+                            new IUpdateable() {
                                 public
                                 void update() {
                                     int pos = ed.getCaretOffset();
@@ -1581,7 +1581,7 @@ class BaseTextEditor2 {
                              : "\u2802 <i> reveal in Finder - ")
                             + allFiles[0].getName()
                             + ' '
-                            + (allFiles[0].isDirectory() ? "</b>" : "</i"), new iUpdateable() {
+                            + (allFiles[0].isDirectory() ? "</b>" : "</i"), new IUpdateable() {
                 public
                 void update() {
                     UbiquitousLinks.showPathInFinder(allFiles[0].getAbsolutePath());
@@ -1607,7 +1607,7 @@ class BaseTextEditor2 {
         if (a == -1) a = 0;
         String leftText = text.substring(a, pos);
 
-        LinkedHashMap<String, iUpdateable> items = new LinkedHashMap<String, iUpdateable>();
+        LinkedHashMap<String, IUpdateable> items = new LinkedHashMap<String, IUpdateable>();
 
         iKeystrokeUpdate ks = new iKeystrokeUpdate() {
 
@@ -1639,7 +1639,7 @@ class BaseTextEditor2 {
         else completionsForFilename(leftText.substring(leftText.lastIndexOf('\"') + 1), items);
 
         menu = new SmallMenu().createMenu(items, frame, ks);
-        menu.doneHook = new iUpdateable() {
+        menu.doneHook = new IUpdateable() {
 
             @Override
             public
@@ -1683,7 +1683,7 @@ class BaseTextEditor2 {
     }
 
     protected
-    boolean completionKeyHandle(String leftText, LinkedHashMap<String, iUpdateable> items, iKeystrokeUpdate ks) {
+    boolean completionKeyHandle(String leftText, LinkedHashMap<String, IUpdateable> items, iKeystrokeUpdate ks) {
         return false;
     }
 
@@ -1696,7 +1696,7 @@ class BaseTextEditor2 {
     }
 
     protected
-    void executeAreaAndRewrite(Area area, iFunction<String, String> up) {
+    void executeAreaAndRewrite(Area area, IFunction<String, String> up) {
     }
 
     protected
@@ -1752,7 +1752,7 @@ class BaseTextEditor2 {
     }
 
     protected
-    void getMenuItems(LinkedHashMap<String, iUpdateable> items) {
+    void getMenuItems(LinkedHashMap<String, IUpdateable> items) {
     }
 
     // protected void handleMouseEventOnArea(MouseEvent e, Area currentArea)
@@ -1780,7 +1780,7 @@ class BaseTextEditor2 {
 
         if (completions.isEmpty()) return;
 
-        LinkedHashMap<String, iUpdateable> insert = new LinkedHashMap<String, iUpdateable>();
+        LinkedHashMap<String, IUpdateable> insert = new LinkedHashMap<String, IUpdateable>();
         for (Completion c : completions) {
             if (c.isDocumentation) {
                 insert.put(String.valueOf(c), new Documentation(c.text));
@@ -1821,7 +1821,7 @@ class BaseTextEditor2 {
         };
 
         menu = new SmallMenu().createMenu(insert, frame, ks);
-        menu.doneHook = new iUpdateable() {
+        menu.doneHook = new IUpdateable() {
 
             @Override
             public
@@ -1943,16 +1943,16 @@ class BaseTextEditor2 {
     protected
     void popUp(Event arg0) {
 
-        java.util.LinkedHashMap<String, iUpdateable> items = new java.util.LinkedHashMap<String, iUpdateable>();
+        java.util.LinkedHashMap<String, IUpdateable> items = new java.util.LinkedHashMap<String, IUpdateable>();
         getMenuItems(items);
 
         items.put("Syntax Colors", null);
-        items.put(" \u26a1\tCustomize colors", new iUpdateable() {
+        items.put(" \u26a1\tCustomize colors", new IUpdateable() {
 
             @Override
             public
             void update() {
-                SyntaxHighlightingStyles2.openCustomizer(colors, ed, new iUpdateable() {
+                SyntaxHighlightingStyles2.openCustomizer(colors, ed, new IUpdateable() {
 
                     @Override
                     public
@@ -1969,7 +1969,7 @@ class BaseTextEditor2 {
 
         BetterPopup m = new SmallMenu().createMenu(items, frame, null);
         m.show(Launcher.display.map(ed, frame, new Point(arg0.x, arg0.y)));
-        m.doneHook = new iUpdateable() {
+        m.doneHook = new IUpdateable() {
 
             @Override
             public

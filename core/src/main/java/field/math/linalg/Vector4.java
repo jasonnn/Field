@@ -12,8 +12,8 @@
 
 package field.math.linalg;
 
-import field.math.abstraction.iBlendAlgebra;
-import field.math.abstraction.iBlendable;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IBlendAlgebra;
 import field.math.util.CubicTools;
 import org.python.core.*;
 
@@ -28,9 +28,7 @@ import java.util.List;
  */
 public
 class Vector4 extends Tuple4 implements java.io.Serializable,
-                                        iToFloatArray,
-                                        iBlendable<Vector4>,
-                                        iBlendAlgebra<Vector4> {
+                                        iToFloatArray, IBlendable<Vector4>, IBlendAlgebra<Vector4> {
 
     // Compatible with 1.1
     static final long serialVersionUID = 8749319902347760659L;

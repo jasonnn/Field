@@ -1,7 +1,7 @@
 package field.core.plugins.python;
 
 import com.google.common.io.Closer;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.windowing.overlay.OverlayAnimationManager;
 import field.launch.SystemProperties;
 import org.eclipse.swt.SWT;
@@ -17,8 +17,8 @@ public
 class AddToStandardLibrary {
 
     public static
-    void addThis(iVisualElement from, String text, boolean plainText, StyledText fc) {
-        String name = iVisualElement.name.get(from);
+    void addThis(IVisualElement from, String text, boolean plainText, StyledText fc) {
+        String name = IVisualElement.name.get(from);
         String extensionsDir = SystemProperties.getProperty("extensions.dir", "../../extensions/");
 
         File newFile = new File(extensionsDir + name + ".py");
@@ -26,7 +26,7 @@ class AddToStandardLibrary {
             // need to ask the user what to
             // do.
 
-            MessageBox mb = new MessageBox(iVisualElement.enclosingFrame.get(from).getFrame(), SWT.OK | SWT.CANCEL);
+            MessageBox mb = new MessageBox(IVisualElement.enclosingFrame.get(from).getFrame(), SWT.OK | SWT.CANCEL);
 
             int oo = mb.open();
 

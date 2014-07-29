@@ -3,7 +3,7 @@ package field.core.plugins.drawing.opengl;
 //import java.awt.BasicStroke;
 //import java.awt.Font;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.ui.MarkingMenuBuilder;
 import field.core.ui.text.protect.ClassDocumentationProtect.Divider;
@@ -12,7 +12,7 @@ import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.Dict;
 import field.util.Dict.Prop;
 
@@ -64,7 +64,7 @@ class iLinearGraphicsContext {
     public static final Prop<Object> z_v = new Prop<Object>("z_v");
     public static final Prop<Float> containsDepth = new Prop<Float>("containsDepth");
     public static final Prop<CoordinateFrame> fastTransform = new Prop<CoordinateFrame>("_transform");
-    public static final Prop<iFunction<Vector3, Vector3>> camera = new Prop<iFunction<Vector3, Vector3>>("camera");
+    public static final Prop<IFunction<Vector3, Vector3>> camera = new Prop<IFunction<Vector3, Vector3>>("camera");
 
     public static final Prop<Vector4> needVertexShading = new Prop<Vector4>("needVertexShading");
     public static final Prop<Vector4> strokeColor_v = new Prop<Vector4>("strokeColor_v");
@@ -128,7 +128,7 @@ class iLinearGraphicsContext {
     public static final Prop<Boolean> isArrow_info = new Prop<Boolean>("isArrow_info");
 
     public static final Divider divider_13 = new Divider();
-    public static final Prop<iVisualElement> source = new Prop<iVisualElement>("source");
+    public static final Prop<IVisualElement> source = new Prop<IVisualElement>("source");
 
     public static final Divider divider_14 = new Divider();
     public static final Prop<Boolean> containsCode = new Prop<Boolean>("containsCode");

@@ -1,8 +1,8 @@
 package field.core.ui;
 
 import field.core.ui.SmallMenu.BetterPopup;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
@@ -55,14 +55,14 @@ class BetterComboBoxToolItem {
             public
             void handleEvent(Event e) {
                 try {
-                    LinkedHashMap<String, iUpdateable> map = new LinkedHashMap<String, iUpdateable>();
+                    LinkedHashMap<String, IUpdateable> map = new LinkedHashMap<String, IUpdateable>();
                     if (titleText != null) {
                         map.put(titleText, null);
                     }
                     for (int n = 0; n < BetterComboBoxToolItem.this.labels.length; n++) {
                         final int fn = n;
                         map.put((n == currentlySelected ? "!" : "") + BetterComboBoxToolItem.this.labels[n],
-                                new iUpdateable() {
+                                new IUpdateable() {
 
                                     @Override
                                     public

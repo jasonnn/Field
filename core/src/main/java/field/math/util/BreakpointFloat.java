@@ -1,11 +1,11 @@
 package field.math.util;
 
 import field.core.plugins.drawing.opengl.LineUtils;
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iHasScalar;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IHasScalar;
 
 public
-class BreakpointFloat implements iBlendable<BreakpointFloat>, iHasScalar {
+class BreakpointFloat implements IBlendable<BreakpointFloat>, IHasScalar {
 
     public
     enum Next {

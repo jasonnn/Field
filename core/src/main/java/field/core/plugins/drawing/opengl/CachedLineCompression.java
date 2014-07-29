@@ -6,7 +6,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.util.Dict;
 import field.util.Dict.Prop;
@@ -141,7 +141,7 @@ class CachedLineCompression {
 outer:
         for (Map.Entry<Prop, Object> q : m.entrySet()) {
 
-            if (q.getValue() instanceof iVisualElement) continue;
+            if (q.getValue() instanceof IVisualElement) continue;
 
             if ((q.getValue() instanceof Serializable) && !(q.getValue() instanceof PyObject)) {
                 if (q.getValue() instanceof Collection) {

@@ -1,9 +1,10 @@
 package field.core.plugins.history;
 
+import field.math.graph.IMutable;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutable;
 import field.math.graph.visitors.GraphNodeSearching;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,7 +17,7 @@ class TextSearching {
     public
     interface iProvidesSearchTerms {
         public
-        iMutable duplicate();
+        IMutable duplicate();
 
         public
         void found(int n);
@@ -47,7 +48,7 @@ class TextSearching {
 
             @Override
             protected
-            VisitCode visit(T n) {
+            TraversalHint visit(T n) {
 
                 if (n instanceof iProvidesSearchTerms) {
                     String[] c = ((iProvidesSearchTerms) n).getTerms();
@@ -74,28 +75,28 @@ class TextSearching {
                     }
                 }
 
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
 
             }
         }.apply(root);
 
         final HashMap<T, T> created = new HashMap<T, T>();
-        final iMutable[] newroot = {null};
+        final IMutable[] newroot = {null};
 
         new GraphNodeSearching.GraphNodeVisitor_depthFirst<T>(false) {
 
             @Override
             protected
-            VisitCode visit(T n) {
+            TraversalHint visit(T n) {
 
                 if (keep.contains(n)) {
                     //System.out.println(" cloning <"+n+">");
-                    iMutable cloned = ((iProvidesSearchTerms) n).duplicate();
+                    IMutable cloned = ((iProvidesSearchTerms) n).duplicate();
                     created.put(n, (T) cloned);
 
                     if (!n.getParents().isEmpty()) {
                         T p = created.get(n.getParents().get(0));
-                        ((iMutable) p).addChild(cloned);
+                        ((IMutable) p).addChild(cloned);
                     }
                     else {
                         assert newroot[0] == null;
@@ -103,7 +104,7 @@ class TextSearching {
                     }
                 }
 
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
 
             }
         }.apply(root);

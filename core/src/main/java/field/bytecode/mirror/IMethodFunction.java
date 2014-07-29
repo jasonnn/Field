@@ -8,10 +8,10 @@ import java.util.Collection;
 * Created by jason on 7/29/14.
 */
 public
-interface IMethodFunction<t_class, t_returns, t_accepts> {
+interface IMethodFunction<E, t_accepts, t_returns> {
     public
-    <A extends t_class> IFunction<t_accepts, t_returns> function(A to);
+    <A extends E> IFunction<t_accepts, t_returns> function(A to);
 
     public
-    <A extends t_class> IFunction<t_accepts, Collection<? extends t_returns>> function(final Collection<A> to);
+    <A extends E> IFunction<t_accepts, Collection<? extends t_returns>> function(final Collection<A> to);
 }

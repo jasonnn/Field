@@ -1,11 +1,17 @@
 package field.core.windowing.components;
 
-import field.bytecode.apt.Mirroring;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iProvider;
-import field.namespace.generic.Bind.iFunction;
+import field.bytecode.mirror.*;
+import field.bytecode.mirror.impl.MirrorMethod;
+import field.bytecode.mirror.impl.MirrorNoArgsMethod;
+import field.bytecode.mirror.impl.MirrorNoReturnMethod;
+import field.core.dispatch.IVisualElement;
+import field.core.windowing.GLComponentWindow;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IProvider;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
+import org.eclipse.swt.widgets.Event;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -16,23 +22,22 @@ class iComponent_m {
     public static final Method isHit_m = ReflectionTools.methodOf("isHit",
                                                                   field.core.windowing.components.iComponent.class,
                                                                   org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorMethod<field.core.windowing.components.iComponent, Float, org.eclipse.swt.widgets.Event>
+    public static final MirrorMethod<iComponent, Float, Event>
             isHit_s =
-            new Mirroring.MirrorMethod<field.core.windowing.components.iComponent, Float, org.eclipse.swt.widgets.Event>(field.core.windowing.components.iComponent.class,
+            new MirrorMethod<iComponent, Float, Event>(field.core.windowing.components.iComponent.class,
                                                                                                                          "isHit",
                                                                                                                          new Class[]{org.eclipse.swt.widgets.Event.class});
 
     public
-    interface isHit_interface extends iAcceptor<org.eclipse.swt.widgets.Event>,
-                                      iFunction<Float, org.eclipse.swt.widgets.Event> {
+    interface isHit_interface extends IAcceptor<Event>, IFunction<Event, Float> {
         public
         float isHit(final org.eclipse.swt.widgets.Event p0);
 
         public
-        iUpdateable updateable(final org.eclipse.swt.widgets.Event p0);
+        IUpdateable updateable(final org.eclipse.swt.widgets.Event p0);
 
         public
-        iProvider<Float> bind(final org.eclipse.swt.widgets.Event p0);
+        IProvider<Float> bind(final org.eclipse.swt.widgets.Event p0);
     }
 
     public final isHit_interface isHit;
@@ -40,52 +45,51 @@ class iComponent_m {
     public static final Method hit_m = ReflectionTools.methodOf("hit",
                                                                 field.core.windowing.components.iComponent.class,
                                                                 org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, org.eclipse.swt.widgets.Event>
+    public static final MirrorMethod<iComponent, iComponent, Event>
             hit_s =
-            new Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, org.eclipse.swt.widgets.Event>(field.core.windowing.components.iComponent.class,
+            new MirrorMethod<iComponent, iComponent, Event>(field.core.windowing.components.iComponent.class,
                                                                                                                                                               "hit",
                                                                                                                                                               new Class[]{org.eclipse.swt.widgets.Event.class});
 
     public
-    interface hit_interface extends iAcceptor<org.eclipse.swt.widgets.Event>,
-                                    iFunction<field.core.windowing.components.iComponent, org.eclipse.swt.widgets.Event> {
+    interface hit_interface extends IAcceptor<Event>, IFunction<Event, iComponent> {
         public
         field.core.windowing.components.iComponent hit(final org.eclipse.swt.widgets.Event p0);
 
         public
-        iUpdateable updateable(final org.eclipse.swt.widgets.Event p0);
+        IUpdateable updateable(final org.eclipse.swt.widgets.Event p0);
 
         public
-        iProvider<field.core.windowing.components.iComponent> bind(final org.eclipse.swt.widgets.Event p0);
+        IProvider<iComponent> bind(final org.eclipse.swt.widgets.Event p0);
     }
 
     public final hit_interface hit;
 
     public static final Method getBounds_m =
             ReflectionTools.methodOf("getBounds", field.core.windowing.components.iComponent.class);
-    public static final Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect>
+    public static final MirrorNoArgsMethod<iComponent, IVisualElement.Rect>
             getBounds_s =
-            new Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect>(field.core.windowing.components.iComponent.class,
+            new MirrorNoArgsMethod<iComponent, IVisualElement.Rect>(field.core.windowing.components.iComponent.class,
                                                                                                                                   "getBounds");
 
-    public final Mirroring.iBoundNoArgsMethod<field.core.dispatch.iVisualElement.Rect> getBounds;
+    public final IBoundNoArgsMethod<IVisualElement.Rect> getBounds;
     public static final Method setBounds_m = ReflectionTools.methodOf("setBounds",
                                                                       field.core.windowing.components.iComponent.class,
-                                                                      field.core.dispatch.iVisualElement.Rect.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect>
+                                                                      IVisualElement.Rect.class);
+    public static final MirrorNoReturnMethod<iComponent, IVisualElement.Rect>
             setBounds_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement.Rect>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, IVisualElement.Rect>(field.core.windowing.components.iComponent.class,
                                                                                                                                     "setBounds",
-                                                                                                                                    new Class[]{field.core.dispatch.iVisualElement.Rect.class});
+                                                                                                                                    new Class[]{IVisualElement.Rect.class});
 
     public
-    interface setBounds_interface extends iAcceptor<field.core.dispatch.iVisualElement.Rect>,
-                                          iFunction<Object, field.core.dispatch.iVisualElement.Rect> {
+    interface setBounds_interface extends IAcceptor<IVisualElement.Rect>,
+                                          IFunction<IVisualElement.Rect, Object> {
         public
-        void setBounds(final field.core.dispatch.iVisualElement.Rect p0);
+        void setBounds(final IVisualElement.Rect p0);
 
         public
-        iUpdateable updateable(final field.core.dispatch.iVisualElement.Rect p0);
+        IUpdateable updateable(final IVisualElement.Rect p0);
     }
 
     public final setBounds_interface setBounds;
@@ -94,21 +98,21 @@ class iComponent_m {
                                                                      field.core.windowing.components.iComponent.class,
                                                                      field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                      org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             keyTyped_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "keyTyped",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface keyTyped_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface keyTyped_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void keyTyped(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                       final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -118,21 +122,21 @@ class iComponent_m {
                                                                        field.core.windowing.components.iComponent.class,
                                                                        field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                        org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             keyPressed_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "keyPressed",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface keyPressed_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface keyPressed_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void keyPressed(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                         final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -142,21 +146,21 @@ class iComponent_m {
                                                                         field.core.windowing.components.iComponent.class,
                                                                         field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                         org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             keyReleased_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "keyReleased",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface keyReleased_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface keyReleased_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void keyReleased(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                          final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -166,21 +170,21 @@ class iComponent_m {
                                                                          field.core.windowing.components.iComponent.class,
                                                                          field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                          org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             mouseClicked_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "mouseClicked",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface mouseClicked_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface mouseClicked_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void mouseClicked(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                           final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -190,21 +194,21 @@ class iComponent_m {
                                                                          field.core.windowing.components.iComponent.class,
                                                                          field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                          org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             mousePressed_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "mousePressed",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface mousePressed_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface mousePressed_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void mousePressed(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                           final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -214,21 +218,21 @@ class iComponent_m {
                                                                           field.core.windowing.components.iComponent.class,
                                                                           field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                           org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             mouseReleased_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "mouseReleased",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface mouseReleased_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface mouseReleased_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void mouseReleased(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                            final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -238,21 +242,21 @@ class iComponent_m {
                                                                          field.core.windowing.components.iComponent.class,
                                                                          field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                          org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             mouseEntered_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "mouseEntered",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface mouseEntered_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface mouseEntered_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void mouseEntered(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                           final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -262,21 +266,21 @@ class iComponent_m {
                                                                         field.core.windowing.components.iComponent.class,
                                                                         field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                         org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             mouseExited_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "mouseExited",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface mouseExited_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface mouseExited_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void mouseExited(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                          final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -286,21 +290,21 @@ class iComponent_m {
                                                                          field.core.windowing.components.iComponent.class,
                                                                          field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                          org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             mouseDragged_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "mouseDragged",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface mouseDragged_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface mouseDragged_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void mouseDragged(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                           final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -310,21 +314,21 @@ class iComponent_m {
                                                                        field.core.windowing.components.iComponent.class,
                                                                        field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                        org.eclipse.swt.widgets.Event.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             mouseMoved_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "mouseMoved",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  org.eclipse.swt.widgets.Event.class});
 
     public
-    interface mouseMoved_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface mouseMoved_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void mouseMoved(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                         final org.eclipse.swt.widgets.Event p1);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final org.eclipse.swt.widgets.Event p1);
     }
 
@@ -333,20 +337,20 @@ class iComponent_m {
     public static final Method beginMouseFocus_m = ReflectionTools.methodOf("beginMouseFocus",
                                                                             field.core.windowing.components.iComponent.class,
                                                                             field.core.windowing.GLComponentWindow.ComponentContainer.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer>
+    public static final MirrorNoReturnMethod<iComponent, GLComponentWindow.ComponentContainer>
             beginMouseFocus_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, GLComponentWindow.ComponentContainer>(field.core.windowing.components.iComponent.class,
                                                                                                                                                       "beginMouseFocus",
                                                                                                                                                       new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class});
 
     public
-    interface beginMouseFocus_interface extends iAcceptor<field.core.windowing.GLComponentWindow.ComponentContainer>,
-                                                iFunction<Object, field.core.windowing.GLComponentWindow.ComponentContainer> {
+    interface beginMouseFocus_interface extends IAcceptor<GLComponentWindow.ComponentContainer>,
+                                                IFunction<GLComponentWindow.ComponentContainer, Object> {
         public
         void beginMouseFocus(final field.core.windowing.GLComponentWindow.ComponentContainer p0);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0);
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0);
     }
 
     public final beginMouseFocus_interface beginMouseFocus;
@@ -354,20 +358,20 @@ class iComponent_m {
     public static final Method endMouseFocus_m = ReflectionTools.methodOf("endMouseFocus",
                                                                           field.core.windowing.components.iComponent.class,
                                                                           field.core.windowing.GLComponentWindow.ComponentContainer.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer>
+    public static final MirrorNoReturnMethod<iComponent, GLComponentWindow.ComponentContainer>
             endMouseFocus_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, field.core.windowing.GLComponentWindow.ComponentContainer>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, GLComponentWindow.ComponentContainer>(field.core.windowing.components.iComponent.class,
                                                                                                                                                       "endMouseFocus",
                                                                                                                                                       new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class});
 
     public
-    interface endMouseFocus_interface extends iAcceptor<field.core.windowing.GLComponentWindow.ComponentContainer>,
-                                              iFunction<Object, field.core.windowing.GLComponentWindow.ComponentContainer> {
+    interface endMouseFocus_interface extends IAcceptor<GLComponentWindow.ComponentContainer>,
+                                              IFunction<GLComponentWindow.ComponentContainer, Object> {
         public
         void endMouseFocus(final field.core.windowing.GLComponentWindow.ComponentContainer p0);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0);
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0);
     }
 
     public final endMouseFocus_interface endMouseFocus;
@@ -377,22 +381,22 @@ class iComponent_m {
                                                                   field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                   field.math.linalg.iCoordinateFrame.class,
                                                                   boolean.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]> paint_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+    public static final MirrorNoReturnMethod<iComponent, Object[]> paint_s =
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "paint",
                                                                                                      new Class[]{field.core.windowing.GLComponentWindow.ComponentContainer.class,
                                                                                                                  field.math.linalg.iCoordinateFrame.class,
                                                                                                                  boolean.class});
 
     public
-    interface paint_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface paint_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void paint(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                    final field.math.linalg.iCoordinateFrame p1,
                    final boolean p2);
 
         public
-        iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+        IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                final field.math.linalg.iCoordinateFrame p1,
                                final boolean p2);
     }
@@ -404,61 +408,61 @@ class iComponent_m {
                                                                          java.util.Set.class,
                                                                          float.class,
                                                                          float.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>
+    public static final MirrorNoReturnMethod<iComponent, Object[]>
             handleResize_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.windowing.components.iComponent, Object[]>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Object[]>(field.core.windowing.components.iComponent.class,
                                                                                                      "handleResize",
                                                                                                      new Class[]{java.util.Set.class,
                                                                                                                  float.class,
                                                                                                                  float.class});
 
     public
-    interface handleResize_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface handleResize_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void handleResize(final java.util.Set p0, final float p1, final float p2);
 
         public
-        iUpdateable updateable(final java.util.Set p0, final float p1, final float p2);
+        IUpdateable updateable(final java.util.Set p0, final float p1, final float p2);
     }
 
     public final handleResize_interface handleResize;
 
     public static final Method getVisualElement_m =
             ReflectionTools.methodOf("getVisualElement", field.core.windowing.components.iComponent.class);
-    public static final Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement>
+    public static final MirrorNoArgsMethod<iComponent, IVisualElement>
             getVisualElement_s =
-            new Mirroring.MirrorNoArgsMethod<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement>(field.core.windowing.components.iComponent.class,
+            new MirrorNoArgsMethod<iComponent, IVisualElement>(field.core.windowing.components.iComponent.class,
                                                                                                                              "getVisualElement");
 
     public
-    interface getVisualElement_interface extends field.core.dispatch.iVisualElement,
-                                                 Mirroring.iBoundNoArgsMethod<field.core.dispatch.iVisualElement> {
+    interface getVisualElement_interface extends IVisualElement,
+                                                 IBoundNoArgsMethod<IVisualElement> {
         public
-        field.core.dispatch.iVisualElement getVisualElement();
+        IVisualElement getVisualElement();
     }
 
     public final getVisualElement_interface getVisualElement;
 
     public static final Method setVisualElement_m = ReflectionTools.methodOf("setVisualElement",
                                                                              field.core.windowing.components.iComponent.class,
-                                                                             field.core.dispatch.iVisualElement.class);
-    public static final Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement>
+                                                                             IVisualElement.class);
+    public static final MirrorMethod<iComponent, iComponent, IVisualElement>
             setVisualElement_s =
-            new Mirroring.MirrorMethod<field.core.windowing.components.iComponent, field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement>(field.core.windowing.components.iComponent.class,
+            new MirrorMethod<iComponent, iComponent, IVisualElement>(field.core.windowing.components.iComponent.class,
                                                                                                                                                                    "setVisualElement",
-                                                                                                                                                                   new Class[]{field.core.dispatch.iVisualElement.class});
+                                                                                                                                                                   new Class[]{IVisualElement.class});
 
     public
-    interface setVisualElement_interface extends iAcceptor<field.core.dispatch.iVisualElement>,
-                                                 iFunction<field.core.windowing.components.iComponent, field.core.dispatch.iVisualElement> {
+    interface setVisualElement_interface extends IAcceptor<IVisualElement>,
+                                                 IFunction<IVisualElement, iComponent> {
         public
-        field.core.windowing.components.iComponent setVisualElement(final field.core.dispatch.iVisualElement p0);
+        field.core.windowing.components.iComponent setVisualElement(final IVisualElement p0);
 
         public
-        iUpdateable updateable(final field.core.dispatch.iVisualElement p0);
+        IUpdateable updateable(final IVisualElement p0);
 
         public
-        iProvider<field.core.windowing.components.iComponent> bind(final field.core.dispatch.iVisualElement p0);
+        IProvider<iComponent> bind(final IVisualElement p0);
     }
 
     public final setVisualElement_interface setVisualElement;
@@ -467,8 +471,8 @@ class iComponent_m {
     iComponent_m(final iComponent x) {
         isHit = new isHit_interface() {
 
-            iAcceptor a = isHit_s.acceptor(x);
-            iFunction f = isHit_s.function(x);
+            IAcceptor a = isHit_s.acceptor(x);
+            IFunction f = isHit_s.function(x);
 
 
             public
@@ -477,19 +481,19 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<org.eclipse.swt.widgets.Event> set(org.eclipse.swt.widgets.Event p) {
+            IAcceptor<Event> set(org.eclipse.swt.widgets.Event p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Float f(org.eclipse.swt.widgets.Event p) {
-                return (Float) f.f(p);
+            Float apply(org.eclipse.swt.widgets.Event p) {
+                return (Float) f.apply(p);
             }
 
             public
-            iUpdateable updateable(final org.eclipse.swt.widgets.Event p0) {
-                return new iUpdateable() {
+            IUpdateable updateable(final org.eclipse.swt.widgets.Event p0) {
+                return new IUpdateable() {
                     public
                     void update() {
                         isHit(p0);
@@ -498,8 +502,8 @@ class iComponent_m {
             }
 
             public
-            iProvider<Float> bind(final org.eclipse.swt.widgets.Event p0) {
-                return new iProvider() {
+            IProvider<Float> bind(final org.eclipse.swt.widgets.Event p0) {
+                return new IProvider() {
                     public
                     Object get() {return isHit(p0);}
                 };
@@ -508,8 +512,8 @@ class iComponent_m {
 
         hit = new hit_interface() {
 
-            iAcceptor a = hit_s.acceptor(x);
-            iFunction f = hit_s.function(x);
+            IAcceptor a = hit_s.acceptor(x);
+            IFunction f = hit_s.function(x);
 
 
             public
@@ -518,19 +522,19 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<org.eclipse.swt.widgets.Event> set(org.eclipse.swt.widgets.Event p) {
+            IAcceptor<Event> set(org.eclipse.swt.widgets.Event p) {
                 a.set(p);
                 return this;
             }
 
             public
-            field.core.windowing.components.iComponent f(org.eclipse.swt.widgets.Event p) {
-                return (field.core.windowing.components.iComponent) f.f(p);
+            field.core.windowing.components.iComponent apply(org.eclipse.swt.widgets.Event p) {
+                return (field.core.windowing.components.iComponent) f.apply(p);
             }
 
             public
-            iUpdateable updateable(final org.eclipse.swt.widgets.Event p0) {
-                return new iUpdateable() {
+            IUpdateable updateable(final org.eclipse.swt.widgets.Event p0) {
+                return new IUpdateable() {
                     public
                     void update() {
                         hit(p0);
@@ -539,8 +543,8 @@ class iComponent_m {
             }
 
             public
-            iProvider<field.core.windowing.components.iComponent> bind(final org.eclipse.swt.widgets.Event p0) {
-                return new iProvider() {
+            IProvider<iComponent> bind(final org.eclipse.swt.widgets.Event p0) {
+                return new IProvider() {
                     public
                     Object get() {return hit(p0);}
                 };
@@ -550,29 +554,29 @@ class iComponent_m {
         getBounds = getBounds_s.bind(x);
         setBounds = new setBounds_interface() {
 
-            iAcceptor a = setBounds_s.acceptor(x);
-            iFunction f = setBounds_s.function(x);
+            IAcceptor a = setBounds_s.acceptor(x);
+            IFunction f = setBounds_s.function(x);
 
 
             public
-            void setBounds(final field.core.dispatch.iVisualElement.Rect p0) {
+            void setBounds(final IVisualElement.Rect p0) {
                 x.setBounds(p0);
             }
 
             public
-            iAcceptor<field.core.dispatch.iVisualElement.Rect> set(field.core.dispatch.iVisualElement.Rect p) {
+            IAcceptor<IVisualElement.Rect> set(IVisualElement.Rect p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(field.core.dispatch.iVisualElement.Rect p) {
-                return f.f(p);
+            Object apply(IVisualElement.Rect p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.dispatch.iVisualElement.Rect p0) {
-                return new iUpdateable() {
+            IUpdateable updateable(final IVisualElement.Rect p0) {
+                return new IUpdateable() {
                     public
                     void update() {
                         setBounds(p0);
@@ -583,8 +587,8 @@ class iComponent_m {
 
         keyTyped = new keyTyped_interface() {
 
-            iAcceptor a = keyTyped_s.acceptor(x);
-            iFunction f = keyTyped_s.function(x);
+            IAcceptor a = keyTyped_s.acceptor(x);
+            IFunction f = keyTyped_s.function(x);
 
 
             public
@@ -594,20 +598,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         keyTyped(p0, p1);
@@ -618,8 +622,8 @@ class iComponent_m {
 
         keyPressed = new keyPressed_interface() {
 
-            iAcceptor a = keyPressed_s.acceptor(x);
-            iFunction f = keyPressed_s.function(x);
+            IAcceptor a = keyPressed_s.acceptor(x);
+            IFunction f = keyPressed_s.function(x);
 
 
             public
@@ -629,20 +633,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         keyPressed(p0, p1);
@@ -653,8 +657,8 @@ class iComponent_m {
 
         keyReleased = new keyReleased_interface() {
 
-            iAcceptor a = keyReleased_s.acceptor(x);
-            iFunction f = keyReleased_s.function(x);
+            IAcceptor a = keyReleased_s.acceptor(x);
+            IFunction f = keyReleased_s.function(x);
 
 
             public
@@ -664,20 +668,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         keyReleased(p0, p1);
@@ -688,8 +692,8 @@ class iComponent_m {
 
         mouseClicked = new mouseClicked_interface() {
 
-            iAcceptor a = mouseClicked_s.acceptor(x);
-            iFunction f = mouseClicked_s.function(x);
+            IAcceptor a = mouseClicked_s.acceptor(x);
+            IFunction f = mouseClicked_s.function(x);
 
 
             public
@@ -699,20 +703,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         mouseClicked(p0, p1);
@@ -723,8 +727,8 @@ class iComponent_m {
 
         mousePressed = new mousePressed_interface() {
 
-            iAcceptor a = mousePressed_s.acceptor(x);
-            iFunction f = mousePressed_s.function(x);
+            IAcceptor a = mousePressed_s.acceptor(x);
+            IFunction f = mousePressed_s.function(x);
 
 
             public
@@ -734,20 +738,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         mousePressed(p0, p1);
@@ -758,8 +762,8 @@ class iComponent_m {
 
         mouseReleased = new mouseReleased_interface() {
 
-            iAcceptor a = mouseReleased_s.acceptor(x);
-            iFunction f = mouseReleased_s.function(x);
+            IAcceptor a = mouseReleased_s.acceptor(x);
+            IFunction f = mouseReleased_s.function(x);
 
 
             public
@@ -769,20 +773,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         mouseReleased(p0, p1);
@@ -793,8 +797,8 @@ class iComponent_m {
 
         mouseEntered = new mouseEntered_interface() {
 
-            iAcceptor a = mouseEntered_s.acceptor(x);
-            iFunction f = mouseEntered_s.function(x);
+            IAcceptor a = mouseEntered_s.acceptor(x);
+            IFunction f = mouseEntered_s.function(x);
 
 
             public
@@ -804,20 +808,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         mouseEntered(p0, p1);
@@ -828,8 +832,8 @@ class iComponent_m {
 
         mouseExited = new mouseExited_interface() {
 
-            iAcceptor a = mouseExited_s.acceptor(x);
-            iFunction f = mouseExited_s.function(x);
+            IAcceptor a = mouseExited_s.acceptor(x);
+            IFunction f = mouseExited_s.function(x);
 
 
             public
@@ -839,20 +843,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         mouseExited(p0, p1);
@@ -863,8 +867,8 @@ class iComponent_m {
 
         mouseDragged = new mouseDragged_interface() {
 
-            iAcceptor a = mouseDragged_s.acceptor(x);
-            iFunction f = mouseDragged_s.function(x);
+            IAcceptor a = mouseDragged_s.acceptor(x);
+            IFunction f = mouseDragged_s.function(x);
 
 
             public
@@ -874,20 +878,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         mouseDragged(p0, p1);
@@ -898,8 +902,8 @@ class iComponent_m {
 
         mouseMoved = new mouseMoved_interface() {
 
-            iAcceptor a = mouseMoved_s.acceptor(x);
-            iFunction f = mouseMoved_s.function(x);
+            IAcceptor a = mouseMoved_s.acceptor(x);
+            IFunction f = mouseMoved_s.function(x);
 
 
             public
@@ -909,20 +913,20 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final org.eclipse.swt.widgets.Event p1) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         mouseMoved(p0, p1);
@@ -933,8 +937,8 @@ class iComponent_m {
 
         beginMouseFocus = new beginMouseFocus_interface() {
 
-            iAcceptor a = beginMouseFocus_s.acceptor(x);
-            iFunction f = beginMouseFocus_s.function(x);
+            IAcceptor a = beginMouseFocus_s.acceptor(x);
+            IFunction f = beginMouseFocus_s.function(x);
 
 
             public
@@ -943,19 +947,19 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<field.core.windowing.GLComponentWindow.ComponentContainer> set(field.core.windowing.GLComponentWindow.ComponentContainer p) {
+            IAcceptor<GLComponentWindow.ComponentContainer> set(field.core.windowing.GLComponentWindow.ComponentContainer p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(field.core.windowing.GLComponentWindow.ComponentContainer p) {
-                return f.f(p);
+            Object apply(field.core.windowing.GLComponentWindow.ComponentContainer p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0) {
-                return new iUpdateable() {
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0) {
+                return new IUpdateable() {
                     public
                     void update() {
                         beginMouseFocus(p0);
@@ -966,8 +970,8 @@ class iComponent_m {
 
         endMouseFocus = new endMouseFocus_interface() {
 
-            iAcceptor a = endMouseFocus_s.acceptor(x);
-            iFunction f = endMouseFocus_s.function(x);
+            IAcceptor a = endMouseFocus_s.acceptor(x);
+            IFunction f = endMouseFocus_s.function(x);
 
 
             public
@@ -976,19 +980,19 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<field.core.windowing.GLComponentWindow.ComponentContainer> set(field.core.windowing.GLComponentWindow.ComponentContainer p) {
+            IAcceptor<GLComponentWindow.ComponentContainer> set(field.core.windowing.GLComponentWindow.ComponentContainer p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(field.core.windowing.GLComponentWindow.ComponentContainer p) {
-                return f.f(p);
+            Object apply(field.core.windowing.GLComponentWindow.ComponentContainer p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0) {
-                return new iUpdateable() {
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0) {
+                return new IUpdateable() {
                     public
                     void update() {
                         endMouseFocus(p0);
@@ -999,8 +1003,8 @@ class iComponent_m {
 
         paint = new paint_interface() {
 
-            iAcceptor a = paint_s.acceptor(x);
-            iFunction f = paint_s.function(x);
+            IAcceptor a = paint_s.acceptor(x);
+            IFunction f = paint_s.function(x);
 
 
             public
@@ -1011,21 +1015,21 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
+            IUpdateable updateable(final field.core.windowing.GLComponentWindow.ComponentContainer p0,
                                    final field.math.linalg.iCoordinateFrame p1,
                                    final boolean p2) {
-                return new iUpdateable() {
+                return new IUpdateable() {
                     public
                     void update() {
                         paint(p0, p1, p2);
@@ -1036,8 +1040,8 @@ class iComponent_m {
 
         handleResize = new handleResize_interface() {
 
-            iAcceptor a = handleResize_s.acceptor(x);
-            iFunction f = handleResize_s.function(x);
+            IAcceptor a = handleResize_s.acceptor(x);
+            IFunction f = handleResize_s.function(x);
 
 
             public
@@ -1046,19 +1050,19 @@ class iComponent_m {
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final java.util.Set p0, final float p1, final float p2) {
-                return new iUpdateable() {
+            IUpdateable updateable(final java.util.Set p0, final float p1, final float p2) {
+                return new IUpdateable() {
                     public
                     void update() {
                         handleResize(p0, p1, p2);
@@ -1068,7 +1072,7 @@ class iComponent_m {
         };
 
         {
-            final Mirroring.iBoundNoArgsMethod<field.core.dispatch.iVisualElement> bound = getVisualElement_s.bind(x);
+            final IBoundNoArgsMethod<IVisualElement> bound = getVisualElement_s.bind(x);
             getVisualElement = (getVisualElement_interface) Proxy.newProxyInstance(x.getClass().getClassLoader(),
                                                                                    new Class[]{getVisualElement_interface.class},
                                                                                    new InvocationHandler() {
@@ -1089,29 +1093,29 @@ class iComponent_m {
         }
         setVisualElement = new setVisualElement_interface() {
 
-            iAcceptor a = setVisualElement_s.acceptor(x);
-            iFunction f = setVisualElement_s.function(x);
+            IAcceptor a = setVisualElement_s.acceptor(x);
+            IFunction f = setVisualElement_s.function(x);
 
 
             public
-            field.core.windowing.components.iComponent setVisualElement(final field.core.dispatch.iVisualElement p0) {
+            field.core.windowing.components.iComponent setVisualElement(final IVisualElement p0) {
                 return x.setVisualElement(p0);
             }
 
             public
-            iAcceptor<field.core.dispatch.iVisualElement> set(field.core.dispatch.iVisualElement p) {
+            IAcceptor<IVisualElement> set(IVisualElement p) {
                 a.set(p);
                 return this;
             }
 
             public
-            field.core.windowing.components.iComponent f(field.core.dispatch.iVisualElement p) {
-                return (field.core.windowing.components.iComponent) f.f(p);
+            field.core.windowing.components.iComponent apply(IVisualElement p) {
+                return (field.core.windowing.components.iComponent) f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.dispatch.iVisualElement p0) {
-                return new iUpdateable() {
+            IUpdateable updateable(final IVisualElement p0) {
+                return new IUpdateable() {
                     public
                     void update() {
                         setVisualElement(p0);
@@ -1120,8 +1124,8 @@ class iComponent_m {
             }
 
             public
-            iProvider<field.core.windowing.components.iComponent> bind(final field.core.dispatch.iVisualElement p0) {
-                return new iProvider() {
+            IProvider<iComponent> bind(final IVisualElement p0) {
+                return new IProvider() {
                     public
                     Object get() {return setVisualElement(p0);}
                 };

@@ -1,10 +1,10 @@
 package field.core.windowing.components;
 
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.ui.SmallMenu;
 import field.core.ui.SmallMenu.BetterPopup;
 import field.core.windowing.GLComponentWindow;
@@ -15,8 +15,8 @@ import field.graphics.core.PointList;
 import field.graphics.core.TextSystem.iLabel;
 import field.graphics.dynamic.DynamicPointlist;
 import field.graphics.dynamic.iDynamicMesh;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector2;
 import field.math.linalg.iCoordinateFrame;
@@ -285,7 +285,7 @@ class RootComponent implements iComponent {
 
     private final Shell frame;
 
-    private iVisualElementOverrides overrides;
+    private IVisualElementOverrides overrides;
 
     private int ox;
 
@@ -356,7 +356,7 @@ class RootComponent implements iComponent {
     }
 
     public
-    iVisualElement getVisualElement() {
+    IVisualElement getVisualElement() {
         return null;
     }
 
@@ -791,7 +791,7 @@ class RootComponent implements iComponent {
 
                 if (GLComponentWindow.getCurrentWindow(this).present) return;
 
-                LinkedHashMap<String, iUpdateable> items = new LinkedHashMap<String, iUpdateable>();
+                LinkedHashMap<String, IUpdateable> items = new LinkedHashMap<String, IUpdateable>();
 
                 overrides.menuItemsFor(null, items);
 
@@ -802,7 +802,7 @@ class RootComponent implements iComponent {
                                                               null);
 
                 Ref<GLComponentWindow> ref = new Ref<GLComponentWindow>(null);
-                overrides.getProperty(null, iVisualElement.enclosingFrame, ref);
+                overrides.getProperty(null, IVisualElement.enclosingFrame, ref);
 
                 if ((ref.get() != null) && hasFocus) {
                     menu.show(Launcher.display.map(GLComponentWindow.getCurrentWindow(this).getCanvas(),
@@ -921,7 +921,7 @@ class RootComponent implements iComponent {
     }
 
     public
-    RootComponent setOverrides(iVisualElementOverrides overrides) {
+    RootComponent setOverrides(IVisualElementOverrides overrides) {
         this.overrides = overrides;
         return this;
     }
@@ -931,7 +931,7 @@ class RootComponent implements iComponent {
     }
 
     public
-    iComponent setVisualElement(iVisualElement ve) {
+    iComponent setVisualElement(IVisualElement ve) {
         return this;
     }
 

@@ -1,9 +1,10 @@
 package field.core.plugins.constrain;
 
-import field.bytecode.apt.Mirroring;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.namespace.generic.Bind.iFunction;
+import field.bytecode.mirror.impl.MirrorNoReturnMethod;
+import field.core.dispatch.IVisualElement;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 
 import java.lang.reflect.Method;
@@ -13,23 +14,23 @@ class ComplexConstraints_m {
     public static final Method addEditFor_m = ReflectionTools.methodOf("addEditFor",
                                                                        field.core.plugins.constrain.ComplexConstraints.class,
                                                                        field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class,
-                                                                       field.core.dispatch.iVisualElement.Rect.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>
+                                                                       IVisualElement.Rect.class);
+    public static final MirrorNoReturnMethod<ComplexConstraints, Object[]>
             addEditFor_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class,
+            new MirrorNoReturnMethod<ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class,
                                                                                                           "addEditFor",
                                                                                                           new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class,
-                                                                                                                      field.core.dispatch.iVisualElement.Rect.class});
+                                                                                                                      IVisualElement.Rect.class});
 
     public
-    interface addEditFor_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface addEditFor_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void addEditFor(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                        final field.core.dispatch.iVisualElement.Rect p1);
+                        final IVisualElement.Rect p1);
 
         public
-        iUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                               final field.core.dispatch.iVisualElement.Rect p1);
+        IUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
+                               final IVisualElement.Rect p1);
     }
 
     public final addEditFor_interface addEditFor;
@@ -37,23 +38,23 @@ class ComplexConstraints_m {
     public static final Method addSuggestionFor_m = ReflectionTools.methodOf("addSuggestionFor",
                                                                              field.core.plugins.constrain.ComplexConstraints.class,
                                                                              field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class,
-                                                                             field.core.dispatch.iVisualElement.Rect.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>
+                                                                             IVisualElement.Rect.class);
+    public static final MirrorNoReturnMethod<ComplexConstraints, Object[]>
             addSuggestionFor_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class,
+            new MirrorNoReturnMethod<ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class,
                                                                                                           "addSuggestionFor",
                                                                                                           new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class,
-                                                                                                                      field.core.dispatch.iVisualElement.Rect.class});
+                                                                                                                      IVisualElement.Rect.class});
 
     public
-    interface addSuggestionFor_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface addSuggestionFor_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void addSuggestionFor(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                              final field.core.dispatch.iVisualElement.Rect p1);
+                              final IVisualElement.Rect p1);
 
         public
-        iUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                               final field.core.dispatch.iVisualElement.Rect p1);
+        IUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
+                               final IVisualElement.Rect p1);
     }
 
     public final addSuggestionFor_interface addSuggestionFor;
@@ -61,20 +62,20 @@ class ComplexConstraints_m {
     public static final Method updateFrameFromVariables_m = ReflectionTools.methodOf("updateFrameFromVariables",
                                                                                      field.core.plugins.constrain.ComplexConstraints.class,
                                                                                      field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, field.core.plugins.constrain.ComplexConstraints.VariablesForRect>
+    public static final MirrorNoReturnMethod<ComplexConstraints, ComplexConstraints.VariablesForRect>
             updateFrameFromVariables_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, field.core.plugins.constrain.ComplexConstraints.VariablesForRect>(field.core.plugins.constrain.ComplexConstraints.class,
+            new MirrorNoReturnMethod<ComplexConstraints, ComplexConstraints.VariablesForRect>(field.core.plugins.constrain.ComplexConstraints.class,
                                                                                                                                                                   "updateFrameFromVariables",
                                                                                                                                                                   new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class});
 
     public
-    interface updateFrameFromVariables_interface extends iAcceptor<field.core.plugins.constrain.ComplexConstraints.VariablesForRect>,
-                                                         iFunction<Object, field.core.plugins.constrain.ComplexConstraints.VariablesForRect> {
+    interface updateFrameFromVariables_interface extends IAcceptor<ComplexConstraints.VariablesForRect>,
+                                                         IFunction<ComplexConstraints.VariablesForRect, Object> {
         public
         void updateFrameFromVariables(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0);
 
         public
-        iUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0);
+        IUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0);
     }
 
     public final updateFrameFromVariables_interface updateFrameFromVariables;
@@ -82,23 +83,23 @@ class ComplexConstraints_m {
     public static final Method updateVariablesFromFrame_m = ReflectionTools.methodOf("updateVariablesFromFrame",
                                                                                      field.core.plugins.constrain.ComplexConstraints.class,
                                                                                      field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class,
-                                                                                     field.core.dispatch.iVisualElement.Rect.class);
-    public static final Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>
+                                                                                     IVisualElement.Rect.class);
+    public static final MirrorNoReturnMethod<ComplexConstraints, Object[]>
             updateVariablesFromFrame_s =
-            new Mirroring.MirrorNoReturnMethod<field.core.plugins.constrain.ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class,
+            new MirrorNoReturnMethod<ComplexConstraints, Object[]>(field.core.plugins.constrain.ComplexConstraints.class,
                                                                                                           "updateVariablesFromFrame",
                                                                                                           new Class[]{field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class,
-                                                                                                                      field.core.dispatch.iVisualElement.Rect.class});
+                                                                                                                      IVisualElement.Rect.class});
 
     public
-    interface updateVariablesFromFrame_interface extends iAcceptor<Object[]>, iFunction<Object, Object[]> {
+    interface updateVariablesFromFrame_interface extends IAcceptor<Object[]>, IFunction<Object[], Object> {
         public
         void updateVariablesFromFrame(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                                      final field.core.dispatch.iVisualElement.Rect p1);
+                                      final IVisualElement.Rect p1);
 
         public
-        iUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                               final field.core.dispatch.iVisualElement.Rect p1);
+        IUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
+                               final IVisualElement.Rect p1);
     }
 
     public final updateVariablesFromFrame_interface updateVariablesFromFrame;
@@ -107,31 +108,31 @@ class ComplexConstraints_m {
     ComplexConstraints_m(final ComplexConstraints x) {
         addEditFor = new addEditFor_interface() {
 
-            iAcceptor a = addEditFor_s.acceptor(x);
-            iFunction f = addEditFor_s.function(x);
+            IAcceptor a = addEditFor_s.acceptor(x);
+            IFunction f = addEditFor_s.function(x);
 
 
             public
             void addEditFor(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                            final field.core.dispatch.iVisualElement.Rect p1) {
+                            final IVisualElement.Rect p1) {
                 x.addEditFor(p0, p1);
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                                   final field.core.dispatch.iVisualElement.Rect p1) {
-                return new iUpdateable() {
+            IUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
+                                   final IVisualElement.Rect p1) {
+                return new IUpdateable() {
                     public
                     void update() {
                         addEditFor(p0, p1);
@@ -142,31 +143,31 @@ class ComplexConstraints_m {
 
         addSuggestionFor = new addSuggestionFor_interface() {
 
-            iAcceptor a = addSuggestionFor_s.acceptor(x);
-            iFunction f = addSuggestionFor_s.function(x);
+            IAcceptor a = addSuggestionFor_s.acceptor(x);
+            IFunction f = addSuggestionFor_s.function(x);
 
 
             public
             void addSuggestionFor(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                                  final field.core.dispatch.iVisualElement.Rect p1) {
+                                  final IVisualElement.Rect p1) {
                 x.addSuggestionFor(p0, p1);
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                                   final field.core.dispatch.iVisualElement.Rect p1) {
-                return new iUpdateable() {
+            IUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
+                                   final IVisualElement.Rect p1) {
+                return new IUpdateable() {
                     public
                     void update() {
                         addSuggestionFor(p0, p1);
@@ -177,8 +178,8 @@ class ComplexConstraints_m {
 
         updateFrameFromVariables = new updateFrameFromVariables_interface() {
 
-            iAcceptor a = updateFrameFromVariables_s.acceptor(x);
-            iFunction f = updateFrameFromVariables_s.function(x);
+            IAcceptor a = updateFrameFromVariables_s.acceptor(x);
+            IFunction f = updateFrameFromVariables_s.function(x);
 
 
             public
@@ -187,19 +188,19 @@ class ComplexConstraints_m {
             }
 
             public
-            iAcceptor<field.core.plugins.constrain.ComplexConstraints.VariablesForRect> set(field.core.plugins.constrain.ComplexConstraints.VariablesForRect p) {
+            IAcceptor<ComplexConstraints.VariablesForRect> set(field.core.plugins.constrain.ComplexConstraints.VariablesForRect p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(field.core.plugins.constrain.ComplexConstraints.VariablesForRect p) {
-                return f.f(p);
+            Object apply(field.core.plugins.constrain.ComplexConstraints.VariablesForRect p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0) {
-                return new iUpdateable() {
+            IUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0) {
+                return new IUpdateable() {
                     public
                     void update() {
                         updateFrameFromVariables(p0);
@@ -210,31 +211,31 @@ class ComplexConstraints_m {
 
         updateVariablesFromFrame = new updateVariablesFromFrame_interface() {
 
-            iAcceptor a = updateVariablesFromFrame_s.acceptor(x);
-            iFunction f = updateVariablesFromFrame_s.function(x);
+            IAcceptor a = updateVariablesFromFrame_s.acceptor(x);
+            IFunction f = updateVariablesFromFrame_s.function(x);
 
 
             public
             void updateVariablesFromFrame(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                                          final field.core.dispatch.iVisualElement.Rect p1) {
+                                          final IVisualElement.Rect p1) {
                 x.updateVariablesFromFrame(p0, p1);
             }
 
             public
-            iAcceptor<Object[]> set(Object[] p) {
+            IAcceptor<Object[]> set(Object[] p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object f(Object[] p) {
-                return f.f(p);
+            Object apply(Object[] p) {
+                return f.apply(p);
             }
 
             public
-            iUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
-                                   final field.core.dispatch.iVisualElement.Rect p1) {
-                return new iUpdateable() {
+            IUpdateable updateable(final field.core.plugins.constrain.ComplexConstraints.VariablesForRect p0,
+                                   final IVisualElement.Rect p1) {
+                return new IUpdateable() {
                     public
                     void update() {
                         updateVariablesFromFrame(p0, p1);

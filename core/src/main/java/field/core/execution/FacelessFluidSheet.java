@@ -2,10 +2,10 @@ package field.core.execution;
 
 import field.bytecode.protect.trampoline.Trampoline2;
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.persistance.FluidPersistence;
 import field.core.plugins.SimpleConstraints;
@@ -14,12 +14,13 @@ import field.core.plugins.history.VersioningSystem;
 import field.core.plugins.iPlugin;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin;
 import field.core.plugins.python.PythonPlugin;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.IMutableContainer;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.Dict.Prop;
 import field.util.PythonUtils;
 import org.eclipse.swt.widgets.Event;
@@ -28,10 +29,10 @@ import java.io.*;
 import java.util.*;
 
 public
-class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
+class FacelessFluidSheet implements IVisualElementOverrides, IUpdateable {
 
     public
-    class RootSheetElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class RootSheetElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -48,7 +49,7 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) FacelessFluidSheet.this;
 
             Object o = rootProperties.get(p);
@@ -70,12 +71,12 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             rootProperties.put(p, to);
             return this;
         }
@@ -109,17 +110,17 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
 
         rootSheetElement = new RootSheetElement();
 
-        rootSheetElement.setProperty(iVisualElement.enclosingFrame, null);
-        rootSheetElement.setProperty(iVisualElement.localView, null);
-        rootSheetElement.setProperty(iVisualElement.sheetView, null);
-        rootSheetElement.setProperty(iVisualElement.selectionGroup, null);
+        rootSheetElement.setProperty(IVisualElement.enclosingFrame, null);
+        rootSheetElement.setProperty(IVisualElement.localView, null);
+        rootSheetElement.setProperty(IVisualElement.sheetView, null);
+        rootSheetElement.setProperty(IVisualElement.selectionGroup, null);
 
         persistence = new FluidPersistence(new FluidPersistence.iWellKnownElementResolver() {
             public
-            iVisualElement getWellKnownElement(String uid) {
+            IVisualElement getWellKnownElement(String uid) {
                 if (uid.equals(StandardFluidSheet.rootSheetElement_uid)) return rootSheetElement;
                 for (iPlugin p : plugins) {
-                    iVisualElement ve = p.getWellKnownVisualElement(uid);
+                    IVisualElement ve = p.getWellKnownVisualElement(uid);
                     if (ve != null) {
                         return ve;
                     }
@@ -133,7 +134,7 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
             @Override
             protected
             boolean filter(Promise p) {
-                iVisualElement v = (iVisualElement) system.keyForPromise(p);
+                IVisualElement v = (IVisualElement) system.keyForPromise(p);
 
                 return iExecutesPromise.promiseExecution.get(v) == this;
             }
@@ -147,30 +148,30 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
     }
 
     public
-    VisitCode added(iVisualElement newSource) {
-        return VisitCode.cont;
+    TraversalHint added(IVisualElement newSource) {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    void addToSheet(iVisualElement newSource) {
+    void addToSheet(IVisualElement newSource) {
         newSource.addChild(rootSheetElement);
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newSource).added(newSource);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource).added(newSource);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newSource).added(newSource);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource).added(newSource);
     }
 
     public
-    VisitCode beginExecution(final iVisualElement source) {
+    TraversalHint beginExecution(final IVisualElement source) {
 
         // should be lookup to support remoting
         Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                        .getProperty(source,
                                                                     PythonScriptingSystem.pythonScriptingSystem,
                                                                     refPss);
         assert refPss.get() != null;
 
         Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                        .getProperty(source,
                                                                     iExecutesPromise.promiseExecution,
                                                                     refRunner);
@@ -180,7 +181,7 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
         Promise promise = refPss.get().promiseForKey(source);
         if (promise != null) {
             System.err.println(" promise isn't null <" + promise + '>');
-            refRunner.get().addActive(new iFloatProvider() {
+            refRunner.get().addActive(new IFloatProvider() {
 
                 public
                 float evaluate() {
@@ -189,19 +190,19 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
 
             }, promise);
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode deleted(iVisualElement source) {
-        source.getProperty(iVisualElement.localView);
-        return VisitCode.cont;
+    TraversalHint deleted(IVisualElement source) {
+        source.getProperty(IVisualElement.localView);
+        return StandardTraversalHint.CONTINUE;
     }
 
 //	 implementation of iVisualElementOverrides
 
     public
-    <T> VisitCode deleteProperty(iVisualElement source, VisualElementProperty<T> prop) {
+    <T> TraversalHint deleteProperty(IVisualElement source, VisualElementProperty<T> prop) {
         if (source == rootSheetElement) {
             VisualElementProperty<T> a = prop.getAliasedTo();
             while (a != null) {
@@ -211,21 +212,21 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
 
             rootSheetElement.deleteProperty(prop);
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode endExecution(iVisualElement source) {
+    TraversalHint endExecution(IVisualElement source) {
 
         Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                        .getProperty(source,
                                                                     PythonScriptingSystem.pythonScriptingSystem,
                                                                     refPss);
         assert refPss.get() != null;
 
         Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                        .getProperty(source,
                                                                     iExecutesPromise.promiseExecution,
                                                                     refRunner);
@@ -236,11 +237,11 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
             refRunner.get().removeActive(p);
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    <T> VisitCode getProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> property, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> property, Ref<T> ref) {
 
 //		;//System.out.println(" root prop faceless <"+rootProperties+"> / <"+property+">");
 
@@ -258,38 +259,38 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
 
             // return VisitCode.STOP;
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    iVisualElement getRoot() {
+    IVisualElement getRoot() {
         return rootSheetElement;
     }
 
     public
-    VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
-        return VisitCode.cont;
+    TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event) {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode inspectablePropertiesFor(iVisualElement source, List<Prop> properties) {
-        return VisitCode.cont;
+    TraversalHint inspectablePropertiesFor(IVisualElement source, List<Prop> properties) {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
-        return VisitCode.cont;
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
     void load(Reader reader) {
-        LinkedHashSet<iVisualElement> created = new LinkedHashSet<iVisualElement>();
+        LinkedHashSet<IVisualElement> created = new LinkedHashSet<IVisualElement>();
 
         ObjectInputStream objectInputStream = persistence.getObjectInputStream(reader, created);
         try {
             String version = (String) objectInputStream.readObject();
             //assert version.equals("version_1") : version;
-            iVisualElement oldRoot = (iVisualElement) objectInputStream.readObject();
+            IVisualElement oldRoot = (IVisualElement) objectInputStream.readObject();
 
 
             assert oldRoot == rootSheetElement : oldRoot;
@@ -312,25 +313,25 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
         // this.added(ve);
         // }
 
-        for (iVisualElement ve : created) {
-            new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(ve).added(ve);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(ve).added(ve);
+        for (IVisualElement ve : created) {
+            new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(ve).added(ve);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(ve).added(ve);
         }
     }
 
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
-        return VisitCode.cont;
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
-        return VisitCode.cont;
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode prepareForSave() {
-        return VisitCode.cont;
+    TraversalHint prepareForSave() {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
@@ -346,10 +347,10 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
     public
     void save(Writer writer) {
 
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(rootSheetElement).prepareForSave();
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(rootSheetElement).prepareForSave();
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(rootSheetElement).prepareForSave();
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(rootSheetElement).prepareForSave();
 
-        Set<iVisualElement> saved = new HashSet<iVisualElement>();
+        Set<IVisualElement> saved = new HashSet<IVisualElement>();
         ObjectOutputStream objectOutputStream = persistence.getObjectOutputStream(writer, saved);
 
         try {
@@ -392,7 +393,7 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
     }
 
     public
-    <T> VisitCode setProperty(iVisualElement source, iVisualElement.VisualElementProperty<T> property, Ref<T> to) {
+    <T> TraversalHint setProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> property, Ref<T> to) {
         if (rootProperties.containsKey(property) || (source == getRoot())) {
             VisualElementProperty<T> a = property.getAliasedTo();
             while (a != null) {
@@ -403,12 +404,12 @@ class FacelessFluidSheet implements iVisualElementOverrides, iUpdateable {
             // return VisitCode.STOP;
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-        return VisitCode.cont;
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+        return StandardTraversalHint.CONTINUE;
     }
 
     public

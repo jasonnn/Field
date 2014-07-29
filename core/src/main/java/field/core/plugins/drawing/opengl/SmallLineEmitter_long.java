@@ -1,8 +1,8 @@
 package field.core.plugins.drawing.opengl;
 
 import field.core.plugins.drawing.opengl.CachedLine.Event;
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iMetric;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IMetric;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.util.Dict;
@@ -21,7 +21,7 @@ class SmallLineEmitter_long {
 
     List<Prop<?>> trackedProperties = new ArrayList<Prop<?>>();
 
-    List<iMetric<?, ?>> trackedPropertiesFlatnesses = new ArrayList<iMetric<?, ?>>();
+    List<IMetric<?, ?>> trackedPropertiesFlatnesses = new ArrayList<IMetric<?, ?>>();
 
     boolean canEmitCubic = false;
 
@@ -32,7 +32,7 @@ class SmallLineEmitter_long {
     }
 
     public
-    <T> void addTrackedProperty(Prop<T> p, iMetric<T, T> m) {
+    <T> void addTrackedProperty(Prop<T> p, IMetric<T, T> m) {
         trackedProperties.add(p);
         trackedPropertiesFlatnesses.add(m);
 
@@ -162,8 +162,8 @@ class SmallLineEmitter_long {
                 q.add(null);
                 continue;
             }
-            if (a instanceof iBlendable) {
-                Object c = ((iBlendable) ((iBlendable) a).blendRepresentation_newZero()).lerp(a, b, 0.5f);
+            if (a instanceof IBlendable) {
+                Object c = ((IBlendable) ((IBlendable) a).blendRepresentation_newZero()).lerp(a, b, 0.5f);
                 q.add(c);
             }
             else if (a instanceof float[]) {
@@ -206,7 +206,7 @@ class SmallLineEmitter_long {
 
         float m = 0;
         for (int i = 0; i < propertiesA.size(); i++) {
-            float q = ((iMetric<Object, Object>) trackedPropertiesFlatnesses.get(i)).distance(propertiesA.get(i),
+            float q = ((IMetric<Object, Object>) trackedPropertiesFlatnesses.get(i)).distance(propertiesA.get(i),
                                                                                               propertiesB.get(i));
             if (q > m) m = q;
         }

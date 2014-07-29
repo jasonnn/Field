@@ -1,6 +1,6 @@
 package field.core.ui.text.referencealgorithms;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.ui.text.embedded.iReferenceAlgorithm;
 
 import java.util.ArrayList;
@@ -12,8 +12,8 @@ class SelfReference extends iReferenceAlgorithm.BaseReferenceAlgorithm {
 
     @Override
     protected
-    List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement) {
-        ArrayList<iVisualElement> r = new ArrayList<iVisualElement>();
+    List<IVisualElement> doEvaluation(IVisualElement root, List<IVisualElement> old, IVisualElement forElement) {
+        ArrayList<IVisualElement> r = new ArrayList<IVisualElement>();
         r.add(forElement);
         r.add(forElement);
         return r;

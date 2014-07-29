@@ -1,20 +1,21 @@
 package field.core.plugins.autoexecute;
 
 import field.bytecode.protect.Woven;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.plugins.SimpleConstraints;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.iPlugin;
 import field.core.plugins.python.PythonPlugin;
 import field.core.plugins.python.PythonPluginEditor;
 import field.launch.SystemProperties;
+import field.math.graph.IMutableContainer;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.collect.tuple.Pair;
 
 import java.util.*;
@@ -25,7 +26,7 @@ public
 class AutoExecutePythonPlugin implements iPlugin {
 
     public
-    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -42,7 +43,7 @@ class AutoExecutePythonPlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -63,13 +64,13 @@ class AutoExecutePythonPlugin implements iPlugin {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             properties = t;
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -80,16 +81,16 @@ class AutoExecutePythonPlugin implements iPlugin {
     }
 
     public
-    class Overrides extends iVisualElementOverrides.Adaptor {
+    class Overrides extends IVisualElementOverrides.Adaptor {
 
         @Override
         public
-        VisitCode added(iVisualElement newSource) {
+        TraversalHint added(IVisualElement newSource) {
 
             //System.out.println(" added <" + newSource + ">");
 
             check(newSource);
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
     }
@@ -103,11 +104,11 @@ class AutoExecutePythonPlugin implements iPlugin {
 
     public static final String pluginId = "//AudoExecutePython";
 
-    private iVisualElement root;
+    private IVisualElement root;
 
     private SimpleConstraints simpleConstraintsPlugin;
 
-    private iVisualElementOverrides elementOverride;
+    private IVisualElementOverrides elementOverride;
 
     private PythonPlugin pythonPlugin;
 
@@ -123,14 +124,14 @@ class AutoExecutePythonPlugin implements iPlugin {
     }
 
     public static
-    void autoExecute(final iVisualElement newSource, final String string) {
+    void autoExecute(final IVisualElement newSource, final String string) {
         assert false;
     }
 
-    TreeSet<iVisualElement> elements = new TreeSet<iVisualElement>(new Comparator<iVisualElement>() {
+    TreeSet<IVisualElement> elements = new TreeSet<IVisualElement>(new Comparator<IVisualElement>() {
 
         public
-        int compare(iVisualElement o1, iVisualElement o2) {
+        int compare(IVisualElement o1, IVisualElement o2) {
             Rect r1 = o1.getFrame(new Rect());
             Rect r2 = o2.getFrame(new Rect());
             int c = Double.compare(r1.x, r2.x);
@@ -139,16 +140,16 @@ class AutoExecutePythonPlugin implements iPlugin {
     });
 
     public
-    void check(iVisualElement newSource) {
+    void check(IVisualElement newSource) {
         elements.add(newSource);
     }
 
     public
-    void perform(iVisualElement newSource) {
+    void perform(IVisualElement newSource) {
         // pull auto execute information from the properties
 
         Ref<String> ref = new Ref<String>("");
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource)
                                                        .getProperty(newSource,
                                                                     PythonPlugin.python_source_forExecution,
                                                                     ref);
@@ -177,13 +178,13 @@ class AutoExecutePythonPlugin implements iPlugin {
     }
 
     public
-    iVisualElement getWellKnownVisualElement(String id) {
+    IVisualElement getWellKnownVisualElement(String id) {
         if (id.equals(pluginId)) return lve;
         return null;
     }
 
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
 
         PythonPluginEditor.knownPythonProperties.put("Automatically Executed", python_autoExec);
 
@@ -207,13 +208,13 @@ class AutoExecutePythonPlugin implements iPlugin {
         if (noAuto) elements.clear();
 
         if (!elements.isEmpty()) {
-            ArrayList<iVisualElement> a1 = new ArrayList<iVisualElement>(elements);
-            ArrayList<iVisualElement> readd = new ArrayList<iVisualElement>();
+            ArrayList<IVisualElement> a1 = new ArrayList<IVisualElement>(elements);
+            ArrayList<IVisualElement> readd = new ArrayList<IVisualElement>();
 
-            Collections.sort(a1, new Comparator<iVisualElement>() {
+            Collections.sort(a1, new Comparator<IVisualElement>() {
 
                 public
-                int compare(iVisualElement o1, iVisualElement o2) {
+                int compare(IVisualElement o1, IVisualElement o2) {
                     Rect f1 = o1.getFrame(null);
                     Rect f2 = o2.getFrame(null);
 
@@ -224,7 +225,7 @@ class AutoExecutePythonPlugin implements iPlugin {
 
             //System.out.println(" about to exec in this order :" + a1);
 
-            for (iVisualElement e : a1) {
+            for (IVisualElement e : a1) {
                 Number m = e.getProperty(autoExecuteDelay);
                 if ((m != null) && (m.intValue() > 0)) {
                     Integer soFar = e.getProperty(autoExecuteDelayedFor);
@@ -253,7 +254,7 @@ class AutoExecutePythonPlugin implements iPlugin {
     }
 
     protected
-    iVisualElementOverrides createElementOverrides() {
+    IVisualElementOverrides createElementOverrides() {
         return new Overrides();
     }
 }

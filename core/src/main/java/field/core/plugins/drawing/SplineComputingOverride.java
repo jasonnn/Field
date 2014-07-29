@@ -2,13 +2,13 @@ package field.core.plugins.drawing;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.Mixins;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem;
 import field.core.execution.PythonScriptingSystem.DerivativePromise;
@@ -33,11 +33,12 @@ import field.core.windowing.components.RootComponent;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
 import field.core.windowing.overlay.OverlayAnimationManager;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.math.graph.iTopology;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.abstraction.IAcceptor;
+import field.math.graph.ITopology;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
@@ -53,7 +54,7 @@ import java.util.*;
 
 @Woven
 public
-class SplineComputingOverride extends DefaultOverride implements iVisualElementOverrides, iChangeParticipant {
+class SplineComputingOverride extends DefaultOverride implements IVisualElementOverrides, iChangeParticipant {
 
     public final
     class PLineList extends ArrayList {
@@ -200,8 +201,8 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     public static final VisualElementProperty<DirectLayer> direct = new VisualElementProperty<DirectLayer>("direct_");
 
-    public static final VisualElementProperty<List<iUpdateable>> computed_drawingInstructions =
-            new VisualElementProperty<List<iUpdateable>>("computed_drawingInstructions");
+    public static final VisualElementProperty<List<IUpdateable>> computed_drawingInstructions =
+            new VisualElementProperty<List<IUpdateable>>("computed_drawingInstructions");
 
     static {
         PythonPluginEditor.knownPythonProperties.put("Spline tweaks", SplineComputingOverride.tweak);
@@ -231,7 +232,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     @SuppressWarnings("unchecked")
     @Override
     public
-    DefaultOverride setVisualElement(iVisualElement ve) {
+    DefaultOverride setVisualElement(IVisualElement ve) {
         DefaultOverride r = super.setVisualElement(ve);
         ve.setProperty(noFrame, false);
 
@@ -252,12 +253,12 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     int frame;
 
     public static
-    void executeMain(iVisualElement e) {
+    void executeMain(IVisualElement e) {
         executePropertyOfElement(PythonPlugin.python_source, e);
     }
 
     public static
-    void executePropertyOfElement(VisualElementProperty<String> property, iVisualElement source) {
+    void executePropertyOfElement(VisualElementProperty<String> property, IVisualElement source) {
         System.err.println(" execute property <" + property + "> of <" + source + '>');
         try {
             String e = property.get(source);
@@ -265,14 +266,14 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
             if (e != null && e.isEmpty()) return;
 
             Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                            .getProperty(source,
                                                                         PythonScriptingSystem.pythonScriptingSystem,
                                                                         refPss);
             assert refPss.get() != null;
 
             Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                            .getProperty(source,
                                                                         iExecutesPromise.promiseExecution,
                                                                         refRunner);
@@ -302,7 +303,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     @Override
     public
-    <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
         if (source == forElement) {
             if (prop.equals(direct)) {
                 if (forElement.getProperty(direct) == null) {
@@ -314,27 +315,27 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
                 else {
                     ref.set((T) forElement.getProperty(direct), forElement);
                 }
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
         }
         return super.getProperty(source, prop, ref);
     }
 
     public static
-    void executeStringInElement(VisualElementProperty<String> property, iVisualElement source, String s) {
+    void executeStringInElement(VisualElementProperty<String> property, IVisualElement source, String s) {
         try {
             String e = property.get(source);
             if (e == null) return;
 
             Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                            .getProperty(source,
                                                                         PythonScriptingSystem.pythonScriptingSystem,
                                                                         refPss);
             assert refPss.get() != null;
 
             Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                            .getProperty(source,
                                                                         iExecutesPromise.promiseExecution,
                                                                         refRunner);
@@ -358,7 +359,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     }
 
     public static
-    void executeTweaks(iVisualElement e) {
+    void executeTweaks(IVisualElement e) {
         executePropertyOfElement(tweak, e);
 
         PLineList lines = (PLineList) computed_linesToDraw.get(e);
@@ -367,20 +368,20 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     }
 
     public static
-    void executueTweaks(iVisualElement e) {
+    void executueTweaks(IVisualElement e) {
         executePropertyOfElement(tweak, e);
     }
 
     public static
-    void fireChange(final iVisualElement e) {
+    void fireChange(final IVisualElement e) {
 
-        new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+        new TopologyVisitor_breadthFirst<IVisualElement>(true) {
             @Override
             protected
-            VisitCode visit(iVisualElement root) {
+            TraversalHint visit(IVisualElement root) {
                 System.err.println(" fire change on <" + root + "> from <" + e + '>');
-                iVisualElementOverrides ov = root.getProperty(iVisualElement.overrides);
-                if (root == e) return VisitCode.cont;
+                IVisualElementOverrides ov = root.getProperty(IVisualElement.overrides);
+                if (root == e) return StandardTraversalHint.CONTINUE;
                 if (ov instanceof iChangeParticipant) {
                     System.err.println(" will call ");
                     long was = ((iChangeParticipant) ov).getHash();
@@ -392,22 +393,22 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
                         ((SplineComputingOverride) ov).delayedRepaint();
                     if (was != now) {
-                        return VisitCode.cont;
+                        return StandardTraversalHint.CONTINUE;
                     }
 
                 }
-                return VisitCode.skip;
+                return StandardTraversalHint.SKIP;
             }
-        }.apply(new iTopology<iVisualElement>() {
+        }.apply(new ITopology<IVisualElement>() {
             public
-            List<iVisualElement> getChildrenOf(iVisualElement of) {
+            List<IVisualElement> getChildrenOf(IVisualElement of) {
                 VEList p = of.getProperty(computed_elaboratedBy);
                 if (p != null) return p;
                 return Collections.EMPTY_LIST;
             }
 
             public
-            List<iVisualElement> getParentsOf(iVisualElement of) {
+            List<IVisualElement> getParentsOf(IVisualElement of) {
                 VEList p = of.getProperty(computed_elaborates);
                 if (p != null) return p;
                 return Collections.EMPTY_LIST;
@@ -416,7 +417,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     }
 
     public static
-    void mixin(iVisualElement e) {
+    void mixin(IVisualElement e) {
         new Mixins().mixInOverride(SplineComputingOverride.class, e);
     }
 
@@ -438,7 +439,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     VisualElement createSubElaboration(String name, CachedLine line) {
 
         System.err.println(" creating sub elaboration of ");
-        List<iVisualElement> c = forElement.getChildren();
+        List<IVisualElement> c = forElement.getChildren();
 
         Rect currentFrame = new Rect(0, 0, 0, 0);
         forElement.getFrame(currentFrame);
@@ -450,12 +451,12 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
                                              VisualElement.class,
                                              PlainDraggableComponent.class,
                                              SplineComputingOverride.class,
-                                             forElement.getProperty(iVisualElement.name) + " -> ");
+                                             forElement.getProperty(IVisualElement.name) + " -> ");
 
         VEList e1 = new VEList();
         created.left.setProperty(computed_elaborates, e1);
         e1.add(forElement);
-        computed_elaboratedBy.addToList(VEList.class, forElement, (iVisualElement) created.left);
+        computed_elaboratedBy.addToList(VEList.class, forElement, (IVisualElement) created.left);
 
         System.err.println(" initializing python for element ");
 
@@ -480,7 +481,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     @Override
     public
-    VisitCode deleted(iVisualElement source) {
+    TraversalHint deleted(IVisualElement source) {
 
         VEList list = computed_elaborates.get(forElement);
         if (list != null) if (list.remove(source)) fireChange();
@@ -516,9 +517,9 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     @Override
     public
-    VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
+    TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event) {
 
-        if (event == null) return VisitCode.cont;
+        if (event == null) return StandardTraversalHint.CONTINUE;
 
         if (newSource == forElement) {
             if (isSelected()) {
@@ -542,12 +543,12 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     @Override
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
         if (source == forElement) {
 
             if (!injectOpacity(null)) {
                 is.set(false);
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
             Rect frame = forElement.getFrame(null);
@@ -575,28 +576,28 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
             if ((tweaking != null) && tweaking.somethingSelected()) is.set(true);
 
             if (forbidDrag || ((tweaking != null) && tweaking.somethingSelected())) {
-                iComponent c = source.getProperty(iVisualElement.localView);
+                iComponent c = source.getProperty(IVisualElement.localView);
                 if (c instanceof PlainDraggableComponent) ((PlainDraggableComponent) c).canDrag(false);
             }
             else {
-                iComponent c = source.getProperty(iVisualElement.localView);
+                iComponent c = source.getProperty(IVisualElement.localView);
                 if (c instanceof PlainDraggableComponent) ((PlainDraggableComponent) c).canDrag(true);
             }
 
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
     boolean isSelected() {
         try {
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                            .getProperty(forElement,
-                                                                        iVisualElement.selectionGroup,
+                                                                        IVisualElement.selectionGroup,
                                                                         group);
             final SelectionGroup<iComponent> g = group.get();
-            if (g.getSelection().contains(iVisualElement.localView.get(forElement))) return true;
+            if (g.getSelection().contains(IVisualElement.localView.get(forElement))) return true;
             return false;
         } catch (NullPointerException e) {
             return false;
@@ -605,21 +606,21 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     @Override
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
 
         if (source == forElement) {
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                            .getProperty(forElement,
-                                                                        iVisualElement.selectionGroup,
+                                                                        IVisualElement.selectionGroup,
                                                                         group);
             final SelectionGroup<iComponent> g = group.get();
 
             final Ref<SelectionGroup<iComponent>> markingGroup = new Ref<SelectionGroup<iComponent>>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
-                                                           .getProperty(forElement, iVisualElement.markingGroup, group);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+                                                           .getProperty(forElement, IVisualElement.markingGroup, group);
             final SelectionGroup<iComponent> mg = group.get();
-            items.put("Spline Operations (" + forElement.getProperty(iVisualElement.name) + ')', null);
+            items.put("Spline Operations (" + forElement.getProperty(IVisualElement.name) + ')', null);
 
             // items.put("   \u276f  Make <b>new elaboration</b> of ",
             // new iUpdateable() {
@@ -673,16 +674,16 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
             // commented out, completely broken right now
 
-            new iUpdateable() {
+            new IUpdateable() {
 
                 public
                 void update() {
                     PopupTextBox.Modal.getString(PopupTextBox.Modal.elementAt(forElement),
                                                  "filename : ",
                                                  "",
-                                                 new iAcceptor<String>() {
+                                                 new IAcceptor<String>() {
                                                      public
-                                                     iAcceptor<String> set(String to) {
+                                                     IAcceptor<String> set(String to) {
                                                          if (!to.trim().isEmpty()) {
                                                              // saveAsSVG(to);
                                                          }
@@ -692,14 +693,14 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
                 }
             };
             // items.put("    Save as <b>SVG</b>", );
-            items.put("   Save as <b>PDF</b>", new iUpdateable() {
+            items.put("   Save as <b>PDF</b>", new IUpdateable() {
 
                 public
                 void update() {
 
                     // TODO swt filechooser
 
-                    FileDialog d = new FileDialog(iVisualElement.enclosingFrame.get(forElement).getFrame(),
+                    FileDialog d = new FileDialog(IVisualElement.enclosingFrame.get(forElement).getFrame(),
                                                   SWT.SHEET | SWT.SAVE);
                     d.setOverwrite(false);
                     String name = d.open();
@@ -730,13 +731,13 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
                 }
             });
 
-            final Set<iVisualElement> sp = new HashSet<iVisualElement>();
+            final Set<IVisualElement> sp = new HashSet<IVisualElement>();
             if (mg != null) {
                 if (mg.getSelection() != null) for (iComponent c : mg.getSelection()) {
-                    iVisualElement q = c.getVisualElement();
+                    IVisualElement q = c.getVisualElement();
                     if (q != null) {
                         if (q != forElement)
-                            if (q.getProperty(iVisualElement.overrides) instanceof SplineComputingOverride) {
+                            if (q.getProperty(IVisualElement.overrides) instanceof SplineComputingOverride) {
                                 sp.add(q);
                             }
                     }
@@ -916,7 +917,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         if (source == forElement) {
             // workaround for #54
             if (source.getProperty(OfferedAlignment.alignment_doNotParticipate) == null) {
@@ -925,8 +926,8 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
             try {
 
-                List<iUpdateable> cc = computed_drawingInstructions.get(source);
-                if (cc != null) for (iUpdateable c : cc)
+                List<IUpdateable> cc = computed_drawingInstructions.get(source);
+                if (cc != null) for (IUpdateable c : cc)
                     c.update();
 
                 SelectionGroup<iComponent> group = getGroup();
@@ -1107,7 +1108,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
                     VEList el = computed_elaboratedBy.get(source);
                     if (el != null) {
-                        for (iVisualElement ve : el) {
+                        for (IVisualElement ve : el) {
                             CachedLine elBy = new CachedLine();
                             iLine elByLine = elBy.getInput();
 
@@ -1173,7 +1174,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
                         in.moveTo((float) (currentFrame.x + (currentFrame.w / 2)),
                                   (float) (currentFrame.y + currentFrame.h + 5));
                         selectedLine.getProperties().put(iLinearGraphicsContext.containsText, !isNoFrame);
-                        in.setPointAttribute(iLinearGraphicsContext.text_v, source.getProperty(iVisualElement.name));
+                        in.setPointAttribute(iLinearGraphicsContext.text_v, source.getProperty(IVisualElement.name));
                         // in.setPointAttribute(iLinearGraphicsContext.font_v,
                         // new
                         // Font(Constants.defaultFont,
@@ -1193,7 +1194,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
             }
             frame++;
         }
-        return visible ? VisitCode.cont : VisitCode.stop;
+        return visible ? StandardTraversalHint.CONTINUE : StandardTraversalHint.STOP;
     }
 
     protected
@@ -1256,7 +1257,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
         PythonInterface.getPythonInterface().execString("makePDF(geometry=__s.lines, filename=\"" + to + "\")");
         OverlayAnimationManager.notifyAsText(forElement,
                                              "saved '"
-                                             + forElement.getProperty(iVisualElement.name)
+                                             + forElement.getProperty(IVisualElement.name)
                                              + "' to '"
                                              + to
                                              + '\'',
@@ -1302,7 +1303,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     @Override
     public
-    <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+    <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
         if ((source == forElement) && prop.equals(computed_rect)) {
             Rect r = (Rect) to.get();
             if (r != null) {
@@ -1320,13 +1321,13 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     @Override
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
 
         if (source == forElement) {
             //System.out.println(" should change frame from <" + oldFrame + " -> " + newFrame + ">");
             new VisualElementProperty<Rect>("oldFrame_").set(source, source, oldFrame);
         }
-        VisitCode c = super.shouldChangeFrame(source, newFrame, oldFrame, now);
+        TraversalHint c = super.shouldChangeFrame(source, newFrame, oldFrame, now);
         if (source == forElement) {
 
             //System.out.println(" source <" + source + "> <" + newFrame + "> <" + oldFrame + ">");
@@ -1353,16 +1354,16 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     private
     void moveToElaboratedBy(float thisOpacity) {
         final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
-                                                       .getProperty(forElement, iVisualElement.selectionGroup, group);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+                                                       .getProperty(forElement, IVisualElement.selectionGroup, group);
         final SelectionGroup<iComponent> g = group.get();
 
         VEList q = computed_elaboratedBy.get(forElement);
         if (q != null) {
             g.deselectAll();
-            for (final iVisualElement e : q) {
+            for (final IVisualElement e : q) {
                 if (e != forElement) {
-                    g.addToSelection(e.getProperty(iVisualElement.localView));
+                    g.addToSelection(e.getProperty(IVisualElement.localView));
                     global_opacity.set(e, e, 1f);
                     global_opacity.set(forElement, forElement, thisOpacity);
                 }
@@ -1374,16 +1375,16 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     private
     void moveToElaborates(float thisOpacity) {
         final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
-                                                       .getProperty(forElement, iVisualElement.selectionGroup, group);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+                                                       .getProperty(forElement, IVisualElement.selectionGroup, group);
         final SelectionGroup<iComponent> g = group.get();
 
         VEList q = computed_elaborates.get(forElement);
         if (q != null) {
             g.deselectAll();
-            for (final iVisualElement e : q) {
+            for (final IVisualElement e : q) {
                 if (e != forElement) {
-                    g.addToSelection(e.getProperty(iVisualElement.localView));
+                    g.addToSelection(e.getProperty(IVisualElement.localView));
                     global_opacity.set(e, e, 1f);
                     global_opacity.set(forElement, forElement, thisOpacity);
                 }
@@ -1394,7 +1395,7 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     @NextUpdate(delay = 2)
     protected
     void delayedRepaint() {
-        RootComponent q = iVisualElement.rootComponent.get(forElement);
+        RootComponent q = IVisualElement.rootComponent.get(forElement);
         if (q != null) q.repaint();
     }
 
@@ -1417,10 +1418,10 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     protected
     SelectionGroup<iComponent> getGroup() {
         if (cachedGroup == null) {
-            cachedGroup = iVisualElement.selectionGroup.get(forElement);
+            cachedGroup = IVisualElement.selectionGroup.get(forElement);
         }
         if (cachedComponent == null) {
-            cachedComponent = forElement.getProperty(iVisualElement.localView);
+            cachedComponent = forElement.getProperty(IVisualElement.localView);
         }
         return cachedGroup;
     }
@@ -1428,10 +1429,10 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     protected
     SelectionGroup<iComponent> getMarkingGroup() {
         if (cachedMarkingGroup == null) {
-            cachedMarkingGroup = iVisualElement.markingGroup.get(forElement);
+            cachedMarkingGroup = IVisualElement.markingGroup.get(forElement);
         }
         if (cachedComponent == null) {
-            cachedComponent = forElement.getProperty(iVisualElement.localView);
+            cachedComponent = forElement.getProperty(IVisualElement.localView);
         }
         return cachedMarkingGroup;
     }
@@ -1473,17 +1474,17 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
 
     protected
     void removeThisElement() {
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
             public
             void update() {
                 Launcher.getLauncher().deregisterUpdateable(this);
-                new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).deleted(forElement);
-                new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(forElement)
+                new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).deleted(forElement);
+                new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(forElement)
                                                                .deleted(forElement);
-                for (iVisualElement ve : new ArrayList<iVisualElement>((Collection<iVisualElement>) forElement.getParents())) {
+                for (IVisualElement ve : new ArrayList<IVisualElement>((Collection<IVisualElement>) forElement.getParents())) {
                     ve.removeChild(forElement);
                 }
-                for (iVisualElement ve : new ArrayList<iVisualElement>(forElement.getChildren())) {
+                for (IVisualElement ve : new ArrayList<IVisualElement>(forElement.getChildren())) {
                     forElement.removeChild(ve);
                 }
             }
@@ -1491,21 +1492,21 @@ class SplineComputingOverride extends DefaultOverride implements iVisualElementO
     }
 
     public static
-    void executeMainWithLabel(iVisualElement source, String label) {
+    void executeMainWithLabel(IVisualElement source, String label) {
 
         try {
             String e = PythonPlugin.python_source.get(source);
             if (e == null) return;
 
             Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                            .getProperty(source,
                                                                         PythonScriptingSystem.pythonScriptingSystem,
                                                                         refPss);
             assert refPss.get() != null;
 
             Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
                                                            .getProperty(source,
                                                                         iExecutesPromise.promiseExecution,
                                                                         refRunner);

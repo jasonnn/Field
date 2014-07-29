@@ -6,10 +6,10 @@ import field.bytecode.protect.iProvidesQueue;
 import field.bytecode.protect.iRegistersUpdateable;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor2;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
 import field.launch.iLaunchable;
-import field.launch.iUpdateable;
 import field.util.TaskQueue;
 import org.python.core.*;
 
@@ -37,7 +37,7 @@ import java.util.Map;
  */
 @Woven
 public
-class Client implements iLaunchable, iHandlesAttributes, RemoteExecutionService, iUpdateable, iProvidesQueue {
+class Client implements iLaunchable, iHandlesAttributes, RemoteExecutionService, IUpdateable, iProvidesQueue {
 
     public PyDictionary globals = new PyDictionary();
     public static PySystemState state = new PySystemState();

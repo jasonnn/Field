@@ -1,6 +1,6 @@
 package field.namespace.key;
 
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 import field.namespace.context.SimpleContextTopology;
 import field.namespace.context.SimpleContextTopology.Context;
 import field.namespace.generic.ReflectionTools;
@@ -320,7 +320,7 @@ class CKey extends Key {
     protected static
     float toFloat(Object o) {
         if (o instanceof Number) return ((Number) o).floatValue();
-        if (o instanceof iFloatProvider) return ((iFloatProvider) o).evaluate();
+        if (o instanceof IFloatProvider) return ((IFloatProvider) o).evaluate();
         if (o instanceof CKey) return ((CKey) o).asFloat();
         throw new PhiException(" toFloat, failed, got class <" + o + "> <" + (o == null ? null : o.getClass()) + '>');
     }

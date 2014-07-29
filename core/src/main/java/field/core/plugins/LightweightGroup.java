@@ -1,11 +1,12 @@
 package field.core.plugins;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.SplineComputingOverride;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 
 import java.util.List;
 
@@ -19,29 +20,29 @@ class LightweightGroup extends SplineComputingOverride {
 
     @Override
     public
-    DefaultOverride setVisualElement(iVisualElement ve) {
+    DefaultOverride setVisualElement(IVisualElement ve) {
         ve.setProperty(shouldAutoComputeRect, false);
         return super.setVisualElement(ve);
     }
 
     @Override
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
 
         if (inside) {
             super.shouldChangeFrame(source, newFrame, oldFrame, now);
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
         int out = getOutset();
 
         if (source != forElement) {
-            List<iVisualElement> c = (List<iVisualElement>) this.forElement.getParents();
+            List<IVisualElement> c = (List<IVisualElement>) this.forElement.getParents();
             if (!c.contains(source)) {
                 return super.shouldChangeFrame(source, newFrame, oldFrame, now);
             }
             inside = true;
             if (subElementHasChangedWillChangeBounds()) {
-                new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+                new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                                .shouldChangeFrame(forElement,
                                                                                   computeNewBoundingFrame(c,
                                                                                                           forElement.getFrame(null),
@@ -50,29 +51,29 @@ class LightweightGroup extends SplineComputingOverride {
                                                                                   true);
             }
             inside = false;
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
 
         oldFrame = new Rect(oldFrame);
         newFrame = new Rect(newFrame);
 
-        List<iVisualElement> c = (List<iVisualElement>) this.forElement.getParents();
+        List<IVisualElement> c = (List<IVisualElement>) this.forElement.getParents();
         inside = true;
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                        .shouldChangeFrame(forElement,
                                                                           computeNewBoundingFrame(c,
                                                                                                   forElement.getFrame(null),
                                                                                                   out),
                                                                           forElement.getFrame(null),
                                                                           true);
-        for (iVisualElement e : c) {
+        for (IVisualElement e : c) {
             Rect f = e.getFrame(null);
             Rect q = computeNewSubFrame(e, newFrame, oldFrame, f, out);
 
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).shouldChangeFrame(e, q, f, true);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).shouldChangeFrame(e, q, f, true);
         }
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                        .shouldChangeFrame(forElement,
                                                                           computeNewBoundingFrame(c,
                                                                                                   forElement.getFrame(null),
@@ -81,7 +82,7 @@ class LightweightGroup extends SplineComputingOverride {
                                                                           true);
 
         inside = false;
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     protected static
@@ -90,7 +91,7 @@ class LightweightGroup extends SplineComputingOverride {
     }
 
     private static
-    Rect computeNewSubFrame(iVisualElement e, Rect newParentFrame, Rect oldParentFrame, Rect oldChildFrame, int out) {
+    Rect computeNewSubFrame(IVisualElement e, Rect newParentFrame, Rect oldParentFrame, Rect oldChildFrame, int out) {
 
         double x1 = (oldChildFrame.x - oldParentFrame.x) / oldParentFrame.w;
         double y1 = (oldChildFrame.y - oldParentFrame.y) / oldParentFrame.h;
@@ -106,7 +107,7 @@ class LightweightGroup extends SplineComputingOverride {
     }
 
     protected static
-    Rect computeNewBoundingFrame(List<iVisualElement> c, Rect oldParentFrame, int out) {
+    Rect computeNewBoundingFrame(List<IVisualElement> c, Rect oldParentFrame, int out) {
         if (c.isEmpty()) return oldParentFrame;
         float mx = Float.POSITIVE_INFINITY;
         float my = Float.POSITIVE_INFINITY;
@@ -114,7 +115,7 @@ class LightweightGroup extends SplineComputingOverride {
         float yy = Float.NEGATIVE_INFINITY;
         Rect t = new Rect(0, 0, 0, 0);
         boolean set = false;
-        for (iVisualElement ve : c) {
+        for (IVisualElement ve : c) {
             if (shouldBound(ve)) {
                 ve.getFrame(t);
                 if (t.x < mx) mx = (float) t.x;
@@ -128,7 +129,7 @@ class LightweightGroup extends SplineComputingOverride {
     }
 
     protected static
-    boolean shouldBound(iVisualElement ve) {
+    boolean shouldBound(IVisualElement ve) {
         return true;
     }
 

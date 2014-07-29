@@ -1,8 +1,8 @@
 package field.core.ui;
 
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.core.windowing.components.iComponent;
@@ -24,7 +24,7 @@ class PresentationMode {
 
     public static
     boolean isHidden(iComponent c) {
-        iVisualElement v = c.getVisualElement();
+        IVisualElement v = c.getVisualElement();
         if (v == null) return false;
         PresentationParameters p = v.getProperty(present);
         if (p == null) return false;
@@ -36,7 +36,7 @@ class PresentationMode {
 
     public static
     boolean canResizeWidth(iComponent c) {
-        iVisualElement v = c.getVisualElement();
+        IVisualElement v = c.getVisualElement();
         if (v == null) return true;
         PresentationParameters p = v.getProperty(present);
         if (p == null) return true;
@@ -46,7 +46,7 @@ class PresentationMode {
 
     public static
     boolean canResizeHeight(iComponent c) {
-        iVisualElement v = c.getVisualElement();
+        IVisualElement v = c.getVisualElement();
         if (v == null) return true;
         PresentationParameters p = v.getProperty(present);
         if (p == null) return true;
@@ -56,7 +56,7 @@ class PresentationMode {
 
     public static
     boolean canMove(iComponent c) {
-        iVisualElement v = c.getVisualElement();
+        IVisualElement v = c.getVisualElement();
         if (v == null) return true;
         PresentationParameters p = v.getProperty(present);
         if (p == null) return true;
@@ -67,7 +67,7 @@ class PresentationMode {
     public static
     boolean transformOptionClick(iComponent c, Event e) {
 
-        iVisualElement v = c.getVisualElement();
+        IVisualElement v = c.getVisualElement();
         if (v == null) return false;
         PresentationParameters p = v.getProperty(present);
         if (p == null) return false;
@@ -89,7 +89,7 @@ class PresentationMode {
 
     public static
     boolean isSpace(iComponent c, Event e) {
-        iVisualElement v = c.getVisualElement();
+        IVisualElement v = c.getVisualElement();
         if (v == null) return false;
         PresentationParameters p = v.getProperty(present);
         if (p == null) return false;
@@ -126,7 +126,7 @@ class PresentationMode {
 
     public static
     boolean isSelectable(iComponent c) {
-        iVisualElement v = c.getVisualElement();
+        IVisualElement v = c.getVisualElement();
         if (v == null) return true;
         PresentationParameters p = v.getProperty(present);
         if (p == null) return true;

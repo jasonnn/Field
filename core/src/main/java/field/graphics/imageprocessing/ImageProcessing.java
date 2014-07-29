@@ -4,7 +4,7 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.graphics.core.*;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iAcceptsSceneListElement;
@@ -15,10 +15,10 @@ import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.core.BasicTextures.TextureUnit;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.graphics.windowing.FullScreenCanvasSWT.StereoSide;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFloatProvider;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IFloatProvider;
+import field.math.abstraction.IProvider;
 import field.math.linalg.Vector4;
 import field.util.TaskQueue;
 import org.lwjgl.opengl.GL11;
@@ -112,14 +112,14 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
         private final boolean rect;
 
-        private final iProvider<Integer> from;
+        private final IProvider<Integer> from;
 
         private final int unit;
 
         private int target;
 
         public
-        TextureWrapper(boolean mip, boolean rect, iProvider<Integer> from, int unit) {
+        TextureWrapper(boolean mip, boolean rect, IProvider<Integer> from, int unit) {
             super("", StandardPass.preRender, StandardPass.postRender);
             this.mip = mip;
             this.rect = rect;
@@ -174,13 +174,13 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
         private final boolean rect;
 
-        private final iProvider<Integer> left;
-        private final iProvider<Integer> right;
+        private final IProvider<Integer> left;
+        private final IProvider<Integer> right;
 
         private final int unit;
 
         public
-        StereoTextureWrapper(boolean mip, boolean rect, iProvider<Integer> left, iProvider<Integer> right, int unit) {
+        StereoTextureWrapper(boolean mip, boolean rect, IProvider<Integer> left, IProvider<Integer> right, int unit) {
             super("", StandardPass.preRender, StandardPass.postRender);
             this.mip = mip;
             this.rect = rect;
@@ -294,7 +294,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     public static
     iReposition placeOnscreen(BasicSceneList into,
-                              final iProvider<Integer> from,
+                              final IProvider<Integer> from,
                               int output,
                               Rect r,
                               float width,
@@ -306,7 +306,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     public static
     iReposition placeOnscreen(final BasicSceneList into,
-                              final iProvider<Integer> from,
+                              final IProvider<Integer> from,
                               int output,
                               final Rect r,
                               float width,
@@ -438,7 +438,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     public static
     iReposition placeOnscreen(final BasicSceneList into,
-                              final iProvider<Integer> from,
+                              final IProvider<Integer> from,
                               final Rect r,
                               float width,
                               float height,
@@ -553,7 +553,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     public static
     iReposition placeOnscreenWithMask(final BasicSceneList into,
-                                      final iProvider<Integer> from,
+                                      final IProvider<Integer> from,
                                       int output,
                                       final Rect r,
                                       final float width,
@@ -583,7 +583,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
         mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
         mesh.aux(Base.texture0_id + 1, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
 
-        final iUpdateable u = new iUpdateable() {
+        final IUpdateable u = new IUpdateable() {
 
             public
             void update() {
@@ -782,7 +782,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     private TriangleMesh mesh;
 
-    protected iProvider<Integer>[] fboInput;
+    protected IProvider<Integer>[] fboInput;
 
     protected final int width;
 
@@ -824,7 +824,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     public
     ImageProcessing(ImageProcessing i, int width, int height, boolean useRect, boolean genMipmap, boolean useFloat) {
-        this(new iProvider[]{i.getFBOOutput()}, width, height, useRect, genMipmap, useFloat);
+        this(new IProvider[]{i.getFBOOutput()}, width, height, useRect, genMipmap, useFloat);
     }
 
     public
@@ -834,7 +834,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
                     boolean useRect,
                     boolean genMipmap,
                     boolean useFloat) {
-        this(new iProvider[]{i.getOutput(0)}, width, height, useRect, genMipmap, useFloat);
+        this(new IProvider[]{i.getOutput(0)}, width, height, useRect, genMipmap, useFloat);
     }
 
     public
@@ -844,12 +844,12 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
                     boolean useRect,
                     boolean genMipmap,
                     boolean useFloat) {
-        this(new iProvider[]{i.getOutput(0), i.getOutput(1)}, width, height, useRect, genMipmap, useFloat);
+        this(new IProvider[]{i.getOutput(0), i.getOutput(1)}, width, height, useRect, genMipmap, useFloat);
     }
 
     public
     ImageProcessing(final iHasFBO i, int width, int height, boolean useRect, boolean genMipmap, boolean useFloat) {
-        this(new iProvider[]{new iProvider<Integer>() {
+        this(new IProvider[]{new IProvider<Integer>() {
             public
             Integer get() {
                 return i.getFBO();
@@ -858,7 +858,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    ImageProcessing(iProvider<Integer>[] fboInput,
+    ImageProcessing(IProvider<Integer>[] fboInput,
                     int width,
                     int height,
                     boolean useRect,
@@ -879,7 +879,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    void setInputs(iProvider<Integer>[] input) {
+    void setInputs(IProvider<Integer>[] input) {
         this.fboInput = input;
     }
 
@@ -914,7 +914,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    void addFadePlane(final iFloatProvider amount1, Vector4 color1, final iFloatProvider amount2, Vector4 color2) {
+    void addFadePlane(final IFloatProvider amount1, Vector4 color1, final IFloatProvider amount2, Vector4 color2) {
         final QuadMesh mesh = new BasicGeometry.QuadMesh(Base.StandardPass.render);
         mesh.rebuildTriangle(1);
         mesh.rebuildVertex(4);
@@ -1037,8 +1037,8 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    iProvider<Integer> getFBOOutput() {
-        return new iProvider<Integer>() {
+    IProvider<Integer> getFBOOutput() {
+        return new IProvider<Integer>() {
             public
             Integer get() {
                 return fbo[0];
@@ -1052,8 +1052,8 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    iProvider<Integer> getOutput(int num) {
-        return new iProvider<Integer>() {
+    IProvider<Integer> getOutput(int num) {
+        return new IProvider<Integer>() {
             public
             Integer get() {
                 // assert tex[0] != -1 : "not initialized";
@@ -1147,8 +1147,8 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    iUpdateable getUpdate() {
-        return new iUpdateable() {
+    IUpdateable getUpdate() {
+        return new IUpdateable() {
             public
             void update() {
                 ImageProcessing.this.update();

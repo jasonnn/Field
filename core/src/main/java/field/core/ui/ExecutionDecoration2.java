@@ -3,10 +3,10 @@ package field.core.ui;
 
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.iComponent;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.linalg.Vector2;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
@@ -24,7 +24,7 @@ class ExecutionDecoration2 {
     }
 
     public
-    iFunction<Boolean, iComponent> down(Event event) {
+    IFunction<iComponent, Boolean> down(Event event) {
         if ((event.stateMask & SWT.ALT) != 0) {
             downAt = new Vector2(event.x, event.y);
             if (isExecuting() && isPaused()) {
@@ -40,9 +40,9 @@ class ExecutionDecoration2 {
             else {
                 // need to defer this a frame to see if we end
                 // up "isExecuting"
-                return new iFunction<Boolean, iComponent>() {
+                return new IFunction<iComponent, Boolean>() {
                     public
-                    Boolean f(iComponent d) {
+                    Boolean apply(iComponent d) {
                         if (isExecuting()) {
                             showStartMenu();
                         }
@@ -60,7 +60,7 @@ class ExecutionDecoration2 {
     void showStartMenu() {
         MarkingMenuBuilder builder = new MarkingMenuBuilder();
         builder.marking("Continue...", "NH");
-        builder.call(new iUpdateable() {
+        builder.call(new IUpdateable() {
             public
             void update() {
                 continueToBeActiveAfterUp();
@@ -80,14 +80,14 @@ class ExecutionDecoration2 {
     void showStopMenu() {
         MarkingMenuBuilder builder = new MarkingMenuBuilder();
         builder.marking("Stop", "SH");
-        builder.call(new iUpdateable() {
+        builder.call(new IUpdateable() {
             public
             void update() {
                 stopBeingActiveNow();
             }
         });
         builder.marking("Pause", "W");
-        builder.call(new iUpdateable() {
+        builder.call(new IUpdateable() {
             public
             void update() {
                 pauseBeingActiveNow();
@@ -105,14 +105,14 @@ class ExecutionDecoration2 {
     void showUnPauseMenu() {
         MarkingMenuBuilder builder = new MarkingMenuBuilder();
         builder.marking("Stop", "SH");
-        builder.call(new iUpdateable() {
+        builder.call(new IUpdateable() {
             public
             void update() {
                 stopBeingActiveNow();
             }
         });
         builder.marking("Go", "E");
-        builder.call(new iUpdateable() {
+        builder.call(new IUpdateable() {
             public
             void update() {
                 unpauseBeingActiveNow();

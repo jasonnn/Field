@@ -1,6 +1,6 @@
 package field.graph;
 
-import field.math.abstraction.iMetric;
+import field.math.abstraction.IMetric;
 import field.math.linalg.Vector2;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ class SpringUtil<t_node> {
 
     double EPSILON = 0.0001d;
 
-    private final iMetric<t_node, t_node> distance;
+    private final IMetric<t_node, t_node> distance;
     private final ArrayList<t_node> vertex;
     private double[][] dm;
     private Vector2[] xydata;
@@ -35,7 +35,7 @@ class SpringUtil<t_node> {
 
 
     public
-    SpringUtil(iMetric<t_node, t_node> distance, ArrayList<t_node> vertex) {
+    SpringUtil(IMetric<t_node, t_node> distance, ArrayList<t_node> vertex) {
         this.distance = distance;
         this.vertex = vertex;
     }

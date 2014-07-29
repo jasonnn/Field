@@ -1,10 +1,10 @@
 package field.core.execution;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -13,10 +13,11 @@ import field.core.ui.MarkingMenuBuilder;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.PlainDraggableComponent;
 import field.core.windowing.components.iComponent;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFloatProvider;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.abstraction.IFloatProvider;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.util.collect.tuple.Triple;
@@ -25,19 +26,19 @@ import org.eclipse.swt.widgets.Event;
 import java.util.*;
 
 public
-class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverride {
+class DisposableTimeSliderOverrides extends IVisualElementOverrides.DefaultOverride {
 
     public static final VisualElementProperty<Number> playDuration = new VisualElementProperty<Number>("playDuration");
     public static final VisualElementProperty<Number> skipbackDuration =
             new VisualElementProperty<Number>("skipbackDuration");
 
-    List<iVisualElement> on = new ArrayList<iVisualElement>();
+    List<IVisualElement> on = new ArrayList<IVisualElement>();
 
     private List<BasicRunner> dependantRunners = null;
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         if (source == forElement) {
 
             List<CachedLine> cl = getCachedLine();
@@ -46,9 +47,9 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
 
             boolean selected = false;
 
-            Set<iComponent> selection = iVisualElement.selectionGroup.get(source).getSelection();
+            Set<iComponent> selection = IVisualElement.selectionGroup.get(source).getSelection();
             for (iComponent s : selection) {
-                iVisualElement e = s.getVisualElement();
+                IVisualElement e = s.getVisualElement();
                 if ((e != null) && e.equals(source)) selected = true;
             }
             if (selected) {
@@ -65,12 +66,12 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
 
     @Override
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
         if (source == forElement) {
             Rect frame = forElement.getFrame(null);
             if (((frame.x - 5) <= event.x) && ((frame.x + frame.w + 5) >= event.x)) is.set(true);
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     private
@@ -88,7 +89,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
             float min = Float.POSITIVE_INFINITY;
             float max = Float.NEGATIVE_INFINITY;
 
-            for (iVisualElement e : on) {
+            for (IVisualElement e : on) {
                 Rect f = e.getFrame(null);
                 min = (float) Math.min(min, f.y);
                 max = (float) Math.max(max, f.y + f.h);
@@ -125,12 +126,12 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
 
     @Override
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
 
         if (source == forElement) {
             newFrame.w = 0;
             newFrame.h = 0;
-            forElement.setProperty(iVisualElement.dirty, true);
+            forElement.setProperty(IVisualElement.dirty, true);
             if (dependantRunners != null) {
 
                 for (BasicRunner r : dependantRunners) {
@@ -148,7 +149,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
     static int uniq = 0;
 
     public static
-    iVisualElement createDTSO(List<iVisualElement> on, iVisualElement root, float initialx) {
+    IVisualElement createDTSO(List<IVisualElement> on, IVisualElement root, float initialx) {
         final Triple<VisualElement, PlainDraggableComponent, DisposableTimeSliderOverrides> created =
                 VisualElement.createWithToken("dtso+" + (uniq++),
                                               root,
@@ -157,15 +158,15 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
                                               PlainDraggableComponent.class,
                                               DisposableTimeSliderOverrides.class);
 
-        iVisualElement.name.set(created.left, created.left, "transient time slider");
-        iVisualElement.doNotSave.set(created.left, created.left, true);
+        IVisualElement.name.set(created.left, created.left, "transient time slider");
+        IVisualElement.doNotSave.set(created.left, created.left, true);
 
         created.left.setFrame(new Rect(initialx, 0, 0, 0));
 
         float min = Float.POSITIVE_INFINITY;
         float max = Float.NEGATIVE_INFINITY;
 
-        for (iVisualElement e : on) {
+        for (IVisualElement e : on) {
             Rect f = e.getFrame(null);
             min = (float) Math.min(min, f.x);
             max = (float) Math.max(max, f.x + f.w);
@@ -183,13 +184,13 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
         created.right.on = on;
         // 1. wire these things up to run @ this float provider
 
-        for (final iVisualElement v : on) {
+        for (final IVisualElement v : on) {
             PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
             iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
 
             Promise promise = pss.promiseForKey(v);
 
-            runner.addActive(new iFloatProvider() {
+            runner.addActive(new IFloatProvider() {
 
                 public
                 float evaluate() {
@@ -216,7 +217,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
     }
 
     public static
-    iVisualElement createDTSO2(List<iVisualElement> on, iVisualElement root, float initialx) {
+    IVisualElement createDTSO2(List<IVisualElement> on, IVisualElement root, float initialx) {
         final Triple<VisualElement, PlainDraggableComponent, DisposableTimeSliderOverrides> created =
                 VisualElement.createWithToken("dtso+" + (uniq++),
                                               root,
@@ -225,15 +226,15 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
                                               PlainDraggableComponent.class,
                                               DisposableTimeSliderOverrides.class);
 
-        iVisualElement.name.set(created.left, created.left, "transient time slider");
-        iVisualElement.doNotSave.set(created.left, created.left, true);
+        IVisualElement.name.set(created.left, created.left, "transient time slider");
+        IVisualElement.doNotSave.set(created.left, created.left, true);
 
         created.left.setFrame(new Rect(initialx, 0, 0, 100));
 
         float min = Float.POSITIVE_INFINITY;
         float max = Float.NEGATIVE_INFINITY;
 
-        for (iVisualElement e : on) {
+        for (IVisualElement e : on) {
             Rect f = e.getFrame(null);
             min = (float) Math.min(min, f.x);
             max = (float) Math.max(max, f.x + f.w);
@@ -249,7 +250,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
         List<BasicRunner> dep = new ArrayList<BasicRunner>();
 
         // 1. wire these things up to run @ this float provider
-        for (final iVisualElement v : on) {
+        for (final IVisualElement v : on) {
             final PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
 
             PythonScriptingSystem sub = new PythonScriptingSystem() {
@@ -282,11 +283,11 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
     }
 
     private static
-    float computePlayDurationForSelection(List<iVisualElement> on) {
+    float computePlayDurationForSelection(List<IVisualElement> on) {
 
         float playDuration = defaultPlayDuration;
 
-        for (iVisualElement e : on) {
+        for (IVisualElement e : on) {
             Number n = DisposableTimeSliderOverrides.playDuration.get(e);
             if (n != null) return n.floatValue();
         }
@@ -304,7 +305,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
 
     @Override
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
         if (source == forElement) {
 
             //System.out.println(" items is <" + items + "> <" + items.getClass() + ">");
@@ -315,7 +316,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
                     MarkingMenuBuilder b = map.getBuilder();
 
                     b.newMenu("Pause", "SW");
-                    b.call(new iUpdateable() {
+                    b.call(new IUpdateable() {
                         public
                         void update() {
                             playing = false;
@@ -329,7 +330,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
                     MarkingMenuBuilder b = map.getBuilder();
 
                     b.newMenu("Play", "E");
-                    b.call(new iUpdateable() {
+                    b.call(new IUpdateable() {
                         public
                         void update() {
                             playing = true;
@@ -339,7 +340,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
                     });
 
                     b.newMenu("Play from beginning", "W");
-                    b.call(new iUpdateable() {
+                    b.call(new IUpdateable() {
                         public
                         void update() {
                             playing = true;
@@ -351,7 +352,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
                         }
                     });
                     b.newMenu("Loop from beginning", "NE2");
-                    b.call(new iUpdateable() {
+                    b.call(new IUpdateable() {
                         public
                         void update() {
                             //System.out.println(" will loop from the beginning ");
@@ -367,7 +368,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
 
                 MarkingMenuBuilder b = map.getBuilder();
                 b.newMenu("Delete", "S");
-                b.call(new iUpdateable() {
+                b.call(new IUpdateable() {
                     public
                     void update() {
                         stopAndDelete();
@@ -380,7 +381,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
         return super.menuItemsFor(source, items);
     }
 
-    iUpdateable player;
+    IUpdateable player;
 
     protected
     void startPlayer() {
@@ -390,11 +391,11 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
     float skipBy = 0;
 
     protected
-    void startPlayer(final iUpdateable continuation) {
+    void startPlayer(final IUpdateable continuation) {
         if (player != null) return;
 
         //System.out.println(" starting player ");
-        player = new iUpdateable() {
+        player = new IUpdateable() {
 
             long startedAt = System.currentTimeMillis();
 
@@ -437,12 +438,12 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
 
                 //forElement.setFrame(f);
 
-                iVisualElementOverrides.topology.begin(forElement);
-                iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(forElement,
+                IVisualElementOverrides.topology.begin(forElement);
+                IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(forElement,
                                                                                     f,
                                                                                     forElement.getFrame(null),
                                                                                     true);
-                iVisualElementOverrides.topology.end(forElement);
+                IVisualElementOverrides.topology.end(forElement);
 
             }
         };
@@ -451,14 +452,14 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
     }
 
     public static
-    void playFromBeginning(iVisualElement e, iVisualElement root) {
-        final iVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
+    void playFromBeginning(IVisualElement e, IVisualElement root) {
+        final IVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
 
-        final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
+        final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) IVisualElement.overrides.get(dtso);
 
         o.playing = true;
         o.loop = false;
-        o.startPlayer(new iUpdateable() {
+        o.startPlayer(new IUpdateable() {
 
             public
             void update() {
@@ -468,16 +469,16 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
     }
 
     public static
-    DisposableTimeSliderOverrides playFromBeginning(List<iVisualElement> e, iVisualElement root) {
+    DisposableTimeSliderOverrides playFromBeginning(List<IVisualElement> e, IVisualElement root) {
         if (e.size() == 0) return null;
 
-        final iVisualElement dtso = createDTSO2(e, root, (float) e.get(0).getFrame(null).x - 1);
+        final IVisualElement dtso = createDTSO2(e, root, (float) e.get(0).getFrame(null).x - 1);
 
-        final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
+        final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) IVisualElement.overrides.get(dtso);
 
         o.playing = true;
         o.loop = false;
-        o.startPlayer(new iUpdateable() {
+        o.startPlayer(new IUpdateable() {
 
             public
             void update() {
@@ -489,14 +490,14 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
     }
 
     public static
-    DisposableTimeSliderOverrides loopFromBeginning(iVisualElement e, iVisualElement root) {
-        final iVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
+    DisposableTimeSliderOverrides loopFromBeginning(IVisualElement e, IVisualElement root) {
+        final IVisualElement dtso = createDTSO(Collections.singletonList(e), root, (float) e.getFrame(null).x);
 
-        final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) iVisualElement.overrides.get(dtso);
+        final DisposableTimeSliderOverrides o = (DisposableTimeSliderOverrides) IVisualElement.overrides.get(dtso);
 
         o.playing = true;
         o.loop = true;
-        o.startPlayer(new iUpdateable() {
+        o.startPlayer(new IUpdateable() {
 
             public
             void update() {
@@ -509,7 +510,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
 
     public
     void stopAndDelete() {
-        for (final iVisualElement v : on) {
+        for (final IVisualElement v : on) {
             PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
             iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
 
@@ -532,7 +533,7 @@ class DisposableTimeSliderOverrides extends iVisualElementOverrides.DefaultOverr
     void stop() {
         if (player == null) return;
 
-        for (final iVisualElement v : on) {
+        for (final IVisualElement v : on) {
             PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
             iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
 

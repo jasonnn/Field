@@ -1,7 +1,7 @@
 package field.core.plugins.python;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.core.ui.text.embedded.HistogramLayerPainter;
@@ -34,7 +34,7 @@ class OutputInserts {
     public
     interface iHandlePrintClass {
         public
-        boolean handle(Object toPrint, OutputInserts o, iVisualElement inside);
+        boolean handle(Object toPrint, OutputInserts o, IVisualElement inside);
     }
 
     public static VisualElementProperty<OutputInserts> outputInserts =
@@ -46,7 +46,7 @@ class OutputInserts {
 
         addPrintHandler(new iHandlePrintClass() {
             public
-            boolean handle(Object toPrint, OutputInserts o, iVisualElement inside) {
+            boolean handle(Object toPrint, OutputInserts o, IVisualElement inside) {
                 if (toPrint instanceof Histogram) {
                     printHistogram("histogram", "histogram", inside, (Histogram<Number>) toPrint);
                     return true;
@@ -57,7 +57,7 @@ class OutputInserts {
 
         addPrintHandler(new iHandlePrintClass() {
             public
-            boolean handle(Object toPrint, OutputInserts o, iVisualElement inside) {
+            boolean handle(Object toPrint, OutputInserts o, IVisualElement inside) {
                 if (toPrint instanceof PyGenerator) {
 
                     PyObject next = ((PyGenerator) toPrint).__iternext__();
@@ -82,7 +82,7 @@ class OutputInserts {
         addPrintHandler(new iHandlePrintClass() {
 
             public
-            boolean handle(Object toPrint, OutputInserts o, iVisualElement inside) {
+            boolean handle(Object toPrint, OutputInserts o, IVisualElement inside) {
                 if (toPrint instanceof List) {
                     List l = ((List) toPrint);
                     if (l.isEmpty()) {
@@ -111,7 +111,7 @@ class OutputInserts {
         addPrintHandler(new iHandlePrintClass() {
 
             public
-            boolean handle(Object toPrint, OutputInserts o, iVisualElement inside) {
+            boolean handle(Object toPrint, OutputInserts o, IVisualElement inside) {
                 if (toPrint instanceof Map) {
                     Map l = ((Map) toPrint);
                     if (l.isEmpty()) {
@@ -181,7 +181,7 @@ class OutputInserts {
     }
 
     public static
-    void printButton(String name, iVisualElement inside, int width, final PyObject call) {
+    void printButton(String name, IVisualElement inside, int width, final PyObject call) {
         OutputInserts oi = outputInserts.get(inside);
 
         PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
@@ -207,7 +207,7 @@ class OutputInserts {
 
 
     public static
-    void printButton(String name, iVisualElement inside, final PyObject call) {
+    void printButton(String name, IVisualElement inside, final PyObject call) {
         OutputInserts oi = outputInserts.get(inside);
 
         PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
@@ -232,7 +232,7 @@ class OutputInserts {
     }
 
     public static
-    void printFold(String name, iVisualElement inside, final String text) {
+    void printFold(String name, IVisualElement inside, final String text) {
         OutputInserts oi = outputInserts.get(inside);
 
         PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
@@ -259,7 +259,7 @@ class OutputInserts {
     }
 
     public static
-    void printHistogram(String text, String name, iVisualElement inside, field.math.util.Histogram<Number> n) {
+    void printHistogram(String text, String name, IVisualElement inside, field.math.util.Histogram<Number> n) {
         OutputInserts oi = outputInserts.get(inside);
 
         PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
@@ -275,7 +275,7 @@ class OutputInserts {
     }
 
     public static
-    void specialPrint(Object o, iVisualElement inside) {
+    void specialPrint(Object o, IVisualElement inside) {
         PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
         OutputInserts oi = outputInserts.get(inside);
         if (ed == null || oi == null || (!(ed instanceof PythonPluginEditor))) return;

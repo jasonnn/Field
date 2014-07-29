@@ -11,64 +11,64 @@ import java.util.Stack;
 
 
 public
-class VisualElementContextTopology extends ContextTopology<iVisualElement, iVisualElementOverrides> {
+class VisualElementContextTopology extends ContextTopology<IVisualElement, IVisualElementOverrides> {
 
-    private final iVisualElement rootElement;
+    private final IVisualElement rootElement;
 
     public
-    VisualElementContextTopology(iVisualElement root) {
-        super(iVisualElement.class, iVisualElementOverrides.class);
+    VisualElementContextTopology(IVisualElement root) {
+        super(IVisualElement.class, IVisualElementOverrides.class);
         this.rootElement = root;
-        this.storage = new iContextStorage<iVisualElement, iVisualElementOverrides>() {
+        this.storage = new iContextStorage<IVisualElement, IVisualElementOverrides>() {
             public
-            iVisualElementOverrides get(iVisualElement at, Method m) {
-                return at.getProperty(iVisualElement.overrides);
+            IVisualElementOverrides get(IVisualElement at, Method m) {
+                return at.getProperty(IVisualElement.overrides);
             }
         };
     }
 
-    ThreadLocal<Stack<iVisualElement>> atStack = new ThreadLocal<Stack<iVisualElement>>() {
+    ThreadLocal<Stack<IVisualElement>> atStack = new ThreadLocal<Stack<IVisualElement>>() {
         @Override
         protected
-        Stack<iVisualElement> initialValue() {
-            return new Stack<iVisualElement>();
+        Stack<IVisualElement> initialValue() {
+            return new Stack<IVisualElement>();
         }
     };
 
     public
-    void begin(iVisualElement e) {
-        Stack<iVisualElement> stack = atStack.get();
+    void begin(IVisualElement e) {
+        Stack<IVisualElement> stack = atStack.get();
         stack.push(e);
         setAt(e);
     }
 
     public
-    void end(iVisualElement e) {
-        Stack<iVisualElement> stack = atStack.get();
+    void end(IVisualElement e) {
+        Stack<IVisualElement> stack = atStack.get();
         assert stack.peek() == e;
         setAt(stack.pop());
     }
 
     @Override
     public
-    Set<iVisualElement> childrenOf(iVisualElement p) {
-        return new LinkedHashSet<iVisualElement>(p.getChildren());
+    Set<IVisualElement> childrenOf(IVisualElement p) {
+        return new LinkedHashSet<IVisualElement>(p.getChildren());
     }
 
     @Override
     public
-    void deleteChild(iVisualElement parent, iVisualElement child) {
+    void deleteChild(IVisualElement parent, IVisualElement child) {
     }
 
     @Override
     public
-    Set<iVisualElement> parentsOf(iVisualElement k) {
-        return new LinkedHashSet<iVisualElement>((Collection<? extends iVisualElement>) k.getParents());
+    Set<IVisualElement> parentsOf(IVisualElement k) {
+        return new LinkedHashSet<IVisualElement>((Collection<? extends IVisualElement>) k.getParents());
     }
 
     @Override
     public
-    iVisualElement root() {
+    IVisualElement root() {
         return rootElement;
     }
 

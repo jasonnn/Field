@@ -2,8 +2,8 @@ package field.core.windowing.components;
 
 import field.core.DragDuplicator;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.core.windowing.components.RootComponent.iMousePeer;
@@ -55,7 +55,7 @@ class GlassComponent implements iComponent {
     }
 
     public
-    iVisualElement getVisualElement() {
+    IVisualElement getVisualElement() {
         return null;
     }
 
@@ -233,7 +233,7 @@ class GlassComponent implements iComponent {
     }
 
     public
-    iComponent setVisualElement(iVisualElement ve) {
+    iComponent setVisualElement(IVisualElement ve) {
         return this;
     }
 

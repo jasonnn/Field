@@ -2,8 +2,8 @@ package field.core.plugins.history;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.help.ContextualHelp;
 import field.core.plugins.help.HelpBrowser;
@@ -25,12 +25,12 @@ class ElementFileSystemTreePlugin extends BaseSimplePlugin {
 
     @Override
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
         super.registeredWith(root);
 
         efst = new ElementFileSystemTree();
 
-        new SheetDropSupport(iVisualElement.enclosingFrame.get(root).getCanvas(), root);
+        new SheetDropSupport(IVisualElement.enclosingFrame.get(root).getCanvas(), root);
 
         fileSystemTree.set(root, root, this);
 
@@ -39,7 +39,7 @@ class ElementFileSystemTreePlugin extends BaseSimplePlugin {
 
     @NextUpdate(delay = 3)
     private
-    void installHelpBrowser(final iVisualElement root) {
+    void installHelpBrowser(final IVisualElement root) {
         HelpBrowser h = HelpBrowser.helpBrowser.get(root);
         ContextualHelp ch = h.getContextualHelp();
         ch.addContextualHelpForWidget("filesyste",

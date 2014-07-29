@@ -2,14 +2,14 @@ package field.core.ui.text.embedded;
 
 import field.core.Constants;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.ui.SmallMenu;
 import field.core.ui.text.embedded.CustomInsertSystem.ExecutesWhat;
 import field.core.ui.text.embedded.CustomInsertSystem.ExecutesWhen;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
 import field.core.windowing.GLComponentWindow;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.linalg.Vector2;
 import field.math.util.BreakpointFloat;
 import field.math.util.BreakpointFloat.Next;
@@ -38,7 +38,7 @@ class MinimalGraphWidget2 extends MinimalExpandable implements iRegistersMinimal
     public static
     class Component_tuple extends ProvidedComponent {
 
-        public transient iUpdateable notify;
+        public transient IUpdateable notify;
 
         public CubicInterpolatorDynamic<BreakpointFloat> interpolator;
 
@@ -50,7 +50,7 @@ class MinimalGraphWidget2 extends MinimalExpandable implements iRegistersMinimal
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             super.deserialize(inside);
             if (when == null) when = ExecutesWhen.never;
             if (what == null) what = ExecutesWhat.line;
@@ -135,7 +135,7 @@ class MinimalGraphWidget2 extends MinimalExpandable implements iRegistersMinimal
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             super.deserialize(inside);
             if (when == null) when = ExecutesWhen.never;
             if (what == null) what = ExecutesWhat.line;
@@ -489,24 +489,24 @@ class MinimalGraphWidget2 extends MinimalExpandable implements iRegistersMinimal
     }
 
     protected
-    LinkedHashMap<String, iUpdateable> popup() {
-        LinkedHashMap<String, iUpdateable> menu = new LinkedHashMap<String, iUpdateable>();
+    LinkedHashMap<String, IUpdateable> popup() {
+        LinkedHashMap<String, IUpdateable> menu = new LinkedHashMap<String, IUpdateable>();
         menu.put("Auto execute: when", null);
-        menu.put((when == ExecutesWhen.always ? "!" : "") + "  always", new iUpdateable() {
+        menu.put((when == ExecutesWhen.always ? "!" : "") + "  always", new IUpdateable() {
 
             public
             void update() {
                 when = ExecutesWhen.always;
             }
         });
-        menu.put((when == ExecutesWhen.onMouseUp ? "!" : "") + "  on mouse up", new iUpdateable() {
+        menu.put((when == ExecutesWhen.onMouseUp ? "!" : "") + "  on mouse up", new IUpdateable() {
 
             public
             void update() {
                 when = ExecutesWhen.onMouseUp;
             }
         });
-        menu.put((when == ExecutesWhen.never ? "!" : "") + "  never", new iUpdateable() {
+        menu.put((when == ExecutesWhen.never ? "!" : "") + "  never", new IUpdateable() {
 
             public
             void update() {
@@ -515,21 +515,21 @@ class MinimalGraphWidget2 extends MinimalExpandable implements iRegistersMinimal
         });
 
         menu.put("Auto execute: what", null);
-        menu.put((what == ExecutesWhat.line ? "!" : "") + "  this line", new iUpdateable() {
+        menu.put((what == ExecutesWhat.line ? "!" : "") + "  this line", new IUpdateable() {
 
             public
             void update() {
                 what = ExecutesWhat.line;
             }
         });
-        menu.put((what == ExecutesWhat.enclosingBlock ? "!" : "") + "  enclosing block", new iUpdateable() {
+        menu.put((what == ExecutesWhat.enclosingBlock ? "!" : "") + "  enclosing block", new IUpdateable() {
 
             public
             void update() {
                 what = ExecutesWhat.enclosingBlock;
             }
         });
-        menu.put((what == ExecutesWhat.everything ? "!" : "") + "  everything", new iUpdateable() {
+        menu.put((what == ExecutesWhat.everything ? "!" : "") + "  everything", new IUpdateable() {
 
             public
             void update() {
@@ -573,14 +573,14 @@ class MinimalGraphWidget2 extends MinimalExpandable implements iRegistersMinimal
                 }
 
                 if (initialDownOn != -1) {
-                    LinkedHashMap<String, iUpdateable> items = new LinkedHashMap<String, iUpdateable>();
+                    LinkedHashMap<String, IUpdateable> items = new LinkedHashMap<String, IUpdateable>();
 
                     items.put("Tangent type, currently \""
                               + interpolator.getSample(initialDownOn).data.next.toString()
                               + '"', null);
                     for (final Next t : Next.values()) {
                         String prefix = (t == interpolator.getSample(initialDownOn).data.next) ? "!" : "";
-                        items.put(prefix + "    " + t.toString(), new iUpdateable() {
+                        items.put(prefix + "    " + t.toString(), new IUpdateable() {
                             public
                             void update() {
                                 interpolator.getSample(initialDownOn).data.next = t;
@@ -589,7 +589,7 @@ class MinimalGraphWidget2 extends MinimalExpandable implements iRegistersMinimal
                         });
                     }
 
-                    LinkedHashMap<String, iUpdateable> m = popup();
+                    LinkedHashMap<String, IUpdateable> m = popup();
 
                     items.putAll(m);
                     //TODO swt
@@ -605,7 +605,7 @@ class MinimalGraphWidget2 extends MinimalExpandable implements iRegistersMinimal
 
                 }
                 else {
-                    LinkedHashMap<String, iUpdateable> m = popup();
+                    LinkedHashMap<String, IUpdateable> m = popup();
                     Canvas canvas = irc.getControl();
                     Point p = Launcher.display.map(canvas, irc.getControl().getShell(), new Point(e.getX(), e.getY()));
 

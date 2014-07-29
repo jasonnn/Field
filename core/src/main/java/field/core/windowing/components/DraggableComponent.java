@@ -4,11 +4,11 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.CachedPerUpdate;
 import field.core.Constants;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.plugins.drawing.BasicDrawingPlugin;
 import field.core.plugins.drawing.BasicDrawingPlugin.FrameManipulation;
 import field.core.plugins.drawing.SplineComputingOverride;
@@ -37,13 +37,14 @@ import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.DynamicPointlist;
 import field.graphics.dynamic.iDynamicMesh;
 import field.launch.Launcher;
+import field.math.abstraction.IInplaceProvider;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.math.linalg.iCoordinateFrame;
 import field.math.linalg.iCoordinateFrame.iMutable;
 import field.namespace.context.Dispatch;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.PythonUtils;
 import field.util.TaskQueue;
 import org.eclipse.swt.SWT;
@@ -270,7 +271,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
     }
 
     public static
-    void finalizeRect(iVisualElement toFinalize, Set<Resize> currentResize, int modifiersDown) {
+    void finalizeRect(IVisualElement toFinalize, Set<Resize> currentResize, int modifiersDown) {
         Rect frameIn = toFinalize.getFrame(new Rect(0, 0, 0, 0));
         Rect frameOut = toFinalize.getFrame(new Rect(0, 0, 0, 0));
         BasicDrawingPlugin.frameManipulationEnd.set(toFinalize,
@@ -278,9 +279,9 @@ class DraggableComponent implements iComponent, iDraggableComponent {
                                                     new FrameManipulation(currentResize, frameOut, modifiersDown));
 
         if (!frameIn.equals(frameOut)) {
-            iVisualElementOverrides.topology.begin(toFinalize);
-            iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(toFinalize, frameOut, frameIn, true);
-            iVisualElementOverrides.topology.end(toFinalize);
+            IVisualElementOverrides.topology.begin(toFinalize);
+            IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(toFinalize, frameOut, frameIn, true);
+            IVisualElementOverrides.topology.end(toFinalize);
 
             if (GLComponentWindow.getCurrentWindow(null) != null) {
                 GLComponentWindow.getCurrentWindow(null).getRoot().requestRedisplay();
@@ -289,7 +290,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
     }
 
     public static
-    void initiateRect(iVisualElement toInitiate, Set<Resize> with) {
+    void initiateRect(IVisualElement toInitiate, Set<Resize> with) {
         if (toInitiate != null) {
             BasicDrawingPlugin.frameManipulationBegin.set(toInitiate,
                                                           toInitiate,
@@ -301,9 +302,9 @@ class DraggableComponent implements iComponent, iDraggableComponent {
         }
     }
 
-    public iVisualElement element;
+    public IVisualElement element;
 
-    public iVisualElementOverrides overridingInterface;
+    public IVisualElementOverrides overridingInterface;
 
     public boolean marked = false;
 
@@ -362,25 +363,25 @@ class DraggableComponent implements iComponent, iDraggableComponent {
 
         coordSys = new CoordinateFrame();
 
-        lines = new BasicGeometry.LineList(new field.math.abstraction.iInplaceProvider<iMutable>() {
+        lines = new BasicGeometry.LineList(new IInplaceProvider<iMutable>() {
             public
             iMutable get(iMutable o) {
                 return coordSys;
             }
         }).setWidth(1.5f);
-        triangles = new BasicGeometry.TriangleMesh(new field.math.abstraction.iInplaceProvider<iMutable>() {
+        triangles = new BasicGeometry.TriangleMesh(new IInplaceProvider<iMutable>() {
             public
             iMutable get(iMutable o) {
                 return coordSys;
             }
         });
-        points = new PointList(new field.math.abstraction.iInplaceProvider<iMutable>() {
+        points = new PointList(new IInplaceProvider<iMutable>() {
             public
             iMutable get(iMutable o) {
                 return coordSys;
             }
         });
-        labelTriangles = new BasicGeometry.TriangleMesh(new field.math.abstraction.iInplaceProvider<iMutable>() {
+        labelTriangles = new BasicGeometry.TriangleMesh(new IInplaceProvider<iMutable>() {
             public
             iMutable get(iMutable o) {
                 return coordSys;
@@ -435,7 +436,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
     }
 
     public
-    iVisualElement getVisualElement() {
+    IVisualElement getVisualElement() {
         return this.element;
     }
 
@@ -632,7 +633,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
 
         if (!GLComponentWindow.getCurrentWindow(this).present) {
             mouseIsDown = true;
-            final iFunction<Boolean, iComponent> f = decoration.down(arg0);
+            final IFunction<iComponent, Boolean> f = decoration.down(arg0);
             inside.requestRedisplay();
             if (f != null) {
                 paintQueue.new Task() {
@@ -646,7 +647,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
 
                         i++;
                         if (i == 2) {
-                            f.f(DraggableComponent.this);
+                            f.apply(DraggableComponent.this);
                             inside.requestRedisplay();
                         }
                         else {
@@ -672,7 +673,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
 
 // JPopupMenu menu = new SmallMenu().createMenu(items);
             Ref<GLComponentWindow> ref = new Ref<GLComponentWindow>(null);
-            this.overridingInterface.getProperty(element, iVisualElement.enclosingFrame, ref);
+            this.overridingInterface.getProperty(element, IVisualElement.enclosingFrame, ref);
             if (ref.get() != null) {
 // menu.show(ref.get().getCanvas(), (int)
 // ref.get().getCurrentMouseInWindowCoordinates().x,
@@ -795,7 +796,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
             decoration.paintNow();
 
             Ref<String> r = new Ref<String>("");
-            overridingInterface.getProperty(element, iVisualElement.name, r);
+            overridingInterface.getProperty(element, IVisualElement.name, r);
 
             boolean d = scaleHasChanged();
 
@@ -810,7 +811,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
 
                 text.getInput().moveTo((int) (bounds.x + bounds.w / 2), (int) (bounds.y + bounds.h / 2));
                 text.getInput()
-                    .setPointAttribute(iLinearGraphicsContext.text_v, element.getProperty(iVisualElement.name));
+                    .setPointAttribute(iLinearGraphicsContext.text_v, element.getProperty(IVisualElement.name));
                 text.getProperties().put(iLinearGraphicsContext.containsText, true);
                 text.getProperties().put(iLinearGraphicsContext.color, new Vector4(0, 0, 0, 0.9f));
                 text.getInput()
@@ -827,7 +828,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
                 GLComponentWindow.currentContext.submitLine(text, text.getProperties());
             }
 
-            String b = element.getProperty(iVisualElement.boundTo);
+            String b = element.getProperty(IVisualElement.boundTo);
 
             if (b != null && b.trim().length() > 0) {
                 CachedLine text = new CachedLine();
@@ -906,11 +907,11 @@ class DraggableComponent implements iComponent, iDraggableComponent {
             if (dirty) {
                 dirty = false;
 
-                Vector4 color1 = element.getProperty(iVisualElement.color1);
+                Vector4 color1 = element.getProperty(IVisualElement.color1);
                 if (color1 == null) color1 = new Vector4(1, 1, 1, 0.5f);
                 else color1 = new Vector4(color1);
 
-                Vector4 color2 = element.getProperty(iVisualElement.color2);
+                Vector4 color2 = element.getProperty(IVisualElement.color2);
                 if (color2 == null) color2 = new Vector4(0, 0, 0, 0.1f);
                 else color2 = new Vector4(color2);
 
@@ -1107,11 +1108,11 @@ class DraggableComponent implements iComponent, iDraggableComponent {
     }
 
     public
-    iComponent setVisualElement(iVisualElement element) {
+    iComponent setVisualElement(IVisualElement element) {
         this.element = element;
         overridingInterface =
-                new Dispatch<iVisualElement, iVisualElementOverrides>(iVisualElementOverrides.topology).getOverrideProxyFor(element,
-                                                                                                                            iVisualElementOverrides.class);
+                new Dispatch<IVisualElement, IVisualElementOverrides>(IVisualElementOverrides.topology).getOverrideProxyFor(element,
+                                                                                                                            IVisualElementOverrides.class);
         this.setBounds(element.getFrame(new Rect(0, 0, 0, 0)));
         return this;
     }
@@ -1120,7 +1121,7 @@ class DraggableComponent implements iComponent, iDraggableComponent {
     ComponentContainer getInside() {
         if (inside != null) return inside;
 
-        GLComponentWindow ec = iVisualElement.enclosingFrame.get(element);
+        GLComponentWindow ec = IVisualElement.enclosingFrame.get(element);
         if (ec == null) return null;
         return ec.getRoot();
     }
@@ -1160,9 +1161,9 @@ class DraggableComponent implements iComponent, iDraggableComponent {
     List<SelectionGroup<iComponent>> getMarkingGroups() {
         ArrayList<SelectionGroup<iComponent>> sel = new ArrayList<SelectionGroup<iComponent>>();
         Ref<SelectionGroup<iComponent>> out = new Ref<SelectionGroup<iComponent>>(null);
-        overridingInterface.getProperty(element, iVisualElement.markingGroup, out);
+        overridingInterface.getProperty(element, IVisualElement.markingGroup, out);
         if (out.get() != null) sel.add(out.get());
-        overridingInterface.getProperty(element, iVisualElement.markingGroup, out);
+        overridingInterface.getProperty(element, IVisualElement.markingGroup, out);
         return sel;
     }
 
@@ -1171,9 +1172,9 @@ class DraggableComponent implements iComponent, iDraggableComponent {
     List<SelectionGroup<iComponent>> getSelectionGroups() {
         ArrayList<SelectionGroup<iComponent>> sel = new ArrayList<SelectionGroup<iComponent>>();
         Ref<SelectionGroup<iComponent>> out = new Ref<SelectionGroup<iComponent>>(null);
-        overridingInterface.getProperty(element, iVisualElement.selectionGroup, out);
+        overridingInterface.getProperty(element, IVisualElement.selectionGroup, out);
         if (out.get() != null) sel.add(out.get());
-        overridingInterface.getProperty(element, iVisualElement.selectionGroup, out);
+        overridingInterface.getProperty(element, IVisualElement.selectionGroup, out);
         return sel;
     }
 

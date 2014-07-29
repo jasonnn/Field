@@ -1,7 +1,7 @@
 package field.core.ui.text.embedded;
 
 import field.core.Constants;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
 import field.namespace.key.OKey;
 import field.util.PythonUtils;
@@ -30,7 +30,7 @@ class MinimalJustLayerPainter extends MinimalExpandable implements iRegistersMin
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
 
             component = new MinimalJustLayerPainter() {
             };

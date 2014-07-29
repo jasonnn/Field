@@ -1,8 +1,8 @@
 package field.util;
 
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -55,10 +55,10 @@ class RectangleAllocator {
     }
 
     public static
-    Rect allocateOnSheet(iVisualElement root, Rect rect, Move move, float buffer) {
+    Rect allocateOnSheet(IVisualElement root, Rect rect, Move move, float buffer) {
         RectangleAllocator allocator = new RectangleAllocator();
-        List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
-        for (iVisualElement e : all) {
+        List<IVisualElement> all = StandardFluidSheet.allVisualElements(root);
+        for (IVisualElement e : all) {
             Rect ff = e.getFrame(null);
             if (ff != null) allocator.rectangles.put(e.getUniqueID(), ff);
         }

@@ -11,8 +11,8 @@ import field.bytecode.protect.yield.YieldUtilities;
 import field.core.Constants;
 import field.core.Platform;
 import field.core.Platform.OS;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.plugins.drawing.threed.ThreedContext.iThreedDrawingSurface;
 import field.core.plugins.selection.ToolBarFolder;
@@ -25,9 +25,9 @@ import field.core.windowing.components.PlainComponent;
 import field.core.windowing.components.PlainDraggableComponent;
 import field.core.windowing.components.iComponent;
 import field.graphics.core.*;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
 import field.math.BaseMath;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector2;
@@ -75,7 +75,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 @Woven
 public
-class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue, iThreedDrawingSurface {
+class GLComponentWindow implements Listener, IUpdateable, iProvidesQueue, iThreedDrawingSurface {
 
     public static Set<Integer> keysDown = new LinkedHashSet<Integer>();
 
@@ -164,7 +164,7 @@ class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue, iThree
         }
 
         public
-        iVisualElement getVisualElement() {
+        IVisualElement getVisualElement() {
             return null;
         }
 
@@ -577,8 +577,8 @@ class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue, iThree
 
                 if (PresentationMode.isHidden(c)) continue;
 
-                // skip = false;
-                // if (!skip)
+                // SKIP = false;
+                // if (!SKIP)
 
                 c.paint(inside, frameSoFar, true || GLComponentWindow.currentWindow.alwaysVisible || !skip);
             }
@@ -610,7 +610,7 @@ class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue, iThree
         }
 
         public
-        iComponent setVisualElement(iVisualElement ve) {
+        iComponent setVisualElement(IVisualElement ve) {
             return this;
         }
 
@@ -641,14 +641,14 @@ class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue, iThree
         void lockFocusTo(iComponent component) {
             focusLocked = true;
             focusLockedTo = component;
-            iVisualElement.hasFocusLock.set(focusLockedTo.getVisualElement(), focusLockedTo.getVisualElement(), true);
+            IVisualElement.hasFocusLock.set(focusLockedTo.getVisualElement(), focusLockedTo.getVisualElement(), true);
         }
 
         public
         void unlockFocus() {
             if (focusLocked) {
                 focusLocked = false;
-                iVisualElement.hasFocusLock.set(focusLockedTo.getVisualElement(),
+                IVisualElement.hasFocusLock.set(focusLockedTo.getVisualElement(),
                                                 focusLockedTo.getVisualElement(),
                                                 false);
             }
@@ -2354,9 +2354,9 @@ class GLComponentWindow implements Listener, iUpdateable, iProvidesQueue, iThree
     }
 
     public
-    void setEditorSpaceHelper(iVisualElement root) {
+    void setEditorSpaceHelper(IVisualElement root) {
         editorSpaceHelper = new EditorSpaceBox(this, root);
-        Launcher.getLauncher().addPostUpdateable(new iUpdateable() {
+        Launcher.getLauncher().addPostUpdateable(new IUpdateable() {
             @Override
             public
             void update() {

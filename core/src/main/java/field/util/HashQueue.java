@@ -1,6 +1,6 @@
 package field.util;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
  * thread safe task queue
  */
 public
-class HashQueue implements iUpdateable {
+class HashQueue implements IUpdateable {
 
     protected Map<Object, Task> live = new LinkedHashMap<Object, Task>();
 
@@ -89,12 +89,12 @@ class HashQueue implements iUpdateable {
     class Gate extends Task {
         boolean con = true;
 
-        private final iUpdateable up;
+        private final IUpdateable up;
 
         private final boolean touch;
 
         public
-        Gate(Object key, HashQueue in, iUpdateable up, boolean touch) {
+        Gate(Object key, HashQueue in, IUpdateable up, boolean touch) {
             in.super(key);
             this.up = up;
             this.touch = touch;
@@ -124,10 +124,10 @@ class HashQueue implements iUpdateable {
     public
     class Updateable extends Task {
 
-        iUpdateable u;
+        IUpdateable u;
 
         public
-        Updateable(Object key, iUpdateable u) {
+        Updateable(Object key, IUpdateable u) {
             super(key);
             this.u = u;
         }
@@ -142,13 +142,13 @@ class HashQueue implements iUpdateable {
     HashMap upMap = new HashMap();
 
     public
-    void addUpdateable(Object key, iUpdateable updateable) {
+    void addUpdateable(Object key, IUpdateable updateable) {
         Updateable up = new Updateable(key, updateable);
         upMap.put(updateable, up);
     }
 
     public
-    void removeUpdateable(iUpdateable view) {
+    void removeUpdateable(IUpdateable view) {
         Updateable up = (Updateable) upMap.remove(view);
         up.remove();
     }

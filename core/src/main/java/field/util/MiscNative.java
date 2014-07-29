@@ -1,7 +1,7 @@
 package field.util;
 
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +44,7 @@ class MiscNative {
         final FloatBuffer wgOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
         final FloatBuffer wbOut = ByteBuffer.allocateDirect(256 * 4).asFloatBuffer();
 
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             int t = 0;
             float length = 100;
@@ -126,7 +126,7 @@ class MiscNative {
         // public void run() {
         // }
         // }).start();
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
             int t = 0;
 
             public

@@ -3,7 +3,7 @@ package field.graphics.imageprocessing;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.graphics.core.*;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iSceneListElement;
@@ -12,7 +12,7 @@ import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.imageprocessing.ImageProcessing.TextureWrapper;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.graphics.windowing.FullScreenCanvasSWT.StereoSide;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import field.math.linalg.Vector4;
 
 import java.lang.reflect.Method;
@@ -49,7 +49,7 @@ class TwoPassImageProcessing implements iImageProcessor {
                            boolean genMipmap,
                            boolean useFloat,
                            boolean doBothPasses) {
-        this(new iProvider[]{i.getFBOOutput()}, width, height, useRect, genMipmap, useFloat, doBothPasses);
+        this(new IProvider[]{i.getFBOOutput()}, width, height, useRect, genMipmap, useFloat, doBothPasses);
     }
 
     public
@@ -59,7 +59,7 @@ class TwoPassImageProcessing implements iImageProcessor {
                            boolean genMipmap,
                            boolean useFloat,
                            boolean doBothPasses) {
-        this(new iProvider[]{}, width, height, useRect, genMipmap, useFloat, doBothPasses);
+        this(new IProvider[]{}, width, height, useRect, genMipmap, useFloat, doBothPasses);
     }
 
     public
@@ -70,7 +70,7 @@ class TwoPassImageProcessing implements iImageProcessor {
                            boolean genMipmap,
                            boolean useFloat,
                            boolean doBothPasses) {
-        this(new iProvider[]{new iProvider<Integer>() {
+        this(new IProvider[]{new IProvider<Integer>() {
             public
             Integer get() {
                 return i.getFBO();
@@ -86,7 +86,7 @@ class TwoPassImageProcessing implements iImageProcessor {
                            boolean genMipmap,
                            boolean useFloat,
                            boolean doBothPasses) {
-        this(new iProvider[]{i.getOutput(0),}, width, height, useRect, genMipmap, useFloat, doBothPasses);
+        this(new IProvider[]{i.getOutput(0),}, width, height, useRect, genMipmap, useFloat, doBothPasses);
     }
 
     public
@@ -97,7 +97,7 @@ class TwoPassImageProcessing implements iImageProcessor {
                            boolean genMipmap,
                            boolean useFloat,
                            boolean doBothPasses) {
-        this(new iProvider[]{i.getOutput(0), i.getOutput(1),},
+        this(new IProvider[]{i.getOutput(0), i.getOutput(1),},
              width,
              height,
              useRect,
@@ -108,7 +108,7 @@ class TwoPassImageProcessing implements iImageProcessor {
 
     @SuppressWarnings("unchecked")
     public
-    TwoPassImageProcessing(iProvider<Integer>[] fboInputs,
+    TwoPassImageProcessing(IProvider<Integer>[] fboInputs,
                            int width,
                            int height,
                            final boolean useRect,
@@ -118,19 +118,19 @@ class TwoPassImageProcessing implements iImageProcessor {
         this.useRect = useRect;
         this.doBothPasses = doBothPasses;
 
-        iProvider<Integer>[] fboInputsLeft = new iProvider[fboInputs.length + 1];
+        IProvider<Integer>[] fboInputsLeft = new IProvider[fboInputs.length + 1];
         System.arraycopy(fboInputs, 0, fboInputsLeft, 0, fboInputs.length);
-        fboInputsLeft[fboInputs.length] = new iProvider<Integer>() {
+        fboInputsLeft[fboInputs.length] = new IProvider<Integer>() {
             public
             Integer get() {
                 return right.getOutput(0).get();
             }
         };
 
-        iProvider<Integer>[] fboInputsRight = new iProvider[fboInputs.length + 1];
+        IProvider<Integer>[] fboInputsRight = new IProvider[fboInputs.length + 1];
         if (doBothPasses) {
             System.arraycopy(fboInputs, 0, fboInputsRight, 1, fboInputs.length);
-            fboInputsRight[0] = new iProvider<Integer>() {
+            fboInputsRight[0] = new IProvider<Integer>() {
                 public
                 Integer get() {
                     return left.getOutput(0).get();
@@ -140,7 +140,7 @@ class TwoPassImageProcessing implements iImageProcessor {
         }
         else {
             System.arraycopy(fboInputs, 0, fboInputsRight, 0, fboInputs.length);
-            fboInputsRight[fboInputs.length] = new iProvider<Integer>() {
+            fboInputsRight[fboInputs.length] = new IProvider<Integer>() {
                 public
                 Integer get() {
                     return left.getOutput(0).get();
@@ -169,10 +169,10 @@ class TwoPassImageProcessing implements iImageProcessor {
     }
 
     public
-    iProvider<Integer> getOutput(int num) {
-        final iProvider<Integer> lo = left.getOutput(0);
-        final iProvider<Integer> ro = right.getOutput(0);
-        return new iProvider<Integer>() {
+    IProvider<Integer> getOutput(int num) {
+        final IProvider<Integer> lo = left.getOutput(0);
+        final IProvider<Integer> ro = right.getOutput(0);
+        return new IProvider<Integer>() {
             public
             Integer get() {
                 return leftJustFinished ? lo.get() : ro.get();

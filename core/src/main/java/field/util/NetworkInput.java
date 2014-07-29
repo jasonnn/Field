@@ -1,6 +1,6 @@
 package field.util;
 
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 import field.math.linalg.VectorN;
 
 import java.io.ByteArrayInputStream;
@@ -276,7 +276,7 @@ class NetworkInput implements Runnable {
     }
 
     public
-    class RecieveFloat implements iFloatProvider {
+    class RecieveFloat implements IFloatProvider {
         public float value = 0;
 
         public

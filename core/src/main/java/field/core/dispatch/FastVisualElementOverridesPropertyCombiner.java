@@ -1,9 +1,10 @@
 package field.core.dispatch;
 
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.Ref;
-import field.math.graph.iMutable;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.math.graph.IMutable;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 
 import java.util.*;
 
@@ -30,33 +31,33 @@ class FastVisualElementOverridesPropertyCombiner<U, T> {
     }
 
     public
-    T getProperty(iVisualElement source, VisualElementProperty<U> prop, iCombiner<U, T> combiner) {
+    T getProperty(IVisualElement source, VisualElementProperty<U> prop, iCombiner<U, T> combiner) {
 
-        List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        List<IVisualElement> fringe = new LinkedList<IVisualElement>();
         fringe.add(source);
 
         T at = combiner.unit();
 
-        HashSet<iVisualElement> seen = new LinkedHashSet<iVisualElement>();
+        HashSet<IVisualElement> seen = new LinkedHashSet<IVisualElement>();
 
 
         Ref<U> ref = new Ref<U>(null);
 
         while (!fringe.isEmpty()) {
-            iVisualElement next = fringe.remove(0);
+            IVisualElement next = fringe.remove(0);
             if (!seen.contains(next)) {
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
 
 
                     ref.set(null);
-                    VisitCode o = over.getProperty(source, prop, ref);
+                    TraversalHint o = over.getProperty(source, prop, ref);
                     U u = ref.get();
                     at = combiner.bind(at, u);
 
-                    if (o.equals(VisitCode.skip)) {
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
+                    else if (o.equals(StandardTraversalHint.STOP)) {
                         return at;
                     }
                     else {
@@ -71,8 +72,8 @@ class FastVisualElementOverridesPropertyCombiner<U, T> {
     }
 
     protected
-    Collection<? extends iVisualElement> sort(List<? extends iMutable<iVisualElement>> parents) {
-        return (Collection<? extends iVisualElement>) parents;
+    Collection<? extends IVisualElement> sort(List<? extends IMutable<IVisualElement>> parents) {
+        return (Collection<? extends IVisualElement>) parents;
     }
 
 }

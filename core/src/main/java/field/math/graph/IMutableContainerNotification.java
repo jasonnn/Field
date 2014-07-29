@@ -6,5 +6,5 @@ package field.math.graph;
 public
 interface IMutableContainerNotification<T, P extends IMutable<P>> extends INotification<P> {
     public
-    void payloadChanged(iMutableContainer<T, P> on, T to);
+    void payloadChanged(IMutableContainer<T, P> on, T to);
 }

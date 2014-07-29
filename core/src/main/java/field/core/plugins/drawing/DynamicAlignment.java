@@ -2,8 +2,8 @@ package field.core.plugins.drawing;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.OfferedAlignment.iDrawable;
 import field.core.plugins.drawing.OfferedAlignment.iOffering;
 import field.core.plugins.drawing.align.PointOffering.BaseDrawable;
@@ -92,17 +92,17 @@ class DynamicAlignment implements iOffering {
 
 
     public
-    void createConstraint(iVisualElement root,
-                          LinkedHashMap<iVisualElement, Rect> current,
-                          iVisualElement element,
+    void createConstraint(IVisualElement root,
+                          LinkedHashMap<IVisualElement, Rect> current,
+                          IVisualElement element,
                           Rect or,
                           Rect originalRect,
                           Rect currentRect) {
     }
 
     public abstract
-    iDrawable score(LinkedHashMap<iVisualElement, Rect> current,
-                    iVisualElement element,
+    iDrawable score(LinkedHashMap<IVisualElement, Rect> current,
+                    IVisualElement element,
                     Rect originalRect,
                     Rect currentRect,
                     Rect newRect);

@@ -1,16 +1,16 @@
 package field.core.util;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.FieldGraphics2D;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.drawing.SplineComputingOverride.PLineList;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.python.PythonPlugin;
 import field.core.util.FieldPyObjectAdaptor.*;
-import field.math.abstraction.iHasScalar;
-import field.namespace.generic.Bind.iFunction;
+import field.math.abstraction.IHasScalar;
+import field.namespace.generic.IFunction;
 import field.util.collect.tuple.Pair;
 import field.util.collect.tuple.Triple;
 import field.util.Dict;
@@ -343,7 +343,7 @@ class FieldPyObjectAdaptor2 {
                         }
                     }
 
-                    final iVisualElement d = Py.tojava(self, iVisualElement.class);
+                    final IVisualElement d = Py.tojava(self, IVisualElement.class);
 
                     final PyObject found = injectedSelfMethods.get(name);
                     if (found != null) {
@@ -375,7 +375,7 @@ class FieldPyObjectAdaptor2 {
                 }
             };
 
-            PyType.fromClass(iVisualElement.class).addMethod(meth);
+            PyType.fromClass(IVisualElement.class).addMethod(meth);
         }
         {
             PyBuiltinMethodNarrow meth = new PyBuiltinMethodNarrow("__setattr__", 2) {
@@ -383,9 +383,9 @@ class FieldPyObjectAdaptor2 {
                 public
                 PyObject __call__(PyObject n, PyObject value) {
                     String name = Py.tojava(n, String.class);
-                    iVisualElement contents = Py.tojava(self, iVisualElement.class);
+                    IVisualElement contents = Py.tojava(self, IVisualElement.class);
                     if ("frame".equals(name)) {
-                        contents.getProperty(iVisualElement.overrides)
+                        contents.getProperty(IVisualElement.overrides)
                                 .shouldChangeFrame(contents,
                                                    ((Rect) value.__tojava__(Rect.class)),
                                                    contents.getFrame(null),
@@ -396,7 +396,7 @@ class FieldPyObjectAdaptor2 {
                     return Py.None;
                 }
             };
-            PyType.fromClass(iVisualElement.class).addMethod(meth);
+            PyType.fromClass(IVisualElement.class).addMethod(meth);
         }
 
         {
@@ -405,14 +405,14 @@ class FieldPyObjectAdaptor2 {
                 public
                 PyObject __call__(PyObject n) {
                     String name = Py.tojava(n, String.class);
-                    iVisualElement contents = Py.tojava(self, iVisualElement.class);
+                    IVisualElement contents = Py.tojava(self, IVisualElement.class);
 
                     contents.deleteProperty(new VisualElementProperty(name));
 
                     return Py.None;
                 }
             };
-            PyType.fromClass(iVisualElement.class).addMethod(meth);
+            PyType.fromClass(IVisualElement.class).addMethod(meth);
         }
 
         {
@@ -438,7 +438,7 @@ class FieldPyObjectAdaptor2 {
                 public
                 PyObject __call__(PyObject[] args, String[] kw) {
 
-                    iVisualElement d = Py.tojava(self, iVisualElement.class);
+                    IVisualElement d = Py.tojava(self, IVisualElement.class);
                     if (args.length == 0) SplineComputingOverride.executeMain(d);
                     if (args.length == 1)
                         SplineComputingOverride.executeMainWithLabel(d, Py.tojava(args[0], String.class));
@@ -446,7 +446,7 @@ class FieldPyObjectAdaptor2 {
                     return Py.None;
                 }
             };
-            PyType.fromClass(iVisualElement.class).addMethod(meth);
+            PyType.fromClass(IVisualElement.class).addMethod(meth);
         }
 
         {
@@ -455,12 +455,12 @@ class FieldPyObjectAdaptor2 {
                 public
                 PyObject __call__(PyObject[] args, String[] kw) {
 
-                    iFunction d = Py.tojava(self, iFunction.class);
-                    return Py.java2py(d.f(Py.tojava(args[0], Object.class)));
+                    IFunction d = Py.tojava(self, IFunction.class);
+                    return Py.java2py(d.apply(Py.tojava(args[0], Object.class)));
 
                 }
             };
-            PyType.fromClass(iFunction.class).addMethod(meth);
+            PyType.fromClass(IFunction.class).addMethod(meth);
         }
 
         PyBuiltinMethodNarrow meth = new PyBuiltinMethodNarrow("__ilshift__", 1) {
@@ -552,12 +552,12 @@ class FieldPyObjectAdaptor2 {
 
         public
         PyObject adapt(Object o) {
-            return new PyHasScalar((iHasScalar) o);
+            return new PyHasScalar((IHasScalar) o);
         }
 
         public
         boolean canAdapt(Object o) {
-            return o instanceof iHasScalar;
+            return o instanceof IHasScalar;
         }
 
     }
@@ -565,11 +565,11 @@ class FieldPyObjectAdaptor2 {
     public static
     class PyHasScalar extends PyFloat {
 
-        private final iHasScalar contents;
+        private final IHasScalar contents;
         private final PyObjectDerived instance;
 
         public
-        PyHasScalar(iHasScalar e) {
+        PyHasScalar(IHasScalar e) {
             super(e.getDoubleValue());
             this.contents = e;
             instance = (PyObjectDerived) PyJavaType.wrapJavaObject(e);

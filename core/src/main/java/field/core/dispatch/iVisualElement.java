@@ -1,7 +1,7 @@
 package field.core.dispatch;
 
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.execution.BasicRunner;
 import field.core.persistance.FluidCopyPastePersistence;
 import field.core.plugins.drawing.ToolPalette2;
@@ -12,7 +12,7 @@ import field.core.windowing.components.GlassComponent;
 import field.core.windowing.components.RootComponent;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
-import field.math.graph.iMutableContainer;
+import field.math.graph.IMutableContainer;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public
-interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualElement> {
+interface IVisualElement extends IMutableContainer<Map<Object, Object>, IVisualElement> {
 
     public static
     class Rect implements Serializable {
@@ -396,7 +396,7 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         public
-        <P, Q extends List<P>> void addToList(Class<Q> q, iVisualElement forElement, P p) {
+        <P, Q extends List<P>> void addToList(Class<Q> q, IVisualElement forElement, P p) {
             Q t = (Q) get(forElement);
             if (t == null) try {
                 t = q.newInstance();
@@ -423,9 +423,9 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         public
-        void delete(iVisualElement from, iVisualElement on) {
-            new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(on).deleteProperty(from, this);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(on).deleteProperty(from, this);
+        void delete(IVisualElement from, IVisualElement on) {
+            new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(on).deleteProperty(from, this);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(on).deleteProperty(from, this);
         }
 
         @Override
@@ -435,7 +435,7 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         public
-        List<T> accumulateList(iVisualElement startAt) {
+        List<T> accumulateList(IVisualElement startAt) {
 
             List<T> at = new ArrayList<T>();
             LinkedHashSet seen = new LinkedHashSet();
@@ -445,7 +445,7 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         private
-        void _accumulateList(iVisualElement from, List<T> into, Set seen) {
+        void _accumulateList(IVisualElement from, List<T> into, Set seen) {
             if (seen.contains(from)) return;
             seen.add(from);
             Object x = from.getProperty(this);
@@ -453,20 +453,20 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
                 if (x instanceof Collection) into.addAll(((Collection) x));
                 else into.add((T) x);
             }
-            Set<iVisualElement> c = iVisualElementOverrides.topology.childrenOf(from);
+            Set<IVisualElement> c = IVisualElementOverrides.topology.childrenOf(from);
             if (c != null) {
-                for (iVisualElement cc : c)
+                for (IVisualElement cc : c)
                     _accumulateList(cc, into, seen);
             }
         }
 
         public
-        T get(iVisualElement e) {
+        T get(IVisualElement e) {
             Ref<T> ref = new Ref<T>(null);
-            iVisualElement ee = iVisualElementOverrides.topology.getAt();
-            iVisualElementOverrides.topology.setAt(e);
-            iVisualElementOverrides.forward.getProperty.getProperty(e, this, ref);
-            iVisualElementOverrides.topology.setAt(ee);
+            IVisualElement ee = IVisualElementOverrides.topology.getAt();
+            IVisualElementOverrides.topology.setAt(e);
+            IVisualElementOverrides.forward.getProperty.getProperty(e, this, ref);
+            IVisualElementOverrides.topology.setAt(ee);
             // new
             // iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).getProperty(e,
             // this, ref);
@@ -474,20 +474,20 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         public
-        T get(iVisualElement e, iVisualElement from) {
+        T get(IVisualElement e, IVisualElement from) {
             Ref<T> ref = new Ref<T>(null);
 
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(from).getProperty(e, this, ref);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(from).getProperty(e, this, ref);
             return ref.get();
         }
 
         public
-        T getAbove(iVisualElement e) {
+        T getAbove(IVisualElement e) {
             Ref<T> ref = new Ref<T>(null);
-            iVisualElement ee = iVisualElementOverrides.topology.getAt();
-            iVisualElementOverrides.topology.setAt(e);
-            iVisualElementOverrides.forwardAbove.getProperty.getProperty(e, this, ref);
-            iVisualElementOverrides.topology.setAt(ee);
+            IVisualElement ee = IVisualElementOverrides.topology.getAt();
+            IVisualElementOverrides.topology.setAt(e);
+            IVisualElementOverrides.forwardAbove.getProperty.getProperty(e, this, ref);
+            IVisualElementOverrides.topology.setAt(ee);
             // new
             // iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).getProperty(e,
             // this, ref);
@@ -500,7 +500,7 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         public
-        boolean getBoolean(iVisualElement forElement, boolean def) {
+        boolean getBoolean(IVisualElement forElement, boolean def) {
             T r = get(forElement);
             if (r == null) return def;
             if (r instanceof Number) return ((Number) r).doubleValue() != 0;
@@ -509,7 +509,7 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         public
-        float getFloat(iVisualElement forElement, float def) {
+        float getFloat(IVisualElement forElement, float def) {
             T g = get(forElement);
             if (g == null) return def;
             if (g instanceof Boolean) {
@@ -536,10 +536,10 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         public
-        Ref<T> getRef(iVisualElement e) {
+        Ref<T> getRef(IVisualElement e) {
             Ref<T> ref = new Ref<T>(null);
-            iVisualElementOverrides.topology.begin(e);
-            iVisualElementOverrides.forward.getProperty.getProperty(e, this, ref);
+            IVisualElementOverrides.topology.begin(e);
+            IVisualElementOverrides.forward.getProperty.getProperty(e, this, ref);
             return ref;
         }
 
@@ -555,7 +555,7 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         public
-        <Q, P> void putInMap(iVisualElement on, Q name, P aa) {
+        <Q, P> void putInMap(IVisualElement on, Q name, P aa) {
             Map m = (Map) get(on);
             if (m == null) m = new HashMap();
             m.put(name, aa);
@@ -563,11 +563,11 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
         }
 
         public
-        T set(iVisualElement from, iVisualElement on, T to) {
+        T set(IVisualElement from, IVisualElement on, T to) {
             Ref<T> ref = new Ref<T>(to);
-            new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(on)
+            new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(on)
                                                            .setProperty(from, this, ref);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(on).setProperty(from, this, ref);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(on).setProperty(from, this, ref);
             return ref.get();
         }
 
@@ -602,8 +602,8 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
 
     public static final VisualElementProperty<String> name = new VisualElementProperty<String>("name");
 
-    public static final VisualElementProperty<iVisualElementOverrides> overrides =
-            new VisualElementProperty<iVisualElementOverrides>("overrides");
+    public static final VisualElementProperty<IVisualElementOverrides> overrides =
+            new VisualElementProperty<IVisualElementOverrides>("overrides");
 
     public static final VisualElementProperty<SelectionGroup<iComponent>> selectionGroup =
             new VisualElementProperty<SelectionGroup<iComponent>>("selectionGroup");
@@ -637,8 +637,8 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
             new VisualElementProperty<Object>("creationToken");
 
     public static final VisualElementProperty<Boolean> doNotSave = new VisualElementProperty<Boolean>("doNotSave");
-    public static final VisualElementProperty<iVisualElement> timeSlider =
-            new VisualElementProperty<iVisualElement>("timeSlider");
+    public static final VisualElementProperty<IVisualElement> timeSlider =
+            new VisualElementProperty<IVisualElement>("timeSlider");
 
     public static final VisualElementProperty<FluidCopyPastePersistence> copyPaste =
             new VisualElementProperty<FluidCopyPastePersistence>("copyPaste");
@@ -683,7 +683,7 @@ interface iVisualElement extends iMutableContainer<Map<Object, Object>, iVisualE
     void setFrame(Rect out);
 
     public
-    <T> iVisualElement setProperty(VisualElementProperty<T> p, T to);
+    <T> IVisualElement setProperty(VisualElementProperty<T> p, T to);
 
     public
     void setUniqueID(String uid);

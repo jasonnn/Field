@@ -1,7 +1,7 @@
 package field.math.abstraction;
 
 public
-interface iBlendable<T> {
+interface IBlendable<T> {
 
     public
     T cerp(T before, float beforeTime, T now, float nowTime, T next, float nextTime, T after, float afterTime, float a);

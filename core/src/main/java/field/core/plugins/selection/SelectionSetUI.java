@@ -7,8 +7,8 @@ import field.core.ui.GraphNodeToTreeFancy;
 import field.core.ui.MacScrollbarHack;
 import field.core.ui.SmallMenu;
 import field.core.ui.SmallMenu.BetterPopup;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.events.SelectionEvent;
@@ -214,7 +214,7 @@ class SelectionSetUI {
             public
             void handleEvent(Event event) {
                 if (Platform.isPopupTrigger(event)) {
-                    LinkedHashMap<String, iUpdateable> items = getMenuItems();
+                    LinkedHashMap<String, IUpdateable> items = getMenuItems();
                     popUpMenu(event, items);
                     BetterPopup m = new SmallMenu().createMenu(items, tree.getShell(), null);
                     m.show(Launcher.display.map(tree, tree.getShell(), new Point(event.x, event.y)));
@@ -254,7 +254,7 @@ class SelectionSetUI {
 
     // TODO selectionSet
     protected
-    LinkedHashMap<String, iUpdateable> getMenuItems() {
+    LinkedHashMap<String, IUpdateable> getMenuItems() {
         return null;
     }
 
@@ -276,6 +276,6 @@ class SelectionSetUI {
 
     // TODO selectionSEt
     protected
-    void popUpMenu(Event ev, LinkedHashMap<String, iUpdateable> u) {
+    void popUpMenu(Event ev, LinkedHashMap<String, IUpdateable> u) {
     }
 }

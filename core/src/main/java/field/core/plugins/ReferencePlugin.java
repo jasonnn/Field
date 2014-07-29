@@ -1,11 +1,11 @@
 package field.core.plugins;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.plugins.drawing.ConnectiveThickArc2;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.python.PythonPlugin;
@@ -14,12 +14,12 @@ import field.core.windowing.components.PlainComponent;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.SelectionGroup.iSelectionChanged;
 import field.core.windowing.components.iComponent;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFloatProvider;
-import field.math.abstraction.iProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IFloatProvider;
+import field.math.abstraction.IProvider;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.IMutableContainer;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector4;
 import field.util.collect.tuple.Pair;
 import field.util.collect.tuple.Triple;
@@ -32,7 +32,7 @@ public
 class ReferencePlugin implements iPlugin {
 
     public
-    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -48,7 +48,7 @@ class ReferencePlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -69,13 +69,13 @@ class ReferencePlugin implements iPlugin {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             properties = t;
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -86,11 +86,11 @@ class ReferencePlugin implements iPlugin {
     }
 
     public
-    class Overrides extends iVisualElementOverrides.Adaptor {
+    class Overrides extends IVisualElementOverrides.Adaptor {
 
         @Override
         public
-        <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+        <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
 
             // this doesn't work if we're a peer, not a child of the python plugin
             // if (prop.getName().equals(PythonPlugin.python_source.getName()))
@@ -115,7 +115,7 @@ class ReferencePlugin implements iPlugin {
 
     public static boolean debug = false;
 
-    private iVisualElement root;
+    private IVisualElement root;
 
     private Overrides elementOverride;
 
@@ -125,9 +125,9 @@ class ReferencePlugin implements iPlugin {
 
     protected static final String pluginId = "//reference_plugin";
 
-    Set<iVisualElement> currentSelection = new HashSet<iVisualElement>();
+    Set<IVisualElement> currentSelection = new HashSet<IVisualElement>();
 
-    WeakHashMap<iVisualElement, String> seenBefore = new WeakHashMap<iVisualElement, String>();
+    WeakHashMap<IVisualElement, String> seenBefore = new WeakHashMap<IVisualElement, String>();
 
     Map<Object, Object> properties = new HashMap<Object, Object>();
 
@@ -141,13 +141,13 @@ class ReferencePlugin implements iPlugin {
     }
 
     public
-    iVisualElement getWellKnownVisualElement(String id) {
+    IVisualElement getWellKnownVisualElement(String id) {
         if (id.equals(pluginId)) return lve;
         return null;
     }
 
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
         this.root = root;
         lve = new LocalVisualElement();
 
@@ -155,20 +155,20 @@ class ReferencePlugin implements iPlugin {
         // root.addChild(lve);
 
         Ref<PythonPlugin> ref = new Ref<PythonPlugin>(null);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(root)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(root)
                                                        .getProperty(root, PythonPlugin.python_plugin, ref);
 
         // lve.addChild(ref.get().getWellKnownVisualElement(PythonPlugin.pluginId));
         (ref.get().getWellKnownVisualElement(PythonPlugin.pluginId)).addChild(lve);
 
-        group = root.getProperty(iVisualElement.selectionGroup);
+        group = root.getProperty(IVisualElement.selectionGroup);
         group.registerNotification(new iSelectionChanged<iComponent>() {
 
             public
             void selectionChanged(Set<iComponent> selected) {
                 currentSelection.clear();
                 for (iComponent c : selected) {
-                    iVisualElement cc = c.getVisualElement();
+                    IVisualElement cc = c.getVisualElement();
                     if (cc != null) currentSelection.add(cc);
                 }
             }
@@ -193,7 +193,7 @@ class ReferencePlugin implements iPlugin {
     }
 
     private
-    void ensureConnection(String propertyName, final iVisualElement source, List<iVisualElement> connectedTo) {
+    void ensureConnection(String propertyName, final IVisualElement source, List<IVisualElement> connectedTo) {
         Triple<VisualElement, PlainComponent, SplineComputingOverride> created =
                 VisualElement.createWithToken("reflected:" + propertyName,
                                               root,
@@ -205,25 +205,25 @@ class ReferencePlugin implements iPlugin {
         if (debug) ;//System.out.println("REF: adding connection <" + source + "> <" + connectedTo + ">");
         // these must be cached once they are working
 
-        List<iUpdateable> instructions = new ArrayList<iUpdateable>();
-        for (final iVisualElement v : connectedTo) {
+        List<IUpdateable> instructions = new ArrayList<IUpdateable>();
+        for (final IVisualElement v : connectedTo) {
 
             if (debug) ;//System.out.println(" connecting to <" + v + "> from <" + source + ">");
 
             ConnectiveThickArc2 con = new ConnectiveThickArc2(created.left,
-                                                              new iProvider.Constant<Vector4>(new Vector4(0.0f,
+                                                              new IProvider.Constant<Vector4>(new Vector4(0.0f,
                                                                                                           0.0f,
                                                                                                           0.0f,
                                                                                                           0.15f)),
-                                                              new iProvider.Constant<Vector4>(new Vector4(0,
+                                                              new IProvider.Constant<Vector4>(new Vector4(0,
                                                                                                           0,
                                                                                                           0,
                                                                                                           0.5f)),
                                                               source,
-                                                              new iFloatProvider.Constant(10),
+                                                              new IFloatProvider.Constant(10),
                                                               v,
-                                                              new iFloatProvider.Constant(0));
-            con.addGate(new iFloatProvider() {
+                                                              new IFloatProvider.Constant(0));
+            con.addGate(new IFloatProvider() {
                 public
                 float evaluate() {
                     return (currentSelection.contains(v) || currentSelection.contains(source)) ? 1 : 0;
@@ -232,8 +232,8 @@ class ReferencePlugin implements iPlugin {
         }
 
         created.left.setProperty(SplineComputingOverride.computed_drawingInstructions,
-                                 new ArrayList<iUpdateable>(instructions));
-        created.left.setProperty(iVisualElement.doNotSave, true);
+                                 new ArrayList<IUpdateable>(instructions));
+        created.left.setProperty(IVisualElement.doNotSave, true);
     }
 
     private static
@@ -245,13 +245,13 @@ class ReferencePlugin implements iPlugin {
     }
 
     private
-    void removeConnection(String name, iVisualElement source) {
+    void removeConnection(String name, IVisualElement source) {
         if (debug) ;//System.out.println("REF: deleting reference marker");
         VisualElement.deleteWithToken("reflected:" + name, root);
     }
 
     protected
-    void updateReferencesFor(iVisualElement source) {
+    void updateReferencesFor(IVisualElement source) {
 
         if (debug) ;//System.out.println("REF: update references for <" + source + ">");
 
@@ -261,7 +261,7 @@ class ReferencePlugin implements iPlugin {
                 if (((VisualElementProperty) o.getKey()).getName().startsWith("__minimalReference")) {
                     if (debug) ;//System.out.println("REF: got property <" + o + ">");
                     if (o.getValue() instanceof List) {
-                        List<iVisualElement> connectedTo = (List<iVisualElement>) o.getValue();
+                        List<IVisualElement> connectedTo = (List<IVisualElement>) o.getValue();
                         if (connectedTo != null) {
                             if (debug) ;//System.out.println("REF: ensuring connection");
                             ensureConnection(((VisualElementProperty) o.getKey()).getName(), source, connectedTo);
@@ -273,7 +273,7 @@ class ReferencePlugin implements iPlugin {
     }
 
     protected
-    void verifyAllReferences(iVisualElement source) {
+    void verifyAllReferences(IVisualElement source) {
 
         List<String> texts = new ArrayList<String>();
 
@@ -286,7 +286,7 @@ class ReferencePlugin implements iPlugin {
     }
 
     protected
-    void verifyReferencesFor(iVisualElement source, List<String> text) {
+    void verifyReferencesFor(IVisualElement source, List<String> text) {
 
         if (debug) ;//System.out.println("REF: verify references for <" + source + "> with text <" + text + ">");
 

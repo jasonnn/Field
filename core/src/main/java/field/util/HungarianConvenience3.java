@@ -1,6 +1,6 @@
 package field.util;
 
-import field.math.abstraction.iMetric;
+import field.math.abstraction.IMetric;
 import field.math.util.Hungarian;
 
 import java.nio.ByteBuffer;
@@ -53,7 +53,7 @@ class HungarianConvenience3<t_element> {
     }
 
     public
-    void computeDistanceMatrix(iMetric<t_element, t_element> e) {
+    void computeDistanceMatrix(IMetric<t_element, t_element> e) {
         // this should be accelerated!
         for (int x = 0; x < (sourceLength + sources); x++) {
 

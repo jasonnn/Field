@@ -4,12 +4,12 @@ package field.math.abstraction;
  * Interface for a class that provides a float
  */
 public
-interface iFloatProvider {
+interface IFloatProvider {
     public
     float evaluate();
 
     public static
-    class Constant implements iFloatProvider {
+    class Constant implements IFloatProvider {
 
         private float constant;
 
@@ -31,11 +31,11 @@ interface iFloatProvider {
     }
 
     public static
-    class HasChanged implements iFloatProvider {
-        private final iFloatProvider to;
+    class HasChanged implements IFloatProvider {
+        private final IFloatProvider to;
 
         public
-        HasChanged(iFloatProvider to) {
+        HasChanged(IFloatProvider to) {
             this.to = to;
         }
 

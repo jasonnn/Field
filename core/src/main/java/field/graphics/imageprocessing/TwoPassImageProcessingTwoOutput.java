@@ -3,7 +3,7 @@ package field.graphics.imageprocessing;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.graphics.core.*;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iSceneListElement;
@@ -11,8 +11,8 @@ import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.imageprocessing.ImageProcessing.TextureWrapper;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.graphics.windowing.FullScreenCanvasSWT.StereoSide;
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
+import field.math.abstraction.IAcceptor;
 import field.math.linalg.Vector4;
 
 import java.lang.reflect.Method;
@@ -38,7 +38,7 @@ class TwoPassImageProcessingTwoOutput implements iImageProcessor {
 
     @SuppressWarnings("unchecked")
     public
-    TwoPassImageProcessingTwoOutput(iProvider<Integer>[] fboInputs,
+    TwoPassImageProcessingTwoOutput(IProvider<Integer>[] fboInputs,
                                     int width,
                                     int height,
                                     final boolean useRect,
@@ -48,30 +48,30 @@ class TwoPassImageProcessingTwoOutput implements iImageProcessor {
         this.useRect = useRect;
         this.doBothPasses = doBothPasses;
 
-        iProvider<Integer>[] fboInputsLeft = (iProvider<Integer>[]) new iProvider[fboInputs.length + 2];
+        IProvider<Integer>[] fboInputsLeft = (IProvider<Integer>[]) new IProvider[fboInputs.length + 2];
         System.arraycopy(fboInputs, 0, fboInputsLeft, 0, fboInputs.length);
-        fboInputsLeft[fboInputs.length] = new iProvider<Integer>() {
+        fboInputsLeft[fboInputs.length] = new IProvider<Integer>() {
             public
             Integer get() {
                 return right.getOutput(0).get();
             }
         };
-        fboInputsLeft[fboInputs.length + 1] = new iProvider<Integer>() {
+        fboInputsLeft[fboInputs.length + 1] = new IProvider<Integer>() {
             public
             Integer get() {
                 return right.getOutput(1).get();
             }
         };
 
-        iProvider<Integer>[] fboInputsRight = (iProvider<Integer>[]) new iProvider[fboInputs.length + 2];
+        IProvider<Integer>[] fboInputsRight = (IProvider<Integer>[]) new IProvider[fboInputs.length + 2];
         System.arraycopy(fboInputs, 0, fboInputsRight, 0, fboInputs.length);
-        fboInputsRight[fboInputs.length] = new iProvider<Integer>() {
+        fboInputsRight[fboInputs.length] = new IProvider<Integer>() {
             public
             Integer get() {
                 return left.getOutput(0).get();
             }
         };
-        fboInputsRight[fboInputs.length + 1] = new iProvider<Integer>() {
+        fboInputsRight[fboInputs.length + 1] = new IProvider<Integer>() {
             public
             Integer get() {
                 return left.getOutput(1).get();
@@ -127,14 +127,14 @@ class TwoPassImageProcessingTwoOutput implements iImageProcessor {
     }
 
     public
-    iAcceptor<Vector4[]> addFadePlane() {
-        final iAcceptor<Vector4[]> lp = left.addFadePlane();
-        final iAcceptor<Vector4[]> rp = right.addFadePlane();
+    IAcceptor<Vector4[]> addFadePlane() {
+        final IAcceptor<Vector4[]> lp = left.addFadePlane();
+        final IAcceptor<Vector4[]> rp = right.addFadePlane();
 
-        return new iAcceptor<Vector4[]>() {
+        return new IAcceptor<Vector4[]>() {
             @Override
             public
-            iAcceptor<Vector4[]> set(Vector4[] to) {
+            IAcceptor<Vector4[]> set(Vector4[] to) {
                 lp.set(to);
                 rp.set(to);
                 return this;
@@ -162,10 +162,10 @@ class TwoPassImageProcessingTwoOutput implements iImageProcessor {
      * @see innards.graphics.basic.iImageProcessor#getOutput()
      */
     public
-    iProvider<Integer> getOutput(int num) {
-        final iProvider<Integer> lo = left.getOutput(num);
-        final iProvider<Integer> ro = right.getOutput(num);
-        return new iProvider<Integer>() {
+    IProvider<Integer> getOutput(int num) {
+        final IProvider<Integer> lo = left.getOutput(num);
+        final IProvider<Integer> ro = right.getOutput(num);
+        return new IProvider<Integer>() {
             public
             Integer get() {
                 return leftJustFinished ? lo.get() : ro.get();

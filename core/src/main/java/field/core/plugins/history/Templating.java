@@ -1,15 +1,15 @@
 package field.core.plugins.history;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.Mixins;
 import field.core.dispatch.Mixins.iMixinProxy;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
-import field.core.dispatch.iVisualElementOverrides.Ref;
-import field.core.dispatch.iVisualElementOverrides.iDefaultOverride;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElementOverrides.iDefaultOverride;
 import field.core.execution.TemporalSliderOverrides;
 import field.core.persistance.FluidCopyPastePersistence;
 import field.core.plugins.drawing.SplineComputingOverride;
@@ -19,7 +19,7 @@ import field.core.plugins.python.PythonPluginEditor;
 import field.core.util.LoadInternalWorkspaceFile;
 import field.core.windowing.components.iComponent;
 import field.launch.SystemProperties;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.collect.tuple.Pair;
 import field.util.collect.tuple.Triple;
 
@@ -42,7 +42,7 @@ class Templating {
     }
 
     public static
-    iVisualElement elementFromKnownTemplate(String name, iVisualElement root) throws IOException {
+    IVisualElement elementFromKnownTemplate(String name, IVisualElement root) throws IOException {
         File found = LoadInternalWorkspaceFile.findTemplateCalled(name);
         if (found == null) return null;
 
@@ -54,13 +54,13 @@ class Templating {
         String uid = split[split.length - 1];
         String sheetname = split[split.length - 2];
 
-        HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(Collections.singleton(uid),
+        HashSet<IVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(Collections.singleton(uid),
                                                                                      new File(canonicalPath).getParent()
                                                                                      + "/sheet.xml",
                                                                                      root,
-                                                                                     iVisualElement.copyPaste.get(root));
+                                                                                     IVisualElement.copyPaste.get(root));
 
-        for (iVisualElement e : loaded) {
+        for (IVisualElement e : loaded) {
             PythonPluginEditor.python_isTemplateHead.delete(e, e);
         }
 
@@ -68,38 +68,38 @@ class Templating {
     }
 
     public static
-    ArrayList<iVisualElement> elementsFromKnownSheet(String name, iVisualElement root) throws IOException {
+    ArrayList<IVisualElement> elementsFromKnownSheet(String name, IVisualElement root) throws IOException {
         File sheetName = new File(SystemProperties.getDirProperty("versioning.dir") + name);
         if (!sheetName.exists()) return null;
 
-        HashSet<iVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(null,
+        HashSet<IVisualElement> loaded = FluidCopyPastePersistence.copyFromNonloaded(null,
                                                                                      sheetName.getCanonicalPath()
                                                                                      + "/sheet.xml",
                                                                                      root,
-                                                                                     iVisualElement.copyPaste.get(root));
+                                                                                     IVisualElement.copyPaste.get(root));
 
-        return new ArrayList<iVisualElement>(loaded);
+        return new ArrayList<IVisualElement>(loaded);
     }
 
     public static
-    ArrayList<iVisualElement> elementsFromKnownSheetNoTimeslider(String name, iVisualElement root) throws IOException {
+    ArrayList<IVisualElement> elementsFromKnownSheetNoTimeslider(String name, IVisualElement root) throws IOException {
         File sheetName = new File(SystemProperties.getDirProperty("versioning.dir") + name);
         if (!sheetName.exists()) return null;
 
-        HashSet<iVisualElement> loaded =
-                FluidCopyPastePersistence.copyFromNonloadedPredicate(new iFunction<Boolean, iVisualElement>() {
+        HashSet<IVisualElement> loaded =
+                FluidCopyPastePersistence.copyFromNonloadedPredicate(new IFunction<IVisualElement, Boolean>() {
                     public
-                    Boolean f(iVisualElement in) {
+                    Boolean apply(IVisualElement in) {
 
-                        iVisualElementOverrides i = in.getProperty(iVisualElement.overrides);
+                        IVisualElementOverrides i = in.getProperty(IVisualElement.overrides);
                         if (i == null) return false;
                         if (i instanceof TemporalSliderOverrides) return false;
                         return true;
 
                     }
-                }, sheetName.getCanonicalPath() + "/sheet.xml", root, iVisualElement.copyPaste.get(root));
+                }, sheetName.getCanonicalPath() + "/sheet.xml", root, IVisualElement.copyPaste.get(root));
 
-        return new ArrayList<iVisualElement>(loaded);
+        return new ArrayList<IVisualElement>(loaded);
     }
 
     public static
@@ -158,7 +158,7 @@ class Templating {
     }
 
     public static
-    void merge(VisualElement source, iVisualElement copy, boolean preferTemplate, boolean becomeVisual)
+    void merge(VisualElement source, IVisualElement copy, boolean preferTemplate, boolean becomeVisual)
             throws IOException {
 
         LoadInternalWorkspaceFile liwf = new LoadInternalWorkspaceFile();
@@ -207,22 +207,22 @@ class Templating {
     }
 
     public static
-    void newEditableProperty(String propertyName, iVisualElement inside) {
+    void newEditableProperty(String propertyName, IVisualElement inside) {
         VisualElementProperty p = new VisualElementProperty(propertyName);
         PythonPluginEditor.knownPythonProperties.put("Template \u2014 " + propertyName, p);
     }
 
     public static
-    iVisualElement simpleCopy(VisualElement source, iVisualElement dispatchTo) {
-        iVisualElementOverrides o = source.getProperty(iVisualElement.overrides);
-        iComponent c = source.getProperty(iVisualElement.localView);
+    IVisualElement simpleCopy(VisualElement source, IVisualElement dispatchTo) {
+        IVisualElementOverrides o = source.getProperty(IVisualElement.overrides);
+        iComponent c = source.getProperty(IVisualElement.localView);
 
         Rect f = source.getFrame(null);
         f.x += 10;
         f.y += 10;
 
         Class oclass = o.getClass();
-        List<iVisualElementOverrides> callList = null;
+        List<IVisualElementOverrides> callList = null;
 
         if (o instanceof iMixinProxy) {
             //System.out.println(" o is <" + o + ">");
@@ -235,12 +235,12 @@ class Templating {
                                                                                                   dispatchTo,
                                                                                                   (Class<VisualElement>) source.getClass(),
                                                                                                   (Class<iComponent>) c.getClass(),
-                                                                                                  (Class<iVisualElementOverrides.DefaultOverride>) oclass,
-                                                                                                  iVisualElement.name.get(source)
+                                                                                                  (Class<IVisualElementOverrides.DefaultOverride>) oclass,
+                                                                                                  IVisualElement.name.get(source)
                                                                                                   + " (copy)");
 
         if (callList != null) {
-            iVisualElementOverrides[] over = new iVisualElementOverrides[callList.size()];
+            IVisualElementOverrides[] over = new IVisualElementOverrides[callList.size()];
             for (int i = 0; i < over.length; i++) {
                 try {
                     over[i] = callList.get(i).getClass().newInstance();
@@ -250,8 +250,8 @@ class Templating {
                     e1.printStackTrace();
                 }
             }
-            iVisualElementOverrides newOver =
-                    Mixins.make(iVisualElementOverrides.class, Mixins.visitCodeCombiner, over);
+            IVisualElementOverrides newOver =
+                    Mixins.make(IVisualElementOverrides.class, Mixins.visitCodeCombiner, over);
 
             ((iDefaultOverride) newOver).setVisualElement(created.left);
             created.left.setElementOverride(newOver);
@@ -286,9 +286,9 @@ class Templating {
     void performCopy(VisualElement source, VisualElement newElement, VisualElementProperty p, Object v) {
         Ref<Object> r = new Ref<Object>(v);
         r.set(v, source);
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newElement)
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newElement)
                                                        .setProperty(newElement, p, r);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newElement).setProperty(newElement, p, r);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newElement).setProperty(newElement, p, r);
     }
 
 }

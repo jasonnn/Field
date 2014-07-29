@@ -3,12 +3,12 @@ package field.core.plugins.python;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.StandardFluidSheet;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.execution.PythonInterface;
 import field.core.plugins.SimpleConstraints;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
@@ -27,11 +27,11 @@ import field.core.ui.text.embedded.MinimalXYSlider.Component_tuple;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.PlainDraggableComponent;
 import field.core.windowing.components.SwingBridgeComponent;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iProvider;
-import field.math.abstraction.iProviderAcceptor;
+import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IProvider;
+import field.math.abstraction.IProviderAcceptor;
 import field.math.linalg.Vector2;
 import field.math.linalg.iToFloatArray;
 import field.math.util.BreakpointFloat;
@@ -84,7 +84,7 @@ class OutputInsertsOnSheet {
 
         @Override
         public
-        PlainDraggableComponent setVisualElement(iVisualElement ve) {
+        PlainDraggableComponent setVisualElement(IVisualElement ve) {
             super.setVisualElement(ve);
             if (this.componentToRender == null) {
                 ProvidedComponent provided = ve.getProperty(outputInsertsOnSheet_providedComponent);
@@ -151,7 +151,7 @@ class OutputInsertsOnSheet {
                 // the top left
                 // corner
                 // correct)
-                GLComponentWindow frame = iVisualElement.enclosingFrame.get(getVisualElement());
+                GLComponentWindow frame = IVisualElement.enclosingFrame.get(getVisualElement());
                 Rect bounds = this.getBounds();
                 Vector2 topLeft = new Vector2(bounds.x, bounds.y);
                 frame.transformDrawingToWindow(topLeft);
@@ -264,7 +264,7 @@ class OutputInsertsOnSheet {
 
         @Override
         public
-        PlainDraggableComponent setVisualElement(iVisualElement ve) {
+        PlainDraggableComponent setVisualElement(IVisualElement ve) {
             super.setVisualElement(ve);
             if (this.componentToRender == null) {
                 ProvidedComponent provided = ve.getProperty(outputInsertsOnSheet_providedComponent);
@@ -303,10 +303,10 @@ class OutputInsertsOnSheet {
     private static boolean lastWasNew;
 
     public static
-    iProvider<Object> printCurve2(String name, final iVisualElement inside, final PyObject onChange, boolean below) {
+    IProvider<Object> printCurve2(String name, final IVisualElement inside, final PyObject onChange, boolean below) {
         OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
 
-        iVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
+        IVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
         Map<String, String> map = getKnownMap(inside);
 
         final MinimalGraphWidget2.Component_tuple tuple;
@@ -337,9 +337,9 @@ class OutputInsertsOnSheet {
             map.put(name, alreadyCreated.getUniqueID());
         }
 
-        final iVisualElement falreadyCreated = alreadyCreated;
+        final IVisualElement falreadyCreated = alreadyCreated;
 
-        falreadyCreated.setProperty(iVisualElement.name, name);
+        falreadyCreated.setProperty(IVisualElement.name, name);
 
         PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
 
@@ -347,7 +347,7 @@ class OutputInsertsOnSheet {
 
         final boolean[] insideChange = {false};
 
-        final iProvider<Object> r = new iProvider<Object>() {
+        final IProvider<Object> r = new IProvider<Object>() {
 
             JComponent component = tuple.component;
 
@@ -364,10 +364,10 @@ class OutputInsertsOnSheet {
 
             public
             void repaint() {
-                iVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
+                IVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
             }
         };
-        tuple.notify = new iUpdateable() {
+        tuple.notify = new IUpdateable() {
             public
             void update() {
                 if (insideChange[0]) return;
@@ -390,15 +390,15 @@ class OutputInsertsOnSheet {
     }
 
     public static
-    iProviderAcceptor<Object> printSlider(String name,
-                                          final iVisualElement inside,
+    IProviderAcceptor<Object> printSlider(String name,
+                                          final IVisualElement inside,
                                           final PyObject onChange,
                                           boolean below) {
         OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
 
         //System.out.println(" inside print slider for <" + inside + "> got <" + oi + ">");
 
-        iVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
+        IVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
         Map<String, String> map = getKnownMap(inside);
 
         final MinimalSlider.Component tuple;
@@ -434,9 +434,9 @@ class OutputInsertsOnSheet {
             lastWasNew = true;
         }
 
-        final iVisualElement falreadyCreated = alreadyCreated;
+        final IVisualElement falreadyCreated = alreadyCreated;
 
-        falreadyCreated.setProperty(iVisualElement.name, name);
+        falreadyCreated.setProperty(IVisualElement.name, name);
 
         PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
 
@@ -444,7 +444,7 @@ class OutputInsertsOnSheet {
 
         final boolean[] insideChange = {false};
 
-        final iProviderAcceptor<Object> r = new iProviderAcceptor<Object>() {
+        final IProviderAcceptor<Object> r = new IProviderAcceptor<Object>() {
 
             JComponent component = tuple.component;
 
@@ -466,11 +466,11 @@ class OutputInsertsOnSheet {
 
             public
             void repaint() {
-                iVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
+                IVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
             }
 
             public
-            iAcceptor<Object> set(Object to) {
+            IAcceptor<Object> set(Object to) {
 
                 insideChange[0] = true;
                 try {
@@ -486,7 +486,7 @@ class OutputInsertsOnSheet {
                     else if (to instanceof Number) {
                         ((MinimalSlider) tuple.component).setValue(((Number) to).floatValue());
                     }
-                    iVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
+                    IVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
                 } catch (Throwable e) {
                     Writer ww = PythonInterface.getPythonInterface().getErrorRedirects().peek();
                     e.printStackTrace(new PrintWriter(ww));
@@ -496,7 +496,7 @@ class OutputInsertsOnSheet {
                 return this;
             }
         };
-        tuple.notify = new iUpdateable() {
+        tuple.notify = new IUpdateable() {
             public
             void update() {
                 if (insideChange[0]) return;
@@ -517,12 +517,12 @@ class OutputInsertsOnSheet {
     }
 
     public static
-    iProviderAcceptor<Object> printLazy(String name, final iVisualElement inside, boolean below) {
+    IProviderAcceptor<Object> printLazy(String name, final IVisualElement inside, boolean below) {
         OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
 
         //System.out.println(" inside print slider for <" + inside + "> got <" + oi + ">");
 
-        iVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
+        IVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
         Map<String, String> map = getKnownMap(inside);
 
         final MinimalLazyBox.Component tuple;
@@ -553,7 +553,7 @@ class OutputInsertsOnSheet {
                                                           inside,
                                                           tuple);
 
-            ((Wrap) alreadyCreated.getProperty(iVisualElement.localView)).heavy = false;
+            ((Wrap) alreadyCreated.getProperty(IVisualElement.localView)).heavy = false;
 
 
             map.put(name, alreadyCreated.getUniqueID());
@@ -561,9 +561,9 @@ class OutputInsertsOnSheet {
             lastWasNew = true;
         }
 
-        final iVisualElement falreadyCreated = alreadyCreated;
+        final IVisualElement falreadyCreated = alreadyCreated;
 
-        falreadyCreated.setProperty(iVisualElement.name, name);
+        falreadyCreated.setProperty(IVisualElement.name, name);
 
         PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
 
@@ -571,7 +571,7 @@ class OutputInsertsOnSheet {
 
         final boolean[] insideChange = {false};
 
-        final iProviderAcceptor<Object> r = new iProviderAcceptor<Object>() {
+        final IProviderAcceptor<Object> r = new IProviderAcceptor<Object>() {
 
             JComponent component = tuple.component;
 
@@ -593,11 +593,11 @@ class OutputInsertsOnSheet {
 
             public
             void repaint() {
-                iVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
+                IVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
             }
 
             public
-            iAcceptor<Object> set(Object to) {
+            IAcceptor<Object> set(Object to) {
                 tuple.updateValue(String.valueOf(to));
                 repaint();
                 return this;
@@ -691,14 +691,14 @@ class OutputInsertsOnSheet {
     // }
 
     public static
-    iProviderAcceptor<Object> printXYSlider(String name,
-                                            final iVisualElement inside,
+    IProviderAcceptor<Object> printXYSlider(String name,
+                                            final IVisualElement inside,
                                             final PyObject onChange,
                                             boolean below) {
         OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
         Map<String, String> map = getKnownMap(inside);
 
-        iVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
+        IVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
 
         final Component_tuple tuple;
 
@@ -729,8 +729,8 @@ class OutputInsertsOnSheet {
             lastWasNew = true;
         }
 
-        final iVisualElement falreadyCreated = alreadyCreated;
-        falreadyCreated.setProperty(iVisualElement.name, name);
+        final IVisualElement falreadyCreated = alreadyCreated;
+        falreadyCreated.setProperty(IVisualElement.name, name);
 
         PythonPlugin ed = PythonPlugin.python_plugin.get(inside);
 
@@ -738,7 +738,7 @@ class OutputInsertsOnSheet {
 
         final boolean[] insideChange = {false};
 
-        final iProviderAcceptor<Object> r = new iProviderAcceptor<Object>() {
+        final IProviderAcceptor<Object> r = new IProviderAcceptor<Object>() {
 
             JComponent component = tuple.component;
 
@@ -757,11 +757,11 @@ class OutputInsertsOnSheet {
 
             public
             void repaint() {
-                iVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
+                IVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
             }
 
             public
-            iAcceptor<Object> set(Object to) {
+            IAcceptor<Object> set(Object to) {
                 if (to instanceof iToFloatArray) {
                     float[] fa = ((iToFloatArray) to).get();
                     ((MinimalXYSlider) tuple.component).setValue(fa[0], fa[1]);
@@ -772,13 +772,13 @@ class OutputInsertsOnSheet {
                     float v2 = ((Number) p.__getitem__(1).__tojava__(Number.class)).floatValue();
                     ((MinimalXYSlider) tuple.component).setValue(v1, v2);
                 }
-                iVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
+                IVisualElement.dirty.set(falreadyCreated, falreadyCreated, true);
 
                 return this;
             }
         };
 
-        tuple.notify = new iUpdateable() {
+        tuple.notify = new IUpdateable() {
             public
             void update() {
                 if (insideChange[0]) return;
@@ -802,10 +802,10 @@ class OutputInsertsOnSheet {
      * the text editor \u2014 see ticket #6
      */
     public static
-    void wrapExisting(String name, iVisualElement inside, ProvidedComponent minimalSlider) {
+    void wrapExisting(String name, IVisualElement inside, ProvidedComponent minimalSlider) {
         OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
         if (oi != null) {
-            iVisualElement already = findAlreadyCreated(oi, inside, name);
+            IVisualElement already = findAlreadyCreated(oi, inside, name);
             if (already == null) {
                 Rect frame = inside.getFrame(null);
                 already = oi.makeComponentWrapperExisting((float) (frame.x + frame.w + 5),
@@ -821,7 +821,7 @@ class OutputInsertsOnSheet {
             }
             else {
 
-                Wrap wrap = (Wrap) already.getProperty(iVisualElement.localView);
+                Wrap wrap = (Wrap) already.getProperty(IVisualElement.localView);
 
                 wrap.componentToRender = minimalSlider.component;
                 wrap.hookupNotifications();
@@ -833,12 +833,12 @@ class OutputInsertsOnSheet {
     }
 
     public static
-    void printProperty(final iVisualElement inside, final String propertyName) {
+    void printProperty(final IVisualElement inside, final String propertyName) {
         printProperty(inside, propertyName, null);
     }
 
     public static
-    void printProperty(final iVisualElement inside, final String propertyName, final PyObject callback) {
+    void printProperty(final IVisualElement inside, final String propertyName, final PyObject callback) {
         Object p = new VisualElementProperty(propertyName).get(inside);
         if (p == null) return;
 
@@ -852,7 +852,7 @@ class OutputInsertsOnSheet {
         OutputInsertsOnSheet oi = outputInsertsOnSheet.get(inside);
 
         String name = "_property_" + propertyName;
-        iVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
+        IVisualElement alreadyCreated = findAlreadyCreated(oi, inside, name);
         Map<String, String> map = getKnownMap(inside);
 
         JComponent tuple = null;
@@ -952,9 +952,9 @@ class OutputInsertsOnSheet {
                                                                          }
                                                                      });
 
-            iVisualElement.doNotSave.set(alreadyCreated, alreadyCreated, true);
+            IVisualElement.doNotSave.set(alreadyCreated, alreadyCreated, true);
 
-            Wrap comp = (Wrap) iVisualElement.localView.get(alreadyCreated);
+            Wrap comp = (Wrap) IVisualElement.localView.get(alreadyCreated);
             comp.backgroundA = comp.obackgroundA = 0;
             comp.backgroundR = comp.obackgroundR = 0.67f;
             comp.backgroundG = comp.obackgroundG = 0.67f;
@@ -970,21 +970,21 @@ class OutputInsertsOnSheet {
             OutputInsertsOnSheet.layoutHierarchy(comp.componentToRender, alreadyCreated);
         }
 
-        final iVisualElement falreadyCreated = alreadyCreated;
+        final IVisualElement falreadyCreated = alreadyCreated;
 
-        falreadyCreated.setProperty(iVisualElement.name, name);
+        falreadyCreated.setProperty(IVisualElement.name, name);
 
     }
 
     private static
-    iVisualElement findAlreadyCreated(OutputInsertsOnSheet oi, iVisualElement inside, String name) {
+    IVisualElement findAlreadyCreated(OutputInsertsOnSheet oi, IVisualElement inside, String name) {
         Map<String, String> map = getKnownMap(inside);
         if (map == null) {
             outputInsertsOnSheet_knownComponents.set(inside, inside, map = new HashMap<String, String>());
         }
 
         String alreadyCreatedUID = map.get(name);
-        iVisualElement alreadyCreated = null;
+        IVisualElement alreadyCreated = null;
         if (alreadyCreatedUID != null) {
             alreadyCreated = StandardFluidSheet.findVisualElement(oi.root, alreadyCreatedUID);
         }
@@ -992,16 +992,16 @@ class OutputInsertsOnSheet {
     }
 
     private static
-    Map<String, String> getKnownMap(final iVisualElement inside) {
+    Map<String, String> getKnownMap(final IVisualElement inside) {
         Map<String, String> map = outputInsertsOnSheet_knownComponents.get(inside);
         if (map == null) outputInsertsOnSheet_knownComponents.set(inside, inside, map = new HashMap<String, String>());
         return map;
     }
 
-    private final iVisualElement root;
+    private final IVisualElement root;
 
     public
-    OutputInsertsOnSheet(iVisualElement root) {
+    OutputInsertsOnSheet(IVisualElement root) {
         this.root = root;
         root.setProperty(outputInsertsOnSheet, this);
 
@@ -1009,8 +1009,8 @@ class OutputInsertsOnSheet {
     }
 
     public
-    void delete(iVisualElement inside, String name) {
-        iVisualElement a = findAlreadyCreated(this, inside, name);
+    void delete(IVisualElement inside, String name) {
+        IVisualElement a = findAlreadyCreated(this, inside, name);
         if (a != null) {
             Map<String, String> map = getKnownMap(inside);
             map.remove(name);
@@ -1019,17 +1019,17 @@ class OutputInsertsOnSheet {
     }
 
     public
-    iVisualElement makeComponentWrapper(float x,
+    IVisualElement makeComponentWrapper(float x,
                                         float y,
                                         float w,
                                         float h,
-                                        iVisualElement inside,
+                                        IVisualElement inside,
                                         ProvidedComponent component) {
 
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               iVisualElementOverrides.DefaultOverride.class);
+                                                                               IVisualElementOverrides.DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1040,8 +1040,8 @@ class OutputInsertsOnSheet {
         allocate(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, (float) inside.getFrame(null).y, at.w, at.h));
 
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1059,17 +1059,17 @@ class OutputInsertsOnSheet {
     }
 
     public
-    iVisualElement makeComponentWrapperVerticalNoEvents(float x,
+    IVisualElement makeComponentWrapperVerticalNoEvents(float x,
                                                         float y,
                                                         float w,
                                                         float h,
-                                                        iVisualElement inside,
+                                                        IVisualElement inside,
                                                         ProvidedComponent component) {
 
         Triple<VisualElement, WrapNoEvents, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                        VisualElement.class,
                                                                                        WrapNoEvents.class,
-                                                                                       iVisualElementOverrides.DefaultOverride.class);
+                                                                                       IVisualElementOverrides.DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1080,8 +1080,8 @@ class OutputInsertsOnSheet {
         allocateVert(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, at.y, at.w, at.h));
 
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1095,17 +1095,17 @@ class OutputInsertsOnSheet {
     }
 
     public
-    iVisualElement makeComponentWrapperNoEvents(float x,
+    IVisualElement makeComponentWrapperNoEvents(float x,
                                                 float y,
                                                 float w,
                                                 float h,
-                                                iVisualElement inside,
+                                                IVisualElement inside,
                                                 ProvidedComponent component) {
 
         Triple<VisualElement, WrapNoEvents, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                        VisualElement.class,
                                                                                        WrapNoEvents.class,
-                                                                                       iVisualElementOverrides.DefaultOverride.class);
+                                                                                       IVisualElementOverrides.DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1116,8 +1116,8 @@ class OutputInsertsOnSheet {
         allocate(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, (float) inside.getFrame(null).y, at.w, at.h));
 
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1135,11 +1135,11 @@ class OutputInsertsOnSheet {
     }
 
     public
-    iVisualElement makeComponentWrapperVerticalMinWidth(float x,
+    IVisualElement makeComponentWrapperVerticalMinWidth(float x,
                                                         float y,
                                                         float w,
                                                         float h,
-                                                        iVisualElement inside,
+                                                        IVisualElement inside,
                                                         ProvidedComponent component) {
 
         w = Math.max(320, w);
@@ -1147,7 +1147,7 @@ class OutputInsertsOnSheet {
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               iVisualElementOverrides.DefaultOverride.class);
+                                                                               IVisualElementOverrides.DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1159,8 +1159,8 @@ class OutputInsertsOnSheet {
         allocateVert(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, at.y, at.w, at.h));
 
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1179,17 +1179,17 @@ class OutputInsertsOnSheet {
     }
 
     public
-    iVisualElement makeComponentWrapperVertical(float x,
+    IVisualElement makeComponentWrapperVertical(float x,
                                                 float y,
                                                 float w,
                                                 float h,
-                                                iVisualElement inside,
+                                                IVisualElement inside,
                                                 ProvidedComponent component) {
 
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               iVisualElementOverrides.DefaultOverride.class);
+                                                                               IVisualElementOverrides.DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1200,8 +1200,8 @@ class OutputInsertsOnSheet {
         allocateVert(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, at.y, at.w, at.h));
 
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1215,17 +1215,17 @@ class OutputInsertsOnSheet {
     }
 
     public
-    iVisualElement makeComponentWrapperVertical(float x,
+    IVisualElement makeComponentWrapperVertical(float x,
                                                 float y,
                                                 float w,
                                                 float h,
-                                                iVisualElement inside,
+                                                IVisualElement inside,
                                                 JComponent component) {
 
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               iVisualElementOverrides.DefaultOverride.class);
+                                                                               IVisualElementOverrides.DefaultOverride.class);
         r2.left.addChild(root);
 
         // !!
@@ -1237,8 +1237,8 @@ class OutputInsertsOnSheet {
         allocateVert(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, at.y, at.w, at.h));
 
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1252,17 +1252,17 @@ class OutputInsertsOnSheet {
     }
 
     public
-    iVisualElement makeComponentWrapperExisting(float x,
+    IVisualElement makeComponentWrapperExisting(float x,
                                                 float y,
                                                 float w,
                                                 float h,
-                                                iVisualElement inside,
+                                                IVisualElement inside,
                                                 ProvidedComponent component) {
 
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               iVisualElementOverrides.DefaultOverride.class);
+                                                                               IVisualElementOverrides.DefaultOverride.class);
 
         r2.middle.componentToRender = component.component;
         r2.middle.hookupNotifications();
@@ -1277,8 +1277,8 @@ class OutputInsertsOnSheet {
         allocate(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, (float) inside.getFrame(null).y, at.w, at.h));
 
-        new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1294,11 +1294,11 @@ class OutputInsertsOnSheet {
 
     @NextUpdate(delay = 20)
     private static
-    void layoutHierarchy(Container c, iVisualElement e) {
+    void layoutHierarchy(Container c, IVisualElement e) {
         c.validate();
         c.doLayout();
 
-        iVisualElement.dirty.set(e, e, true);
+        IVisualElement.dirty.set(e, e, true);
 
         for (Component cc : c.getComponents()) {
             cc.validate();
@@ -1308,7 +1308,7 @@ class OutputInsertsOnSheet {
     }
 
     private
-    void allocate(iVisualElement parent, iVisualElement inside, Rect at) {
+    void allocate(IVisualElement parent, IVisualElement inside, Rect at) {
         RectangleAllocator alloc = parent.getProperty(outputInsertsOnSheet_allocactor);
         if (alloc == null) {
             alloc = new RectangleAllocator();
@@ -1319,7 +1319,7 @@ class OutputInsertsOnSheet {
             while (i.hasNext()) {
                 Entry<Object, Rect> n = i.next();
                 String uid = (String) n.getKey();
-                iVisualElement e = StandardFluidSheet.findVisualElement(root, uid);
+                IVisualElement e = StandardFluidSheet.findVisualElement(root, uid);
 
                 if (e == null) i.remove();
                 else {
@@ -1332,7 +1332,7 @@ class OutputInsertsOnSheet {
     }
 
     private
-    void allocateVert(iVisualElement parent, iVisualElement inside, Rect at) {
+    void allocateVert(IVisualElement parent, IVisualElement inside, Rect at) {
         RectangleAllocator alloc = parent.getProperty(outputInsertsOnSheet_allocactorVert);
         if (alloc == null) {
             //System.out.println(" new allocator ");
@@ -1344,7 +1344,7 @@ class OutputInsertsOnSheet {
             while (i.hasNext()) {
                 Entry<Object, Rect> n = i.next();
                 String uid = (String) n.getKey();
-                iVisualElement e = StandardFluidSheet.findVisualElement(root, uid);
+                IVisualElement e = StandardFluidSheet.findVisualElement(root, uid);
 
                 if (e == null) i.remove();
                 else {

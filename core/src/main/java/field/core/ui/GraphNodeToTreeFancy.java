@@ -4,7 +4,7 @@ import field.core.Constants;
 import field.core.Platform;
 import field.core.plugins.selection.ToolBarFolder;
 import field.launch.Launcher;
-import field.math.graph.iMutable;
+import field.math.graph.IMutable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
@@ -35,23 +35,23 @@ class GraphNodeToTreeFancy {
     }
 
     public
-    void reset(iMutable m) {
+    void reset(IMutable m) {
         target.removeAll();
 
         for (Object o : m.getChildren())
-            populate((iMutable) o, target);
+            populate((IMutable) o, target);
 
     }
 
     private static
-    void populate(iMutable m, Widget i) {
+    void populate(IMutable m, Widget i) {
 
         TreeItem item = (i instanceof TreeItem) ? new TreeItem(((TreeItem) i), 0) : new TreeItem((Tree) i, 0);
         item.setText((String.valueOf(m)));
         item.setData(m);
 
-        List<iMutable> c = m.getChildren();
-        for (iMutable cc : c) {
+        List<IMutable> c = m.getChildren();
+        for (IMutable cc : c) {
             populate(cc, item);
         }
 

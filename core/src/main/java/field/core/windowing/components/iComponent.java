@@ -5,8 +5,8 @@ package field.core.windowing.components;
 
 import field.bytecode.protect.annotations.GenerateMethods;
 import field.bytecode.protect.annotations.Mirror;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.math.linalg.iCoordinateFrame;
@@ -94,11 +94,11 @@ interface iComponent {
 
     @Mirror
     public
-    iVisualElement getVisualElement();
+    IVisualElement getVisualElement();
 
     @Mirror
     public
-    iComponent setVisualElement(iVisualElement ve);
+    iComponent setVisualElement(IVisualElement ve);
 
     public
     void setSelected(boolean selected);

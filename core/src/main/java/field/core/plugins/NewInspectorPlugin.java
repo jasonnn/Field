@@ -2,10 +2,10 @@ package field.core.plugins;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.help.ContextualHelp;
 import field.core.plugins.help.HelpBrowser;
 import field.core.plugins.python.PythonPlugin;
@@ -20,11 +20,11 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.SelectionGroup.iSelectionChanged;
 import field.core.windowing.components.iComponent;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
+import field.math.graph.IMutableContainer;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.collect.tuple.Triple;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Spinner;
@@ -37,7 +37,7 @@ public
 class NewInspectorPlugin implements iPlugin {
 
     public
-    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -53,7 +53,7 @@ class NewInspectorPlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -74,13 +74,13 @@ class NewInspectorPlugin implements iPlugin {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             properties = t;
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -91,11 +91,11 @@ class NewInspectorPlugin implements iPlugin {
     }
 
     public
-    class Overrides extends iVisualElementOverrides.Adaptor {
+    class Overrides extends IVisualElementOverrides.Adaptor {
 
         @Override
         public
-        <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+        <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
             if (prop.equals(inspectorPlugin)) {
                 ref.set((T) NewInspectorPlugin.this);
             }
@@ -104,7 +104,7 @@ class NewInspectorPlugin implements iPlugin {
 
         @Override
         public
-        <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+        <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
             if ((source == currentInspection)
                 && !prop.equals(PythonPlugin.python_areas)
                 && !prop.equals(PythonPlugin.python_source)
@@ -115,8 +115,8 @@ class NewInspectorPlugin implements iPlugin {
                 // needsInspection = 0;
             }
 
-            if (prop.equals(iVisualElement.name)) {
-                source.setProperty(iVisualElement.dirty, true);
+            if (prop.equals(IVisualElement.name)) {
+                source.setProperty(IVisualElement.dirty, true);
             }
             return super.setProperty(source, prop, to);
         }
@@ -138,13 +138,13 @@ class NewInspectorPlugin implements iPlugin {
 
     private SelectionGroup<iComponent> group;
 
-    private iVisualElement currentInspection;
+    private IVisualElement currentInspection;
 
     protected static final String pluginId = "//inspector_python";
 
     protected LocalVisualElement lve;
 
-    protected iVisualElement root;
+    protected IVisualElement root;
 
     protected Overrides elementOverride;
 
@@ -202,24 +202,24 @@ class NewInspectorPlugin implements iPlugin {
     }
 
     public
-    iVisualElement getWellKnownVisualElement(String id) {
+    IVisualElement getWellKnownVisualElement(String id) {
         if (id.equals(pluginId)) return lve;
         return null;
     }
 
     public
-    void registeredWith(final iVisualElement root) {
+    void registeredWith(final IVisualElement root) {
         this.root = root;
 
         inspector = new NewInspector2() {
             protected
-            java.util.LinkedHashMap<String, iUpdateable> getMenuItems() {
-                return helper.getMenuItems(new iUpdateable() {
+            java.util.LinkedHashMap<String, IUpdateable> getMenuItems() {
+                return helper.getMenuItems(new IUpdateable() {
 
                     @Override
                     public
                     void update() {
-                        changeSelection(root.getProperty(iVisualElement.selectionGroup).getSelection());
+                        changeSelection(root.getProperty(IVisualElement.selectionGroup).getSelection());
                     }
                 });
             }
@@ -231,7 +231,7 @@ class NewInspectorPlugin implements iPlugin {
 
         elementOverride = createElementOverrides();
         root.addChild(lve);
-        group = root.getProperty(iVisualElement.selectionGroup);
+        group = root.getProperty(IVisualElement.selectionGroup);
 
         group.registerNotification(new iSelectionChanged<iComponent>() {
             public
@@ -240,14 +240,14 @@ class NewInspectorPlugin implements iPlugin {
             }
         });
 
-        final GLComponentWindow window = root.getProperty(iVisualElement.enclosingFrame);
+        final GLComponentWindow window = root.getProperty(IVisualElement.enclosingFrame);
 
         installHelpBrowser(root);
     }
 
     @NextUpdate(delay = 3)
     private
-    void installHelpBrowser(final iVisualElement root) {
+    void installHelpBrowser(final IVisualElement root) {
         HelpBrowser h = HelpBrowser.helpBrowser.get(root);
         ContextualHelp ch = h.getContextualHelp();
         ch.addContextualHelpForWidget("inspector",
@@ -266,12 +266,12 @@ class NewInspectorPlugin implements iPlugin {
 
     boolean updatedLast = false;
 
-    private ArrayList<iVisualElement> sel = new ArrayList<iVisualElement>();
+    private ArrayList<IVisualElement> sel = new ArrayList<IVisualElement>();
 
     public
     void update() {
         needsInspection--;
-        if (needsInspection == 0) changeSelection(root.getProperty(iVisualElement.selectionGroup).getSelection());
+        if (needsInspection == 0) changeSelection(root.getProperty(IVisualElement.selectionGroup).getSelection());
 
         if (needsInspection < 0) needsInspection = 0;
     }
@@ -299,9 +299,9 @@ class NewInspectorPlugin implements iPlugin {
         }
         if (selected.isEmpty()) inspector.clear();
 
-        sel = new ArrayList<iVisualElement>();
+        sel = new ArrayList<IVisualElement>();
         for (iComponent c : selected) {
-            iVisualElement m = c.getVisualElement();
+            IVisualElement m = c.getVisualElement();
             if (m != null) sel.add(m);
         }
         inspector.clear();
@@ -321,7 +321,7 @@ class NewInspectorPlugin implements iPlugin {
         return new Overrides() {
             @Override
             public
-            <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+            <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
                 if (sel.contains(source)
                     && !prop.equals(PythonPlugin.python_areas)
                     && !prop.equals(PythonPlugin.python_source)
@@ -329,15 +329,15 @@ class NewInspectorPlugin implements iPlugin {
                     needsInspection = 30;
                 }
 
-                if (prop.equals(iVisualElement.name)) {
-                    source.setProperty(iVisualElement.dirty, true);
+                if (prop.equals(IVisualElement.name)) {
+                    source.setProperty(IVisualElement.dirty, true);
                 }
                 return super.setProperty(source, prop, to);
             }
 
             @Override
             public
-            VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+            TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
                 if (sel.contains(source)) needsInspection = 30;
                 return super.shouldChangeFrame(source, newFrame, oldFrame, now);
             }

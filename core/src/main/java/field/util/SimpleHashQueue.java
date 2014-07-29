@@ -1,6 +1,6 @@
 package field.util;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ class SimpleHashQueue extends TaskQueue {
     }
 
     public
-    Task queueSingleUpdate(Object token, iUpdateable u) {
+    Task queueSingleUpdate(Object token, IUpdateable u) {
         synchronized (lock) {
 
             if (tokens.containsKey(token)) return tokens.get(token);

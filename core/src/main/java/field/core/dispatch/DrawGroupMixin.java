@@ -1,15 +1,16 @@
 package field.core.dispatch;
 
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
-import field.launch.iUpdateable;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.launch.IUpdateable;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector4;
 
 import java.util.ArrayList;
@@ -19,14 +20,14 @@ import java.util.Set;
 
 
 public
-class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
+class DrawGroupMixin extends IVisualElementOverrides.DefaultOverride {
 
     public static VisualElementProperty<Vector4> groupFillColor = new VisualElementProperty<Vector4>("groupFillColor");
     public static VisualElementProperty<Vector4> groupStrokeColor =
             new VisualElementProperty<Vector4>("groupStrokeColor");
 
     public static
-    void mixin(iVisualElement e) {
+    void mixin(IVisualElement e) {
         new Mixins().mixInOverride(DrawGroupMixin.class, e);
     }
 
@@ -34,26 +35,26 @@ class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.Default
 
     @Override
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
 
         if (source == forElement) {
 
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
-                                                           .getProperty(source, iVisualElement.selectionGroup, group);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+                                                           .getProperty(source, IVisualElement.selectionGroup, group);
 
-            items.put("Groups (" + forElement.getProperty(iVisualElement.name) + ')', null);
+            items.put("Groups (" + forElement.getProperty(IVisualElement.name) + ')', null);
 
-            items.put("   \u21e3  unpack selection from this group", new iUpdateable() {
+            items.put("   \u21e3  unpack selection from this group", new IUpdateable() {
 
                 public
                 void update() {
-                    List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
+                    List<IVisualElement> parents = (List<IVisualElement>) forElement.getParents();
 
                     Set<iComponent> selection = group.get().getSelection();
 
                     for (iComponent c : selection) {
-                        iVisualElement ve = c.getVisualElement();
+                        IVisualElement ve = c.getVisualElement();
                         if (ve != null) {
                             if (parents.contains(ve) && parents.size() > 1) {
                                 ve.removeChild(forElement);
@@ -62,20 +63,20 @@ class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.Default
                     }
 
                     frameLine = null;
-                    forElement.setProperty(iVisualElement.dirty, true);
+                    forElement.setProperty(IVisualElement.dirty, true);
                 }
             });
 
-            items.put("   \u21e3  put selection into this group", new iUpdateable() {
+            items.put("   \u21e3  put selection into this group", new IUpdateable() {
 
                 public
                 void update() {
-                    List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
+                    List<IVisualElement> parents = (List<IVisualElement>) forElement.getParents();
 
                     Set<iComponent> selection = group.get().getSelection();
 
                     for (iComponent c : selection) {
-                        iVisualElement ve = c.getVisualElement();
+                        IVisualElement ve = c.getVisualElement();
                         if (ve != null) {
                             if (!parents.contains(ve) && ve != forElement) {
                                 ve.addChild(forElement);
@@ -83,24 +84,24 @@ class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.Default
                         }
                     }
                     frameLine = null;
-                    forElement.setProperty(iVisualElement.dirty, true);
+                    forElement.setProperty(IVisualElement.dirty, true);
                 }
             });
 
-            items.put("   \u21e3  put selection into this group exclusively", new iUpdateable() {
+            items.put("   \u21e3  put selection into this group exclusively", new IUpdateable() {
 
                 public
                 void update() {
-                    List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
+                    List<IVisualElement> parents = (List<IVisualElement>) forElement.getParents();
 
                     Set<iComponent> selection = group.get().getSelection();
 
                     for (iComponent c : selection) {
-                        iVisualElement ve = c.getVisualElement();
+                        IVisualElement ve = c.getVisualElement();
                         if (ve != null) {
                             if (!parents.contains(ve) && ve != forElement) {
-                                List<iVisualElement> cp = new ArrayList<iVisualElement>(ve.getChildren());
-                                for (iVisualElement cc : cp) {
+                                List<IVisualElement> cp = new ArrayList<IVisualElement>(ve.getChildren());
+                                for (IVisualElement cc : cp) {
                                     ve.removeChild(cc);
                                 }
                                 ve.addChild(forElement);
@@ -108,24 +109,24 @@ class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.Default
                         }
                     }
                     frameLine = null;
-                    forElement.setProperty(iVisualElement.dirty, true);
+                    forElement.setProperty(IVisualElement.dirty, true);
                 }
             });
 
         }
         else {
-            List<iVisualElement> c = (List<iVisualElement>) this.forElement.getParents();
+            List<IVisualElement> c = (List<IVisualElement>) this.forElement.getParents();
             if (c.contains(source)) {
 
             }
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         if (source == forElement) {
 
             if (frameLine == null) {
@@ -139,7 +140,7 @@ class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.Default
 
     @Override
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
         if (isChild(source)) {
             frameLine = null;
         }
@@ -147,16 +148,16 @@ class DrawGroupMixin extends field.core.dispatch.iVisualElementOverrides.Default
     }
 
     private
-    boolean isChild(iVisualElement source) {
+    boolean isChild(IVisualElement source) {
         return forElement.getParents().contains(source);
     }
 
     protected
     CachedLine computeFrameLine() {
-        List<iVisualElement> q = (List<iVisualElement>) forElement.getParents();
+        List<IVisualElement> q = (List<IVisualElement>) forElement.getParents();
 
         Rect u = null;
-        for (iVisualElement e : q) {
+        for (IVisualElement e : q) {
             u = Rect.union(u, e.getFrame(null));
         }
 

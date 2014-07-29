@@ -10,18 +10,18 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.Mixins;
 import field.core.dispatch.Mixins.iMixinProxy;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.iDefaultOverride;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElementOverrides.iDefaultOverride;
 import field.core.persistance.FluidPersistence.iWellKnownElementResolver;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLineCompression;
 import field.core.windowing.components.iComponent;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 import field.namespace.key.Key;
 
@@ -44,13 +44,13 @@ class FluidCopyPastePersistence {
         // we could use this to displace the frames for
         // example...
         public
-        void endCopy(iVisualElement newCopy, iVisualElement old);
+        void endCopy(IVisualElement newCopy, IVisualElement old);
     }
 
     public static
-    HashSet<iVisualElement> copyFromNonloadedPredicate(iFunction<Boolean, iVisualElement> shouldCopy,
+    HashSet<IVisualElement> copyFromNonloadedPredicate(IFunction<IVisualElement, Boolean> shouldCopy,
                                                        String sheetXMLname,
-                                                       iVisualElement graphRoot,
+                                                       IVisualElement graphRoot,
                                                        FluidCopyPastePersistence ultimatePaster) {
         System.err.println(" inside copySource from nonloaded");
         try {
@@ -60,9 +60,9 @@ class FluidCopyPastePersistence {
 
             FluidCopyPastePersistence pIn = new FluidCopyPastePersistence(new iWellKnownElementResolver() {
                 public
-                iVisualElement getWellKnownElement(String uid) {
-                    iVisualElement element = new VisualElement();
-                    element.setProperty(iVisualElement.name, "(well known mock object)");
+                IVisualElement getWellKnownElement(String uid) {
+                    IVisualElement element = new VisualElement();
+                    element.setProperty(IVisualElement.name, "(well known mock object)");
                     element.setUniqueID(uid);
                     return element;
                 }
@@ -74,32 +74,32 @@ class FluidCopyPastePersistence {
                 }
 
                 public
-                void endCopy(iVisualElement newCopy, iVisualElement old) {
+                void endCopy(IVisualElement newCopy, IVisualElement old) {
                 }
             });
 
-            HashSet<iVisualElement> created = new HashSet<iVisualElement>();
-            HashSet<iVisualElement> createdElements = new HashSet<iVisualElement>();
+            HashSet<IVisualElement> created = new HashSet<IVisualElement>();
+            HashSet<IVisualElement> createdElements = new HashSet<IVisualElement>();
 
             ObjectInputStream in1 =
                     pIn.getObjectInputStream(new FileReader(new File(sheetXMLname)), createdElements, created);
             String version = (String) in1.readObject();
-            iVisualElement root = (iVisualElement) in1.readObject();
+            IVisualElement root = (IVisualElement) in1.readObject();
             in1.close();
 
-            HashSet<iVisualElement> sub = new HashSet<iVisualElement>();
+            HashSet<IVisualElement> sub = new HashSet<IVisualElement>();
 
-            for (iVisualElement e : createdElements) {
-                if (shouldCopy == null || shouldCopy.f(e)) {
+            for (IVisualElement e : createdElements) {
+                if (shouldCopy == null || shouldCopy.apply(e)) {
                     sub.add(e);
                 }
             }
 
             FluidCopyPastePersistence pOut = new FluidCopyPastePersistence(new iWellKnownElementResolver() {
                 public
-                iVisualElement getWellKnownElement(String uid) {
-                    iVisualElement element = new VisualElement();
-                    element.setProperty(iVisualElement.name, "(well known mock object)");
+                IVisualElement getWellKnownElement(String uid) {
+                    IVisualElement element = new VisualElement();
+                    element.setProperty(IVisualElement.name, "(well known mock object)");
                     element.setUniqueID(uid);
                     return element;
                 }
@@ -111,12 +111,12 @@ class FluidCopyPastePersistence {
                 }
 
                 public
-                void endCopy(iVisualElement newCopy, iVisualElement old) {
+                void endCopy(IVisualElement newCopy, IVisualElement old) {
                 }
             });
 
-            HashSet<iVisualElement> saved = new HashSet<iVisualElement>();
-            createdElements = new HashSet<iVisualElement>();
+            HashSet<IVisualElement> saved = new HashSet<IVisualElement>();
+            createdElements = new HashSet<IVisualElement>();
 
             ObjectOutputStream oos = pOut.getObjectOutputStream(out, saved, sub);
             oos.writeObject("tmp-snippet");
@@ -125,13 +125,13 @@ class FluidCopyPastePersistence {
 
             System.err.println(" saved <" + sub + "> / <" + saved + '>');
 
-            created = new HashSet<iVisualElement>();
-            createdElements = new HashSet<iVisualElement>();
+            created = new HashSet<IVisualElement>();
+            createdElements = new HashSet<IVisualElement>();
 
             ObjectInputStream in2 =
                     ultimatePaster.getObjectInputStream(new FileReader(tmpFile), created, createdElements);
             String tmpSnippet = (String) in2.readObject();
-            HashSet<iVisualElement> root2 = (HashSet<iVisualElement>) in2.readObject();
+            HashSet<IVisualElement> root2 = (HashSet<IVisualElement>) in2.readObject();
             in2.close();
 
             System.err.println(" final load <" + created + "> <" + createdElements + "> / <" + root2 + '>');
@@ -151,27 +151,27 @@ class FluidCopyPastePersistence {
     }
 
     public static
-    HashSet<iVisualElement> copyFromNonloaded(final Set<String> uidSubset,
+    HashSet<IVisualElement> copyFromNonloaded(final Set<String> uidSubset,
                                               String sheetXMLname,
-                                              iVisualElement graphRoot,
+                                              IVisualElement graphRoot,
                                               FluidCopyPastePersistence ultimatePaster) {
-        return copyFromNonloadedPredicate(uidSubset == null ? null : new iFunction<Boolean, iVisualElement>() {
+        return copyFromNonloadedPredicate(uidSubset == null ? null : new IFunction<IVisualElement, Boolean>() {
             public
-            Boolean f(iVisualElement in) {
+            Boolean apply(IVisualElement in) {
                 return uidSubset.contains(in.getUniqueID());
             }
         }, sheetXMLname, graphRoot, ultimatePaster);
     }
 
     private final XStream stream;
-    private Set<iVisualElement> created;
-    private Set<iVisualElement> saved;
+    private Set<IVisualElement> created;
+    private Set<IVisualElement> saved;
 
-    private Set<iVisualElement> subsetToSave;
+    private Set<IVisualElement> subsetToSave;
 
     private Set<String> subsetToLoad;
 
-    private Map<String, iVisualElement> existing;
+    private Map<String, IVisualElement> existing;
 
     protected UnmarshallingContext context;
 
@@ -226,18 +226,18 @@ class FluidCopyPastePersistence {
 
             public
             boolean canConvert(Class type) {
-                return iVisualElement.class.isAssignableFrom(type);
+                return IVisualElement.class.isAssignableFrom(type);
             }
 
             public
             void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
                 try {
-                    iVisualElement element = (iVisualElement) source;
+                    IVisualElement element = (IVisualElement) source;
                     writer.startNode("uid");
                     writer.setValue(element.getUniqueID());
                     writer.endNode();
 
-                    Boolean doNot = element.getProperty(iVisualElement.doNotSave);
+                    Boolean doNot = element.getProperty(IVisualElement.doNotSave);
                     if (doNot != null && doNot) {
                         writer.startNode("aborted");
                         writer.endNode();
@@ -266,7 +266,7 @@ class FluidCopyPastePersistence {
                         writer.endNode();
                     }
                     else {
-                        saved.add((iVisualElement) source);
+                        saved.add((IVisualElement) source);
 
                         writer.startNode("class");
                         context.convertAnother(element.getClass());
@@ -283,7 +283,7 @@ class FluidCopyPastePersistence {
                         Iterator<Entry<Object, Object>> i = properties.entrySet().iterator();
                         while (i.hasNext()) {
                             Entry<Object, Object> e = i.next();
-                            if (((iVisualElement.VisualElementProperty<?>) e.getKey()).getName().endsWith("_"))
+                            if (((IVisualElement.VisualElementProperty<?>) e.getKey()).getName().endsWith("_"))
                                 i.remove();
                         }
                         writer.startNode("properties");
@@ -316,22 +316,22 @@ class FluidCopyPastePersistence {
                 try {
                     reader.moveUp();
                     if (uid.startsWith("//")) {
-                        iVisualElement ve = resolver.getWellKnownElement(uid);
+                        IVisualElement ve = resolver.getWellKnownElement(uid);
                         if (ve == null) return null;
 
                         reader.moveDown();
-                        List<iVisualElement> parents = (List) context.convertAnother(ve, List.class);
+                        List<IVisualElement> parents = (List) context.convertAnother(ve, List.class);
                         reader.moveUp();
                         reader.moveDown();
-                        List<iVisualElement> children = (List) context.convertAnother(ve, List.class);
+                        List<IVisualElement> children = (List) context.convertAnother(ve, List.class);
                         reader.moveUp();
 
-                        for (iVisualElement e : parents) {
+                        for (IVisualElement e : parents) {
                             if (e != null) if (!e.getChildren().contains(ve)) {
                                 e.addChild(ve);
                             }
                         }
-                        for (iVisualElement e : children) {
+                        for (IVisualElement e : children) {
                             if (e != null) if (!ve.getChildren().contains(e)) {
                                 ve.addChild(e);
                             }
@@ -348,14 +348,14 @@ class FluidCopyPastePersistence {
 
                         if ("fringe".equals(reader.getNodeName())) {
                             reader.moveUp();
-                            iVisualElement existing = FluidCopyPastePersistence.this.existing.get(uid);
+                            IVisualElement existing = FluidCopyPastePersistence.this.existing.get(uid);
                             return existing;
                         }
 
                         Class c = (Class) context.convertAnother(null, Class.class);
                         reader.moveUp();
 
-                        iVisualElement ve = (iVisualElement) c.newInstance();
+                        IVisualElement ve = (IVisualElement) c.newInstance();
 
                         reader.moveDown();
                         Map<Object, Object> properties = null;
@@ -376,20 +376,20 @@ class FluidCopyPastePersistence {
                         ve.setFrame(r);
 
                         reader.moveDown();
-                        List<iVisualElement> parents = (List) context.convertAnother(ve, List.class);
+                        List<IVisualElement> parents = (List) context.convertAnother(ve, List.class);
                         reader.moveUp();
                         reader.moveDown();
-                        List<iVisualElement> children = (List) context.convertAnother(ve, List.class);
+                        List<IVisualElement> children = (List) context.convertAnother(ve, List.class);
                         reader.moveUp();
 
-                        for (iVisualElement e : parents) {
+                        for (IVisualElement e : parents) {
                             if (e != null) {
                                 if (!e.getChildren().contains(ve)) {
                                     e.addChild(ve);
                                 }
                             }
                         }
-                        for (iVisualElement e : children) {
+                        for (IVisualElement e : children) {
                             if (e != null) {
                                 if (!ve.getChildren().contains(e)) {
                                     ve.addChild(e);
@@ -449,7 +449,7 @@ class FluidCopyPastePersistence {
                     iComponent o = (iComponent) c.newInstance();
 
                     reader.moveDown();
-                    iVisualElement ve = (iVisualElement) context.convertAnother(o, iVisualElement.class);
+                    IVisualElement ve = (IVisualElement) context.convertAnother(o, IVisualElement.class);
                     reader.moveUp();
 
                     if (ve != null) o.setVisualElement(ve);
@@ -468,7 +468,7 @@ class FluidCopyPastePersistence {
 
             public
             boolean canConvert(Class type) {
-                return iVisualElementOverrides.iDefaultOverride.class.isAssignableFrom(type);
+                return IVisualElementOverrides.iDefaultOverride.class.isAssignableFrom(type);
             }
 
             public
@@ -481,7 +481,7 @@ class FluidCopyPastePersistence {
 //				iVisualElement e = ((iVisualElementOverrides.DefaultOverride) source).forElement;
 //				;//System.out.println(" e:"+e);
 
-                iVisualElement e = (iVisualElement) ReflectionTools.illegalGetObject(source, "forElement");
+                IVisualElement e = (IVisualElement) ReflectionTools.illegalGetObject(source, "forElement");
 
                 //System.out.println(" got element <"+e+"> from <"+source+"> : "+source.getClass()+">");
 
@@ -504,7 +504,7 @@ class FluidCopyPastePersistence {
                 reader.moveUp();
 
                 reader.moveDown();
-                iVisualElement ve = (iVisualElement) context.convertAnother(def, iVisualElement.class);
+                IVisualElement ve = (IVisualElement) context.convertAnother(def, IVisualElement.class);
 
                 def.setVisualElement(ve);
                 reader.moveUp();
@@ -621,14 +621,14 @@ class FluidCopyPastePersistence {
     }
 
     public
-    ObjectInputStream getObjectInputStream(Reader reader, Set<iVisualElement> created, Set<iVisualElement> existing) {
+    ObjectInputStream getObjectInputStream(Reader reader, Set<IVisualElement> created, Set<IVisualElement> existing) {
         this.created = created;
-        this.existing = new LinkedHashMap<String, iVisualElement>();
+        this.existing = new LinkedHashMap<String, IVisualElement>();
         this.saved = null;
         this.subsetToSave = null;
 
-        for (iVisualElement e : existing) {
-            iVisualElement displaced = this.existing.put(e.getUniqueID(), e);
+        for (IVisualElement e : existing) {
+            IVisualElement displaced = this.existing.put(e.getUniqueID(), e);
             assert displaced == null;
         }
         try {
@@ -640,7 +640,7 @@ class FluidCopyPastePersistence {
     }
 
     public
-    ObjectOutputStream getObjectOutputStream(Writer delegate, Set<iVisualElement> saved, Set<iVisualElement> subset) {
+    ObjectOutputStream getObjectOutputStream(Writer delegate, Set<IVisualElement> saved, Set<IVisualElement> subset) {
         this.saved = saved;
         this.subsetToSave = subset;
         try {

@@ -1,8 +1,9 @@
 package field.core.dispatch;
 
-import field.core.dispatch.iVisualElementOverrides.iDefaultOverride;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
-import field.namespace.generic.Bind.iFunction;
+import field.core.dispatch.IVisualElementOverrides.iDefaultOverride;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
+import field.namespace.generic.IFunction;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -25,7 +26,7 @@ class Mixins {
     }
 
     public static
-    <T> T make(final Class<T> t, final iFunction<Object, List<Object>> combine, T... over) {
+    <T> T make(final Class<T> t, final IFunction<List<Object>, Object> combine, T... over) {
         final iMixinProxy<T> m = new iMixinProxy<T>() {
             List<T> callList = new ArrayList<T>();
 
@@ -61,7 +62,7 @@ class Mixins {
                                                       }
                                                       Object ret = null;
                                                       if (combine != null) {
-                                                          ret = combine.f(r);
+                                                          ret = combine.apply(r);
                                                       }
                                                       else {
                                                           ret = !r.isEmpty() ? r.get(0) : null;
@@ -72,38 +73,38 @@ class Mixins {
                                           });
         return (T) o;
     }
-
-    public static iFunction<Object, List<Object>> visitCodeCombiner = new iFunction<Object, List<Object>>() {
+//TODO I think i might have messed this up?
+    public static IFunction<List<Object>, Object> visitCodeCombiner = new IFunction<List<Object>, Object>() {
 
         public
-        Object f(List<Object> in) {
+        Object apply(List<Object> in) {
             if (in.isEmpty()) return null;
             if (in.size() == 1) return in.get(0);
             boolean isVisitCode = false;
             for (int i = 0; i < in.size(); i++) {
-                if (in == VisitCode.stop) return VisitCode.stop;
-                if (in == VisitCode.skip) return VisitCode.skip;
-                if (in instanceof VisitCode) isVisitCode = true;
+                if (in.get(i) == StandardTraversalHint.STOP) return StandardTraversalHint.STOP;
+                if (in.get(i) == StandardTraversalHint.SKIP) return StandardTraversalHint.SKIP;
+                if (in instanceof TraversalHint) isVisitCode = true;
             }
-            return isVisitCode ? VisitCode.cont : in.get(0);
+            return isVisitCode ? StandardTraversalHint.CONTINUE : in.get(0);
         }
     };
 
     public static
-    iMixinProxy<iVisualElementOverrides> upgradeOverrides(iVisualElement e) {
-        iVisualElementOverrides o = e.getProperty(iVisualElement.overrides);
-        if (o instanceof iMixinProxy) return (iMixinProxy<iVisualElementOverrides>) o;
+    iMixinProxy<IVisualElementOverrides> upgradeOverrides(IVisualElement e) {
+        IVisualElementOverrides o = e.getProperty(IVisualElement.overrides);
+        if (o instanceof iMixinProxy) return (iMixinProxy<IVisualElementOverrides>) o;
 
-        iVisualElementOverrides oo = make(iVisualElementOverrides.class, visitCodeCombiner, o);
-        e.setProperty(iVisualElement.overrides, oo);
-        return (iMixinProxy<iVisualElementOverrides>) oo;
+        IVisualElementOverrides oo = make(IVisualElementOverrides.class, visitCodeCombiner, o);
+        e.setProperty(IVisualElement.overrides, oo);
+        return (iMixinProxy<IVisualElementOverrides>) oo;
     }
 
     public
-    <T extends iDefaultOverride> T mixInOverride(Class<T> ty, iVisualElement e) {
-        iMixinProxy<iVisualElementOverrides> m = upgradeOverrides(e);
-        List<iVisualElementOverrides> c = m.getCallList();
-        for (iVisualElementOverrides o : c) {
+    <T extends iDefaultOverride> T mixInOverride(Class<T> ty, IVisualElement e) {
+        iMixinProxy<IVisualElementOverrides> m = upgradeOverrides(e);
+        List<IVisualElementOverrides> c = m.getCallList();
+        for (IVisualElementOverrides o : c) {
             if (ty.isInstance(o)) {
                 return (T) o;
             }
@@ -111,7 +112,7 @@ class Mixins {
         try {
             iDefaultOverride o = ty.newInstance();
             o.setVisualElement(e);
-            c.add((iVisualElementOverrides) o);
+            c.add((IVisualElementOverrides) o);
             return (T) o;
         } catch (InstantiationException e1) {
             e1.printStackTrace();

@@ -2,7 +2,7 @@ package field.math.abstraction;
 
 
 public
-interface iFilter<t_in, t_out> {
+interface IFilter<I, O> {
     public
-    t_out filter(t_in value);
+    O filter(I value);
 }

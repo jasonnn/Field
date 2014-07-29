@@ -1,7 +1,7 @@
 package field.graph;
 
 import field.context.Context.Cobj;
-import field.math.abstraction.iMetric;
+import field.math.abstraction.IMetric;
 import field.math.linalg.Vector2;
 import field.util.Dict.Prop;
 
@@ -25,7 +25,7 @@ class SpringUtilCobj {
 
     double EPSILON = 0.0001d;
 
-    private final iMetric<Cobj, Cobj> distance;
+    private final IMetric<Cobj, Cobj> distance;
     private final ArrayList<Cobj> vertex;
     // private double[][] dm;
     private double L;
@@ -38,7 +38,7 @@ class SpringUtilCobj {
     Prop<Integer> locked = new Prop<Integer>("locked");
 
     public
-    SpringUtilCobj(iMetric<Cobj, Cobj> distance, ArrayList<Cobj> vertex) {
+    SpringUtilCobj(IMetric<Cobj, Cobj> distance, ArrayList<Cobj> vertex) {
         this.distance = distance;
         this.vertex = vertex;
     }

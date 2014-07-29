@@ -1,6 +1,6 @@
 package field.core.plugins.drawing.text;
 
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.LineUtils;
 import field.math.linalg.Vector2;

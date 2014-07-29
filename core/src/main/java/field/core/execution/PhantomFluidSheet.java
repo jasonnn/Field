@@ -1,17 +1,17 @@
 package field.core.execution;
 
 import field.core.StandardFluidSheet;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.iHasVisualElementRoot;
 import field.core.windowing.components.PlainDraggableComponent;
 import field.launch.SystemProperties;
 import field.launch.iPhasic;
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 import field.util.collect.tuple.Triple;
 
 import java.io.*;
@@ -31,7 +31,7 @@ class PhantomFluidSheet implements iHasVisualElementRoot {
         PhantomFluidSheet getPhantom();
 
         public
-        iVisualElement getVisualElement();
+        IVisualElement getVisualElement();
     }
 
     private FacelessFluidSheet faceless;
@@ -119,12 +119,12 @@ class PhantomFluidSheet implements iHasVisualElementRoot {
     }
 
     public
-    iVisualElement findElement(String description) {
+    IVisualElement findElement(String description) {
         return StandardFluidSheet.findVisualElementWithName(getRoot(), description);
     }
 
     public
-    iVisualElement getRoot() {
+    IVisualElement getRoot() {
         if (faceless != null) return faceless.getRoot();
         return facefull.getRoot();
     }
@@ -149,7 +149,7 @@ class PhantomFluidSheet implements iHasVisualElementRoot {
     }
 
     public
-    iPhasicForElement phasicForDescription(final String description, final iFloatProvider fp, final boolean local) {
+    iPhasicForElement phasicForDescription(final String description, final IFloatProvider fp, final boolean local) {
 
         // right now this is very simple (could be xpath, if we needed
         // it)
@@ -161,7 +161,7 @@ class PhantomFluidSheet implements iHasVisualElementRoot {
 
             iExecutesPromise runner = null;
 
-            iVisualElement running = null;
+            IVisualElement running = null;
 
             boolean first = true;
 
@@ -185,7 +185,7 @@ class PhantomFluidSheet implements iHasVisualElementRoot {
             }
 
             public
-            iVisualElement getVisualElement() {
+            IVisualElement getVisualElement() {
                 return running;
             }
 
@@ -203,7 +203,7 @@ class PhantomFluidSheet implements iHasVisualElementRoot {
                 if (running != null) {
 
                     refPss = new Ref<PythonScriptingSystem>(null);
-                    new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running)
+                    new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running)
                                                                    .getProperty(running,
                                                                                 PythonScriptingSystem.pythonScriptingSystem,
                                                                                 refPss);
@@ -215,7 +215,7 @@ class PhantomFluidSheet implements iHasVisualElementRoot {
                                                       1));
                     }
                     else {
-                        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running)
+                        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running)
                                                                        .getProperty(running,
                                                                                     iExecutesPromise.promiseExecution,
                                                                                     refRunner);

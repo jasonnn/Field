@@ -4,12 +4,12 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Platform;
 import field.core.StandardFluidSheet;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.execution.PythonGeneratorStack;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem.DerivativePromise;
@@ -52,12 +52,13 @@ import field.core.util.StringAdaptations;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.*;
 import field.core.windowing.overlay.OverlayAnimationManager;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.abstraction.IProvider;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.collect.tuple.Pair;
 import field.util.collect.tuple.Triple;
 import field.util.Dict.Prop;
@@ -83,7 +84,7 @@ public
 class PythonPluginEditor extends PythonPlugin {
 
     public
-    class InsertPossibleComponentHere implements iUpdateable {
+    class InsertPossibleComponentHere implements IUpdateable {
 
         private final iPossibleComponent pc;
 
@@ -129,7 +130,7 @@ class PythonPluginEditor extends PythonPlugin {
     }
 
     public
-    class InsertPossibleWrapHere implements iUpdateable {
+    class InsertPossibleWrapHere implements IUpdateable {
 
         private final Triple<String, iPossibleComponent, iPossibleComponent> pc;
 
@@ -179,7 +180,7 @@ class PythonPluginEditor extends PythonPlugin {
     class LocalEditablelPromise extends LocalPromise implements Promise, DerivativePromise {
 
         public
-        LocalEditablelPromise(iVisualElement element) {
+        LocalEditablelPromise(IVisualElement element) {
             super(element);
         }
 
@@ -210,15 +211,15 @@ class PythonPluginEditor extends PythonPlugin {
         public
         String getText() {
             if ((currentlyEditing == element) && (currentlyEditingProperty == python_source)) {
-                iVisualElementOverrides.topology.begin(lve);
+                IVisualElementOverrides.topology.begin(lve);
                 insideUpdate = true;
                 try {
-                    iVisualElementOverrides.forward.setProperty.setProperty(element,
+                    IVisualElementOverrides.forward.setProperty.setProperty(element,
                                                                             python_source_forExecution,
                                                                             new Ref<String>(stringAtSwapIn));
                 } finally {
                     insideUpdate = false;
-                    iVisualElementOverrides.topology.end(lve);
+                    IVisualElementOverrides.topology.end(lve);
                 }
             }
             else if ((currentlyEditing == element) && (currentlyEditing == property)) {
@@ -235,13 +236,13 @@ class PythonPluginEditor extends PythonPlugin {
     class MenuOverrides extends Overrides {
         @Override
         public
-        <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+        <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
             if (prop.equals(OutputInsertsOnSheet.outputInsertsOnSheet)) {
                 if (ref.get() == null) {
                     OutputInsertsOnSheet oios = new OutputInsertsOnSheet(source);
                     source.setProperty(OutputInsertsOnSheet.outputInsertsOnSheet, oios);
                     ref.set((T) oios);
-                    return VisitCode.stop;
+                    return StandardTraversalHint.STOP;
                 }
             }
             return super.getProperty(source, prop, ref);
@@ -249,7 +250,7 @@ class PythonPluginEditor extends PythonPlugin {
 
         @Override
         public
-        VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+        TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
             Boolean group = source.getProperty(python_isDefaultGroup);
             if ((group != null) && group) {
                 if ((GLComponentWindow.currentContext != null) && GLComponentWindow.draft) {
@@ -311,23 +312,23 @@ class PythonPluginEditor extends PythonPlugin {
 
         @Override
         public
-        VisitCode menuItemsFor(final iVisualElement source, Map<String, iUpdateable> items) {
+        TraversalHint menuItemsFor(final IVisualElement source, Map<String, IUpdateable> items) {
 
-            LinkedHashMap<String, iUpdateable> old = new LinkedHashMap<String, iUpdateable>(items);
+            LinkedHashMap<String, IUpdateable> old = new LinkedHashMap<String, IUpdateable>(items);
 
             items.clear();
 
             items.put("Boxes", null);
 
-            items.put(" \u21e3\tCreate <b>new</b> visual element here ///N///", new iUpdateable() {
+            items.put(" \u21e3\tCreate <b>new</b> visual element here ///N///", new IUpdateable() {
 
                 public
                 void update() {
 
-                    List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
-                    iVisualElement ee = root;
+                    List<IVisualElement> all = StandardFluidSheet.allVisualElements(root);
+                    IVisualElement ee = root;
                     boolean exclusive = false;
-                    for (iVisualElement a : all) {
+                    for (IVisualElement a : all) {
                         Boolean f = a.getProperty(python_isDefaultGroup);
                         if ((f != null) && f) {
                             Boolean ex = a.getProperty(python_isDefaultGroupExclusive);
@@ -337,7 +338,7 @@ class PythonPluginEditor extends PythonPlugin {
                         }
                     }
 
-                    GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
+                    GLComponentWindow frame = IVisualElement.enclosingFrame.get(root);
 
                     Rect bounds = new Rect(30, 30, 50, 50);
                     if (frame != null) {
@@ -361,7 +362,7 @@ class PythonPluginEditor extends PythonPlugin {
 
             });
 
-            final SelectionGroup<iComponent> g = iVisualElement.selectionGroup.get(root);
+            final SelectionGroup<iComponent> g = IVisualElement.selectionGroup.get(root);
 
             // items.put("   \u2709  <b>group selected elements</b> together in a new group",
             // new iUpdateable() {
@@ -398,12 +399,12 @@ class PythonPluginEditor extends PythonPlugin {
             // }
             // });
 
-            items.put(" \u0236\tCreate a vertical <b>time marker</b> here", new iUpdateable() {
+            items.put(" \u0236\tCreate a vertical <b>time marker</b> here", new IUpdateable() {
 
                 public
                 void update() {
 
-                    GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
+                    GLComponentWindow frame = IVisualElement.enclosingFrame.get(root);
 
                     Rect bounds = new Rect(30, 30, 50, 50);
                     if (frame != null) {
@@ -414,7 +415,7 @@ class PythonPluginEditor extends PythonPlugin {
                     PlainDraggableComponent c1 = new PlainDraggableComponent(bounds);
                     VisualElement element = new VisualElement(c1);
                     element.setFrame(bounds);
-                    element.setProperty(iVisualElement.name, "untitled");
+                    element.setProperty(IVisualElement.name, "untitled");
                     element.addChild(root);
 
                     TimeMarker tm = new TimeMarker();
@@ -422,53 +423,53 @@ class PythonPluginEditor extends PythonPlugin {
                     tm.setVisualElement(element);
                     c1.setVisualElement(element);
 
-                    iVisualElementOverrides.topology.begin(root);
-                    iVisualElementOverrides.forward.added.f(element);
-                    iVisualElementOverrides.backward.added.f(element);
-                    iVisualElementOverrides.topology.end(root);
+                    IVisualElementOverrides.topology.begin(root);
+                    IVisualElementOverrides.forward.added.apply(element);
+                    IVisualElementOverrides.backward.added.apply(element);
+                    IVisualElementOverrides.topology.end(root);
                 }
             });
 
-            items.put(" \u232b\t<b>Delete</b> element ///meta BACK_SPACE///", new iUpdateable() {
+            items.put(" \u232b\t<b>Delete</b> element ///meta BACK_SPACE///", new IUpdateable() {
                 public
                 void update() {
                     if (source == null) return;
                     Rect r = source.getFrame(null);
                     delete(source);
-                    OverlayAnimationManager.notifyAsText(root, "deleted element " + iVisualElement.name.get(source), r);
+                    OverlayAnimationManager.notifyAsText(root, "deleted element " + IVisualElement.name.get(source), r);
                 }
             });
 
             if (source != null) {
                 Boolean def = source.getProperty(python_isDefaultGroup);
                 if ((def != null) && def) {
-                    items.put(" \u25a2\t<b>Reset the default super-element</b>", new iUpdateable() {
+                    items.put(" \u25a2\t<b>Reset the default super-element</b>", new IUpdateable() {
 
                         public
                         void update() {
                             source.deleteProperty(python_isDefaultGroup);
                             source.deleteProperty(python_isDefaultGroupExclusive);
-                            iVisualElement.dirty.set(source, source, true);
+                            IVisualElement.dirty.set(source, source, true);
                         }
 
                     });
                 }
                 else {
-                    items.put(" \u25a2\tMake this element the <b>default super element</b>", new iUpdateable() {
+                    items.put(" \u25a2\tMake this element the <b>default super element</b>", new IUpdateable() {
                         public
                         void update() {
                             source.setProperty(python_isDefaultGroup, true);
                             source.setProperty(python_isDefaultGroupExclusive, false);
-                            iVisualElement.dirty.set(source, source, true);
+                            IVisualElement.dirty.set(source, source, true);
                         }
                     });
                     items.put(" \u25a2\tMake this element the <b>exclusive default super element</b>",
-                              new iUpdateable() {
+                              new IUpdateable() {
                                   public
                                   void update() {
                                       source.setProperty(python_isDefaultGroup, true);
                                       source.setProperty(python_isDefaultGroupExclusive, true);
-                                      iVisualElement.dirty.set(source, source, true);
+                                      IVisualElement.dirty.set(source, source, true);
                                   }
                               });
                 }
@@ -506,14 +507,14 @@ class PythonPluginEditor extends PythonPlugin {
 
             if (source != null) {
                 if (ExecutionRuler.hasUnitTests(source, python_source)) {
-                    items.put(" \u24ca\tRun <b>all unit tests</b>", new iUpdateable() {
+                    items.put(" \u24ca\tRun <b>all unit tests</b>", new IUpdateable() {
                         public
                         void update() {
                             // make sure that we're
                             // selected
-                            SelectionGroup<iComponent> s = iVisualElement.selectionGroup.get(source);
+                            SelectionGroup<iComponent> s = IVisualElement.selectionGroup.get(source);
                             s.deselectAll();
-                            iComponent view = iVisualElement.localView.get(source);
+                            iComponent view = IVisualElement.localView.get(source);
                             view.setSelected(true);
 
                             // need to wait a frame
@@ -540,7 +541,7 @@ class PythonPluginEditor extends PythonPlugin {
                                     items.put("Python menu items", null);
                                 }
                                 items.put(" \u22ef\t" + ((VisualElementProperty) e.getKey()).getNameNoSuffix(),
-                                          new iUpdateable() {
+                                          new IUpdateable() {
                                               public
                                               void update() {
                                                   configurePythonEnvironment(source);
@@ -556,24 +557,24 @@ class PythonPluginEditor extends PythonPlugin {
 
             items.putAll(old);
 
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
         public
-        VisitCode prepareForSave() {
+        TraversalHint prepareForSave() {
             // if (currentlyEditing != null)
             // {
             // swapOut(currentlyEditing,
             // "");
             // swapIn(currentlyEditing);
             // }
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         @Override
         public
-        <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+        <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
             if (knownPythonProperties.values().contains(prop)) {
                 informationFor(source);
             }
@@ -604,10 +605,10 @@ class PythonPluginEditor extends PythonPlugin {
         public
         class Delegate implements EditorExecutionInterface {
 
-            private final iVisualElement current;
+            private final IVisualElement current;
 
             public
-            Delegate(iVisualElement current) {
+            Delegate(IVisualElement current) {
                 this.current = current;
 
             }
@@ -638,7 +639,7 @@ class PythonPluginEditor extends PythonPlugin {
                 editor.pausedText = null;
                 messaging.getMessages();
 
-                PythonInterface.getPythonInterface().execStringWithContinuation(fragment, new iUpdateable() {
+                PythonInterface.getPythonInterface().execStringWithContinuation(fragment, new IUpdateable() {
 
                     @Override
                     public
@@ -661,7 +662,7 @@ class PythonPluginEditor extends PythonPlugin {
                             editor.getFrame().redraw();
                         }
                     }
-                }, new iUpdateable() {
+                }, new IUpdateable() {
 
                     @Override
                     public
@@ -697,7 +698,7 @@ class PythonPluginEditor extends PythonPlugin {
                                 }
                                 promiseFor(current).endExecute();
 
-                                GLComponentWindow window = root.getProperty(iVisualElement.enclosingFrame);
+                                GLComponentWindow window = root.getProperty(IVisualElement.enclosingFrame);
                                 if (window != null) {
                                     window.getRoot().requestRedisplay();
                                 }
@@ -717,7 +718,7 @@ class PythonPluginEditor extends PythonPlugin {
 
                 // r = PythonUtils.maybeToJava(r);
 
-                GLComponentWindow window = root.getProperty(iVisualElement.enclosingFrame);
+                GLComponentWindow window = root.getProperty(IVisualElement.enclosingFrame);
                 if (window != null) {
                     window.getRoot().requestRedisplay();
                 }
@@ -725,10 +726,10 @@ class PythonPluginEditor extends PythonPlugin {
             }
         }
 
-        private final iVisualElement root;
+        private final IVisualElement root;
 
         protected
-        DefaultEditorExecutionInterface(iVisualElement root) {
+        DefaultEditorExecutionInterface(IVisualElement root) {
             this.root = root;
         }
 
@@ -739,10 +740,10 @@ class PythonPluginEditor extends PythonPlugin {
                                      ArrayList<Completion> comp,
                                      BaseTextEditor2 inside) {
 
-            iVisualElementOverrides.topology.begin(currentlyEditing);
+            IVisualElementOverrides.topology.begin(currentlyEditing);
             Ref<EditorExecutionInterface> ref = new Ref<EditorExecutionInterface>(new Delegate(currentlyEditing));
-            iVisualElementOverrides.forward.getProperty.getProperty(currentlyEditing, editorExecutionInterface, ref);
-            iVisualElementOverrides.topology.end(currentlyEditing);
+            IVisualElementOverrides.forward.getProperty.getProperty(currentlyEditing, editorExecutionInterface, ref);
+            IVisualElementOverrides.topology.end(currentlyEditing);
 
             if (ref.get() != null) {
                 return ref.get().globalCompletionHook(leftText, publicOnly, comp, editor);
@@ -755,10 +756,10 @@ class PythonPluginEditor extends PythonPlugin {
             editor.clearPositionAnnotations();
             fragment = customInsertSystem.convertUserTextToExecutableText(fragment);
 
-            iVisualElementOverrides.topology.begin(currentlyEditing);
+            IVisualElementOverrides.topology.begin(currentlyEditing);
             Ref<EditorExecutionInterface> ref = new Ref<EditorExecutionInterface>(new Delegate(currentlyEditing));
-            iVisualElementOverrides.forward.getProperty.getProperty(currentlyEditing, editorExecutionInterface, ref);
-            iVisualElementOverrides.topology.end(currentlyEditing);
+            IVisualElementOverrides.forward.getProperty.getProperty(currentlyEditing, editorExecutionInterface, ref);
+            IVisualElementOverrides.topology.end(currentlyEditing);
 
             if (ref.get() != null) {
                 ref.get().executeFragment(fragment);
@@ -778,10 +779,10 @@ class PythonPluginEditor extends PythonPlugin {
                 return r;
             }
 
-            iVisualElementOverrides.topology.begin(currentlyEditing);
+            IVisualElementOverrides.topology.begin(currentlyEditing);
             Ref<EditorExecutionInterface> ref = new Ref<EditorExecutionInterface>(new Delegate(currentlyEditing));
-            iVisualElementOverrides.forward.getProperty.getProperty(currentlyEditing, editorExecutionInterface, ref);
-            iVisualElementOverrides.topology.end(currentlyEditing);
+            IVisualElementOverrides.forward.getProperty.getProperty(currentlyEditing, editorExecutionInterface, ref);
+            IVisualElementOverrides.topology.end(currentlyEditing);
 
             if (ref.get() != null) {
                 return ref.get().executeReturningValue(string);
@@ -792,17 +793,17 @@ class PythonPluginEditor extends PythonPlugin {
 
     }
 
-    public static final VisualElementProperty<List<Pair<String, iUpdateable>>> python_customToolbar =
-            new VisualElementProperty<List<Pair<String, iUpdateable>>>("python_customToolbar_");
+    public static final VisualElementProperty<List<Pair<String, IUpdateable>>> python_customToolbar =
+            new VisualElementProperty<List<Pair<String, IUpdateable>>>("python_customToolbar_");
     public static final VisualElementProperty<StyledTextUndo.Memo> python_undoStack =
             new VisualElementProperty<StyledTextUndo.Memo>("python_undoStack");
 
     public static final VisualElementProperty<Object> python_customInsertPersistanceInfo =
             new VisualElementProperty<Object>("python_customInsertPersistanceInfo");
 
-    public static final VisualElementProperty<Pair<iVisualElement, VisualElementProperty<String>>>
+    public static final VisualElementProperty<Pair<IVisualElement, VisualElementProperty<String>>>
             python_currentlyEditingProperty =
-            new VisualElementProperty<Pair<iVisualElement, VisualElementProperty<String>>>("python_currentlyEditingProperty");
+            new VisualElementProperty<Pair<IVisualElement, VisualElementProperty<String>>>("python_currentlyEditingProperty");
 
     public static final VisualElementProperty<EditorExecutionInterface> editorExecutionInterface =
             new VisualElementProperty<EditorExecutionInterface>("editorExecutionInterface_");
@@ -836,15 +837,15 @@ class PythonPluginEditor extends PythonPlugin {
             new VisualElementProperty<Boolean>("python_isDefaultGroupExclusive");
 
     public static
-    void delete(iVisualElement node, iVisualElement root) {
+    void delete(IVisualElement node, IVisualElement root) {
 
         if (root == null) root = node;
-        iVisualElementOverrides.topology.begin(root);
-        iVisualElementOverrides.forward.deleted.f(node);
-        iVisualElementOverrides.backward.deleted.f(node);
-        iVisualElementOverrides.topology.end(root);
+        IVisualElementOverrides.topology.begin(root);
+        IVisualElementOverrides.forward.deleted.apply(node);
+        IVisualElementOverrides.backward.deleted.apply(node);
+        IVisualElementOverrides.topology.end(root);
 
-        for (iVisualElement ve : new ArrayList<iVisualElement>((Collection<iVisualElement>) node.getParents())) {
+        for (IVisualElement ve : new ArrayList<IVisualElement>((Collection<IVisualElement>) node.getParents())) {
             ve.removeChild(node);
 
             // if there are parents that
@@ -853,7 +854,7 @@ class PythonPluginEditor extends PythonPlugin {
             if (ve.getChildren().size() == 0 && ve.getParents().size() == 0) delete(ve, root);
 
         }
-        for (iVisualElement ve : new ArrayList<iVisualElement>(node.getChildren())) {
+        for (IVisualElement ve : new ArrayList<IVisualElement>(node.getChildren())) {
             node.removeChild(ve);
 
             // if there are parents that
@@ -884,7 +885,7 @@ class PythonPluginEditor extends PythonPlugin {
 
     boolean insideUpdate = false;
 
-    iVisualElement currentlyEditing = null;
+    IVisualElement currentlyEditing = null;
 
     VisualElementProperty<String> currentlyEditingProperty = python_source;
     public static final VisualElementProperty<Integer> currentlyEditingCaretPosition =
@@ -935,7 +936,7 @@ class PythonPluginEditor extends PythonPlugin {
 
     @Override
     public
-    void registeredWith(final iVisualElement root) {
+    void registeredWith(final IVisualElement root) {
         super.registeredWith(root);
 
         customInsertSystem = new CustomInsertSystem();
@@ -1030,7 +1031,7 @@ class PythonPluginEditor extends PythonPlugin {
 
             @Override
             protected
-            void executeAreaAndRewrite(Area currentArea, iFunction<String, String> convert) {
+            void executeAreaAndRewrite(Area currentArea, IFunction<String, String> convert) {
                 executionRuler.highlight(currentArea);
 
                 int oldStart = editor.getInputEditor().getSelectionRanges()[0];
@@ -1046,7 +1047,7 @@ class PythonPluginEditor extends PythonPlugin {
 
                 String expression = customInsertSystem.convertUserTextToExecutableText(ed.getText().substring(p1, p2));
 
-                expression = convert.f(expression);
+                expression = convert.apply(expression);
 
                 // TODO swt momentum
                 // editor.getInputEditor().replaceSelection(expression);
@@ -1101,7 +1102,7 @@ class PythonPluginEditor extends PythonPlugin {
                             customInsertSystem.convertUserTextToExecutableText(ed.getText().substring(p1, p2));
 
                     final String expectedOutput = UnitTestHelper.expectedOutputForExpression(expression);
-                    return waitForOutput(expression, o, new iProvider<Boolean>() {
+                    return waitForOutput(expression, o, new IProvider<Boolean>() {
 
                         public
                         Boolean get() {
@@ -1126,7 +1127,7 @@ class PythonPluginEditor extends PythonPlugin {
             private
             LocalFuture<Boolean> waitForOutput(final String expression,
                                                final String[] o,
-                                               final iProvider<Boolean> iProvider) {
+                                               final IProvider<Boolean> provider) {
                 final LocalFuture<Boolean> r = new LocalFuture<Boolean>();
                 getOutputFlusher().update();
                 queue.new Task() {
@@ -1138,7 +1139,7 @@ class PythonPluginEditor extends PythonPlugin {
                     void run() {
                         t++;
                         if (o[0] != null) {
-                            r.set(iProvider.get());
+                            r.set(provider.get());
                             return;
                         }
                         if (t < 30) recur();
@@ -1176,7 +1177,7 @@ class PythonPluginEditor extends PythonPlugin {
 
                     final String expectedOutput = UnitTestHelper.expectedOutputForExpression(expression);
                     getOutputFlusher().update();
-                    waitForOutput(expression, o, new iProvider<Boolean>() {
+                    waitForOutput(expression, o, new IProvider<Boolean>() {
 
                         public
                         Boolean get() {
@@ -1287,7 +1288,7 @@ class PythonPluginEditor extends PythonPlugin {
                 Object x = inter.executeReturningValue(s);
                 if (x instanceof LocalFuture) {
                     final LocalFuture lf = ((LocalFuture) x);
-                    lf.addContinuation(new iUpdateable() {
+                    lf.addContinuation(new IUpdateable() {
 
                         public
                         void update() {
@@ -1385,7 +1386,7 @@ class PythonPluginEditor extends PythonPlugin {
 
             @Override
             protected
-            void getMenuItems(LinkedHashMap<String, iUpdateable> items) {
+            void getMenuItems(LinkedHashMap<String, IUpdateable> items) {
                 super.getMenuItems(items);
 
                 if (currentlyEditingProperty.equals(python_source)) {
@@ -1410,14 +1411,14 @@ class PythonPluginEditor extends PythonPlugin {
                 if (oldEnd - oldStart > 0) {
                     final String sel = editor.getInputEditor().getSelectionText();
 
-                    iVisualElement existing = globals.getExistingDefinitionFor(sel.trim());
+                    IVisualElement existing = globals.getExistingDefinitionFor(sel.trim());
                     boolean title = false;
                     if (existing != null) {
                         title = true;
-                        final iVisualElement ex = existing;
+                        final IVisualElement ex = existing;
                         items.put("Definitions", null);
                         items.put(" \u2345 Defined in element '" + SelectionSetDriver.nameFor(existing) + '\'',
-                                  new iUpdateable() {
+                                  new IUpdateable() {
                                       public
                                       void update() {
                                           SelectionSetDriver.travelTo(Collections.singleton(ex));
@@ -1427,12 +1428,12 @@ class PythonPluginEditor extends PythonPlugin {
                     else {
                         existing = globals.getPotentialDefinitionFor(sel.trim());
                         if (existing != null) {
-                            final iVisualElement ex = existing;
+                            final IVisualElement ex = existing;
                             title = true;
                             items.put("Definitions", null);
                             items.put("Will be defined by auto-executing element '"
                                       + SelectionSetDriver.nameFor(existing)
-                                      + '\'', new iUpdateable() {
+                                      + '\'', new IUpdateable() {
                                 public
                                 void update() {
                                     SelectionSetDriver.travelTo(Collections.singleton(ex));
@@ -1441,17 +1442,17 @@ class PythonPluginEditor extends PythonPlugin {
                         }
                     }
 
-                    List<iVisualElement> uses = globals.getUses(sel.trim());
+                    List<IVisualElement> uses = globals.getUses(sel.trim());
                     if (uses != null && uses.size() > 0) {
                         if (!title) {
                             items.put("Definitions", null);
                             title = true;
                         }
-                        for (final iVisualElement u : uses) {
-                            final iVisualElement ex = existing;
+                        for (final IVisualElement u : uses) {
+                            final IVisualElement ex = existing;
                             items.put(" \u2345 Definition has been used by '"
                                       + SelectionSetDriver.nameFor(existing)
-                                      + '\'', new iUpdateable() {
+                                      + '\'', new IUpdateable() {
                                 public
                                 void update() {
                                     SelectionSetDriver.travelTo(Collections.singleton(ex));
@@ -1463,7 +1464,7 @@ class PythonPluginEditor extends PythonPlugin {
                     // System.out.println(" -- hello ?? -- ");
 
                     items.put("Browse", null);
-                    items.put(" B\tEvaluate, show in <b>browser</b>", new iUpdateable() {
+                    items.put(" B\tEvaluate, show in <b>browser</b>", new IUpdateable() {
 
                         @Override
                         public
@@ -1480,19 +1481,19 @@ class PythonPluginEditor extends PythonPlugin {
                     });
 
                     items.put("Search Utilities", null);
-                    items.put(" \u263d\t<b>Open in Eclipse</b> ", new iUpdateable() {
+                    items.put(" \u263d\t<b>Open in Eclipse</b> ", new IUpdateable() {
                         public
                         void update() {
                             new OpenInEclipse(sel);
                         }
                     });
-                    items.put(" \u2370\t<b>Open documentation</b> ", new iUpdateable() {
+                    items.put(" \u2370\t<b>Open documentation</b> ", new IUpdateable() {
                         public
                         void update() {
                             HelpBrowser.helpBrowser.get(root).goToWiki(sel);
                         }
                     });
-                    items.put(" \u2370\t<b>Search over openendedgroup.com/field</b> ", new iUpdateable() {
+                    items.put(" \u2370\t<b>Search over openendedgroup.com/field</b> ", new IUpdateable() {
                         public
                         void update() {
                             OpenInTrac.searchFor(sel);
@@ -1503,7 +1504,7 @@ class PythonPluginEditor extends PythonPlugin {
                 }
 
                 items.put("Standard Library & Plugins", null);
-                items.put(" \u222b\tAlways <b>run this text at Field startup</b>", new iUpdateable() {
+                items.put(" \u222b\tAlways <b>run this text at Field startup</b>", new IUpdateable() {
                     public
                     void update() {
                         AddToStandardLibrary.addThis(currentlyEditing,
@@ -1512,7 +1513,7 @@ class PythonPluginEditor extends PythonPlugin {
                                                      ed);
                     }
                 });
-                items.put(" \u222b\tMake a <b>new startup module</b> with this text in it", new iUpdateable() {
+                items.put(" \u222b\tMake a <b>new startup module</b> with this text in it", new IUpdateable() {
                     public
                     void update() {
                         AddToStandardLibrary.addThis(currentlyEditing,
@@ -1561,7 +1562,7 @@ class PythonPluginEditor extends PythonPlugin {
             void goButton(String uidDesc, int parseInt) {
                 try {
                     String[] m = uidDesc.split("\\[");
-                    iVisualElement found = StandardFluidSheet.findVisualElement(root, m[1]);
+                    IVisualElement found = StandardFluidSheet.findVisualElement(root, m[1]);
                     if (found != null) {
                         SelectionSetDriver.travelTo(Collections.singleton(found));
                     }
@@ -1571,7 +1572,7 @@ class PythonPluginEditor extends PythonPlugin {
             }
 
             public
-            iVisualElement getThisBox() {
+            IVisualElement getThisBox() {
                 return currentlyEditing;
             }
 
@@ -1581,7 +1582,7 @@ class PythonPluginEditor extends PythonPlugin {
             }
 
             protected
-            iVisualElement getRoot() {
+            IVisualElement getRoot() {
                 return root;
             }
 
@@ -1593,9 +1594,9 @@ class PythonPluginEditor extends PythonPlugin {
             }
 
             protected
-            void navigateTo(iVisualElement box, VisualElementProperty prop, int start, int end) {
+            void navigateTo(IVisualElement box, VisualElementProperty prop, int start, int end) {
                 if (box != currentlyEditing) {
-                    changeSelection(Collections.singleton(iVisualElement.localView.get(box)), prop, false);
+                    changeSelection(Collections.singleton(IVisualElement.localView.get(box)), prop, false);
                 }
 
                 ed.setSelection(start, end);
@@ -1655,14 +1656,14 @@ class PythonPluginEditor extends PythonPlugin {
             void previousSelection() {
 
                 if (currentlyEditing != null)
-                    ((MainSelectionGroup) iVisualElement.selectionGroup.get(currentlyEditing)).popSelection();
+                    ((MainSelectionGroup) IVisualElement.selectionGroup.get(currentlyEditing)).popSelection();
 
             }
 
             protected
             void nextSelection() {
                 if (currentlyEditing != null)
-                    ((MainSelectionGroup) iVisualElement.selectionGroup.get(currentlyEditing)).moveForwardSelection();
+                    ((MainSelectionGroup) IVisualElement.selectionGroup.get(currentlyEditing)).moveForwardSelection();
 
             }
 
@@ -1717,7 +1718,7 @@ class PythonPluginEditor extends PythonPlugin {
         //
         // }, editor, root);
 
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
             int t = 0;
 
             int lc = 0;
@@ -1739,13 +1740,13 @@ class PythonPluginEditor extends PythonPlugin {
             }
         });
 
-        final GLComponentWindow window = root.getProperty(iVisualElement.enclosingFrame);
+        final GLComponentWindow window = root.getProperty(IVisualElement.enclosingFrame);
 
         ToolBar toolbar = editor.getToolbar();
         versionMenu = new VersionMenu(editor.getToolbar(), editor) {
             @Override
             protected
-            void swapInText(iVisualElement element, String contents) {
+            void swapInText(IVisualElement element, String contents) {
                 currentlyEditingProperty.set(element, element, contents);
             }
         };
@@ -1774,8 +1775,8 @@ class PythonPluginEditor extends PythonPlugin {
                     String ll = e.getKey().replace("<html>", "");
 
                     Ref rr = new Ref(null);
-                    iVisualElementOverrides.topology.begin(currentlyEditing);
-                    iVisualElementOverrides.forward.getProperty.getProperty(currentlyEditing, e.getValue(), rr);
+                    IVisualElementOverrides.topology.begin(currentlyEditing);
+                    IVisualElementOverrides.forward.getProperty.getProperty(currentlyEditing, e.getValue(), rr);
 
                     if (rr.isUnset()) {
                         ll = "\u2606 <font color='#333333'>" + ll + "</font>";
@@ -1849,7 +1850,7 @@ class PythonPluginEditor extends PythonPlugin {
 
     @NextUpdate(delay = 3)
     private
-    void installHelpBrowser(final iVisualElement root) {
+    void installHelpBrowser(final IVisualElement root) {
         HelpBrowser h = HelpBrowser.helpBrowser.get(root);
         ContextualHelp ch = h.getContextualHelp();
         ch.addContextualHelpForWidget("textEditor",
@@ -1864,9 +1865,9 @@ class PythonPluginEditor extends PythonPlugin {
 
     private
     void makeOutputActions() {
-        LinkedHashMap<String, iUpdateable> outputActions = new LinkedHashMap<String, iUpdateable>();
+        LinkedHashMap<String, IUpdateable> outputActions = new LinkedHashMap<String, IUpdateable>();
         outputActions.put("Output", null);
-        outputActions.put(" \u2327 <b>Clear everything</b>", new iUpdateable() {
+        outputActions.put(" \u2327 <b>Clear everything</b>", new IUpdateable() {
             public
             void update() {
                 editor.getOutputEditor()
@@ -1876,7 +1877,7 @@ class PythonPluginEditor extends PythonPlugin {
         });
 
         outputActions.put(((editor.outputLength == 100 * 1024) ? "!" : "") + " \u2807 <b>Long</b> history",
-                          new iUpdateable() {
+                          new IUpdateable() {
                               public
                               void update() {
                                   editor.outputLength = 100 * 1024;
@@ -1884,7 +1885,7 @@ class PythonPluginEditor extends PythonPlugin {
                               }
                           });
         outputActions.put(((editor.outputLength == 2 * 1024) ? "!" : "") + " \u2807 <b>Medium</b> history",
-                          new iUpdateable() {
+                          new IUpdateable() {
                               public
                               void update() {
                                   editor.outputLength = 2 * 1024;
@@ -1892,7 +1893,7 @@ class PythonPluginEditor extends PythonPlugin {
                               }
                           });
         outputActions.put(((editor.outputLength == 50) ? "!" : "") + " \u2807 <b>Short</b> history (fastest)",
-                          new iUpdateable() {
+                          new IUpdateable() {
                               public
                               void update() {
                                   editor.outputLength = 50;
@@ -1900,7 +1901,7 @@ class PythonPluginEditor extends PythonPlugin {
                               }
                           });
 
-        outputActions.put(" \u2807 <b>Copy</b> ", new iUpdateable() {
+        outputActions.put(" \u2807 <b>Copy</b> ", new IUpdateable() {
             public
             void update() {
                 editor.getOutputEditor().copy();
@@ -1911,7 +1912,7 @@ class PythonPluginEditor extends PythonPlugin {
     }
 
     private static
-    boolean canEdit(iVisualElement current) {
+    boolean canEdit(IVisualElement current) {
         Number c = python_noEdit.get(current);
         if (c == null) return true;
         if (c.doubleValue() > 0) return false;
@@ -1919,7 +1920,7 @@ class PythonPluginEditor extends PythonPlugin {
     }
 
     private
-    void swapOutAreas(iVisualElement on, boolean freeze) {
+    void swapOutAreas(IVisualElement on, boolean freeze) {
         // TODO swt rulers
         State aa = editor.getAreas();
 
@@ -1956,7 +1957,7 @@ class PythonPluginEditor extends PythonPlugin {
     }
 
     protected
-    VisualElementProperty<String> autoSwapProperty(iVisualElement visualElement, VisualElementProperty<String> prop) {
+    VisualElementProperty<String> autoSwapProperty(IVisualElement visualElement, VisualElementProperty<String> prop) {
         if (visualElement == null) return prop;
 
         String m = visualElement.getProperty(prop);
@@ -2035,7 +2036,7 @@ class PythonPluginEditor extends PythonPlugin {
                 swapOut(currentlyEditing, "");
                 swapOutAreas(currentlyEditing, true);
             }
-            iVisualElement visualElement = selected.iterator().next().getVisualElement();
+            IVisualElement visualElement = selected.iterator().next().getVisualElement();
 
             if (considerOtherProperties) prop = autoSwapProperty(visualElement, prop);
 
@@ -2044,7 +2045,7 @@ class PythonPluginEditor extends PythonPlugin {
             currentlyEditingProperty = prop;
             python_currentlyEditingProperty.set(lve,
                                                 lve,
-                                                new Pair<iVisualElement, VisualElementProperty<String>>(visualElement,
+                                                new Pair<IVisualElement, VisualElementProperty<String>>(visualElement,
                                                                                                         prop));
             if (visualElement == null) {
                 // System.out.println(" disabled ");
@@ -2074,12 +2075,12 @@ class PythonPluginEditor extends PythonPlugin {
 
     @Override
     protected
-    iVisualElementOverrides createElementOverrides() {
+    IVisualElementOverrides createElementOverrides() {
         return new MenuOverrides().setVisualElement(lve);
     }
 
     public
-    void delete(iVisualElement node) {
+    void delete(IVisualElement node) {
         delete(node, root);
     }
 
@@ -2091,8 +2092,8 @@ class PythonPluginEditor extends PythonPlugin {
     @Override
     protected
     void handleExceptionThrownDuringRunning(String when,
-                                            final iVisualElement element,
-                                            final iVisualElement parentElement,
+                                            final IVisualElement element,
+                                            final IVisualElement parentElement,
                                             final Throwable t) {
 
         if (Logging.logging != null) {
@@ -2115,26 +2116,26 @@ class PythonPluginEditor extends PythonPlugin {
     }
 
     static public
-    void handlePythonException(final iVisualElement element, final iVisualElement parentElement, final Throwable t) {
+    void handlePythonException(final IVisualElement element, final IVisualElement parentElement, final Throwable t) {
         PythonInterface.handlePythonException(element, parentElement, t);
     }
 
     @Override
     protected
-    Promise newPromiseFor(iVisualElement element) {
+    Promise newPromiseFor(IVisualElement element) {
         return new LocalEditablelPromise(element);
     }
 
     protected
-    void swapIn(iVisualElement element, VisualElementProperty<String> prop) {
+    void swapIn(IVisualElement element, VisualElementProperty<String> prop) {
         editor.clearPositionAnnotations();
         editor.setInside(element);
         if (element != null) {
             informationFor(element);
             Ref<String> r = new Ref<String>(null);
 
-            iVisualElementOverrides.topology.begin(element);
-            iVisualElementOverrides.forward.getProperty.getProperty(element, prop, r);
+            IVisualElementOverrides.topology.begin(element);
+            IVisualElementOverrides.forward.getProperty.getProperty(element, prop, r);
 
             if (r.get() == null) {
                 if (prop.equals(python_source)) {
@@ -2166,16 +2167,16 @@ class PythonPluginEditor extends PythonPlugin {
                     banner = "local";
                 }
                 else {
-                    banner = "inherited from '" + editingRef.getStorageSource().getProperty(iVisualElement.name) + '\'';
-                    if (iVisualElement.localView.get(editingRef.getStorageSource()) instanceof DraggableComponent)
-                        ((DraggableComponent) iVisualElement.localView.get(editingRef.getStorageSource())).setMarked(true);
+                    banner = "inherited from '" + editingRef.getStorageSource().getProperty(IVisualElement.name) + '\'';
+                    if (IVisualElement.localView.get(editingRef.getStorageSource()) instanceof DraggableComponent)
+                        ((DraggableComponent) IVisualElement.localView.get(editingRef.getStorageSource())).setMarked(true);
                 }
 
                 versionMenu.swapIn(element, prop);
 
             }
 
-            iVisualElementOverrides.topology.end(element);
+            IVisualElementOverrides.topology.end(element);
 
             StringAdaptations.stringAdaptation_promise.set(promises.get(element));
 
@@ -2201,10 +2202,10 @@ class PythonPluginEditor extends PythonPlugin {
             // ".property",
             // stringAtSwapIn);
 
-            LinkedHashMap<String, iUpdateable> inheritanceMenu = new LinkedHashMap<String, iUpdateable>();
+            LinkedHashMap<String, IUpdateable> inheritanceMenu = new LinkedHashMap<String, IUpdateable>();
 
             inheritanceMenu.put("Property Inheritance", null);
-            inheritanceMenu.put(" \u232b <b>delete this property</b> from this element", new iUpdateable() {
+            inheritanceMenu.put(" \u232b <b>delete this property</b> from this element", new IUpdateable() {
 
                 public
                 void update() {
@@ -2231,7 +2232,7 @@ class PythonPluginEditor extends PythonPlugin {
             // editor.setActionMenu(new
             // SmallMenu().createMenu(inheritanceMenu,
             // null));
-            editor.setName(iVisualElement.name.get(element));
+            editor.setName(IVisualElement.name.get(element));
 
             Memo e = python_undoStack.get(element);
             editor.getUndoHelper().fromMemo(e);
@@ -2278,18 +2279,18 @@ class PythonPluginEditor extends PythonPlugin {
 
         if (currentlyEditing == null) return;
 
-        List<Pair<String, iUpdateable>> list = python_customToolbar.get(currentlyEditing);
+        List<Pair<String, IUpdateable>> list = python_customToolbar.get(currentlyEditing);
 
         if (list == null) return;
 
-        LinkedHashMap<String, iUpdateable> pp = new LinkedHashMap<String, iUpdateable>();
-        for (final Pair<String, iUpdateable> ppp : list) {
+        LinkedHashMap<String, IUpdateable> pp = new LinkedHashMap<String, IUpdateable>();
+        for (final Pair<String, IUpdateable> ppp : list) {
 
-            final iUpdateable was = pp.get(ppp.left);
+            final IUpdateable was = pp.get(ppp.left);
 
             if (was == null) pp.put(ppp.left, ppp.right);
             else {
-                pp.put(ppp.left, new iUpdateable() {
+                pp.put(ppp.left, new IUpdateable() {
 
                     @Override
                     public
@@ -2301,7 +2302,7 @@ class PythonPluginEditor extends PythonPlugin {
             }
         }
 
-        for (final Map.Entry<String, iUpdateable> e : pp.entrySet()) {
+        for (final Map.Entry<String, IUpdateable> e : pp.entrySet()) {
             // Button b = new Button(too);
             // b.putClientProperty("Quaqua.Button.style", "square");
             // b.setFont(new Font(Constants.defaultFont, 0, 8));
@@ -2387,7 +2388,7 @@ class PythonPluginEditor extends PythonPlugin {
     }
 
     protected
-    void swapOut(iVisualElement element, String string) {
+    void swapOut(IVisualElement element, String string) {
 
         if (editor.getInputEditor().isDisposed()) return;
 
@@ -2404,7 +2405,7 @@ class PythonPluginEditor extends PythonPlugin {
             {
                 String plainText = editor.getText();
 
-                iVisualElementOverrides.topology.begin(lve);
+                IVisualElementOverrides.topology.begin(lve);
                 if (currentlyEditingProperty.equals(python_source)) {
                     Pair<String, Object> swappedOut = customInsertSystem.swapOutText(plainText);
 
@@ -2417,9 +2418,9 @@ class PythonPluginEditor extends PythonPlugin {
                 }
                 editingRef.set(plainText);
                 insideUpdate = true;
-                iVisualElementOverrides.backward.setProperty.setProperty(element, currentlyEditingProperty, editingRef);
+                IVisualElementOverrides.backward.setProperty.setProperty(element, currentlyEditingProperty, editingRef);
                 insideUpdate = false;
-                iVisualElementOverrides.topology.end(lve);
+                IVisualElementOverrides.topology.end(lve);
                 stringAtSwapIn = plainText;
             }
 
@@ -2443,25 +2444,25 @@ class PythonPluginEditor extends PythonPlugin {
 
     static public
     void makeBoxLocalEverywhere(final String m) {
-        PythonInterface.getPythonInterface().specialVariables_read.put(m, new iFunction<PyObject, String>() {
+        PythonInterface.getPythonInterface().specialVariables_read.put(m, new IFunction<String, PyObject>() {
 
             @Override
             public
-            PyObject f(String in) {
+            PyObject apply(String in) {
 
-                iVisualElement inside = (iVisualElement) PythonInterface.getPythonInterface().getVariable("_self");
+                IVisualElement inside = (IVisualElement) PythonInterface.getPythonInterface().getVariable("_self");
                 if (inside == null)
                     throw new NullPointerException(" looked up <" + in + "> as box local with no context set");
                 return Py.java2py(getAttr(inside, in + '_'));
             }
         });
-        PythonInterface.getPythonInterface().specialVariables_write.put(m, new iFunction<PyObject, PyObject>() {
+        PythonInterface.getPythonInterface().specialVariables_write.put(m, new IFunction<PyObject, PyObject>() {
 
             @Override
             public
-            PyObject f(PyObject in) {
+            PyObject apply(PyObject in) {
 
-                iVisualElement inside = (iVisualElement) PythonInterface.getPythonInterface().getVariable("_self");
+                IVisualElement inside = (IVisualElement) PythonInterface.getPythonInterface().getVariable("_self");
                 if (inside == null)
                     throw new NullPointerException(" looked up <" + in + "> as box local with no context set");
 
