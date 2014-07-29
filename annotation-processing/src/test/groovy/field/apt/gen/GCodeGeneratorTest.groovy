@@ -1,11 +1,8 @@
 package field.apt.gen
-
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory
 import field.apt.TestingProcessor
 import javabuilder.JavaBuilder
-import javabuilder.delegates.Handlers
-import javabuilder.writer.JavaWriterEx
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Test
@@ -19,7 +16,6 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 import static groovy.util.StringTestUtil.assertMultilineStringsEqual
-
 /**
  * Created by jason on 7/11/14.
  */
@@ -149,18 +145,18 @@ public interface MyIFace{
     @Test
     public void testGenerate() throws Exception {
         def sw = new StringWriter()
-        def jw = new JavaWriterEx(sw)
-        def jb = new JavaBuilder(new Handlers(jw))
+      //  def jw = new JavaWriterEx(sw)
+        def jb = new JavaBuilder(sw)
         def gen = new GCodeGenerator(env, e)
         gen.javaBuilder = jb
-        gen.javaWriter = jw
+        gen.javaWriter = jb.javaWriter
 
         gen.generate()
 
         def expect = '''
 package some.pkg;
 
-import field.bytecode.apt.*;
+import field.bytecode.mirror.*;
 import field.launch.*;
 import field.math.abstraction.*;
 import field.namespace.generic.Bind.*;

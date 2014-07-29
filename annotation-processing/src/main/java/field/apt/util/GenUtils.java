@@ -61,7 +61,7 @@ class GenUtils {
     List<String> defaultImports(boolean mutable) {
         List<String> imports = Arrays.asList("java.lang.reflect.*",
                                              "java.util.*",
-                                             "field.bytecode.apt.*",
+                                             "field.bytecode.mirror.*",
                                              "field.namespace.generic.Bind.*",
                                              "field.math.abstraction.*",
                                              "field.launch.*",

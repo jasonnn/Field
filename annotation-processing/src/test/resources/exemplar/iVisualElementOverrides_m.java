@@ -1,15 +1,11 @@
 package exemplar;
 import java.lang.reflect.Method;
 import field.namespace.generic.ReflectionTools;
-import field.bytecode.apt.*;
+import field.bytecode.mirror.*;
 
 import field.namespace.generic.Bind.*;
 
 import field.namespace.generic.Bind.iFunction;
-
-import java.lang.reflect.*;
-
-import java.util.*;
 
 import field.math.abstraction.*;
 

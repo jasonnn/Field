@@ -30,7 +30,7 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
             imports.add([
                     'java.lang.reflect.*',
                     'java.util.*',
-                    'field.bytecode.apt.*',
+                    'field.bytecode.mirror.*',
                     'field.namespace.generic.Bind.*',
                     'field.math.abstraction.*',
                     'field.launch.*',

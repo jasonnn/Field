@@ -82,7 +82,7 @@ public class GenMethodsFactory  {
 
 							// preamble
 							out.println("package " + ((ClassDeclaration) d).getPackage() + ";");
-							out.println("import java.lang.reflect.Method;\n" + "import field.namespace.generic.ReflectionTools;\n" + "import field.bytecode.apt.*;\n");
+							out.println("import java.lang.reflect.Method;\n" + "import field.namespace.generic.ReflectionTools;\n" + "import field.bytecode.mirror.*;\n");
 							out.println("import field.namespace.generic.Bind.*;\n");
 							out.println("import field.namespace.generic.Bind.iFunction;\n");
 							out.println("import java.lang.reflect.*;\n");
@@ -156,7 +156,7 @@ public class GenMethodsFactory  {
 
 							// preamble
 							out.println("package " + ((InterfaceDeclaration) d).getPackage() + ";");
-							out.println("import java.lang.reflect.Method;\n" + "import field.namespace.generic.ReflectionTools;\n" + "import field.bytecode.apt.*;\n");
+							out.println("import java.lang.reflect.Method;\n" + "import field.namespace.generic.ReflectionTools;\n" + "import field.bytecode.mirror.*;\n");
 							out.println("import field.namespace.generic.Bind.*;\n");
 							out.println("import field.namespace.generic.Bind.iFunction;\n");
 							out.println("import java.lang.reflect.*;\n");
