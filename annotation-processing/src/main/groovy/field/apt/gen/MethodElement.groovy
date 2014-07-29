@@ -81,6 +81,9 @@ class MethodElement implements ExecutableElement {
 //        def visit = MyTypeVisitor.instance.&visit.rcurry(types) << { VariableElement ve -> ve.asType() }
 //        return parameters.collect(visit)
     }
+    public String paramClassesCSV(){
+        paramClassNames().collect {it+'.class'}.join(', ')
+    }
 
     boolean hasParams() {
         return !parameters.empty

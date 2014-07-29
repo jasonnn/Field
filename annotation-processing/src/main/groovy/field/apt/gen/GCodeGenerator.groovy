@@ -7,7 +7,6 @@ import javabuilder.JavaBuilder
 import javabuilder.config.FieldSpec
 import javabuilder.writer.JavaWriterEx
 
-import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
 
 /**
@@ -19,31 +18,6 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
     JavaBuilder javaBuilder
     JavaWriterEx javaWriter
 
-//    TypeElement element
-//    List<VariableElement> fields
-//    List<ExecutableElement> methods
-//    ProcessingEnvironment env
-//
-//
-//    String defaultPrefix
-//    boolean isInterface
-//
-//    JavaBuilder javaBuilder
-//
-//    public CodeGenerator(ProcessingEnvironment env,
-//                         Writer out,
-//                         TypeElement element,
-//                         List<VariableElement> fields,
-//                         List<ExecutableElement> methods) {
-//        this.env = env
-//        this.element = element
-//        this.fields = fields
-//        this.methods = methods
-//        this.javaBuilder = new JavaBuilder(out)
-//        this.isInterface = element.kind == ElementKind.INTERFACE
-//        this.defaultPrefix = element.getAnnotation(GenerateMethods).prefix()
-//
-//    }
 
     @Override
     void generate() throws IOException {
@@ -59,10 +33,14 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
                     'field.launch.*',
                     'field.namespace.generic.ReflectionTools'])
             createClass(name: GenUtils.generatedSimpleName(element),
-                    modifiers: [Modifier.PUBLIC]) {
+                        modifiers: [Modifier.PUBLIC]) {
 
                 for (meth in methods) {
+                    javaWriter.emitEmptyLine()
                     genAccessField(meth)
+                    genMirror(meth)
+                    genIFace(meth)
+                    genImpl(meth)
                 }
 
             }
@@ -74,42 +52,54 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
     def genAccessField(MethodElement me) {
         def paramStr = ''
         if (!me.parameters.isEmpty()) {
-            paramStr = ', ' + me.paramClassNames().collect { it + '.class' }.join(', ')
+            paramStr = ', ' + me.paramClassesCSV()
         }
         javaWriter.emitField(new FieldSpec(
                 name: me.reflectionFieldName + '_m',
                 type: 'java.lang.reflect.Method',
                 modifiers: [Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL],
-                initializer: "ReflectionUtils.methodOf\"$me.simpleName\",${element.qualifiedName}.class$paramStr)"
-        ))
+                initializer: "ReflectionUtils.methodOf(\"$me.simpleName\",${element.qualifiedName}.class$paramStr)"))
     }
 
     def genMirror(MethodElement me) {
         def typeParams = "<${element.qualifiedName}, field.math.graph.GraphNodeSearching.VisitCode, ${element.qualifiedName}>"
         def type = 'Mirroring.MirrorMethod' + typeParams
-        def paramTypesArr = 'new Class[]{' + me.paramClassNames().collect { it + '.class' }.join(', ') + '}'
-        def init = "new $type(${element.qualifiedName}.class,$me.simpleName,$paramTypesArr)"
+        def paramTypesArr = 'new Class[]{' + me.paramClassesCSV() + '}'
+        def init = "new $type(${element.qualifiedName}.class,\"$me.simpleName\",$paramTypesArr)"
 
         javaWriter.emitField(new FieldSpec(
                 name: me.reflectionFieldName + '_s',
                 type: type,
-                modifiers: [Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL],
-                initializer: init
-
-        ))
-    }
-    //TODO generated API isnt actually SAM compatible :(
-    def genSAMType(MethodElement me) {
-
+                initializer: init,
+                modifiers: [Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL]))
     }
 
-    def genSAMField(MethodElement me) {
+    def genIFace(MethodElement me) {
+        def ext = ["iAcceptor<${element.qualifiedName}>",
+                   "iFunction<field.math.graph.GraphNodeSearching.VisitCode,${element.qualifiedName}>"
+        ]
+
+        javaBuilder.createInterface(name: me.simpleName + '_interface',
+                                    modifiers: [Modifier.PUBLIC, Modifier.STATIC],
+                                    implements: ext) {
+
+            method(name: me.simpleName,
+                   returnType: 'field.math.graph.GraphNodeSearching.VisitCode',
+                   params: [p0: element.qualifiedName])
+            method(name: 'updateable',
+                   returnType: 'iUpdateable',
+                   params: [p0: element.qualifiedName])
+            method(name: 'bind',
+                   returnType: 'iProvider<field.math.graph.GraphNodeSearching.VisitCode>',
+                   params: [p0: element.qualifiedName])
+
+        }
+    }
+
+    def genImpl(MethodElement me){
 
     }
 
-    def genSAMInitializer(MethodElement me) {
-
-    }
     /**
      * (from iVisualElementOverrides...)
      * given:

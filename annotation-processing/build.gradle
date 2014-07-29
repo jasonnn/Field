@@ -3,7 +3,7 @@ apply plugin: 'groovy'
 
 dependencies {
     compile 'com.google.guava:guava:17.0'
-    compile group:'org.codehaus.groovy', name:'groovy-all', version:'2.3.3'
+    compile 'org.codehaus.groovy:groovy-all:2.4.0-beta-2'
     compile 'javabuilder:javabuilder:1.0'
     //compile 'com.squareup:javawriter:2.5.0'
     testCompile 'com.google.testing.compile:compile-testing:0.5'
