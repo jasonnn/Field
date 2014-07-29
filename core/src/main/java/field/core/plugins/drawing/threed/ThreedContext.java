@@ -1,6 +1,6 @@
 package field.core.plugins.drawing.threed;
 
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
@@ -13,7 +13,7 @@ import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.State;
 import field.graphics.core.BasicUtilities;
 import field.graphics.core.CoreHelpers;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.SingularMatrixException;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
@@ -148,7 +148,7 @@ class ThreedContext extends BaseGLGraphicsContext implements iTransformingContex
 
         });
 
-        parent.getPostQueue().addUpdateable(new iUpdateable() {
+        parent.getPostQueue().addUpdateable(new IUpdateable() {
 
             public
             void update() {

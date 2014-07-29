@@ -2,10 +2,10 @@ package field;
 
 import field.core.execution.AutoEngage;
 import field.core.execution.PhantomFluidSheet;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
 import field.launch.iLaunchable;
-import field.launch.iUpdateable;
 import field.util.MiscNative;
 
 public
@@ -28,7 +28,7 @@ class Faceless implements iLaunchable {
                                         false,
                                         false);
 
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             public
             void update() {

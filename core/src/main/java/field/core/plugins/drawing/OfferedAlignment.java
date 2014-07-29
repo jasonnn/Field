@@ -1,18 +1,19 @@
 package field.core.plugins.drawing;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.BasicDrawingPlugin.iDragParticipant;
 import field.core.plugins.drawing.align.*;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.core.windowing.components.RootComponent;
 import field.core.windowing.components.RootComponent.iPaintPeer;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
 import field.math.graph.TopologyViewOfGraphNodes;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.util.HashMapOfLists;
 
@@ -92,16 +93,16 @@ class OfferedAlignment implements iDragParticipant, iPaintPeer {
     public
     interface iOffering {
         public
-        void createConstraint(iVisualElement root,
-                              LinkedHashMap<iVisualElement, Rect> current,
-                              iVisualElement element,
+        void createConstraint(IVisualElement root,
+                              LinkedHashMap<IVisualElement, Rect> current,
+                              IVisualElement element,
                               Rect or,
                               Rect originalRect,
                               Rect currentRect);
 
         public
-        iDrawable score(LinkedHashMap<iVisualElement, Rect> current,
-                        iVisualElement element,
+        iDrawable score(LinkedHashMap<IVisualElement, Rect> current,
+                        IVisualElement element,
                         Rect originalRect,
                         Rect currentRect,
                         Rect newRect);
@@ -129,18 +130,18 @@ class OfferedAlignment implements iDragParticipant, iPaintPeer {
     //
     // public DynamicPointlist downArrows = null;
 
-    private final iVisualElement root;
+    private final IVisualElement root;
 
-    HashMap<iVisualElement, Set<Resize>> resizingOngoing = new LinkedHashMap<iVisualElement, Set<Resize>>();
+    HashMap<IVisualElement, Set<Resize>> resizingOngoing = new LinkedHashMap<IVisualElement, Set<Resize>>();
 
-    HashMap<iVisualElement, Set<ConstraintOrigin>> constraintsOngoing =
-            new LinkedHashMap<iVisualElement, Set<ConstraintOrigin>>();
+    HashMap<IVisualElement, Set<ConstraintOrigin>> constraintsOngoing =
+            new LinkedHashMap<IVisualElement, Set<ConstraintOrigin>>();
 
     HashMapOfLists<ConstraintOrigin, iOffering> offerings = new HashMapOfLists<ConstraintOrigin, iOffering>();
 
-    LinkedHashMap<iVisualElement, Rect> currentFrames = new LinkedHashMap<iVisualElement, Rect>();
+    LinkedHashMap<IVisualElement, Rect> currentFrames = new LinkedHashMap<IVisualElement, Rect>();
 
-    LinkedHashMap<iVisualElement, Rect> currentFramesMinusOngoing = new LinkedHashMap<iVisualElement, Rect>();
+    LinkedHashMap<IVisualElement, Rect> currentFramesMinusOngoing = new LinkedHashMap<IVisualElement, Rect>();
 
     LinkedHashMap<String, iDrawable> drawQueue = new LinkedHashMap<String, iDrawable>();
 
@@ -149,10 +150,10 @@ class OfferedAlignment implements iDragParticipant, iPaintPeer {
     boolean stopAllNext = false;
 
     public
-    OfferedAlignment(iVisualElement root) {
+    OfferedAlignment(IVisualElement root) {
         this.root = root;
 
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
             int last = touchCount;
 
             public
@@ -216,7 +217,7 @@ class OfferedAlignment implements iDragParticipant, iPaintPeer {
     }
 
     public static
-    HashMapOfLists<ConstraintOrigin, iOffering> getAdditionalOfferings(iVisualElement forElement) {
+    HashMapOfLists<ConstraintOrigin, iOffering> getAdditionalOfferings(IVisualElement forElement) {
         HashMapOfLists<ConstraintOrigin, iOffering> r = new HashMapOfLists<ConstraintOrigin, iOffering>();
         List<DynamicAlignment> t = guides.accumulateList(forElement);
 
@@ -237,7 +238,7 @@ class OfferedAlignment implements iDragParticipant, iPaintPeer {
     }
 
     public
-    void beginDrag(Set<Resize> resizeType, iVisualElement element, Rect originalRect, int modifiers) {
+    void beginDrag(Set<Resize> resizeType, IVisualElement element, Rect originalRect, int modifiers) {
 
         if (isTrue(element.getProperty(alignment_doNotParticipate))) return;
 
@@ -254,7 +255,7 @@ class OfferedAlignment implements iDragParticipant, iPaintPeer {
 
     public
     void endDrag(Set<Resize> resizeType,
-                 iVisualElement element,
+                 IVisualElement element,
                  Rect inOutRect,
                  boolean createConstraint,
                  int modifiers) {
@@ -279,7 +280,7 @@ class OfferedAlignment implements iDragParticipant, iPaintPeer {
     }
 
     public
-    void interpretRect(iVisualElement element, Rect originalRect, Rect currentRect) {
+    void interpretRect(IVisualElement element, Rect originalRect, Rect currentRect) {
         if (isTrue(element.getProperty(alignment_doNotParticipate))) return;
         this.interpretRect(element, originalRect, currentRect, true, false);
     }
@@ -291,7 +292,7 @@ class OfferedAlignment implements iDragParticipant, iPaintPeer {
     }
 
     public
-    void interpretRect(iVisualElement element,
+    void interpretRect(IVisualElement element,
                        Rect originalRect,
                        Rect currentRect,
                        boolean update,
@@ -506,20 +507,20 @@ class OfferedAlignment implements iDragParticipant, iPaintPeer {
         currentFrames.clear();
         currentFramesMinusOngoing.clear();
 
-        TopologyVisitor_breadthFirst<iVisualElement> search = new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+        TopologyVisitor_breadthFirst<IVisualElement> search = new TopologyVisitor_breadthFirst<IVisualElement>(true) {
             @Override
             protected
-            VisitCode visit(iVisualElement n) {
+            TraversalHint visit(IVisualElement n) {
                 Rect fr = n.getFrame(null);
                 if (fr != null) {
                     currentFrames.put(n, fr);
                     if (!constraintsOngoing.containsKey(n)) currentFramesMinusOngoing.put(n, fr);
                 }
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
 
         };
 
-        search.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+        search.apply(new TopologyViewOfGraphNodes<IVisualElement>(false).setEverything(true), root);
     }
 }

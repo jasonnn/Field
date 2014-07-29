@@ -1,28 +1,28 @@
 package field.util;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 
 import java.util.List;
 
 public
 class CascadedResize {
 
-    private final List<iVisualElement> e;
+    private final List<IVisualElement> e;
 
     public
-    CascadedResize(List<iVisualElement> e) {
+    CascadedResize(List<IVisualElement> e) {
         this.e = e;
     }
 
     public
-    void cascadedResize(iVisualElement on, Rect from, Rect to, int capture) {
+    void cascadedResize(IVisualElement on, Rect from, Rect to, int capture) {
         // TODO: other directions and some fuzz on this
         if (from.x != to.x) return;
         if (from.y != to.y) return;
         if (from.w != to.w) return;
 
-        for (iVisualElement ee : e) {
+        for (IVisualElement ee : e) {
             if (ee == on) continue;
 
             Rect t = ee.getFrame(null);
@@ -39,8 +39,8 @@ class CascadedResize {
     }
 
     private
-    void resize(iVisualElement ee, Rect to, Rect tt, int capture) {
-        ee.getProperty(iVisualElement.overrides).shouldChangeFrame(ee, tt, to, true);
+    void resize(IVisualElement ee, Rect to, Rect tt, int capture) {
+        ee.getProperty(IVisualElement.overrides).shouldChangeFrame(ee, tt, to, true);
         cascadedResize(ee, to, tt, capture);
     }
 

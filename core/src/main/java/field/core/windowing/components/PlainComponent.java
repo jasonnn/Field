@@ -1,16 +1,16 @@
 package field.core.windowing.components;
 
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.ui.SmallMenu;
 import field.core.ui.SmallMenu.BetterPopup;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.DraggableComponent.Resize;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.iCoordinateFrame;
 import field.namespace.context.Dispatch;
 import org.eclipse.swt.SWT;
@@ -34,9 +34,9 @@ class PlainComponent implements iComponent {
 
     protected Rect bounds;
 
-    protected iVisualElement visualElement;
+    protected IVisualElement visualElement;
 
-    protected iVisualElementOverrides override;
+    protected IVisualElementOverrides override;
 
     protected ComponentContainer inside;
 
@@ -70,7 +70,7 @@ class PlainComponent implements iComponent {
     }
 
     public
-    iVisualElement getVisualElement() {
+    IVisualElement getVisualElement() {
         return visualElement;
     }
 
@@ -148,12 +148,12 @@ class PlainComponent implements iComponent {
             // present
             // menu
 
-            LinkedHashMap<String, iUpdateable> items = new LinkedHashMap<String, iUpdateable>();
+            LinkedHashMap<String, IUpdateable> items = new LinkedHashMap<String, IUpdateable>();
             override.menuItemsFor(this.visualElement, items);
 
 
             Ref<GLComponentWindow> ref = new Ref<GLComponentWindow>(null);
-            this.override.getProperty(visualElement, iVisualElement.enclosingFrame, ref);
+            this.override.getProperty(visualElement, IVisualElement.enclosingFrame, ref);
             if (ref.get() != null) {
                 BetterPopup menu = new SmallMenu().createMenu(items, ref.get().getCanvas().getShell(), null);
                 // menu.show(ref.get().getCanvas(), (int)
@@ -250,11 +250,11 @@ class PlainComponent implements iComponent {
     }
 
     public
-    iComponent setVisualElement(iVisualElement ve) {
+    iComponent setVisualElement(IVisualElement ve) {
         visualElement = ve;
         override =
-                new Dispatch<iVisualElement, iVisualElementOverrides>(iVisualElementOverrides.topology).getOverrideProxyFor(ve,
-                                                                                                                            iVisualElementOverrides.class);
+                new Dispatch<IVisualElement, IVisualElementOverrides>(IVisualElementOverrides.topology).getOverrideProxyFor(ve,
+                                                                                                                            IVisualElementOverrides.class);
         return this;
     }
 
@@ -262,7 +262,7 @@ class PlainComponent implements iComponent {
     List<SelectionGroup<iComponent>> getSelectionGroups() {
         ArrayList<SelectionGroup<iComponent>> sel = new ArrayList<SelectionGroup<iComponent>>();
         Ref<SelectionGroup<iComponent>> out = new Ref<SelectionGroup<iComponent>>(null);
-        override.getProperty(visualElement, iVisualElement.selectionGroup, out);
+        override.getProperty(visualElement, IVisualElement.selectionGroup, out);
         if (out.get() != null) sel.add(out.get());
         return sel;
     }

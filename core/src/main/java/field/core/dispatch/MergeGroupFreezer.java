@@ -1,7 +1,7 @@
 package field.core.dispatch;
 
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.plugins.python.PythonPlugin;
 import field.core.ui.text.embedded.FreezeProperties;
 import field.core.ui.text.embedded.FreezeProperties.Freeze;
@@ -15,16 +15,16 @@ import java.util.Set;
 
 public
 class MergeGroupFreezer extends MergeGroup {
-    public static final VisualElementProperty<HashMap<iVisualElement, Freeze>> mergeGroup_initialParameters =
-            new VisualElementProperty<HashMap<iVisualElement, Freeze>>("mergeGroup_initialParameters");
+    public static final VisualElementProperty<HashMap<IVisualElement, Freeze>> mergeGroup_initialParameters =
+            new VisualElementProperty<HashMap<IVisualElement, Freeze>>("mergeGroup_initialParameters");
 
-    protected HashSet<iVisualElement> newlyCreated = new HashSet<iVisualElement>();
+    protected HashSet<IVisualElement> newlyCreated = new HashSet<IVisualElement>();
 
     Set<String> include = new HashSet<String>();
 
     FreezeProperties freezer = new FreezeProperties();
 
-    HashMap<iVisualElement, Freeze> frozen = new HashMap<iVisualElement, Freeze>();
+    HashMap<IVisualElement, Freeze> frozen = new HashMap<IVisualElement, Freeze>();
 
     public
     MergeGroupFreezer() {
@@ -32,9 +32,9 @@ class MergeGroupFreezer extends MergeGroup {
     }
 
     public
-    MergeGroupFreezer(iVisualElement owner) {
+    MergeGroupFreezer(IVisualElement owner) {
         super(owner);
-        HashMap<iVisualElement, Freeze> q = mergeGroup_initialParameters.get(owner);
+        HashMap<IVisualElement, Freeze> q = mergeGroup_initialParameters.get(owner);
         if (q == null) mergeGroup_initialParameters.set(owner, owner, frozen);
         else frozen = q;
 
@@ -64,14 +64,14 @@ class MergeGroupFreezer extends MergeGroup {
     void end() {
         super.end();
         if (open == 0) {
-            for (iVisualElement v : newlyCreated) {
+            for (IVisualElement v : newlyCreated) {
                 frozen.put(v, freezer.new Freeze().freeze((VisualElement) v));
             }
         }
     }
 
     public
-    void reset(iVisualElement a) {
+    void reset(IVisualElement a) {
         assert open > 0;
         newlyCreated.add(a);
         frozen.remove(a);
@@ -80,7 +80,7 @@ class MergeGroupFreezer extends MergeGroup {
     // these echo those in PythonPlugin, but can diff3 merge on set
     // it might be better to defer these until end() time
     public
-    void setAttr(iVisualElement a, String name, Object value) {
+    void setAttr(IVisualElement a, String name, Object value) {
         System.err.println(" setting property <" + a + "> <" + name + "> <" + value + '>');
         if (frozen.containsKey(a)) {
             name = PythonPlugin.externalPropertyNameToInternalName(name);

@@ -2,15 +2,15 @@ package field.core.plugins.python;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NonSwing;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
 @Woven
 public
-class Action extends DynamicExtensionPoint<iUpdateable> {
+class Action extends DynamicExtensionPoint<IUpdateable> {
 
     public
     Action() {
-        super(iUpdateable.class);
+        super(IUpdateable.class);
     }
 
     @NonSwing

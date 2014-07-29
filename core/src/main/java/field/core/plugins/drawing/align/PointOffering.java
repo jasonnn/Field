@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.align;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.OfferedAlignment;
 import field.core.plugins.drawing.OfferedAlignment.iDrawable;
 import field.core.plugins.drawing.OfferedAlignment.iOffering;
@@ -109,9 +109,9 @@ class PointOffering implements iOffering {
     }
 
     public
-    void createConstraint(iVisualElement root,
-                          LinkedHashMap<iVisualElement, Rect> current,
-                          iVisualElement element,
+    void createConstraint(IVisualElement root,
+                          LinkedHashMap<IVisualElement, Rect> current,
+                          IVisualElement element,
                           Rect or,
                           Rect originalRect,
                           Rect currentRect) {
@@ -119,11 +119,11 @@ class PointOffering implements iOffering {
         Vector2 oPoint = originalPoint(currentRect);
         if (oPoint == null) return;
 
-        Set<iVisualElement> best = new HashSet<iVisualElement>();
+        Set<IVisualElement> best = new HashSet<IVisualElement>();
         float bestScore = Float.NEGATIVE_INFINITY;
 
-        Set<Entry<iVisualElement, Rect>> es = current.entrySet();
-        for (Entry<iVisualElement, Rect> e : es) {
+        Set<Entry<IVisualElement, Rect>> es = current.entrySet();
+        for (Entry<IVisualElement, Rect> e : es) {
 
             if (e.getKey().getProperty(OfferedAlignment.alignment_doNotParticipate) != null) continue;
 
@@ -145,24 +145,24 @@ class PointOffering implements iOffering {
 
         if (best.size() == 0) return;
 
-        iVisualElement b = best.iterator().next();
+        IVisualElement b = best.iterator().next();
         createConstraint(root, b, element);
 
         GLComponentWindow c = GLComponentWindow.getCurrentWindow(null);
         if (c != null) {
             OverlayAnimationManager.notifyAsText(root,
                                                  "Created constraint between "
-                                                 + b.getProperty(iVisualElement.name)
+                                                 + b.getProperty(IVisualElement.name)
                                                  + " & "
-                                                 + element.getProperty(iVisualElement.name),
+                                                 + element.getProperty(IVisualElement.name),
                                                  b.getFrame(null));
         }
 
     }
 
     public
-    iDrawable score(LinkedHashMap<iVisualElement, Rect> current,
-                    iVisualElement element,
+    iDrawable score(LinkedHashMap<IVisualElement, Rect> current,
+                    IVisualElement element,
                     Rect originalRect,
                     Rect currentRect,
                     Rect newRect) {
@@ -173,8 +173,8 @@ class PointOffering implements iOffering {
         Set<Vector2> best = new HashSet<Vector2>();
         float bestScore = Float.NEGATIVE_INFINITY;
 
-        Set<Entry<iVisualElement, Rect>> es = current.entrySet();
-        for (Entry<iVisualElement, Rect> e : es) {
+        Set<Entry<IVisualElement, Rect>> es = current.entrySet();
+        for (Entry<IVisualElement, Rect> e : es) {
 
             if (e.getKey().getProperty(OfferedAlignment.alignment_doNotParticipate) != null) continue;
 
@@ -199,10 +199,10 @@ class PointOffering implements iOffering {
     }
 
     protected abstract
-    Vector2 connectionPoint(iVisualElement source, Vector2 sourcePoint, iVisualElement target, Rect targetRect);
+    Vector2 connectionPoint(IVisualElement source, Vector2 sourcePoint, IVisualElement target, Rect targetRect);
 
     protected
-    void createConstraint(iVisualElement root, iVisualElement from, iVisualElement to) {
+    void createConstraint(IVisualElement root, IVisualElement from, IVisualElement to) {
     }
 
     protected abstract
@@ -215,8 +215,8 @@ class PointOffering implements iOffering {
     iDrawable newDrawableFor(float bestScore,
                              Set<Vector2> best,
                              Vector2 point,
-                             LinkedHashMap<iVisualElement, Rect> current,
-                             iVisualElement element,
+                             LinkedHashMap<IVisualElement, Rect> current,
+                             IVisualElement element,
                              Rect originalRect,
                              Rect currentRect,
                              Rect newRect);

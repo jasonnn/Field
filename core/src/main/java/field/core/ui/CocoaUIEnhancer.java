@@ -1,6 +1,6 @@
 package field.core.ui;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.internal.C;
 import org.eclipse.swt.internal.Callback;
@@ -55,11 +55,11 @@ class CocoaUIEnhancer {
      */
     private static
     class MenuHookObject {
-        final iUpdateable about;
-        final iUpdateable pref;
+        final IUpdateable about;
+        final IUpdateable pref;
 
         public
-        MenuHookObject(iUpdateable about, iUpdateable pref) {
+        MenuHookObject(IUpdateable about, IUpdateable pref) {
             this.about = about;
             this.pref = pref;
         }
@@ -114,7 +114,7 @@ class CocoaUIEnhancer {
      * @param preferencesAction The action to run when the Preferences menu is invoked.
      */
     public
-    void hookApplicationMenu(Display display, iUpdateable aboutAction, iUpdateable preferencesAction) {
+    void hookApplicationMenu(Display display, IUpdateable aboutAction, IUpdateable preferencesAction) {
         // This is our callbackObject whose 'actionProc' method will be called when the About or
         // Preferences menuItem is invoked.
         MenuHookObject target = new MenuHookObject(aboutAction, preferencesAction);

@@ -3,10 +3,10 @@ package field.core.plugins.log;
 import field.core.Constants;
 import field.core.plugins.history.TextSearching.iProvidesSearchTerms;
 import field.core.plugins.selection.PopupInfoWindow;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
+import field.math.graph.IMutableContainer;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
 
 import java.util.ArrayList;
 
@@ -54,7 +54,7 @@ class Logging {
     }
 
     public static
-    class LoggingEventModel extends NodeImpl<LoggingEventModel> implements iMutableContainer<Object, LoggingEventModel>,
+    class LoggingEventModel extends NodeImpl<LoggingEventModel> implements IMutableContainer<Object, LoggingEventModel>,
                                                                            iProvidesSearchTerms {
         LoggingEventType type;
 
@@ -93,7 +93,7 @@ class Logging {
         }
 
         public
-        field.math.graph.iMutableContainer setPayload(Object t) {
+        IMutableContainer setPayload(Object t) {
             return this;
         }
 
@@ -201,7 +201,7 @@ class Logging {
 
     static public
     void registerCycleUpdateable() {
-        Launcher.getLauncher().addPostUpdateable(new iUpdateable() {
+        Launcher.getLauncher().addPostUpdateable(new IUpdateable() {
 
             long n = 0;
 

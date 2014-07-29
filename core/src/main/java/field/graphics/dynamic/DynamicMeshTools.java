@@ -1,11 +1,11 @@
 package field.graphics.dynamic;
 
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.graphics.core.Base;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iGeometry;
 import field.graphics.core.BasicUtilities;
-import field.math.abstraction.iFilter;
+import field.math.abstraction.IFilter;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.math.util.CubicTools;
@@ -233,7 +233,7 @@ class DynamicMeshTools {
 
     public static
     void drawSquareXY(Rect tile,
-                      iFilter<Vector3, Vector3> warp,
+                      IFilter<Vector3, Vector3> warp,
                       float fr,
                       float fg,
                       float fb,
@@ -281,7 +281,7 @@ class DynamicMeshTools {
 
     public static
     void drawSquareXY(Rect tile,
-                      iFilter<Vector3, Vector3> warp,
+                      IFilter<Vector3, Vector3> warp,
                       float fr,
                       float fg,
                       float fb,
@@ -329,7 +329,7 @@ class DynamicMeshTools {
 
     public static
     void drawSquareXY(Rect tile,
-                      iFilter<Vector3, Vector3> warp,
+                      IFilter<Vector3, Vector3> warp,
                       float fr,
                       float fg,
                       float fb,

@@ -4,7 +4,7 @@ import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicFrameBuffers.NullTexture;
@@ -14,9 +14,9 @@ import field.graphics.core.BasicFrameBuffers.iHasTexture;
 import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.imageprocessing.ImageProcessing.TextureWrapper;
 import field.graphics.windowing.FullScreenCanvasSWT;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IProvider;
 import field.math.graph.NodeImpl;
 import field.math.linalg.Vector4;
 import field.math.linalg.iToFloatArray;
@@ -132,7 +132,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     }
 
     public
-    iAcceptor<Number> addFadePlane() {
+    IAcceptor<Number> addFadePlane() {
         final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.transform);
         mesh.rebuildTriangle(2);
         mesh.rebuildVertex(4);
@@ -182,7 +182,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
 
         rootSceneList.addChild(mesh);
 
-        return new iAcceptor<Number>() {
+        return new IAcceptor<Number>() {
 
             float last = -1;
 
@@ -190,7 +190,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
 
             @Override
             public
-            iAcceptor<Number> set(Number to) {
+            IAcceptor<Number> set(Number to) {
                 if (to.floatValue() != last) mesh.aux(Base.color0_id, 4)
                                                  .put(new float[]{0,
                                                                   0,
@@ -217,7 +217,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     public
     void copyToVBO(final TriangleMesh mesh, final int aux) {
         sceneList.add(StandardPass.preDisplay)
-                 .register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux, new iUpdateable() {
+                 .register("__copyToVbo__" + System.identityHashCode(mesh) + ' ' + aux, new IUpdateable() {
                      @Override
                      public
                      void update() {
@@ -244,7 +244,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     void copyToNullTexture(final NullTexture nt) {
 
         sceneList.add(StandardPass.preDisplay)
-                 .register("__copyToNullTexture__" + System.identityHashCode(nt), new iUpdateable() {
+                 .register("__copyToNullTexture__" + System.identityHashCode(nt), new IUpdateable() {
                      @Override
                      public
                      void update() {
@@ -259,7 +259,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     void copyToNullTextureOnce(final NullTexture nt) {
 
         final String name = "__copyToNullTexture__" + System.identityHashCode(nt);
-        sceneList.add(StandardPass.preDisplay).register(name, new iUpdateable() {
+        sceneList.add(StandardPass.preDisplay).register(name, new IUpdateable() {
             @Override
             public
             void update() {
@@ -302,8 +302,8 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     }
 
     public
-    iProvider<Integer> getOutput() {
-        return new iProvider<Integer>() {
+    IProvider<Integer> getOutput() {
+        return new IProvider<Integer>() {
             public
             Integer get() {
                 return tex[0];

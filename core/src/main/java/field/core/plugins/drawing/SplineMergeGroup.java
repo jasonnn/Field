@@ -1,9 +1,9 @@
 package field.core.plugins.drawing;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.MergeGroupFreezer;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElementOverrides;
 import field.core.persistance.VEList;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.windowing.components.PlainDraggableComponent;
@@ -22,12 +22,12 @@ class SplineMergeGroup extends MergeGroupFreezer {
     }
 
     public
-    SplineMergeGroup(iVisualElement owner) {
+    SplineMergeGroup(IVisualElement owner) {
         super(owner);
     }
 
     public
-    iVisualElement create(Object token) {
+    IVisualElement create(Object token) {
         Triple<VisualElement, PlainDraggableComponent, SplineComputingOverride> r = super.create(token,
                                                                                                  owner.getFrame(null),
                                                                                                  VisualElement.class,
@@ -39,11 +39,11 @@ class SplineMergeGroup extends MergeGroupFreezer {
 
     @Override
     protected
-    <T extends VisualElement, S extends iComponent, U extends iVisualElementOverrides.DefaultOverride> void newlyCreated(Triple<T, S, U> r) {
+    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> void newlyCreated(Triple<T, S, U> r) {
         super.newlyCreated(r);
         SplineComputingOverride.computed_linesToDraw.set(owner, r.left, new ArrayList<CachedLine>());
         SplineComputingOverride.computed_elaborates.addToList(VEList.class, r.left, owner);
-        SplineComputingOverride.computed_elaboratedBy.addToList(VEList.class, owner, (iVisualElement) r.left);
+        SplineComputingOverride.computed_elaboratedBy.addToList(VEList.class, owner, (IVisualElement) r.left);
     }
 
     @Override
@@ -64,7 +64,7 @@ class SplineMergeGroup extends MergeGroupFreezer {
     void end() {
         super.end();
         if (open == 0) {
-            for (iVisualElement v : newlyCreated) {
+            for (IVisualElement v : newlyCreated) {
                 SplineComputingOverride.executeMain(v);
             }
         }

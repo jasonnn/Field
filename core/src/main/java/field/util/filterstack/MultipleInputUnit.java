@@ -1,7 +1,7 @@
 package field.util.filterstack;
 
-import field.math.abstraction.iFloatProvider;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IFloatProvider;
+import field.math.abstraction.IProvider;
 import field.util.collect.tuple.Pair;
 
 import java.util.*;
@@ -16,22 +16,22 @@ class MultipleInputUnit<T> extends Unit<T> {
         super(name);
     }
 
-    protected iFloatProvider main;
+    protected IFloatProvider main;
 
-    Map<String, Pair<iProvider<T>, iFloatProvider>> others =
-            new LinkedHashMap<String, Pair<iProvider<T>, iFloatProvider>>();
+    Map<String, Pair<IProvider<T>, IFloatProvider>> others =
+            new LinkedHashMap<String, Pair<IProvider<T>, IFloatProvider>>();
 
     public
-    MultipleInputUnit<T> setMainWeight(iFloatProvider main) {
+    MultipleInputUnit<T> setMainWeight(IFloatProvider main) {
         this.main = main;
         return this;
     }
 
     public
-    MultipleInputUnit<T> setAdditional(String name, iProvider<T> in, iFloatProvider amount) {
+    MultipleInputUnit<T> setAdditional(String name, IProvider<T> in, IFloatProvider amount) {
         if (in == null) others.remove(name);
         else {
-            others.put(name, new Pair<iProvider<T>, iFloatProvider>(in, amount));
+            others.put(name, new Pair<IProvider<T>, IFloatProvider>(in, amount));
         }
         return this;
     }
@@ -47,8 +47,8 @@ class MultipleInputUnit<T> extends Unit<T> {
         if (main != null) am.add(tot = main.evaluate());
         else am.add(tot = 1f);
 
-        Set<Entry<String, Pair<iProvider<T>, iFloatProvider>>> es = others.entrySet();
-        for (Entry<String, Pair<iProvider<T>, iFloatProvider>> e : es) {
+        Set<Entry<String, Pair<IProvider<T>, IFloatProvider>>> es = others.entrySet();
+        for (Entry<String, Pair<IProvider<T>, IFloatProvider>> e : es) {
             T v = e.getValue().left.get();
             if (v != null) {
                 val.add(v);

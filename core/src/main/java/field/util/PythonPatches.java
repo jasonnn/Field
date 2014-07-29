@@ -1,7 +1,7 @@
 package field.util;
 
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import org.python.core.Py;
 import org.python.core.PyObject;
 
@@ -9,7 +9,7 @@ public
 class PythonPatches {
 
     public static
-    class Filter<T> implements iFunction<T, T> {
+    class Filter<T> implements IFunction<T, T> {
 
         public PyObject callable;
 
@@ -32,7 +32,7 @@ class PythonPatches {
         }
 
         public
-        T f(T in) {
+        T apply(T in) {
             if (callable == null) return computeDefault(in);
 
             enter();

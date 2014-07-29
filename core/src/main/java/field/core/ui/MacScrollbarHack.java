@@ -1,8 +1,8 @@
 package field.core.ui;
 
 import field.core.Platform;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.namespace.generic.ReflectionTools;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.internal.cocoa.NSView;
@@ -94,7 +94,7 @@ class MacScrollbarHack {
             final Method[] enable = ReflectionTools.findAllMethodsCalled(window.getClass(), "enableFlushWindow");
 
             disable[0].invoke(window);
-            Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+            Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
                 @Override
                 public

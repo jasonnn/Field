@@ -1,13 +1,14 @@
 package field.core.plugins;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
-import field.launch.iUpdateable;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.launch.IUpdateable;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.Dict.Prop;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 public
-class GroupOverride extends iVisualElementOverrides.DefaultOverride {
+class GroupOverride extends IVisualElementOverrides.DefaultOverride {
 
     public static final VisualElementProperty<Integer> groupOutset =
             new VisualElementProperty<Integer>("groupOutset_i");
@@ -24,7 +25,7 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
 
     @Override
     public
-    VisitCode added(iVisualElement newSource) {
+    TraversalHint added(IVisualElement newSource) {
         shouldChangeFrame(this.forElement, forElement.getFrame(null), forElement.getFrame(null), true);
         return super.added(newSource);
     }
@@ -32,7 +33,7 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
 
     @Override
     public
-    VisitCode inspectablePropertiesFor(iVisualElement source, List<Prop> properties) {
+    TraversalHint inspectablePropertiesFor(IVisualElement source, List<Prop> properties) {
         if (source != forElement) { return super.inspectablePropertiesFor(source, properties); }
 
         int outset = getOutset();
@@ -53,31 +54,31 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
 //			}
 //		});
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     @Override
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
 
         if (source == forElement) {
 
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
-                                                           .getProperty(source, iVisualElement.selectionGroup, group);
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+                                                           .getProperty(source, IVisualElement.selectionGroup, group);
 
-            items.put("Groups (" + forElement.getProperty(iVisualElement.name) + ')', null);
+            items.put("Groups (" + forElement.getProperty(IVisualElement.name) + ')', null);
 
-            items.put("   \u21e3  unpack selection from this group", new iUpdateable() {
+            items.put("   \u21e3  unpack selection from this group", new IUpdateable() {
 
                 public
                 void update() {
-                    List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
+                    List<IVisualElement> parents = (List<IVisualElement>) forElement.getParents();
 
                     Set<iComponent> selection = group.get().getSelection();
 
                     for (iComponent c : selection) {
-                        iVisualElement ve = c.getVisualElement();
+                        IVisualElement ve = c.getVisualElement();
                         if (ve != null) {
                             if (parents.contains(ve) && (parents.size() > 1)) {
                                 ve.removeChild(forElement);
@@ -90,16 +91,16 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
                 }
             });
 
-            items.put("   \u21e3  put selection into this group", new iUpdateable() {
+            items.put("   \u21e3  put selection into this group", new IUpdateable() {
 
                 public
                 void update() {
-                    List<iVisualElement> parents = (List<iVisualElement>) forElement.getParents();
+                    List<IVisualElement> parents = (List<IVisualElement>) forElement.getParents();
 
                     Set<iComponent> selection = group.get().getSelection();
 
                     for (iComponent c : selection) {
-                        iVisualElement ve = c.getVisualElement();
+                        IVisualElement ve = c.getVisualElement();
                         if (ve != null) {
                             if (!parents.contains(ve) && (ve != forElement)) {
                                 ve.addChild(forElement);
@@ -112,32 +113,32 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
 
         }
         else {
-            List<iVisualElement> c = (List<iVisualElement>) this.forElement.getParents();
+            List<IVisualElement> c = (List<IVisualElement>) this.forElement.getParents();
             if (c.contains(source)) {
 
             }
         }
 
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     @Override
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
 
         if (inside) {
             super.shouldChangeFrame(source, newFrame, oldFrame, now);
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
         int out = getOutset();
 
         if (source != forElement) {
-            List<iVisualElement> c = (List<iVisualElement>) this.forElement.getParents();
+            List<IVisualElement> c = (List<IVisualElement>) this.forElement.getParents();
             if (!c.contains(source)) { return super.shouldChangeFrame(source, newFrame, oldFrame, now); }
             // recalculate forElement's
             // frame
             inside = true;
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                            .shouldChangeFrame(forElement,
                                                                               computeNewBoundingFrame(c,
                                                                                                       source,
@@ -148,12 +149,12 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
                                                                               forElement.getFrame(null),
                                                                               true);
             inside = false;
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
-        List<iVisualElement> c = (List<iVisualElement>) this.forElement.getParents();
+        List<IVisualElement> c = (List<IVisualElement>) this.forElement.getParents();
         inside = true;
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                        .shouldChangeFrame(forElement,
                                                                           computeNewBoundingFrame(c,
                                                                                                   source,
@@ -163,8 +164,8 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
                                                                                                   out),
                                                                           forElement.getFrame(null),
                                                                           true);
-        for (iVisualElement e : c) {
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e)
+        for (IVisualElement e : c) {
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e)
                                                            .shouldChangeFrame(e,
                                                                               computeNewSubFrame(e,
                                                                                                  newFrame,
@@ -174,7 +175,7 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
                                                                               e.getFrame(null),
                                                                               true);
         }
-        new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                        .shouldChangeFrame(forElement,
                                                                           computeNewBoundingFrame(c,
                                                                                                   source,
@@ -185,11 +186,11 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
                                                                           forElement.getFrame(null),
                                                                           true);
         inside = false;
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     private static
-    Rect computeNewSubFrame(iVisualElement e, Rect newParentFrame, Rect oldParentFrame, Rect oldChildFrame, int out) {
+    Rect computeNewSubFrame(IVisualElement e, Rect newParentFrame, Rect oldParentFrame, Rect oldChildFrame, int out) {
 
         double x1 = (oldChildFrame.x - oldParentFrame.x) / oldParentFrame.w;
         double y1 = (oldChildFrame.y - oldParentFrame.y) / oldParentFrame.h;
@@ -205,8 +206,8 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
     }
 
     protected static
-    Rect computeNewBoundingFrame(List<iVisualElement> c,
-                                 iVisualElement source,
+    Rect computeNewBoundingFrame(List<IVisualElement> c,
+                                 IVisualElement source,
                                  Rect newSourceFrame,
                                  Rect oldSourceFrame,
                                  Rect oldParentFrame,
@@ -218,7 +219,7 @@ class GroupOverride extends iVisualElementOverrides.DefaultOverride {
         float yy = Float.NEGATIVE_INFINITY;
         Rect t = new Rect(0, 0, 0, 0);
         boolean set = false;
-        for (iVisualElement ve : c) {
+        for (IVisualElement ve : c) {
             ve.getFrame(t);
             if (t.x < mx) mx = (float) t.x;
             if (t.y < my) my = (float) t.y;

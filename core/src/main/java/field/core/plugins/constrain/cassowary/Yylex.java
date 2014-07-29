@@ -299,7 +299,7 @@ class Yylex implements Scanner {
                         case 1:
                         case -2:
                             break;
-                        case 2: { /* skip white space */
+                        case 2: { /* SKIP white space */
                         }
                         case -3:
                             break;

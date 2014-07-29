@@ -2,8 +2,8 @@ package field.core.util;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +14,14 @@ class LocalFuture<T> {
     boolean set = false;
 
     T t;
-    List<iAcceptor<T>> continuation = new ArrayList<iAcceptor<T>>();
+    List<IAcceptor<T>> continuation = new ArrayList<IAcceptor<T>>();
 
     public
-    void addContinuation(final iUpdateable u) {
-        continuation.add(new iAcceptor<T>() {
+    void addContinuation(final IUpdateable u) {
+        continuation.add(new IAcceptor<T>() {
 
             public
-            iAcceptor<T> set(T to) {
+            IAcceptor<T> set(T to) {
                 u.update();
                 return this;
             }
@@ -29,7 +29,7 @@ class LocalFuture<T> {
     }
 
     public
-    void addContinuation(final iAcceptor<T> a) {
+    void addContinuation(final IAcceptor<T> a) {
         continuation.add(a);
     }
 
@@ -47,7 +47,7 @@ class LocalFuture<T> {
     public
     void set(T t) {
         this.t = t;
-        for (iAcceptor<T> u : continuation)
+        for (IAcceptor<T> u : continuation)
             u.set(t);
     }
 }

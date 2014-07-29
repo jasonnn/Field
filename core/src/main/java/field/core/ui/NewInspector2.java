@@ -6,8 +6,8 @@ import field.core.Constants;
 import field.core.Platform;
 import field.core.plugins.selection.ToolBarFolder;
 import field.core.ui.SmallMenu.BetterPopup;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.linalg.Vector4;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -131,7 +131,7 @@ class NewInspector2 {
             @Override
             public
             void handleEvent(Event event) {
-                LinkedHashMap<String, iUpdateable> items = getMenuItems();
+                LinkedHashMap<String, IUpdateable> items = getMenuItems();
                 if (items == null) return;
 
             }
@@ -148,7 +148,7 @@ class NewInspector2 {
     }
 
     protected
-    LinkedHashMap<String, iUpdateable> getMenuItems() {
+    LinkedHashMap<String, IUpdateable> getMenuItems() {
         return null;
     }
 
@@ -526,10 +526,10 @@ class NewInspector2 {
     }
 
     public
-    class MoreControl extends BaseControl<LinkedHashMap<String, iUpdateable>> {
+    class MoreControl extends BaseControl<LinkedHashMap<String, IUpdateable>> {
 
         public
-        MoreControl(iIO<LinkedHashMap<String, iUpdateable>> io) {
+        MoreControl(iIO<LinkedHashMap<String, IUpdateable>> io) {
             super(io);
 
             GridData d = new GridData();
@@ -600,7 +600,7 @@ class NewInspector2 {
 
         @Override
         public
-        void setValue(LinkedHashMap<String, iUpdateable> s) {
+        void setValue(LinkedHashMap<String, IUpdateable> s) {
         }
 
     }
@@ -829,12 +829,12 @@ class NewInspector2 {
     }
 
     public
-    iIO<LinkedHashMap<String, iUpdateable>> getMenuItemsIO() {
-        iIO<LinkedHashMap<String, iUpdateable>> m = new iIO<LinkedHashMap<String, iUpdateable>>("") {
+    iIO<LinkedHashMap<String, IUpdateable>> getMenuItemsIO() {
+        iIO<LinkedHashMap<String, IUpdateable>> m = new iIO<LinkedHashMap<String, IUpdateable>>("") {
 
             @Override
             public
-            LinkedHashMap<String, iUpdateable> getValue() {
+            LinkedHashMap<String, IUpdateable> getValue() {
                 return getMenuItems();
             }
 
@@ -846,7 +846,7 @@ class NewInspector2 {
 
             @Override
             public
-            void setValue(LinkedHashMap<String, iUpdateable> s) {
+            void setValue(LinkedHashMap<String, IUpdateable> s) {
             }
         };
 

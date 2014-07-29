@@ -2,7 +2,7 @@ package field.bytecode.protect;
 
 import field.bytecode.protect.instrumentation.DeferCallingFast;
 import field.bytecode.protect.trampoline.TrampolineReflection;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -146,7 +146,7 @@ outer:
             return null;
         }
 
-        iUpdateable u = new iUpdateable() {
+        IUpdateable u = new IUpdateable() {
 
             public
             void update() {
@@ -165,7 +165,7 @@ outer:
             final Object[] argArray,
             final iRegistersUpdateable queue,
             final Exception stack,
-            iUpdateable out) {
+            IUpdateable out) {
         try {
 
             inside.inc(queue);

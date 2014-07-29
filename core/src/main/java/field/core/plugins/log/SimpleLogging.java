@@ -1,9 +1,9 @@
 package field.core.plugins.log;
 
 import field.core.plugins.log.Logging.iLoggingEvent;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.Launcher.iExceptionHandler;
-import field.launch.iUpdateable;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -124,7 +124,7 @@ class SimpleLogging {
             }
             else {
                 final Exception fe = e;
-                Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+                Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
                     public
                     void update() {

@@ -1,11 +1,12 @@
 package field.core.ui.text.embedded;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.math.graph.TopologyViewOfGraphNodes;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 
 import java.util.ArrayList;
@@ -18,22 +19,22 @@ interface iReferenceAlgorithm {
     public abstract static
     class BaseReferenceAlgorithm implements iReferenceAlgorithm {
         public
-        List<iVisualElement> evaluate(iVisualElement root,
+        List<IVisualElement> evaluate(IVisualElement root,
                                       String uniqueReferenceID,
                                       String algorithmName,
-                                      iVisualElement forElement) {
+                                      IVisualElement forElement) {
             VisualElementProperty pr = new VisualElementProperty(uniqueReferenceID);
-            List<iVisualElement> prop = (List<iVisualElement>) forElement.getProperty(pr);
-            List<iVisualElement> newProp = doEvaluation(root, prop, forElement);
+            List<IVisualElement> prop = (List<IVisualElement>) forElement.getProperty(pr);
+            List<IVisualElement> newProp = doEvaluation(root, prop, forElement);
 
 
             //forElement.setProperty(	pr, newProp)
 
             String name = algorithmName;
             forElement.setProperty(new VisualElementProperty(uniqueReferenceID + "-source"), name);
-            new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(forElement)
+            new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(forElement)
                                                            .setProperty(forElement, pr, new Ref(newProp));
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                            .setProperty(forElement, pr, new Ref(newProp));
 
             assert newProp != null;
@@ -42,26 +43,26 @@ interface iReferenceAlgorithm {
 
 
         protected
-        List<iVisualElement> allVisualElements(iVisualElement root) {
+        List<IVisualElement> allVisualElements(IVisualElement root) {
 
 
-            final List<iVisualElement> ret = new ArrayList<iVisualElement>();
-            new TopologyVisitor_breadthFirst<iVisualElement>(true) {
+            final List<IVisualElement> ret = new ArrayList<IVisualElement>();
+            new TopologyVisitor_breadthFirst<IVisualElement>(true) {
                 @Override
                 protected
-                VisitCode visit(iVisualElement n) {
-                    String name = n.getProperty(iVisualElement.name);
+                TraversalHint visit(IVisualElement n) {
+                    String name = n.getProperty(IVisualElement.name);
                     //System.out.println(" adding <"+n+" called <"+name+">");
                     ret.add(n);
-                    return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
                 }
 
-            }.apply(new TopologyViewOfGraphNodes<iVisualElement>(false).setEverything(true), root);
+            }.apply(new TopologyViewOfGraphNodes<IVisualElement>(false).setEverything(true), root);
             return ret;
         }
 
         protected abstract
-        List<iVisualElement> doEvaluation(iVisualElement root, List<iVisualElement> old, iVisualElement forElement);
+        List<IVisualElement> doEvaluation(IVisualElement root, List<IVisualElement> old, IVisualElement forElement);
 
     }
 
@@ -76,8 +77,8 @@ interface iReferenceAlgorithm {
      * @param algorithmName TODO
      */
     public
-    List<iVisualElement> evaluate(iVisualElement root,
+    List<IVisualElement> evaluate(IVisualElement root,
                                   String uniqueReferenceID,
                                   String algorithmName,
-                                  iVisualElement forElement);
+                                  IVisualElement forElement);
 }

@@ -1,17 +1,17 @@
 package field.core.execution;
 
 import field.bytecode.protect.trampoline.ClassPath;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.log.ElementInvocationLogging;
 import field.core.plugins.log.Logging;
 import field.core.plugins.log.Logging.iLoggingEvent;
 import field.core.plugins.selection.PopupInfoWindow;
 import field.core.ui.text.util.IndentationUtils;
 import field.core.util.BetterPythonConstructors;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 import org.python.core.*;
 import org.python.google.common.collect.MapMaker;
@@ -23,10 +23,10 @@ import java.util.*;
 public
 class PythonInterface implements ScriptingInterface {
 
-    public HashMap<String, iFunction<PyObject, String>> specialVariables_read =
-            new HashMap<String, iFunction<PyObject, String>>();
-    public HashMap<String, iFunction<PyObject, PyObject>> specialVariables_write =
-            new HashMap<String, iFunction<PyObject, PyObject>>();
+    public HashMap<String, IFunction<String, PyObject>> specialVariables_read =
+            new HashMap<String, IFunction<String, PyObject>>();
+    public HashMap<String, IFunction<PyObject, PyObject>> specialVariables_write =
+            new HashMap<String, IFunction<PyObject, PyObject>>();
 
     public
     interface iPretends {
@@ -45,8 +45,8 @@ class PythonInterface implements ScriptingInterface {
         PyObject __finditem__(String arg0) {
             PyObject r = super.__finditem__(arg0);
             try {
-                iFunction<PyObject, String> s = specialVariables_read.get(arg0);
-                if (s != null) return s.f(arg0);
+                IFunction<String, PyObject> s = specialVariables_read.get(arg0);
+                if (s != null) return s.apply(arg0);
 
                 if (!globalTrap.isEmpty() && !arg0.startsWith("_")) {
                     topic = arg0;
@@ -106,9 +106,9 @@ class PythonInterface implements ScriptingInterface {
                 Object cc = cache.remove(arg0);
                 if (cc != null) reverseCache.remove(cc);
 
-                iFunction<PyObject, PyObject> g = specialVariables_write.get(arg0);
+                IFunction<PyObject, PyObject> g = specialVariables_write.get(arg0);
                 if (g != null) {
-                    arg1 = g.f(arg1);
+                    arg1 = g.apply(arg1);
                 }
                 if (!globalTrap.isEmpty()) {
                     PyObject was = super.__finditem__(arg0);
@@ -410,7 +410,7 @@ class PythonInterface implements ScriptingInterface {
     }
 
     public
-    void execStringWithContinuation(String fragment, iUpdateable waiting, iUpdateable ending) {
+    void execStringWithContinuation(String fragment, IUpdateable waiting, IUpdateable ending) {
 
         long in = System.currentTimeMillis();
         monitor.enter();
@@ -667,8 +667,8 @@ class PythonInterface implements ScriptingInterface {
     public
     void exececuteWithWaitContinuation(final PythonInterpreter i,
                                        final String f,
-                                       final iUpdateable next,
-                                       final iUpdateable end) {
+                                       final IUpdateable next,
+                                       final IUpdateable end) {
 
         // if (ThreadedLauncher.isTimer2Thread()) {
         // i.exec(f);
@@ -1076,7 +1076,7 @@ class PythonInterface implements ScriptingInterface {
     }
 
     static public
-    void handlePythonException(final iVisualElement element, final iVisualElement parentElement, final Throwable t) {
+    void handlePythonException(final IVisualElement element, final IVisualElement parentElement, final Throwable t) {
         Logging.logging.addEvent(new iLoggingEvent() {
 
             public

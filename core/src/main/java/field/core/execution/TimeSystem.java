@@ -1,8 +1,8 @@
 package field.core.execution;
 
 import field.launch.SystemProperties;
-import field.math.abstraction.iDoubleProvider;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IDoubleProvider;
+import field.math.abstraction.IProvider;
 import field.util.filterstack.FilterStack;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author marc
  */
 public
-class TimeSystem implements iDoubleProvider {
+class TimeSystem implements IDoubleProvider {
 
     class Manipulation {
         boolean started = false;
@@ -70,12 +70,12 @@ class TimeSystem implements iDoubleProvider {
 
     public
     TimeSystem() {
-        processingTime = new FilterStack<Double>(new iProvider<Double>() {
+        processingTime = new FilterStack<Double>(new IProvider<Double>() {
             public
             java.lang.Double get() {
                 return processingTime_root;
             }
-        }, new iDoubleProvider() {
+        }, new IDoubleProvider() {
             public
             double evaluate() {
                 return processingTime_root;
@@ -95,12 +95,12 @@ class TimeSystem implements iDoubleProvider {
             }
         };
 
-        processingTime_rate = new FilterStack<Double>(new iProvider<Double>() {
+        processingTime_rate = new FilterStack<Double>(new IProvider<Double>() {
             public
             java.lang.Double get() {
                 return thisIsRealTime ? timeElapsed() : baseTime;
             }
-        }, new iDoubleProvider() {
+        }, new IDoubleProvider() {
             public
             double evaluate() {
                 return processingTime_rate_root;

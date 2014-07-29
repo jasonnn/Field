@@ -1,20 +1,20 @@
 package field.core.plugins.constrain;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.constrain.cassowary.ClConstraint;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.TraversalHint;
 
 import java.util.Map;
 
 
 public abstract
-class BaseConstraintOverrides extends iVisualElementOverrides.DefaultOverride {
+class BaseConstraintOverrides extends IVisualElementOverrides.DefaultOverride {
 
-    public static final VisualElementProperty<Map<String, iVisualElement>> constraintParameters =
-            new VisualElementProperty<Map<String, iVisualElement>>("constraintParameters");
+    public static final VisualElementProperty<Map<String, IVisualElement>> constraintParameters =
+            new VisualElementProperty<Map<String, IVisualElement>>("constraintParameters");
 
     private ComplexConstraints cachedComplex;
 
@@ -23,7 +23,7 @@ class BaseConstraintOverrides extends iVisualElementOverrides.DefaultOverride {
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         ensureConstraint();
         if (source == this.forElement) {
             paint(bounds, visible);
@@ -34,16 +34,16 @@ class BaseConstraintOverrides extends iVisualElementOverrides.DefaultOverride {
 
     @Override
     public
-    <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+    <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
         if ((source == forElement) && prop.equals(constraintParameters)) {
             constraintsHaveChanged = true;
-            forElement.setProperty(iVisualElement.dirty, true);
+            forElement.setProperty(IVisualElement.dirty, true);
         }
         return super.setProperty(source, prop, to);
     }
 
     protected abstract
-    ClConstraint createConstraint(Map<String, iVisualElement> property);
+    ClConstraint createConstraint(Map<String, IVisualElement> property);
 
     protected
     void ensureConstraint() {
@@ -69,7 +69,7 @@ class BaseConstraintOverrides extends iVisualElementOverrides.DefaultOverride {
     }
 
     protected
-    Map<String, iVisualElement> getConstraintParameters() {
+    Map<String, IVisualElement> getConstraintParameters() {
         return forElement.getProperty(constraintParameters);
     }
 

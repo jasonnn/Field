@@ -1,8 +1,8 @@
 package field.core.execution;
 
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 
 public
 interface iExecutesPromise {
@@ -11,7 +11,7 @@ interface iExecutesPromise {
             new VisualElementProperty<iExecutesPromise>("promiseExecution_");
 
     public abstract
-    void addActive(iFloatProvider timeProvider, Promise p);
+    void addActive(IFloatProvider timeProvider, Promise p);
 
     public abstract
     void removeActive(Promise p);

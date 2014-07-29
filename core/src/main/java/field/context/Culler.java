@@ -1,19 +1,19 @@
 package field.context;
 
 import field.context.Generator.Channel;
-import field.launch.iUpdateable;
-import field.math.abstraction.iDoubleProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IDoubleProvider;
 
 public
-class Culler<X> implements iUpdateable {
+class Culler<X> implements IUpdateable {
 
 
     private final Channel<X> c;
-    private final iDoubleProvider time;
+    private final IDoubleProvider time;
     private final double history;
 
     public
-    Culler(Channel<X> c, iDoubleProvider time, double historyLength) {
+    Culler(Channel<X> c, IDoubleProvider time, double historyLength) {
         this.c = c;
         this.time = time;
         this.history = historyLength;

@@ -1,13 +1,13 @@
 package field.core.plugins.drawing;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.LineUtils;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFloatProvider;
-import field.math.abstraction.iProvider;
-import field.math.abstraction.iProvider.HasChanged;
+import field.launch.IUpdateable;
+import field.math.abstraction.IFloatProvider;
+import field.math.abstraction.IProvider;
+import field.math.abstraction.IProvider.HasChanged;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.namespace.generic.ReflectionTools;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public
-class ConnectiveThickArc2 implements iUpdateable {
+class ConnectiveThickArc2 implements IUpdateable {
 
 
     public static
@@ -79,60 +79,60 @@ class ConnectiveThickArc2 implements iUpdateable {
 
     private final HasChanged<Vector4> outlineColor;
 
-    private final field.math.abstraction.iFloatProvider.HasChanged startThickness;
+    private final IFloatProvider.HasChanged startThickness;
 
-    private final field.math.abstraction.iFloatProvider.HasChanged endThickness;
+    private final IFloatProvider.HasChanged endThickness;
 
-    private final iVisualElement start;
+    private final IVisualElement start;
 
-    private final iVisualElement end;
+    private final IVisualElement end;
 
     private final HasChanged<Rect> startRect;
 
     private final HasChanged<Rect> endRect;
 
-    private iFloatProvider gate;
+    private IFloatProvider gate;
 
-    private final iVisualElement dest;
+    private final IVisualElement dest;
 
     CachedLine destination;
 
     public
-    ConnectiveThickArc2(iVisualElement dest,
-                        iProvider<Vector4> fillColor,
-                        iProvider<Vector4> outlineColor,
-                        iVisualElement start,
-                        iFloatProvider startThickness,
-                        iVisualElement end,
-                        iFloatProvider endThickness) {
+    ConnectiveThickArc2(IVisualElement dest,
+                        IProvider<Vector4> fillColor,
+                        IProvider<Vector4> outlineColor,
+                        IVisualElement start,
+                        IFloatProvider startThickness,
+                        IVisualElement end,
+                        IFloatProvider endThickness) {
 
         this.dest = dest;
-        this.fillColor = new iProvider.HasChanged<Vector4>(fillColor);
-        this.outlineColor = new iProvider.HasChanged<Vector4>(outlineColor);
+        this.fillColor = new IProvider.HasChanged<Vector4>(fillColor);
+        this.outlineColor = new IProvider.HasChanged<Vector4>(outlineColor);
 
         this.start = start;
         this.end = end;
 
-        this.startRect = new iProvider.HasChanged<Rect>(new iProvider<Rect>() {
+        this.startRect = new IProvider.HasChanged<Rect>(new IProvider<Rect>() {
             public
             Rect get() {
                 return ConnectiveThickArc2.this.start.getFrame(null);
             }
         });
 
-        this.endRect = new iProvider.HasChanged<Rect>(new iProvider<Rect>() {
+        this.endRect = new IProvider.HasChanged<Rect>(new IProvider<Rect>() {
             public
             Rect get() {
                 return ConnectiveThickArc2.this.end.getFrame(null);
             }
         });
 
-        this.startThickness = new iFloatProvider.HasChanged(startThickness);
-        this.endThickness = new iFloatProvider.HasChanged(endThickness);
+        this.startThickness = new IFloatProvider.HasChanged(startThickness);
+        this.endThickness = new IFloatProvider.HasChanged(endThickness);
     }
 
     public
-    void addGate(iFloatProvider gate) {
+    void addGate(IFloatProvider gate) {
         this.gate = gate;
     }
 

@@ -95,7 +95,7 @@ class Diff3 {
                     i1.previous();
                 }
                 else if (n2.getPayload().type == EditType.deletion) {
-                    // we have to skip over
+                    // we have to SKIP over
                     // if (n1 != null) for (int i = 0; i < n2.getPayload().left.size() - 1; i++) {
                     // iMarker<ChannelDifferences<Character>.EditRelationship> q = i1.next();
                     // // we know that these are going to be equivilences

@@ -2,15 +2,15 @@ package field.core.util;
 
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner;
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner.iCombiner;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.plugins.PythonOverridden;
 import field.core.plugins.PythonOverridden.Callable;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.core.util.FieldPyObjectAdaptor.iCallable;
-import field.launch.iUpdateable;
-import field.namespace.generic.Bind.iFunction;
+import field.launch.IUpdateable;
+import field.namespace.generic.IFunction;
 import org.python.core.Py;
 import org.python.core.PyFunction;
 import org.python.core.PyObject;
@@ -37,7 +37,7 @@ class PythonCallableMap implements iCallable {
     }
 
     public
-    iUpdateable register(String name, iUpdateable f) {
+    IUpdateable register(String name, IUpdateable f) {
         Callable newCallable = newCallable(name, f);
         Callable oldCallable = known.get(name);
 
@@ -46,7 +46,7 @@ class PythonCallableMap implements iCallable {
     }
 
     public
-    iFunction<Object, Object> register(String name, iFunction<Object, Object> f) {
+    IFunction<Object, Object> register(String name, IFunction<Object, Object> f) {
         Callable newCallable = newCallable(name, f);
         Callable oldCallable = known.get(name);
 
@@ -64,12 +64,12 @@ class PythonCallableMap implements iCallable {
     }
 
     protected
-    Callable newCallable(String name, iUpdateable f) {
+    Callable newCallable(String name, IUpdateable f) {
         return PythonOverridden.callableForUpdatable(name, f);
     }
 
     protected static
-    Callable newCallable(String name, iFunction f) {
+    Callable newCallable(String name, IFunction f) {
         return PythonOverridden.callableForFunction(name, f);
     }
 
@@ -203,7 +203,7 @@ class PythonCallableMap implements iCallable {
     }
 
     public static
-    PythonCallableMap merge(iVisualElement from, VisualElementProperty<PythonCallableMap> parameter) {
+    PythonCallableMap merge(IVisualElement from, VisualElementProperty<PythonCallableMap> parameter) {
         return new FastVisualElementOverridesPropertyCombiner<PythonCallableMap, PythonCallableMap>(false).getProperty(from,
                                                                                                                        parameter,
                                                                                                                        new iCombiner<PythonCallableMap, PythonCallableMap>() {

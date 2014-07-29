@@ -1,7 +1,7 @@
 package field.namespace.context;
 
 import field.bytecode.protect.BaseRef;
-import field.math.graph.visitors.GraphNodeSearching;
+import field.math.graph.visitors.hint.TraversalHint;
 
 /**
  * Created by jason on 7/14/14.
@@ -10,11 +10,11 @@ import field.math.graph.visitors.GraphNodeSearching;
 public
 interface iStorage<T> {
     public
-    GraphNodeSearching.VisitCode get(String name, BaseRef<? super T> result);
+    TraversalHint get(String name, BaseRef<? super T> result);
 
     public
-    GraphNodeSearching.VisitCode set(String name, BaseRef<? extends T> value);
+    TraversalHint set(String name, BaseRef<? extends T> value);
 
     public
-    GraphNodeSearching.VisitCode unset(String key);
+    TraversalHint unset(String key);
 }

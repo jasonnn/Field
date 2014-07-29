@@ -1,6 +1,6 @@
 package field.core.execution;
 
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import org.python.core.PyObject;
 

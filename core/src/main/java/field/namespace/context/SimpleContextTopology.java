@@ -1,7 +1,8 @@
 package field.namespace.context;
 
 import field.bytecode.protect.BaseRef;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.BetterWeakHashMap.BaseWeakHashMapKey;
 
 import java.lang.ref.WeakReference;
@@ -42,12 +43,12 @@ class SimpleContextTopology extends ContextTopology<field.namespace.context.Simp
         }
 
         public
-        VisitCode get(String name, BaseRef result) {
+        TraversalHint get(String name, BaseRef result) {
             return SimpleContextTopology.this.get(this, name, result);
         }
 
         public
-        VisitCode set(String name, BaseRef value) {
+        TraversalHint set(String name, BaseRef value) {
             return SimpleContextTopology.this.set(this, name, value);
         }
 
@@ -63,7 +64,7 @@ class SimpleContextTopology extends ContextTopology<field.namespace.context.Simp
         }
 
         public
-        VisitCode unset(String name) {
+        TraversalHint unset(String name) {
             return SimpleContextTopology.this.unset(this, name);
         }
     }
@@ -207,23 +208,23 @@ class SimpleContextTopology extends ContextTopology<field.namespace.context.Simp
     }
 
     protected
-    VisitCode get(Context c, String name, BaseRef result) {
+    TraversalHint get(Context c, String name, BaseRef result) {
         if (c.values.containsKey(name)) {
             result.set(c.values.get(name));
-            return VisitCode.stop;
+            return StandardTraversalHint.STOP;
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     protected
-    VisitCode set(Context c, String name, BaseRef value) {
+    TraversalHint set(Context c, String name, BaseRef value) {
         c.values.put(name, value.get());
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 
     protected
-    VisitCode unset(Context c, String name) {
+    TraversalHint unset(Context c, String name) {
         c.values.remove(name);
-        return VisitCode.stop;
+        return StandardTraversalHint.STOP;
     }
 }

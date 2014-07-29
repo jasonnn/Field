@@ -1,11 +1,11 @@
 package field.core.ui;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.ui.NewInspector2.*;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.Vector4;
 import field.util.collect.tuple.Triple;
 
@@ -114,7 +114,7 @@ class NewInspectorFromProperties {
     }
 
     public
-    ArrayList<BaseControl> rebuild(List<iVisualElement> sel) {
+    ArrayList<BaseControl> rebuild(List<IVisualElement> sel) {
 
         if (sel.isEmpty()) {
             begin();
@@ -129,20 +129,20 @@ class NewInspectorFromProperties {
 
         //System.out.println(" hello ??? inside rebuild ");
 
-        for (final iVisualElement e : sel) {
+        for (final IVisualElement e : sel) {
 
             iIO<String> name = new iIO<String>("name") {
 
                 @Override
                 public
                 void setValue(String s) {
-                    iVisualElement.name.set(e, e, s);
+                    IVisualElement.name.set(e, e, s);
                 }
 
                 @Override
                 public
                 String getValue() {
-                    return iVisualElement.name.get(e);
+                    return IVisualElement.name.get(e);
                 }
 
                 @Override
@@ -171,10 +171,10 @@ class NewInspectorFromProperties {
                     Rect f = e.getFrame(null);
                     f.x = s.floatValue();
 
-                    iVisualElementOverrides.topology.begin(e);
-                    iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
-                    iVisualElementOverrides.topology.end(e);
-                    iVisualElement.dirty.set(e, e, true);
+                    IVisualElementOverrides.topology.begin(e);
+                    IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
+                    IVisualElementOverrides.topology.end(e);
+                    IVisualElement.dirty.set(e, e, true);
                 }
 
                 @Override
@@ -201,10 +201,10 @@ class NewInspectorFromProperties {
                     Rect f = e.getFrame(null);
                     f.y = s.floatValue();
 
-                    iVisualElementOverrides.topology.begin(e);
-                    iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
-                    iVisualElementOverrides.topology.end(e);
-                    iVisualElement.dirty.set(e, e, true);
+                    IVisualElementOverrides.topology.begin(e);
+                    IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
+                    IVisualElementOverrides.topology.end(e);
+                    IVisualElement.dirty.set(e, e, true);
                 }
 
                 @Override
@@ -231,10 +231,10 @@ class NewInspectorFromProperties {
                     Rect f = e.getFrame(null);
                     f.w = s.floatValue();
 
-                    iVisualElementOverrides.topology.begin(e);
-                    iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
-                    iVisualElementOverrides.topology.end(e);
-                    iVisualElement.dirty.set(e, e, true);
+                    IVisualElementOverrides.topology.begin(e);
+                    IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
+                    IVisualElementOverrides.topology.end(e);
+                    IVisualElement.dirty.set(e, e, true);
                 }
 
                 @Override
@@ -260,10 +260,10 @@ class NewInspectorFromProperties {
                     Rect f = e.getFrame(null);
                     f.h = s.floatValue();
 
-                    iVisualElementOverrides.topology.begin(e);
-                    iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
-                    iVisualElementOverrides.topology.end(e);
-                    iVisualElement.dirty.set(e, e, true);
+                    IVisualElementOverrides.topology.begin(e);
+                    IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(e, f, e.getFrame(null), true);
+                    IVisualElementOverrides.topology.end(e);
+                    IVisualElement.dirty.set(e, e, true);
                 }
 
                 @Override
@@ -281,13 +281,13 @@ class NewInspectorFromProperties {
                 public
                 void setValue(String s) {
 
-                    iVisualElement.boundTo.set(e, e, s);
+                    IVisualElement.boundTo.set(e, e, s);
                 }
 
                 @Override
                 public
                 String getValue() {
-                    String m = iVisualElement.boundTo.get(e);
+                    String m = IVisualElement.boundTo.get(e);
                     if (m == null) return "";
                     return m;
                 }
@@ -485,14 +485,14 @@ class NewInspectorFromProperties {
     }
 
     public
-    LinkedHashMap<String, iUpdateable> getMenuItems(final iUpdateable rebuild) {
-        LinkedHashMap<String, iUpdateable> map = new LinkedHashMap<String, iUpdateable>();
+    LinkedHashMap<String, IUpdateable> getMenuItems(final IUpdateable rebuild) {
+        LinkedHashMap<String, IUpdateable> map = new LinkedHashMap<String, IUpdateable>();
 
         map.put("Additional property sets", null);
 
         for (final Triple<String, LinkedHashMap<String, Class<? extends BaseControl>>, Boolean> t : activeSets) {
             String x = t.right ? "!" : "";
-            map.put(x + " \u26aa\t" + t.left, new iUpdateable() {
+            map.put(x + " \u26aa\t" + t.left, new IUpdateable() {
 
                 @Override
                 public

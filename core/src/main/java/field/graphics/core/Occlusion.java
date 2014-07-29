@@ -6,9 +6,9 @@ import field.graphics.core.BasicGLSLangProgram.ElementType;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
 import field.graphics.core.BasicTextures.BaseTexture;
 import field.graphics.windowing.FullScreenCanvasSWT;
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 import field.math.linalg.Vector2;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.TaskQueue;
 import org.lwjgl.opengl.GL11;
 
@@ -169,7 +169,7 @@ class Occlusion {
      * @author marc
      */
     static public
-    class AsynchronousQuery extends BasicUtilities.TwoPassElement implements iFloatProvider {
+    class AsynchronousQuery extends BasicUtilities.TwoPassElement implements IFloatProvider {
 
         static public AsynchronousQuery active = null;
 
@@ -181,7 +181,7 @@ class Occlusion {
 
         int[] query = {-1};
 
-        private iFunction<Void, Number> f;
+        private IFunction<Number, Void> f;
 
         public
         AsynchronousQuery(String name, StandardPass prePass, StandardPass postPass) {
@@ -194,7 +194,7 @@ class Occlusion {
         }
 
         public
-        void setFunction(iFunction<Void, Number> f) {
+        void setFunction(IFunction<Number, Void> f) {
             this.f = f;
         }
 
@@ -226,7 +226,7 @@ class Occlusion {
                 if (available[0] != 0 || neverSkip) {
                     sampleCount[0] = glGetQueryObjectui(query[0], GL_QUERY_RESULT);
 
-                    if (f != null) f.f(sampleCount[0]);
+                    if (f != null) f.apply(sampleCount[0]);
 
                 }
                 else {

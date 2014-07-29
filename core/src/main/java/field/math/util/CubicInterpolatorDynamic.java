@@ -1,8 +1,8 @@
 package field.math.util;
 
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iTemporalFunction;
-import field.namespace.generic.Bind.iFunction;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.ITemporalFunction;
+import field.namespace.generic.IFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -13,13 +13,13 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public
-class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunction<T>, Serializable {
+class CubicInterpolatorDynamic<T extends IBlendable<T>> implements ITemporalFunction<T>, Serializable {
 
     // static private final long serialVersionUID = -119976144885796527L;
     private static final long serialVersionUID = 494798624173987102L;
 
     public static
-    class Sample<B extends iBlendable<B>> implements Serializable, Comparable<Sample<B>> {
+    class Sample<B extends IBlendable<B>> implements Serializable, Comparable<Sample<B>> {
 
         private static final long serialVersionUID = -4587582997695641410L;
 
@@ -607,10 +607,10 @@ class CubicInterpolatorDynamic<T extends iBlendable<T>> implements iTemporalFunc
     }
 
     public
-    void remapTime(iFunction<Number, Number> iFunction) {
+    void remapTime(IFunction<Number, Number> iFunction) {
 
         for (int i = 0; i < getNumSamples(); i++) {
-            getSample(i).time = iFunction.f(getSample(i).time).floatValue();
+            getSample(i).time = iFunction.apply(getSample(i).time).floatValue();
         }
 
         resort();

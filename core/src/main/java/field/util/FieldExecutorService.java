@@ -1,7 +1,7 @@
 package field.util;
 
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -51,7 +51,7 @@ class FieldExecutorService extends AbstractExecutorService {
     @Override
     public
     void execute(final Runnable arg0) {
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             @Override
             public
@@ -69,7 +69,7 @@ class FieldExecutorService extends AbstractExecutorService {
 
     public
     void executeLater(final Runnable arg0, final int delay) {
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             int t = 0;
 

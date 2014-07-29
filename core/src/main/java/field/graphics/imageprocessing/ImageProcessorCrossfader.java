@@ -7,20 +7,20 @@ import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
 import field.bytecode.protect.yield.YieldUtilities;
 import field.graphics.windowing.FullScreenCanvasSWT;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFloatProvider;
-import field.math.abstraction.iProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IFloatProvider;
+import field.math.abstraction.IProvider;
 
 @Woven
 public
-class ImageProcessorCrossfader implements iUpdateable {
+class ImageProcessorCrossfader implements IUpdateable {
 
-    private final iProvider<Integer> delayProvider;
-    private final iUpdateable left;
-    private final iUpdateable right;
+    private final IProvider<Integer> delayProvider;
+    private final IUpdateable left;
+    private final IUpdateable right;
 
     public
-    ImageProcessorCrossfader(iProvider<Integer> delayProvider, iUpdateable left, iUpdateable right) {
+    ImageProcessorCrossfader(IProvider<Integer> delayProvider, IUpdateable left, IUpdateable right) {
         this.delayProvider = delayProvider;
         this.left = left;
         this.right = right;
@@ -61,8 +61,8 @@ class ImageProcessorCrossfader implements iUpdateable {
     }
 
     public
-    iFloatProvider getCrossfade() {
-        return new iFloatProvider() {
+    IFloatProvider getCrossfade() {
+        return new IFloatProvider() {
             public
             float evaluate() {
                 return at;

@@ -2,8 +2,8 @@ package field.core.ui;
 
 import field.core.Constants;
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.execution.PythonInterface;
 import field.core.plugins.selection.SelectionSetDriver.TravelTo;
 import field.core.ui.text.util.OpenInEclipse;
@@ -509,13 +509,13 @@ class UbiquitousLinks {
     public static
     boolean markElementByUID(String uid) {
         for (StandardFluidSheet s : sheets) {
-            SelectionGroup<iComponent> selectionGroup = iVisualElement.markingGroup.get(s.getRoot());
+            SelectionGroup<iComponent> selectionGroup = IVisualElement.markingGroup.get(s.getRoot());
             selectionGroup.deselectAll();
-            iVisualElement found = StandardFluidSheet.findVisualElement(s.getRoot(), uid);
+            IVisualElement found = StandardFluidSheet.findVisualElement(s.getRoot(), uid);
             if (found != null) {
-                selectionGroup.addToSelection(iVisualElement.localView.get(found));
-                ((DraggableComponent) iVisualElement.localView.get(found)).setMarked(true);
-                iVisualElement.dirty.set(found, found, true);
+                selectionGroup.addToSelection(IVisualElement.localView.get(found));
+                ((DraggableComponent) IVisualElement.localView.get(found)).setMarked(true);
+                IVisualElement.dirty.set(found, found, true);
             }
         }
         return true;
@@ -528,15 +528,15 @@ class UbiquitousLinks {
         GLComponentWindow window = null;
 
         for (StandardFluidSheet s : sheets) {
-            SelectionGroup<iComponent> selectionGroup = iVisualElement.markingGroup.get(s.getRoot());
+            SelectionGroup<iComponent> selectionGroup = IVisualElement.markingGroup.get(s.getRoot());
             selectionGroup.deselectAll();
-            iVisualElement found = StandardFluidSheet.findVisualElement(s.getRoot(), uid);
+            IVisualElement found = StandardFluidSheet.findVisualElement(s.getRoot(), uid);
             if (found != null) {
-                selectionGroup.addToSelection(iVisualElement.localView.get(found));
-                ((DraggableComponent) iVisualElement.localView.get(found)).setMarked(true);
-                iVisualElement.dirty.set(found, found, true);
+                selectionGroup.addToSelection(IVisualElement.localView.get(found));
+                ((DraggableComponent) IVisualElement.localView.get(found)).setMarked(true);
+                IVisualElement.dirty.set(found, found, true);
                 bound = Rect.union(bound, found.getFrame(null));
-                window = iVisualElement.enclosingFrame.get(found);
+                window = IVisualElement.enclosingFrame.get(found);
             }
         }
         if (bound != null) {
@@ -561,13 +561,13 @@ class UbiquitousLinks {
     public static
     boolean selectElementByUID(String uid) {
         for (StandardFluidSheet s : sheets) {
-            SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(s.getRoot());
+            SelectionGroup<iComponent> selectionGroup = IVisualElement.selectionGroup.get(s.getRoot());
             selectionGroup.deselectAll();
-            iVisualElement found = StandardFluidSheet.findVisualElement(s.getRoot(), uid);
+            IVisualElement found = StandardFluidSheet.findVisualElement(s.getRoot(), uid);
             if (found != null) {
-                selectionGroup.addToSelection(iVisualElement.localView.get(found));
-                iVisualElement.localView.get(found).setSelected(true);
-                iVisualElement.dirty.set(found, found, true);
+                selectionGroup.addToSelection(IVisualElement.localView.get(found));
+                IVisualElement.localView.get(found).setSelected(true);
+                IVisualElement.dirty.set(found, found, true);
             }
         }
         return true;

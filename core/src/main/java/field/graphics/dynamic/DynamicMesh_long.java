@@ -13,7 +13,7 @@ import field.graphics.core.BasicGeometry.TriangleMesh_long;
 import field.graphics.core.BasicUtilities;
 import field.graphics.core.ResourceMonitor;
 import field.launch.SystemProperties;
-import field.math.graph.iMutable;
+import field.math.graph.IMutable;
 import field.math.linalg.Vector3;
 
 import java.nio.FloatBuffer;
@@ -579,11 +579,11 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
 
         if (this.getUnderlyingGeometry().getParents().size() != 0) {
 
-            List<? extends iMutable<iSceneListElement>> p =
-                    new ArrayList<iMutable<iSceneListElement>>(this.getUnderlyingGeometry().getParents());
-            Iterator<? extends iMutable<iSceneListElement>> n = p.iterator();
+            List<? extends IMutable<iSceneListElement>> p =
+                    new ArrayList<IMutable<iSceneListElement>>(this.getUnderlyingGeometry().getParents());
+            Iterator<? extends IMutable<iSceneListElement>> n = p.iterator();
             while (n.hasNext()) {
-                iMutable<iSceneListElement> nn = n.next();
+                IMutable<iSceneListElement> nn = n.next();
                 nn.removeChild(this.getUnderlyingGeometry());
             }
 
@@ -716,14 +716,14 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
         }
     }
 
-    private List<iMutable<iSceneListElement>> oldParents;
+    private List<IMutable<iSceneListElement>> oldParents;
 
     public
     void off() {
         if (oldParents != null) return;
 
-        oldParents = new ArrayList<iMutable<iSceneListElement>>(getUnderlyingGeometry().getParents());
-        for (iMutable<iSceneListElement> m : oldParents) {
+        oldParents = new ArrayList<IMutable<iSceneListElement>>(getUnderlyingGeometry().getParents());
+        for (IMutable<iSceneListElement> m : oldParents) {
             m.removeChild(getUnderlyingGeometry());
         }
     }
@@ -731,7 +731,7 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
     public
     void on() {
         if (oldParents == null) return;
-        for (iMutable<iSceneListElement> m : oldParents) {
+        for (IMutable<iSceneListElement> m : oldParents) {
             m.addChild(getUnderlyingGeometry());
         }
         oldParents = null;

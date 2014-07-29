@@ -1,11 +1,11 @@
 package field.core.windowing.components;
 
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.LineUtils;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -20,7 +20,7 @@ import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector2;
 import field.math.linalg.iCoordinateFrame;
 import field.namespace.context.Dispatch;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.PythonUtils;
 import field.util.TaskQueue;
 import org.eclipse.swt.SWT;
@@ -44,9 +44,9 @@ class PlainDraggableComponent implements iComponent, iDraggableComponent {
 
     protected ComponentContainer inside;
 
-    public iVisualElement element;
+    public IVisualElement element;
 
-    public iVisualElementOverrides overridingInterface;
+    public IVisualElementOverrides overridingInterface;
 
     public
     PlainDraggableComponent() {
@@ -68,17 +68,17 @@ class PlainDraggableComponent implements iComponent, iDraggableComponent {
     }
 
     public
-    PlainDraggableComponent setVisualElement(iVisualElement element) {
+    PlainDraggableComponent setVisualElement(IVisualElement element) {
         this.element = element;
         overridingInterface =
-                new Dispatch<iVisualElement, iVisualElementOverrides>(iVisualElementOverrides.topology).getOverrideProxyFor(element,
-                                                                                                                            iVisualElementOverrides.class);
+                new Dispatch<IVisualElement, IVisualElementOverrides>(IVisualElementOverrides.topology).getOverrideProxyFor(element,
+                                                                                                                            IVisualElementOverrides.class);
         this.setBounds(element.getFrame(new Rect(0, 0, 0, 0)));
         return this;
     }
 
     public
-    iVisualElement getVisualElement() {
+    IVisualElement getVisualElement() {
         return this.element;
     }
 
@@ -89,7 +89,7 @@ class PlainDraggableComponent implements iComponent, iDraggableComponent {
         // overridingInterface.getProperty(element,
         // iVisualElement.selectionGroup, out);
 
-        SelectionGroup<iComponent> s = iVisualElement.selectionGroup.get(element);
+        SelectionGroup<iComponent> s = IVisualElement.selectionGroup.get(element);
 
         if (s != null) sel.add(s);
         return sel;
@@ -190,9 +190,9 @@ class PlainDraggableComponent implements iComponent, iDraggableComponent {
     List<SelectionGroup<iComponent>> getMarkingGroups() {
         ArrayList<SelectionGroup<iComponent>> sel = new ArrayList<SelectionGroup<iComponent>>();
         Ref<SelectionGroup<iComponent>> out = new Ref<SelectionGroup<iComponent>>(null);
-        overridingInterface.getProperty(element, iVisualElement.markingGroup, out);
+        overridingInterface.getProperty(element, IVisualElement.markingGroup, out);
         if (out.get() != null) sel.add(out.get());
-        overridingInterface.getProperty(element, iVisualElement.markingGroup, out);
+        overridingInterface.getProperty(element, IVisualElement.markingGroup, out);
         return sel;
     }
 
@@ -225,7 +225,7 @@ class PlainDraggableComponent implements iComponent, iDraggableComponent {
 
         if (!GLComponentWindow.getCurrentWindow(this).present) {
 
-            final iFunction<Boolean, iComponent> f = decoration.down(arg0);
+            final IFunction<iComponent, Boolean> f = decoration.down(arg0);
             if (f != null) {
                 inside.requestRedisplay();
                 paintQueue.new Task() {
@@ -237,7 +237,7 @@ class PlainDraggableComponent implements iComponent, iDraggableComponent {
                     void run() {
                         i++;
                         if (i == 15) {
-                            f.f(PlainDraggableComponent.this);
+                            f.apply(PlainDraggableComponent.this);
                             inside.requestRedisplay();
                         }
                         else {
@@ -257,7 +257,7 @@ class PlainDraggableComponent implements iComponent, iDraggableComponent {
             overridingInterface.menuItemsFor(element, items);
 
             Ref<GLComponentWindow> ref = new Ref<GLComponentWindow>(null);
-            this.overridingInterface.getProperty(element, iVisualElement.enclosingFrame, ref);
+            this.overridingInterface.getProperty(element, IVisualElement.enclosingFrame, ref);
             if (ref.get() != null) {
                 // menu.show(ref.get().getCanvas(), (int)
                 // ref.get().getCurrentMouseInWindowCoordinates().x,
@@ -779,7 +779,7 @@ class PlainDraggableComponent implements iComponent, iDraggableComponent {
         if (inside != null) return inside;
         if (element == null) return null;
 
-        GLComponentWindow ec = iVisualElement.enclosingFrame.get(element);
+        GLComponentWindow ec = IVisualElement.enclosingFrame.get(element);
         if (ec == null) return null;
         return ec.getRoot();
     }

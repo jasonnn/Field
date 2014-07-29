@@ -1,11 +1,11 @@
 package field.core.execution;
 
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
 
 import java.util.List;
 
@@ -15,18 +15,18 @@ import java.util.List;
 public
 class AutoEngage {
 
-    private final iVisualElement root;
+    private final IVisualElement root;
 
     int delay = SystemProperties.getIntProperty("autoDelay", 0);
 
     public
-    AutoEngage(iVisualElement root) {
+    AutoEngage(IVisualElement root) {
         this.root = root;
     }
 
     public
     void start(final String spec) {
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             int t = 0;
 
@@ -71,7 +71,7 @@ class AutoEngage {
     }
 
     protected static
-    void startElement(iVisualElement v) {
+    void startElement(IVisualElement v) {
 
         //System.out.println(" :::::::::::::: starting <" + v + ">");
         PseudoPropertiesPlugin.begin.get(v).call(new Object[]{});
@@ -92,8 +92,8 @@ class AutoEngage {
 
     protected
     void startElement(String s) {
-        List<iVisualElement> found = StandardFluidSheet.findVisualElementWithNameExpression(root, s);
-        for (iVisualElement v : found) {
+        List<IVisualElement> found = StandardFluidSheet.findVisualElementWithNameExpression(root, s);
+        for (IVisualElement v : found) {
             startElement(v);
         }
     }

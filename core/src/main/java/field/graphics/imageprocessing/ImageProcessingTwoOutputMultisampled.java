@@ -4,7 +4,7 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.graphics.core.*;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iSceneListElement;
@@ -15,8 +15,8 @@ import field.graphics.imageprocessing.ImageProcessing.TextureWrapper;
 import field.graphics.imageprocessing.ImageProcessing.iProcessesMesh;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.graphics.windowing.FullScreenCanvasSWT.StereoSide;
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
+import field.math.abstraction.IAcceptor;
 import field.math.linalg.Vector4;
 import field.util.TaskQueue;
 
@@ -42,7 +42,7 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
 public
 class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
 
-    private final iProvider<Integer>[] fboInput;
+    private final IProvider<Integer>[] fboInput;
 
     final int width;
 
@@ -55,7 +55,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
     private final boolean useFloat;
 
     public
-    ImageProcessingTwoOutputMultisampled(iProvider<Integer>[] fboInput,
+    ImageProcessingTwoOutputMultisampled(IProvider<Integer>[] fboInput,
                                          int width,
                                          int height,
                                          boolean useRect,
@@ -80,10 +80,10 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
                                          boolean useRect,
                                          boolean genMipmap,
                                          boolean useFloat) {
-        this.fboInput = new iProvider[fboInput.length];
+        this.fboInput = new IProvider[fboInput.length];
         for (int i = 0; i < fboInput.length; i++) {
             final int fi = i;
-            this.fboInput[i] = new iProvider<Integer>() {
+            this.fboInput[i] = new IProvider<Integer>() {
                 @Override
                 public
                 Integer get() {
@@ -455,8 +455,8 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
     }
 
     public
-    iProvider<Integer> getOutput(final int num) {
-        return new iProvider<Integer>() {
+    IProvider<Integer> getOutput(final int num) {
+        return new IProvider<Integer>() {
             public
             Integer get() {
                 if (tex[0] == -1) initialize();
@@ -567,7 +567,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
 
 
     public
-    iAcceptor<Vector4[]> addFadePlane() {
+    IAcceptor<Vector4[]> addFadePlane() {
         fadeMesh = new BasicGeometry.QuadMesh(Base.StandardPass.render);
         fadeMesh.rebuildTriangle(1);
         fadeMesh.rebuildVertex(4);
@@ -637,11 +637,11 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
             }
         });
 
-        return new iAcceptor<Vector4[]>() {
+        return new IAcceptor<Vector4[]>() {
 
             @Override
             public
-            iAcceptor<Vector4[]> set(Vector4[] to) {
+            IAcceptor<Vector4[]> set(Vector4[] to) {
                 fadeMesh.aux(Base.color0_id, 4)
                         .put(new float[]{to[0].x,
                                          to[0].y,

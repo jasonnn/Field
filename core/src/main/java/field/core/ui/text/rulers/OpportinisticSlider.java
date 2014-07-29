@@ -1,7 +1,7 @@
 package field.core.ui.text.rulers;
 
 import field.core.execution.PythonInterface;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.util.Dict.Prop;
 import org.python.core.Py;
 import org.python.core.PyList;
@@ -112,10 +112,10 @@ class OpportinisticSlider {
     }
 
     public
-    iFunction<String, String> getUp() {
-        return new iFunction<String, String>() {
+    IFunction<String, String> getUp() {
+        return new IFunction<String, String>() {
             public
-            String f(String in) {
+            String apply(String in) {
                 return up(in);
             }
         };
@@ -139,10 +139,10 @@ class OpportinisticSlider {
     }
 
     public
-    iFunction<String, String> getDown() {
-        return new iFunction<String, String>() {
+    IFunction<String, String> getDown() {
+        return new IFunction<String, String>() {
             public
-            String f(String in) {
+            String apply(String in) {
                 return down(in);
             }
         };

@@ -1,12 +1,12 @@
 package field.core.plugins.drawing.tweak;
 
 import field.core.Platform;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.Mixins.iMixinProxy;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem;
 import field.core.plugins.drawing.SplineComputingOverride;
@@ -33,9 +33,9 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.RootComponent;
 import field.core.windowing.components.RootComponent.iMousePeer;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iFilter;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IFilter;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.util.collect.tuple.Pair;
@@ -605,7 +605,7 @@ class TweakSplineUI {
 
                     //System.out.println(" popup and shift ");
 
-                    LinkedHashMap<String, iUpdateable> upup = new LinkedHashMap<String, iUpdateable>();
+                    LinkedHashMap<String, IUpdateable> upup = new LinkedHashMap<String, IUpdateable>();
 
                     aquireToolMenu(upup);
 
@@ -743,12 +743,12 @@ class TweakSplineUI {
     }
 
     public
-    class SelectionStringAcceptor implements iAcceptor<String> {
+    class SelectionStringAcceptor implements IAcceptor<String> {
 
         public
-        iAcceptor<String> set(String to) {
+        IAcceptor<String> set(String to) {
             Ref<PythonScriptingSystem> pss = new Ref<PythonScriptingSystem>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(inside)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(inside)
                                                            .getProperty(inside,
                                                                         PythonScriptingSystem.pythonScriptingSystem,
                                                                         pss);
@@ -870,7 +870,7 @@ class TweakSplineUI {
 
     private SelectionMousePeer installedPeer;
 
-    public iVisualElement inside;
+    public IVisualElement inside;
 
     List<SelectedVertex> selection = new ArrayList<SelectedVertex>();
 
@@ -911,11 +911,11 @@ class TweakSplineUI {
     }
 
     public
-    void aquireToolMenu(LinkedHashMap<String, iUpdateable> upup) {
+    void aquireToolMenu(LinkedHashMap<String, IUpdateable> upup) {
 
         upup.put("Live tools ...", null);
         for (final Map.Entry<String, BaseTool> m : knownLiveTools.entrySet()) {
-            upup.put((m.getValue() == currentTool ? "!" : "") + " \u2333 <b>" + m.getKey() + "</b>", new iUpdateable() {
+            upup.put((m.getValue() == currentTool ? "!" : "") + " \u2333 <b>" + m.getKey() + "</b>", new IUpdateable() {
                 public
                 void update() {
                     currentTool = m.getValue();
@@ -926,7 +926,7 @@ class TweakSplineUI {
         upup.put("Apply tool ... ", null);
 
         for (final Map.Entry<String, BaseTool> m : knownNodeTools.entrySet()) {
-            upup.put(" \u2335 <b>" + m.getKey() + "</b>", new iUpdateable() {
+            upup.put(" \u2335 <b>" + m.getKey() + "</b>", new IUpdateable() {
                 public
                 void update() {
 
@@ -937,7 +937,7 @@ class TweakSplineUI {
 
                     final BaseTool tool = m.getValue();
 
-                    tool.populateParameters(inside, new iUpdateable() {
+                    tool.populateParameters(inside, new IUpdateable() {
                         public
                         void update() {
                             iResult expressions = tool.obtainExpressions(inside, on, selection, null);
@@ -973,7 +973,7 @@ class TweakSplineUI {
 
             if (k != -1) accelerator = "///" + (char) k + "///";
 
-            upup.put(" \u230c <b>" + e.getKey() + "</b> " + accelerator, new iUpdateable() {
+            upup.put(" \u230c <b>" + e.getKey() + "</b> " + accelerator, new IUpdateable() {
 
                 public
                 void update() {
@@ -1015,11 +1015,11 @@ class TweakSplineUI {
     }
 
     public
-    void deinstallMousePeer(iVisualElement e) {
+    void deinstallMousePeer(IVisualElement e) {
         if (installedPeer != null) {
             System.err.println(ANSIColorUtils.red(" deinstall peer "));
 
-            RootComponent rc = iVisualElement.rootComponent.get(e);
+            RootComponent rc = IVisualElement.rootComponent.get(e);
             if (rc != null) rc.removeMousePeer(installedPeer);
             installedPeer = null;
             if (isReplacing) {
@@ -1038,7 +1038,7 @@ class TweakSplineUI {
     public
     void fireRepaint() {
         if (inside != null) {
-            GLComponentWindow ee = iVisualElement.enclosingFrame.get(inside);
+            GLComponentWindow ee = IVisualElement.enclosingFrame.get(inside);
             if (ee != null) ee.getRoot().requestRedisplay();
         }
     }
@@ -1104,7 +1104,7 @@ class TweakSplineUI {
 
     private
     SplineComputingOverride getSplineComputingOverride() {
-        iVisualElementOverrides over = inside.getProperty(iVisualElement.overrides);
+        IVisualElementOverrides over = inside.getProperty(IVisualElement.overrides);
         if (over instanceof SplineComputingOverride) return (SplineComputingOverride) over;
         if (over instanceof iMixinProxy) {
             List list = ((iMixinProxy) over).getCallList();
@@ -1115,7 +1115,7 @@ class TweakSplineUI {
     }
 
     static public
-    PLineList postProcessLineHook(iVisualElement inside, PLineList o) {
+    PLineList postProcessLineHook(IVisualElement inside, PLineList o) {
 
         Object p = postProcess.get(inside);
         if (p == null) return o;
@@ -1124,19 +1124,19 @@ class TweakSplineUI {
 
         if (p instanceof PythonCallableMap) ((PythonCallableMap) p).invoke(o);
         else if (p instanceof PyObject) o = Py.tojava(((PyObject) p).__call__(Py.java2py(o)), PLineList.class);
-        else if (p instanceof iFilter) o = (PLineList) ((iFilter) p).filter(o);
+        else if (p instanceof IFilter) o = (PLineList) ((IFilter) p).filter(o);
         else System.err.println(" unknown object for postprocess hook <" + p + '>');
 
         return o == null ? original : o;
     }
 
     public
-    void installMousePeer(iVisualElement e) {
+    void installMousePeer(IVisualElement e) {
         if (installedPeer == null) {
 
             System.err.println(ANSIColorUtils.red(" install peer "));
 
-            RootComponent rc = iVisualElement.rootComponent.get(e);
+            RootComponent rc = IVisualElement.rootComponent.get(e);
             if (rc != null) rc.addMousePeer(installedPeer = new SelectionMousePeer());
 
             inside = e;

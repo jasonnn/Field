@@ -4,8 +4,8 @@ import field.graphics.core.AdvancedTextures.OneDTexture;
 import field.graphics.core.*;
 import field.graphics.core.Base.iGeometry;
 import field.graphics.imageprocessing.ImageProcessing.iProcessesMesh;
-import field.math.abstraction.iFloatProvider;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IFloatProvider;
+import field.math.abstraction.IProvider;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.math.linalg.iToFloatArray;
@@ -98,7 +98,7 @@ class Processors {
             saltColorRemap.gl_texture_wrap_s(GL_REPEAT);
             saltColorRemap.gl_texture_wrap_t(GL_REPEAT);
             prog.addChild(new BasicTextures.TextureUnit(4, saltColorRemap));
-            prog.new SetIntegerUniform("salt", new iProvider.Constant<Integer>(4));
+            prog.new SetIntegerUniform("salt", new IProvider.Constant<Integer>(4));
         }
 
         public
@@ -155,7 +155,7 @@ class Processors {
         private float cw;
 
         public
-        Simple7Kernel(iFloatProvider scale, Vector3[] offsets, final float centerWeight) {
+        Simple7Kernel(IFloatProvider scale, Vector3[] offsets, final float centerWeight) {
             super(scale,
                   offsets,
                   "content/shaders/VertBlur7NDCVertex.glslang",
@@ -191,10 +191,10 @@ class Processors {
 
     public static
     class SimpleCrossfader extends BasicGLSLangProgram {
-        private final iFloatProvider oneToTwo;
+        private final IFloatProvider oneToTwo;
 
         public
-        SimpleCrossfader(final iFloatProvider oneToTwo, final float power) {
+        SimpleCrossfader(final IFloatProvider oneToTwo, final float power) {
             super("content/shaders/NDCvertex.glslang", "content/shaders/processors/SimpleCrossfaderFragment.glslang");
             this.oneToTwo = oneToTwo;
 
@@ -225,8 +225,8 @@ class Processors {
             }
 
             );
-            new SetIntegerUniform("texture1", new iProvider.Constant<Integer>(0));
-            new SetIntegerUniform("texture2", new iProvider.Constant<Integer>(1));
+            new SetIntegerUniform("texture1", new IProvider.Constant<Integer>(0));
+            new SetIntegerUniform("texture2", new IProvider.Constant<Integer>(1));
         }
     }
 
@@ -245,7 +245,7 @@ class Processors {
         Vector4 feedbackParameters = new Vector4();
 
         public
-        SimpleFeedbackDOFKernel(iFloatProvider scale, Vector3[] offsets) {
+        SimpleFeedbackDOFKernel(IFloatProvider scale, Vector3[] offsets) {
             super(scale,
                   offsets,
                   "content/shaders/VertBlurNDCvertex.glslang",
@@ -306,7 +306,7 @@ class Processors {
         Vector4 feedbackParameters = new Vector4();
 
         public
-        SimpleFeedbackKernel(iFloatProvider scale, Vector3[] offsets) {
+        SimpleFeedbackKernel(IFloatProvider scale, Vector3[] offsets) {
             super(scale,
                   offsets,
                   "content/shaders/VertBlurNDCvertex.glslang",
@@ -373,7 +373,7 @@ class Processors {
 
         private boolean attachNoBlending;
 
-        protected final iFloatProvider scale;
+        protected final IFloatProvider scale;
 
         protected Vector3[] offsets;
 
@@ -386,7 +386,7 @@ class Processors {
         int c = 0;
 
         public
-        SimpleKernel(iFloatProvider scale, Vector3[] offsets) {
+        SimpleKernel(IFloatProvider scale, Vector3[] offsets) {
             super("content/shaders/VertBlurNDCVertex.glslang", "content/shaders/processors/VertBlurFragment.glslang");
             this.scale = scale;
             this.offsets = offsets;
@@ -396,7 +396,7 @@ class Processors {
         }
 
         protected
-        SimpleKernel(iFloatProvider scale, Vector3[] offsets, String vertex, String fragment) {
+        SimpleKernel(IFloatProvider scale, Vector3[] offsets, String vertex, String fragment) {
             super(vertex, fragment);
             this.scale = scale;
             this.offsets = offsets;
@@ -463,7 +463,7 @@ class Processors {
     class SimpleKernel_randomOffset extends SimpleKernel {
 
         public
-        SimpleKernel_randomOffset(iFloatProvider scale, Vector3[] offsets) {
+        SimpleKernel_randomOffset(IFloatProvider scale, Vector3[] offsets) {
             super(scale, offsets);
         }
 

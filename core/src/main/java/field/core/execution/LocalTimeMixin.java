@@ -1,16 +1,18 @@
 package field.core.execution;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.Mixins;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 
 public
-class LocalTimeMixin extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
+class LocalTimeMixin extends IVisualElementOverrides.DefaultOverride {
 
     public static
-    void mixin(iVisualElement e) {
+    void mixin(IVisualElement e) {
         new Mixins().mixInOverride(LocalTimeMixin.class, e);
     }
 
@@ -19,7 +21,7 @@ class LocalTimeMixin extends field.core.dispatch.iVisualElementOverrides.Default
 
     @Override
     public
-    <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
         if (isChild(source)) {
             if (prop.equals(PythonScriptingSystem.pythonScriptingSystem)) {
                 PythonScriptingSystem overrides = forElement.getProperty(localScriptingSystem);
@@ -39,7 +41,7 @@ class LocalTimeMixin extends field.core.dispatch.iVisualElementOverrides.Default
                         overrides.promisePythonScriptingElement(source, oldPromise);
                     }
                     ref.set((T) overrides);
-                    return VisitCode.stop;
+                    return StandardTraversalHint.STOP;
                 }
             }
         }
@@ -47,7 +49,7 @@ class LocalTimeMixin extends field.core.dispatch.iVisualElementOverrides.Default
     }
 
     private
-    boolean isChild(iVisualElement source) {
+    boolean isChild(IVisualElement source) {
         return forElement.getParents().contains(source);
     }
 

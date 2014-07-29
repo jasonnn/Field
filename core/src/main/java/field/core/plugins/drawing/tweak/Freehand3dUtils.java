@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.tweak;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.ThreedComputingOverride;
 import field.core.plugins.drawing.opengl.*;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
@@ -23,10 +23,10 @@ import java.util.List;
 public
 class Freehand3dUtils {
 
-    private final iVisualElement inside;
+    private final IVisualElement inside;
 
     public
-    Freehand3dUtils(iVisualElement inside) {
+    Freehand3dUtils(IVisualElement inside) {
         this.inside = inside;
     }
 

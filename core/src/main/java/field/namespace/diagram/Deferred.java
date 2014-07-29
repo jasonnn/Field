@@ -2,8 +2,8 @@ package field.namespace.diagram;
 
 import field.bytecode.protect.annotations.AliasedParameter;
 import field.bytecode.protect.annotations.Aliases;
-import field.launch.iUpdateable;
-import field.math.abstraction.iDoubleProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IDoubleProvider;
 import field.namespace.diagram.DiagramZero.aChannelNotify;
 import field.namespace.diagram.DiagramZero.iChannel;
 import field.namespace.diagram.DiagramZero.iMarker;
@@ -26,7 +26,7 @@ class Deferred {
      * executed
      */
     public abstract static
-    class Executable implements iUpdateable, Serializable {
+    class Executable implements IUpdateable, Serializable {
 
         public String name;
 
@@ -182,7 +182,7 @@ class Deferred {
 
         private final iChannel into;
 
-        private final iDoubleProvider clock;
+        private final IDoubleProvider clock;
 
         private float durationBetweenEvents;
 
@@ -191,7 +191,7 @@ class Deferred {
         List<iMarker> created = new ArrayList<iMarker>();
 
         public
-        Production(iChannel into, iDoubleProvider clock) {
+        Production(iChannel into, IDoubleProvider clock) {
             this.into = into;
             this.clock = clock;
             into.addNotify(new aChannelNotify() {
@@ -364,7 +364,7 @@ class Deferred {
         HashSet<iMarker<Object>> active = new LinkedHashSet<iMarker<Object>>();
 
         public
-        SimpleExecutingHorizon(iDoubleProvider nowClock, iChannel outputStream) {
+        SimpleExecutingHorizon(IDoubleProvider nowClock, iChannel outputStream) {
             super(nowClock, outputStream);
             if (outputStream instanceof Channel) ((Channel) outputStream).setSliceIsGreedy(true);
         }
@@ -404,8 +404,8 @@ class Deferred {
             if (p instanceof Executable) {
                 ((Executable) p).update();
             }
-            else if (p instanceof iUpdateable) {
-                ((iUpdateable) p).update();
+            else if (p instanceof IUpdateable) {
+                ((IUpdateable) p).update();
             }
         }
 

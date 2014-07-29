@@ -2,7 +2,7 @@ package field.math.util;
 
 import field.math.BaseMath.MutableFloat;
 import field.namespace.generic.Bind;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools.Pair;
 import field.util.ANSIColorUtils;
 
@@ -189,13 +189,13 @@ class Histogram<T> implements iHistogram<T>, Serializable {
     }
 
     public
-    void remove(iFunction<Boolean, Pair<T, Number>> f) {
+    void remove(IFunction<Pair<T, Number>, Boolean> f) {
         Set<Entry<T, MutableFloat>> e = counts.entrySet();
 
         Iterator<Entry<T, MutableFloat>> ii = e.iterator();
         while (ii.hasNext()) {
             Entry<T, MutableFloat> n = ii.next();
-            Boolean shouldRemove = f.f(new Pair<T, Number>(n.getKey(), n.getValue().d / normalization));
+            Boolean shouldRemove = f.apply(new Pair<T, Number>(n.getKey(), n.getValue().d / normalization));
             if (shouldRemove) {
                 normalization -= n.getValue().d;
                 ii.remove();
@@ -228,10 +228,10 @@ class Histogram<T> implements iHistogram<T>, Serializable {
     public
     T best() {
 
-        Entry<T, MutableFloat> a = Bind.argMax(counts.entrySet(), new iFunction<Double, Entry<T, MutableFloat>>() {
+        Entry<T, MutableFloat> a = Bind.argMax(counts.entrySet(), new IFunction<Entry<T, MutableFloat>, Double>() {
             @Override
             public
-            Double f(Entry<T, MutableFloat> in) {
+            Double apply(Entry<T, MutableFloat> in) {
                 return in.getValue().d;
             }
         });

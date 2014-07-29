@@ -4,8 +4,8 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Platform;
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.selection.ToolBarFolder;
 import field.core.ui.text.FindAndReplace.FindAll.Found;
 import field.launch.Launcher;
@@ -211,11 +211,11 @@ class FindAndReplace extends Composite {
     }
 
     protected
-    void navigateTo(iVisualElement thisBox, VisualElementProperty visualElementProperty, ArrayList<Found> ff) {
+    void navigateTo(IVisualElement thisBox, VisualElementProperty visualElementProperty, ArrayList<Found> ff) {
     }
 
     protected
-    iVisualElement getRoot() {
+    IVisualElement getRoot() {
         return null;
     }
 
@@ -243,7 +243,7 @@ class FindAndReplace extends Composite {
 
         public
         class Found {
-            iVisualElement box;
+            IVisualElement box;
             VisualElementProperty prop;
             int start, end;
         }
@@ -252,26 +252,26 @@ class FindAndReplace extends Composite {
         List<Found> prev = new ArrayList<FindAndReplace.FindAll.Found>();
 
         public
-        void build(iVisualElement root) {
+        void build(IVisualElement root) {
             found = new ArrayList<FindAndReplace.FindAll.Found>();
             prev = new ArrayList<FindAndReplace.FindAll.Found>();
-            List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
+            List<IVisualElement> all = StandardFluidSheet.allVisualElements(root);
 
             if (boxOnly) {
-                all = new ArrayList<iVisualElement>();
+                all = new ArrayList<IVisualElement>();
                 all.add(getThisBox());
             }
 
             all.remove(getThisBox());
             all.add(0, getThisBox());
 
-            for (iVisualElement e : all) {
+            for (IVisualElement e : all) {
                 findIn(e);
             }
         }
 
         private
-        void findIn(iVisualElement e) {
+        void findIn(IVisualElement e) {
             Map<Object, Object> m = e.payload();
             Set<Entry<Object, Object>> me = m.entrySet();
             for (Entry<Object, Object> ee : me) {
@@ -285,7 +285,7 @@ class FindAndReplace extends Composite {
         }
 
         private
-        void findIn(iVisualElement in, VisualElementProperty prop, String value) {
+        void findIn(IVisualElement in, VisualElementProperty prop, String value) {
             Matcher q = r.matcher(value);
             while (q.find()) {
                 Found f = new Found();
@@ -316,7 +316,7 @@ class FindAndReplace extends Composite {
     }
 
     public
-    iVisualElement getThisBox() {
+    IVisualElement getThisBox() {
         return null;
     }
 

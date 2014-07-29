@@ -1,9 +1,9 @@
 package field.core.util;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.python.OutputInserts;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.BaseMath;
 import field.math.util.Histogram;
 
@@ -30,7 +30,7 @@ class Taps {
         String descriptiveString();
 
         public abstract
-        void output(String key, CapturedEnvironment env, iVisualElement inside);
+        void output(String key, CapturedEnvironment env, IVisualElement inside);
     }
 
     public static
@@ -112,7 +112,7 @@ class Taps {
 
         @Override
         public
-        void output(String key, CapturedEnvironment env, iVisualElement inside) {
+        void output(String key, CapturedEnvironment env, IVisualElement inside) {
             OutputInserts.printHistogram(key + ": " + descriptiveString(), key, inside, getHistogram(15));
         }
     }
@@ -132,9 +132,9 @@ class Taps {
                      final Object executionUID,
                      final String key,
                      final CapturedEnvironment env,
-                     final iVisualElement inside) {
+                     final IVisualElement inside) {
         if (!env.hasExitHandler(key)) {
-            env.addExitHandler(key, new iUpdateable() {
+            env.addExitHandler(key, new IUpdateable() {
                 public
                 void update() {
                     if (hasPackage(executionUID, key)) {

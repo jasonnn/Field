@@ -2,9 +2,9 @@ package field.core.windowing.components;
 
 import field.core.Platform;
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.GLComponentWindow;
@@ -498,7 +498,7 @@ class SwingBridgeComponent extends PlainDraggableComponent {
             c.getProperties().put(iLinearGraphicsContext.containsText, true);
             c.getInput()
              .setPointAttribute(iLinearGraphicsContext.text_v,
-                                '(' + this.element.getProperty(iVisualElement.name) + ')');
+                                '(' + this.element.getProperty(IVisualElement.name) + ')');
             c.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new Font("Gill Sans", 0, 10));
             cc.submitLine(c, c.getProperties());
         }
@@ -653,7 +653,7 @@ class SwingBridgeComponent extends PlainDraggableComponent {
             inside.requestRedisplay();
         }
 
-        List<iVisualElement> parents = StandardFluidSheet.allVisualElements(element.getChildren().get(0));
+        List<IVisualElement> parents = StandardFluidSheet.allVisualElements(element.getChildren().get(0));
 
         System.out.println(" parents are <" + parents + '>');
         new CascadedResize(parents).cascadedResize(element, oldBounds, bounds, 10);

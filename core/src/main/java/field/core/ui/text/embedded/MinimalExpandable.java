@@ -5,9 +5,9 @@ import field.bytecode.protect.annotations.Yield;
 import field.bytecode.protect.yield.YieldUtilities;
 import field.core.ui.text.embedded.CustomInsertDrawing.iAcceptsInsertRenderingContext;
 import field.core.ui.text.embedded.CustomInsertDrawing.iInsertRenderingContext;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
+import field.math.abstraction.IAcceptor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +21,7 @@ class MinimalExpandable extends JComponent implements iAcceptsInsertRenderingCon
     public float maxCollapse = 2f;
     public float collapseness = maxCollapse;
     public boolean isCollapsing = true;
-    public iUpdateable animationThread;
+    public IUpdateable animationThread;
     protected int height = 14;
     protected boolean shouldColapseOnOff = false;
     protected float alignment = 0.9f;
@@ -113,7 +113,7 @@ class MinimalExpandable extends JComponent implements iAcceptsInsertRenderingCon
     protected iInsertRenderingContext irc;
 
     void newAnimationThread() {
-        Launcher.getLauncher().registerUpdateable(animationThread = new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(animationThread = new IUpdateable() {
             public
             void update() {
                 if (isCollapsing && (collapseness >= maxCollapse)) {
@@ -149,13 +149,13 @@ class MinimalExpandable extends JComponent implements iAcceptsInsertRenderingCon
         });
     }
 
-    iUpdateable interpolationThread;
+    IUpdateable interpolationThread;
 
-    void newInterpolationThread(final int frames, final iAcceptor<Integer> call) {
-        interpolationThread = new iUpdateable() {
+    void newInterpolationThread(final int frames, final IAcceptor<Integer> call) {
+        interpolationThread = new IUpdateable() {
 
             int f = frames;
-            iAcceptor<Integer> callback = call;
+            IAcceptor<Integer> callback = call;
 
             @Woven
             @Yield

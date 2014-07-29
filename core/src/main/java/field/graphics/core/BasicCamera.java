@@ -4,8 +4,8 @@ import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.core.util.FieldPyObjectAdaptor.iExtensible;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iSceneListElement;
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IProvider;
 import field.math.linalg.*;
 import field.math.util.CubicTools;
 import field.util.Dict;
@@ -235,7 +235,7 @@ class BasicCamera extends BasicUtilities.OnePassListElement implements iBasicCam
     }
 
     public static
-    class State implements Serializable, iBlendable<State>, iExtensible {
+    class State implements Serializable, IBlendable<State>, iExtensible {
         private static final long serialVersionUID = 1L;
 
         /**
@@ -1273,8 +1273,8 @@ class BasicCamera extends BasicUtilities.OnePassListElement implements iBasicCam
 
     @HiddenInAutocomplete
     public
-    iProvider<Vector3> getPositionProvider() {
-        return new iProvider<Vector3>() {
+    IProvider<Vector3> getPositionProvider() {
+        return new IProvider<Vector3>() {
             public
             Vector3 get() {
                 return getPosition(null);

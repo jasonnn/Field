@@ -1,8 +1,8 @@
 package field.math.linalg;
 
-import field.math.abstraction.iBlendAlgebra;
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iDistanceAlgebra;
+import field.math.abstraction.IBlendAlgebra;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IDistanceAlgebra;
 import field.math.util.CubicTools;
 import org.python.core.*;
 
@@ -17,11 +17,8 @@ import java.util.Random;
  */
 public
 class Vector3 implements java.io.Serializable,
-                         Cloneable,
-                         iBlendAlgebra<Vector3>,
-                         iDistanceAlgebra<Vector3>,
-                         iToFloatArray,
-                         iBlendable<Vector3> {
+                         Cloneable, IBlendAlgebra<Vector3>, IDistanceAlgebra<Vector3>,
+                         iToFloatArray, IBlendable<Vector3> {
 
     static final long serialVersionUID = 5019834619484343712L;
 

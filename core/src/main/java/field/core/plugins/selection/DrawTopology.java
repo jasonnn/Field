@@ -1,8 +1,8 @@
 package field.core.plugins.selection;
 
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.BasicDrawingPlugin;
 import field.core.plugins.drawing.SimpleArrows;
 import field.core.plugins.drawing.opengl.CachedLine;
@@ -17,7 +17,7 @@ import field.core.windowing.components.RootComponent;
 import field.core.windowing.components.RootComponent.iPaintPeer;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
-import field.math.graph.iTopology;
+import field.math.graph.ITopology;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
@@ -67,12 +67,12 @@ class DrawTopology implements iPaintPeer {
         Vector4 color = new Vector4(0, 0, 0, 0.25f);
 
         public
-        List<CachedLine> connect(iVisualElement from, iVisualElement to, boolean isParent) {
+        List<CachedLine> connect(IVisualElement from, IVisualElement to, boolean isParent) {
 
             if (a == null) a = new SimpleArrows();
 
             if (isParent) {
-                iVisualElement t = to;
+                IVisualElement t = to;
                 to = from;
                 from = t;
             }
@@ -114,7 +114,7 @@ class DrawTopology implements iPaintPeer {
     public
     interface iTopologyDrawer {
         public
-        List<CachedLine> connect(iVisualElement from, iVisualElement to, boolean isParent);
+        List<CachedLine> connect(IVisualElement from, IVisualElement to, boolean isParent);
     }
 
     static List<Pair<Compass, Compass>> options = new ArrayList<Pair<Compass, Compass>>();
@@ -130,8 +130,8 @@ class DrawTopology implements iPaintPeer {
 
     public static
     void addTopologyAsSelectionAxis(final String name,
-                                    final iVisualElement root,
-                                    final iTopology<iVisualElement> t,
+                                    final IVisualElement root,
+                                    final ITopology<IVisualElement> t,
                                     iTopologyDrawer drawer) {
         addTopologyAsSelectionAxis(name,
                                    root,
@@ -145,8 +145,8 @@ class DrawTopology implements iPaintPeer {
 
     public static
     void addTopologyAsSelectionAxis(String name,
-                                    iVisualElement root,
-                                    iTopology<iVisualElement> top,
+                                    IVisualElement root,
+                                    ITopology<IVisualElement> top,
                                     iTopologyDrawer drawer,
                                     String cng,
                                     String png,
@@ -160,8 +160,8 @@ class DrawTopology implements iPaintPeer {
     public static
     void addTopologyAsSelectionAxis(SelectionSetDriver driver,
                                     final String name,
-                                    final iVisualElement root,
-                                    final iTopology<iVisualElement> t,
+                                    final IVisualElement root,
+                                    final ITopology<IVisualElement> t,
                                     iTopologyDrawer drawer,
                                     final String childrenNameGroup,
                                     final String parentsNameGroup,
@@ -181,11 +181,11 @@ class DrawTopology implements iPaintPeer {
             };
 
             public
-            void constructNodesForSelected(Set<iVisualElement> everything,
-                                           iVisualElement oneThning,
+            void constructNodesForSelected(Set<IVisualElement> everything,
+                                           IVisualElement oneThning,
                                            SelectionSetNode parent) {
                 {
-                    List<iVisualElement> c = t.getChildrenOf(oneThning);
+                    List<IVisualElement> c = t.getChildrenOf(oneThning);
                     if (c != null && c.size() > 0) {
                         SelectionSetNode to = parent;
                         if (c.size() > 1) {
@@ -194,17 +194,17 @@ class DrawTopology implements iPaintPeer {
                             parent.addChild(p1);
                             to = p1;
                         }
-                        for (final iVisualElement v : c) {
+                        for (final IVisualElement v : c) {
                             to.addChild(new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
 
                                 public
-                                void begin(Set<iVisualElement> everything,
-                                           Set<iVisualElement> currentlySelected,
-                                           Set<iVisualElement> previousCache) {
+                                void begin(Set<IVisualElement> everything,
+                                           Set<IVisualElement> currentlySelected,
+                                           Set<IVisualElement> previousCache) {
                                 }
 
                                 public
-                                boolean is(iVisualElement e) {
+                                boolean is(IVisualElement e) {
                                     return e == v;
                                 }
                             }, childName + SelectionSetDriver.nameFor(v)), null, SelectionSetNodeType.saved));
@@ -212,7 +212,7 @@ class DrawTopology implements iPaintPeer {
                     }
                 }
                 {
-                    List<iVisualElement> c = t.getParentsOf(oneThning);
+                    List<IVisualElement> c = t.getParentsOf(oneThning);
                     if (c != null && c.size() > 0) {
                         SelectionSetNode to = parent;
                         if (c.size() > 1) {
@@ -221,17 +221,17 @@ class DrawTopology implements iPaintPeer {
                             parent.addChild(p1);
                             to = p1;
                         }
-                        for (final iVisualElement v : c) {
+                        for (final IVisualElement v : c) {
                             to.addChild(new SelectionSetNode(new SelectionSet(new iSelectionPredicate() {
 
                                 public
-                                void begin(Set<iVisualElement> everything,
-                                           Set<iVisualElement> currentlySelected,
-                                           Set<iVisualElement> previousCache) {
+                                void begin(Set<IVisualElement> everything,
+                                           Set<IVisualElement> currentlySelected,
+                                           Set<IVisualElement> previousCache) {
                                 }
 
                                 public
-                                boolean is(iVisualElement e) {
+                                boolean is(IVisualElement e) {
                                     return e == v;
                                 }
                             }, parentName + SelectionSetDriver.nameFor(v)), null, SelectionSetNodeType.saved));
@@ -247,18 +247,18 @@ class DrawTopology implements iPaintPeer {
             }
 
             public
-            void selectionChanged(Set<iVisualElement> s) {
+            void selectionChanged(Set<IVisualElement> s) {
             }
 
             public
             void start() {
-                RootComponent g = iVisualElement.rootComponent.get(root);
+                RootComponent g = IVisualElement.rootComponent.get(root);
                 g.addPaintPeer(peer);
             }
 
             public
             void stop() {
-                RootComponent g = iVisualElement.rootComponent.get(root);
+                RootComponent g = IVisualElement.rootComponent.get(root);
                 g.removePaintPeer(peer);
             }
         });
@@ -292,8 +292,8 @@ class DrawTopology implements iPaintPeer {
     }
 
     public static
-    <T> iTopology<T> topoologyFromList(final List<T> t) {
-        return new iTopology<T>() {
+    <T> ITopology<T> topoologyFromList(final List<T> t) {
+        return new ITopology<T>() {
             public
             java.util.List<T> getChildrenOf(T of) {
                 int a = t.indexOf(of);
@@ -310,36 +310,36 @@ class DrawTopology implements iPaintPeer {
         };
     }
 
-    private final iVisualElement root;
+    private final IVisualElement root;
 
     private final GLComponentWindow window;
 
-    List<Pair<iTopology<iVisualElement>, iTopologyDrawer>> toDraw =
-            new ArrayList<Pair<iTopology<iVisualElement>, iTopologyDrawer>>();
+    List<Pair<ITopology<IVisualElement>, iTopologyDrawer>> toDraw =
+            new ArrayList<Pair<ITopology<IVisualElement>, iTopologyDrawer>>();
 
     boolean selectedOnly = false;
 
     public
-    DrawTopology(iVisualElement root) {
+    DrawTopology(IVisualElement root) {
         this.root = root;
 
-        window = iVisualElement.enclosingFrame.get(root);
+        window = IVisualElement.enclosingFrame.get(root);
     }
 
     public
-    void add(iTopology<iVisualElement> t, iTopologyDrawer drawer) {
-        toDraw.add(new Pair<iTopology<iVisualElement>, iTopologyDrawer>(t, drawer));
+    void add(ITopology<IVisualElement> t, iTopologyDrawer drawer) {
+        toDraw.add(new Pair<ITopology<IVisualElement>, iTopologyDrawer>(t, drawer));
     }
 
     public
     void paint(RootComponent inside) {
 
-        List<iVisualElement> all = null;
+        List<IVisualElement> all = null;
         if (selectedOnly) {
-            SelectionGroup<iComponent> selection = iVisualElement.selectionGroup.get(root);
-            all = new ArrayList<iVisualElement>();
+            SelectionGroup<iComponent> selection = IVisualElement.selectionGroup.get(root);
+            all = new ArrayList<IVisualElement>();
             for (iComponent c : selection.getSelection()) {
-                iVisualElement ve = c.getVisualElement();
+                IVisualElement ve = c.getVisualElement();
                 if (ve != null) all.add(ve);
             }
         }
@@ -349,18 +349,18 @@ class DrawTopology implements iPaintPeer {
 
         List<CachedLine> cl = new ArrayList<CachedLine>();
 
-        for (iVisualElement v : all) {
-            for (Pair<iTopology<iVisualElement>, iTopologyDrawer> p : toDraw) {
+        for (IVisualElement v : all) {
+            for (Pair<ITopology<IVisualElement>, iTopologyDrawer> p : toDraw) {
                 {
-                    List<iVisualElement> c = p.left.getChildrenOf(v);
-                    for (iVisualElement vv : c) {
+                    List<IVisualElement> c = p.left.getChildrenOf(v);
+                    for (IVisualElement vv : c) {
                         List<CachedLine> cls = p.right.connect(v, vv, false);
                         if (cls != null) cl.addAll(cls);
                     }
                 }
                 {
-                    List<iVisualElement> c = p.left.getParentsOf(v);
-                    for (iVisualElement vv : c) {
+                    List<IVisualElement> c = p.left.getParentsOf(v);
+                    for (IVisualElement vv : c) {
                         List<CachedLine> cls = p.right.connect(v, vv, true);
                         if (cls != null) cl.addAll(cls);
                     }

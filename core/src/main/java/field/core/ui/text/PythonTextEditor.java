@@ -12,7 +12,7 @@ import field.bytecode.protect.annotations.NextUpdate;
 import field.bytecode.protect.trampoline.TrampolineClassLoader;
 import field.core.Constants;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.execution.PythonInterface;
 import field.core.ui.SmallMenu.iKeystrokeUpdate;
 import field.core.ui.text.protect.ClassDocumentationProtect.Comp;
@@ -23,11 +23,11 @@ import field.core.ui.text.rulers.ExecutionRuler;
 import field.core.ui.text.rulers.StyledTextPositionSystem;
 import field.core.util.FieldPyObjectAdaptor.PyExtensibleJavaInstance;
 import field.core.util.LocalFuture;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
 import field.math.linalg.*;
-import field.namespace.generic.Bind.iFunction2;
+import field.namespace.generic.IFunction2;
 import field.namespace.generic.ReflectionTools;
 import field.util.PythonUtils;
 import org.eclipse.swt.SWT;
@@ -139,10 +139,10 @@ class PythonTextEditor extends BaseTextEditor2 {
 
     }
 
-    iVisualElement inside;
+    IVisualElement inside;
 
     public
-    void setInside(iVisualElement inside) {
+    void setInside(IVisualElement inside) {
         this.inside = inside;
     }
 
@@ -165,7 +165,7 @@ class PythonTextEditor extends BaseTextEditor2 {
     public int outputLength = 1024 * 2;
 
     public final
-    class OutputFlusher implements iUpdateable {
+    class OutputFlusher implements IUpdateable {
 
         TextStyle inputStyle;
         TextStyle outputStyle;
@@ -2323,7 +2323,7 @@ class PythonTextEditor extends BaseTextEditor2 {
 
     @Override
     protected
-    boolean completionKeyHandle(String leftText, LinkedHashMap<String, iUpdateable> items, final iKeystrokeUpdate u) {
+    boolean completionKeyHandle(String leftText, LinkedHashMap<String, IUpdateable> items, final iKeystrokeUpdate u) {
         leftText = leftText.trim();
         // System.out.println(" completion key handle2 <" + leftText +
         // ">");
@@ -2360,7 +2360,7 @@ class PythonTextEditor extends BaseTextEditor2 {
     private
     boolean interpretKeyHandleCompletionObject(final Object ex,
                                                final String after,
-                                               LinkedHashMap<String, iUpdateable> items,
+                                               LinkedHashMap<String, IUpdateable> items,
                                                final iKeystrokeUpdate u) {
         // System.out.println(" interpret key handle2 completion object <"
         // + ex + "> <" + (ex == null ? null : ex.getClass()) +
@@ -2378,7 +2378,7 @@ class PythonTextEditor extends BaseTextEditor2 {
             return true;
         }
         if (ex instanceof Map.Entry) {
-            items.put("   <b>" + ((Map.Entry) ex).getKey() + "</b>", new iUpdateable() {
+            items.put("   <b>" + ((Map.Entry) ex).getKey() + "</b>", new IUpdateable() {
 
                 @Override
                 public
@@ -2393,7 +2393,7 @@ class PythonTextEditor extends BaseTextEditor2 {
         if (ex instanceof PyObject) {
             PyObject a = ((PyObject) ex).__findattr__("__completions__");
             if (a != null) {
-                iFunction2 f = Py.tojava(a, iFunction2.class);
+                IFunction2 f = Py.tojava(a, IFunction2.class);
                 Object res = f.f(ex, after);
                 interpretKeyHandleCompletionObject(res, after, items, u);
                 return true;
@@ -2406,7 +2406,7 @@ class PythonTextEditor extends BaseTextEditor2 {
         }
         if (ex instanceof String) {
 
-            items.put("   <b>" + ex + "</b>", new iUpdateable() {
+            items.put("   <b>" + ex + "</b>", new IUpdateable() {
 
                 @Override
                 public
@@ -2421,7 +2421,7 @@ class PythonTextEditor extends BaseTextEditor2 {
 
         if (ex instanceof LocalFuture) {
             items.put("Waiting...", null);
-            ((LocalFuture) ex).addContinuation(new iUpdateable() {
+            ((LocalFuture) ex).addContinuation(new IUpdateable() {
 
                 public
                 void update() {
@@ -2467,7 +2467,7 @@ class PythonTextEditor extends BaseTextEditor2 {
                 ccc.enabled = false;
                 ccc.text = "waiting...";
 
-                ((LocalFuture) ret).addContinuation(new iUpdateable() {
+                ((LocalFuture) ret).addContinuation(new IUpdateable() {
 
                     public
                     void update() {

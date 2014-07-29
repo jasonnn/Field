@@ -1,8 +1,8 @@
 package field.core.windowing;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.python.PythonPluginEditor;
 import field.core.ui.text.rulers.StyledTextPositionSystem;
@@ -34,18 +34,18 @@ class EditorSpaceBox {
     public static final VisualElementProperty<String> isEditorSpace_belongsToProperty =
             new VisualElementProperty<String>("isEditorSpace_belongsToProperty");
     private final GLComponentWindow window;
-    private final iVisualElement root;
+    private final IVisualElement root;
 
     public
-    EditorSpaceBox(GLComponentWindow window, iVisualElement root) {
+    EditorSpaceBox(GLComponentWindow window, IVisualElement root) {
         this.window = window;
         this.root = root;
     }
 
     static final boolean disable = true;
 
-    HashMap<iVisualElement, Pair<Rect, StyledTextPositionSystem.Position>> frozen =
-            new HashMap<iVisualElement, Pair<Rect, StyledTextPositionSystem.Position>>();
+    HashMap<IVisualElement, Pair<Rect, StyledTextPositionSystem.Position>> frozen =
+            new HashMap<IVisualElement, Pair<Rect, StyledTextPositionSystem.Position>>();
     private Vector4 frozenAt;
     private ArrayList<Vector2> frozenAtLineMap;
 
@@ -56,7 +56,7 @@ class EditorSpaceBox {
         try {
             ComponentContainer root = window.getRoot();
 
-            frozen = new HashMap<iVisualElement, Pair<Rect, StyledTextPositionSystem.Position>>();
+            frozen = new HashMap<IVisualElement, Pair<Rect, StyledTextPositionSystem.Position>>();
             frozenAt = new Vector4(window.getXScale(),
                                    window.getYScale(),
                                    window.getXTranslation(),
@@ -102,7 +102,7 @@ class EditorSpaceBox {
             PythonPluginEditor p = (PythonPluginEditor) PythonPluginEditor.python_plugin.get(root);
             StyledText t = p.getEditor().getInputEditor();
 
-            iVisualElement current = p.getEditor().getThisBox();
+            IVisualElement current = p.getEditor().getThisBox();
             VisualElementProperty currentProp = p.getEditor().getThisProperty();
 
             Vector4 thawAt = new Vector4(window.getXScale(),
@@ -117,7 +117,7 @@ class EditorSpaceBox {
             // thrawAtLineMap.equals(frozenAtLineMap)) return;
 
             boolean changed = false;
-            for (Map.Entry<iVisualElement, Pair<Rect, StyledTextPositionSystem.Position>> e : frozen.entrySet()) {
+            for (Map.Entry<IVisualElement, Pair<Rect, StyledTextPositionSystem.Position>> e : frozen.entrySet()) {
                 Rect r = transform(e.getValue(),
                                    frozenAt,
                                    thawAt,
@@ -136,20 +136,20 @@ class EditorSpaceBox {
 
                 if ((bt != null && bt.get(root) != null && bt.get(root) != current) || (btp != null
                                                                                         && !btp.equals(currentProp))) {
-                    iComponent local = iVisualElement.localView.get(e.getKey());
+                    iComponent local = IVisualElement.localView.get(e.getKey());
                     if (local instanceof DraggableComponent) ((DraggableComponent) local).setHidden(true);
                     else if (local instanceof PlainDraggableComponent)
                         ((PlainDraggableComponent) local).setHidden(true);
                 }
                 else {
-                    iComponent local = iVisualElement.localView.get(e.getKey());
+                    iComponent local = IVisualElement.localView.get(e.getKey());
                     if (local instanceof DraggableComponent) ((DraggableComponent) local).setHidden(false);
                     else if (local instanceof PlainDraggableComponent)
                         ((PlainDraggableComponent) local).setHidden(false);
                 }
 
                 e.getKey()
-                 .getProperty(iVisualElement.overrides)
+                 .getProperty(IVisualElement.overrides)
                  .shouldChangeFrame(e.getKey(), r, e.getKey().getFrame(null), true);
             }
 
@@ -192,7 +192,7 @@ class EditorSpaceBox {
 
     protected
     void doFreeze(iComponent root) {
-        iVisualElement x = root.getVisualElement();
+        IVisualElement x = root.getVisualElement();
 
         PythonPluginEditor p = (PythonPluginEditor) PythonPluginEditor.python_plugin.get(this.root);
         StyledText t = p.getEditor().getInputEditor();

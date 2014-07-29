@@ -327,7 +327,7 @@ class DirectLine {
             return;
         }
 
-        //boolean skip = false;
+        //boolean SKIP = false;
 
         HashSet<LineAdaptor> remove = new LinkedHashSet<LineAdaptor>();
 

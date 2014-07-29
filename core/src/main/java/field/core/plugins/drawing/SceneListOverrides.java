@@ -1,10 +1,10 @@
 package field.core.plugins.drawing;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.plugins.drawing.threed.ArcBall;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.SelectionGroup;
@@ -14,7 +14,8 @@ import field.graphics.core.BasicCamera.State;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicSceneList;
 import field.graphics.core.CoreHelpers;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector2;
 import org.eclipse.swt.widgets.Event;
 
@@ -41,7 +42,7 @@ class SceneListOverrides extends DefaultOverride {
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         if (source == forElement) {
 
             CoreHelpers.glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -85,8 +86,8 @@ class SceneListOverrides extends DefaultOverride {
                             }
                         };
 
-                        iVisualElement.glassComponent.get(forElement).addTransparentMousePeer(ball);
-                        iVisualElement.rootComponent.get(forElement).addPaintPeer(ball);
+                        IVisualElement.glassComponent.get(forElement).addTransparentMousePeer(ball);
+                        IVisualElement.rootComponent.get(forElement).addPaintPeer(ball);
 
                     }
 
@@ -143,12 +144,12 @@ class SceneListOverrides extends DefaultOverride {
     boolean isSelected() {
         try {
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
                                                            .getProperty(forElement,
-                                                                        iVisualElement.selectionGroup,
+                                                                        IVisualElement.selectionGroup,
                                                                         group);
             final SelectionGroup<iComponent> g = group.get();
-            if (g.getSelection().contains(iVisualElement.localView.get(forElement))) return true;
+            if (g.getSelection().contains(IVisualElement.localView.get(forElement))) return true;
             return false;
         } catch (NullPointerException e) {
             return false;
@@ -157,19 +158,19 @@ class SceneListOverrides extends DefaultOverride {
 
     @Override
     public
-    <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
         if (source == forElement) {
             if (prop.equals(canvas)) {
                 ref.set((T) list);
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
             if (prop.equals(canvasLeft)) {
                 ref.set((T) left);
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
             if (prop.equals(canvasRight)) {
                 ref.set((T) right);
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
         }
         return super.getProperty(source, prop, ref);

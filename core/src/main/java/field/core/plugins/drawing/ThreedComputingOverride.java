@@ -1,8 +1,8 @@
 package field.core.plugins.drawing;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.plugins.drawing.opengl.*;
 import field.core.plugins.drawing.opengl.OnCanvasLines.DirectLayer;
 import field.core.plugins.drawing.threed.ArcBall;
@@ -15,7 +15,8 @@ import field.graphics.core.BasicCamera.State;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicSceneList;
 import field.graphics.core.CoreHelpers;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import org.eclipse.swt.widgets.Event;
@@ -65,10 +66,10 @@ class ThreedComputingOverride extends SplineComputingOverride {
 
     public static
     class BasicSceneList_fscshim extends BasicSceneList implements iHandlesAttributes {
-        final iVisualElement forElement;
+        final IVisualElement forElement;
 
         public
-        BasicSceneList_fscshim(iVisualElement forElement) {this.forElement = forElement;}
+        BasicSceneList_fscshim(IVisualElement forElement) {this.forElement = forElement;}
 
         public
         float width() {
@@ -103,7 +104,7 @@ class ThreedComputingOverride extends SplineComputingOverride {
 
     @Override
     public
-    DefaultOverride setVisualElement(iVisualElement ve) {
+    DefaultOverride setVisualElement(IVisualElement ve) {
         DefaultOverride o = super.setVisualElement(ve);
         ve.setProperty(shouldAutoComputeRect, false);
         // ve.setProperty(noFrame, true);
@@ -119,7 +120,7 @@ class ThreedComputingOverride extends SplineComputingOverride {
     void makeDefaultContext() {
         ThreedContext c = context.get(forElement);
         if (c == null) {
-            GLComponentWindow element = iVisualElement.enclosingFrame.get(forElement);
+            GLComponentWindow element = IVisualElement.enclosingFrame.get(forElement);
             if (element != null) {
 
                 // defaultContext = c = new
@@ -227,7 +228,7 @@ class ThreedComputingOverride extends SplineComputingOverride {
                     }
                 };
 
-                iVisualElement.glassComponent.get(forElement).addTransparentMousePeer(mousePeer);
+                IVisualElement.glassComponent.get(forElement).addTransparentMousePeer(mousePeer);
 
                 // default camera
                 State state = c.getTransformState();
@@ -264,8 +265,8 @@ class ThreedComputingOverride extends SplineComputingOverride {
                 };
                 ball.setThreedContext(defaultContext);
 
-                iVisualElement.glassComponent.get(forElement).addTransparentMousePeer(ball);
-                iVisualElement.rootComponent.get(forElement).addPaintPeer(ball);
+                IVisualElement.glassComponent.get(forElement).addTransparentMousePeer(ball);
+                IVisualElement.rootComponent.get(forElement).addPaintPeer(ball);
             }
         }
         context.set(forElement, forElement, c);
@@ -282,7 +283,7 @@ class ThreedComputingOverride extends SplineComputingOverride {
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         if (source == forElement) {
             State cameraState = camera.get(forElement);
             if (cameraState != null) cameraState = cameraState.duplicate();
@@ -454,7 +455,7 @@ class ThreedComputingOverride extends SplineComputingOverride {
 
     @Override
     public
-    VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
+    TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event) {
 
         //System.out.println(" hke <" + newSource + "> <" + event + "> <" + isSelected() + ">");
 
@@ -480,19 +481,19 @@ class ThreedComputingOverride extends SplineComputingOverride {
 
     @Override
     public
-    <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
         if (source == forElement) {
             if (prop.equals(canvas)) {
                 ref.set((T) list);
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
             if (prop.equals(canvasLeft)) {
                 ref.set((T) left);
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
             if (prop.equals(canvasRight)) {
                 ref.set((T) right);
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
 
             if (prop.equals(direct)) {
@@ -505,7 +506,7 @@ class ThreedComputingOverride extends SplineComputingOverride {
                 else {
                     ref.set((T) forElement.getProperty(direct), forElement);
                 }
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
         }
         return super.getProperty(source, prop, ref);
@@ -513,10 +514,10 @@ class ThreedComputingOverride extends SplineComputingOverride {
 
     @Override
     public
-    VisitCode deleted(iVisualElement source) {
+    TraversalHint deleted(IVisualElement source) {
         if (source == forElement) {
-            iVisualElement.glassComponent.get(forElement).removeMousePeer(ball);
-            iVisualElement.rootComponent.get(forElement).removePaintPeer(ball);
+            IVisualElement.glassComponent.get(forElement).removeMousePeer(ball);
+            IVisualElement.rootComponent.get(forElement).removePaintPeer(ball);
         }
         return super.deleted(source);
     }

@@ -1,6 +1,6 @@
 package field.core.network;
 
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.util.TaskQueue;
 
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 public
-class SimpleUDPListener implements iUpdateable {
+class SimpleUDPListener implements IUpdateable {
 
     private final DatagramSocket socket;
     private final Thread t;

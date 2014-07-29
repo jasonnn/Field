@@ -1,8 +1,8 @@
 package field.math.linalg;
 
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iInplaceProvider;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IInplaceProvider;
+import field.math.abstraction.IProvider;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,8 +11,7 @@ import java.util.List;
 // need to turn this into QuatVec again, the math into and out of matrix is unstable and expensive
 public
 class CoordinateFrame implements iCoordinateFrame.iMutable,
-                                 iInplaceProvider<iCoordinateFrame.iMutable>,
-                                 iBlendable<CoordinateFrame>,
+                                 IInplaceProvider<iCoordinateFrame.iMutable>, IBlendable<CoordinateFrame>,
                                  Serializable {
 
     static final long serialVersionUID = 5132350781464648322L;
@@ -266,8 +265,8 @@ class CoordinateFrame implements iCoordinateFrame.iMutable,
     }
 
     public
-    iProvider<Vector3> position() {
-        return new iProvider<Vector3>() {
+    IProvider<Vector3> position() {
+        return new IProvider<Vector3>() {
             public
             Vector3 get() {
                 return getTranslation(null);

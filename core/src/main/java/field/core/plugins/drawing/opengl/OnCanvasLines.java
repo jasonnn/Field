@@ -4,9 +4,9 @@ import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.ThreedComputingOverride;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
@@ -24,8 +24,8 @@ import field.graphics.dynamic.DynamicMesh_long;
 import field.graphics.dynamic.DynamicPointlist;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.graphics.windowing.MouseEventDelegate;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
+import field.launch.IUpdateable;
+import field.math.abstraction.IProvider;
 import field.util.HashMapOfLists;
 import field.util.TaskQueue;
 import org.eclipse.swt.events.MouseEvent;
@@ -62,16 +62,16 @@ class OnCanvasLines {
     private final iAcceptsSceneListElement on;
 
     public
-    OnCanvasLines(iVisualElement element) {
-        this(iVisualElement.enclosingFrame.get(element).getSceneList(), element);
+    OnCanvasLines(IVisualElement element) {
+        this(IVisualElement.enclosingFrame.get(element).getSceneList(), element);
     }
 
     TaskQueue animationQueue = new TaskQueue();
 
     public
-    OnCanvasLines(iAcceptsSceneListElement on, final iVisualElement element) {
+    OnCanvasLines(iAcceptsSceneListElement on, final IVisualElement element) {
 
-        iVisualElementOverrides o = iVisualElement.overrides.get(element);
+        IVisualElementOverrides o = IVisualElement.overrides.get(element);
         final ThreedComputingOverride canvas;
         if (o instanceof ThreedComputingOverride) {
             canvas = ((ThreedComputingOverride) o);
@@ -115,13 +115,13 @@ class OnCanvasLines {
         }
         else interaction = null;
 
-        GLComponentWindow window = iVisualElement.enclosingFrame.get(element);
+        GLComponentWindow window = IVisualElement.enclosingFrame.get(element);
 
         if (on instanceof BasicGLSLangProgram) {
 
             ((BasicGLSLangProgram) on).getWhen()
                                       .getMap(StandardPass.render)
-                                      .register("ocpl" + System.identityHashCode(this), new iUpdateable() {
+                                      .register("ocpl" + System.identityHashCode(this), new IUpdateable() {
 
                                           @Override
                                           public
@@ -147,7 +147,7 @@ class OnCanvasLines {
                                               }
                                               context.windowDisplayExit();
 
-                                              if (work) iVisualElement.dirty.set(element, element, true);
+                                              if (work) IVisualElement.dirty.set(element, element, true);
 
                                           }
                                       });
@@ -177,7 +177,7 @@ class OnCanvasLines {
                         resolve(o.fallback);
                         work |= o.didWork;
                     }
-                    if (work) iVisualElement.dirty.set(element, element, true);
+                    if (work) IVisualElement.dirty.set(element, element, true);
 
                     return super.head(calledOn, args);
                 }
@@ -192,7 +192,7 @@ class OnCanvasLines {
             Cont.linkWith(window, GLComponentWindow.method_doRender, arun);
         }
 
-        RootComponent rootComponent = iVisualElement.rootComponent.get(element);
+        RootComponent rootComponent = IVisualElement.rootComponent.get(element);
 
         if (interaction != null) {
             iMousePeer mousePeer = new iMousePeer() {
@@ -403,7 +403,7 @@ class OnCanvasLines {
 
     private
     void resolve(Object o) {
-        if (o instanceof iProvider) o = ((iProvider) o).get();
+        if (o instanceof IProvider) o = ((IProvider) o).get();
 
         if (o instanceof PyObject) o = filter((PyObject) o);
 

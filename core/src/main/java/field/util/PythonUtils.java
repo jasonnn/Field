@@ -8,7 +8,7 @@ import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
 import field.bytecode.protect.iRegistersUpdateable;
 import field.bytecode.protect.trampoline.Trampoline2;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.execution.PythonGeneratorStack;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem;
@@ -16,13 +16,13 @@ import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.plugins.PythonOverridden;
 import field.core.plugins.PythonOverridden.Callable;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.abstraction.*;
 import field.math.util.ComplexCubicFloat;
 import field.math.util.CubicInterpolatorDynamic;
 import field.namespace.generic.Adaptation;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 import field.util.collect.tuple.Triple;
 import field.namespace.key.FKey;
@@ -49,7 +49,7 @@ public
 class PythonUtils {
 
     public static
-    class FKeyByName implements iFloatProvider {
+    class FKeyByName implements IFloatProvider {
         private final String name;
 
         private final float def;
@@ -69,7 +69,7 @@ class PythonUtils {
     }
 
     public static
-    class OKeyByName<T> implements iProvider<T> {
+    class OKeyByName<T> implements IProvider<T> {
         private final String name;
 
         private final T def;
@@ -103,11 +103,11 @@ class PythonUtils {
     }
 
     public static
-    iDoubleProvider doubleFor(final Object in, String name) {
+    IDoubleProvider doubleFor(final Object in, String name) {
         try {
             final Field declaredField = in.getClass().getDeclaredField(name);
             declaredField.setAccessible(true);
-            return new iDoubleProvider() {
+            return new IDoubleProvider() {
                 public
                 double evaluate() {
                     try {
@@ -126,7 +126,7 @@ class PythonUtils {
     }
 
     public static
-    iFloatProvider floatFor(final Object in, String name) {
+    IFloatProvider floatFor(final Object in, String name) {
         try {
 
             final Field declaredField = ReflectionTools.getFirstFIeldCalled(in.getClass(), name);
@@ -135,7 +135,7 @@ class PythonUtils {
             // in.getClass().getDeclaredField
             // (name);
             declaredField.setAccessible(true);
-            return new iFloatProvider() {
+            return new IFloatProvider() {
                 public
                 float evaluate() {
                     try {
@@ -186,8 +186,8 @@ class PythonUtils {
     }
 
     public static
-    iFilter<Float, Float> asFilter(final float mul, final CubicInterpolatorDynamic<ComplexCubicFloat> blender) {
-        return new iFilter<Float, Float>() {
+    IFilter<Float, Float> asFilter(final float mul, final CubicInterpolatorDynamic<ComplexCubicFloat> blender) {
+        return new IFilter<Float, Float>() {
             public
             Float filter(Float value) {
                 return blender.get(value).value * mul;
@@ -196,11 +196,11 @@ class PythonUtils {
     }
 
     public static
-    iFunction<?, ?> asFunction(final PyObject o) {
-        return new iFunction<Object, Object>() {
+    IFunction<?, ?> asFunction(final PyObject o) {
+        return new IFunction<Object, Object>() {
 
             public
-            Object f(Object in) {
+            Object apply(Object in) {
                 return o.__call__(Py.java2py(in)).__tojava__(Object.class);
             }
         };
@@ -208,10 +208,10 @@ class PythonUtils {
     }
 
     public
-    iUpdateable asUpdateable(final PyObject o) {
+    IUpdateable asUpdateable(final PyObject o) {
         final CapturedEnvironment env =
                 (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment");
-        return new iUpdateable() {
+        return new IUpdateable() {
 
             public
             void update() {
@@ -227,20 +227,20 @@ class PythonUtils {
     }
 
     public
-    iUpdateable toUpdateable(Object o) {
-        if (o instanceof iUpdateable) return ((iUpdateable) o);
+    IUpdateable toUpdateable(Object o) {
+        if (o instanceof IUpdateable) return ((IUpdateable) o);
         if (o instanceof PyObject) return asUpdateable((PyObject) o);
         return null;
     }
 
     public static
-    Object call(iVisualElement forElement, Object function, Object arg) {
+    Object call(IVisualElement forElement, Object function, Object arg) {
 
         PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(forElement);
         Promise p = pss.promiseForKey(forElement);
         p.beginExecute();
         try {
-            if (function instanceof iFilter) return ((iFilter) function).filter(arg);
+            if (function instanceof IFilter) return ((IFilter) function).filter(arg);
             if (function instanceof PyObject) {
                 Object m = ((PyObject) function).__call__(Py.java2py(arg));
                 if (m instanceof PyObject) {
@@ -322,10 +322,10 @@ class PythonUtils {
     }
 
     public static
-    iFunction function(final PyFunction f) {
-        return new iFunction() {
+    IFunction function(final PyFunction f) {
+        return new IFunction() {
             public
-            Object f(Object in) {
+            Object apply(Object in) {
                 PyObject ins = Py.java2py(in);
                 PyObject g = f.__call__(new PyObject[]{ins}, new String[0]);
                 return g.__tojava__(Object.class);
@@ -355,7 +355,7 @@ class PythonUtils {
         PythonInterface.getPythonInterface().importJava("field.util.PythonUtils", "*");
         PythonInterface.getPythonInterface().importJava("field.core.ui.text.referencealgorithms", "*");
 
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             /** @see innards.iUpdateable#update() */
             public
@@ -456,8 +456,8 @@ class PythonUtils {
     }
 
     public
-    iFloatProvider provider(final PyFunction f, final float def) {
-        return new iFloatProvider() {
+    IFloatProvider provider(final PyFunction f, final float def) {
+        return new IFloatProvider() {
             /** @see innards.provider.iFloatProvider#evaluate() */
             public
             float evaluate() {
@@ -472,8 +472,8 @@ class PythonUtils {
     }
 
     public
-    iFloatProvider provider(final PyGenerator f, final float def) {
-        return new iFloatProvider() {
+    IFloatProvider provider(final PyGenerator f, final float def) {
+        return new IFloatProvider() {
             /** @see innards.provider.iFloatProvider#evaluate() */
             public
             float evaluate() {
@@ -489,8 +489,8 @@ class PythonUtils {
     }
 
     public
-    iFloatProvider provider(final PyObject varname) {
-        return new iFloatProvider() {
+    IFloatProvider provider(final PyObject varname) {
+        return new IFloatProvider() {
             public
             float evaluate() {
                 return ((Number) varname.__tojava__(Number.class)).floatValue();
@@ -499,8 +499,8 @@ class PythonUtils {
     }
 
     public
-    iFloatProvider provider(final PyTuple varname) {
-        return new iFloatProvider() {
+    IFloatProvider provider(final PyTuple varname) {
+        return new IFloatProvider() {
             public
             float evaluate() {
                 return ((Number) varname.__getitem__(0).__tojava__(Number.class)).floatValue();
@@ -509,8 +509,8 @@ class PythonUtils {
     }
 
     public
-    iFloatProvider provider(final String varname) {
-        return new iFloatProvider() {
+    IFloatProvider provider(final String varname) {
+        return new IFloatProvider() {
             public
             float evaluate() {
                 return ((Number) PythonInterface.getPythonInterface().getVariable(varname)).floatValue();
@@ -519,8 +519,8 @@ class PythonUtils {
     }
 
     public
-    iDoubleProvider providerDouble(final PyFunction f, final float def) {
-        return new iDoubleProvider() {
+    IDoubleProvider providerDouble(final PyFunction f, final float def) {
+        return new IDoubleProvider() {
             /** @see innards.provider.iFloatProvider#evaluate() */
             public
             double evaluate() {
@@ -535,11 +535,11 @@ class PythonUtils {
     }
 
     public
-    iProvider<Object> providerObject(final PyFunction f, final CapturedEnvironment inside) {
+    IProvider<Object> providerObject(final PyFunction f, final CapturedEnvironment inside) {
 
         //System.out.println(" creating provider object with environment <"+inside+">");
 
-        return new iProvider<Object>() {
+        return new IProvider<Object>() {
             /** @see innards.provider.iFloatProvider#evaluate() */
             public
             Object get() {
@@ -556,8 +556,8 @@ class PythonUtils {
     }
 
     public
-    iProvider<Object> providerObject(final PyFunction f, final Object def) {
-        return new iProvider<Object>() {
+    IProvider<Object> providerObject(final PyFunction f, final Object def) {
+        return new IProvider<Object>() {
             /** @see innards.provider.iFloatProvider#evaluate() */
             public
             Object get() {
@@ -621,7 +621,7 @@ class PythonUtils {
                 }
                 return r;
             }
-        }, new iFloatProvider.Constant(0.5f));
+        }, new IFloatProvider.Constant(0.5f));
     }
 
     public
@@ -738,7 +738,7 @@ class PythonUtils {
     public
     PythonGeneratorStack stackPrePost(final PyFunction pre,
                                       final PyGenerator g,
-                                      final iAcceptor<Object> progress,
+                                      final IAcceptor<Object> progress,
                                       final PyFunction post) {
         if (g == null) return null;
 
@@ -765,13 +765,13 @@ class PythonUtils {
             @Override
             protected
             void finished() {
-                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).end();
+                if (progress instanceof IPhasicAcceptor) ((IPhasicAcceptor) progress).end();
             }
 
             @Override
             protected
             void first() {
-                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).begin();
+                if (progress instanceof IPhasicAcceptor) ((IPhasicAcceptor) progress).begin();
             }
         };
         registeredFunctions.put(g, x);
@@ -784,13 +784,13 @@ class PythonUtils {
     public
     void stackPrePost(final PyFunction pre,
                       final PySequence g,
-                      final iAcceptor<PyObject> progress,
+                      final IAcceptor<PyObject> progress,
                       final PyFunction post) {
         if (g == null) return;
 
         final PyIterator gi = (PyIterator) g.__iter__();
 
-        PythonGeneratorStack x = new PythonGeneratorStack(new iProvider<Object>() {
+        PythonGeneratorStack x = new PythonGeneratorStack(new IProvider<Object>() {
             public
             Object get() {
                 PyObject a = gi.__iternext__();
@@ -815,13 +815,13 @@ class PythonUtils {
             @Override
             protected
             void finished() {
-                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).end();
+                if (progress instanceof IPhasicAcceptor) ((IPhasicAcceptor) progress).end();
             }
 
             @Override
             protected
             void first() {
-                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).begin();
+                if (progress instanceof IPhasicAcceptor) ((IPhasicAcceptor) progress).begin();
             }
         };
 
@@ -831,7 +831,7 @@ class PythonUtils {
     }
 
     public
-    void stackPrePost(final PyGenerator g, final iAcceptor<Object> progress, final CapturedEnvironment env) {
+    void stackPrePost(final PyGenerator g, final IAcceptor<Object> progress, final CapturedEnvironment env) {
         if (g == null) return;
 
         final PyIterator gi = (PyIterator) g.__iter__();
@@ -841,7 +841,7 @@ class PythonUtils {
             @Override
             protected
             void evaluatedTo(Object to) {
-                iAcceptor<Object> set = progress.set(to);
+                IAcceptor<Object> set = progress.set(to);
             }
 
             @Override
@@ -859,13 +859,13 @@ class PythonUtils {
             @Override
             protected
             void finished() {
-                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).end();
+                if (progress instanceof IPhasicAcceptor) ((IPhasicAcceptor) progress).end();
             }
 
             @Override
             protected
             void first() {
-                if (progress instanceof iPhasicAcceptor) ((iPhasicAcceptor) progress).begin();
+                if (progress instanceof IPhasicAcceptor) ((IPhasicAcceptor) progress).begin();
             }
         };
 
@@ -877,7 +877,7 @@ class PythonUtils {
     public
     void stackPrePost(final PyFunction pre, final PyGenerator g, final PyFunction post) {
         if (g == null) return;
-        PythonGeneratorStack x = new PythonGeneratorStack(new iProvider<Object>() {
+        PythonGeneratorStack x = new PythonGeneratorStack(new IProvider<Object>() {
             public
             Object get() {
                 PyObject a = g.__iternext__();
@@ -904,14 +904,14 @@ class PythonUtils {
     }
 
     public
-    iUpdateable start(iUpdateable u) {
+    IUpdateable start(IUpdateable u) {
         Launcher.getLauncher().registerUpdateable(u);
         return u;
     }
 
     public
     void start(final PyFunction f) {
-        iUpdateable up = new iUpdateable() {
+        IUpdateable up = new IUpdateable() {
             /** @see innards.iUpdateable#update() */
             public
             void update() {
@@ -924,7 +924,7 @@ class PythonUtils {
 
     public
     void start(final PyFunction f, iRegistersUpdateable r) {
-        iUpdateable up = new iUpdateable() {
+        IUpdateable up = new IUpdateable() {
             /** @see innards.iUpdateable#update() */
             public
             void update() {
@@ -944,7 +944,7 @@ class PythonUtils {
     public
     void start(final PyGenerator f, final CapturedEnvironment e) {
 
-        iUpdateable up = new iUpdateable() {
+        IUpdateable up = new IUpdateable() {
             public
             void update() {
                 if (e != null) e.enter();
@@ -964,14 +964,14 @@ class PythonUtils {
     }
 
     public
-    iUpdateable stop(iUpdateable u) {
+    IUpdateable stop(IUpdateable u) {
         Launcher.getLauncher().deregisterUpdateable(u);
         return u;
     }
 
     public
     void stop(final PyFunction f) {
-        iUpdateable up = (iUpdateable) registeredFunctions.remove(f);
+        IUpdateable up = (IUpdateable) registeredFunctions.remove(f);
         if (up != null) {
             try {
                 Launcher.getLauncher().deregisterUpdateable(up);
@@ -983,7 +983,7 @@ class PythonUtils {
 
     public
     void stop(final PyFunction f, iRegistersUpdateable r) {
-        iUpdateable up = (iUpdateable) registeredFunctions.remove(f);
+        IUpdateable up = (IUpdateable) registeredFunctions.remove(f);
         if (up != null) {
             try {
                 r.deregisterUpdateable(up);
@@ -995,7 +995,7 @@ class PythonUtils {
 
     public
     void stop(final PyGenerator f) {
-        iUpdateable up = (iUpdateable) registeredFunctions.remove(f);
+        IUpdateable up = (IUpdateable) registeredFunctions.remove(f);
         if (up != null) {
             try {
                 Launcher.getLauncher().deregisterUpdateable(up);
@@ -1015,9 +1015,9 @@ class PythonUtils {
 
     public
     Number toNumber(Object o) {
-        if (o instanceof iFloatProvider) return ((iFloatProvider) o).evaluate();
-        if (o instanceof iDoubleProvider) return ((iDoubleProvider) o).evaluate();
-        if (o instanceof iProvider) return toNumber(((iProvider) o).get());
+        if (o instanceof IFloatProvider) return ((IFloatProvider) o).evaluate();
+        if (o instanceof IDoubleProvider) return ((IDoubleProvider) o).evaluate();
+        if (o instanceof IProvider) return toNumber(((IProvider) o).get());
 
         if (o instanceof Number) return (Number) o;
         if (o instanceof PyIterator) {
@@ -1138,7 +1138,7 @@ class PythonUtils {
         final Callable c = PythonOverridden.callableForFunction(f,
                                                                 (CapturedEnvironment) PythonInterface.getPythonInterface()
                                                                                                      .getVariable("_environment"));
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
             public
             void update() {
                 c.call(null, new Object[]{});
@@ -1152,7 +1152,7 @@ class PythonUtils {
         final Callable c = PythonOverridden.callableForFunction(f,
                                                                 (CapturedEnvironment) PythonInterface.getPythonInterface()
                                                                                                      .getVariable("_environment"));
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
             int y = 0;
 
             public

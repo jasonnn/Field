@@ -2,10 +2,10 @@ package field.context;
 
 import field.context.Generator.Channel;
 import field.context.Generator.iTimeFor;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.iLaunchable;
-import field.launch.iUpdateable;
-import field.math.abstraction.iDoubleProvider;
+import field.math.abstraction.IDoubleProvider;
 
 public
 class GlazedGCTest implements iLaunchable {
@@ -34,7 +34,7 @@ class GlazedGCTest implements iLaunchable {
         });
 
 
-        final Culler<Banana> h = new Culler<GlazedGCTest.Banana>(b, new iDoubleProvider() {
+        final Culler<Banana> h = new Culler<GlazedGCTest.Banana>(b, new IDoubleProvider() {
 
             @Override
             public
@@ -43,7 +43,7 @@ class GlazedGCTest implements iLaunchable {
             }
         }, 500);
 
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             @Override
             public

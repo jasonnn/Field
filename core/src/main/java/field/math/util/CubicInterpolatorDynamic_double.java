@@ -1,6 +1,6 @@
 package field.math.util;
 
-import field.math.abstraction.iBlendable;
+import field.math.abstraction.IBlendable;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -11,7 +11,7 @@ import java.util.Comparator;
 
 
 public
-class CubicInterpolatorDynamic_double<T extends iBlendable<T>> implements Serializable {
+class CubicInterpolatorDynamic_double<T extends IBlendable<T>> implements Serializable {
 
     public
     class Sample implements Serializable {

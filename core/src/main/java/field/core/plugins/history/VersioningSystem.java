@@ -3,9 +3,9 @@ package field.core.plugins.history;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.core.ReferenceByIdMarshallingStrategy;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.Ref;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.Ref;
 import field.core.plugins.history.Versionings.*;
 import field.launch.SystemProperties;
 import field.util.HashMapOfLists;
@@ -103,8 +103,8 @@ class VersioningSystem {
 
     final String fullPathToRepositoryDirectory;
 
-    HashMapOfLists<iVisualElement, VisualElementProperty<?>> dirty =
-            new HashMapOfLists<iVisualElement, VisualElementProperty<?>>() {
+    HashMapOfLists<IVisualElement, VisualElementProperty<?>> dirty =
+            new HashMapOfLists<IVisualElement, VisualElementProperty<?>>() {
                 @Override
                 protected
                 Collection<VisualElementProperty<?>> newList() {
@@ -148,7 +148,7 @@ class VersioningSystem {
      * works through the journal, and the dirty list
      */
     public
-    void commitAll(Collection<iVisualElement> elements) {
+    void commitAll(Collection<IVisualElement> elements) {
 
         Iterator<iOperation> i = journal.iterator();
         while (i.hasNext()) {
@@ -169,7 +169,7 @@ class VersioningSystem {
             }
         }
 
-        for (iVisualElement element : elements) {
+        for (IVisualElement element : elements) {
             commitOutToFileStructureAndRepository(element);
         }
 
@@ -186,7 +186,7 @@ class VersioningSystem {
     // over to another program, which will commit everything in that
     // .xml file
     public
-    void fastCommit(List<iVisualElement> elements) {
+    void fastCommit(List<IVisualElement> elements) {
         commitAll(elements);
     }
 
@@ -197,7 +197,7 @@ class VersioningSystem {
 
     public
     void notifyCopyFileToProperty(String filename,
-                                  iVisualElement targetElement,
+                                  IVisualElement targetElement,
                                   VisualElementProperty<String> targetProperty) {
         File f = new File(fullPathToSheetDirectory + '/' + targetElement.getUniqueID());
         if (!f.exists()) f.mkdir();
@@ -211,7 +211,7 @@ class VersioningSystem {
     }
 
     public
-    void notifyElementCopied(iVisualElement copy, iVisualElement to) {
+    void notifyElementCopied(IVisualElement copy, IVisualElement to) {
         if (copy == null || to == null) return;
 
         commitOutToFileStructureAndRepository(copy);
@@ -225,21 +225,21 @@ class VersioningSystem {
     }
 
     public
-    void notifyElementDeleted(iVisualElement deleted) {
+    void notifyElementDeleted(IVisualElement deleted) {
         DeleteElementOp op = new DeleteElementOp();
         op.oldElement = pathFor(deleted, null);
         journal.add(op);
     }
 
     public
-    <T> void notifyPropertyDeleted(VisualElementProperty<T> property, iVisualElement deleted) {
+    <T> void notifyPropertyDeleted(VisualElementProperty<T> property, IVisualElement deleted) {
         DeletePropertyOp op = new DeletePropertyOp();
         op.oldProperty = pathFor(deleted, property);
         journal.add(op);
     }
 
     public
-    <T> void notifyPropertySet(VisualElementProperty<T> property, Ref<T> was, iVisualElement dest) {
+    <T> void notifyPropertySet(VisualElementProperty<T> property, Ref<T> was, IVisualElement dest) {
         if (journalingDisabled > 0) return;
         if (was.getStorageSource() == null || was.getStorageSource() == dest) {
             dirty.addToList(dest, property);
@@ -271,7 +271,7 @@ class VersioningSystem {
 
     // called on all elements when first loaded?
     public
-    void synchronizeElementWithFileStructure(iVisualElement to) {
+    void synchronizeElementWithFileStructure(IVisualElement to) {
 
         if (true) return;
 
@@ -317,7 +317,7 @@ class VersioningSystem {
     }
 
     private
-    void commitOutToFileStructureAndRepository(iVisualElement to, VisualElementProperty<?> property) {
+    void commitOutToFileStructureAndRepository(IVisualElement to, VisualElementProperty<?> property) {
 
         Path path = pathFor(to, property);
 
@@ -370,7 +370,7 @@ class VersioningSystem {
     }
 
     protected
-    void commitOutToFileStructureAndRepository(iVisualElement to) {
+    void commitOutToFileStructureAndRepository(IVisualElement to) {
         if (to == null) return;
 
         // go through journal and see if it has any
@@ -421,7 +421,7 @@ class VersioningSystem {
     }
 
     protected
-    void ensureUnderVersionControl(iVisualElement to) {
+    void ensureUnderVersionControl(IVisualElement to) {
 
         Path path = pathFor(to, null);
 
@@ -448,7 +448,7 @@ class VersioningSystem {
             }
         }
 
-        if (iVisualElement.doNotSave.getBoolean(to, false)) return;
+        if (IVisualElement.doNotSave.getBoolean(to, false)) return;
 
         if (useGit) scmAddDirectory(path.getFile());
 
@@ -471,7 +471,7 @@ class VersioningSystem {
     }
 
     protected
-    Versionings.Path pathFor(iVisualElement element, VisualElementProperty<?> property) {
+    Versionings.Path pathFor(IVisualElement element, VisualElementProperty<?> property) {
         return new Versionings.Path(fullPathToSheetDirectory,
                                     element.getUniqueID(),
                                     property == null ? Versionings.NoProperty : property.getName());

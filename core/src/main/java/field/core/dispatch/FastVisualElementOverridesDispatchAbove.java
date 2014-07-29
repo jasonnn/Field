@@ -1,9 +1,10 @@
 package field.core.dispatch;
 
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.launch.iUpdateable;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.launch.IUpdateable;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.util.Dict.Prop;
 import org.eclipse.swt.widgets.Event;
 
@@ -16,7 +17,7 @@ import java.util.*;
  * @author marc
  */
 public
-class FastVisualElementOverridesDispatchAbove implements iVisualElementOverrides {
+class FastVisualElementOverridesDispatchAbove implements IVisualElementOverrides {
 
     private final boolean backwards;
 
@@ -26,454 +27,454 @@ class FastVisualElementOverridesDispatchAbove implements iVisualElementOverrides
     }
 
     public
-    VisitCode added(iVisualElement newSource) {
+    TraversalHint added(IVisualElement newSource) {
 
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.added(newSource);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.added(newSource);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode beginExecution(iVisualElement source) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    TraversalHint beginExecution(IVisualElement source) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.beginExecution(source);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.beginExecution(source);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    <T> VisitCode deleteProperty(iVisualElement source, VisualElementProperty<T> prop) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    <T> TraversalHint deleteProperty(IVisualElement source, VisualElementProperty<T> prop) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.deleteProperty(source, prop);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.deleteProperty(source, prop);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode deleted(iVisualElement source) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    TraversalHint deleted(IVisualElement source) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.deleted(source);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.deleted(source);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode endExecution(iVisualElement source) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    TraversalHint endExecution(IVisualElement source) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.endExecution(source);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.endExecution(source);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
 
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.getProperty(start, prop, ref);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.getProperty(start, prop, ref);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.handleKeyboardEvent(newSource, event);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.handleKeyboardEvent(newSource, event);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode inspectablePropertiesFor(iVisualElement source, List<Prop> properties) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    TraversalHint inspectablePropertiesFor(IVisualElement source, List<Prop> properties) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.inspectablePropertiesFor(source, properties);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.inspectablePropertiesFor(source, properties);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+    TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
 
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.isHit(source, event, is);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.isHit(source, event, is);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.menuItemsFor(source, items);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.menuItemsFor(source, items);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.paintNow(source, bounds, visible);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.paintNow(source, bounds, visible);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode prepareForSave() {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    TraversalHint prepareForSave() {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.prepareForSave();
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.prepareForSave();
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.setProperty(start, prop, to);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.setProperty(start, prop, to);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
     public
-    VisitCode shouldChangeFrame(iVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-        List<iVisualElement> firstFringe = new ArrayList<iVisualElement>();
+    TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
+        List<IVisualElement> firstFringe = new ArrayList<IVisualElement>();
         if (backwards)
-            firstFringe.addAll((Collection<? extends iVisualElement>) iVisualElementOverrides.topology.getAt()
+            firstFringe.addAll((Collection<? extends IVisualElement>) IVisualElementOverrides.topology.getAt()
                                                                                                       .getParents());
-        else firstFringe.addAll(iVisualElementOverrides.topology.getAt().getChildren());
+        else firstFringe.addAll(IVisualElementOverrides.topology.getAt().getChildren());
 
-        for (iVisualElement start : firstFringe) {
-            List<iVisualElement> fringe = new LinkedList<iVisualElement>();
+        for (IVisualElement start : firstFringe) {
+            List<IVisualElement> fringe = new LinkedList<IVisualElement>();
             fringe.add(start);
 
             while (!fringe.isEmpty()) {
-                iVisualElement next = fringe.remove(0);
-                iVisualElementOverrides over = next.getProperty(iVisualElement.overrides);
+                IVisualElement next = fringe.remove(0);
+                IVisualElementOverrides over = next.getProperty(IVisualElement.overrides);
                 if (over != null) {
-                    VisitCode o = over.shouldChangeFrame(source, newFrame, oldFrame, now);
-                    if (o.equals(VisitCode.skip)) {
+                    TraversalHint o = over.shouldChangeFrame(source, newFrame, oldFrame, now);
+                    if (o.equals(StandardTraversalHint.SKIP)) {
                     }
-                    else if (o.equals(VisitCode.stop)) {
-                        return VisitCode.stop;
+                    else if (o.equals(StandardTraversalHint.STOP)) {
+                        return StandardTraversalHint.STOP;
                     }
                     else {
-                        if (backwards) fringe.addAll((Collection<? extends iVisualElement>) next.getParents());
+                        if (backwards) fringe.addAll((Collection<? extends IVisualElement>) next.getParents());
                         else fringe.addAll(next.getChildren());
                     }
                 }
             }
         }
-        return VisitCode.cont;
+        return StandardTraversalHint.CONTINUE;
     }
 
 }

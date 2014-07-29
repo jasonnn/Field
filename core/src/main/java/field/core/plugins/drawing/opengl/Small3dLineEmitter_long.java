@@ -1,8 +1,8 @@
 package field.core.plugins.drawing.opengl;
 
 import field.core.plugins.drawing.opengl.CachedLine.Event;
-import field.math.abstraction.iBlendable;
-import field.math.abstraction.iMetric;
+import field.math.abstraction.IBlendable;
+import field.math.abstraction.IMetric;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
@@ -22,7 +22,7 @@ class Small3dLineEmitter_long {
 
     List<Prop<?>> trackedProperties = new ArrayList<Prop<?>>();
 
-    List<iMetric<?, ?>> trackedPropertiesFlatnesses = new ArrayList<iMetric<?, ?>>();
+    List<IMetric<?, ?>> trackedPropertiesFlatnesses = new ArrayList<IMetric<?, ?>>();
 
     boolean canEmitCubic = false;
 
@@ -33,7 +33,7 @@ class Small3dLineEmitter_long {
     }
 
     public
-    <T> void addTrackedProperty(Prop<T> p, iMetric<T, T> m) {
+    <T> void addTrackedProperty(Prop<T> p, IMetric<T, T> m) {
         trackedProperties.add(p);
         trackedPropertiesFlatnesses.add(m);
     }
@@ -265,8 +265,8 @@ class Small3dLineEmitter_long {
                     q.add(new Vector3().add(((Vector3) a), ((Vector3) b)).scale(0.5f));
                 }
             }
-            else if (a instanceof iBlendable) {
-                Object c = ((iBlendable) ((iBlendable) a).blendRepresentation_newZero()).lerp(a, b, 0.5f);
+            else if (a instanceof IBlendable) {
+                Object c = ((IBlendable) ((IBlendable) a).blendRepresentation_newZero()).lerp(a, b, 0.5f);
                 q.add(c);
             }
             else if (a instanceof float[]) {
@@ -318,7 +318,7 @@ class Small3dLineEmitter_long {
         float m = 0;
         //;//System.out.println(" properties size <" + propertiesA + " " + propertiesB + "> <" + trackedPropertiesFlatnesses + ">");
         for (int i = 0; i < propertiesA.size() - 1; i++) {
-            float q = ((iMetric<Object, Object>) trackedPropertiesFlatnesses.get(i)).distance(propertiesA.get(i + 1),
+            float q = ((IMetric<Object, Object>) trackedPropertiesFlatnesses.get(i)).distance(propertiesA.get(i + 1),
                                                                                               propertiesB.get(i + 1));
             if (q > m) m = q;
         }

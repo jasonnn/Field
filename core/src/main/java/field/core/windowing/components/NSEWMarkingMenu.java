@@ -1,6 +1,6 @@
 package field.core.windowing.components;
 
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;

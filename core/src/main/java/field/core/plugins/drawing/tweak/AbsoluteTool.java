@@ -1,6 +1,6 @@
 package field.core.plugins.drawing.tweak;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.tweak.TweakSplineCodeGen.BaseTool;
 import field.core.plugins.drawing.tweak.TweakSplineCodeGen.iCoordDesc;
@@ -67,7 +67,7 @@ class AbsoluteTool extends BaseTool {
                 }
 
                 public
-                void toProperties(iVisualElement e, Map<String, Object> soFar) {
+                void toProperties(IVisualElement e, Map<String, Object> soFar) {
                 }
             };
         }
@@ -99,7 +99,7 @@ class AbsoluteTool extends BaseTool {
                 }
 
                 public
-                void toProperties(iVisualElement e, Map<String, Object> soFar) {
+                void toProperties(IVisualElement e, Map<String, Object> soFar) {
                 }
             };
 

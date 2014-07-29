@@ -1,13 +1,14 @@
 package field.graphics.ci;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.util.PythonCallableMap;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.TraversalHint;
 
 public
-class DrawImageOverride extends field.core.dispatch.iVisualElementOverrides.DefaultOverride {
+class DrawImageOverride extends IVisualElementOverrides.DefaultOverride {
 
     VisualElementProperty<PythonCallableMap> images = new VisualElementProperty<PythonCallableMap>("images_");
 
@@ -17,7 +18,7 @@ class DrawImageOverride extends field.core.dispatch.iVisualElementOverrides.Defa
 
     @Override
     public
-    DefaultOverride setVisualElement(iVisualElement ve) {
+    DefaultOverride setVisualElement(IVisualElement ve) {
         ve.setProperty(images, new PythonCallableMap());
         super.setVisualElement(ve);
         return this;
@@ -25,7 +26,7 @@ class DrawImageOverride extends field.core.dispatch.iVisualElementOverrides.Defa
 
     @Override
     public
-    <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
         if (source == forElement) {
             if (forElement.getProperty(images) == null) forElement.setProperty(images, new PythonCallableMap());
         }
@@ -34,7 +35,7 @@ class DrawImageOverride extends field.core.dispatch.iVisualElementOverrides.Defa
 
     @Override
     public
-    VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+    TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
         //System.out.println(" ? ");
         if (source == forElement) {
             PythonCallableMap m = images.get(source);

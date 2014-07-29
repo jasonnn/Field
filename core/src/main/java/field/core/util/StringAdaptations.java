@@ -2,7 +2,7 @@ package field.core.util;
 
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.math.abstraction.iFloatProvider;
+import field.math.abstraction.IFloatProvider;
 import field.namespace.generic.Adaptation;
 import field.namespace.key.OKey;
 
@@ -22,7 +22,7 @@ class StringAdaptations {
                 return new Double(object);
             }
 
-        }, new iFloatProvider.Constant(1));
+        }, new IFloatProvider.Constant(1));
 
         adaptation.declare(String.class, Double.TYPE, new Adaptation.iAdaptor<String, Double>() {
 
@@ -31,7 +31,7 @@ class StringAdaptations {
                 return new Double(object);
             }
 
-        }, new iFloatProvider.Constant(1));
+        }, new IFloatProvider.Constant(1));
 
         adaptation.declare(String.class, Integer.TYPE, new Adaptation.iAdaptor<String, Integer>() {
 
@@ -40,7 +40,7 @@ class StringAdaptations {
                 return new Integer(object);
             }
 
-        }, new iFloatProvider.Constant(1));
+        }, new IFloatProvider.Constant(1));
 
 
         adaptation.declare(Double.class, Integer.class, new Adaptation.iAdaptor<Double, Integer>() {
@@ -50,7 +50,7 @@ class StringAdaptations {
                 return object.intValue();
             }
 
-        }, new iFloatProvider.Constant(1));
+        }, new IFloatProvider.Constant(1));
 
         adaptation.declare(Double.class, Float.class, new Adaptation.iAdaptor<Double, Float>() {
 
@@ -59,7 +59,7 @@ class StringAdaptations {
                 return object.floatValue();
             }
 
-        }, new iFloatProvider.Constant(1));
+        }, new IFloatProvider.Constant(1));
 
         adaptation.declare(Double.class, Float.TYPE, new Adaptation.iAdaptor<Double, Float>() {
 
@@ -68,7 +68,7 @@ class StringAdaptations {
                 return object.floatValue();
             }
 
-        }, new iFloatProvider.Constant(1));
+        }, new IFloatProvider.Constant(1));
 
         adaptation.declare(String.class, Boolean.class, new Adaptation.iAdaptor<String, Boolean>() {
 
@@ -77,7 +77,7 @@ class StringAdaptations {
                 return Boolean.parseBoolean(object);
             }
 
-        }, new iFloatProvider.Constant(1));
+        }, new IFloatProvider.Constant(1));
 
         adaptation.declare(String.class, Boolean.TYPE, new Adaptation.iAdaptor<String, Boolean>() {
 
@@ -86,7 +86,7 @@ class StringAdaptations {
                 return Boolean.parseBoolean(object);
             }
 
-        }, new iFloatProvider.Constant(1));
+        }, new IFloatProvider.Constant(1));
 
     }
 

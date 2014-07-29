@@ -1,7 +1,7 @@
 package field.core.ui.text.embedded;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.persistance.FluidPersistence;
 import field.core.plugins.python.PythonPlugin;
 import field.core.plugins.python.PythonPluginEditor;
@@ -60,7 +60,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
         }
 
         public
-        void prep(ProvidedComponent pc, iVisualElement currentlyEditing, String currentSelection) {
+        void prep(ProvidedComponent pc, IVisualElement currentlyEditing, String currentSelection) {
 
         }
     }
@@ -73,7 +73,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
         public int tagNumber;
 
         transient StyleRange style;
-        transient iVisualElement inside;
+        transient IVisualElement inside;
 
         public
         ProvidedComponent() {
@@ -85,7 +85,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
         }
 
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
 
             //System.out.println(" component has deserialized inside <" + inside + ">");
 
@@ -365,7 +365,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
         possibleComponents.add(new iPossibleComponent(" \u25a2\t<b>lazy</b> text box", MinimalLazyBox.Component.class) {
             @Override
             public
-            void prep(ProvidedComponent arg0, iVisualElement arg1, String arg2) {
+            void prep(ProvidedComponent arg0, IVisualElement arg1, String arg2) {
                 if (arg2 == null) arg2 = "None";
                 ((MinimalLazyBox.Component) arg0).valueString = arg2;
                 ((MinimalLazyBox.Component) arg0).updateValue(arg2);
@@ -428,7 +428,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
                                                                                             @Override
                                                                                             public
                                                                                             void prep(ProvidedComponent pc,
-                                                                                                      iVisualElement currentlyEditing,
+                                                                                                      IVisualElement currentlyEditing,
                                                                                                       String currentSelection) {
                                                                                                 ((MinimalTextField.Component) pc).valueString =
                                                                                                         "1. untitled";
@@ -439,7 +439,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
                                                                                             @Override
                                                                                             public
                                                                                             void prep(ProvidedComponent pc,
-                                                                                                      iVisualElement currentlyEditing,
+                                                                                                      IVisualElement currentlyEditing,
                                                                                                       String currentSelection) {
                                                                                                 ((MinimalTextField.Component) pc).valueString =
                                                                                                         "1. untitled";
@@ -452,7 +452,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
                                                                                             @Override
                                                                                             public
                                                                                             void prep(ProvidedComponent pc,
-                                                                                                      iVisualElement currentlyEditing,
+                                                                                                      IVisualElement currentlyEditing,
                                                                                                       String currentSelection) {
                                                                                                 ((MinimalTextField_blockMenu.Component_transformBlockStart) pc).valueString =
                                                                                                         "1. defaultTransform";
@@ -463,7 +463,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
                                                                                             @Override
                                                                                             public
                                                                                             void prep(ProvidedComponent pc,
-                                                                                                      iVisualElement currentlyEditing,
+                                                                                                      IVisualElement currentlyEditing,
                                                                                                       String currentSelection) {
                                                                                                 ((MinimalTextField_blockMenu.Component_transformBlockEnd) pc).valueString =
                                                                                                         "1. defaultTransform";
@@ -683,7 +683,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
     int styleWidth = SystemProperties.getIntProperty("defaultEmbeddedUIWidth", 300);
 
     public
-    StyleRange styleForTag(String tag, iVisualElement inside, StyleRange in) {
+    StyleRange styleForTag(String tag, IVisualElement inside, StyleRange in) {
 
         Matcher matcher = findText.matcher(tag);
         if (matcher.find()) {
@@ -712,7 +712,7 @@ class CustomInsertSystem implements iCustomInsertSystem {
     }
 
     public
-    void updateAllStyles(StyledText document, iVisualElement inside) {
+    void updateAllStyles(StyledText document, IVisualElement inside) {
         String text = document.getText();
 
         Matcher matcher = findText.matcher(text);

@@ -6,32 +6,32 @@ import java.util.*;
 
 
 public abstract
-class GraphNodesForTopologyView<T> implements iTopology.iMutableTopology<T> {
+class GraphNodesForTopologyView<T> implements IMutableTopology<T> {
 
-    HashMap<T, iMutable> forward = new HashMap<T, iMutable>();
-    HashMap<iMutable, T> backward = new HashMap<iMutable, T>();
+    HashMap<T, IMutable> forward = new HashMap<T, IMutable>();
+    HashMap<IMutable, T> backward = new HashMap<IMutable, T>();
 
-    LinkedHashSet<iMutableTopology<? super T>> notes = new LinkedHashSet<iMutableTopology<? super T>>();
+    LinkedHashSet<IMutableTopology<? super T>> notes = new LinkedHashSet<IMutableTopology<? super T>>();
 
     protected abstract
-    iMutable newGraphNode(T from);
+    IMutable newGraphNode(T from);
 
     abstract
-    boolean removeGraphNode(iMutable fromP, T from);
+    boolean removeGraphNode(IMutable fromP, T from);
 
     public
-    Set<iMutable> getAllNodes() {
+    Set<IMutable> getAllNodes() {
         return backward.keySet();
     }
 
     public
     void begin() {
-        ReflectionTools.apply(notes, iMutableTopology.method_begin);
+        ReflectionTools.apply(notes, IMutableTopology.method_begin);
     }
 
     public
     void end() {
-        ReflectionTools.apply(notes, iMutableTopology.method_begin);
+        ReflectionTools.apply(notes, IMutableTopology.method_begin);
     }
 
     public
@@ -41,12 +41,12 @@ class GraphNodesForTopologyView<T> implements iTopology.iMutableTopology<T> {
 
         forward.get(from).addChild(forward.get(to));
 
-        ReflectionTools.apply(notes, iMutableTopology.method_addChild, from, to);
+        ReflectionTools.apply(notes, IMutableTopology.method_addChild, from, to);
     }
 
     protected
-    iMutable install(T from) {
-        iMutable node = newGraphNode(from);
+    IMutable install(T from) {
+        IMutable node = newGraphNode(from);
         forward.put(from, node);
         backward.put(node, from);
         return node;
@@ -55,44 +55,44 @@ class GraphNodesForTopologyView<T> implements iTopology.iMutableTopology<T> {
 
     public
     void removeChild(T from, T to) {
-        iMutable fromP = forward.get(from);
-        iMutable toP = forward.get(to);
+        IMutable fromP = forward.get(from);
+        IMutable toP = forward.get(to);
         fromP.removeChild(toP);
         if (fromP.getParents().size() == 0) if (removeGraphNode(fromP, from)) backward.remove(forward.remove(from));
         if (toP.getParents().size() == 0) if (removeGraphNode(toP, to)) backward.remove(forward.remove(toP));
-        ReflectionTools.apply(notes, iMutableTopology.method_removeChild, from, to);
+        ReflectionTools.apply(notes, IMutableTopology.method_removeChild, from, to);
     }
 
     public
-    void registerNotify(iMutableTopology<? super T> here) {
+    void registerNotify(IMutableTopology<? super T> here) {
         notes.add(here);
     }
 
     public
-    void deregisterNotify(iMutableTopology<? super T> here) {
+    void deregisterNotify(IMutableTopology<? super T> here) {
         notes.remove(here);
     }
 
     public
     List<T> getParentsOf(T of) {
-        iMutable fromP = forward.get(of);
+        IMutable fromP = forward.get(of);
         if (fromP == null) fromP = install(of);
-        List<iMutable> parents = fromP.getParents();
+        List<IMutable> parents = fromP.getParents();
         if (parents.size() == 0) return Collections.EMPTY_LIST;
         ArrayList<T> r = new ArrayList<T>(parents.size());
-        for (iMutable m : parents)
+        for (IMutable m : parents)
             r.add(backward.get(m));
         return r;
     }
 
     public
     List<T> getChildrenOf(T of) {
-        iMutable fromP = forward.get(of);
+        IMutable fromP = forward.get(of);
         if (fromP == null) fromP = install(of);
-        List<iMutable> parents = fromP.getChildren();
+        List<IMutable> parents = fromP.getChildren();
         if (parents.size() == 0) return Collections.EMPTY_LIST;
         ArrayList<T> r = new ArrayList<T>(parents.size());
-        for (iMutable m : parents)
+        for (IMutable m : parents)
             r.add(backward.get(m));
         return r;
     }

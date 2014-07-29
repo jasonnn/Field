@@ -2,15 +2,15 @@ package field.core.ui.text.embedded;
 
 import field.core.Constants;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.ui.PopupTextBox;
 import field.core.ui.text.embedded.CustomInsertDrawing.Nub;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidesWidth;
 import field.launch.Launcher;
-import field.math.abstraction.iAcceptor;
-import field.namespace.generic.Bind.iFunction;
+import field.math.abstraction.IAcceptor;
+import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 import field.namespace.key.OKey;
 import org.eclipse.swt.SWTException;
@@ -50,7 +50,7 @@ class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
 
         @Override
         public
-        void deserialize(iVisualElement inside) {
+        void deserialize(IVisualElement inside) {
             if (localKey == null) localKey = new OKey(name) {
                 public
                 Object evaluate() {
@@ -199,11 +199,11 @@ class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
     }
 
     public static
-    void allViewHierarchy(List<Object> into, Object from, HashSet<Object> seen, iFunction<Boolean, Object> predicate) {
+    void allViewHierarchy(List<Object> into, Object from, HashSet<Object> seen, IFunction<Object, Boolean> predicate) {
         if (seen.contains(from)) return;
 
         seen.add(from);
-        if (predicate.f(from)) into.add(from);
+        if (predicate.apply(from)) into.add(from);
 
         if (from instanceof Container) {
             Container c = (Container) from;
@@ -223,10 +223,10 @@ class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
         // minimaltextfield with the right string
 
         List<MinimalLazyBox> r = new ArrayList<MinimalLazyBox>();
-        allViewHierarchy((List) r, this, new HashSet<Object>(), new iFunction<Boolean, Object>() {
+        allViewHierarchy((List) r, this, new HashSet<Object>(), new IFunction<Object, Boolean>() {
 
             public
-            Boolean f(Object in) {
+            Boolean apply(Object in) {
                 return (in instanceof MinimalLazyBox);
             }
         });
@@ -432,9 +432,9 @@ class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
         super.revalidate();
 
         List<JEditorPane> r = new ArrayList<JEditorPane>();
-        allViewHierarchy((List) r, this, new HashSet<Object>(), new iFunction<Boolean, Object>() {
+        allViewHierarchy((List) r, this, new HashSet<Object>(), new IFunction<Object, Boolean>() {
             public
-            Boolean f(Object in) {
+            Boolean apply(Object in) {
                 return (in instanceof JEditorPane);
             }
         });
@@ -466,11 +466,11 @@ class MinimalLazyBox extends JTextField implements iOutOfBandDrawing {
             new PopupTextBox.Modal().getString(new java.awt.Point(loc.x, loc.y),
                                                "Contents: ",
                                                getText(),
-                                               new iAcceptor<String>() {
+                                               new IAcceptor<String>() {
 
                                                    @Override
                                                    public
-                                                   iAcceptor<String> set(String to) {
+                                                   IAcceptor<String> set(String to) {
 
                                                        MinimalLazyBox.this.setText(to);
                                                        if (inside != null) {

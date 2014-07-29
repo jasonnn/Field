@@ -4,7 +4,7 @@
 package field.core.plugins.drawing;
 
 import field.bytecode.protect.Notable;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.util.BetterPythonConstructors.SynthesizeFactory;
 

@@ -2,7 +2,7 @@ package field.core.ui;
 
 import field.launch.Launcher;
 import field.math.linalg.Vector2;
-import field.namespace.generic.Bind.iFunction;
+import field.namespace.generic.IFunction;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.Region;
 import org.jetbrains.annotations.NotNull;
@@ -73,7 +73,7 @@ class SimpleVoronoi {
     }
 
     public
-    List<Pnt[]> allContoursSortedByArea(iFunction<Number, Pnt[]> filter) {
+    List<Pnt[]> allContoursSortedByArea(IFunction<Pnt[], Number> filter) {
         ArrayList<Pnt[]> p = new ArrayList<Pnt[]>();
         HashSet<Pnt> done = new HashSet<Pnt>(initialTriangle);
         for (Triangle triangle : dt)
@@ -88,7 +88,7 @@ class SimpleVoronoi {
                     if (tri == null) break outer;
                     vertices[i++] = tri.getCircumcenter();
                 }
-                if ((filter == null) || (filter.f(vertices).intValue() > 0)) p.add(vertices);
+                if ((filter == null) || (filter.apply(vertices).intValue() > 0)) p.add(vertices);
             }
         Collections.sort(p, new Comparator<Pnt[]>() {
 

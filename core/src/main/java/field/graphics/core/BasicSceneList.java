@@ -6,7 +6,7 @@ import field.graphics.core.Base.LocalPass;
 import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.Base.iPass;
 import field.graphics.core.Base.iSceneListElement;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.graph.NodeImpl;
 
 import java.util.*;
@@ -16,8 +16,7 @@ import java.util.*;
  * to this class
  */
 public
-class BasicSceneList extends NodeImpl<iSceneListElement> implements iSceneListElement,
-                                                                    iUpdateable,
+class BasicSceneList extends NodeImpl<iSceneListElement> implements iSceneListElement, IUpdateable,
                                                                     iAcceptsSceneListElement {
 
 

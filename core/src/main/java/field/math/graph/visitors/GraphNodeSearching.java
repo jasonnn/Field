@@ -1,62 +1,19 @@
 package field.math.graph.visitors;
 
+import field.math.graph.IGraphNode;
 import field.math.graph.SimpleNode;
-import field.math.graph.iGraphNode;
+import field.math.graph.visitors.hint.SkipMultiple;
+import field.math.graph.visitors.hint.SkipMultipleBut;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 
 import java.util.*;
 
 public
 class GraphNodeSearching {
 
-    public static
-    class VisitCode {
-        public static final VisitCode cont = new VisitCode("CONTINUE");
-
-        public static final VisitCode stop = new VisitCode("STOP");
-
-        public static final VisitCode skip = new VisitCode("skip");
-
-        private final String string;
-
-        public
-        VisitCode(String string) {
-            this.string = string;
-        }
-
-        @Override
-        public
-        String toString() {
-            return string;
-        }
-    }
-
-    public static
-    class SkipMultiple extends VisitCode {
-        public Collection c;
-
-        public
-        SkipMultiple(Collection c) {
-            super("skip_multiple");
-            this.c = c;
-        }
-    }
-
-    public static
-    class SkipMultipleBut extends VisitCode {
-        public Collection c;
-
-        public Object o;
-
-        public
-        SkipMultipleBut(Collection c, Object o) {
-            super("skip_multiple_but");
-            this.c = c;
-            this.o = o;
-        }
-    }
-
     public abstract static
-    class GraphNodeVisitor_depthFirst<T extends iGraphNode> {
+    class GraphNodeVisitor_depthFirst<T extends IGraphNode> {
         private boolean avoidLoops;
 
         protected HashSet<T> seen = new HashSet<T>();
@@ -93,9 +50,9 @@ class GraphNodeSearching {
             stack.push(root);
             seen.add(root);
 
-            VisitCode code = visit(root);
-            if (code == VisitCode.stop) return;
-            if (code == VisitCode.skip) {
+            TraversalHint code = visit(root);
+            if (code == StandardTraversalHint.STOP) return;
+            if (code == StandardTraversalHint.SKIP) {
                 stack.pop();
                 exit(root);
                 return;
@@ -132,11 +89,11 @@ class GraphNodeSearching {
         int depth = 0;
 
         protected
-        VisitCode _apply(List<T> c) {
+        TraversalHint _apply(List<T> c) {
             depth++;
             if (depth > maxDepth * 2) {
                 //System.out.println(" (( warning, max depth exceeded in search ))");
-                return VisitCode.stop;
+                return StandardTraversalHint.STOP;
             }
 
             ListIterator<T> li = c.listIterator(reverse ? c.size() : 0);
@@ -147,8 +104,8 @@ class GraphNodeSearching {
                     if (avoidLoops) seen.add(n);
                     enter(n);
                     stack.push(n);
-                    VisitCode code = visit(n);
-                    if (code == VisitCode.stop) return VisitCode.stop;
+                    TraversalHint code = visit(n);
+                    if (code == StandardTraversalHint.STOP) return StandardTraversalHint.STOP;
                     if (code instanceof SkipMultiple) {
                         seen.addAll(((SkipMultiple) code).c);
                         avoidLoops = true;
@@ -158,20 +115,20 @@ class GraphNodeSearching {
                         seen.remove(((SkipMultipleBut) code).o);
                         avoidLoops = true;
                     }
-                    if (code != VisitCode.skip) {
-                        VisitCode vc = _apply(n.getChildren());
-                        if (vc == VisitCode.stop) return VisitCode.stop;
+                    if (code != StandardTraversalHint.SKIP) {
+                        TraversalHint vc = _apply(n.getChildren());
+                        if (vc == StandardTraversalHint.STOP) return StandardTraversalHint.STOP;
                     }
                     stack.pop();
                     exit(n);
                 }
             }
             depth--;
-            return VisitCode.cont;
+            return StandardTraversalHint.CONTINUE;
         }
 
         protected abstract
-        VisitCode visit(T n);
+        TraversalHint visit(T n);
 
         protected static
         String spaces(int n) {
@@ -195,12 +152,12 @@ class GraphNodeSearching {
             }
 
             protected
-            VisitCode visit(SimpleNode<String> n) {
+            TraversalHint visit(SimpleNode<String> n) {
                 if (Math.random() < factor) {
                     ref[0] = n;
-                    return VisitCode.stop;
+                    return StandardTraversalHint.STOP;
                 }
-                return VisitCode.cont;
+                return StandardTraversalHint.CONTINUE;
             }
         }
         RandomSearch rs = new RandomSearch();
@@ -218,7 +175,7 @@ class GraphNodeSearching {
     }
 
     public static
-    <T extends iGraphNode<T>> List<T> findPath_avoidingLoops(T from, final T to) {
+    <T extends IGraphNode<T>> List<T> findPath_avoidingLoops(T from, final T to) {
         final ArrayList<T> path = new ArrayList<T>();
         if (from == to) {
             path.add(from);
@@ -227,9 +184,9 @@ class GraphNodeSearching {
         new GraphNodeVisitor_depthFirst<T>(true) {
             @Override
             protected
-            VisitCode visit(T n) {
-                VisitCode vc = n == to ? VisitCode.stop : VisitCode.cont;
-                if (vc == VisitCode.stop) path.addAll(stack);
+            TraversalHint visit(T n) {
+                TraversalHint vc = n == to ? StandardTraversalHint.STOP : StandardTraversalHint.CONTINUE;
+                if (vc == StandardTraversalHint.STOP) path.addAll(stack);
                 return vc;
             }
         }.apply(from);

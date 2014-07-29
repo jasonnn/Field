@@ -5,7 +5,7 @@ import field.core.ui.NewInspector2;
 import field.core.ui.NewInspector2.ColorControl;
 import field.core.ui.NewInspector2.iIO;
 import field.core.ui.text.syntax.PythonScanner;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.Color4;
 import field.math.linalg.Vector4;
 import field.util.AutoPersist;
@@ -59,7 +59,7 @@ class SyntaxHighlightingStyles2 {
     static ToolBarFolder open;
 
     public static
-    void openCustomizer(final Color[] colors, final StyledText target, final iUpdateable post) {
+    void openCustomizer(final Color[] colors, final StyledText target, final IUpdateable post) {
         if (open != null && !open.getShell().isDisposed()) return;
 
         ToolBarFolder f = new ToolBarFolder(new Rectangle(50, 50, 300, 600), true);

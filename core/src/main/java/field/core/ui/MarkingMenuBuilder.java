@@ -4,7 +4,7 @@ import field.core.execution.PythonInterface;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.core.ui.PopupMarkingArea.PopMenuSpec;
 import field.core.ui.PopupMarkingArea.Position;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.python.core.Py;
@@ -20,7 +20,7 @@ class MarkingMenuBuilder {
 
     PopMenuSpec currentlyBuilding;
 
-    iUpdateable singleAction;
+    IUpdateable singleAction;
 
     public boolean insertCopyPasteItems = false;
     public boolean insertDeleteItem = false;
@@ -77,7 +77,7 @@ class MarkingMenuBuilder {
     }
 
     public
-    void setSingleAction(iUpdateable singleAction) {
+    void setSingleAction(IUpdateable singleAction) {
         this.singleAction = singleAction;
     }
 
@@ -118,7 +118,7 @@ class MarkingMenuBuilder {
     }
 
     public
-    MarkingMenuBuilder call(iUpdateable u) {
+    MarkingMenuBuilder call(IUpdateable u) {
         currentlyBuilding.mainCallback = u;
         return this;
     }
@@ -129,7 +129,7 @@ class MarkingMenuBuilder {
     }
 
     public
-    MarkingMenuBuilder addUpdateable(String text, iUpdateable u) {
+    MarkingMenuBuilder addUpdateable(String text, IUpdateable u) {
         if (currentlyBuilding == null) defaultMenu();
 
 //		if (!text.contains("<"))
@@ -150,7 +150,7 @@ class MarkingMenuBuilder {
     }
 
     public
-    MarkingMenuBuilder add(String icon, String text, iUpdateable u) {
+    MarkingMenuBuilder add(String icon, String text, IUpdateable u) {
         if (currentlyBuilding == null) defaultMenu();
 
         currentlyBuilding.menu.put(' ' + icon + ' ' + text, u);
@@ -171,11 +171,11 @@ class MarkingMenuBuilder {
     }
 
     private
-    iUpdateable wrap(final PyObject u) {
+    IUpdateable wrap(final PyObject u) {
 
         final CapturedEnvironment env =
                 (CapturedEnvironment) PythonInterface.getPythonInterface().getVariable("_environment");
-        return new iUpdateable() {
+        return new IUpdateable() {
 
             public
             void update() {
@@ -206,13 +206,13 @@ class MarkingMenuBuilder {
     PopMenuSpec getSpecFor(Position z) {
         PopMenuSpec m = spec.get(z);
         if (m == null) {
-            spec.put(z, m = new PopMenuSpec(z, new LinkedHashMap<String, iUpdateable>(), null, "Untitled menu"));
+            spec.put(z, m = new PopMenuSpec(z, new LinkedHashMap<String, IUpdateable>(), null, "Untitled menu"));
         }
         return m;
     }
 
     public
-    Map<String, iUpdateable> getMap() {
+    Map<String, IUpdateable> getMap() {
         if (currentlyBuilding == null) defaultMenu();
 
         return currentlyBuilding.menu;

@@ -1,6 +1,6 @@
 package field.core.execution;
 
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import org.python.core.PyFunction;
 import org.python.core.PyGenerator;
 import org.python.core.PyMethod;
@@ -39,12 +39,12 @@ class EvaluationGeneratorStack extends PythonGeneratorStack {
     }
 
     public
-    EvaluationGeneratorStack(iProvider top) {
+    EvaluationGeneratorStack(IProvider top) {
         super(top);
     }
 
     public
-    EvaluationGeneratorStack(iProvider top, List addTo) {
+    EvaluationGeneratorStack(IProvider top, List addTo) {
         super(top, addTo);
     }
 
@@ -92,7 +92,7 @@ class EvaluationGeneratorStack extends PythonGeneratorStack {
     }
 
     protected
-    void newPythonGeneratorStack(iProvider g, List subUpdateables2) {
+    void newPythonGeneratorStack(IProvider g, List subUpdateables2) {
         new EvaluationGeneratorStack(g, subUpdateables2);
     }
 

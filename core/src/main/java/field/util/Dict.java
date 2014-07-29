@@ -1,6 +1,6 @@
 package field.util;
 
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import org.python.core.PyObject;
 
 import java.io.Serializable;
@@ -150,8 +150,8 @@ class Dict implements Serializable {
     }
 
     public
-    <T> iProvider<T> provide(final Prop<T> p) {
-        return new iProvider<T>() {
+    <T> IProvider<T> provide(final Prop<T> p) {
+        return new IProvider<T>() {
             public
             T get() {
                 return Dict.this.get(p);

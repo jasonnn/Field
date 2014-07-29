@@ -3,11 +3,11 @@ package field.core.plugins;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.core.plugins.python.PythonPluginEditor;
-import field.math.graph.visitors.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.TraversalHint;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ class BindingPlugin extends BaseSimplePlugin {
 
     @Override
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
         super.registeredWith(root);
     }
 
@@ -42,8 +42,8 @@ class BindingPlugin extends BaseSimplePlugin {
 
     private
     void addAll() {
-        List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
-        for (iVisualElement e : all) {
+        List<IVisualElement> all = StandardFluidSheet.allVisualElements(root);
+        for (IVisualElement e : all) {
             added(e);
         }
     }
@@ -51,24 +51,24 @@ class BindingPlugin extends BaseSimplePlugin {
     @NextUpdate(delay = 1)
     protected
     void addAllNext() {
-        List<iVisualElement> all = StandardFluidSheet.allVisualElements(root);
-        for (iVisualElement e : all) {
+        List<IVisualElement> all = StandardFluidSheet.allVisualElements(root);
+        for (IVisualElement e : all) {
             added(e);
         }
     }
 
     protected static
-    void added(iVisualElement e) {
-        String b = e.getProperty(iVisualElement.boundTo);
+    void added(IVisualElement e) {
+        String b = e.getProperty(IVisualElement.boundTo);
         if ((b != null) && !b.trim().isEmpty()) {
 
             //System.out.println(" initializing boundto with <" + b + "> for <" + e + ">");
 
             PythonPluginEditor.makeBoxLocalEverywhere(b.trim());
-            List<iVisualElement> c = e.getChildren();
-            for (iVisualElement ee : c)
-                ee.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + '_'), e);
-            e.setProperty(new VisualElementProperty<iVisualElement>(b.trim() + '_'), e);
+            List<IVisualElement> c = e.getChildren();
+            for (IVisualElement ee : c)
+                ee.setProperty(new VisualElementProperty<IVisualElement>(b.trim() + '_'), e);
+            e.setProperty(new VisualElementProperty<IVisualElement>(b.trim() + '_'), e);
         }
     }
 
@@ -78,46 +78,46 @@ class BindingPlugin extends BaseSimplePlugin {
         return new DefaultOverride() {
             @Override
             public
-            <T> VisitCode setProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
-                if (prop.equals(iVisualElement.boundTo)) {
-                    String was = source.getProperty(iVisualElement.boundTo);
+            <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
+                if (prop.equals(IVisualElement.boundTo)) {
+                    String was = source.getProperty(IVisualElement.boundTo);
 
                     if ((was == null) || was.trim().isEmpty()) {
                         if ((to.get() == null) || ((String) to.get()).trim().isEmpty()) {
                         }
                         else {
                             PythonPluginEditor.makeBoxLocalEverywhere(((String) to.get()).trim());
-                            List<iVisualElement> c = source.getChildren();
-                            for (iVisualElement ee : c)
-                                ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim()
+                            List<IVisualElement> c = source.getChildren();
+                            for (IVisualElement ee : c)
+                                ee.setProperty(new VisualElementProperty<IVisualElement>(((String) to.get()).trim()
                                                                                          + '_'), source);
-                            source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim()
+                            source.setProperty(new VisualElementProperty<IVisualElement>(((String) to.get()).trim()
                                                                                          + '_'), source);
                         }
                     }
                     else {
                         if ((to.get() == null) || ((String) to.get()).trim().isEmpty()) {
                             PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
-                            List<iVisualElement> c = source.getChildren();
-                            for (iVisualElement ee : c)
-                                ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
-                            source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+                            List<IVisualElement> c = source.getChildren();
+                            for (IVisualElement ee : c)
+                                ee.deleteProperty(new VisualElementProperty<IVisualElement>(was + '_'));
+                            source.deleteProperty(new VisualElementProperty<IVisualElement>(was + '_'));
 
                             addAllNext();
 
                         }
                         else {
                             PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
-                            List<iVisualElement> c = source.getChildren();
-                            for (iVisualElement ee : c)
-                                ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
-                            source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+                            List<IVisualElement> c = source.getChildren();
+                            for (IVisualElement ee : c)
+                                ee.deleteProperty(new VisualElementProperty<IVisualElement>(was + '_'));
+                            source.deleteProperty(new VisualElementProperty<IVisualElement>(was + '_'));
 
                             PythonPluginEditor.makeBoxLocalEverywhere(((String) to.get()).trim());
-                            for (iVisualElement ee : c)
-                                ee.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim()
+                            for (IVisualElement ee : c)
+                                ee.setProperty(new VisualElementProperty<IVisualElement>(((String) to.get()).trim()
                                                                                          + '_'), source);
-                            source.setProperty(new VisualElementProperty<iVisualElement>(((String) to.get()).trim()
+                            source.setProperty(new VisualElementProperty<IVisualElement>(((String) to.get()).trim()
                                                                                          + '_'), source);
 
                         }
@@ -129,9 +129,9 @@ class BindingPlugin extends BaseSimplePlugin {
 
             @Override
             public
-            VisitCode deleted(iVisualElement source) {
+            TraversalHint deleted(IVisualElement source) {
 
-                String was = source.getProperty(iVisualElement.boundTo);
+                String was = source.getProperty(IVisualElement.boundTo);
                 //System.out.println(" handling deleted for <" + source + " -> " + was);
 
                 if ((was == null) || was.trim().isEmpty()) {
@@ -140,10 +140,10 @@ class BindingPlugin extends BaseSimplePlugin {
 
                     //System.out.println(" children are <" + source.getChildren() + ">");
                     PythonPluginEditor.removeBoxLocalEverywhere(was.trim());
-                    List<iVisualElement> c = source.getChildren();
-                    for (iVisualElement ee : c)
-                        ee.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
-                    source.deleteProperty(new VisualElementProperty<iVisualElement>(was + '_'));
+                    List<IVisualElement> c = source.getChildren();
+                    for (IVisualElement ee : c)
+                        ee.deleteProperty(new VisualElementProperty<IVisualElement>(was + '_'));
+                    source.deleteProperty(new VisualElementProperty<IVisualElement>(was + '_'));
                 }
 
                 addAllNext();
@@ -153,7 +153,7 @@ class BindingPlugin extends BaseSimplePlugin {
 
             @Override
             public
-            VisitCode added(iVisualElement source) {
+            TraversalHint added(IVisualElement source) {
                 BindingPlugin.added(source);
                 return super.added(source);
             }

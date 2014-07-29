@@ -1,7 +1,7 @@
 package field.util;
 
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.ReferenceQueue;
@@ -465,7 +465,7 @@ class BetterWeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
     static LinkedList<WeakReference<BetterWeakHashMap>> weakness = new LinkedList();
 
     static {
-        Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+        Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
             public
             void update() {

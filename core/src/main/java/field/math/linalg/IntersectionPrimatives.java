@@ -1,6 +1,6 @@
 package field.math.linalg;
 
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement.Rect;
 import field.util.collect.tuple.Pair;
 
 import java.util.ArrayList;

@@ -1,11 +1,11 @@
 package field.core.plugins;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
+import field.math.graph.IMutableContainer;
 import field.util.collect.tuple.Pair;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public abstract
 class BaseSimplePlugin implements iPlugin {
 
     protected
-    class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+    class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
         public
         <T> void deleteProperty(VisualElementProperty<T> p) {
@@ -31,7 +31,7 @@ class BaseSimplePlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
             if (p == overrides) return (T) BaseSimplePlugin.this.overrides;
             Object o = properties.get(p);
             return (T) o;
@@ -52,13 +52,13 @@ class BaseSimplePlugin implements iPlugin {
         }
 
         public
-        iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+        IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
             properties = t;
             return this;
         }
 
         public
-        <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -75,14 +75,14 @@ class BaseSimplePlugin implements iPlugin {
     }
 
     protected static
-    class Overrides extends iVisualElementOverrides.DefaultOverride {
+    class Overrides extends IVisualElementOverrides.DefaultOverride {
     }
 
-    protected iVisualElement element;
-    protected iVisualElementOverrides.DefaultOverride overrides;
+    protected IVisualElement element;
+    protected IVisualElementOverrides.DefaultOverride overrides;
     protected Map<Object, Object> properties = new HashMap<Object, Object>();
 
-    protected iVisualElement root;
+    protected IVisualElement root;
 
     public
     void close() {
@@ -94,20 +94,20 @@ class BaseSimplePlugin implements iPlugin {
     }
 
     public
-    iVisualElement getWellKnownVisualElement(String id) {
+    IVisualElement getWellKnownVisualElement(String id) {
         String n = getPluginName();
         if (id.equals(n)) return element;
         return null;
     }
 
     public
-    void registeredWith(iVisualElement root) {
+    void registeredWith(IVisualElement root) {
         this.root = root;
 
         element = newVisualElement();
         overrides = newVisualElementOverrides();
         overrides.setVisualElement(element);
-        element.setProperty(iVisualElement.overrides, overrides);
+        element.setProperty(IVisualElement.overrides, overrides);
 
         root.addChild(element);
 
@@ -134,7 +134,7 @@ class BaseSimplePlugin implements iPlugin {
     String getPluginNameImpl();
 
     protected
-    iVisualElement newVisualElement() {
+    IVisualElement newVisualElement() {
         return new LocalVisualElement();
     }
 

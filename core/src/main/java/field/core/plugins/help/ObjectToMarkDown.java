@@ -9,7 +9,7 @@ import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.core.Platform;
 import field.core.ui.text.JavaDocCache;
 import field.core.ui.text.PythonTextEditor;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
 import org.python.core.PyObject;
 
 import java.lang.ref.SoftReference;
@@ -31,9 +31,9 @@ class ObjectToMarkDown {
         }
     };
 
-    public static Map<String, iProvider<String>> invokeMap = new LinkedHashMap<String, iProvider<String>>() {
+    public static Map<String, IProvider<String>> invokeMap = new LinkedHashMap<String, IProvider<String>>() {
         protected
-        boolean removeEldestEntry(Map.Entry<String, field.math.abstraction.iProvider<String>> arg0) {
+        boolean removeEldestEntry(Map.Entry<String, IProvider<String>> arg0) {
             return this.size() > 100;
         }
     };
@@ -331,7 +331,7 @@ class ObjectToMarkDown {
 
                             String mapName = "___invoke_" + q + "__";
 
-                            invokeMap.put(mapName, new iProvider<String>() {
+                            invokeMap.put(mapName, new IProvider<String>() {
                                 @Override
                                 public
                                 String get() {

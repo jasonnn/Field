@@ -1,10 +1,10 @@
 package field.math.util;
 
-import field.math.abstraction.iBlendAlgebra;
-import field.math.abstraction.iFilter;
+import field.math.abstraction.IBlendAlgebra;
+import field.math.abstraction.IFilter;
 
 public
-class Blender implements iBlendAlgebra<Blender>, iFilter<Float, Float> {
+class Blender implements IBlendAlgebra<Blender>, IFilter<Float, Float> {
 
     float a;
 
