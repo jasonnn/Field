@@ -18,6 +18,9 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
     JavaBuilder javaBuilder
     JavaWriterEx javaWriter
 
+    static final String VISUAL_ELEMENT = 'field.core.dispatch.iVisualElement';
+    static final String VISIT_CODE = 'field.math.graph.GraphNodeSearching.VisitCode'
+//TODO this doesnt handle methods with arguments?
 
     @Override
     void generate() throws IOException {
@@ -42,12 +45,29 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
                     genIFace(meth)
                     genImpl(meth)
                 }
+                javaWriter.emitEmptyLine()
+                methods.each(this.&genInstanceField)
+                javaWriter.emitEmptyLine()
 
+                constructor(modifiers: [Modifier.PUBLIC],
+                            params: [x: element.simpleName])
+                        {
+                            for (me in methods) {
+                                stmnt "${me.simpleName}=new ${me.simpleName}_impl(x)"
+                            }
+                        }
             }
 
         }
     }
 
+
+    def genInstanceField(MethodElement me) {
+        javaWriter.emitField(new FieldSpec(
+                name: me.simpleName,
+                type: me.simpleName + '_interface',
+                modifiers: PF))
+    }
 
     def genAccessField(MethodElement me) {
         def paramStr = ''
@@ -57,12 +77,12 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
         javaWriter.emitField(new FieldSpec(
                 name: me.reflectionFieldName + '_m',
                 type: 'java.lang.reflect.Method',
-                modifiers: [Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL],
+                modifiers: PSF,
                 initializer: "ReflectionUtils.methodOf(\"$me.simpleName\",${element.qualifiedName}.class$paramStr)"))
     }
 
     def genMirror(MethodElement me) {
-        def typeParams = "<${element.qualifiedName}, field.math.graph.GraphNodeSearching.VisitCode, ${element.qualifiedName}>"
+        def typeParams = "<${element.qualifiedName}, $VISIT_CODE, ${element.qualifiedName}>"
         def type = 'Mirroring.MirrorMethod' + typeParams
         def paramTypesArr = 'new Class[]{' + me.paramClassesCSV() + '}'
         def init = "new $type(${element.qualifiedName}.class,\"$me.simpleName\",$paramTypesArr)"
@@ -71,93 +91,112 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
                 name: me.reflectionFieldName + '_s',
                 type: type,
                 initializer: init,
-                modifiers: [Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL]))
+                modifiers: PSF))
     }
 
     def genIFace(MethodElement me) {
         def ext = ["iAcceptor<${element.qualifiedName}>",
-                   "iFunction<field.math.graph.GraphNodeSearching.VisitCode,${element.qualifiedName}>"
-        ]
+                   "iFunction<$VISIT_CODE,${element.qualifiedName}>"]
 
         javaBuilder.createInterface(name: me.simpleName + '_interface',
-                                    modifiers: [Modifier.PUBLIC, Modifier.STATIC],
+                                    modifiers: PS,
                                     implements: ext) {
 
             method(name: me.simpleName,
-                   returnType: 'field.math.graph.GraphNodeSearching.VisitCode',
-                   params: [p0: element.qualifiedName])
+                   returnType: VISIT_CODE,
+                   params: [p0: VISUAL_ELEMENT])
             method(name: 'updateable',
                    returnType: 'iUpdateable',
-                   params: [p0: element.qualifiedName])
+                   params: [p0: VISUAL_ELEMENT])
             method(name: 'bind',
-                   returnType: 'iProvider<field.math.graph.GraphNodeSearching.VisitCode>',
-                   params: [p0: element.qualifiedName])
+                   returnType: "iProvider<$VISIT_CODE>",
+                   params: [p0: VISUAL_ELEMENT])
 
         }
     }
 
-    def genImpl(MethodElement me){
+    static final Set<Modifier> PS = EnumSet.of(Modifier.PUBLIC, Modifier.STATIC);
+    static final Set<Modifier> PSF = EnumSet.of(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
+    static final Set<Modifier> PF = EnumSet.of(Modifier.PUBLIC, Modifier.FINAL);
+    static final Set<Modifier> F = EnumSet.of(Modifier.FINAL)
+
+    def genImpl(MethodElement me) {
+
+        javaBuilder.createClass(name: me.simpleName + '_impl',
+                                modifiers: [Modifier.STATIC],
+                                implements: [me.simpleName + '_interface']) {
+            field(name: 'x',
+                  type: element.simpleName,
+                  modifiers: F)
+            field(name: 'a',
+                  type: 'iAcceptor',
+                  modifiers: F)
+            field(name: 'f',
+                  type: 'iFunction',
+                  modifiers: F)
+            constructor(params: [x: element.simpleName]) {
+                stmnt 'this.x=x'
+                stmnt "this.a=${me.simpleName}_s.acceptor(x)"
+                stmnt "this.f=${me.simpleName}_s.function(x)"
+            }
+
+            method(name: me.simpleName,
+                   returnType: VISIT_CODE,
+                   params: [p0: VISUAL_ELEMENT],
+                   modifiers: [Modifier.PUBLIC],
+                   annotations: [Override])
+                    {
+                        stmnt "return x.${me.simpleName}(p0)"
+                    }
+
+            method(name: 'set',
+                   returnType: 'iAcceptor<field.core.dispatch.iVisualElement>',
+                   params: [p: VISUAL_ELEMENT],
+                   modifiers: [Modifier.PUBLIC],
+                   annotations: [Override])
+                    {
+                        stmnt 'a.set(p)'
+                        stmnt 'return this'
+                    }
+            method(name: 'f',
+                   returnType: VISIT_CODE,
+                   params: [p: VISUAL_ELEMENT],
+                   modifiers: [Modifier.PUBLIC],
+                   annotations: [Override])
+                    {
+                        stmnt 'return (field.math.graph.GraphNodeSearching.VisitCode) f.f(p)'
+                    }
+            method(name: 'updateable',
+                   returnType: 'iUpdateable',
+                   params: [p: VISUAL_ELEMENT],
+                   modifiers: [Modifier.PUBLIC],
+                   annotations: [Override]) {
+
+                stmnt """
+                |return new iUpdateable(){
+                |   public void update(){
+                |       ${me.simpleName}(p);
+                |   }
+                |}""".stripMargin()
+            }
+            method(name: 'bind',
+                   returnType: 'iProvider<field.math.graph.GraphNodeSearching.VisitCode>',
+                   params: [p: VISUAL_ELEMENT],
+                   modifiers: [Modifier.PUBLIC],
+                   annotations: [Override]) {
+
+                stmnt """   |return new iProvider(){
+                            |    public Object get(){
+                            |        return added(p0);
+                            |        }
+                            |}""".stripMargin()
+
+            }
+
+
+        }
 
     }
-
-    /**
-     * (from iVisualElementOverrides...)
-     * given:
-     *
-     * @Mirror public VisitCode added(iVisualElement newSource);
-     * <p/>
-     * emit:
-     * <p/>
-     * static public final Method added_m = ReflectionTools.methodOf("added", field.core.dispatch.iVisualElementOverrides.class, field.core.dispatch.iVisualElement.class);
-     * static public final Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, field.math.graph.GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>
-     *     added_s = new Mirroring.MirrorMethod<field.core.dispatch.iVisualElementOverrides, field.math.graph.GraphNodeSearching.VisitCode, field.core.dispatch.iVisualElement>
-     *         (field.core.dispatch.iVisualElementOverrides.class, "added", new Class[]{field.core.dispatch.iVisualElement.class});
-     * <p/>
-     * public interface added_interface
-     * extends iAcceptor<field.core.dispatch.iVisualElement>,
-     * iFunction<field.math.graph.GraphNodeSearching.VisitCode ,field.core.dispatch.iVisualElement >
-     *{
-     * public field.math.graph.GraphNodeSearching.VisitCode added( final field.core.dispatch.iVisualElement p0);
-     * public iUpdateable updateable(final field.core.dispatch.iVisualElement p0);
-     * public iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iVisualElement p0);
-     *}* <p/>
-     * public final added_interface added;
-     * <p/>
-     * <p/>
-     * and in the constructor...
-     * <p/>
-     * <p/>
-     * added = new added_interface()
-     *{
-     * <p/>
-     * iAcceptor a = added_s.acceptor(x);
-     * iFunction f = added_s.function(x);
-     * <p/>
-     * <p/>
-     * public field.math.graph.GraphNodeSearching.VisitCode added (final field.core.dispatch.iVisualElement p0)
-     *{
-     * return x.added(p0 );
-     *}* <p/>
-     * public iAcceptor<field.core.dispatch.iVisualElement> set(field.core.dispatch.iVisualElement p)
-     *{
-     * a.set(p);
-     * return this;
-     *}* <p/>
-     * public field.math.graph.GraphNodeSearching.VisitCode f(field.core.dispatch.iVisualElement p)
-     *{
-     * return (field.math.graph.GraphNodeSearching.VisitCode) f.f(p);
-     *}* <p/>
-     * public iUpdateable updateable(final field.core.dispatch.iVisualElement p0)
-     *{
-     * return new iUpdateable()
-     *{
-     * public void update()
-     *{
-     * added(p0);
-     *}*};
-     *}* public iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(final field.core.dispatch.iVisualElement p0){
-     * return new iProvider(){public Object get(){return added(p0);}};}};
-     */
 
 
 }

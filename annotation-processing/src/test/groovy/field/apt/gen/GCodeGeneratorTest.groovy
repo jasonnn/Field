@@ -173,36 +173,212 @@ public class MyIFace_m {
   public static final Mirroring.MirrorMethod<MyIFace, field.math.graph.GraphNodeSearching.VisitCode, MyIFace> added_s = new Mirroring.MirrorMethod<some.pkg.MyIFace, field.math.graph.GraphNodeSearching.VisitCode, some.pkg.MyIFace>(some.pkg.MyIFace.class,"added",new Class[]{int.class, java.util.List.class, java.util.Date.class});
   public static interface added_interface
       implements iAcceptor<MyIFace>, iFunction<field.math.graph.GraphNodeSearching.VisitCode,MyIFace> {
-    field.math.graph.GraphNodeSearching.VisitCode added(MyIFace p0);
-    iUpdateable updateable(MyIFace p0);
-    iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(MyIFace p0);
+    field.math.graph.GraphNodeSearching.VisitCode added(field.core.dispatch.iVisualElement p0);
+    iUpdateable updateable(field.core.dispatch.iVisualElement p0);
+    iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(field.core.dispatch.iVisualElement p0);
+  }
+  static class added_impl
+      implements added_interface {
+    final MyIFace x;
+    final iAcceptor a;
+    final iFunction f;
+    added_impl(MyIFace x) {
+      this.x=x;
+      this.a=added_s.acceptor(x);
+      this.f=added_s.function(x);
+    }
+    @Override
+    public field.math.graph.GraphNodeSearching.VisitCode added(field.core.dispatch.iVisualElement p0) {
+      return x.added(p0);
+    }
+    @Override
+    public iAcceptor<field.core.dispatch.iVisualElement> set(field.core.dispatch.iVisualElement p) {
+      a.set(p);
+      return this;
+    }
+    @Override
+    public field.math.graph.GraphNodeSearching.VisitCode f(field.core.dispatch.iVisualElement p) {
+      return (field.math.graph.GraphNodeSearching.VisitCode) f.f(p);
+    }
+    @Override
+    public iUpdateable updateable(field.core.dispatch.iVisualElement p) {
+
+          return new iUpdateable(){
+             public void update(){
+                 added(p);
+             }
+          };
+    }
+    @Override
+    public iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(field.core.dispatch.iVisualElement p) {
+      return new iProvider(){
+              public Object get(){
+                  return added(p0);
+                  }
+          };
+    }
   }
 
   public static final java.lang.reflect.Method simpleGeneric_m = ReflectionUtils.methodOf("simpleGeneric",some.pkg.MyIFace.class, Object.class);
   public static final Mirroring.MirrorMethod<MyIFace, field.math.graph.GraphNodeSearching.VisitCode, MyIFace> simpleGeneric_s = new Mirroring.MirrorMethod<some.pkg.MyIFace, field.math.graph.GraphNodeSearching.VisitCode, some.pkg.MyIFace>(some.pkg.MyIFace.class,"simpleGeneric",new Class[]{Object.class});
   public static interface simpleGeneric_interface
       implements iAcceptor<MyIFace>, iFunction<field.math.graph.GraphNodeSearching.VisitCode,MyIFace> {
-    field.math.graph.GraphNodeSearching.VisitCode simpleGeneric(MyIFace p0);
-    iUpdateable updateable(MyIFace p0);
-    iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(MyIFace p0);
+    field.math.graph.GraphNodeSearching.VisitCode simpleGeneric(field.core.dispatch.iVisualElement p0);
+    iUpdateable updateable(field.core.dispatch.iVisualElement p0);
+    iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(field.core.dispatch.iVisualElement p0);
+  }
+  static class simpleGeneric_impl
+      implements simpleGeneric_interface {
+    final MyIFace x;
+    final iAcceptor a;
+    final iFunction f;
+    simpleGeneric_impl(MyIFace x) {
+      this.x=x;
+      this.a=simpleGeneric_s.acceptor(x);
+      this.f=simpleGeneric_s.function(x);
+    }
+    @Override
+    public field.math.graph.GraphNodeSearching.VisitCode simpleGeneric(field.core.dispatch.iVisualElement p0) {
+      return x.simpleGeneric(p0);
+    }
+    @Override
+    public iAcceptor<field.core.dispatch.iVisualElement> set(field.core.dispatch.iVisualElement p) {
+      a.set(p);
+      return this;
+    }
+    @Override
+    public field.math.graph.GraphNodeSearching.VisitCode f(field.core.dispatch.iVisualElement p) {
+      return (field.math.graph.GraphNodeSearching.VisitCode) f.f(p);
+    }
+    @Override
+    public iUpdateable updateable(field.core.dispatch.iVisualElement p) {
+
+          return new iUpdateable(){
+             public void update(){
+                 simpleGeneric(p);
+             }
+          };
+    }
+    @Override
+    public iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(field.core.dispatch.iVisualElement p) {
+      return new iProvider(){
+              public Object get(){
+                  return added(p0);
+                  }
+          };
+    }
   }
 
   public static final java.lang.reflect.Method trickyGeneric_m = ReflectionUtils.methodOf("trickyGeneric",some.pkg.MyIFace.class, Enum.class);
   public static final Mirroring.MirrorMethod<MyIFace, field.math.graph.GraphNodeSearching.VisitCode, MyIFace> trickyGeneric_s = new Mirroring.MirrorMethod<some.pkg.MyIFace, field.math.graph.GraphNodeSearching.VisitCode, some.pkg.MyIFace>(some.pkg.MyIFace.class,"trickyGeneric",new Class[]{Enum.class});
   public static interface trickyGeneric_interface
       implements iAcceptor<MyIFace>, iFunction<field.math.graph.GraphNodeSearching.VisitCode,MyIFace> {
-    field.math.graph.GraphNodeSearching.VisitCode trickyGeneric(MyIFace p0);
-    iUpdateable updateable(MyIFace p0);
-    iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(MyIFace p0);
+    field.math.graph.GraphNodeSearching.VisitCode trickyGeneric(field.core.dispatch.iVisualElement p0);
+    iUpdateable updateable(field.core.dispatch.iVisualElement p0);
+    iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(field.core.dispatch.iVisualElement p0);
+  }
+  static class trickyGeneric_impl
+      implements trickyGeneric_interface {
+    final MyIFace x;
+    final iAcceptor a;
+    final iFunction f;
+    trickyGeneric_impl(MyIFace x) {
+      this.x=x;
+      this.a=trickyGeneric_s.acceptor(x);
+      this.f=trickyGeneric_s.function(x);
+    }
+    @Override
+    public field.math.graph.GraphNodeSearching.VisitCode trickyGeneric(field.core.dispatch.iVisualElement p0) {
+      return x.trickyGeneric(p0);
+    }
+    @Override
+    public iAcceptor<field.core.dispatch.iVisualElement> set(field.core.dispatch.iVisualElement p) {
+      a.set(p);
+      return this;
+    }
+    @Override
+    public field.math.graph.GraphNodeSearching.VisitCode f(field.core.dispatch.iVisualElement p) {
+      return (field.math.graph.GraphNodeSearching.VisitCode) f.f(p);
+    }
+    @Override
+    public iUpdateable updateable(field.core.dispatch.iVisualElement p) {
+
+          return new iUpdateable(){
+             public void update(){
+                 trickyGeneric(p);
+             }
+          };
+    }
+    @Override
+    public iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(field.core.dispatch.iVisualElement p) {
+      return new iProvider(){
+              public Object get(){
+                  return added(p0);
+                  }
+          };
+    }
   }
 
   public static final java.lang.reflect.Method dudearrayMethod_m = ReflectionUtils.methodOf("arrayMethod",some.pkg.MyIFace.class, float[][].class);
   public static final Mirroring.MirrorMethod<MyIFace, field.math.graph.GraphNodeSearching.VisitCode, MyIFace> dudearrayMethod_s = new Mirroring.MirrorMethod<some.pkg.MyIFace, field.math.graph.GraphNodeSearching.VisitCode, some.pkg.MyIFace>(some.pkg.MyIFace.class,"arrayMethod",new Class[]{float[][].class});
   public static interface arrayMethod_interface
       implements iAcceptor<MyIFace>, iFunction<field.math.graph.GraphNodeSearching.VisitCode,MyIFace> {
-    field.math.graph.GraphNodeSearching.VisitCode arrayMethod(MyIFace p0);
-    iUpdateable updateable(MyIFace p0);
-    iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(MyIFace p0);
+    field.math.graph.GraphNodeSearching.VisitCode arrayMethod(field.core.dispatch.iVisualElement p0);
+    iUpdateable updateable(field.core.dispatch.iVisualElement p0);
+    iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(field.core.dispatch.iVisualElement p0);
+  }
+  static class arrayMethod_impl
+      implements arrayMethod_interface {
+    final MyIFace x;
+    final iAcceptor a;
+    final iFunction f;
+    arrayMethod_impl(MyIFace x) {
+      this.x=x;
+      this.a=arrayMethod_s.acceptor(x);
+      this.f=arrayMethod_s.function(x);
+    }
+    @Override
+    public field.math.graph.GraphNodeSearching.VisitCode arrayMethod(field.core.dispatch.iVisualElement p0) {
+      return x.arrayMethod(p0);
+    }
+    @Override
+    public iAcceptor<field.core.dispatch.iVisualElement> set(field.core.dispatch.iVisualElement p) {
+      a.set(p);
+      return this;
+    }
+    @Override
+    public field.math.graph.GraphNodeSearching.VisitCode f(field.core.dispatch.iVisualElement p) {
+      return (field.math.graph.GraphNodeSearching.VisitCode) f.f(p);
+    }
+    @Override
+    public iUpdateable updateable(field.core.dispatch.iVisualElement p) {
+
+          return new iUpdateable(){
+             public void update(){
+                 arrayMethod(p);
+             }
+          };
+    }
+    @Override
+    public iProvider<field.math.graph.GraphNodeSearching.VisitCode> bind(field.core.dispatch.iVisualElement p) {
+      return new iProvider(){
+              public Object get(){
+                  return added(p0);
+                  }
+          };
+    }
+  }
+
+  public final added_interface added;
+  public final simpleGeneric_interface simpleGeneric;
+  public final trickyGeneric_interface trickyGeneric;
+  public final arrayMethod_interface arrayMethod;
+
+  public MyIFace_m(MyIFace x) {
+    added=new added_impl(x);
+    simpleGeneric=new simpleGeneric_impl(x);
+    trickyGeneric=new trickyGeneric_impl(x);
+    arrayMethod=new arrayMethod_impl(x);
   }
 }
 '''
