@@ -8,7 +8,9 @@ import groovy.transform.InheritConstructors
 import javabuilder.JavaBuilder
 import javabuilder.writer.JavaWriterEx
 
+import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Modifier
+import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeKind
 import javax.lang.model.type.TypeMirror
 
@@ -20,13 +22,18 @@ import static field.apt.gen.GCodeGenerator.MirrorKind.*
 @InheritConstructors
 class GCodeGenerator extends GeneratorBase implements CodeGen {
 
+    GCodeGenerator(ProcessingEnvironment env, TypeElement element) {
+        super(env, element)
+        def jfo = createJFO()
+
+        this.javaBuilder = new JavaBuilder(jfo.openWriter())
+        this.javaWriter = javaBuilder.javaWriter
+    }
     @Delegate
     JavaBuilder javaBuilder
     JavaWriterEx javaWriter
 
-    static final String VISUAL_ELEMENT = 'field.core.dispatch.IVisualElement';
     static final String TRAVERSAL_HINT = 'field.math.graph.visitors.hint.TraversalHint'
-//TODO this doesnt handle methods with arguments?
 
     def emitEmptyLine() {
         javaWriter.emitEmptyLine()
@@ -68,6 +75,8 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
     static def extraImports = ['field.bytecode.mirror.impl.*',
                                'field.launch.IUpdateable',
                                'field.math.abstraction.IAcceptor',
+                               'field.math.abstraction.IProvider',
+                               'field.math.graph.visitors.hint.TraversalHint',
                                'field.namespace.generic.IFunction',
                                'field.namespace.generic.ReflectionTools',
                                'java.lang.reflect.Method'
@@ -93,7 +102,7 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
         if (!me.parameters.isEmpty()) {
             paramStr = ', ' + me.paramClassesCSV()
         }
-        return "ReflectionUtils.methodOf(\"$me.simpleName\",${element.qualifiedName}.class$paramStr)".toString()
+        return "ReflectionTools.methodOf(\"$me.simpleName\",${element.qualifiedName}.class$paramStr)".toString()
     }
 
     def genAccessField(MethodElement me) {
@@ -123,9 +132,9 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
     String typeParams(MethodElement me, MirrorKind kind) {
         switch (kind) {
             case MirrorMethod:
-                return '<' + me.enclosingElement.toString() + ', ' + name(me.returnType) + ', ' + genArgs(me) + '>'
+                return '<' + me.enclosingElement.toString() + ', ' + boxedClassName(me.returnType) + ', ' + genArgs(me) + '>'
             case MirrorNoArgsMethod:
-                return '<' + me.enclosingElement.toString() + ', ' + name(me.returnType) + '>'
+                return '<' + me.enclosingElement.toString() + ', ' + boxedClassName(me.returnType) + '>'
             case MirrorNoReturnMethod:
                 return '<' + me.enclosingElement.toString() + ', ' + genArgs(me) + '>'
             case MirrorNoReturnNoArgsMethod:
@@ -137,14 +146,18 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
         def nParams = me.parameters.size();
         if (nParams == 1) {
             def param = me.parameters[0].asType()
-            return name(param)
+            return boxedClassName(param)
         } else {
             return 'Object[]'
         }
     }
 
-    def name(TypeMirror mirror) {
-        return TypeNameVisitor.INSTANCE.visit(mirror, env.typeUtils)
+    def boxedClassName(TypeMirror mirror) {
+        return TypeNameVisitor.BOXING.visit(mirror, env.typeUtils)
+    }
+
+    def className(TypeMirror mirror) {
+        return TypeNameVisitor.NON_BOXING.visit(mirror, env.typeUtils)
     }
 
     def genMirror(MethodElement me) {
@@ -167,18 +180,30 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
                          modifiers : PS,
                          implements: ext]) {
 
+            def params = methodParams(me)
+
             method([name      : me.simpleName,
                     returnType: TRAVERSAL_HINT,
-                    params    : [p0: VISUAL_ELEMENT]])
+                    params    : params])
+
             method([name      : 'updateable',
                     returnType: 'IUpdateable',
-                    params    : [p0: VISUAL_ELEMENT]])
+                    params    : params])
+
             method([name      : 'bind',
                     returnType: "IProvider<$TRAVERSAL_HINT>",
-                    params    : [p0: VISUAL_ELEMENT]])
+                    params    : params])
 
         }
     }
+
+    Map<String, String> methodParams(MethodElement me) {
+        me.parameters.inject(new LinkedHashMap<>()) { acc, var ->
+            acc[var.simpleName.toString()] = 'final ' + className(var.asType());
+            acc
+        }
+    }
+
 
     static final Set<Modifier> PS = EnumSet.of(Modifier.PUBLIC, Modifier.STATIC);
     static final Set<Modifier> PSF = EnumSet.of(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
@@ -205,17 +230,21 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
                 stmnt "this.f=${me.simpleName}_s.function(x)"
             }
 
+            def params = methodParams(me)
+
+            def call = me.simpleName + '(' + params.keySet().join(',') + ')'
+
             method([name       : me.simpleName,
-                    returnType : TRAVERSAL_HINT,
-                    params     : [p0: VISUAL_ELEMENT],
+                    returnType : me.hasReturnType() ? className(me.returnType) : 'void',
+                    params     : params,
                     modifiers  : [Modifier.PUBLIC],
                     annotations: [Override]]) {
-                "return x.${me.simpleName}(p0)"
+                def ret = me.hasReturnType() ? 'return' : ''
+                "$ret x.$call"
             }
-
             method([name       : 'set',
-                    returnType : 'IAcceptor<field.core.dispatch.IVisualElement>',
-                    params     : [p: VISUAL_ELEMENT],
+                    returnType : "IAcceptor<$element.qualifiedName>",
+                    params     : [p: genArgs(me)],
                     modifiers  : [Modifier.PUBLIC],
                     annotations: [Override]]) {
                 stmnt 'a.set(p)'
@@ -223,30 +252,32 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
             }
             method([name       : 'apply',
                     returnType : TRAVERSAL_HINT,
-                    params     : [p: VISUAL_ELEMENT],
+                    params     : [p: genArgs(me)],
                     modifiers  : [Modifier.PUBLIC],
                     annotations: [Override]]) {
                 'return (field.math.graph.visitors.hint.TraversalHint) f.apply(p)'
             }
             method([name       : 'updateable',
                     returnType : 'IUpdateable',
-                    params     : [p: VISUAL_ELEMENT],
+                    params     : params,
                     modifiers  : [Modifier.PUBLIC],
                     annotations: [Override]]) {
                 """ |return new IUpdateable(){
                     |   public void update(){
-                    |       ${me.simpleName}(p);
+                    |      $call;
                     |   }
                     |}""".stripMargin()
             }
+
+            def bindCall = me.hasReturnType() ? "return $call" : "$call;\nreturn null;"
             method([name       : 'bind',
                     returnType : 'IProvider<field.math.graph.visitors.hint.TraversalHint>',
-                    params     : [p: VISUAL_ELEMENT],
+                    params     : params,
                     modifiers  : [Modifier.PUBLIC],
                     annotations: [Override]]) {
                 """ |return new IProvider(){
                     |    public Object get(){
-                    |        return added(p0);
+                    |        $bindCall ;
                     |        }
                     |}""".stripMargin()
             }

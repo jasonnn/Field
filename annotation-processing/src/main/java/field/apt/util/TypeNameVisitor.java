@@ -9,17 +9,31 @@ import javax.lang.model.util.Types;
  */
 public
 class TypeNameVisitor extends SimpleTypeVisitor6<String, Types> {
-    public static
-    String getName(Types types, TypeMirror mirror) {
-        return mirror.accept(INSTANCE, types);
+    public
+    TypeNameVisitor(boolean boxing) {
+        this.boxing = boxing;
     }
 
-    public static TypeNameVisitor INSTANCE = new TypeNameVisitor();
+    public static
+    String getName(Types types, TypeMirror mirror) {
+        return mirror.accept(NON_BOXING, types);
+    }
+
+    public static
+    String getName_Boxing(Types types, TypeMirror mirror) {
+        return mirror.accept(BOXING, types);
+    }
+
+    public static TypeNameVisitor BOXING = new TypeNameVisitor(true);
+
+    public static final TypeNameVisitor NON_BOXING = new TypeNameVisitor(false);
+
+    private final boolean boxing;
 
     @Override
     public
     String visitPrimitive(PrimitiveType t, Types types) {
-        return types.boxedClass(t).getQualifiedName().toString();
+        return boxing ? types.boxedClass(t).getQualifiedName().toString() : t.toString();
     }
 
     @Override

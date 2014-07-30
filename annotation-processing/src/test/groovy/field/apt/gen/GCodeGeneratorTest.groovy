@@ -1,4 +1,5 @@
 package field.apt.gen
+
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory
 import field.apt.TestingProcessor
@@ -16,6 +17,7 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 import static groovy.util.StringTestUtil.assertMultilineStringsEqual
+
 /**
  * Created by jason on 7/11/14.
  */
@@ -145,7 +147,7 @@ public interface MyIFace{
     @Test
     public void testGenerate() throws Exception {
         def sw = new StringWriter()
-      //  def jw = new JavaWriterEx(sw)
+        //  def jw = new JavaWriterEx(sw)
         def jb = new JavaBuilder(sw)
         def gen = new GCodeGenerator(env, e)
         gen.javaBuilder = jb
@@ -177,27 +179,27 @@ public class MyIFace_m {
 
   public static interface added_interface
       implements IAcceptor<MyIFace>, IFunction<field.math.graph.visitors.hint.TraversalHint,MyIFace> {
-    field.math.graph.visitors.hint.TraversalHint added(field.core.dispatch.IVisualElement p0);
-    IUpdateable updateable(field.core.dispatch.IVisualElement p0);
-    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(field.core.dispatch.IVisualElement p0);
+    field.math.graph.visitors.hint.TraversalHint added(final int newSource, final List listOfStr, final Date date);
+    IUpdateable updateable(final int newSource, final List listOfStr, final Date date);
+    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final int newSource, final List listOfStr, final Date date);
   }
   public static interface simpleGeneric_interface
       implements IAcceptor<MyIFace>, IFunction<field.math.graph.visitors.hint.TraversalHint,MyIFace> {
-    field.math.graph.visitors.hint.TraversalHint simpleGeneric(field.core.dispatch.IVisualElement p0);
-    IUpdateable updateable(field.core.dispatch.IVisualElement p0);
-    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(field.core.dispatch.IVisualElement p0);
+    field.math.graph.visitors.hint.TraversalHint simpleGeneric(final Object t);
+    IUpdateable updateable(final Object t);
+    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final Object t);
   }
   public static interface trickyGeneric_interface
       implements IAcceptor<MyIFace>, IFunction<field.math.graph.visitors.hint.TraversalHint,MyIFace> {
-    field.math.graph.visitors.hint.TraversalHint trickyGeneric(field.core.dispatch.IVisualElement p0);
-    IUpdateable updateable(field.core.dispatch.IVisualElement p0);
-    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(field.core.dispatch.IVisualElement p0);
+    field.math.graph.visitors.hint.TraversalHint trickyGeneric(final Enum e);
+    IUpdateable updateable(final Enum e);
+    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final Enum e);
   }
   public static interface arrayMethod_interface
       implements IAcceptor<MyIFace>, IFunction<field.math.graph.visitors.hint.TraversalHint,MyIFace> {
-    field.math.graph.visitors.hint.TraversalHint arrayMethod(field.core.dispatch.IVisualElement p0);
-    IUpdateable updateable(field.core.dispatch.IVisualElement p0);
-    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(field.core.dispatch.IVisualElement p0);
+    field.math.graph.visitors.hint.TraversalHint arrayMethod(final float[][] array);
+    IUpdateable updateable(final float[][] array);
+    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final float[][] array);
   }
 
   static class added_impl
@@ -211,31 +213,31 @@ public class MyIFace_m {
       this.f=added_s.function(x);
     }
     @Override
-    public field.math.graph.visitors.hint.TraversalHint added(field.core.dispatch.IVisualElement p0) {
-      return x.added(p0);
+    public String added(final int newSource, final List listOfStr, final Date date) {
+      return x.added(newSource,listOfStr,date);
     }
     @Override
-    public IAcceptor<field.core.dispatch.IVisualElement> set(field.core.dispatch.IVisualElement p) {
+    public IAcceptor<MyIFace> set(Object[] p) {
       a.set(p);
       return this;
     }
     @Override
-    public field.math.graph.visitors.hint.TraversalHint apply(field.core.dispatch.IVisualElement p) {
+    public field.math.graph.visitors.hint.TraversalHint apply(Object[] p) {
       return (field.math.graph.visitors.hint.TraversalHint) f.apply(p);
     }
     @Override
-    public IUpdateable updateable(field.core.dispatch.IVisualElement p) {
+    public IUpdateable updateable(final int newSource, final List listOfStr, final Date date) {
       return new IUpdateable(){
              public void update(){
-                 added(p);
+                added(newSource,listOfStr,date);
              }
           };
     }
     @Override
-    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(field.core.dispatch.IVisualElement p) {
+    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final int newSource, final List listOfStr, final Date date) {
       return new IProvider(){
               public Object get(){
-                  return added(p0);
+                  return added(newSource,listOfStr,date)
                   }
           };
     }
@@ -251,31 +253,32 @@ public class MyIFace_m {
       this.f=simpleGeneric_s.function(x);
     }
     @Override
-    public field.math.graph.visitors.hint.TraversalHint simpleGeneric(field.core.dispatch.IVisualElement p0) {
-      return x.simpleGeneric(p0);
+    public void simpleGeneric(final Object t) {
+       x.simpleGeneric(t);
     }
     @Override
-    public IAcceptor<field.core.dispatch.IVisualElement> set(field.core.dispatch.IVisualElement p) {
+    public IAcceptor<MyIFace> set(Object p) {
       a.set(p);
       return this;
     }
     @Override
-    public field.math.graph.visitors.hint.TraversalHint apply(field.core.dispatch.IVisualElement p) {
+    public field.math.graph.visitors.hint.TraversalHint apply(Object p) {
       return (field.math.graph.visitors.hint.TraversalHint) f.apply(p);
     }
     @Override
-    public IUpdateable updateable(field.core.dispatch.IVisualElement p) {
+    public IUpdateable updateable(final Object t) {
       return new IUpdateable(){
              public void update(){
-                 simpleGeneric(p);
+                simpleGeneric(t);
              }
           };
     }
     @Override
-    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(field.core.dispatch.IVisualElement p) {
+    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final Object t) {
       return new IProvider(){
               public Object get(){
-                  return added(p0);
+                  simpleGeneric(t);
+          return null;
                   }
           };
     }
@@ -291,31 +294,31 @@ public class MyIFace_m {
       this.f=trickyGeneric_s.function(x);
     }
     @Override
-    public field.math.graph.visitors.hint.TraversalHint trickyGeneric(field.core.dispatch.IVisualElement p0) {
-      return x.trickyGeneric(p0);
+    public Enum trickyGeneric(final Enum e) {
+      return x.trickyGeneric(e);
     }
     @Override
-    public IAcceptor<field.core.dispatch.IVisualElement> set(field.core.dispatch.IVisualElement p) {
+    public IAcceptor<MyIFace> set(Enum p) {
       a.set(p);
       return this;
     }
     @Override
-    public field.math.graph.visitors.hint.TraversalHint apply(field.core.dispatch.IVisualElement p) {
+    public field.math.graph.visitors.hint.TraversalHint apply(Enum p) {
       return (field.math.graph.visitors.hint.TraversalHint) f.apply(p);
     }
     @Override
-    public IUpdateable updateable(field.core.dispatch.IVisualElement p) {
+    public IUpdateable updateable(final Enum e) {
       return new IUpdateable(){
              public void update(){
-                 trickyGeneric(p);
+                trickyGeneric(e);
              }
           };
     }
     @Override
-    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(field.core.dispatch.IVisualElement p) {
+    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final Enum e) {
       return new IProvider(){
               public Object get(){
-                  return added(p0);
+                  return trickyGeneric(e)
                   }
           };
     }
@@ -331,31 +334,32 @@ public class MyIFace_m {
       this.f=arrayMethod_s.function(x);
     }
     @Override
-    public field.math.graph.visitors.hint.TraversalHint arrayMethod(field.core.dispatch.IVisualElement p0) {
-      return x.arrayMethod(p0);
+    public void arrayMethod(final float[][] array) {
+       x.arrayMethod(array);
     }
     @Override
-    public IAcceptor<field.core.dispatch.IVisualElement> set(field.core.dispatch.IVisualElement p) {
+    public IAcceptor<MyIFace> set(Float[][] p) {
       a.set(p);
       return this;
     }
     @Override
-    public field.math.graph.visitors.hint.TraversalHint apply(field.core.dispatch.IVisualElement p) {
+    public field.math.graph.visitors.hint.TraversalHint apply(Float[][] p) {
       return (field.math.graph.visitors.hint.TraversalHint) f.apply(p);
     }
     @Override
-    public IUpdateable updateable(field.core.dispatch.IVisualElement p) {
+    public IUpdateable updateable(final float[][] array) {
       return new IUpdateable(){
              public void update(){
-                 arrayMethod(p);
+                arrayMethod(array);
              }
           };
     }
     @Override
-    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(field.core.dispatch.IVisualElement p) {
+    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final float[][] array) {
       return new IProvider(){
               public Object get(){
-                  return added(p0);
+                  arrayMethod(array);
+          return null;
                   }
           };
     }
@@ -377,8 +381,8 @@ public class MyIFace_m {
 '''
         try {
             assertMultilineStringsEqual(expect, sw.toString())
-        } catch (Throwable ignored){
-            Assert.assertEquals(expect,sw.toString())
+        } catch (Throwable ignored) {
+            Assert.assertEquals(expect, sw.toString())
         }
     }
 }

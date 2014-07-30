@@ -2,6 +2,7 @@ package field.apt.gen
 
 import field.apt.util.FieldsAndMethods
 import field.bytecode.protect.annotations.GenerateMethods
+import field.bytecode.protect.annotations.Mirror
 
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.ElementKind
@@ -34,8 +35,8 @@ class GeneratorBase {
         this.element = element
         def fm = FieldsAndMethods.forElement(element)
         this.fields = fm.fields
-        def fact=new MethodElement.Factory(env)
-        this.methods = fm.methods.collect { fact.create(it) }
+        def fact = new MethodElement.Factory(env)
+        this.methods = fm.methods.findAll { it.getAnnotation(Mirror) }.collect { fact.create(it) }
         this.isInterface = element.kind == ElementKind.INTERFACE
         this.defaultPrefix = element.getAnnotation(GenerateMethods).prefix()
     }
