@@ -1,6 +1,6 @@
 package field.apt.gen
-
 import field.apt.util.FieldsAndMethods
+import field.apt.util.GenUtils
 import field.bytecode.protect.annotations.GenerateMethods
 import field.bytecode.protect.annotations.Mirror
 import javabuilder.JavaBuilder
@@ -15,12 +15,11 @@ import javax.lang.model.element.VariableElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import javax.tools.JavaFileObject
-
 /**
  * Created by jason on 7/12/14.
  */
 class GeneratorBase {
-    public static final String DEFAULT_SUFFIX = "_m2";
+    public static final String DEFAULT_SUFFIX = "_m";
 
 
     TypeElement element
@@ -99,4 +98,19 @@ class GeneratorBase {
     def emitEmptyLine() {
         javaWriter.emitEmptyLine()
     }
+//TODO see if params share a common supertype other than Object
+    def acceptorGenericArg(MethodElement me) {
+        def nParams = me.parameters.size();
+        if(nParams==0) return 'Void'
+        if (nParams == 1) {
+            def param = me.parameters[0].asType()
+            return GenUtils.getRawTypeName(true, types, param)
+        } else {
+            return 'Object[]'
+        }
+    }
+
+//    def boxedClassName(TypeMirror mirror) {
+//        return RawTypeNameVisitor.BOXING.visit(mirror, env.typeUtils)
+//    }
 }

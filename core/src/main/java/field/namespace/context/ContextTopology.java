@@ -3,7 +3,9 @@ package field.namespace.context;
 import java.util.Set;
 
 /**
- * Created by jason on 7/14/14.
+ *
+ * @param K key type
+ * @param I interface type
  */
 public abstract
 class ContextTopology<K, I> {

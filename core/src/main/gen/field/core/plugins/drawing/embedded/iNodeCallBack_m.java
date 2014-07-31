@@ -147,9 +147,9 @@ class iNodeCallBack_m {
                                                                  field.core.plugins.drawing.opengl.CachedLine.Event.class,
                                                                  field.math.linalg.Vector2.class,
                                                                  java.awt.event.MouseEvent.class);
-    public static final MirrorMethod<iNodeCallBack, Map, Object[]>
+    public static final MirrorMethod<iNodeCallBack, Object[], Map>
             menu_s =
-            new MirrorMethod<iNodeCallBack, Map, Object[]>(field.core.plugins.drawing.embedded.iNodeCallBack.class,
+            new MirrorMethod<iNodeCallBack, Object[], Map>(field.core.plugins.drawing.embedded.iNodeCallBack.class,
                                                                                                                    "menu",
                                                                                                                    new Class[]{field.core.plugins.drawing.opengl.CachedLine.class,
                                                                                                                                field.core.plugins.drawing.opengl.CachedLine.Event.class,

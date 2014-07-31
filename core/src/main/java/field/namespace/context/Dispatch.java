@@ -13,7 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by jason on 7/14/14.
+ *  @param K key type
+ * @param I interface type
  */
 public
 class Dispatch<K, I> {
@@ -24,15 +25,19 @@ class Dispatch<K, I> {
         public
         List<K> getChildrenOf(K of) {
             Collection<K> pp = topology.parentsOf(of);
-            if (pp != null) return new ArrayList<K>(pp);
-            else return Collections.emptyList();
+            if (pp != null)
+                return new ArrayList<K>(pp);
+            else
+                return Collections.emptyList();
         }
 
         public
         List<K> getParentsOf(K of) {
             Collection<K> pp = topology.childrenOf(of);
-            if (pp != null) return new ArrayList<K>(pp);
-            else return Collections.emptyList();
+            if (pp != null)
+                return new ArrayList<K>(pp);
+            else
+                return Collections.emptyList();
         }
 
     };
@@ -41,15 +46,19 @@ class Dispatch<K, I> {
         public
         List<K> getChildrenOf(K of) {
             Collection<K> pp = topology.childrenOf(of);
-            if (pp != null) return new ArrayList<K>(pp);
-            else return Collections.emptyList();
+            if (pp != null)
+                return new ArrayList<K>(pp);
+            else
+                return Collections.emptyList();
         }
 
         public
         List<K> getParentsOf(K of) {
             Collection<K> pp = topology.parentsOf(of);
-            if (pp != null) return new ArrayList<K>(pp);
-            else return Collections.emptyList();
+            if (pp != null)
+                return new ArrayList<K>(pp);
+            else
+                return Collections.emptyList();
         }
     };
 
@@ -84,7 +93,8 @@ class Dispatch<K, I> {
             @Override
             public
             Object getObject(K e) {
-                if (e == startingFrom) return null;
+                if (e == startingFrom)
+                    return null;
                 return topology.storage.get(e, method);
             }
         };
@@ -113,7 +123,8 @@ class Dispatch<K, I> {
             @Override
             public
             Object getObject(K e) {
-                if (e == startingFrom) return null;
+                if (e == startingFrom)
+                    return null;
                 return topology.storage.get(e, method);
             }
         };
@@ -136,7 +147,8 @@ class Dispatch<K, I> {
                     @Override
                     public
                     Object getObject(K e) {
-                        if (e == startingFrom) return null;
+                        if (e == startingFrom)
+                            return null;
                         return topology.storage.get(e, method);
                     }
                 };

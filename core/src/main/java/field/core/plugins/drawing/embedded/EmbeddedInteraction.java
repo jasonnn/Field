@@ -1,5 +1,6 @@
 package field.core.plugins.drawing.embedded;
 
+import field.bytecode.mirror.impl.MirrorMethod;
 import field.bytecode.mirror.impl.MirrorNoReturnMethod;
 import field.core.dispatch.IVisualElement;
 import field.core.execution.PythonScriptingSystem;
@@ -131,7 +132,7 @@ class EmbeddedInteraction {
 
     public static
     List<Triple<iNodeCallBack, CachedLine, CachedLine.Event>> perform(Set<CachedLine> al,
-                                                                      MirrorNoReturnMethod<iNodeCallBack, Object[]> mirrorNoReturnMethod,
+                                                                      MirrorMethod<iNodeCallBack,Object[],?> mirrorNoReturnMethod,
                                                                       Vector2 vector2,
                                                                       Event arg0,
                                                                       boolean doPerLine) {
@@ -222,7 +223,7 @@ class EmbeddedInteraction {
     void fire(iNodeCallBack n1,
               CachedLine l,
               CachedLine.Event current,
-              MirrorNoReturnMethod<iNodeCallBack, Object[]> method,
+              MirrorMethod<iNodeCallBack, Object[],?> method,
               Vector2 vector2,
               Event arg0) {
 

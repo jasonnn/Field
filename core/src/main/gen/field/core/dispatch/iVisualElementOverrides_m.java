@@ -18,8 +18,8 @@ class iVisualElementOverrides_m {
                                                                   IVisualElementOverrides.class,
                                                                   IVisualElement.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, IVisualElement> added_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, IVisualElement>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, IVisualElement, TraversalHint> added_s =
+            new MirrorMethod<IVisualElementOverrides, IVisualElement, TraversalHint>(IVisualElementOverrides.class,
                                                                                      "added",
                                                                                      new Class[]{IVisualElement.class});
 
@@ -27,8 +27,8 @@ class iVisualElementOverrides_m {
                                                                            IVisualElementOverrides.class,
                                                                            IVisualElement.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, IVisualElement> beginExecution_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, IVisualElement>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, IVisualElement, TraversalHint> beginExecution_s =
+            new MirrorMethod<IVisualElementOverrides, IVisualElement, TraversalHint>(IVisualElementOverrides.class,
                                                                                      "beginExecution",
                                                                                      new Class[]{IVisualElement.class});
 
@@ -36,8 +36,8 @@ class iVisualElementOverrides_m {
                                                                     IVisualElementOverrides.class,
                                                                     IVisualElement.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, IVisualElement> deleted_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, IVisualElement>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, IVisualElement, TraversalHint> deleted_s =
+            new MirrorMethod<IVisualElementOverrides, IVisualElement, TraversalHint>(IVisualElementOverrides.class,
                                                                                      "deleted",
                                                                                      new Class[]{IVisualElement.class});
 
@@ -46,8 +46,8 @@ class iVisualElementOverrides_m {
                                                                            IVisualElement.class,
                                                                            IVisualElement.VisualElementProperty.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]> deleteProperty_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> deleteProperty_s =
+            new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "deleteProperty",
                                                                                new Class[]{IVisualElement.class,
                                                                                            IVisualElement.VisualElementProperty.class});
@@ -56,8 +56,8 @@ class iVisualElementOverrides_m {
                                                                          IVisualElementOverrides.class,
                                                                          IVisualElement.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, IVisualElement> endExecution_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, IVisualElement>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, IVisualElement, TraversalHint> endExecution_s =
+            new MirrorMethod<IVisualElementOverrides, IVisualElement, TraversalHint>(IVisualElementOverrides.class,
                                                                                      "endExecution",
                                                                                      new Class[]{IVisualElement.class});
 
@@ -67,8 +67,8 @@ class iVisualElementOverrides_m {
                                                                         IVisualElement.VisualElementProperty.class,
                                                                         IVisualElementOverrides.Ref.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]> getProperty_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> getProperty_s =
+            new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "getProperty",
                                                                                new Class[]{IVisualElement.class,
                                                                                            IVisualElement.VisualElementProperty.class,
@@ -79,8 +79,8 @@ class iVisualElementOverrides_m {
                                                                                 IVisualElement.class,
                                                                                 org.eclipse.swt.widgets.Event.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]> handleKeyboardEvent_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> handleKeyboardEvent_s =
+            new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "handleKeyboardEvent",
                                                                                new Class[]{IVisualElement.class,
                                                                                            org.eclipse.swt.widgets.Event.class});
@@ -90,8 +90,8 @@ class iVisualElementOverrides_m {
                                                                                      IVisualElement.class,
                                                                                      java.util.List.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]> inspectablePropertiesFor_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> inspectablePropertiesFor_s =
+            new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "inspectablePropertiesFor",
                                                                                new Class[]{IVisualElement.class,
                                                                                            java.util.List.class});
@@ -102,8 +102,8 @@ class iVisualElementOverrides_m {
                                                                   org.eclipse.swt.widgets.Event.class,
                                                                   IVisualElementOverrides.Ref.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]> isHit_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> isHit_s =
+            new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "isHit",
                                                                                new Class[]{IVisualElement.class,
                                                                                            org.eclipse.swt.widgets.Event.class,
@@ -114,8 +114,8 @@ class iVisualElementOverrides_m {
                                                                          IVisualElement.class,
                                                                          java.util.Map.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]> menuItemsFor_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> menuItemsFor_s =
+            new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "menuItemsFor",
                                                                                new Class[]{IVisualElement.class,
                                                                                            java.util.Map.class});
@@ -126,8 +126,8 @@ class iVisualElementOverrides_m {
                                                                      IVisualElement.Rect.class,
                                                                      boolean.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]> paintNow_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> paintNow_s =
+            new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "paintNow",
                                                                                new Class[]{IVisualElement.class,
                                                                                            IVisualElement.Rect.class,
@@ -146,8 +146,8 @@ class iVisualElementOverrides_m {
                                                                         IVisualElement.VisualElementProperty.class,
                                                                         IVisualElementOverrides.Ref.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]> setProperty_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> setProperty_s =
+            new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "setProperty",
                                                                                new Class[]{IVisualElement.class,
                                                                                            IVisualElement.VisualElementProperty.class,
@@ -160,8 +160,8 @@ class iVisualElementOverrides_m {
                                                                               IVisualElement.Rect.class,
                                                                               boolean.class);
 
-    public static final MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]> shouldChangeFrame_s =
-            new MirrorMethod<IVisualElementOverrides, TraversalHint, Object[]>(IVisualElementOverrides.class,
+    public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> shouldChangeFrame_s =
+            new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "shouldChangeFrame",
                                                                                new Class[]{IVisualElement.class,
                                                                                            IVisualElement.Rect.class,

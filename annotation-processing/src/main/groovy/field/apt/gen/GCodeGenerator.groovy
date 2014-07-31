@@ -3,14 +3,12 @@ package field.apt.gen
 import field.apt.CodeGen
 import field.apt.util.CollectImportsScanner
 import field.apt.util.GenUtils
-import field.apt.util.RawTypeNameVisitor
 import groovy.transform.InheritConstructors
 import javabuilder.JavaBuilder
 
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
 
 import static field.apt.gen.MirrorKind.*
 
@@ -31,10 +29,10 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
         super.setJavaBuilder(jb)
         wrapperTypesGen.setJavaBuilder(jb)
         wrapperTypesGen.setJavaWriter(jb.javaWriter)
-        assert javaBuilder !=null
-        assert wrapperTypesGen!=null
-        assert wrapperTypesGen.javaBuilder!=null
-        assert wrapperTypesGen.javaWriter!=null
+        assert javaBuilder != null
+        assert wrapperTypesGen != null
+        assert wrapperTypesGen.javaBuilder != null
+        assert wrapperTypesGen.javaWriter != null
     }
 
 
@@ -47,7 +45,7 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
             createClass(name: generatedSimpleName,
                         modifiers: [Modifier.PUBLIC]) {
                 def steps = [this.&genAccessField,
-                             this.&genMirror,
+                             this.&genMirrorField,
                              this.wrapperTypesGen.&generate,
                              this.&genInstanceField]
 
@@ -74,7 +72,6 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
                                'field.launch.IUpdateable',
                                'field.math.abstraction.IAcceptor',
                                'field.math.abstraction.IProvider',
-                               'field.math.graph.visitors.hint.TraversalHint',
                                'field.namespace.generic.IFunction',
                                'field.namespace.generic.ReflectionTools',
                                'java.lang.reflect.Method'
@@ -111,44 +108,37 @@ class GCodeGenerator extends GeneratorBase implements CodeGen {
     }
 
 
-    String typeParams(MethodElement me, MirrorKind kind) {
-        switch (kind) {
-            case MirrorMethod:
-                return '<' + me.parent.toString() + ', ' + boxedClassName(me.returnType) + ', ' + genArgs(me) + '>'
-            case MirrorNoArgsMethod:
-                return '<' + me.parent.toString() + ', ' + boxedClassName(me.returnType) + '>'
-            case MirrorNoReturnMethod:
-                return '<' + me.parent.toString() + ', ' + genArgs(me) + '>'
-            case MirrorNoReturnNoArgsMethod:
-                return '<' + me.parent.toString() + '>'
-        }
-    }
+//    String typeParams(MethodElement me) {
+//        switch (me.mirrorKind) {
+//            case MirrorMethod:
+//                return '<' + me.parent.toString() + ', ' + boxedClassName(me.returnType) + ', ' + acceptorGenericArg(me) + '>'
+//            case MirrorNoArgsMethod:
+//                return '<' + me.parent.toString() + ', ' + boxedClassName(me.returnType) + '>'
+//            case MirrorNoReturnMethod:
+//                return '<' + me.parent.toString() + ', ' + acceptorGenericArg(me) + '>'
+//            case MirrorNoReturnNoArgsMethod:
+//                return '<' + me.parent.toString() + '>'
+//            default:
+//                throw new IllegalArgumentException(me.toString())
+//        }
+//    }
 
-    def genArgs(MethodElement me) {
-        def nParams = me.parameters.size();
-        if (nParams == 1) {
-            def param = me.parameters[0].asType()
-            return boxedClassName(param)
-        } else {
-            return 'Object[]'
-        }
-    }
-
-    def boxedClassName(TypeMirror mirror) {
-        return RawTypeNameVisitor.BOXING.visit(mirror, env.typeUtils)
+    String typeParams2(MethodElement me) {
+        def owner = me.parent.toString()
+        def I = acceptorGenericArg(me)
+        def O = me.boxedReturnType
+        "<$owner,$I,$O>"
     }
 
 
+    def genMirrorField(MethodElement me) {
 
-    def genMirror(MethodElement me) {
-        def mirrorKind = forMethod(me)
-
-        def typeParams = typeParams(me, mirrorKind)
-        def type = mirrorKind.name() + typeParams
+        def parameterizedPart = typeParams2(me)
+        def mirrorType = 'MirrorMethod' + parameterizedPart
 
         field([name       : me.generatedName + '_s',
-               type       : type,
-               initializer: "new $type(${me.generatedName}_m)",
+               type       : mirrorType,
+               initializer: "new $mirrorType(${me.generatedName}_m)",
                modifiers  : [Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL]])
     }
 

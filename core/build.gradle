@@ -32,7 +32,7 @@ sourceSets {
         java {
             srcDir 'src/main/java'
             srcDir 'src/main/genSrc'
-            srcDir 'src/main/gen'
+            //srcDir 'src/main/gen'
         }
     }
     test {

@@ -1605,8 +1605,8 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
         // System.out.println(" b ");
 
         IVisualElementOverrides.topology.begin(rootSheetElement);
-        IVisualElementOverrides.forward.prepareForSave.update();
-        IVisualElementOverrides.backward.prepareForSave.update();
+        IVisualElementOverrides.forward.prepareForSave.updateable().update();
+        IVisualElementOverrides.backward.prepareForSave.updateable().update();
         IVisualElementOverrides.topology.end(rootSheetElement);
 
         // System.out.println(" c ");
@@ -1672,8 +1672,8 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
         // System.out.println(" b ");
 
         IVisualElementOverrides.topology.begin(rootSheetElement);
-        IVisualElementOverrides.forward.prepareForSave.update();
-        IVisualElementOverrides.backward.prepareForSave.update();
+        IVisualElementOverrides.forward.prepareForSave.updateable().update();
+        IVisualElementOverrides.backward.prepareForSave.updateable().update();
         IVisualElementOverrides.topology.end(rootSheetElement);
 
         // System.out.println(" c ");

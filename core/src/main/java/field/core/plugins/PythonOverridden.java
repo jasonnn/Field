@@ -4,7 +4,7 @@ import field.core.dispatch.IVisualElement;
 import field.core.dispatch.IVisualElement.Rect;
 import field.core.dispatch.IVisualElement.VisualElementProperty;
 import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
-import field.core.dispatch.iVisualElementOverrides_m;
+import field.core.dispatch.IVisualElementOverrides_m;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.launch.IUpdateable;
 import field.math.graph.visitors.hint.StandardTraversalHint;
@@ -106,7 +106,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     TraversalHint added(IVisualElement newSource) {
-        Method method = iVisualElementOverrides_m.added_m;
+        Method method = IVisualElementOverrides_m.added_m;
         Object[] args = {newSource};
         String methodName = "added";
 
@@ -116,7 +116,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     TraversalHint beginExecution(IVisualElement source) {
-        Method method = iVisualElementOverrides_m.beginExecution_m;
+        Method method = IVisualElementOverrides_m.beginExecution_m;
         Object[] args = {source};
         String methodName = "beginExecution";
 
@@ -126,7 +126,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     TraversalHint deleted(IVisualElement source) {
-        Method method = iVisualElementOverrides_m.deleted_m;
+        Method method = IVisualElementOverrides_m.deleted_m;
         Object[] args = {source};
         String methodName = "deleted";
 
@@ -136,7 +136,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     <T> TraversalHint deleteProperty(IVisualElement source, VisualElementProperty<T> prop) {
-        Method method = iVisualElementOverrides_m.deleteProperty_m;
+        Method method = IVisualElementOverrides_m.deleteProperty_m;
         Object[] args = {source, prop};
         String methodName = "deleteProperty";
 
@@ -146,7 +146,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     TraversalHint endExecution(IVisualElement source) {
-        Method method = iVisualElementOverrides_m.endExecution_m;
+        Method method = IVisualElementOverrides_m.endExecution_m;
         Object[] args = {source};
         String methodName = "endExecution";
 
@@ -156,7 +156,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
-        Method method = iVisualElementOverrides_m.getProperty_m;
+        Method method = IVisualElementOverrides_m.getProperty_m;
         Object[] args = {source, prop, ref};
         String methodName = "getProperty";
 
@@ -166,7 +166,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     TraversalHint handleKeyboardEvent(IVisualElement newSource, org.eclipse.swt.widgets.Event event) {
-        Method method = iVisualElementOverrides_m.handleKeyboardEvent_m;
+        Method method = IVisualElementOverrides_m.handleKeyboardEvent_m;
         Object[] args = {newSource, event};
         String methodName = "handleKeyboardEvent";
 
@@ -176,7 +176,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
-        Method method = iVisualElementOverrides_m.menuItemsFor_m;
+        Method method = IVisualElementOverrides_m.menuItemsFor_m;
         Object[] args = {source, items};
         String methodName = "menuItemsFor";
 
@@ -186,7 +186,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
-        Method method = iVisualElementOverrides_m.paintNow_m;
+        Method method = IVisualElementOverrides_m.paintNow_m;
         Object[] args = {source, bounds, visible};
         String methodName = "paintNow";
 
@@ -202,7 +202,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> to) {
-        Method method = iVisualElementOverrides_m.setProperty_m;
+        Method method = IVisualElementOverrides_m.setProperty_m;
         Object[] args = {source, prop, to};
         String methodName = "setProperty";
 
@@ -212,7 +212,7 @@ class PythonOverridden extends DefaultOverride {
     @Override
     public
     TraversalHint shouldChangeFrame(IVisualElement source, Rect newFrame, Rect oldFrame, boolean now) {
-        Method method = iVisualElementOverrides_m.shouldChangeFrame_m;
+        Method method = IVisualElementOverrides_m.shouldChangeFrame_m;
         Object[] args = {source, newFrame, oldFrame, now};
         String methodName = "shouldChangeFrame";
 

@@ -22,9 +22,9 @@ class iComponent_m {
     public static final Method isHit_m = ReflectionTools.methodOf("isHit",
                                                                   field.core.windowing.components.iComponent.class,
                                                                   org.eclipse.swt.widgets.Event.class);
-    public static final MirrorMethod<iComponent, Float, Event>
+    public static final MirrorMethod<iComponent, Event, Float>
             isHit_s =
-            new MirrorMethod<iComponent, Float, Event>(field.core.windowing.components.iComponent.class,
+            new MirrorMethod<iComponent, Event, Float>(field.core.windowing.components.iComponent.class,
                                                                                                                          "isHit",
                                                                                                                          new Class[]{org.eclipse.swt.widgets.Event.class});
 
@@ -45,9 +45,9 @@ class iComponent_m {
     public static final Method hit_m = ReflectionTools.methodOf("hit",
                                                                 field.core.windowing.components.iComponent.class,
                                                                 org.eclipse.swt.widgets.Event.class);
-    public static final MirrorMethod<iComponent, iComponent, Event>
+    public static final MirrorMethod<iComponent, Event, iComponent>
             hit_s =
-            new MirrorMethod<iComponent, iComponent, Event>(field.core.windowing.components.iComponent.class,
+            new MirrorMethod<iComponent, Event, iComponent>(field.core.windowing.components.iComponent.class,
                                                                                                                                                               "hit",
                                                                                                                                                               new Class[]{org.eclipse.swt.widgets.Event.class});
 
@@ -446,9 +446,9 @@ class iComponent_m {
     public static final Method setVisualElement_m = ReflectionTools.methodOf("setVisualElement",
                                                                              field.core.windowing.components.iComponent.class,
                                                                              IVisualElement.class);
-    public static final MirrorMethod<iComponent, iComponent, IVisualElement>
+    public static final MirrorMethod<iComponent, IVisualElement, iComponent>
             setVisualElement_s =
-            new MirrorMethod<iComponent, iComponent, IVisualElement>(field.core.windowing.components.iComponent.class,
+            new MirrorMethod<iComponent, IVisualElement, iComponent>(field.core.windowing.components.iComponent.class,
                                                                                                                                                                    "setVisualElement",
                                                                                                                                                                    new Class[]{IVisualElement.class});
 

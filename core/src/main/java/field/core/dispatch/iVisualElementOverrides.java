@@ -300,15 +300,15 @@ interface IVisualElementOverrides {
 
 //	static public iVisualElementOverrides_m backward = new iVisualElementOverrides_m(new Dispatch<iVisualElement, iVisualElementOverrides>(topology).getBackwardsOverrideProxyFor(iVisualElementOverrides.class));
 
-    public static iVisualElementOverrides_m backward =
-            new iVisualElementOverrides_m(new FastVisualElementOverridesDispatch(true));
-    public static iVisualElementOverrides_m forward =
-            new iVisualElementOverrides_m(new FastVisualElementOverridesDispatch(false));
+    public static IVisualElementOverrides_m backward =
+            new IVisualElementOverrides_m(new FastVisualElementOverridesDispatch(true));
+    public static IVisualElementOverrides_m forward =
+            new IVisualElementOverrides_m(new FastVisualElementOverridesDispatch(false));
 
     //	static public iVisualElementOverrides_m forward = new iVisualElementOverrides_m(new Dispatch<iVisualElement, iVisualElementOverrides>(topology).getOverrideProxyFor(iVisualElementOverrides.class));
 //	static public iVisualElementOverrides_m forwardAbove = new iVisualElementOverrides_m(new Dispatch<iVisualElement, iVisualElementOverrides>(topology).getAboveOverrideProxyFor(iVisualElementOverrides.class));
-    public static iVisualElementOverrides_m forwardAbove =
-            new iVisualElementOverrides_m(new FastVisualElementOverridesDispatchAbove(false));
+    public static IVisualElementOverrides_m forwardAbove =
+            new IVisualElementOverrides_m(new FastVisualElementOverridesDispatchAbove(false));
 
     @Mirror
     public

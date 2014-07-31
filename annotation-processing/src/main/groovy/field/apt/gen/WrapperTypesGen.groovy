@@ -1,6 +1,5 @@
 package field.apt.gen
 
-import field.apt.util.GenUtils
 import groovy.transform.InheritConstructors
 import javabuilder.delegates.StatementHandler
 
@@ -19,13 +18,14 @@ class WrapperTypesGen extends GeneratorBase {
 
     void generate(MethodElement me) {
         def params = makeParamsFinal(me.params())
-        def genericIn = genArgs(me)
-        def vv = me.mirrorKind == MirrorKind.MirrorNoReturnNoArgsMethod
+        def genericIn = acceptorGenericArg(me)
+        //def vv = me.mirrorKind == MirrorKind.MirrorNoReturnNoArgsMethod
 
         def call = me.simpleName + '(' + me.params().keySet().join(',') + ')'
 
         def impls = ["IAcceptor<${genericIn}>",
                      "IFunction<$genericIn,${me.boxedReturnType}>"]
+        if(me.params().isEmpty()) impls<<"field.launch.IUpdateable"
 
         def wrapMethod = [name      : me.simpleName,
                           returnType: me.rawReturnType,
@@ -51,18 +51,19 @@ class WrapperTypesGen extends GeneratorBase {
         createClass([name      : me.generatedName + '_impl',
                      modifiers : [Modifier.STATIC],
                      implements: [me.generatedName + '_interface']]) {
+
             field([name     : 'x',
                    type     : me.parent.simpleName,
                    modifiers: [Modifier.FINAL]])
-            if (!vv) field([name     : 'a',
-                            type     : 'IAcceptor',
-                            modifiers: [Modifier.FINAL]])
+            field([name     : 'a',
+                   type     : "IAcceptor<$genericIn>",
+                   modifiers: [Modifier.FINAL]])
             field([name     : 'f',
-                   type     : 'IFunction',
+                   type     : "IFunction<$genericIn,$me.boxedReturnType>",
                    modifiers: [Modifier.FINAL]])
             constructor(params: [x: me.parent.simpleName]) {
                 stmnt 'this.x=x'
-                if (!vv) stmnt "this.a=${me.generatedName}_s.acceptor(x)"
+                stmnt "this.a=${me.generatedName}_s.acceptor(x)"
                 stmnt "this.f=${me.generatedName}_s.function(x)"
             }
 
@@ -71,6 +72,11 @@ class WrapperTypesGen extends GeneratorBase {
             impl(wrapMethod) {
                 stmnt "$maybeReturn this.x.$call"
                 if (!me.hasReturnType()) stmnt 'return null'
+            }
+            def updateMeth=[name:'update']
+            if(me.params().isEmpty()) impl(updateMeth){
+                //TODO cache field
+            'updateable().update()'
             }
             impl(updateable) {
                 """ |return new IUpdateable(){
@@ -81,21 +87,21 @@ class WrapperTypesGen extends GeneratorBase {
             }
             impl(bind) {
                 def bindCall = me.hasReturnType() ? "return $call" : "$call;\nreturn null"
-                """ |return new IProvider(){
-                    |    public Object get(){
+                """ |return new IProvider<$me.boxedReturnType>(){
+                    |    public $me.boxedReturnType get(){
                     |        $bindCall;
                     |        }
                     |}""".stripMargin()
             }
             impl([name      : 'apply',
                   returnType: me.boxedReturnType,
-                  params    : [p: genArgs(me)]]) {
-                "return ($me.boxedReturnType) f.apply(p)"
+                  params    : [p: acceptorGenericArg(me)]]) {
+                "return f.apply(p)"
             }
             impl([name      : 'set',
                   returnType: "IAcceptor<$genericIn>",
-                  params    : [p: genArgs(me)]]) {
-                if (!vv) stmnt 'this.a.set(p)'
+                  params    : [p: acceptorGenericArg(me)]]) {
+                stmnt 'this.a.set(p)'
                 stmnt 'return this'
             }
         }
@@ -108,17 +114,6 @@ class WrapperTypesGen extends GeneratorBase {
                 modifiers  : [Modifier.PUBLIC],
                 annotations: [Override]],
                c)
-    }
-
-
-    def genArgs(MethodElement me) {
-        def nParams = me.parameters.size();
-        if (nParams == 1) {
-            def param = me.parameters[0].asType()
-            return GenUtils.getRawTypeName(true, types, param)
-        } else {
-            return 'Object[]'
-        }
     }
 
 
