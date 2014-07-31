@@ -7,11 +7,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.*;
+import javax.lang.model.util.SimpleTypeVisitor6;
+import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by jason on 7/10/14.
@@ -19,7 +19,16 @@ import java.util.List;
 public
 class GenUtils {
 
+    public static
+    String getRawTypeName(Types types, TypeMirror type) {
+        return getRawTypeName(false, types, type);
+    }
 
+    public static
+    String getRawTypeName(boolean boxing, Types types, TypeMirror type) {
+        return boxing ? RawTypeNameVisitor.BOXING.visit(type, types) : RawTypeNameVisitor.NON_BOXING.visit(type, types);
+
+    }
 
 
     public static final String GEN_SUFFIX = "_m";
@@ -52,27 +61,80 @@ class GenUtils {
     public static
     PackageElement packageOf(TypeElement e) {
         for (Element parent = e; parent != null; parent = parent.getEnclosingElement()) {
-            if (parent.getKind() == ElementKind.PACKAGE) return (PackageElement) parent;
+            if (parent.getKind() == ElementKind.PACKAGE)
+                return (PackageElement) parent;
         }
         throw new RuntimeException("??!!");
     }
 
     public static
-    List<String> defaultImports(boolean mutable) {
-        List<String> imports = Arrays.asList("java.lang.reflect.*",
-                                             "java.util.*",
-                                             "field.bytecode.mirror.*",
-                                             "field.namespace.generic.Bind.*",
-                                             "field.math.abstraction.*",
-                                             "field.launch.*",
-                                             "field.namespace.generic.ReflectionTools");
-
-        return mutable ? new ArrayList<String>(imports) : imports;
+    String getTypeName(TypeMirror typeMirror) {
+        return ParameterizedTypeNameVisitor.INSTANCE.visit(typeMirror);
     }
 
-    public static
-    List<String> defaultImports() {
-        return defaultImports(false);
+            private static String removeJavaLang(String s) {
+            return s.startsWith("java.lang.") ? s.substring(10) : s;
+        }
+    static
+    class ParameterizedTypeNameVisitor extends SimpleTypeVisitor6<String, Void> {
+        static final ParameterizedTypeNameVisitor INSTANCE = new ParameterizedTypeNameVisitor();
+
+        @Override
+        protected
+        String defaultAction(TypeMirror e, Void aVoid) {
+            return e.toString();
+        }
+
+        @Override
+        public
+        String visitDeclared(DeclaredType t, Void aVoid) {
+
+            //return t.asElement().toString();
+            //TODO deal with recursion, or is this even necessary?
+            if (t.getTypeArguments().isEmpty()) {
+                return super.visitDeclared(t, aVoid);
+            }
+            boolean hasTypeVars = false;
+            for (TypeMirror mirror : t.getTypeArguments()) {
+                if (mirror.getKind() == TypeKind.TYPEVAR) {
+                    hasTypeVars = true;
+                    break;
+                }
+            }
+            return hasTypeVars ? t.asElement().toString() : super.visitDeclared(t, aVoid);
+
+//            List<String> strings = new ArrayList<String>(t.getTypeArguments().size());
+//            for (TypeMirror mirror : t.getTypeArguments()) {
+//                strings.add(visit(mirror));
+//            }
+//            StringBuilder sb = new StringBuilder();
+//            sb.append(t.asElement().toString()).append('<');
+//            Joiner.on(',').appendTo(sb, strings);
+//            sb.append('>');
+//            return sb.toString();
+
+
+        }
+
+        @Override
+        public
+        String visitTypeVariable(TypeVariable t, Void aVoid) {
+
+            return t.getLowerBound().getKind() == TypeKind.NULL ? visit(t.getUpperBound()) : visit(t.getLowerBound());
+        }
+
+        @Override
+        public
+        String visitWildcard(WildcardType t, Void aVoid) {
+            return super.visitWildcard(t, aVoid);
+        }
     }
+
+
+    static
+    class RecursionAwareTypeScanner extends SimpleTypeVisitor6<String, Void> {
+
+    }
+
 
 }

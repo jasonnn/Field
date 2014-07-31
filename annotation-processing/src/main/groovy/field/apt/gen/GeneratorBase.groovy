@@ -3,35 +3,49 @@ package field.apt.gen
 import field.apt.util.FieldsAndMethods
 import field.bytecode.protect.annotations.GenerateMethods
 import field.bytecode.protect.annotations.Mirror
+import javabuilder.JavaBuilder
+import javabuilder.writer.JavaWriterEx
 
+import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.PackageElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.element.VariableElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 import javax.tools.JavaFileObject
 
 /**
  * Created by jason on 7/12/14.
  */
 class GeneratorBase {
-    public static final String DEFAULT_SUFFIX = "_m";
+    public static final String DEFAULT_SUFFIX = "_m2";
 
 
     TypeElement element
     List<VariableElement> fields
     List<MethodElement> methods
     ProcessingEnvironment env
+    Types types
+    Elements elements
+    Messager log
 
 
     String defaultPrefix
     boolean isInterface
 
-    //  JavaBuilder javaBuilder
+    @Delegate
+    JavaBuilder javaBuilder
+    JavaWriterEx javaWriter
 
     GeneratorBase(ProcessingEnvironment env,
                   TypeElement element) {
         this.env = env
+        this.types=env.typeUtils
+        this.elements=env.elementUtils
+        this.log=env.messager
+
         this.element = element
         def fm = FieldsAndMethods.forElement(element)
         this.fields = fm.fields
@@ -39,6 +53,16 @@ class GeneratorBase {
         this.methods = fm.methods.findAll { it.getAnnotation(Mirror) }.collect { fact.create(it) }
         this.isInterface = element.kind == ElementKind.INTERFACE
         this.defaultPrefix = element.getAnnotation(GenerateMethods).prefix()
+    }
+
+    public void init() {
+        def jfo = createJFO()
+        setJavaBuilder(new JavaBuilder(jfo.openWriter()))
+    }
+
+    public void setJavaBuilder(JavaBuilder jb) {
+        this.javaBuilder = jb
+        this.javaWriter = jb.javaWriter
     }
 
 
@@ -65,4 +89,14 @@ class GeneratorBase {
         return element.qualifiedName + DEFAULT_SUFFIX
     }
 
+    def hr() {
+        char[] chars = new char[80]
+        char fillChar = '-'
+        Arrays.fill(chars, fillChar)
+        javaWriter.emitSingleLineComment(new String(chars))
+    }
+
+    def emitEmptyLine() {
+        javaWriter.emitEmptyLine()
+    }
 }

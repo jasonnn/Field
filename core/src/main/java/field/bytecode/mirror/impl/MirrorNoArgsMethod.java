@@ -3,6 +3,7 @@ package field.bytecode.mirror.impl;
 import field.bytecode.mirror.IBoundNoArgsMethod;
 import field.bytecode.mirror.IMethodFunction;
 import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
 import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 
@@ -29,6 +30,18 @@ class MirrorNoArgsMethod<t_class, t_returns> extends AbstractMirrorMethod implem
     MirrorNoArgsMethod(Class on, String name) {
         this(ReflectionTools.methodOf(name, on));
 
+    }
+    //TODO fix processor so this isnt necessary
+    public
+    <A extends t_class,T> IAcceptor<T> acceptor(final A to) {
+        return new IAcceptor<T>() {
+
+            public
+            IAcceptor<T> set(T parameter) {
+                invoke(to, parameter);
+                return this;
+            }
+        };
     }
 
     public

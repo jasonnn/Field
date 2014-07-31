@@ -16,7 +16,7 @@ configurations {
 }
 
 compileJava {
-    classpath += configurations.codeGen
+   // classpath += configurations.codeGen
 }
 
 task genSrc(type: JavaCompile, group: 'build') {
@@ -32,7 +32,7 @@ sourceSets {
         java {
             srcDir 'src/main/java'
             srcDir 'src/main/genSrc'
-           // srcDir 'src/main/gen'
+            srcDir 'src/main/gen'
         }
     }
     test {

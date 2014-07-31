@@ -6,12 +6,12 @@ import field.apt.TestingProcessor
 import javabuilder.JavaBuilder
 import org.junit.Assert
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import org.truth0.Truth
 
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -23,15 +23,17 @@ import static groovy.util.StringTestUtil.assertMultilineStringsEqual
  */
 class GCodeGeneratorTest {
 
+
     static Types types
     static Elements elements
     static ProcessingEnvironment env
     static TypeElement e
-    static ExecutableElement m
-    static ExecutableElement simpleGeneric
-    static ExecutableElement trickyGeneric
-    static ExecutableElement arrayMethod
+    static MethodElement m
+    static MethodElement simpleGeneric
+    static MethodElement trickyGeneric
+    static MethodElement arrayMethod
 
+    @SuppressWarnings("GroovyAssignabilityCheck")
     @BeforeClass
     static void initStatic() {
         def jfo = JavaFileObjects.forSourceString('some.pkg.MyIFace',
@@ -64,8 +66,12 @@ public interface MyIFace{
         elements = p.elements
         e = p.element
 
+        def methodFactory = new MethodElement.Factory(env)
+
         e.metaClass.findMethod = { name ->
-            enclosedElements.find { it.kind == ElementKind.METHOD && it.simpleName.contentEquals(name) }
+            methodFactory.create(enclosedElements.find {
+                it.kind == ElementKind.METHOD && it.simpleName.contentEquals(name)
+            })
         }
 
         m = e.findMethod('added')
@@ -83,6 +89,7 @@ public interface MyIFace{
         assert arrayMethod
     }
 
+    @Ignore
     @Test
     public void testGeneratorBase() throws Exception {
         def gen = new GeneratorBase(env, e)
@@ -94,52 +101,60 @@ public interface MyIFace{
         assert gen.generatedFQN == 'some.pkg.MyIFace_m'
     }
 
-    def methodFactory = new MethodElement.Factory(env)
-
-    MethodElement enhance(ExecutableElement ex) {
-        return methodFactory.create(ex)
-    }
 
     @Test
     public void testMethodElementParams() throws Exception {
-        def me = methodFactory.create(m)
-        assert me.hasParams()
-        assert ['int', 'java.util.List', 'java.util.Date'] == me.paramClassNames()
-        assert me.hasReturnType()
-        assert me.returnTypeName == 'String'
+        assert m.hasParams()
+        assert ['int', 'java.util.List', 'java.util.Date'] == m.rawParamTypes()
+        assert m.hasReturnType()
+        assert m.rawReturnType == 'java.lang.String'
     }
 
     @Test
-    public void testSimpleGenericMethod() throws Exception {
-        def me = enhance(simpleGeneric)
-        assert ['Object'] == me.paramClassNames()
+    public void testParamMap() throws Exception {
+        def params = [(m)            : [newSource: 'int', listOfStr: 'java.util.List', date: 'java.util.Date'],
+                      (simpleGeneric): [t: Object.name],
+                      (trickyGeneric): [e: Enum.name],
+                      (arrayMethod)  : [array: 'float[][]']]
+
+        params.each { me, expect ->
+            assert expect == me.rawParams
+        }
+
+        params[(m)] = [newSource: Integer.name, listOfStr: 'java.util.List', date: 'java.util.Date']
+        params.each { me, expect ->
+            assert expect == me.rawParams(true)
+        }
+        params[(m)] = [newSource: int.name, listOfStr: 'java.util.List<java.lang.String>', date: 'java.util.Date']
+        params.each { me, expect ->
+            assert expect == me.params()
+        }
+
     }
 
     @Test
-    public void testTrickyGenericMethod() throws Exception {
-        def me = enhance(trickyGeneric)
-        assert ['Enum'] == me.paramClassNames()
+    public void testMirrorKind() throws Exception {
+        assert m.mirrorKind == MirrorKind.MirrorMethod
+        assert simpleGeneric.mirrorKind == MirrorKind.MirrorNoReturnMethod
+        assert trickyGeneric.mirrorKind == MirrorKind.MirrorMethod
+        assert arrayMethod.mirrorKind == MirrorKind.MirrorNoReturnMethod
+
     }
 
-    @Test
-    public void testArrayMethod() throws Exception {
-        def me = enhance(arrayMethod)
-        assert ['float[][]'] == me.paramClassNames()
-    }
 
     @Test
     public void testPrefix() throws Exception {
-        enhance(simpleGeneric).with {
+        simpleGeneric.with {
             assert prefix == ''
-            assert reflectionFieldName == 'simpleGeneric'
+            assert generatedName == 'simpleGeneric'
         }
-        enhance(arrayMethod).with {
+        arrayMethod.with {
             assert prefix == 'dude'
-            assert reflectionFieldName == 'dudearrayMethod'
+            assert generatedName == 'dudearrayMethod'
         }
         new MethodElement.Factory(env, 'something').create(simpleGeneric).with {
             assert prefix == 'something'
-            assert reflectionFieldName == 'somethingsimpleGeneric'
+            assert generatedName == 'somethingsimpleGeneric'
         }
 
     }
@@ -147,7 +162,6 @@ public interface MyIFace{
     @Test
     public void testGenerate() throws Exception {
         def sw = new StringWriter()
-        //  def jw = new JavaWriterEx(sw)
         def jb = new JavaBuilder(sw)
         def gen = new GCodeGenerator(env, e)
         gen.javaBuilder = jb
@@ -161,47 +175,30 @@ package some.pkg;
 import field.bytecode.mirror.impl.*;
 import field.launch.IUpdateable;
 import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IProvider;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
-public class MyIFace_m {
-  public static final Method added_m = ReflectionUtils.methodOf("added",some.pkg.MyIFace.class, int.class, java.util.List.class, java.util.Date.class);
-  public static final Method simpleGeneric_m = ReflectionUtils.methodOf("simpleGeneric",some.pkg.MyIFace.class, Object.class);
-  public static final Method trickyGeneric_m = ReflectionUtils.methodOf("trickyGeneric",some.pkg.MyIFace.class, Enum.class);
-  public static final Method dudearrayMethod_m = ReflectionUtils.methodOf("arrayMethod",some.pkg.MyIFace.class, float[][].class);
-
+public class MyIFace_m2 {
+  public static final Method added_m = ReflectionTools.methodOf("added",some.pkg.MyIFace.class, int.class, java.util.List.class, java.util.Date.class);
+  public static final Method simpleGeneric_m = ReflectionTools.methodOf("simpleGeneric",some.pkg.MyIFace.class, java.lang.Object.class);
+  public static final Method trickyGeneric_m = ReflectionTools.methodOf("trickyGeneric",some.pkg.MyIFace.class, java.lang.Enum.class);
+  public static final Method dudearrayMethod_m = ReflectionTools.methodOf("arrayMethod",some.pkg.MyIFace.class, float[][].class);
+  // --------------------------------------------------------------------------------
   public static final MirrorMethod<MyIFace, String, Object[]> added_s = new MirrorMethod<some.pkg.MyIFace, java.lang.String, Object[]>(added_m);
   public static final MirrorNoReturnMethod<MyIFace, Object> simpleGeneric_s = new MirrorNoReturnMethod<some.pkg.MyIFace, java.lang.Object>(simpleGeneric_m);
   public static final MirrorMethod<MyIFace, Enum, Enum> trickyGeneric_s = new MirrorMethod<some.pkg.MyIFace, java.lang.Enum, java.lang.Enum>(trickyGeneric_m);
-  public static final MirrorNoReturnMethod<MyIFace, Float[][]> dudearrayMethod_s = new MirrorNoReturnMethod<some.pkg.MyIFace, java.lang.Float[][]>(dudearrayMethod_m);
-
+  public static final MirrorNoReturnMethod<MyIFace, float[][]> dudearrayMethod_s = new MirrorNoReturnMethod<some.pkg.MyIFace, float[][]>(dudearrayMethod_m);
+  // --------------------------------------------------------------------------------
   public static interface added_interface
-      implements IAcceptor<MyIFace>, IFunction<field.math.graph.visitors.hint.TraversalHint,MyIFace> {
-    field.math.graph.visitors.hint.TraversalHint added(final int newSource, final List listOfStr, final Date date);
-    IUpdateable updateable(final int newSource, final List listOfStr, final Date date);
-    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final int newSource, final List listOfStr, final Date date);
+      extends IAcceptor<MyIFace>, IFunction<String,MyIFace> {
+    String added(final int newSource, final List<String> listOfStr, final Date date);
+    IUpdateable updateable(final int newSource, final List<String> listOfStr, final Date date);
+    IProvider<String> bind(final int newSource, final List<String> listOfStr, final Date date);
   }
-  public static interface simpleGeneric_interface
-      implements IAcceptor<MyIFace>, IFunction<field.math.graph.visitors.hint.TraversalHint,MyIFace> {
-    field.math.graph.visitors.hint.TraversalHint simpleGeneric(final Object t);
-    IUpdateable updateable(final Object t);
-    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final Object t);
-  }
-  public static interface trickyGeneric_interface
-      implements IAcceptor<MyIFace>, IFunction<field.math.graph.visitors.hint.TraversalHint,MyIFace> {
-    field.math.graph.visitors.hint.TraversalHint trickyGeneric(final Enum e);
-    IUpdateable updateable(final Enum e);
-    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final Enum e);
-  }
-  public static interface arrayMethod_interface
-      implements IAcceptor<MyIFace>, IFunction<field.math.graph.visitors.hint.TraversalHint,MyIFace> {
-    field.math.graph.visitors.hint.TraversalHint arrayMethod(final float[][] array);
-    IUpdateable updateable(final float[][] array);
-    IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final float[][] array);
-  }
-
   static class added_impl
       implements added_interface {
     final MyIFace x;
@@ -213,20 +210,11 @@ public class MyIFace_m {
       this.f=added_s.function(x);
     }
     @Override
-    public String added(final int newSource, final List listOfStr, final Date date) {
+    public void null() {
       return x.added(newSource,listOfStr,date);
     }
     @Override
-    public IAcceptor<MyIFace> set(Object[] p) {
-      a.set(p);
-      return this;
-    }
-    @Override
-    public field.math.graph.visitors.hint.TraversalHint apply(Object[] p) {
-      return (field.math.graph.visitors.hint.TraversalHint) f.apply(p);
-    }
-    @Override
-    public IUpdateable updateable(final int newSource, final List listOfStr, final Date date) {
+    public void null() {
       return new IUpdateable(){
              public void update(){
                 added(newSource,listOfStr,date);
@@ -234,13 +222,26 @@ public class MyIFace_m {
           };
     }
     @Override
-    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final int newSource, final List listOfStr, final Date date) {
+    public void null() {
       return new IProvider(){
               public Object get(){
-                  return added(newSource,listOfStr,date)
+                  return added(newSource,listOfStr,date) ;
                   }
           };
     }
+    public String apply(Object[] p) {
+      return (java.lang.String) f.apply(p);
+    }
+    public IAcceptor<MyIFace> set(Object[] p) {
+      a.set(p);
+      return this;
+    }
+  }
+  public static interface simpleGeneric_interface
+      extends IAcceptor<MyIFace>, IFunction<Void,MyIFace> {
+    Void simpleGeneric(final Object t);
+    IUpdateable updateable(final Object t);
+    IProvider<Void> bind(final Object t);
   }
   static class simpleGeneric_impl
       implements simpleGeneric_interface {
@@ -253,20 +254,12 @@ public class MyIFace_m {
       this.f=simpleGeneric_s.function(x);
     }
     @Override
-    public void simpleGeneric(final Object t) {
+    public void null() {
        x.simpleGeneric(t);
+      return null;
     }
     @Override
-    public IAcceptor<MyIFace> set(Object p) {
-      a.set(p);
-      return this;
-    }
-    @Override
-    public field.math.graph.visitors.hint.TraversalHint apply(Object p) {
-      return (field.math.graph.visitors.hint.TraversalHint) f.apply(p);
-    }
-    @Override
-    public IUpdateable updateable(final Object t) {
+    public void null() {
       return new IUpdateable(){
              public void update(){
                 simpleGeneric(t);
@@ -274,14 +267,27 @@ public class MyIFace_m {
           };
     }
     @Override
-    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final Object t) {
+    public void null() {
       return new IProvider(){
               public Object get(){
                   simpleGeneric(t);
-          return null;
+          return null; ;
                   }
           };
     }
+    public Void apply(Object p) {
+      return (java.lang.Void) f.apply(p);
+    }
+    public IAcceptor<MyIFace> set(Object p) {
+      a.set(p);
+      return this;
+    }
+  }
+  public static interface trickyGeneric_interface
+      extends IAcceptor<MyIFace>, IFunction<Enum,MyIFace> {
+    Enum trickyGeneric(final Enum e);
+    IUpdateable updateable(final Enum e);
+    IProvider<Enum> bind(final Enum e);
   }
   static class trickyGeneric_impl
       implements trickyGeneric_interface {
@@ -294,20 +300,11 @@ public class MyIFace_m {
       this.f=trickyGeneric_s.function(x);
     }
     @Override
-    public Enum trickyGeneric(final Enum e) {
+    public void null() {
       return x.trickyGeneric(e);
     }
     @Override
-    public IAcceptor<MyIFace> set(Enum p) {
-      a.set(p);
-      return this;
-    }
-    @Override
-    public field.math.graph.visitors.hint.TraversalHint apply(Enum p) {
-      return (field.math.graph.visitors.hint.TraversalHint) f.apply(p);
-    }
-    @Override
-    public IUpdateable updateable(final Enum e) {
+    public void null() {
       return new IUpdateable(){
              public void update(){
                 trickyGeneric(e);
@@ -315,39 +312,44 @@ public class MyIFace_m {
           };
     }
     @Override
-    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final Enum e) {
+    public void null() {
       return new IProvider(){
               public Object get(){
-                  return trickyGeneric(e)
+                  return trickyGeneric(e) ;
                   }
           };
     }
-  }
-  static class arrayMethod_impl
-      implements arrayMethod_interface {
-    final MyIFace x;
-    final IAcceptor a;
-    final IFunction f;
-    arrayMethod_impl(MyIFace x) {
-      this.x=x;
-      this.a=arrayMethod_s.acceptor(x);
-      this.f=arrayMethod_s.function(x);
+    public Enum apply(Enum p) {
+      return (java.lang.Enum) f.apply(p);
     }
-    @Override
-    public void arrayMethod(final float[][] array) {
-       x.arrayMethod(array);
-    }
-    @Override
-    public IAcceptor<MyIFace> set(Float[][] p) {
+    public IAcceptor<MyIFace> set(Enum p) {
       a.set(p);
       return this;
     }
-    @Override
-    public field.math.graph.visitors.hint.TraversalHint apply(Float[][] p) {
-      return (field.math.graph.visitors.hint.TraversalHint) f.apply(p);
+  }
+  public static interface dudearrayMethod_interface
+      extends IAcceptor<MyIFace>, IFunction<Void,MyIFace> {
+    Void arrayMethod(final float[][] array);
+    IUpdateable updateable(final float[][] array);
+    IProvider<Void> bind(final float[][] array);
+  }
+  static class dudearrayMethod_impl
+      implements dudearrayMethod_interface {
+    final MyIFace x;
+    final IAcceptor a;
+    final IFunction f;
+    dudearrayMethod_impl(MyIFace x) {
+      this.x=x;
+      this.a=dudearrayMethod_s.acceptor(x);
+      this.f=dudearrayMethod_s.function(x);
     }
     @Override
-    public IUpdateable updateable(final float[][] array) {
+    public void null() {
+       x.arrayMethod(array);
+      return null;
+    }
+    @Override
+    public void null() {
       return new IUpdateable(){
              public void update(){
                 arrayMethod(array);
@@ -355,34 +357,46 @@ public class MyIFace_m {
           };
     }
     @Override
-    public IProvider<field.math.graph.visitors.hint.TraversalHint> bind(final float[][] array) {
+    public void null() {
       return new IProvider(){
               public Object get(){
                   arrayMethod(array);
-          return null;
+          return null; ;
                   }
           };
     }
+    public Void apply(float[][] p) {
+      return (java.lang.Void) f.apply(p);
+    }
+    public IAcceptor<MyIFace> set(float[][] p) {
+      a.set(p);
+      return this;
+    }
   }
-
+  // --------------------------------------------------------------------------------
   public final added_interface added;
   public final simpleGeneric_interface simpleGeneric;
   public final trickyGeneric_interface trickyGeneric;
-  public final arrayMethod_interface arrayMethod;
+  public final dudearrayMethod_interface dudearrayMethod;
+  // --------------------------------------------------------------------------------
 
-
-  public MyIFace_m(MyIFace x) {
+  public MyIFace_m2(MyIFace x) {
     added=new added_impl(x);
     simpleGeneric=new simpleGeneric_impl(x);
     trickyGeneric=new trickyGeneric_impl(x);
-    arrayMethod=new arrayMethod_impl(x);
+    dudearrayMethod=new dudearrayMethod_impl(x);
   }
 }
 '''
+        //println sw.toString()
+        //assertCode(expect,sw.toString())
+    }
+
+    static void assertCode(String expect, String actual) {
         try {
-            assertMultilineStringsEqual(expect, sw.toString())
+            assertMultilineStringsEqual(expect, actual)
         } catch (Throwable ignored) {
-            Assert.assertEquals(expect, sw.toString())
+            Assert.assertEquals(expect, actual)
         }
     }
 }

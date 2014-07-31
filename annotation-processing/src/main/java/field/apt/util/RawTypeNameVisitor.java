@@ -8,9 +8,9 @@ import javax.lang.model.util.Types;
  * Created by jason on 7/29/14.
  */
 public
-class TypeNameVisitor extends SimpleTypeVisitor6<String, Types> {
+class RawTypeNameVisitor extends SimpleTypeVisitor6<String, Types> {
     public
-    TypeNameVisitor(boolean boxing) {
+    RawTypeNameVisitor(boolean boxing) {
         this.boxing = boxing;
     }
 
@@ -24,11 +24,22 @@ class TypeNameVisitor extends SimpleTypeVisitor6<String, Types> {
         return mirror.accept(BOXING, types);
     }
 
-    public static TypeNameVisitor BOXING = new TypeNameVisitor(true);
+    public static final RawTypeNameVisitor BOXING = new RawTypeNameVisitor(true);
 
-    public static final TypeNameVisitor NON_BOXING = new TypeNameVisitor(false);
+    public static final RawTypeNameVisitor NON_BOXING = new RawTypeNameVisitor(false);
 
     private final boolean boxing;
+    @Override
+    protected String defaultAction(TypeMirror e, Types types) {
+        throw new RuntimeException("something got through the cracks: "+e);
+    }
+
+    @Override
+    public
+    String visitNoType(NoType t, Types types) {
+        if(t.getKind()==TypeKind.VOID) return Void.class.getName();
+        return super.visitNoType(t, types);
+    }
 
     @Override
     public
@@ -44,6 +55,9 @@ class TypeNameVisitor extends SimpleTypeVisitor6<String, Types> {
         while (arr.getKind() == TypeKind.ARRAY) {
             dim++;
             arr = ((ArrayType) arr).getComponentType();
+        }
+        if (arr.getKind().isPrimitive()) {
+            return arr.toString() + brackets(dim);
         }
         return visit(arr, types) + brackets(dim);
     }
