@@ -1,6 +1,6 @@
 package field.core.plugins.python;
 
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import org.python.core.PyFile;
 
 import java.io.IOException;

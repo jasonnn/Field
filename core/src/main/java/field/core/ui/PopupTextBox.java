@@ -2,7 +2,7 @@ package field.core.ui;
 
 import field.bytecode.protect.Woven;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.ui.SmallMenu.iKeystrokeUpdate;
 import field.core.windowing.GLComponentWindow;
 import field.launch.IUpdateable;

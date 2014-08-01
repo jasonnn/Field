@@ -3,7 +3,7 @@ package field.core.plugins.drawing;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.plugins.drawing.OfferedAlignment.iDrawable;
 import field.core.plugins.drawing.OfferedAlignment.iOffering;
 import field.core.plugins.drawing.align.PointOffering.BaseDrawable;

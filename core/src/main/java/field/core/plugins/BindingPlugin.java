@@ -4,8 +4,9 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.python.PythonPluginEditor;
 import field.math.graph.visitors.hint.TraversalHint;
 

@@ -1,7 +1,7 @@
 package field.core.dispatch;
 
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.override.Ref;
 import field.launch.IUpdateable;
 import field.math.graph.visitors.hint.StandardTraversalHint;
 import field.math.graph.visitors.hint.TraversalHint;

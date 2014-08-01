@@ -3,7 +3,7 @@ package field.core.util;
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner;
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner.iCombiner;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.plugins.PythonOverridden;
 import field.core.plugins.PythonOverridden.Callable;

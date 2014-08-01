@@ -1,6 +1,6 @@
 package field.graphics.ci;
 
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor2;
 import field.core.windowing.GLComponentWindow;

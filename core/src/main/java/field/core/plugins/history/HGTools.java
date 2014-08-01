@@ -2,7 +2,7 @@ package field.core.plugins.history;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.Cached;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.history.HistoryExplorerHG.VersionNode;
 import field.core.util.ExecuteCommand;
 import field.launch.SystemProperties;

@@ -1,16 +1,15 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.iSceneListElement;
 import field.math.linalg.Vector3;
 
 public
-interface iBasicCamera {
+interface IBasicCamera {
 
     /**
      * aspect is width / height
      */
     public abstract
-    iSceneListElement setAspect(float f);
+    Base.ISceneListElement setAspect(float f);
 
     /**
      * sets the fov (IN ANGLES), aspect ratio (width/height), near and far clipping planes for use by gluPerspective().

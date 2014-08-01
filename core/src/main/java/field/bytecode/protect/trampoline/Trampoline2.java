@@ -3,9 +3,9 @@ package field.bytecode.protect.trampoline;
 import field.bytecode.protect.ModificationCache;
 import field.bytecode.protect.ReloadingSupport;
 import field.bytecode.protect.security.Security;
+import field.launch.ILaunchable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iLaunchable;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public
-class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
+class Trampoline2 implements ILaunchable, TrampolineInstrumentation {
     private static final Logger log = Logger.getLogger(Trampoline2.class.getName());
 
     public static final List<ClassLoadedNotification> notifications = new ArrayList<ClassLoadedNotification>();
@@ -490,7 +490,7 @@ class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
         // + ">");
 
         InputStream s = deferTo.getResourceAsStream(resourceNameForClassName(class_name));
-        if (s == null) return null;
+        if (s == null) throw new RuntimeException("couldnt get input stream to read class: "+class_name);
 
         // try to load it
         // here we might cache modification dates
@@ -602,7 +602,7 @@ class Trampoline2 implements iLaunchable, TrampolineInstrumentation {
 
             Launcher.getLauncher().mainThread = Thread.currentThread();
             printInfo();
-            Launcher.mainInstance = (iLaunchable) c.newInstance();
+            Launcher.mainInstance = (ILaunchable) c.newInstance();
             printInfo();
             Launcher.mainInstance.launch();
             printInfo();

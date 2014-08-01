@@ -2,9 +2,9 @@ package field.core.plugins.drawing.tweak;
 
 import field.core.Platform;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.drawing.ThreedComputingOverride;
 import field.core.plugins.drawing.opengl.CachedLine;

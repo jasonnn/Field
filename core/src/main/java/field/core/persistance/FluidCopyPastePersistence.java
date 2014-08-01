@@ -10,13 +10,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
-import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.Mixins;
+import field.core.dispatch.*;
 import field.core.dispatch.Mixins.iMixinProxy;
-import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElementOverrides.iDefaultOverride;
+import field.core.dispatch.override.IDefaultOverride;
 import field.core.persistance.FluidPersistence.iWellKnownElementResolver;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLineCompression;
@@ -283,7 +279,7 @@ class FluidCopyPastePersistence {
                         Iterator<Entry<Object, Object>> i = properties.entrySet().iterator();
                         while (i.hasNext()) {
                             Entry<Object, Object> e = i.next();
-                            if (((IVisualElement.VisualElementProperty<?>) e.getKey()).getName().endsWith("_"))
+                            if (((VisualElementProperty<?>) e.getKey()).getName().endsWith("_"))
                                 i.remove();
                         }
                         writer.startNode("properties");
@@ -468,7 +464,7 @@ class FluidCopyPastePersistence {
 
             public
             boolean canConvert(Class type) {
-                return IVisualElementOverrides.iDefaultOverride.class.isAssignableFrom(type);
+                return IDefaultOverride.class.isAssignableFrom(type);
             }
 
             public
@@ -493,9 +489,9 @@ class FluidCopyPastePersistence {
             Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
                 reader.moveDown();
                 Class c = (Class) context.convertAnother(null, Class.class);
-                iDefaultOverride def = null;
+                IDefaultOverride def = null;
                 try {
-                    def = (iDefaultOverride) c.newInstance();
+                    def = (IDefaultOverride) c.newInstance();
                 } catch (InstantiationException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {

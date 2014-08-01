@@ -1,7 +1,6 @@
 package field.graphics.core;
 
 import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicUtilities.TwoPassElement;
 import field.graphics.qt.ByteImage;
 import field.graphics.windowing.FullScreenCanvasSWT;
@@ -24,7 +23,7 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
 public
 class BasicTextures {
     public abstract static
-    class BaseTexture extends BasicUtilities.TwoPassElement implements iSceneListElement {
+    class BaseTexture extends BasicUtilities.TwoPassElement implements Base.ISceneListElement {
         public static boolean enableTextures = true;
 
         public int gl_texture_min_filter = GL_NEAREST;
@@ -133,7 +132,7 @@ class BasicTextures {
     }
 
     public static
-    class DisableTextures extends BasicUtilities.TwoPassElement implements iSceneListElement {
+    class DisableTextures extends BasicUtilities.TwoPassElement implements Base.ISceneListElement {
         boolean texturesEnabled;
 
         public
@@ -203,7 +202,7 @@ class BasicTextures {
      */
 
     public static
-    class TextureFromQTImage extends BaseTexture implements iSceneListElement {
+    class TextureFromQTImage extends BaseTexture implements Base.ISceneListElement {
 
         private boolean deallocated = false;
 
@@ -444,7 +443,7 @@ class BasicTextures {
     }
 
     public static
-    class ExplicitMipTexture extends BaseTexture implements iSceneListElement {
+    class ExplicitMipTexture extends BaseTexture implements Base.ISceneListElement {
 
         private boolean deallocated = false;
 

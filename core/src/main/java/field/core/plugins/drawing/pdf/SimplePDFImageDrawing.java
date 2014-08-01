@@ -4,7 +4,7 @@ import com.lowagie.text.BadElementException;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfGState;
 import com.lowagie.text.pdf.PdfName;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;

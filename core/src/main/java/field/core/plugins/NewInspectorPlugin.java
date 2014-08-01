@@ -3,9 +3,10 @@ package field.core.plugins;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.IVisualElementOverridesAdaptor;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.help.ContextualHelp;
 import field.core.plugins.help.HelpBrowser;
 import field.core.plugins.python.PythonPlugin;
@@ -53,7 +54,7 @@ class NewInspectorPlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -80,7 +81,7 @@ class NewInspectorPlugin implements iPlugin {
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -91,7 +92,7 @@ class NewInspectorPlugin implements iPlugin {
     }
 
     public
-    class Overrides extends IVisualElementOverrides.Adaptor {
+    class Overrides extends IVisualElementOverridesAdaptor {
 
         @Override
         public

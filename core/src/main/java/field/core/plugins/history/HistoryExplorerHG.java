@@ -1,7 +1,7 @@
 package field.core.plugins.history;
 
 import field.bytecode.protect.Woven;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.history.HGTools.HGLog;
 import field.math.graph.visitors.GraphNodeSearching;
 import field.math.graph.visitors.hint.StandardTraversalHint;

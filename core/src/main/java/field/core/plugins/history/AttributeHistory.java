@@ -1,7 +1,7 @@
 package field.core.plugins.history;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.history.HistoryExplorerHG.VersionNode;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor2;

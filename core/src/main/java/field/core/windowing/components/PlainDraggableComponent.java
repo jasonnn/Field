@@ -2,10 +2,10 @@ package field.core.windowing.components;
 
 import field.core.Platform;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.LineUtils;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;

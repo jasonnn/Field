@@ -1,6 +1,6 @@
 package field.core.execution;
 
-import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElementProperty;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.execution.PythonScriptingSystem.Runner;
 import field.core.plugins.log.ElementInvocationLogging.ElementTextWasExecuted;
@@ -17,7 +17,7 @@ import java.util.*;
  * @author marc created on Jan 31, 2004
  */
 public
-class BasicRunner extends Runner implements iExecutesPromise {
+class BasicRunner extends Runner implements IExecutesPromise {
 
     public
     interface Delegate {
@@ -38,8 +38,8 @@ class BasicRunner extends Runner implements iExecutesPromise {
         void stop(float t, Promise p, boolean forwards);
     }
 
-    public static final IVisualElement.VisualElementProperty<BasicRunner> basicRunner =
-            new IVisualElement.VisualElementProperty<BasicRunner>("basicRunner_");
+    public static final VisualElementProperty<BasicRunner> basicRunner =
+            new VisualElementProperty<BasicRunner>("basicRunner_");
 
     protected static
     Delegate createDelegateForPromise_static(float t, Promise p, boolean forwards, boolean noDefaultBackwards) {
@@ -186,25 +186,25 @@ class BasicRunner extends Runner implements iExecutesPromise {
     }
 
     public
-    iExecutesPromise dontExecuteBackwards() {
+    IExecutesPromise dontExecuteBackwards() {
         noDefaultBackwards = true;
         return this;
     }
 
     public
-    iExecutesPromise dontStartAndStopSkipped() {
+    IExecutesPromise dontStartAndStopSkipped() {
         dontStartAndStopSkipped = true;
         return this;
     }
 
     public
-    iExecutesPromise doStartAndStopSkipped() {
+    IExecutesPromise doStartAndStopSkipped() {
         dontStartAndStopSkipped = false;
         return this;
     }
 
     public
-    iExecutesPromise executeBackwards() {
+    IExecutesPromise executeBackwards() {
         noDefaultBackwards = false;
         return this;
     }

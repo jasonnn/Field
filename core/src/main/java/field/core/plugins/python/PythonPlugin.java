@@ -2,10 +2,11 @@ package field.core.plugins.python;
 
 import field.core.Constants;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem;
 import field.core.execution.PythonScriptingSystem.DerivativePromise;
@@ -45,8 +46,8 @@ import org.python.core.PyObject;
 
 import java.util.*;
 
-import static field.core.dispatch.IVisualElementOverrides.forward;
-import static field.core.dispatch.IVisualElementOverrides.topology;
+import static field.core.dispatch.override.IVisualElementOverrides.forward;
+import static field.core.dispatch.override.IVisualElementOverrides.topology;
 
 public
 class PythonPlugin implements iPlugin {
@@ -142,8 +143,8 @@ class PythonPlugin implements iPlugin {
         public
         LocalPromise(IVisualElement element) {
             this.element = element;
-            forward = new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(element);
-            backward = new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(element);
+            forward = IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(element);
+            backward = IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(element);
         }
 
         public
@@ -286,7 +287,7 @@ class PythonPlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -313,7 +314,7 @@ class PythonPlugin implements iPlugin {
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -324,7 +325,7 @@ class PythonPlugin implements iPlugin {
     }
 
     public
-    class Overrides extends IVisualElementOverrides.DefaultOverride {
+    class Overrides extends DefaultOverride {
         private TriangleMesh triangles;
 
         private iDynamicMesh triangle;
@@ -474,7 +475,7 @@ class PythonPlugin implements iPlugin {
 
         // ;//System.out.println(" get attr <"+from+" "+to+" "+name+">");
 
-        VisualElementProperty<Object> n = new IVisualElement.VisualElementProperty<Object>(name);
+        VisualElementProperty<Object> n = new VisualElementProperty<Object>(name);
         Ref<Object> r = new Ref<Object>(null);
 
         topology.begin(to);
@@ -493,7 +494,7 @@ class PythonPlugin implements iPlugin {
     public static
     Object getLocalProperty(IVisualElement of, String name) {
         name = externalPropertyNameToInternalName(name);
-        VisualElementProperty<Object> n = new IVisualElement.VisualElementProperty<Object>(name);
+        VisualElementProperty<Object> n = new VisualElementProperty<Object>(name);
         return of.getProperty(n);
     }
 
@@ -550,7 +551,7 @@ class PythonPlugin implements iPlugin {
     public static
     void setAttr(IVisualElement from, IVisualElement to, String name, Object value) {
         name = externalPropertyNameToInternalName(name);
-        VisualElementProperty<Object> n = new IVisualElement.VisualElementProperty<Object>(name);
+        VisualElementProperty<Object> n = new VisualElementProperty<Object>(name);
         n.set(to, to, value);
 
         // topology.begin(from);
@@ -562,7 +563,7 @@ class PythonPlugin implements iPlugin {
     public static
     void setAttr(IVisualElement to, String name, Object value) {
         name = externalPropertyNameToInternalName(name);
-        VisualElementProperty<Object> n = new IVisualElement.VisualElementProperty<Object>(name);
+        VisualElementProperty<Object> n = new VisualElementProperty<Object>(name);
 
         // topology.begin(to);
         // backward.setProperty.setProperty(to, n, new
@@ -742,7 +743,7 @@ class PythonPlugin implements iPlugin {
         database.remove(element.getUniqueID());
         Promise p = promises.get(element);
         Ref<PythonScriptingSystem> pss = new Ref<PythonScriptingSystem>(null);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(element)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(element)
                                                        .getProperty(element,
                                                                     PythonScriptingSystem.pythonScriptingSystem,
                                                                     pss);

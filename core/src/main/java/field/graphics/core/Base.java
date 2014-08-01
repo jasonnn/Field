@@ -6,7 +6,8 @@ import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Quaternion;
 import field.math.linalg.Vector3;
 import field.math.linalg.iCoordinateFrame;
-import field.namespace.change.iChangable;
+import field.namespace.change.IChangable;
+import field.namespace.change.IModCount;
 import field.namespace.context.SimpleContextTopology;
 
 import java.nio.FloatBuffer;
@@ -22,6 +23,8 @@ import java.util.Map;
  */
 public
 class Base {
+    //TODO get rid of iiiiii's
+    //TODO also move classes out
 
     //static public final iContextTree context = new LocalContextTree();
     public static final SimpleContextTopology context = SimpleContextTopology.newInstance();
@@ -48,7 +51,7 @@ class Base {
      */
 
     public static
-    class LocalPass implements iPass {
+    class LocalPass implements IPass {
         protected float value;
 
         public
@@ -62,18 +65,18 @@ class Base {
         }
 
         public
-        boolean isLaterThan(iPass p) {
+        boolean isLaterThan(IPass p) {
             return p.getValue() < value;
         }
 
         public
-        boolean isEarlierThan(iPass p) {
+        boolean isEarlierThan(IPass p) {
             return p.getValue() > value;
         }
     }
 
     public
-    enum StandardPass implements iPass {
+    enum StandardPass implements IPass {
         preTransform(-1), transform(0), postTransform(1), preRender(2), render(3), postRender(4), preDisplay(5);
 
         private final int value;
@@ -88,12 +91,12 @@ class Base {
         }
 
         public
-        boolean isLaterThan(iPass p) {
+        boolean isLaterThan(IPass p) {
             return p.getValue() < value;
         }
 
         public
-        boolean isEarlierThan(iPass p) {
+        boolean isEarlierThan(IPass p) {
             return p.getValue() > value;
         }
     }
@@ -102,12 +105,12 @@ class Base {
      * represents a rendering pass, Passes are interned by the iSceneList, so you can always use == to check to see what you should do
      */
     public
-    interface iPass {
+    interface IPass {
         public
-        boolean isLaterThan(iPass p);
+        boolean isLaterThan(IPass p);
 
         public
-        boolean isEarlierThan(iPass p);
+        boolean isEarlierThan(IPass p);
 
         public
         float getValue();
@@ -116,13 +119,13 @@ class Base {
     public
     interface iAcceptsSceneListElement {
         public
-        void addChild(iSceneListElement e);
+        void addChild(ISceneListElement e);
 
         public
-        void removeChild(iSceneListElement e);
+        void removeChild(ISceneListElement e);
 
         public
-        boolean isChild(iSceneListElement e);
+        boolean isChild(ISceneListElement e);
 
     }
 
@@ -130,32 +133,32 @@ class Base {
     interface iProvidesSceneListElement {
 
         public
-        List<iSceneListElement> elements();
+        List<ISceneListElement> elements();
     }
 
     /**
      * this is an interface for something that can go into a multipass scene list
      */
     public
-    interface iSceneListElement extends IMutable<iSceneListElement> {
+    interface ISceneListElement extends IMutable<ISceneListElement> {
         public
-        iPass requestPass(iPass pass);
+        IPass requestPass(IPass pass);
 
         public
-        iPass requestPassAfter(iPass pass);
+        IPass requestPassAfter(IPass pass);
 
         public
-        iPass requestPassBefore(iPass pass);
+        IPass requestPassBefore(IPass pass);
 
         public
-        iPass requestPassAfterAndBefore(iPass after, iPass before);
+        IPass requestPassAfterAndBefore(IPass after, IPass before);
 
 
         /**
          * main entry point, do your work for iPass 'p' here
          */
         public
-        void performPass(iPass p);
+        void performPass(IPass p);
     }
 
     /**
@@ -169,7 +172,7 @@ class Base {
      */
 
     public
-    interface iTransform extends IMutable<iTransform>, IInplaceProvider<iCoordinateFrame.iMutable>, iChangable {
+    interface iTransform extends IMutable<iTransform>, IInplaceProvider<iCoordinateFrame.iMutable>, IChangable {
         /**
          * this will not reflect non-committed changes to the transform controllers, or any other transform controller further up the chain. hence the name, 'committed' it may, however, change during the rendering pass process (this is from iCoordinateFrameProvider
          */
@@ -217,7 +220,7 @@ class Base {
          * returns an object that you can ask about if this thing has changed or not
          */
         public
-        iModCount getModCount(Object withRespectTo);
+        IModCount getModCount(Object withRespectTo);
 
     }
 
@@ -225,7 +228,7 @@ class Base {
      * an interface for geometry
      */
     public
-    interface iGeometry extends iSceneListElement {
+    interface iGeometry extends ISceneListElement {
         /**
          * for manipulating geometry, here's the rule. don't hang onto these buffers, we'll update modification count so we know to resend these buffers
          */
@@ -306,7 +309,7 @@ class Base {
     }
 
     public
-    interface iSkin extends iSceneListElement {
+    interface iSkin extends ISceneListElement {
         // this vertex, has this weight on this bone
         public
         void addBoneWeightInfo(int vertexIndex, float weight, int boneIndex);

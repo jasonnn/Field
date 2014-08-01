@@ -4,10 +4,11 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Constants;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.drawing.SimpleArrows;
 import field.core.plugins.drawing.opengl.CachedLine;
@@ -54,7 +55,7 @@ class LineDrawingOverride extends DefaultOverride {
     TraversalHint deleted(IVisualElement source) {
 
         if ((source == from()) || (source == to())) {
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).deleted(forElement);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement).deleted(forElement);
             for (IVisualElement ve : new ArrayList<IVisualElement>((Collection<IVisualElement>) forElement.getParents())) {
                 ve.removeChild(forElement);
             }

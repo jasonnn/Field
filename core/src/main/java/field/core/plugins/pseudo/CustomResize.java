@@ -1,8 +1,8 @@
 package field.core.plugins.pseudo;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin.Collector;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.math.linalg.Vector2;

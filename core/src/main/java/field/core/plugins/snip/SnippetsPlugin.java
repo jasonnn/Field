@@ -4,7 +4,7 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Constants;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.history.TextSearching;
 import field.core.plugins.history.TextSearching.iProvidesSearchTerms;

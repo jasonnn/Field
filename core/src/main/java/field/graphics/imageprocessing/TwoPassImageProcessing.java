@@ -3,10 +3,9 @@ package field.graphics.imageprocessing;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.graphics.core.*;
 import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicFrameBuffers.iHasFBO;
 import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.imageprocessing.ImageProcessing.TextureWrapper;
@@ -153,18 +152,18 @@ class TwoPassImageProcessing implements iImageProcessor {
     }
 
     public
-    void addChild(iSceneListElement e) {
+    void addChild(Base.ISceneListElement e) {
         left.addChild(e);
         right.addChild(e);
     }
 
     public
-    void addChildOne(iSceneListElement e) {
+    void addChildOne(Base.ISceneListElement e) {
         left.addChild(e);
     }
 
     public
-    void addChildTwo(iSceneListElement e) {
+    void addChildTwo(Base.ISceneListElement e) {
         right.addChild(e);
     }
 
@@ -330,12 +329,12 @@ class TwoPassImageProcessing implements iImageProcessor {
 
 
     public
-    iSceneListElement getOnscreenList(final Rect r) {
+    Base.ISceneListElement getOnscreenList(final Rect r) {
         return getOnscreenList(0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
     }
 
     public
-    iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+    Base.ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
         final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
         mesh.rebuildTriangle(2);
         mesh.rebuildVertex(4);

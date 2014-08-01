@@ -12,7 +12,7 @@ import java.util.*;
 
 public
 class DispatchOverTopology<T> {
-
+//TODO can these classes safely be changed to top level?
     public
     class And extends TopologyDispatchVaryingMethod<Boolean> {
 

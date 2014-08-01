@@ -1,6 +1,6 @@
 package field.core.ui.text.util;
 
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.math.linalg.Vector2;
 import field.math.util.Histogram;
 import field.math.util.iAverage;

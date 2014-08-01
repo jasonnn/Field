@@ -7,7 +7,6 @@ import field.bytecode.protect.annotations.InheritWeave;
 import field.bytecode.protect.dispatch.Cont;
 import field.core.plugins.drawing.opengl.OnCanvasLines;
 import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.ShaderPreprocessor.PreprocessorException;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.math.abstraction.IProvider;
@@ -36,7 +35,7 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 @Woven
 public
-class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements iSceneListElement {
+class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements Base.ISceneListElement {
 
     public
     interface iErrorHandler {

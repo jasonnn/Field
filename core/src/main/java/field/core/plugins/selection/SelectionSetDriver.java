@@ -11,9 +11,9 @@ import field.core.Platform;
 import field.core.Platform.OS;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.Mixins.iMixinProxy;
-import field.core.dispatch.IVisualElementOverrides.MakeDispatchProxy;
+import field.core.dispatch.override.IVisualElementOverrides.MakeDispatchProxy;
 import field.core.persistance.FluidCopyPastePersistence;
 import field.core.persistance.PackageTools;
 import field.core.plugins.autoexecute.Globals;
@@ -705,7 +705,7 @@ class SelectionSetDriver {
                             }
                         }
                         for (IVisualElement e : here)
-                            new MakeDispatchProxy().getOverrideProxyFor(e).menuItemsFor(e, items);
+                            MakeDispatchProxy.getOverrideProxyFor(e).menuItemsFor(e, items);
 
                     }
                 }

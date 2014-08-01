@@ -1,6 +1,6 @@
 package field.core.plugins.drawing.opengl;
 
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.Projector;
 import field.util.collect.tuple.Pair;

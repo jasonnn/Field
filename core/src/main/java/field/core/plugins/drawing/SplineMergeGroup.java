@@ -1,7 +1,7 @@
 package field.core.plugins.drawing;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.DefaultOverride;
 import field.core.dispatch.MergeGroupFreezer;
 import field.core.dispatch.VisualElement;
 import field.core.persistance.VEList;
@@ -39,7 +39,7 @@ class SplineMergeGroup extends MergeGroupFreezer {
 
     @Override
     protected
-    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> void newlyCreated(Triple<T, S, U> r) {
+    <T extends VisualElement, S extends iComponent, U extends DefaultOverride> void newlyCreated(Triple<T, S, U> r) {
         super.newlyCreated(r);
         SplineComputingOverride.computed_linesToDraw.set(owner, r.left, new ArrayList<CachedLine>());
         SplineComputingOverride.computed_elaborates.addToList(VEList.class, r.left, owner);

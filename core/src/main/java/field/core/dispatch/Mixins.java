@@ -1,6 +1,7 @@
 package field.core.dispatch;
 
-import field.core.dispatch.IVisualElementOverrides.iDefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.override.IDefaultOverride;
 import field.math.graph.visitors.hint.StandardTraversalHint;
 import field.math.graph.visitors.hint.TraversalHint;
 import field.namespace.generic.IFunction;
@@ -42,7 +43,7 @@ class Mixins {
         };
         if (over != null) m.getCallList().addAll(Arrays.asList(over));
         Object o = Proxy.newProxyInstance(t.getClassLoader(),
-                                          new Class[]{t, iDefaultOverride.class, iMixinProxy.class},
+                                          new Class[]{t, IDefaultOverride.class, iMixinProxy.class},
                                           new InvocationHandler() {
                                               public
                                               Object invoke(Object proxy, Method method, Object[] args)
@@ -101,7 +102,7 @@ class Mixins {
     }
 
     public
-    <T extends iDefaultOverride> T mixInOverride(Class<T> ty, IVisualElement e) {
+    <T extends IDefaultOverride> T mixInOverride(Class<T> ty, IVisualElement e) {
         iMixinProxy<IVisualElementOverrides> m = upgradeOverrides(e);
         List<IVisualElementOverrides> c = m.getCallList();
         for (IVisualElementOverrides o : c) {
@@ -110,7 +111,7 @@ class Mixins {
             }
         }
         try {
-            iDefaultOverride o = ty.newInstance();
+            IDefaultOverride o = ty.newInstance();
             o.setVisualElement(e);
             c.add((IVisualElementOverrides) o);
             return (T) o;

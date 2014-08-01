@@ -3,7 +3,6 @@ package field.graphics.dynamic;
 import field.bytecode.protect.iInside;
 import field.graphics.core.*;
 import field.graphics.core.Base.iAcceptsSceneListElement;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.math.graph.IMutable;
 import field.math.linalg.CoordinateFrame;
@@ -432,11 +431,11 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
 
         if (this.getUnderlyingGeometry().getParents().size() != 0) {
 
-            List<? extends IMutable<iSceneListElement>> p =
-                    new ArrayList<IMutable<iSceneListElement>>(this.getUnderlyingGeometry().getParents());
-            Iterator<? extends IMutable<iSceneListElement>> n = p.iterator();
+            List<? extends IMutable<Base.ISceneListElement>> p =
+                    new ArrayList<IMutable<Base.ISceneListElement>>(this.getUnderlyingGeometry().getParents());
+            Iterator<? extends IMutable<Base.ISceneListElement>> n = p.iterator();
             while (n.hasNext()) {
-                IMutable<iSceneListElement> nn = n.next();
+                IMutable<Base.ISceneListElement> nn = n.next();
                 nn.removeChild(this.getUnderlyingGeometry());
             }
 
@@ -548,14 +547,14 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
         }
     }
 
-    private List<IMutable<iSceneListElement>> oldParents;
+    private List<IMutable<Base.ISceneListElement>> oldParents;
 
     public
     void off() {
         if (oldParents != null) return;
 
-        oldParents = new ArrayList<IMutable<iSceneListElement>>(getUnderlyingGeometry().getParents());
-        for (IMutable<iSceneListElement> m : oldParents) {
+        oldParents = new ArrayList<IMutable<Base.ISceneListElement>>(getUnderlyingGeometry().getParents());
+        for (IMutable<Base.ISceneListElement> m : oldParents) {
             m.removeChild(getUnderlyingGeometry());
         }
     }
@@ -563,24 +562,24 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
     public
     void on() {
         if (oldParents == null) return;
-        for (IMutable<iSceneListElement> m : oldParents) {
+        for (IMutable<Base.ISceneListElement> m : oldParents) {
             m.addChild(getUnderlyingGeometry());
         }
         oldParents = null;
     }
 
     public
-    void addChild(iSceneListElement e) {
+    void addChild(Base.ISceneListElement e) {
         this.getUnderlyingGeometry().addChild(e);
     }
 
     public
-    boolean isChild(iSceneListElement e) {
+    boolean isChild(Base.ISceneListElement e) {
         return this.getUnderlyingGeometry().getChildren().contains(e);
     }
 
     public
-    void removeChild(iSceneListElement e) {
+    void removeChild(Base.ISceneListElement e) {
         this.getUnderlyingGeometry().removeChild(e);
     }
 }

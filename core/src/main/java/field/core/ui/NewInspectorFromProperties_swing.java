@@ -1,9 +1,9 @@
 package field.core.ui;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.python.Action;
 import field.core.plugins.python.OutputInsertsOnSheet;
 import field.core.ui.NewInspector.*;

@@ -6,7 +6,7 @@ package field.core.windowing.components;
 import field.bytecode.protect.annotations.GenerateMethods;
 import field.bytecode.protect.annotations.Mirror;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.math.linalg.iCoordinateFrame;

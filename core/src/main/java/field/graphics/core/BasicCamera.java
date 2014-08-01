@@ -3,7 +3,6 @@ package field.graphics.core;
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.core.util.FieldPyObjectAdaptor.iExtensible;
 import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iSceneListElement;
 import field.math.abstraction.IBlendable;
 import field.math.abstraction.IProvider;
 import field.math.linalg.*;
@@ -21,7 +20,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 
 public
-class BasicCamera extends BasicUtilities.OnePassListElement implements iBasicCamera {
+class BasicCamera extends BasicUtilities.OnePassListElement implements IBasicCamera {
 
     @HiddenInAutocomplete
     public
@@ -1544,7 +1543,7 @@ class BasicCamera extends BasicUtilities.OnePassListElement implements iBasicCam
      * sets the aspect ratio of the camera
      */
     public
-    iSceneListElement setAspect(float f) {
+    Base.ISceneListElement setAspect(float f) {
         aspect = f;
         return this;
     }

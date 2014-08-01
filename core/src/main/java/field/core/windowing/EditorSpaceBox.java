@@ -1,8 +1,8 @@
 package field.core.windowing;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.python.PythonPluginEditor;
 import field.core.ui.text.rulers.StyledTextPositionSystem;

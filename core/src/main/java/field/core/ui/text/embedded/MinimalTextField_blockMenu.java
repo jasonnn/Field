@@ -3,7 +3,7 @@ package field.core.ui.text.embedded;
 import field.core.Constants;
 import field.core.Platform;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.execution.PythonInterface;
 import field.core.plugins.python.PythonPlugin;
 import field.core.ui.PopupTextBox;

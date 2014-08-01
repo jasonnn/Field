@@ -1,8 +1,8 @@
 package field.core.util;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.drawing.FieldGraphics2D;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.drawing.SplineComputingOverride.PLineList;

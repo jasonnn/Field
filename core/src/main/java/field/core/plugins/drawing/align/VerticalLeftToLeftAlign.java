@@ -1,10 +1,10 @@
 package field.core.plugins.drawing.align;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.override.DefaultOverride;
 import field.core.plugins.constrain.BaseConstraintOverrides;
 import field.core.plugins.constrain.constraints.VerticalLeftToLeftConstraint;
 import field.core.plugins.drawing.OfferedAlignment;
@@ -84,7 +84,7 @@ class VerticalLeftToLeftAlign extends PointOffering {
 
         Class<? extends DefaultOverride> cc = getConstraintClass();
         if (cc != null) {
-            Triple<VisualElement, PlainDraggableComponent, ? extends IVisualElementOverrides.DefaultOverride> created =
+            Triple<VisualElement, PlainDraggableComponent, ? extends DefaultOverride> created =
                     VisualElement.create(new Rect(10, 10, 10, 10),
                                          VisualElement.class,
                                          PlainDraggableComponent.class,
@@ -121,7 +121,7 @@ class VerticalLeftToLeftAlign extends PointOffering {
     }
 
     protected
-    Class<? extends IVisualElementOverrides.DefaultOverride> getConstraintClass() {
+    Class<? extends DefaultOverride> getConstraintClass() {
         return VerticalLeftToLeftConstraint.class;
     }
 

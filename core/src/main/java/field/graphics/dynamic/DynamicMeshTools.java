@@ -1,6 +1,6 @@
 package field.graphics.dynamic;
 
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.graphics.core.Base;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iGeometry;
@@ -44,7 +44,7 @@ class DynamicMeshTools {
         }
 
         public
-        Base.iSceneListElement onPost() {
+        Base.ISceneListElement onPost() {
             return new BasicUtilities.OnePassElement(StandardPass.postRender) {
 
                 @Override
@@ -58,7 +58,7 @@ class DynamicMeshTools {
         }
 
         public
-        Base.iSceneListElement onPre() {
+        Base.ISceneListElement onPre() {
             return new BasicUtilities.OnePassElement(StandardPass.preRender) {
 
                 @Override
@@ -100,7 +100,7 @@ class DynamicMeshTools {
         }
 
         public
-        Base.iSceneListElement onPre() {
+        Base.ISceneListElement onPre() {
             return new BasicUtilities.OnePassElement(StandardPass.preRender) {
 
                 @Override

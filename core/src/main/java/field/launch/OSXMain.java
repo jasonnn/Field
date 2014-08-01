@@ -7,6 +7,7 @@ import com.apple.concurrent.Dispatch;
  */
 public
 class OSXMain {
+
     public static
     void main(final String[] args) {
         System.setProperty("main.class", "field.Blank2");
@@ -15,8 +16,12 @@ class OSXMain {
             @Override
             public
             void run() {
+
+                Thread.currentThread().setUncaughtExceptionHandler(UncaughtExceptions.HANDLER);
                 Launcher.main(args);
             }
         });
     }
+
+
 }

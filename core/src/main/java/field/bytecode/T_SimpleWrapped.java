@@ -4,13 +4,13 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.SimplyWrapped;
 import field.bytecode.protect.iProvidesWrapping;
 import field.bytecode.protect.iWrappedExit;
-import field.launch.iLaunchable;
+import field.launch.ILaunchable;
 import field.math.linalg.Vector3;
 
 import java.lang.reflect.Method;
 
 public
-class T_SimpleWrapped implements iLaunchable {
+class T_SimpleWrapped implements ILaunchable {
 
     @Woven
     public static

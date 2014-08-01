@@ -9,21 +9,21 @@ public
 class SimpleKey<t_Key, T> {
     public final String name;
 
-    private final ContextTopology<t_Key, iStorage> c;
+    private final ContextTopology<t_Key, IStorage> c;
 
-    private final Dispatch<t_Key, ? extends iStorage> d;
+    private final Dispatch<t_Key, ? extends IStorage> d;
 
     public
-    SimpleKey(String name, ContextTopology<t_Key, ? extends iStorage> c) {
+    SimpleKey(String name, ContextTopology<t_Key, ? extends IStorage> c) {
         this.name = name;
-        this.c = (ContextTopology<t_Key, iStorage>) c;
+        this.c = (ContextTopology<t_Key, IStorage>) c;
         d = new Dispatch(this.c);
     }
 
     public
     T get() {
         BaseRef<T> ref = new BaseRef<T>(null);
-        iStorage s = d.getOverrideProxyFor(iStorage.class);
+        IStorage s = d.getOverrideProxyFor(IStorage.class);
         s.get(name, ref);
         return ref.get();
     }
@@ -34,7 +34,7 @@ class SimpleKey<t_Key, T> {
         c.setAt(k);
         try {
             BaseRef<T> ref = new BaseRef<T>(null);
-            iStorage s = d.getOverrideProxyFor(iStorage.class);
+            IStorage s = d.getOverrideProxyFor(IStorage.class);
             s.get(name, ref);
             return ref.get();
         } finally {
@@ -45,7 +45,7 @@ class SimpleKey<t_Key, T> {
     public
     T set(T to) {
         BaseRef<T> ref = new BaseRef<T>(to);
-        iStorage s = d.getOverrideProxyFor(iStorage.class);
+        IStorage s = d.getOverrideProxyFor(IStorage.class);
         s.set(name, ref);
         return ref.get();
     }
@@ -56,7 +56,7 @@ class SimpleKey<t_Key, T> {
         c.setAt(k);
         try {
             BaseRef<T> ref = new BaseRef<T>(to);
-            iStorage s = d.getOverrideProxyFor(iStorage.class);
+            IStorage s = d.getOverrideProxyFor(IStorage.class);
             s.set(name, ref);
             return ref.get();
         } finally {

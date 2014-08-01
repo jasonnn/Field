@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.threed;
 
+import field.graphics.core.Base;
 import field.graphics.core.Base.iGeometry;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.Projector;
 import field.graphics.core.BasicCamera.State;
@@ -348,8 +348,8 @@ class BetterCameraControl implements IUpdateable {
 
     private static
     void addMeshes(BasicSceneList s, LinkedHashSet<iGeometry> g) {
-        List<iSceneListElement> e = s.getChildren();
-        for (iSceneListElement ee : e) {
+        List<Base.ISceneListElement> e = s.getChildren();
+        for (Base.ISceneListElement ee : e) {
             if (ee instanceof iGeometry) g.add((iGeometry) ee);
             if (ee instanceof BasicSceneList) addMeshes(((BasicSceneList) ee), g);
         }

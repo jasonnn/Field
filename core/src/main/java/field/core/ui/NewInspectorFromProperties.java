@@ -1,9 +1,9 @@
 package field.core.ui;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.ui.NewInspector2.*;
 import field.launch.IUpdateable;
 import field.math.linalg.Vector4;

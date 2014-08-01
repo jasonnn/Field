@@ -1,7 +1,7 @@
 package field.core.plugins.drawing;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLine.Event;

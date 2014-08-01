@@ -82,10 +82,11 @@ class FastClassLoader extends URLClassLoader {
     protected
     void addURL(URL url) {
         try {
-            URI uri = url.toURI();
-            super.addURL(url);
+            File file=new File(url.getPath());
+            URI uri = file.toURI();
+            super.addURL(uri.toURL());
             maphash = 31 * maphash + uri.hashCode();
-        } catch (URISyntaxException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 

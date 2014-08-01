@@ -1,9 +1,9 @@
 package field.core.plugins;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.Rect;
 import field.math.graph.NodeImpl;
 import field.math.graph.IMutableContainer;
 import field.util.collect.tuple.Pair;
@@ -31,7 +31,7 @@ class BaseSimplePlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p == overrides) return (T) BaseSimplePlugin.this.overrides;
             Object o = properties.get(p);
             return (T) o;
@@ -58,7 +58,7 @@ class BaseSimplePlugin implements iPlugin {
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -75,11 +75,11 @@ class BaseSimplePlugin implements iPlugin {
     }
 
     protected static
-    class Overrides extends IVisualElementOverrides.DefaultOverride {
+    class Overrides extends DefaultOverride {
     }
 
     protected IVisualElement element;
-    protected IVisualElementOverrides.DefaultOverride overrides;
+    protected DefaultOverride overrides;
     protected Map<Object, Object> properties = new HashMap<Object, Object>();
 
     protected IVisualElement root;

@@ -1,7 +1,7 @@
 package field.launch;
 
 public
-interface iLaunchable {
+interface ILaunchable {
     public
     void launch();
 }

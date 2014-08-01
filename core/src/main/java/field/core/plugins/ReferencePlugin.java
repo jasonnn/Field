@@ -1,11 +1,12 @@
 package field.core.plugins;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
+import field.core.dispatch.override.IVisualElementOverridesAdaptor;
 import field.core.plugins.drawing.ConnectiveThickArc2;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.python.PythonPlugin;
@@ -48,7 +49,7 @@ class ReferencePlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -75,7 +76,7 @@ class ReferencePlugin implements iPlugin {
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -86,7 +87,7 @@ class ReferencePlugin implements iPlugin {
     }
 
     public
-    class Overrides extends IVisualElementOverrides.Adaptor {
+    class Overrides extends IVisualElementOverridesAdaptor {
 
         @Override
         public
@@ -155,7 +156,7 @@ class ReferencePlugin implements iPlugin {
         // root.addChild(lve);
 
         Ref<PythonPlugin> ref = new Ref<PythonPlugin>(null);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(root)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(root)
                                                        .getProperty(root, PythonPlugin.python_plugin, ref);
 
         // lve.addChild(ref.get().getWellKnownVisualElement(PythonPlugin.pluginId));

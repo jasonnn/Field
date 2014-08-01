@@ -28,9 +28,9 @@ class ContextAnnotationTools {
     void begin(ContextTopology<?, ?> topology, Object value) {
         if (value == null) throw new Error(" null value for context_begin ");
         if (topology == null) throw new Error(" null topology for context_begin ");
-        if (!(topology instanceof iSupportsBeginEnd))
+        if (!(topology instanceof ISupportsBeginEnd))
             throw new Error(" topology <" + topology + "> doesn't support begin / end");
-        iSupportsBeginEnd<Object> s = (iSupportsBeginEnd<Object>) topology;
+        ISupportsBeginEnd<Object> s = (ISupportsBeginEnd<Object>) topology;
         Class<Object> supportedClass = s.getBeginEndSupportedClass();
         if (!supportedClass.isAssignableFrom(value.getClass())) {
             throw new Error(" value is of wrong type <"
@@ -92,7 +92,7 @@ class ContextAnnotationTools {
 
     public static
     void end(ContextTopology<?, ?> topology, Object value) {
-        iSupportsBeginEnd<Object> s = (iSupportsBeginEnd<Object>) topology;
+        ISupportsBeginEnd<Object> s = (ISupportsBeginEnd<Object>) topology;
         s.end(value);
     }
 
@@ -131,7 +131,7 @@ class ContextAnnotationTools {
         }
 
         Dispatch d = new Dispatch(topology);
-        iStorage<?> getter = (iStorage<?>) d.getBackwardsOverrideProxyFor(iStorage.class);
+        IStorage<?> getter = (IStorage<?>) d.getBackwardsOverrideProxyFor(IStorage.class);
 
 
         for (Pair<Field, FromContext> p : parameters) {
@@ -139,7 +139,7 @@ class ContextAnnotationTools {
             if ((p.right.name() == null) || "".equals(p.right.name())) name = p.left.getName();
 
             BaseRef<Object> res = new BaseRef<Object>(null);
-            ((iStorage) getter).get(name, res);
+            ((IStorage) getter).get(name, res);
 
             try {
                 p.left.setAccessible(true);

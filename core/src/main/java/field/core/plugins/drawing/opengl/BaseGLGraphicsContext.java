@@ -8,7 +8,6 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.overlay.OverlayAnimationManager;
 import field.graphics.core.Base;
 import field.graphics.core.Base.iAcceptsSceneListElement;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGeometry.LineList_long;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
@@ -216,8 +215,8 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
     public
     void setVertexProgram(BasicGLSLangProgram program) {
         inside.addChild(program);
-        List<iSceneListElement> c = new ArrayList<iSceneListElement>(program.getChildren());
-        for (iSceneListElement cc : c) {
+        List<Base.ISceneListElement> c = new ArrayList<Base.ISceneListElement>(program.getChildren());
+        for (Base.ISceneListElement cc : c) {
             // if (cc instanceof BasicMesh)
             {
                 program.addChild(cc);
@@ -226,7 +225,7 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
         }
 
         vertexProgram = program;
-        inside.removeChild((iSceneListElement) vertexProgram);
+        inside.removeChild((Base.ISceneListElement) vertexProgram);
     }
 
     public
@@ -426,15 +425,15 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
             }
             else GLComponentWindow.fastContext = wasContext;
 
-            List<iSceneListElement> c = ((BasicGLSLangProgram) vertexProgram).getChildren();
+            List<Base.ISceneListElement> c = ((BasicGLSLangProgram) vertexProgram).getChildren();
 
             final List<InternalLine> indexer = new ArrayList<InternalLine>(cache.values());
 
-            Collections.sort(c, new Comparator<iSceneListElement>() {
+            Collections.sort(c, new Comparator<Base.ISceneListElement>() {
 
                 @Override
                 public
-                int compare(iSceneListElement arg0, iSceneListElement arg1) {
+                int compare(Base.ISceneListElement arg0, Base.ISceneListElement arg1) {
 
                     int a = arg0 instanceof LineList_long ? 2 : (arg0 instanceof TriangleMesh_long ? 1 : 0);
                     int b = arg1 instanceof LineList_long ? 2 : (arg1 instanceof TriangleMesh_long ? 1 : 0);
@@ -514,8 +513,8 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
             probation.put(o, 0);
 
             // vertexProgram.removeChild(o.getUnderlyingGeometry());
-            List<iSceneListElement> p = (List<iSceneListElement>) o.getUnderlyingGeometry().getParents();
-            for (iSceneListElement pp : new ArrayList<iSceneListElement>(p))
+            List<Base.ISceneListElement> p = (List<Base.ISceneListElement>) o.getUnderlyingGeometry().getParents();
+            for (Base.ISceneListElement pp : new ArrayList<Base.ISceneListElement>(p))
                 pp.removeChild(o.getUnderlyingGeometry());
 
         }

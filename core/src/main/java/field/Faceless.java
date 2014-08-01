@@ -2,14 +2,14 @@ package field;
 
 import field.core.execution.AutoEngage;
 import field.core.execution.PhantomFluidSheet;
+import field.launch.ILaunchable;
 import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iLaunchable;
 import field.util.MiscNative;
 
 public
-class Faceless implements iLaunchable {
+class Faceless implements ILaunchable {
     public double t;
 
     private PhantomFluidSheet phantom;

@@ -2,7 +2,7 @@ package field.core.util;
 
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.history.HGTools;
 import field.core.plugins.history.HGVersioningSystem;
 import field.core.plugins.history.VersioningSystem;

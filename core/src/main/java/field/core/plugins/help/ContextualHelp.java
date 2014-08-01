@@ -2,10 +2,11 @@ package field.core.plugins.help;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.math.abstraction.IProvider;
+import field.protect.asm.IOUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -94,6 +95,20 @@ class ContextualHelp {
             this.contents = contents;
         }
 
+    }
+    public static IProvider<String> providerForStaticMarkdownResourceInClasspath(final String name){
+        return new IProvider<String>() {
+            @Override
+            public
+            String get() {
+                try {
+                    return new String( IOUtil.readFully(ContextualHelp.class.getResourceAsStream(name)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return "fail";
+            }
+        };
     }
 
     public static

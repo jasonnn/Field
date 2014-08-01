@@ -1,7 +1,8 @@
 package field.core.dispatch;
 
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -20,7 +21,7 @@ import java.util.Set;
 
 
 public
-class DrawGroupMixin extends IVisualElementOverrides.DefaultOverride {
+class DrawGroupMixin extends DefaultOverride {
 
     public static VisualElementProperty<Vector4> groupFillColor = new VisualElementProperty<Vector4>("groupFillColor");
     public static VisualElementProperty<Vector4> groupStrokeColor =
@@ -40,7 +41,7 @@ class DrawGroupMixin extends IVisualElementOverrides.DefaultOverride {
         if (source == forElement) {
 
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                            .getProperty(source, IVisualElement.selectionGroup, group);
 
             items.put("Groups (" + forElement.getProperty(IVisualElement.name) + ')', null);

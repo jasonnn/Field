@@ -1,16 +1,13 @@
 package field.namespace.context;
 
-/**
- * Created by jason on 7/14/14.
- */
 public
-interface iSupportsBeginEnd<t_Key> {
+interface ISupportsBeginEnd<T> {
     public
-    void begin(t_Key b);
+    void begin(T b);
 
     public
-    void end(t_Key b);
+    void end(T b);
 
     public
-    Class<t_Key> getBeginEndSupportedClass();
+    Class<T> getBeginEndSupportedClass();
 }

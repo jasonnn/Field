@@ -3,9 +3,11 @@ package field.core.execution;
 import field.core.Constants;
 import field.core.Platform.OS;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.GLComponentWindow;
@@ -40,7 +42,7 @@ import static org.lwjgl.opengl.GL13.*;
  * @author marc
  */
 public
-class TimeMarker extends IVisualElementOverrides.DefaultOverride {
+class TimeMarker extends DefaultOverride {
 
     public static final VisualElementProperty<String> keyboardShortcut =
             new VisualElementProperty<String>("keyboardShortcut_i");
@@ -274,7 +276,7 @@ class TimeMarker extends IVisualElementOverrides.DefaultOverride {
     protected
     void executeWithoutModifiers(Event event, char c) {
         final Ref<IVisualElement> r = new Ref<IVisualElement>(null);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                        .getProperty(forElement, IVisualElement.timeSlider, r);
         if (r.get() != null) {
             IUpdateable u = ongoing.get(r.get());
@@ -282,7 +284,7 @@ class TimeMarker extends IVisualElementOverrides.DefaultOverride {
 
             int over = 100;
             Ref<Object> r2 = new Ref<Object>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                            .getProperty(forElement, transitionDuration, r2);
             if (r2.get() != null) over = ((Number) r2.get()).intValue();
 
@@ -377,7 +379,7 @@ class TimeMarker extends IVisualElementOverrides.DefaultOverride {
     void executeWithShift(Event event, char c) {
 
         Ref<IVisualElement> r = new Ref<IVisualElement>(null);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                        .getProperty(forElement, IVisualElement.timeSlider, r);
 
         //System.out.println(" execute with mask ");

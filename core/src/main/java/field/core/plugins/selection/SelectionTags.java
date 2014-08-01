@@ -2,7 +2,7 @@ package field.core.plugins.selection;
 
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor.iHandlesFindItem;

@@ -3,7 +3,7 @@ package field.core.ui.text.rulers;
 import field.core.Constants;
 import field.core.Platform;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.execution.PythonGeneratorStack;
 import field.core.plugins.python.PythonPluginEditor;
 import field.core.ui.SmallMenu;

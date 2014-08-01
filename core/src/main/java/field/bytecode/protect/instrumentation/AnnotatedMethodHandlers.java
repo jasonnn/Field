@@ -11,7 +11,7 @@ import field.bytecode.protect.dispatch.DispatchSupport;
 import field.bytecode.protect.dispatch.InsideSupport;
 import field.bytecode.protect.yield.YieldSupport;
 import field.namespace.context.ContextTopology;
-import field.namespace.context.iStorage;
+import field.namespace.context.IStorage;
 import field.util.collect.tuple.Pair;
 import field.protect.asm.ASMMethod;
 import org.objectweb.asm.ClassVisitor;
@@ -636,7 +636,7 @@ enum AnnotatedMethodHandlers implements HandlesAnnontatedMethod {
                     if ((value == null) || ((value instanceof String) && "".equals(value))) value = fromThis;
 
                     String name = (String) parameterName.get("name");
-                    iStorage storage = (iStorage) context.storage.get(context.getAt(), null);
+                    IStorage storage = (IStorage) context.storage.get(context.getAt(), null);
                     storage.set(name, new BaseRef<Object>(value));
 
 

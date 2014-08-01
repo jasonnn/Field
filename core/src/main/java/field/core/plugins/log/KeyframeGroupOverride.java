@@ -1,12 +1,13 @@
 package field.core.plugins.log;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
+import field.core.execution.IExecutesPromise;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.core.execution.iExecutesPromise;
 import field.core.plugins.GroupOverride;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.log.AssemblingLogging.Move;
@@ -94,7 +95,7 @@ class KeyframeGroupOverride extends GroupOverride {
 
     // a no-op group promise execution
     public static
-    class GroupPromiseExecution implements iExecutesPromise {
+    class GroupPromiseExecution implements IExecutesPromise {
 
         public
         void addActive(IFloatProvider timeProvider, Promise p) {
@@ -273,7 +274,7 @@ class KeyframeGroupOverride extends GroupOverride {
 
         if (isChild(source)) {
 
-            if (prop == iExecutesPromise.promiseExecution) {
+            if (prop == IExecutesPromise.promiseExecution) {
                 if (inside) return super.getProperty(source, prop, ref);
                 ref.set((T) new GroupPromiseExecution());
                 return StandardTraversalHint.CONTINUE;
@@ -393,8 +394,8 @@ class KeyframeGroupOverride extends GroupOverride {
     void executeChildGroup(IVisualElement e) {
         inside = true;
         try {
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).beginExecution(e);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).endExecution(e);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(e).beginExecution(e);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(e).endExecution(e);
         } finally {
             inside = false;
         }
@@ -424,8 +425,8 @@ class KeyframeGroupOverride extends GroupOverride {
     void executeThis() {
         inside = true;
         try {
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).beginExecution(forElement);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).endExecution(forElement);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement).beginExecution(forElement);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement).endExecution(forElement);
         } finally {
             inside = false;
         }

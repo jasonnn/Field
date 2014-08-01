@@ -1,9 +1,11 @@
 package field.core.plugins;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
 import field.launch.IUpdateable;
@@ -16,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 public
-class GroupOverride extends IVisualElementOverrides.DefaultOverride {
+class GroupOverride extends DefaultOverride {
 
     public static final VisualElementProperty<Integer> groupOutset =
             new VisualElementProperty<Integer>("groupOutset_i");
@@ -64,7 +66,7 @@ class GroupOverride extends IVisualElementOverrides.DefaultOverride {
         if (source == forElement) {
 
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                            .getProperty(source, IVisualElement.selectionGroup, group);
 
             items.put("Groups (" + forElement.getProperty(IVisualElement.name) + ')', null);
@@ -138,7 +140,7 @@ class GroupOverride extends IVisualElementOverrides.DefaultOverride {
             // recalculate forElement's
             // frame
             inside = true;
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                            .shouldChangeFrame(forElement,
                                                                               computeNewBoundingFrame(c,
                                                                                                       source,
@@ -154,7 +156,7 @@ class GroupOverride extends IVisualElementOverrides.DefaultOverride {
 
         List<IVisualElement> c = (List<IVisualElement>) this.forElement.getParents();
         inside = true;
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                        .shouldChangeFrame(forElement,
                                                                           computeNewBoundingFrame(c,
                                                                                                   source,
@@ -165,7 +167,7 @@ class GroupOverride extends IVisualElementOverrides.DefaultOverride {
                                                                           forElement.getFrame(null),
                                                                           true);
         for (IVisualElement e : c) {
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(e)
                                                            .shouldChangeFrame(e,
                                                                               computeNewSubFrame(e,
                                                                                                  newFrame,
@@ -175,7 +177,7 @@ class GroupOverride extends IVisualElementOverrides.DefaultOverride {
                                                                               e.getFrame(null),
                                                                               true);
         }
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                        .shouldChangeFrame(forElement,
                                                                           computeNewBoundingFrame(c,
                                                                                                   source,

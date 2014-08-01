@@ -3,7 +3,7 @@ package field.core.windowing.components;
 import field.core.DragDuplicator;
 import field.core.Platform;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.core.windowing.components.RootComponent.iMousePeer;

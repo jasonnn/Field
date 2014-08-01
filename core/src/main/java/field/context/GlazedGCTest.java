@@ -2,13 +2,13 @@ package field.context;
 
 import field.context.Generator.Channel;
 import field.context.Generator.iTimeFor;
+import field.launch.ILaunchable;
 import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iLaunchable;
 import field.math.abstraction.IDoubleProvider;
 
 public
-class GlazedGCTest implements iLaunchable {
+class GlazedGCTest implements ILaunchable {
 
     public static
     class Banana {

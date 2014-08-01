@@ -2,7 +2,7 @@ package field.util;
 
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

@@ -1,5 +1,7 @@
 package field.core.dispatch;
 
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.plugins.autoexecute.AutoExecutePythonPlugin;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin;
 import field.core.ui.PopupTextBox;
@@ -10,12 +12,12 @@ import field.core.windowing.components.*;
 import field.core.windowing.overlay.OverlayAnimationManager;
 import field.launch.IUpdateable;
 import field.math.abstraction.IAcceptor;
+import field.math.graph.IMutableContainer;
 import field.math.graph.NodeImpl;
 import field.math.graph.TopologyViewOfGraphNodes;
-import field.math.graph.IMutableContainer;
+import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.math.graph.visitors.hint.StandardTraversalHint;
 import field.math.graph.visitors.hint.TraversalHint;
-import field.math.graph.visitors.TopologyVisitor_breadthFirst;
 import field.util.collect.tuple.Triple;
 
 import java.rmi.server.UID;
@@ -29,7 +31,7 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
     }
 
     public static
-    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> Triple<T, S, U> create(Rect bounds,
+    <T extends VisualElement, S extends iComponent, U extends DefaultOverride> Triple<T, S, U> create(Rect bounds,
                                                                                                                               Class<T> visualElementclass,
                                                                                                                               Class<S> componentClass,
                                                                                                                               Class<U> overrideClass) {
@@ -48,7 +50,7 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
     }
 
     public static
-    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> Triple<T, S, U> createAddAndName(Rect bounds,
+    <T extends VisualElement, S extends iComponent, U extends DefaultOverride> Triple<T, S, U> createAddAndName(Rect bounds,
                                                                                                                                         final IVisualElement root,
                                                                                                                                         String defaultName,
                                                                                                                                         Class<T> visualElementclass,
@@ -68,8 +70,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
             t.setProperty(AutoExecutePythonPlugin.python_autoExec, "");
 
-            new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(t).added(t);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(t).added(t);
+            IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(t).added(t);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(t).added(t);
 
             PopupTextBox.Modal.getStringOrCancel(PopupTextBox.Modal.elementAt(t),
                                                  "name :",
@@ -78,7 +80,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
                                                      public
                                                      IAcceptor<String> set(String to) {
                                                          IVisualElement.name.set(t, t, to);
-                                                         if (continuation != null) continuation.update();
+                                                         if (continuation != null)
+                                                             continuation.update();
 
                                                          IVisualElement.dirty.set(t, t, true);
                                                          Rect rect = s.getBounds();
@@ -116,7 +119,7 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
     }
 
     public static
-    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> Triple<T, S, U> createWithName(Rect bounds,
+    <T extends VisualElement, S extends iComponent, U extends DefaultOverride> Triple<T, S, U> createWithName(Rect bounds,
                                                                                                                                       final IVisualElement root,
                                                                                                                                       Class<T> visualElementclass,
                                                                                                                                       Class<S> componentClass,
@@ -133,8 +136,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
 
             t.addChild(root);
-            new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(t).added(t);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(t).added(t);
+            IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(t).added(t);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(t).added(t);
 
             IVisualElement.name.set(t, t, name);
             IVisualElement.dirty.set(t, t, true);
@@ -147,7 +150,7 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
     }
 
     public static
-    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> Triple<T, S, U> createWithToken(final Object token,
+    <T extends VisualElement, S extends iComponent, U extends DefaultOverride> Triple<T, S, U> createWithToken(final Object token,
                                                                                                                                        IVisualElement root,
                                                                                                                                        Rect bounds,
                                                                                                                                        Class<T> visualElementclass,
@@ -175,8 +178,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
                 Triple<T, S, U> r = create(bounds, visualElementclass, componentClass, overrideClass);
                 r.left.addChild(root);
-                new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r.left).added(r.left);
-                new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r.left).added(r.left);
+                IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(r.left).added(r.left);
+                IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(r.left).added(r.left);
                 r.left.setProperty(IVisualElement.creationToken, token);
                 return r;
             }
@@ -198,7 +201,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
     public static
     void delete(IVisualElement root, final IVisualElement node) {
-        if (root == null) root = node;
+        if (root == null)
+            root = node;
 
         final IVisualElement froot = root;
 
@@ -216,7 +220,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
             // if there are parents that
             // have no children right now,
             // delete them too
-            if (ve.getChildren().size() == 0 && ve.getParents().size() == 0) delete(root, ve);
+            if (ve.getChildren().size() == 0 && ve.getParents().size() == 0)
+                delete(root, ve);
 
         }
         for (IVisualElement ve : new ArrayList<IVisualElement>(node.getChildren())) {
@@ -225,7 +230,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
             // if there are parents that
             // have no children right now,
             // delete them too
-            if (ve.getChildren().size() == 0 && ve.getParents().size() == 0) delete(root, ve);
+            if (ve.getChildren().size() == 0 && ve.getParents().size() == 0)
+                delete(root, ve);
 
         }
 
@@ -273,7 +279,7 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
     public
     VisualElement() {
         reverseInsertionOrder = true;
-        setElementOverride(new IVisualElementOverrides.DefaultOverride().setVisualElement(this));
+        setElementOverride(new DefaultOverride().setVisualElement(this));
         //System.out.println(" -- new visual element --");
     }
 
@@ -282,7 +288,7 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
         reverseInsertionOrder = true;
         this.d = d;
         properties.put(localView, d);
-        setElementOverride(new IVisualElementOverrides.DefaultOverride().setVisualElement(this));
+        setElementOverride(new DefaultOverride().setVisualElement(this));
 
         //System.out.println(" -- new visual element --");
     }
@@ -301,29 +307,34 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
     public
     void dispose() {
-        if (d == null) return;
+        if (d == null)
+            return;
 
-        if (d instanceof DraggableComponent) ((DraggableComponent) d).dispose();
+        if (d instanceof DraggableComponent)
+            ((DraggableComponent) d).dispose();
 
-        if (d instanceof PlainComponent) ((PlainComponent) d).dispose();
+        if (d instanceof PlainComponent)
+            ((PlainComponent) d).dispose();
 
     }
 
     public
     HashSet<IVisualElement> getCachedChildren() {
-        if (cachedChildren == null) cachedChildren = new HashSet<IVisualElement>(this.getChildren());
+        if (cachedChildren == null)
+            cachedChildren = new HashSet<IVisualElement>(this.getChildren());
         return cachedChildren;
     }
 
     public
     Rect getFrame(Rect out) {
-        if (out == null) out = new Rect(0, 0, 0, 0);
+        if (out == null)
+            out = new Rect(0, 0, 0, 0);
         out.setValue(frame);
         return out;
     }
 
     public
-    <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+    <T> T getProperty(VisualElementProperty<T> p) {
         Object o = properties.get(p);
         return (T) o;
     }
@@ -354,9 +365,11 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
     public
     void setFrame(Rect out) {
-        if (frame == null) frame = new Rect(0, 0, 0, 0);
+        if (frame == null)
+            frame = new Rect(0, 0, 0, 0);
         frame.setValue(out);
-        if (d != null) d.setBounds(frame);
+        if (d != null)
+            d.setBounds(frame);
     }
 
     public
@@ -378,18 +391,23 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
     }
 
     public
-    <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+    <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
 
         properties.put(p, to);
 
         if (p.equals(IVisualElement.dirty)) {
-            if (d instanceof DraggableComponent) ((iDraggableComponent) d).setDirty();
-            if (d instanceof PlainComponent) ((PlainComponent) d).setDirty();
-            if (d instanceof PlainDraggableComponent) ((iDraggableComponent) d).setDirty();
+            if (d instanceof DraggableComponent)
+                ((iDraggableComponent) d).setDirty();
+            if (d instanceof PlainComponent)
+                ((PlainComponent) d).setDirty();
+            if (d instanceof PlainDraggableComponent)
+                ((iDraggableComponent) d).setDirty();
         }
         if (p.equals(IVisualElement.hidden)) {
-            if (d instanceof DraggableComponent) ((iDraggableComponent) d).setHidden((Boolean) to);
-            if (d instanceof PlainDraggableComponent) ((iDraggableComponent) d).setHidden((Boolean) to);
+            if (d instanceof DraggableComponent)
+                ((iDraggableComponent) d).setHidden((Boolean) to);
+            if (d instanceof PlainDraggableComponent)
+                ((iDraggableComponent) d).setHidden((Boolean) to);
         }
         return this;
     }
@@ -420,7 +438,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
         }
         else {
             String name = IVisualElement.name.get(adaptor);
-            if (name == null) name = "unnamed element";
+            if (name == null)
+                name = "unnamed element";
             c.add(new Comp("<h3><i><font color='#555555' >\u2014\u2014</font> "
                            + name
                            + " <font color='#555555' >\u2014\u2014</font></i> . "
@@ -435,7 +454,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
                 ps.add(new Comp(p.getName(), PythonTextEditor.limit(String.valueOf(p.get(adaptor)))));
             }
         }
-        if (ps.size() > 1) c.addAll(ps);
+        if (ps.size() > 1)
+            c.addAll(ps);
         Map<Object, Object> set = adaptor.payload();
         String groupname = "Already set, local to this element";
         addPropertiesByInspection(prefix, adaptor, c, set, groupname);
@@ -472,7 +492,8 @@ class VisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
             for (IVisualElement vv : childern) {
                 Map<Object, Object> setp = vv.payload();
                 String name = vv.getProperty(IVisualElement.name);
-                if (name == null) name = vv.getClass().getName();
+                if (name == null)
+                    name = vv.getClass().getName();
                 addPropertiesByInspection(prefix, vv, c, setp, "Set in parent <b>" + name + "</b>");
             }
         }

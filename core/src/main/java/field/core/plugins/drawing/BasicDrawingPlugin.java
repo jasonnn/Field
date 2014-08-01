@@ -4,10 +4,12 @@ import field.core.Platform;
 import field.core.Platform.OS;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.execution.PythonInterface;
 import field.core.plugins.PluginList;
 import field.core.plugins.constrain.ComplexConstraints;
@@ -161,7 +163,7 @@ class BasicDrawingPlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -188,7 +190,7 @@ class BasicDrawingPlugin implements iPlugin {
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -199,7 +201,7 @@ class BasicDrawingPlugin implements iPlugin {
     }
 
     public
-    class Overrides extends IVisualElementOverrides.DefaultOverride {
+    class Overrides extends DefaultOverride {
         @Override
         public
         TraversalHint deleted(IVisualElement source) {

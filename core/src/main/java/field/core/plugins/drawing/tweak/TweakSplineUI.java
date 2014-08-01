@@ -2,11 +2,11 @@ package field.core.plugins.drawing.tweak;
 
 import field.core.Platform;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.Mixins.iMixinProxy;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem;
 import field.core.plugins.drawing.SplineComputingOverride;
@@ -748,7 +748,7 @@ class TweakSplineUI {
         public
         IAcceptor<String> set(String to) {
             Ref<PythonScriptingSystem> pss = new Ref<PythonScriptingSystem>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(inside)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(inside)
                                                            .getProperty(inside,
                                                                         PythonScriptingSystem.pythonScriptingSystem,
                                                                         pss);

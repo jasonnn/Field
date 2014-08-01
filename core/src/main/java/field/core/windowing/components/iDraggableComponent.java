@@ -1,6 +1,6 @@
 package field.core.windowing.components;
 
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import org.eclipse.swt.widgets.Event;
 
 

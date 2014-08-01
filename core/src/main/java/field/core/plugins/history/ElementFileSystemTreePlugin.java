@@ -3,7 +3,7 @@ package field.core.plugins.history;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.help.ContextualHelp;
 import field.core.plugins.help.HelpBrowser;

@@ -1,7 +1,8 @@
 package field.core.dispatch;
 
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.namespace.context.ContextTopology;
-import field.namespace.context.iContextStorage;
+import field.namespace.context.IContextStorage;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -19,7 +20,7 @@ class VisualElementContextTopology extends ContextTopology<IVisualElement, IVisu
     VisualElementContextTopology(IVisualElement root) {
         super(IVisualElement.class, IVisualElementOverrides.class);
         this.rootElement = root;
-        this.storage = new iContextStorage<IVisualElement, IVisualElementOverrides>() {
+        this.storage = new IContextStorage<IVisualElement, IVisualElementOverrides>() {
             public
             IVisualElementOverrides get(IVisualElement at, Method m) {
                 return at.getProperty(IVisualElement.overrides);

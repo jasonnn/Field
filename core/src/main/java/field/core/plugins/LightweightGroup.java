@@ -1,9 +1,10 @@
 package field.core.plugins;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.math.graph.visitors.hint.StandardTraversalHint;
 import field.math.graph.visitors.hint.TraversalHint;
@@ -42,7 +43,7 @@ class LightweightGroup extends SplineComputingOverride {
             }
             inside = true;
             if (subElementHasChangedWillChangeBounds()) {
-                new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+                IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                                .shouldChangeFrame(forElement,
                                                                                   computeNewBoundingFrame(c,
                                                                                                           forElement.getFrame(null),
@@ -60,7 +61,7 @@ class LightweightGroup extends SplineComputingOverride {
 
         List<IVisualElement> c = (List<IVisualElement>) this.forElement.getParents();
         inside = true;
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                        .shouldChangeFrame(forElement,
                                                                           computeNewBoundingFrame(c,
                                                                                                   forElement.getFrame(null),
@@ -71,9 +72,9 @@ class LightweightGroup extends SplineComputingOverride {
             Rect f = e.getFrame(null);
             Rect q = computeNewSubFrame(e, newFrame, oldFrame, f, out);
 
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(e).shouldChangeFrame(e, q, f, true);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(e).shouldChangeFrame(e, q, f, true);
         }
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                        .shouldChangeFrame(forElement,
                                                                           computeNewBoundingFrame(c,
                                                                                                   forElement.getFrame(null),

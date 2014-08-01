@@ -1,8 +1,8 @@
 package field.core.dispatch;
 
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.python.PythonPluginEditor;
 import field.core.windowing.components.iComponent;
 import field.math.graph.IMutable;
@@ -59,7 +59,7 @@ class MergeGroup {
         List<IVisualElement> parents = (List<IVisualElement>) getElementsForSynchronization(owner);
         for (IVisualElement v : parents) {
             Ref<Object> tok = new Ref<Object>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(v)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(v)
                                                            .getProperty(v, mergeGroup_token, tok);
             Object object = tok.get();
             if ((object != null) && (v instanceof VisualElement)) {
@@ -96,7 +96,7 @@ class MergeGroup {
     }
 
     public
-    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> Triple<T, S, U> create(Object token,
+    <T extends VisualElement, S extends iComponent, U extends DefaultOverride> Triple<T, S, U> create(Object token,
                                                                                                                               Rect bounds,
                                                                                                                               Class<T> visualElementclass,
                                                                                                                               Class<S> componentClass,
@@ -123,7 +123,7 @@ class MergeGroup {
         createdOverrides.put(token, triple.right);
         triple.left.setFrame(bounds);
 
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(triple.left)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(triple.left)
                                                        .setProperty(triple.left,
                                                                     mergeGroup_token,
                                                                     new Ref<Object>(token));
@@ -207,7 +207,7 @@ class MergeGroup {
     }
 
     protected
-    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> void alreadyCreated(Triple<T, S, U> triple) {
+    <T extends VisualElement, S extends iComponent, U extends DefaultOverride> void alreadyCreated(Triple<T, S, U> triple) {
 
     }
 
@@ -216,15 +216,15 @@ class MergeGroup {
     }
 
     protected
-    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> void newlyCreated(Triple<T, S, U> triple) {
+    <T extends VisualElement, S extends iComponent, U extends DefaultOverride> void newlyCreated(Triple<T, S, U> triple) {
         parentNewlyCreated(triple);
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(triple.left).added(triple.left);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(triple.left).added(triple.left);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(triple.left).added(triple.left);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(triple.left).added(triple.left);
 
     }
 
     protected
-    <T extends VisualElement, S extends iComponent, U extends IVisualElementOverrides.DefaultOverride> void parentNewlyCreated(Triple<T, S, U> triple) {
+    <T extends VisualElement, S extends iComponent, U extends DefaultOverride> void parentNewlyCreated(Triple<T, S, U> triple) {
         triple.left.addChild(owner);
     }
 

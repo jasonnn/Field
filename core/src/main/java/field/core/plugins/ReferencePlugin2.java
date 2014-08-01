@@ -1,7 +1,7 @@
 package field.core.plugins;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.selection.DrawTopology;
 import field.core.plugins.selection.DrawTopology.DefaultDrawer;
 import field.math.graph.ITopology;

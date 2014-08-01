@@ -1,14 +1,15 @@
 package field.graphics.ci;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.util.PythonCallableMap;
 import field.math.graph.visitors.hint.TraversalHint;
 
 public
-class DrawImageOverride extends IVisualElementOverrides.DefaultOverride {
+class DrawImageOverride extends DefaultOverride {
 
     VisualElementProperty<PythonCallableMap> images = new VisualElementProperty<PythonCallableMap>("images_");
 

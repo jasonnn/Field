@@ -1,8 +1,8 @@
 package field.core.plugins.constrain.constraints;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.constrain.BaseConstraintOverrides;
 import field.core.plugins.constrain.ComplexConstraints;
 import field.core.plugins.constrain.ComplexConstraints.VariablesForRect;

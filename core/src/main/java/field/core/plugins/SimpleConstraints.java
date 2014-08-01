@@ -1,9 +1,10 @@
 package field.core.plugins;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.persistance.VisualElementReference;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
@@ -59,7 +60,7 @@ class SimpleConstraints implements iPlugin {
                                      oldParentFrame.y + y * oldParentFrame.h - oy,
                                      width,
                                      height);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(control)
                                                            .shouldChangeFrame(control, newFrame, oldFrame, true);
         }
 
@@ -86,7 +87,7 @@ class SimpleConstraints implements iPlugin {
                                      oldParentFrame.y + y * oldParentFrame.h - oy,
                                      width,
                                      height);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(control)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(control)
                                                            .shouldChangeFrame(control, newFrame, oldFrame, true);
         }
 
@@ -242,7 +243,7 @@ class SimpleConstraints implements iPlugin {
             Rect oldCurrentRect = to.get(root).getFrame(null);
             boolean b = doFire(root, newRect, oldRect, currentRect);
             if (b) {
-                new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(to.get(root))
+                IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(to.get(root))
                                                                .shouldChangeFrame(to.get(root),
                                                                                   currentRect,
                                                                                   oldCurrentRect,
@@ -273,7 +274,7 @@ class SimpleConstraints implements iPlugin {
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -300,7 +301,7 @@ class SimpleConstraints implements iPlugin {
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -311,7 +312,7 @@ class SimpleConstraints implements iPlugin {
     }
 
     public
-    class Overrides extends IVisualElementOverrides.DefaultOverride {
+    class Overrides extends DefaultOverride {
         @Override
         public
         TraversalHint deleted(IVisualElement source) {

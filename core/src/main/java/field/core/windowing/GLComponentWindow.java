@@ -12,7 +12,7 @@ import field.core.Constants;
 import field.core.Platform;
 import field.core.Platform.OS;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.plugins.drawing.threed.ThreedContext.iThreedDrawingSurface;
 import field.core.plugins.selection.ToolBarFolder;

@@ -9,10 +9,12 @@ import field.bytecode.protect.trampoline.Trampoline2;
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner;
 import field.core.dispatch.FastVisualElementOverridesPropertyCombiner.iCombiner;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.execution.*;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.persistance.FluidCopyPastePersistence;
@@ -87,7 +89,7 @@ import java.util.regex.Pattern;
 
 @Woven
 public
-class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVisualElementRoot {
+class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, IHasVisualElementRoot {
 
     public static final VisualElementProperty<String> keyboardShortcut =
             new VisualElementProperty<String>("keyboardShortcut");
@@ -110,7 +112,7 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p == overrides) return (T) StandardFluidSheet.this;
             Object o = rootProperties.get(p);
             return (T) o;
@@ -136,7 +138,7 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             rootProperties.put(p, to);
             return this;
         }
@@ -560,7 +562,7 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
             boolean filter(Promise p) {
                 IVisualElement v = (IVisualElement) system.keyForPromise(p);
                 if (v == null) return false;
-                return iExecutesPromise.promiseExecution.get(v) == this;
+                return IExecutesPromise.promiseExecution.get(v) == this;
             }
         };
 
@@ -595,7 +597,7 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
         // }
 
         rootSheetElement.setProperty(PythonScriptingSystem.pythonScriptingSystem, pss);
-        rootSheetElement.setProperty(iExecutesPromise.promiseExecution, basicRunner);
+        rootSheetElement.setProperty(IExecutesPromise.promiseExecution, basicRunner);
         rootSheetElement.setProperty(BasicRunner.basicRunner, basicRunner);
         rootSheetElement.setProperty(IVisualElement.multithreadedRunner, multiThreadedRunner);
 
@@ -627,7 +629,7 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
         }
 
         if (IVisualElement.isRenderer.getBoolean(newSource, false))
-            iExecutesPromise.promiseExecution.set(newSource, newSource, multiThreadedRunner);
+            IExecutesPromise.promiseExecution.set(newSource, newSource, multiThreadedRunner);
 
         window.getRoot().requestRedisplay();
         return StandardTraversalHint.CONTINUE;
@@ -636,8 +638,8 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
     public
     void addToSheet(IVisualElement newSource) {
         newSource.addChild(rootSheetElement);
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newSource).added(newSource);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource).added(newSource);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(newSource).added(newSource);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(newSource).added(newSource);
     }
 
     ThreadLocal<LinkedHashSet<IVisualElement>> inprogress = new ThreadLocal<LinkedHashSet<IVisualElement>>() {
@@ -676,7 +678,7 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
             }
 
             PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(source);
-            iExecutesPromise runner = iExecutesPromise.promiseExecution.get(source);
+            IExecutesPromise runner = IExecutesPromise.promiseExecution.get(source);
 
             Promise promise = pss.promiseForKey(source);
 
@@ -785,16 +787,16 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
     TraversalHint endExecution(IVisualElement source) {
 
         Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                        .getProperty(source,
                                                                     PythonScriptingSystem.pythonScriptingSystem,
                                                                     refPss);
         assert refPss.get() != null;
 
-        Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+        Ref<IExecutesPromise> refRunner = new Ref<IExecutesPromise>(null);
+         IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                        .getProperty(source,
-                                                                    iExecutesPromise.promiseExecution,
+                                                                    IExecutesPromise.promiseExecution,
                                                                     refRunner);
         assert refRunner.get() != null;
 
@@ -813,7 +815,7 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
     }
 
     public
-    <T> TraversalHint getProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> property, Ref<T> ref) {
+    <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> property, Ref<T> ref) {
         if (rootProperties.containsKey(property)) {
             VisualElementProperty<T> a = property.getAliasedTo();
             while (a != null) {
@@ -1762,7 +1764,7 @@ class StandardFluidSheet implements IVisualElementOverrides, IUpdateable, iHasVi
     }
 
     public
-    <T> TraversalHint setProperty(IVisualElement source, IVisualElement.VisualElementProperty<T> property, Ref<T> to) {
+    <T> TraversalHint setProperty(IVisualElement source, VisualElementProperty<T> property, Ref<T> to) {
 
         if (/* rootProperties.containsKey(property) || */source == getRoot()) {
             VisualElementProperty<T> a = property.getAliasedTo();

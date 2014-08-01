@@ -1,6 +1,6 @@
 package field.graphics.ci;
 
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 

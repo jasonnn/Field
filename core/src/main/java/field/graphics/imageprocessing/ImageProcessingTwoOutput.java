@@ -4,10 +4,9 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.graphics.core.*;
 import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicFrameBuffers.iHasFBO;
 import field.graphics.core.BasicGeometry.QuadMesh;
 import field.graphics.core.BasicGeometry.TriangleMesh;
@@ -209,7 +208,7 @@ class ImageProcessingTwoOutput implements iImageProcessor {
     }
 
     public
-    void addChild(final iSceneListElement e) {
+    void addChild(final Base.ISceneListElement e) {
         mesh.addChild(e);
         if (e instanceof iProcessesMesh) {
             queue.new Task() {
@@ -494,12 +493,12 @@ class ImageProcessingTwoOutput implements iImageProcessor {
     }
 
     public
-    iSceneListElement getOnscreenList(final Rect r, int n) {
+    Base.ISceneListElement getOnscreenList(final Rect r, int n) {
         return getOnscreenList(n, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
     }
 
     public
-    iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+    Base.ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
         final TriangleMesh mesh = new BasicGeometry.QuadMesh(StandardPass.render);
         mesh.rebuildTriangle(1);
         mesh.rebuildVertex(4);

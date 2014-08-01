@@ -1,7 +1,8 @@
 package field.core.plugins.selection;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.selection.SelectionSetDriver.iSelectionPredicate;
 import field.core.windowing.components.DraggableComponent;
@@ -108,7 +109,7 @@ class ComputedSelectionSets {
             iComponent component = IVisualElement.localView.get(e);
             IVisualElementOverrides overrides = IVisualElement.overrides.get(e);
             return component instanceof DraggableComponent
-                   && overrides instanceof IVisualElementOverrides.DefaultOverride;
+                   && overrides instanceof DefaultOverride;
         }
     }
 

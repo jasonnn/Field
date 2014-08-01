@@ -2,7 +2,7 @@ package field.core.ui.text.embedded;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.TimingStatistics;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

@@ -1,15 +1,15 @@
 package field.core.plugins.history;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.Mixins;
 import field.core.dispatch.Mixins.iMixinProxy;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
-import field.core.dispatch.IVisualElementOverrides.Ref;
-import field.core.dispatch.IVisualElementOverrides.iDefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
+import field.core.dispatch.override.IDefaultOverride;
 import field.core.execution.TemporalSliderOverrides;
 import field.core.persistance.FluidCopyPastePersistence;
 import field.core.plugins.drawing.SplineComputingOverride;
@@ -235,7 +235,7 @@ class Templating {
                                                                                                   dispatchTo,
                                                                                                   (Class<VisualElement>) source.getClass(),
                                                                                                   (Class<iComponent>) c.getClass(),
-                                                                                                  (Class<IVisualElementOverrides.DefaultOverride>) oclass,
+                                                                                                  (Class<DefaultOverride>) oclass,
                                                                                                   IVisualElement.name.get(source)
                                                                                                   + " (copy)");
 
@@ -253,7 +253,7 @@ class Templating {
             IVisualElementOverrides newOver =
                     Mixins.make(IVisualElementOverrides.class, Mixins.visitCodeCombiner, over);
 
-            ((iDefaultOverride) newOver).setVisualElement(created.left);
+            ((IDefaultOverride) newOver).setVisualElement(created.left);
             created.left.setElementOverride(newOver);
         }
 
@@ -286,9 +286,9 @@ class Templating {
     void performCopy(VisualElement source, VisualElement newElement, VisualElementProperty p, Object v) {
         Ref<Object> r = new Ref<Object>(v);
         r.set(v, source);
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(newElement)
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(newElement)
                                                        .setProperty(newElement, p, r);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newElement).setProperty(newElement, p, r);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(newElement).setProperty(newElement, p, r);
     }
 
 }

@@ -3,7 +3,7 @@ package field.core.plugins.drawing.pdf;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
 import field.bytecode.mirror.impl.*;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.plugins.drawing.pdf.BasePDFGraphicsContext.DrawingResult;

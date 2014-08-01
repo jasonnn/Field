@@ -1,10 +1,11 @@
 package field.core.plugins;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
-import field.core.dispatch.IVisualElementOverrides_m;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides_m;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.launch.IUpdateable;
 import field.math.graph.visitors.hint.StandardTraversalHint;

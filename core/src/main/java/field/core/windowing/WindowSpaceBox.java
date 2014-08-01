@@ -1,8 +1,8 @@
 package field.core.windowing;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.iComponent;
 import field.math.linalg.Vector2;
@@ -31,7 +31,7 @@ class WindowSpaceBox {
     void freeze() {
         ComponentContainer root = window.getRoot();
 
-        frozen = new HashMap<IVisualElement, IVisualElement.Rect>();
+        frozen = new HashMap<IVisualElement, Rect>();
         frozenAt =
                 new Vector4(window.getXScale(), window.getYScale(), window.getXTranslation(), window.getYTranslation());
 

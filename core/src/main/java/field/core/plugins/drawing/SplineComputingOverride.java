@@ -3,17 +3,18 @@ package field.core.plugins.drawing;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.Mixins;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
+import field.core.execution.IExecutesPromise;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem;
 import field.core.execution.PythonScriptingSystem.DerivativePromise;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.core.execution.iExecutesPromise;
 import field.core.persistance.VEList;
 import field.core.plugins.drawing.opengl.*;
 import field.core.plugins.drawing.opengl.OnCanvasLines.DirectLayer;
@@ -266,16 +267,16 @@ class SplineComputingOverride extends DefaultOverride implements IVisualElementO
             if (e != null && e.isEmpty()) return;
 
             Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                            .getProperty(source,
                                                                         PythonScriptingSystem.pythonScriptingSystem,
                                                                         refPss);
             assert refPss.get() != null;
 
-            Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            Ref<IExecutesPromise> refRunner = new Ref<IExecutesPromise>(null);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                            .getProperty(source,
-                                                                        iExecutesPromise.promiseExecution,
+                                                                        IExecutesPromise.promiseExecution,
                                                                         refRunner);
             assert refRunner.get() != null;
 
@@ -328,16 +329,16 @@ class SplineComputingOverride extends DefaultOverride implements IVisualElementO
             if (e == null) return;
 
             Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                            .getProperty(source,
                                                                         PythonScriptingSystem.pythonScriptingSystem,
                                                                         refPss);
             assert refPss.get() != null;
 
-            Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            Ref<IExecutesPromise> refRunner = new Ref<IExecutesPromise>(null);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                            .getProperty(source,
-                                                                        iExecutesPromise.promiseExecution,
+                                                                        IExecutesPromise.promiseExecution,
                                                                         refRunner);
             assert refRunner.get() != null;
 
@@ -592,7 +593,7 @@ class SplineComputingOverride extends DefaultOverride implements IVisualElementO
     boolean isSelected() {
         try {
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                            .getProperty(forElement,
                                                                         IVisualElement.selectionGroup,
                                                                         group);
@@ -610,14 +611,14 @@ class SplineComputingOverride extends DefaultOverride implements IVisualElementO
 
         if (source == forElement) {
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                            .getProperty(forElement,
                                                                         IVisualElement.selectionGroup,
                                                                         group);
             final SelectionGroup<iComponent> g = group.get();
 
             final Ref<SelectionGroup<iComponent>> markingGroup = new Ref<SelectionGroup<iComponent>>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                            .getProperty(forElement, IVisualElement.markingGroup, group);
             final SelectionGroup<iComponent> mg = group.get();
             items.put("Spline Operations (" + forElement.getProperty(IVisualElement.name) + ')', null);
@@ -1354,7 +1355,7 @@ class SplineComputingOverride extends DefaultOverride implements IVisualElementO
     private
     void moveToElaboratedBy(float thisOpacity) {
         final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                        .getProperty(forElement, IVisualElement.selectionGroup, group);
         final SelectionGroup<iComponent> g = group.get();
 
@@ -1375,7 +1376,7 @@ class SplineComputingOverride extends DefaultOverride implements IVisualElementO
     private
     void moveToElaborates(float thisOpacity) {
         final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                        .getProperty(forElement, IVisualElement.selectionGroup, group);
         final SelectionGroup<iComponent> g = group.get();
 
@@ -1478,8 +1479,8 @@ class SplineComputingOverride extends DefaultOverride implements IVisualElementO
             public
             void update() {
                 Launcher.getLauncher().deregisterUpdateable(this);
-                new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).deleted(forElement);
-                new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(forElement)
+                IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement).deleted(forElement);
+                IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(forElement)
                                                                .deleted(forElement);
                 for (IVisualElement ve : new ArrayList<IVisualElement>((Collection<IVisualElement>) forElement.getParents())) {
                     ve.removeChild(forElement);
@@ -1499,16 +1500,16 @@ class SplineComputingOverride extends DefaultOverride implements IVisualElementO
             if (e == null) return;
 
             Ref<PythonScriptingSystem> refPss = new Ref<PythonScriptingSystem>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                            .getProperty(source,
                                                                         PythonScriptingSystem.pythonScriptingSystem,
                                                                         refPss);
             assert refPss.get() != null;
 
-            Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(source)
+            Ref<IExecutesPromise> refRunner = new Ref<IExecutesPromise>(null);
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(source)
                                                            .getProperty(source,
-                                                                        iExecutesPromise.promiseExecution,
+                                                                        IExecutesPromise.promiseExecution,
                                                                         refRunner);
             assert refRunner.get() != null;
 

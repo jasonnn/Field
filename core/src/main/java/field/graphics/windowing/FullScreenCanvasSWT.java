@@ -15,7 +15,6 @@ import field.core.windowing.LinuxCanvasInterface;
 import field.core.windowing.iCanvasInterface;
 import field.graphics.core.*;
 import field.graphics.core.Base.iAcceptsSceneListElement;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicUtilities.Clear;
 import field.launch.IUpdateable;
 import field.launch.Launcher;
@@ -775,18 +774,18 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
     iAcceptsSceneListElement getBothEyes() {
         return new iAcceptsSceneListElement() {
             public
-            void addChild(iSceneListElement e) {
+            void addChild(Base.ISceneListElement e) {
                 leftSceneList.addChild(e);
                 rightSceneList.addChild(e);
             }
 
             public
-            boolean isChild(iSceneListElement e) {
+            boolean isChild(Base.ISceneListElement e) {
                 return leftSceneList.getChildren().contains(e) || rightSceneList.getChildren().contains(e);
             }
 
             public
-            void removeChild(iSceneListElement e) {
+            void removeChild(Base.ISceneListElement e) {
                 leftSceneList.removeChild(e);
                 rightSceneList.removeChild(e);
 
@@ -800,7 +799,7 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
      * the << operator
      */
     public
-    void addChild(iSceneListElement e) {
+    void addChild(Base.ISceneListElement e) {
         getSceneList().addChild(e);
     }
 
@@ -808,7 +807,7 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
      * returns true if this is already in the list of things to be drawn
      */
     public
-    boolean isChild(iSceneListElement e) {
+    boolean isChild(Base.ISceneListElement e) {
         return getSceneList().isChild(e);
     }
 
@@ -817,7 +816,7 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
      * use the | operator
      */
     public
-    void removeChild(iSceneListElement e) {
+    void removeChild(Base.ISceneListElement e) {
         getSceneList().removeChild(e);
     }
 

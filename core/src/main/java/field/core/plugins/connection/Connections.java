@@ -2,11 +2,11 @@ package field.core.plugins.connection;
 
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.iPlugin;
 import field.core.plugins.python.PythonPluginEditor;
@@ -53,7 +53,7 @@ class Connections implements iPlugin {
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p.equals(overrides)) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -80,7 +80,7 @@ class Connections implements iPlugin {
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -91,7 +91,7 @@ class Connections implements iPlugin {
     }
 
     public
-    class Overrides extends IVisualElementOverrides.DefaultOverride {
+    class Overrides extends DefaultOverride {
         @Override
         public
         TraversalHint deleted(IVisualElement source) {
@@ -158,7 +158,7 @@ class Connections implements iPlugin {
 //	}
 
     public
-    <T extends IVisualElementOverrides.DefaultOverride> IVisualElement connect(final IVisualElement from,
+    <T extends DefaultOverride> IVisualElement connect(final IVisualElement from,
                                                                                final IVisualElement to,
                                                                                Class<T> connective,
                                                                                boolean askforname) {
@@ -166,8 +166,8 @@ class Connections implements iPlugin {
                 VisualElement.create(new Rect(30, 30, 30, 30), VisualElement.class, PlainComponent.class, connective);
 
         c1.left.addChild(rootElement);
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(c1.left).added(c1.left);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(c1.left).added(c1.left);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(c1.left).added(c1.left);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(c1.left).added(c1.left);
 
         LineDrawingOverride.lineDrawing_to.set(c1.left, c1.left, new VisualElementReference(to));
         LineDrawingOverride.lineDrawing_from.set(c1.left, c1.left, new VisualElementReference(from));

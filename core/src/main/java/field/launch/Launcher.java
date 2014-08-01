@@ -27,7 +27,7 @@ class Launcher {
 
     private static final Logger log = Logger.getLogger(Launcher.class.getName());
     public static String resourcesDirectory;
-    public static iLaunchable mainInstance;
+    public static ILaunchable mainInstance;
     public static String[] args = {};
     public static Display display;
     public static volatile boolean shuttingDown = false;
@@ -89,13 +89,13 @@ class Launcher {
             // swing utilities?
             if (isTrampoline) {
                 //StandardTrampoline is created here
-                (mainInstance = (iLaunchable) c.newInstance()).launch();
+                (mainInstance = (ILaunchable) c.newInstance()).launch();
                 constructMainTimer();
             }
             else {
 
                 mainThread = Thread.currentThread();
-                (mainInstance = (iLaunchable) c.newInstance()).launch();
+                (mainInstance = (ILaunchable) c.newInstance()).launch();
             }
 
         } catch (Throwable e) {

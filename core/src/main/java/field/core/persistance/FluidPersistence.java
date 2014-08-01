@@ -13,13 +13,13 @@ import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.DefaultOverride;
 import field.core.dispatch.Mixins;
 import field.core.dispatch.Mixins.iMixinProxy;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.iDefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.IDefaultOverride;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLineCompression;
@@ -165,7 +165,7 @@ class FluidPersistence {
                         Iterator<Entry<Object, Object>> i = properties.entrySet().iterator();
                         while (i.hasNext()) {
                             Entry<Object, Object> e = i.next();
-                            if (((IVisualElement.VisualElementProperty<?>) e.getKey()).getName().endsWith("_"))
+                            if (((VisualElementProperty<?>) e.getKey()).getName().endsWith("_"))
                                 i.remove();
                             else if (!checkProperty(element, e)) {
                                 i.remove();
@@ -354,7 +354,7 @@ class FluidPersistence {
 
             public
             boolean canConvert(Class type) {
-                return IVisualElementOverrides.iDefaultOverride.class.isAssignableFrom(type);
+                return IDefaultOverride.class.isAssignableFrom(type);
             }
 
             public
@@ -363,7 +363,7 @@ class FluidPersistence {
                 context.convertAnother(source.getClass());
                 writer.endNode();
                 writer.startNode("element");
-                context.convertAnother(((IVisualElementOverrides.DefaultOverride) source).forElement);
+                context.convertAnother(((DefaultOverride) source).forElement);
                 writer.endNode();
             }
 
@@ -372,9 +372,9 @@ class FluidPersistence {
                 FluidPersistence.this.context = context;
                 reader.moveDown();
                 Class c = (Class) context.convertAnother(null, Class.class);
-                iDefaultOverride def = null;
+                IDefaultOverride def = null;
                 try {
-                    def = (iDefaultOverride) c.newInstance();
+                    def = (IDefaultOverride) c.newInstance();
                 } catch (InstantiationException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {

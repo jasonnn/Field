@@ -1,10 +1,12 @@
 package field.core.execution;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -26,7 +28,7 @@ import org.eclipse.swt.widgets.Event;
 import java.util.*;
 
 public
-class DisposableTimeSliderOverrides extends IVisualElementOverrides.DefaultOverride {
+class DisposableTimeSliderOverrides extends DefaultOverride {
 
     public static final VisualElementProperty<Number> playDuration = new VisualElementProperty<Number>("playDuration");
     public static final VisualElementProperty<Number> skipbackDuration =
@@ -186,7 +188,7 @@ class DisposableTimeSliderOverrides extends IVisualElementOverrides.DefaultOverr
 
         for (final IVisualElement v : on) {
             PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
-            iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
+            IExecutesPromise runner = IExecutesPromise.promiseExecution.get(v);
 
             Promise promise = pss.promiseForKey(v);
 
@@ -512,7 +514,7 @@ class DisposableTimeSliderOverrides extends IVisualElementOverrides.DefaultOverr
     void stopAndDelete() {
         for (final IVisualElement v : on) {
             PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
-            iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
+            IExecutesPromise runner = IExecutesPromise.promiseExecution.get(v);
 
             Promise promise = pss.promiseForKey(v);
             runner.removeActive(promise);
@@ -535,7 +537,7 @@ class DisposableTimeSliderOverrides extends IVisualElementOverrides.DefaultOverr
 
         for (final IVisualElement v : on) {
             PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(v);
-            iExecutesPromise runner = iExecutesPromise.promiseExecution.get(v);
+            IExecutesPromise runner = IExecutesPromise.promiseExecution.get(v);
 
             Promise promise = pss.promiseForKey(v);
             runner.removeActive(promise);

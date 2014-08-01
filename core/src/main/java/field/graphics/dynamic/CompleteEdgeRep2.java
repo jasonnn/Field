@@ -3,8 +3,9 @@ package field.graphics.dynamic;
 import field.graphics.core.Base;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
 import field.math.linalg.Vector3;
+import field.namespace.change.IModCount;
+import field.namespace.change.IRecompute;
 import field.namespace.change.SimpleChangable;
-import field.namespace.change.iChangable;
 
 import java.io.*;
 import java.nio.FloatBuffer;
@@ -278,7 +279,7 @@ class CompleteEdgeRep2 implements Serializable {
 
     int beginCount = 0;
 
-    iChangable.iRecompute compute_openEdgeList = new iChangable.iRecompute() {
+    IRecompute compute_openEdgeList = new IRecompute() {
 
         public
         Object recompute() {
@@ -381,7 +382,7 @@ class CompleteEdgeRep2 implements Serializable {
 
     protected List opcodeList = new ArrayList();
 
-    iChangable.iModCount openEdgeList_mod = allEdge_change.getModCount(new ArrayList());
+    IModCount openEdgeList_mod = allEdge_change.getModCount(new ArrayList());
 
     protected int operand_index = 0;
 

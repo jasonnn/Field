@@ -2,10 +2,11 @@ package field.core.plugins.autoexecute;
 
 import field.bytecode.protect.Woven;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
+import field.core.dispatch.override.IVisualElementOverridesAdaptor;
 import field.core.plugins.SimpleConstraints;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.iPlugin;
@@ -43,7 +44,7 @@ class AutoExecutePythonPlugin implements iPlugin {
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -70,7 +71,7 @@ class AutoExecutePythonPlugin implements iPlugin {
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -81,7 +82,7 @@ class AutoExecutePythonPlugin implements iPlugin {
     }
 
     public
-    class Overrides extends IVisualElementOverrides.Adaptor {
+    class Overrides extends IVisualElementOverridesAdaptor {
 
         @Override
         public
@@ -149,7 +150,7 @@ class AutoExecutePythonPlugin implements iPlugin {
         // pull auto execute information from the properties
 
         Ref<String> ref = new Ref<String>("");
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(newSource)
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(newSource)
                                                        .getProperty(newSource,
                                                                     PythonPlugin.python_source_forExecution,
                                                                     ref);

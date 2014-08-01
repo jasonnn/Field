@@ -1,9 +1,9 @@
 package field.core.ui.text.embedded;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.math.graph.TopologyViewOfGraphNodes;
 import field.math.graph.visitors.hint.StandardTraversalHint;
 import field.math.graph.visitors.hint.TraversalHint;
@@ -32,9 +32,9 @@ interface iReferenceAlgorithm {
 
             String name = algorithmName;
             forElement.setProperty(new VisualElementProperty(uniqueReferenceID + "-source"), name);
-            new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(forElement)
+            IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(forElement)
                                                            .setProperty(forElement, pr, new Ref(newProp));
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                            .setProperty(forElement, pr, new Ref(newProp));
 
             assert newProp != null;

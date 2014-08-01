@@ -2,8 +2,8 @@ package field.core.plugins.log;
 
 import field.core.Constants;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.log.AssemblingLogging.iUndoable;
 import field.core.plugins.log.Logging.iLoggingEvent;
 import field.core.plugins.selection.PopupInfoWindow;

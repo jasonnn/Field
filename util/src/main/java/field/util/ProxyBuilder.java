@@ -12,7 +12,9 @@ import java.util.List;
 public
 class ProxyBuilder<T> {
     ClassLoader loader;
+
     List<Class> interfaces = new ArrayList<Class>();
+
     InvocationHandler handler;
 
     public static
@@ -29,6 +31,13 @@ class ProxyBuilder<T> {
     ProxyBuilder<T> withClassLoader(ClassLoader loader) {
         this.loader = loader;
         return this;
+    }
+
+    public
+    ProxyBuilder<T> withClassLoaderOf(Object o) {
+        if (o instanceof Class)
+            return withClassLoader(((Class) o).getClassLoader());
+        return withClassLoader(o.getClass().getClassLoader());
     }
 
     public

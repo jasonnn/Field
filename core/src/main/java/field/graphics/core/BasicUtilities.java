@@ -6,8 +6,6 @@ import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.dispatch.Cont;
 import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iPass;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.graphics.windowing.FullScreenCanvasSWT.StereoSide;
 import field.launch.IUpdateable;
@@ -46,7 +44,7 @@ class BasicUtilities {
     public static final boolean thinState = false;
 
     public static
-    class ChangeLineWidth extends BasicUtilities.TwoPassElement implements iSceneListElement {
+    class ChangeLineWidth extends BasicUtilities.TwoPassElement implements Base.ISceneListElement {
 
         private float o;
 
@@ -82,7 +80,7 @@ class BasicUtilities {
     // public static FKey freq = new FKey("blurFreq").rootSet(1);
 
     public static
-    class Clear extends OnePassElement implements iSceneListElement {
+    class Clear extends OnePassElement implements Base.ISceneListElement {
 
         Vector3 background = new Vector3(0.1, 0.1, 0.1);
 
@@ -142,7 +140,7 @@ class BasicUtilities {
     }
 
     public static
-    class ClearAlpha extends OnePassElement implements iSceneListElement {
+    class ClearAlpha extends OnePassElement implements Base.ISceneListElement {
 
         private final float to;
 
@@ -173,7 +171,7 @@ class BasicUtilities {
     }
 
     public static
-    class ClearColor extends OnePassElement implements iSceneListElement {
+    class ClearColor extends OnePassElement implements Base.ISceneListElement {
 
         Vector3 background = new Vector3(0.1, 0.1, 0.1);
 
@@ -226,7 +224,7 @@ class BasicUtilities {
     }
 
     public static
-    class ClearDepth extends OnePassElement implements iSceneListElement {
+    class ClearDepth extends OnePassElement implements Base.ISceneListElement {
         public
         ClearDepth() {
             super(StandardPass.preRender);
@@ -257,7 +255,7 @@ class BasicUtilities {
      *         Comments
      */
     public static
-    class ClearOnce extends OnePassElement implements iSceneListElement {
+    class ClearOnce extends OnePassElement implements Base.ISceneListElement {
 
         Vector3 background = new Vector3(0.1, 0.1, 0.1);
 
@@ -304,18 +302,18 @@ class BasicUtilities {
     }
 
     public abstract static
-    class ContextWrapper extends BasicSceneList implements iSceneListElement {
+    class ContextWrapper extends BasicSceneList implements Base.ISceneListElement {
 
-        protected iSceneListElement[] one;
+        protected Base.ISceneListElement[] one;
 
         public
-        ContextWrapper(iSceneListElement[] one) {
+        ContextWrapper(Base.ISceneListElement[] one) {
             this.one = one;
         }
 
         @Override
         public
-        void notifyAddParent(IMutable<iSceneListElement> list) {
+        void notifyAddParent(IMutable<Base.ISceneListElement> list) {
             super.notifyAddParent(list);
             for (int i = 0; i < one.length; i++)
                 one[i].notifyAddParent(list);
@@ -323,7 +321,7 @@ class BasicUtilities {
 
         @Override
         public
-        void performPass(iPass p) {
+        void performPass(Base.IPass p) {
             one[indexForContext(BasicContextManager.getCurrentContext())].performPass(p);
         }
 
@@ -845,28 +843,28 @@ class BasicUtilities {
     @HiddenInAutocomplete
     @Woven
     public abstract static
-    class OnePassElement extends BasicSceneList implements iSceneListElement {
+    class OnePassElement extends BasicSceneList implements Base.ISceneListElement {
 
         static public final Method method_performPass = ReflectionTools.methodOf("performPass", OnePassElement.class);
 
         protected Set renderPass = new HashSet();
 
-        protected Base.iPass requestPass;
+        protected Base.IPass requestPass;
 
         protected Object gl = null;
 
         protected Object glu = null;
 
         public
-        OnePassElement(Base.iPass requestPass) {
+        OnePassElement(Base.IPass requestPass) {
             this.requestPass = requestPass;
         }
 
         @Override
         public
-        void notifyAddParent(IMutable<iSceneListElement> newParent) {
+        void notifyAddParent(IMutable<Base.ISceneListElement> newParent) {
             super.notifyAddParent(newParent);
-            renderPass.add(((iSceneListElement) newParent).requestPass(requestPass));
+            renderPass.add(((Base.ISceneListElement) newParent).requestPass(requestPass));
         }
 
         // this is where you do the work of the element
@@ -879,7 +877,7 @@ class BasicUtilities {
         @DispatchOverTopology(topology = Cont.class)
         @ConstantContext(immediate = false, topology = Base.class)
         public
-        void performPass(iPass p) {
+        void performPass(Base.IPass p) {
             gl = BasicContextManager.getGl();
             glu = BasicContextManager.getGlu();
             if ((p == null) || (renderPass.contains(p))) {
@@ -899,7 +897,7 @@ class BasicUtilities {
 
     @Woven
     abstract static public
-    class OnePassListElement extends BasicSceneList implements iSceneListElement {
+    class OnePassListElement extends BasicSceneList implements Base.ISceneListElement {
 
         static public final Method method_performPass =
                 ReflectionTools.methodOf("performPass", OnePassListElement.class);
@@ -914,7 +912,7 @@ class BasicUtilities {
 
         protected Set renderPass = new HashSet();
 
-        protected iPass ourRenderPass;
+        protected Base.IPass ourRenderPass;
 
         protected boolean preCalled = false;
 
@@ -933,9 +931,9 @@ class BasicUtilities {
 
         @Override
         public
-        void notifyAddParent(IMutable<iSceneListElement> newParent) {
+        void notifyAddParent(IMutable<Base.ISceneListElement> newParent) {
             super.notifyAddParent(newParent);
-            renderPass.add(((iSceneListElement) newParent).requestPass(requestPass));
+            renderPass.add(((Base.ISceneListElement) newParent).requestPass(requestPass));
         }
 
         @DispatchOverTopology(topology = Cont.class)
@@ -947,7 +945,7 @@ class BasicUtilities {
 
         @Override
         public
-        void performPass(iPass p) {
+        void performPass(Base.IPass p) {
             gl = BasicContextManager.getGl();
             glu = BasicContextManager.getGlu();
 
@@ -1597,23 +1595,23 @@ class BasicUtilities {
      */
 
     static public
-    class ToggleWrapper extends BasicSceneList implements iSceneListElement, IUpdateable {
+    class ToggleWrapper extends BasicSceneList implements Base.ISceneListElement, IUpdateable {
 
-        protected iSceneListElement one;
+        protected Base.ISceneListElement one;
 
-        protected iSceneListElement two;
+        protected Base.ISceneListElement two;
 
         boolean first = true;
 
         public
-        ToggleWrapper(iSceneListElement one, iSceneListElement two) {
+        ToggleWrapper(Base.ISceneListElement one, Base.ISceneListElement two) {
             this.one = one;
             this.two = two;
         }
 
         @Override
         public
-        void notifyAddParent(IMutable<iSceneListElement> list) {
+        void notifyAddParent(IMutable<Base.ISceneListElement> list) {
             super.notifyAddParent(list);
             one.notifyAddParent(list);
             two.notifyAddParent(list);
@@ -1621,7 +1619,7 @@ class BasicUtilities {
 
         @Override
         public
-        void performPass(iPass p) {
+        void performPass(Base.IPass p) {
             if (first) one.performPass(p);
             else two.performPass(p);
         }
@@ -1636,7 +1634,7 @@ class BasicUtilities {
 
     @Woven
     abstract static public
-    class TwoPassElement extends BasicSceneList implements iSceneListElement {
+    class TwoPassElement extends BasicSceneList implements Base.ISceneListElement {
 
         public Object gl = null;
 
@@ -1660,11 +1658,11 @@ class BasicUtilities {
 
         @Override
         public
-        void notifyAddParent(IMutable<iSceneListElement> newParent) {
+        void notifyAddParent(IMutable<Base.ISceneListElement> newParent) {
             super.notifyAddParent(newParent);
 
-            preRender.add(((iSceneListElement) newParent).requestPass(prePass));
-            postRender.add(((iSceneListElement) newParent).requestPass(postPass));
+            preRender.add(((Base.ISceneListElement) newParent).requestPass(prePass));
+            postRender.add(((Base.ISceneListElement) newParent).requestPass(postPass));
         }
 
         // a two pass calls pre() on preRender and
@@ -1673,7 +1671,7 @@ class BasicUtilities {
         @DispatchOverTopology(topology = Cont.class)
         @ConstantContext(immediate = false, topology = Base.class)
         public
-        void performPass(iPass p) {
+        void performPass(Base.IPass p) {
             gl = BasicContextManager.getGl();
             glu = BasicContextManager.getGlu();
 
@@ -1716,7 +1714,7 @@ class BasicUtilities {
                 // including
                 // <"+(iPass)preRender.iterator().next()+"
                 // -> "+p+">");
-                super.updateFromButNotIncluding((iPass) preRender.iterator().next(), p);
+                super.updateFromButNotIncluding((Base.IPass) preRender.iterator().next(), p);
 
                 post();
                 uniform.pop();
@@ -1763,7 +1761,7 @@ class BasicUtilities {
     }
 
     static public
-    class WireFrame extends BasicUtilities.TwoPassElement implements iSceneListElement {
+    class WireFrame extends BasicUtilities.TwoPassElement implements Base.ISceneListElement {
 
         boolean b = true;
 

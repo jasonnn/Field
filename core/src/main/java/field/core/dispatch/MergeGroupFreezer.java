@@ -1,7 +1,6 @@
 package field.core.dispatch;
 
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.override.DefaultOverride;
 import field.core.plugins.python.PythonPlugin;
 import field.core.ui.text.embedded.FreezeProperties;
 import field.core.ui.text.embedded.FreezeProperties.Freeze;

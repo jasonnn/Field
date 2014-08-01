@@ -1,7 +1,7 @@
 package field.core.plugins.python;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
 import field.core.ui.text.embedded.HistogramLayerPainter;

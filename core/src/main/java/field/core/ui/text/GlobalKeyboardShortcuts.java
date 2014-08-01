@@ -2,7 +2,7 @@ package field.core.ui.text;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.launch.IUpdateable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;

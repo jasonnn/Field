@@ -4,9 +4,9 @@ import field.core.execution.PythonInterface;
 import field.core.plugins.log.ElementInvocationLogging.iProvidesContextStack;
 import field.core.plugins.log.Logging.iLoggingEvent;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
+import field.launch.ILaunchable;
 import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iLaunchable;
 import field.math.abstraction.IBlendAlgebra;
 import field.math.abstraction.IBlendable;
 import field.math.abstraction.IProvider;
@@ -721,7 +721,7 @@ class AssemblingLogging extends InvocationLogging {
         });
         cloners.add(new ImmutableCloner(String.class));
         cloners.add(new ImmutableCloner(Number.class));
-        cloners.add(new ImmutableCloner(iLaunchable.class));
+        cloners.add(new ImmutableCloner(ILaunchable.class));
 
         cloners.add(new iCloneSupport() {
             public

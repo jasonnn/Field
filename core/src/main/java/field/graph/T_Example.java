@@ -5,7 +5,7 @@ import field.context.Context.DebugToString;
 import field.graph.MotionGraphs.Graph;
 import field.graph.MotionGraphs.iAxis;
 import field.graph.MotionGraphs.iLayout;
-import field.launch.iLaunchable;
+import field.launch.ILaunchable;
 import field.math.linalg.Vector2;
 import field.util.Dict.Prop;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public
-class T_Example implements iLaunchable {
+class T_Example implements ILaunchable {
 
     public static final Prop<Vector2> at = new Prop<Vector2>("at");
 

@@ -1,7 +1,7 @@
 package field.graphics.dynamic;
 
+import field.graphics.core.Base;
 import field.graphics.core.Base.iAcceptsSceneListElement;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGeometry;
 import field.graphics.core.BasicGeometry.LineList;
@@ -34,7 +34,7 @@ class DynamicLine extends DynamicMesh implements iLineOutput {
 
 
     public static
-    DynamicLine unshadedLine(iSceneListElement into, float width) {
+    DynamicLine unshadedLine(Base.ISceneListElement into, float width) {
         BasicGeometry.LineList lines = new BasicGeometry.LineList(new BasicUtilities.Position()).setWidth(width);
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);

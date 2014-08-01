@@ -5,11 +5,12 @@ import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Platform;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.execution.PythonGeneratorStack;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem.DerivativePromise;
@@ -1855,11 +1856,11 @@ class PythonPluginEditor extends PythonPlugin {
         ContextualHelp ch = h.getContextualHelp();
         ch.addContextualHelpForWidget("textEditor",
                                       editor.getInputEditor(),
-                                      ContextualHelp.providerForStaticMarkdownResource("contextual/textInput.md"),
+                                      ContextualHelp.providerForStaticMarkdownResourceInClasspath("/documentation/contextual/textInput.md"),
                                       50);
         ch.addContextualHelpForWidget("outputEditor",
                                       editor.getOutputEditor(),
-                                      ContextualHelp.providerForStaticMarkdownResource("contextual/textOutput.md"),
+                                      ContextualHelp.providerForStaticMarkdownResourceInClasspath("/documentation/contextual/textOutput.md"),
                                       50);
     }
 

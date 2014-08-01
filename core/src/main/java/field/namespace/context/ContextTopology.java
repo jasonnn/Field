@@ -9,7 +9,7 @@ import java.util.Set;
  */
 public abstract
 class ContextTopology<K, I> {
-    public iContextStorage<K, I> storage;
+    public IContextStorage<K, I> storage;
 
     protected final Class<K> keyClass;
 

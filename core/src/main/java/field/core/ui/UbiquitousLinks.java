@@ -3,7 +3,7 @@ package field.core.ui;
 import field.core.Constants;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.execution.PythonInterface;
 import field.core.plugins.selection.SelectionSetDriver.TravelTo;
 import field.core.ui.text.util.OpenInEclipse;

@@ -6,7 +6,7 @@ import field.core.Platform;
 import field.core.Platform.OS;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.drawing.SplineComputingOverride;

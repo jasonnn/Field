@@ -2,7 +2,7 @@ package field.core.windowing.components;
 
 import field.bytecode.mirror.impl.*;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.launch.IUpdateable;
 import field.math.abstraction.IAcceptor;
@@ -17,7 +17,7 @@ public class iComponent_m {
   public static final Method isHit_m = ReflectionTools.methodOf("isHit",field.core.windowing.components.iComponent.class, org.eclipse.swt.widgets.Event.class);
   public static final Method hit_m = ReflectionTools.methodOf("hit",field.core.windowing.components.iComponent.class, org.eclipse.swt.widgets.Event.class);
   public static final Method getBounds_m = ReflectionTools.methodOf("getBounds",field.core.windowing.components.iComponent.class);
-  public static final Method setBounds_m = ReflectionTools.methodOf("setBounds",field.core.windowing.components.iComponent.class, field.core.dispatch.IVisualElement.Rect.class);
+  public static final Method setBounds_m = ReflectionTools.methodOf("setBounds",field.core.windowing.components.iComponent.class, field.core.dispatch.Rect.class);
   public static final Method keyTyped_m = ReflectionTools.methodOf("keyTyped",field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
   public static final Method keyPressed_m = ReflectionTools.methodOf("keyPressed",field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
   public static final Method keyReleased_m = ReflectionTools.methodOf("keyReleased",field.core.windowing.components.iComponent.class, field.core.windowing.GLComponentWindow.ComponentContainer.class, org.eclipse.swt.widgets.Event.class);
@@ -37,8 +37,8 @@ public class iComponent_m {
   // --------------------------------------------------------------------------------
   public static final MirrorMethod<iComponent,Event,Float> isHit_s = new MirrorMethod<field.core.windowing.components.iComponent,org.eclipse.swt.widgets.Event,java.lang.Float>(isHit_m);
   public static final MirrorMethod<iComponent,Event,iComponent> hit_s = new MirrorMethod<field.core.windowing.components.iComponent,org.eclipse.swt.widgets.Event,field.core.windowing.components.iComponent>(hit_m);
-  public static final MirrorMethod<iComponent,Void,Rect> getBounds_s = new MirrorMethod<field.core.windowing.components.iComponent,Void,field.core.dispatch.IVisualElement.Rect>(getBounds_m);
-  public static final MirrorMethod<iComponent,Rect,Void> setBounds_s = new MirrorMethod<field.core.windowing.components.iComponent,field.core.dispatch.IVisualElement.Rect,java.lang.Void>(setBounds_m);
+  public static final MirrorMethod<iComponent,Void,Rect> getBounds_s = new MirrorMethod<field.core.windowing.components.iComponent,Void,field.core.dispatch.Rect>(getBounds_m);
+  public static final MirrorMethod<iComponent,Rect,Void> setBounds_s = new MirrorMethod<field.core.windowing.components.iComponent,field.core.dispatch.Rect,java.lang.Void>(setBounds_m);
   public static final MirrorMethod<iComponent,Object[],Void> keyTyped_s = new MirrorMethod<field.core.windowing.components.iComponent,Object[],java.lang.Void>(keyTyped_m);
   public static final MirrorMethod<iComponent,Object[],Void> keyPressed_s = new MirrorMethod<field.core.windowing.components.iComponent,Object[],java.lang.Void>(keyPressed_m);
   public static final MirrorMethod<iComponent,Object[],Void> keyReleased_s = new MirrorMethod<field.core.windowing.components.iComponent,Object[],java.lang.Void>(keyReleased_m);
@@ -182,8 +182,8 @@ public class iComponent_m {
     }
     @Override
     public IProvider<Rect> bind() {
-      return new IProvider<field.core.dispatch.IVisualElement.Rect>(){
-              public field.core.dispatch.IVisualElement.Rect get(){
+      return new IProvider<field.core.dispatch.Rect>(){
+              public field.core.dispatch.Rect get(){
                   return getBounds();
                   }
           };

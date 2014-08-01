@@ -6,7 +6,6 @@ import field.bytecode.protect.dispatch.aRun;
 import field.core.Platform;
 import field.core.Platform.OS;
 import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iPass;
 import field.graphics.qt.ByteImage;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.math.linalg.Vector4;
@@ -1612,7 +1611,7 @@ class AdvancedTextures extends BasicTextures {
 
         @Override
         public
-        void performPass(iPass p) {
+        void performPass(Base.IPass p) {
             super.performPass(p);
         }
 

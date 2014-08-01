@@ -4,11 +4,10 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.graphics.core.*;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iAcceptsSceneListElement;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicFrameBuffers.iHasFBO;
 import field.graphics.core.BasicGeometry.QuadMesh;
 import field.graphics.core.BasicGeometry.TriangleMesh;
@@ -74,7 +73,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    interface iRepositionAndSceneList extends iSceneListElement {
+    interface iRepositionAndSceneList extends Base.ISceneListElement {
         public
         Rect getRect();
 
@@ -713,12 +712,12 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    iSceneListElement getOnscreenList(final Rect r) {
+    Base.ISceneListElement getOnscreenList(final Rect r) {
         return getOnscreenList(0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
     }
 
     public
-    iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+    Base.ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
         final TriangleMesh mesh = new BasicGeometry.QuadMesh(StandardPass.render);
         mesh.rebuildTriangle(1);
         mesh.rebuildVertex(4);
@@ -806,7 +805,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     int[] available = new int[1];
 
-    List<iSceneListElement> children = new ArrayList<iSceneListElement>();
+    List<Base.ISceneListElement> children = new ArrayList<Base.ISceneListElement>();
 
     TaskQueue queue = new TaskQueue();
 
@@ -884,7 +883,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    void addChild(final iSceneListElement e) {
+    void addChild(final Base.ISceneListElement e) {
         mesh.addChild(e);
         children.add(e);
         if (e instanceof iProcessesMesh) {
@@ -903,13 +902,13 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     @Override
     public
-    void removeChild(iSceneListElement e) {
+    void removeChild(Base.ISceneListElement e) {
         mesh.removeChild(e);
         children.remove(e);
     }
 
     public
-    boolean isChild(iSceneListElement e) {
+    boolean isChild(Base.ISceneListElement e) {
         return mesh.isChild(e);
     }
 

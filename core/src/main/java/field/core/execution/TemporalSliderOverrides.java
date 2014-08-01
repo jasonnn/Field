@@ -4,10 +4,12 @@ import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.mRun;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.drawing.OfferedAlignment;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -41,7 +43,7 @@ import java.util.*;
  * @author marc
  */
 public
-class TemporalSliderOverrides extends IVisualElementOverrides.DefaultOverride {
+class TemporalSliderOverrides extends DefaultOverride {
     public static final VisualElementProperty<TimeSystem> currentTimeSystem =
             new VisualElementProperty<TimeSystem>("currentTimeSystem_");
 
@@ -237,7 +239,7 @@ class TemporalSliderOverrides extends IVisualElementOverrides.DefaultOverride {
     @Override
     public
     TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
-        IVisualElementOverrides dp = new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement);
+        IVisualElementOverrides dp = IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement);
         final Ref<TimeSystem> r = new Ref<TimeSystem>(null);
         dp.getProperty(forElement, currentTimeSystem, r);
         if (r.get() != null) {
@@ -356,7 +358,7 @@ class TemporalSliderOverrides extends IVisualElementOverrides.DefaultOverride {
 
             OfferedAlignment.alignment_doNotParticipate.set(source, source, true);
             IVisualElementOverrides dp =
-                    new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement);
+                    IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement);
             Ref<TimeSystem> r = new Ref<TimeSystem>(null);
             dp.getProperty(forElement, currentTimeSystem, r);
 
@@ -467,7 +469,7 @@ class TemporalSliderOverrides extends IVisualElementOverrides.DefaultOverride {
     IUpdateable getTimeSliderToFrame() {
         return timeSliderToFrame == null ? timeSliderToFrame = new IUpdateable() {
             IVisualElementOverrides dp =
-                    new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement);
+                    IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement);
 
             public
             void update() {

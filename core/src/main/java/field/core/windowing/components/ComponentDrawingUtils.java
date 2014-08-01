@@ -1,6 +1,6 @@
 package field.core.windowing.components;
 
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.graphics.core.Base;
 import field.graphics.dynamic.DynamicLine;
 import field.graphics.dynamic.DynamicPointlist;

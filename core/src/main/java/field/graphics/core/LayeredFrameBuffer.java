@@ -4,9 +4,8 @@ import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicFrameBuffers.NullTexture;
 import field.graphics.core.BasicFrameBuffers.iDisplayable;
 import field.graphics.core.BasicFrameBuffers.iHasFBO;
@@ -312,7 +311,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     }
 
     public
-    NodeImpl<iSceneListElement> getRootSceneList() {
+    NodeImpl<Base.ISceneListElement> getRootSceneList() {
         return rootSceneList;
     }
 
@@ -440,13 +439,13 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     }
 
     public
-    iSceneListElement placeOnscreen(int output, final Rect r) {
+    Base.ISceneListElement placeOnscreen(int output, final Rect r) {
         return getOnscreenList(output, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
     }
 
     @HiddenInAutocomplete
     public
-    iSceneListElement getOnscreenList(final int output,
+    Base.ISceneListElement getOnscreenList(final int output,
                                       final Rect r,
                                       Vector4 offset,
                                       Vector4 mul,
@@ -509,12 +508,12 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     }
 
     public
-    iSceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
+    Base.ISceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
         return getOnscreenList(onscreenProgram, 0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
     }
 
     public
-    iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+    Base.ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
                                       final Rect r,
                                       Vector4 offset,
                                       Vector4 mul,
@@ -524,7 +523,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
 
     @HiddenInAutocomplete
     public
-    iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+    Base.ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
                                       int output,
                                       final Rect r,
                                       Vector4 offset,

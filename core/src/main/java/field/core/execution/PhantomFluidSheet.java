@@ -1,13 +1,13 @@
 package field.core.execution;
 
+import field.core.IHasVisualElementRoot;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.Rect;
+import field.core.dispatch.override.Ref;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.core.iHasVisualElementRoot;
 import field.core.windowing.components.PlainDraggableComponent;
 import field.launch.SystemProperties;
 import field.launch.iPhasic;
@@ -23,7 +23,7 @@ import java.io.*;
  * @author marc
  */
 public
-class PhantomFluidSheet implements iHasVisualElementRoot {
+class PhantomFluidSheet implements IHasVisualElementRoot {
 
     public
     interface iPhasicForElement extends iPhasic {
@@ -159,7 +159,7 @@ class PhantomFluidSheet implements iHasVisualElementRoot {
 
             boolean started = false;
 
-            iExecutesPromise runner = null;
+            IExecutesPromise runner = null;
 
             IVisualElement running = null;
 
@@ -203,21 +203,21 @@ class PhantomFluidSheet implements iHasVisualElementRoot {
                 if (running != null) {
 
                     refPss = new Ref<PythonScriptingSystem>(null);
-                    new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running)
+                    IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(running)
                                                                    .getProperty(running,
                                                                                 PythonScriptingSystem.pythonScriptingSystem,
                                                                                 refPss);
                     assert refPss.get() != null;
 
-                    Ref<iExecutesPromise> refRunner = new Ref<iExecutesPromise>(null);
+                    Ref<IExecutesPromise> refRunner = new Ref<IExecutesPromise>(null);
                     if (local) {
                         refRunner.set(new BasicRunner(getRoot().getProperty(PythonScriptingSystem.pythonScriptingSystem),
                                                       1));
                     }
                     else {
-                        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(running)
+                        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(running)
                                                                        .getProperty(running,
-                                                                                    iExecutesPromise.promiseExecution,
+                                                                                    IExecutesPromise.promiseExecution,
                                                                                     refRunner);
                         assert refRunner.get() != null;
                         //System.err.println(" runner is <" + refRunner.get().getClass() + ">");

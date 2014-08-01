@@ -5,7 +5,7 @@ import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Platform;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.selection.ToolBarFolder;
 import field.core.ui.text.FindAndReplace.FindAll.Found;
 import field.launch.Launcher;

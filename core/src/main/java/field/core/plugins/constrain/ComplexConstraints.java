@@ -4,9 +4,11 @@ import field.bytecode.protect.annotations.GenerateMethods;
 import field.bytecode.protect.annotations.Mirror;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.SimpleConstraints.Constraint;
 import field.core.plugins.constrain.cassowary.*;
 import field.core.plugins.drawing.BasicDrawingPlugin;
@@ -47,7 +49,7 @@ class ComplexConstraints implements iPlugin {
         }
 
         public
-        <T> T getProperty(IVisualElement.VisualElementProperty<T> p) {
+        <T> T getProperty(VisualElementProperty<T> p) {
             if (p == overrides) return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
@@ -74,7 +76,7 @@ class ComplexConstraints implements iPlugin {
         }
 
         public
-        <T> IVisualElement setProperty(IVisualElement.VisualElementProperty<T> p, T to) {
+        <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
             properties.put(p, to);
             return this;
         }
@@ -85,7 +87,7 @@ class ComplexConstraints implements iPlugin {
     }
 
     public
-    class Overrides extends IVisualElementOverrides.DefaultOverride {
+    class Overrides extends DefaultOverride {
         @Override
         public
         TraversalHint deleted(IVisualElement source) {
@@ -491,7 +493,7 @@ class ComplexConstraints implements iPlugin {
                              roundy(r.variableH.value()));
         Rect oldRect = r.rect.getFrame(null);
         if (!rect.equals(oldRect)) {
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r.rect)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(r.rect)
                                                            .shouldChangeFrame(r.rect, rect, oldRect, true);
         }
     }

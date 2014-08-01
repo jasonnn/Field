@@ -1,8 +1,8 @@
 package field.core.plugins.drawing;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.drawing.BasicDrawingPlugin.iDragParticipant;
 import field.core.plugins.drawing.align.*;
 import field.core.windowing.components.DraggableComponent.Resize;

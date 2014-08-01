@@ -1,7 +1,7 @@
 package field.core.ui.text.referencealgorithms;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.ui.text.embedded.iReferenceAlgorithm.BaseReferenceAlgorithm;
 import field.math.linalg.Vector2;
 

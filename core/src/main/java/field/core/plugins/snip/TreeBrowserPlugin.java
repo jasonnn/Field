@@ -1,7 +1,7 @@
 package field.core.plugins.snip;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.BaseSimplePlugin;
 
 public

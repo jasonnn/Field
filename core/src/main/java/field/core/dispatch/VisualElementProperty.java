@@ -1,5 +1,8 @@
 package field.core.dispatch;
 
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.override.Ref;
+
 import java.util.*;
 
 /**
@@ -54,8 +57,8 @@ class VisualElementProperty<T> {
 
     public
     void delete(IVisualElement from, IVisualElement on) {
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(on).deleteProperty(from, this);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(on).deleteProperty(from, this);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(on).deleteProperty(from, this);
+         IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(on).deleteProperty(from, this);
     }
 
     @Override
@@ -92,7 +95,7 @@ class VisualElementProperty<T> {
 
     public
     T get(IVisualElement e) {
-        IVisualElementOverrides.Ref<T> ref = new IVisualElementOverrides.Ref<T>(null);
+        Ref<T> ref = new Ref<T>(null);
         IVisualElement ee = IVisualElementOverrides.topology.getAt();
         IVisualElementOverrides.topology.setAt(e);
         IVisualElementOverrides.forward.getProperty.getProperty(e, this, ref);
@@ -105,15 +108,15 @@ class VisualElementProperty<T> {
 
     public
     T get(IVisualElement e, IVisualElement from) {
-        IVisualElementOverrides.Ref<T> ref = new IVisualElementOverrides.Ref<T>(null);
+        Ref<T> ref = new Ref<T>(null);
 
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(from).getProperty(e, this, ref);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(from).getProperty(e, this, ref);
         return ref.get();
     }
 
     public
     T getAbove(IVisualElement e) {
-        IVisualElementOverrides.Ref<T> ref = new IVisualElementOverrides.Ref<T>(null);
+        Ref<T> ref = new Ref<T>(null);
         IVisualElement ee = IVisualElementOverrides.topology.getAt();
         IVisualElementOverrides.topology.setAt(e);
         IVisualElementOverrides.forwardAbove.getProperty.getProperty(e, this, ref);
@@ -166,8 +169,8 @@ class VisualElementProperty<T> {
     }
 
     public
-    IVisualElementOverrides.Ref<T> getRef(IVisualElement e) {
-        IVisualElementOverrides.Ref<T> ref = new IVisualElementOverrides.Ref<T>(null);
+    Ref<T> getRef(IVisualElement e) {
+        Ref<T> ref = new Ref<T>(null);
         IVisualElementOverrides.topology.begin(e);
         IVisualElementOverrides.forward.getProperty.getProperty(e, this, ref);
         return ref;
@@ -194,10 +197,10 @@ class VisualElementProperty<T> {
 
     public
     T set(IVisualElement from, IVisualElement on, T to) {
-        IVisualElementOverrides.Ref<T> ref = new IVisualElementOverrides.Ref<T>(to);
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(on)
+        Ref<T> ref = new Ref<T>(to);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(on)
                                                        .setProperty(from, this, ref);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(on).setProperty(from, this, ref);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(on).setProperty(from, this, ref);
         return ref.get();
     }
 

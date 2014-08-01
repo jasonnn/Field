@@ -1,7 +1,7 @@
 package field.core.ui.text.embedded;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.persistance.FluidPersistence;
 import field.core.plugins.python.PythonPlugin;
 import field.core.plugins.python.PythonPluginEditor;

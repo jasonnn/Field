@@ -10,21 +10,21 @@ import java.util.WeakHashMap;
  * @author marc Created on May 6, 2003
  */
 public
-class SimpleChangable implements iChangable, Serializable {
-
+class SimpleChangable implements IChangable, Serializable {
+//TODO move up
     private
-    class ModCount implements iChangable.iModCount, Serializable {
+    class ModCount implements IModCount, Serializable {
 
         transient int dirty = -1;
 
         transient Object data = null;
 
-        transient iRecompute default_recompute;
+        transient IRecompute default_recompute;
 
-        iChangable.iModCount[] localChain = new iChangable.iModCount[0];
+        IModCount[] localChain = new IModCount[0];
 
         public
-        iModCount clear(Object data) {
+        IModCount clear(Object data) {
             this.data = data;
             dirty = count;
             for (int i = 0; i < localChain.length; i++) {
@@ -41,7 +41,7 @@ class SimpleChangable implements iChangable, Serializable {
         }
 
         public
-        Object data(iRecompute recomp) {
+        Object data(IRecompute recomp) {
             if ((dirty != count) | checkChain() | checkLocalChain(localChain)) {
                 Object r = recomp.recompute();
                 clear(r);
@@ -57,13 +57,13 @@ class SimpleChangable implements iChangable, Serializable {
         }
 
         public
-        iModCount localChainWith(iModCount[] localChain) {
+        IModCount localChainWith(IModCount[] localChain) {
             this.localChain = localChain;
             return this;
         }
 
         public
-        iModCount setRecompute(iRecompute r) {
+        IModCount setRecompute(IRecompute r) {
             this.default_recompute = r;
             return this;
         }
@@ -75,7 +75,7 @@ class SimpleChangable implements iChangable, Serializable {
         }
 
         private
-        boolean checkLocalChain(iModCount[] localChain2) {
+        boolean checkLocalChain(IModCount[] localChain2) {
 
             for (int i = 0; i < localChain2.length; i++) {
 //				System.err.println("localChain <"+i+"> is <"+localChain2[i]+"> is <"+localChain2[i].hasChanged()+">");
@@ -90,10 +90,10 @@ class SimpleChangable implements iChangable, Serializable {
 
     int count = 0;
 
-    iChangable.iModCount[] chainCount;
+    IModCount[] chainCount;
 
     public
-    SimpleChangable chainWith(iChangable.iModCount[] chainCount) {
+    SimpleChangable chainWith(IModCount[] chainCount) {
         this.chainCount = chainCount;
         return this;
     }
@@ -104,8 +104,8 @@ class SimpleChangable implements iChangable, Serializable {
     }
 
     public
-    iModCount getModCount(Object withRespectTo) {
-        iModCount count = (iModCount) map.get(withRespectTo);
+    IModCount getModCount(Object withRespectTo) {
+        IModCount count = (IModCount) map.get(withRespectTo);
         if (count == null) {
             map.put(withRespectTo, count = new ModCount());
         }

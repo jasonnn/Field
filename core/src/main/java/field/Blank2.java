@@ -9,8 +9,8 @@ import field.core.execution.AutoEngage;
 import field.core.execution.PhantomFluidSheet;
 import field.core.plugins.log.SimpleLogging;
 import field.core.ui.FieldMenus2;
+import field.launch.ILaunchable;
 import field.launch.SystemProperties;
-import field.launch.iLaunchable;
 import field.util.MiscNative;
 import field.util.WorkspaceDirectory;
 
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
                    note = "the system property main.class defaults to this class")
 @Woven
 public
-class Blank2 implements iLaunchable {
+class Blank2 implements ILaunchable {
     private static final Logger log = Logger.getLogger(Blank2.class.getName());
     File openFileProvocation;
     boolean finished = false;

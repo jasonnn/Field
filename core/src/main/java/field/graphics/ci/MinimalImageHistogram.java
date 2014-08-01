@@ -1,7 +1,7 @@
 package field.graphics.ci;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.ui.text.embedded.CustomInsertSystem;
 import field.core.ui.text.embedded.CustomInsertSystem.ProvidedComponent;
 import field.core.ui.text.embedded.CustomInsertSystem.iPossibleComponent;

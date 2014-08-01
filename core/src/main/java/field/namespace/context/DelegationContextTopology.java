@@ -40,7 +40,7 @@ class DelegationContextTopology<K> extends ContextTopology<K, K> {
     public
     DelegationContextTopology(Class<K> c) {
         super(c, c);
-        this.storage = new iContextStorage<K, K>() {
+        this.storage = new IContextStorage<K, K>() {
             public
             K get(K at, Method m) {
                 return at;

@@ -4,11 +4,11 @@ import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
 import field.core.execution.PythonInterface;
 import field.core.plugins.SimpleConstraints;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
@@ -1029,7 +1029,7 @@ class OutputInsertsOnSheet {
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               IVisualElementOverrides.DefaultOverride.class);
+                                                                               DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1040,8 +1040,8 @@ class OutputInsertsOnSheet {
         allocate(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, (float) inside.getFrame(null).y, at.w, at.h));
 
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1069,7 +1069,7 @@ class OutputInsertsOnSheet {
         Triple<VisualElement, WrapNoEvents, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                        VisualElement.class,
                                                                                        WrapNoEvents.class,
-                                                                                       IVisualElementOverrides.DefaultOverride.class);
+                                                                                       DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1080,8 +1080,8 @@ class OutputInsertsOnSheet {
         allocateVert(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, at.y, at.w, at.h));
 
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1105,7 +1105,7 @@ class OutputInsertsOnSheet {
         Triple<VisualElement, WrapNoEvents, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                        VisualElement.class,
                                                                                        WrapNoEvents.class,
-                                                                                       IVisualElementOverrides.DefaultOverride.class);
+                                                                                       DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1116,8 +1116,8 @@ class OutputInsertsOnSheet {
         allocate(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, (float) inside.getFrame(null).y, at.w, at.h));
 
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1147,7 +1147,7 @@ class OutputInsertsOnSheet {
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               IVisualElementOverrides.DefaultOverride.class);
+                                                                               DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1159,8 +1159,8 @@ class OutputInsertsOnSheet {
         allocateVert(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, at.y, at.w, at.h));
 
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1189,7 +1189,7 @@ class OutputInsertsOnSheet {
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               IVisualElementOverrides.DefaultOverride.class);
+                                                                               DefaultOverride.class);
         r2.left.addChild(root);
 
         r2.left.setProperty(outputInsertsOnSheet_providedComponent, component);
@@ -1200,8 +1200,8 @@ class OutputInsertsOnSheet {
         allocateVert(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, at.y, at.w, at.h));
 
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1225,7 +1225,7 @@ class OutputInsertsOnSheet {
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               IVisualElementOverrides.DefaultOverride.class);
+                                                                               DefaultOverride.class);
         r2.left.addChild(root);
 
         // !!
@@ -1237,8 +1237,8 @@ class OutputInsertsOnSheet {
         allocateVert(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, at.y, at.w, at.h));
 
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 
@@ -1262,7 +1262,7 @@ class OutputInsertsOnSheet {
         Triple<VisualElement, Wrap, DefaultOverride> r2 = VisualElement.create(new Rect(x, y, w, h),
                                                                                VisualElement.class,
                                                                                Wrap.class,
-                                                                               IVisualElementOverrides.DefaultOverride.class);
+                                                                               DefaultOverride.class);
 
         r2.middle.componentToRender = component.component;
         r2.middle.hookupNotifications();
@@ -1277,8 +1277,8 @@ class OutputInsertsOnSheet {
         allocate(inside, r2.left, at);
         r2.left.setFrame(new Rect(at.x, (float) inside.getFrame(null).y, at.w, at.h));
 
-        new IVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(r2.left).added(r2.left);
-        new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(r2.left).added(r2.left);
+        IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(r2.left).added(r2.left);
 
         field.core.plugins.drawing.OfferedAlignment.alignment_doNotParticipate.set(r2.left, r2.left, true);
 

@@ -3,6 +3,8 @@ package field.core.dispatch;
 import field.bytecode.mirror.IBoundNoArgsMethod;
 import field.bytecode.mirror.impl.MirrorMethod;
 import field.bytecode.mirror.impl.MirrorNoArgsMethod;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.override.Ref;
 import field.launch.IUpdateable;
 import field.math.abstraction.IAcceptor;
 import field.math.abstraction.IProvider;
@@ -44,13 +46,13 @@ class iVisualElementOverrides_m {
     public static final Method deleteProperty_m = ReflectionTools.methodOf("deleteProperty",
                                                                            IVisualElementOverrides.class,
                                                                            IVisualElement.class,
-                                                                           IVisualElement.VisualElementProperty.class);
+                                                                           VisualElementProperty.class);
 
     public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> deleteProperty_s =
             new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "deleteProperty",
                                                                                new Class[]{IVisualElement.class,
-                                                                                           IVisualElement.VisualElementProperty.class});
+                                                                                           VisualElementProperty.class});
 
     public static final Method endExecution_m = ReflectionTools.methodOf("endExecution",
                                                                          IVisualElementOverrides.class,
@@ -64,15 +66,15 @@ class iVisualElementOverrides_m {
     public static final Method getProperty_m = ReflectionTools.methodOf("getProperty",
                                                                         IVisualElementOverrides.class,
                                                                         IVisualElement.class,
-                                                                        IVisualElement.VisualElementProperty.class,
-                                                                        IVisualElementOverrides.Ref.class);
+                                                                        VisualElementProperty.class,
+                                                                        Ref.class);
 
     public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> getProperty_s =
             new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "getProperty",
                                                                                new Class[]{IVisualElement.class,
-                                                                                           IVisualElement.VisualElementProperty.class,
-                                                                                           IVisualElementOverrides.Ref.class});
+                                                                                           VisualElementProperty.class,
+                                                                                           Ref.class});
 
     public static final Method handleKeyboardEvent_m = ReflectionTools.methodOf("handleKeyboardEvent",
                                                                                 IVisualElementOverrides.class,
@@ -100,14 +102,14 @@ class iVisualElementOverrides_m {
                                                                   IVisualElementOverrides.class,
                                                                   IVisualElement.class,
                                                                   org.eclipse.swt.widgets.Event.class,
-                                                                  IVisualElementOverrides.Ref.class);
+                                                                  Ref.class);
 
     public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> isHit_s =
             new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "isHit",
                                                                                new Class[]{IVisualElement.class,
                                                                                            org.eclipse.swt.widgets.Event.class,
-                                                                                           IVisualElementOverrides.Ref.class});
+                                                                                           Ref.class});
 
     public static final Method menuItemsFor_m = ReflectionTools.methodOf("menuItemsFor",
                                                                          IVisualElementOverrides.class,
@@ -123,14 +125,14 @@ class iVisualElementOverrides_m {
     public static final Method paintNow_m = ReflectionTools.methodOf("paintNow",
                                                                      IVisualElementOverrides.class,
                                                                      IVisualElement.class,
-                                                                     IVisualElement.Rect.class,
+                                                                     Rect.class,
                                                                      boolean.class);
 
     public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> paintNow_s =
             new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "paintNow",
                                                                                new Class[]{IVisualElement.class,
-                                                                                           IVisualElement.Rect.class,
+                                                                                           Rect.class,
                                                                                            boolean.class});
 
     public static final Method prepareForSave_m = ReflectionTools.methodOf("prepareForSave",
@@ -143,29 +145,29 @@ class iVisualElementOverrides_m {
     public static final Method setProperty_m = ReflectionTools.methodOf("setProperty",
                                                                         IVisualElementOverrides.class,
                                                                         IVisualElement.class,
-                                                                        IVisualElement.VisualElementProperty.class,
-                                                                        IVisualElementOverrides.Ref.class);
+                                                                        VisualElementProperty.class,
+                                                                        Ref.class);
 
     public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> setProperty_s =
             new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "setProperty",
                                                                                new Class[]{IVisualElement.class,
-                                                                                           IVisualElement.VisualElementProperty.class,
-                                                                                           IVisualElementOverrides.Ref.class});
+                                                                                           VisualElementProperty.class,
+                                                                                           Ref.class});
 
     public static final Method shouldChangeFrame_m = ReflectionTools.methodOf("shouldChangeFrame",
                                                                               IVisualElementOverrides.class,
                                                                               IVisualElement.class,
-                                                                              IVisualElement.Rect.class,
-                                                                              IVisualElement.Rect.class,
+                                                                              Rect.class,
+                                                                              Rect.class,
                                                                               boolean.class);
 
     public static final MirrorMethod<IVisualElementOverrides, Object[], TraversalHint> shouldChangeFrame_s =
             new MirrorMethod<IVisualElementOverrides, Object[], TraversalHint>(IVisualElementOverrides.class,
                                                                                "shouldChangeFrame",
                                                                                new Class[]{IVisualElement.class,
-                                                                                           IVisualElement.Rect.class,
-                                                                                           IVisualElement.Rect.class,
+                                                                                           Rect.class,
+                                                                                           Rect.class,
                                                                                            boolean.class});
 
     public final added_interface added;
@@ -338,7 +340,7 @@ class iVisualElementOverrides_m {
 
 
             public
-            TraversalHint deleteProperty(final IVisualElement p0, final IVisualElement.VisualElementProperty p1) {
+            TraversalHint deleteProperty(final IVisualElement p0, final VisualElementProperty p1) {
                 return x.deleteProperty(p0, p1);
             }
 
@@ -354,7 +356,7 @@ class iVisualElementOverrides_m {
             }
 
             public
-            IUpdateable updateable(final IVisualElement p0, final IVisualElement.VisualElementProperty p1) {
+            IUpdateable updateable(final IVisualElement p0, final VisualElementProperty p1) {
                 return new IUpdateable() {
                     public
                     void update() {
@@ -364,7 +366,7 @@ class iVisualElementOverrides_m {
             }
 
             public
-            IProvider<TraversalHint> bind(final IVisualElement p0, final IVisualElement.VisualElementProperty p1) {
+            IProvider<TraversalHint> bind(final IVisualElement p0, final VisualElementProperty p1) {
                 return new IProvider() {
                     public
                     Object get() {
@@ -427,8 +429,8 @@ class iVisualElementOverrides_m {
 
             public
             TraversalHint getProperty(final IVisualElement p0,
-                                      final IVisualElement.VisualElementProperty p1,
-                                      final IVisualElementOverrides.Ref p2) {
+                                      final VisualElementProperty p1,
+                                      final Ref p2) {
                 return x.getProperty(p0, p1, p2);
             }
 
@@ -445,8 +447,8 @@ class iVisualElementOverrides_m {
 
             public
             IUpdateable updateable(final IVisualElement p0,
-                                   final IVisualElement.VisualElementProperty p1,
-                                   final IVisualElementOverrides.Ref p2) {
+                                   final VisualElementProperty p1,
+                                   final Ref p2) {
                 return new IUpdateable() {
                     public
                     void update() {
@@ -457,8 +459,8 @@ class iVisualElementOverrides_m {
 
             public
             IProvider<TraversalHint> bind(final IVisualElement p0,
-                                          final IVisualElement.VisualElementProperty p1,
-                                          final IVisualElementOverrides.Ref p2) {
+                                          final VisualElementProperty p1,
+                                          final Ref p2) {
                 return new IProvider() {
                     public
                     Object get() {
@@ -566,7 +568,7 @@ class iVisualElementOverrides_m {
             public
             TraversalHint isHit(final IVisualElement p0,
                                 final org.eclipse.swt.widgets.Event p1,
-                                final IVisualElementOverrides.Ref p2) {
+                                final Ref p2) {
                 return x.isHit(p0, p1, p2);
             }
 
@@ -584,7 +586,7 @@ class iVisualElementOverrides_m {
             public
             IUpdateable updateable(final IVisualElement p0,
                                    final org.eclipse.swt.widgets.Event p1,
-                                   final IVisualElementOverrides.Ref p2) {
+                                   final Ref p2) {
                 return new IUpdateable() {
                     public
                     void update() {
@@ -596,7 +598,7 @@ class iVisualElementOverrides_m {
             public
             IProvider<TraversalHint> bind(final IVisualElement p0,
                                           final org.eclipse.swt.widgets.Event p1,
-                                          final IVisualElementOverrides.Ref p2) {
+                                          final Ref p2) {
                 return new IProvider() {
                     public
                     Object get() {
@@ -658,7 +660,7 @@ class iVisualElementOverrides_m {
 
 
             public
-            TraversalHint paintNow(final IVisualElement p0, final IVisualElement.Rect p1, final boolean p2) {
+            TraversalHint paintNow(final IVisualElement p0, final Rect p1, final boolean p2) {
                 return x.paintNow(p0, p1, p2);
             }
 
@@ -674,7 +676,7 @@ class iVisualElementOverrides_m {
             }
 
             public
-            IUpdateable updateable(final IVisualElement p0, final IVisualElement.Rect p1, final boolean p2) {
+            IUpdateable updateable(final IVisualElement p0, final Rect p1, final boolean p2) {
                 return new IUpdateable() {
                     public
                     void update() {
@@ -684,7 +686,7 @@ class iVisualElementOverrides_m {
             }
 
             public
-            IProvider<TraversalHint> bind(final IVisualElement p0, final IVisualElement.Rect p1, final boolean p2) {
+            IProvider<TraversalHint> bind(final IVisualElement p0, final Rect p1, final boolean p2) {
                 return new IProvider() {
                     public
                     Object get() {
@@ -704,8 +706,8 @@ class iVisualElementOverrides_m {
 
             public
             TraversalHint setProperty(final IVisualElement p0,
-                                      final IVisualElement.VisualElementProperty p1,
-                                      final IVisualElementOverrides.Ref p2) {
+                                      final VisualElementProperty p1,
+                                      final Ref p2) {
                 return x.setProperty(p0, p1, p2);
             }
 
@@ -722,8 +724,8 @@ class iVisualElementOverrides_m {
 
             public
             IUpdateable updateable(final IVisualElement p0,
-                                   final IVisualElement.VisualElementProperty p1,
-                                   final IVisualElementOverrides.Ref p2) {
+                                   final VisualElementProperty p1,
+                                   final Ref p2) {
                 return new IUpdateable() {
                     public
                     void update() {
@@ -734,8 +736,8 @@ class iVisualElementOverrides_m {
 
             public
             IProvider<TraversalHint> bind(final IVisualElement p0,
-                                          final IVisualElement.VisualElementProperty p1,
-                                          final IVisualElementOverrides.Ref p2) {
+                                          final VisualElementProperty p1,
+                                          final Ref p2) {
                 return new IProvider() {
                     public
                     Object get() {
@@ -754,8 +756,8 @@ class iVisualElementOverrides_m {
 
             public
             TraversalHint shouldChangeFrame(final IVisualElement p0,
-                                            final IVisualElement.Rect p1,
-                                            final IVisualElement.Rect p2,
+                                            final Rect p1,
+                                            final Rect p2,
                                             final boolean p3) {
                 return x.shouldChangeFrame(p0, p1, p2, p3);
             }
@@ -773,8 +775,8 @@ class iVisualElementOverrides_m {
 
             public
             IUpdateable updateable(final IVisualElement p0,
-                                   final IVisualElement.Rect p1,
-                                   final IVisualElement.Rect p2,
+                                   final Rect p1,
+                                   final Rect p2,
                                    final boolean p3) {
                 return new IUpdateable() {
                     public
@@ -786,8 +788,8 @@ class iVisualElementOverrides_m {
 
             public
             IProvider<TraversalHint> bind(final IVisualElement p0,
-                                          final IVisualElement.Rect p1,
-                                          final IVisualElement.Rect p2,
+                                          final Rect p1,
+                                          final Rect p2,
                                           final boolean p3) {
                 return new IProvider() {
                     public
@@ -840,13 +842,13 @@ class iVisualElementOverrides_m {
     public
     interface deleteProperty_interface extends IAcceptor<Object[]>, IFunction<Object[], TraversalHint> {
         public
-        TraversalHint deleteProperty(final IVisualElement p0, final IVisualElement.VisualElementProperty p1);
+        TraversalHint deleteProperty(final IVisualElement p0, final VisualElementProperty p1);
 
         public
-        IUpdateable updateable(final IVisualElement p0, final IVisualElement.VisualElementProperty p1);
+        IUpdateable updateable(final IVisualElement p0, final VisualElementProperty p1);
 
         public
-        IProvider<TraversalHint> bind(final IVisualElement p0, final IVisualElement.VisualElementProperty p1);
+        IProvider<TraversalHint> bind(final IVisualElement p0, final VisualElementProperty p1);
     }
 
     public
@@ -865,18 +867,18 @@ class iVisualElementOverrides_m {
     interface getProperty_interface extends IAcceptor<Object[]>, IFunction<Object[], TraversalHint> {
         public
         TraversalHint getProperty(final IVisualElement p0,
-                                  final IVisualElement.VisualElementProperty p1,
-                                  final IVisualElementOverrides.Ref p2);
+                                  final VisualElementProperty p1,
+                                  final Ref p2);
 
         public
         IUpdateable updateable(final IVisualElement p0,
-                               final IVisualElement.VisualElementProperty p1,
-                               final IVisualElementOverrides.Ref p2);
+                               final VisualElementProperty p1,
+                               final Ref p2);
 
         public
         IProvider<TraversalHint> bind(final IVisualElement p0,
-                                      final IVisualElement.VisualElementProperty p1,
-                                      final IVisualElementOverrides.Ref p2);
+                                      final VisualElementProperty p1,
+                                      final Ref p2);
     }
 
     public
@@ -908,17 +910,17 @@ class iVisualElementOverrides_m {
         public
         TraversalHint isHit(final IVisualElement p0,
                             final org.eclipse.swt.widgets.Event p1,
-                            final IVisualElementOverrides.Ref p2);
+                            final Ref p2);
 
         public
         IUpdateable updateable(final IVisualElement p0,
                                final org.eclipse.swt.widgets.Event p1,
-                               final IVisualElementOverrides.Ref p2);
+                               final Ref p2);
 
         public
         IProvider<TraversalHint> bind(final IVisualElement p0,
                                       final org.eclipse.swt.widgets.Event p1,
-                                      final IVisualElementOverrides.Ref p2);
+                                      final Ref p2);
     }
 
     public
@@ -936,51 +938,51 @@ class iVisualElementOverrides_m {
     public
     interface paintNow_interface extends IAcceptor<Object[]>, IFunction<Object[], TraversalHint> {
         public
-        TraversalHint paintNow(final IVisualElement p0, final IVisualElement.Rect p1, final boolean p2);
+        TraversalHint paintNow(final IVisualElement p0, final Rect p1, final boolean p2);
 
         public
-        IUpdateable updateable(final IVisualElement p0, final IVisualElement.Rect p1, final boolean p2);
+        IUpdateable updateable(final IVisualElement p0, final Rect p1, final boolean p2);
 
         public
-        IProvider<TraversalHint> bind(final IVisualElement p0, final IVisualElement.Rect p1, final boolean p2);
+        IProvider<TraversalHint> bind(final IVisualElement p0, final Rect p1, final boolean p2);
     }
 
     public
     interface setProperty_interface extends IAcceptor<Object[]>, IFunction<Object[], TraversalHint> {
         public
         TraversalHint setProperty(final IVisualElement p0,
-                                  final IVisualElement.VisualElementProperty p1,
-                                  final IVisualElementOverrides.Ref p2);
+                                  final VisualElementProperty p1,
+                                  final Ref p2);
 
         public
         IUpdateable updateable(final IVisualElement p0,
-                               final IVisualElement.VisualElementProperty p1,
-                               final IVisualElementOverrides.Ref p2);
+                               final VisualElementProperty p1,
+                               final Ref p2);
 
         public
         IProvider<TraversalHint> bind(final IVisualElement p0,
-                                      final IVisualElement.VisualElementProperty p1,
-                                      final IVisualElementOverrides.Ref p2);
+                                      final VisualElementProperty p1,
+                                      final Ref p2);
     }
 
     public
     interface shouldChangeFrame_interface extends IAcceptor<Object[]>, IFunction<Object[], TraversalHint> {
         public
         TraversalHint shouldChangeFrame(final IVisualElement p0,
-                                        final IVisualElement.Rect p1,
-                                        final IVisualElement.Rect p2,
+                                        final Rect p1,
+                                        final Rect p2,
                                         final boolean p3);
 
         public
         IUpdateable updateable(final IVisualElement p0,
-                               final IVisualElement.Rect p1,
-                               final IVisualElement.Rect p2,
+                               final Rect p1,
+                               final Rect p2,
                                final boolean p3);
 
         public
         IProvider<TraversalHint> bind(final IVisualElement p0,
-                                      final IVisualElement.Rect p1,
-                                      final IVisualElement.Rect p2,
+                                      final Rect p1,
+                                      final Rect p2,
                                       final boolean p3);
     }
 }

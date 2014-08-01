@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.tweak;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.plugins.drawing.ThreedComputingOverride;
 import field.core.plugins.drawing.opengl.*;
 import field.core.plugins.drawing.opengl.CachedLine.Event;

@@ -2,7 +2,7 @@ package field.core.ui.text.embedded;
 
 import field.core.Constants;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.util.FieldPyObjectAdaptor.iExtensible;
 import field.math.linalg.Vector4;
 import field.util.Dict;

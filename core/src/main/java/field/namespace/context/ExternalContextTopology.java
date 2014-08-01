@@ -20,7 +20,7 @@ public
 class ExternalContextTopology<K> extends ContextTopology<K, ExternalContextTopology<K>.Context> {
 
     public
-    class Context extends BaseWeakHashMapKey implements iStorage {
+    class Context extends BaseWeakHashMapKey implements IStorage {
         WeakReference<K> name;
 
         HashMap<K, Context> children = new HashMap<K, Context>();
@@ -77,7 +77,7 @@ class ExternalContextTopology<K> extends ContextTopology<K, ExternalContextTopol
         super(keyClass);
         setInterfaceClass((Class<Context>) root.getClass());
 //		super(keyClass, Context.class);
-        this.storage = new iContextStorage<K, Context>() {
+        this.storage = new IContextStorage<K, Context>() {
             public
             Context get(K at, Method m) {
                 return contextFor(null, at);

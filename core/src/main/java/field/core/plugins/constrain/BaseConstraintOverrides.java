@@ -1,9 +1,10 @@
 package field.core.plugins.constrain;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.constrain.cassowary.ClConstraint;
 import field.math.graph.visitors.hint.TraversalHint;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 
 
 public abstract
-class BaseConstraintOverrides extends IVisualElementOverrides.DefaultOverride {
+class BaseConstraintOverrides extends DefaultOverride {
 
     public static final VisualElementProperty<Map<String, IVisualElement>> constraintParameters =
             new VisualElementProperty<Map<String, IVisualElement>>("constraintParameters");

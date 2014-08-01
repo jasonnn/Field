@@ -1,11 +1,10 @@
 package field.core.ui.text.util;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
 import field.core.plugins.python.PythonPluginEditor;
 import field.core.windowing.components.DraggableComponent;
 import field.graphics.core.BasicGLSLangProgram;
@@ -89,7 +88,7 @@ class EchoOndiskFile {
                                                 new Rect(30, 100 + (n * 40), 30, 30),
                                                 VisualElement.class,
                                                 DraggableComponent.class,
-                                                IVisualElementOverrides.DefaultOverride.class);
+                                                DefaultOverride.class);
         VisualElement.name.set(created.left, created.left, filename);
         PythonPluginEditor.python_customToolbar.addToList(ArrayList.class,
                                                           created.left,

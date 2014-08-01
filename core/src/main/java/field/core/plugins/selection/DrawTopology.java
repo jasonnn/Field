@@ -2,7 +2,7 @@ package field.core.plugins.selection;
 
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.plugins.drawing.BasicDrawingPlugin;
 import field.core.plugins.drawing.SimpleArrows;
 import field.core.plugins.drawing.opengl.CachedLine;

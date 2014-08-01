@@ -12,7 +12,7 @@ import field.math.graph.visitors.hint.TraversalHint;
 * Created by jason on 7/31/14.
 */
 public
-class DefaultOverride extends IVisualElementOverridesAdaptor implements IVisualElementOverrides.iDefaultOverride {
+class DefaultOverride extends IVisualElementOverridesAdaptor implements IDefaultOverride {
     public IVisualElement forElement;
 
     public

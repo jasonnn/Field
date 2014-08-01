@@ -2,7 +2,7 @@ package field.core.ui.text.embedded;
 
 import field.bytecode.protect.Woven;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.LineUtils;
 import field.core.plugins.python.PythonPlugin;

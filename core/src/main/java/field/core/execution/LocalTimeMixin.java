@@ -1,15 +1,16 @@
 package field.core.execution;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
+import field.core.dispatch.override.DefaultOverride;
 import field.core.dispatch.Mixins;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.Ref;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.math.graph.visitors.hint.StandardTraversalHint;
 import field.math.graph.visitors.hint.TraversalHint;
 
 public
-class LocalTimeMixin extends IVisualElementOverrides.DefaultOverride {
+class LocalTimeMixin extends DefaultOverride {
 
     public static
     void mixin(IVisualElement e) {

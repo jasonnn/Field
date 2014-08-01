@@ -2,7 +2,7 @@ package field.core.ui;
 
 import field.core.Platform;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.VisualElementProperty;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.core.windowing.components.iComponent;

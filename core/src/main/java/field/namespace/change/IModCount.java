@@ -8,13 +8,13 @@ import java.io.Serializable;
 public
 interface IModCount extends Serializable {
     public
-    IModCount setRecompute(IChangable.iRecompute r);
+    IModCount setRecompute(IRecompute r);
 
     public
     Object data();
 
     public
-    Object data(IChangable.iRecompute recompute);
+    Object data(IRecompute recompute);
 
     public
     boolean hasChanged();

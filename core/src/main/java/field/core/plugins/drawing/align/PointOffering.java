@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.align;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.core.plugins.drawing.OfferedAlignment;
 import field.core.plugins.drawing.OfferedAlignment.iDrawable;
 import field.core.plugins.drawing.OfferedAlignment.iOffering;

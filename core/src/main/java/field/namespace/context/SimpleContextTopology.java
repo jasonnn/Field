@@ -18,10 +18,10 @@ import java.util.*;
  */
 public
 class SimpleContextTopology extends ContextTopology<field.namespace.context.SimpleContextTopology.Context, field.namespace.context.SimpleContextTopology.Context> implements
-                                                                                                                                                                  iSupportsBeginEnd<String> {
+                                                                                                                                                                  ISupportsBeginEnd<String> {
 
     public
-    class Context extends BaseWeakHashMapKey implements iStorage {
+    class Context extends BaseWeakHashMapKey implements IStorage {
         String name;
 
         HashMap<String, Context> children = new HashMap<String, Context>();
@@ -83,7 +83,7 @@ class SimpleContextTopology extends ContextTopology<field.namespace.context.Simp
 
     SimpleContextTopology(Class<Context> k, Class<Context> i, SimpleContextTopology sharedRoot) {
         super(k, i);
-        this.storage = new iContextStorage<Context, Context>() {
+        this.storage = new IContextStorage<Context, Context>() {
             public
             Context get(Context at, Method m) {
                 return at;

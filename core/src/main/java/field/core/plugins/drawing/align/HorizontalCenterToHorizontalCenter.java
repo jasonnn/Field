@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.align;
 
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.Rect;
+import field.core.dispatch.override.DefaultOverride;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 

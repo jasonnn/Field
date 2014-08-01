@@ -6,7 +6,7 @@ import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
-import field.core.dispatch.IVisualElement.Rect;
+import field.core.dispatch.Rect;
 import field.graphics.core.Base.*;
 import field.graphics.core.BasicGeometry.Instance;
 import field.graphics.core.BasicGeometry.TriangleMesh;
@@ -1413,7 +1413,7 @@ class BasicFrameBuffers {
         }
 
         public
-        NodeImpl<iSceneListElement> getRootSceneList() {
+        NodeImpl<ISceneListElement> getRootSceneList() {
             return rootSceneList;
         }
 
@@ -1566,22 +1566,22 @@ class BasicFrameBuffers {
         }
 
         public
-        iSceneListElement placeOnscreen(final Rect r, int output) {
+        ISceneListElement placeOnscreen(final Rect r, int output) {
             return getOnscreenList(output, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
         }
 
         public
-        iSceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip, int output) {
+        ISceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip, int output) {
             return getOnscreenList(output, r, offset, mul, genMip);
         }
 
         public
-        iSceneListElement placeOnscreen(BasicGLSLangProgram p, final Rect r, int output) {
+        ISceneListElement placeOnscreen(BasicGLSLangProgram p, final Rect r, int output) {
             return getOnscreenList(p, output, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
         }
 
         public
-        iSceneListElement getOnscreenList(BasicGLSLangProgram p,
+        ISceneListElement getOnscreenList(BasicGLSLangProgram p,
                                           final Rect r,
                                           Vector4 offset,
                                           Vector4 mul,
@@ -1592,7 +1592,7 @@ class BasicFrameBuffers {
 
         @HiddenInAutocomplete
         public
-        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+        ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
                                           int output,
                                           final Rect r,
                                           Vector4 offset,
@@ -1655,7 +1655,7 @@ class BasicFrameBuffers {
 
         @HiddenInAutocomplete
         public
-        iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+        ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
             final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
@@ -1973,7 +1973,7 @@ class BasicFrameBuffers {
         }
 
         public
-        NodeImpl<iSceneListElement> getRootSceneList() {
+        NodeImpl<ISceneListElement> getRootSceneList() {
             return rootSceneList;
         }
 
@@ -3564,18 +3564,18 @@ class BasicFrameBuffers {
         }
 
         public
-        iSceneListElement placeOnscreen(final Rect r) {
+        ISceneListElement placeOnscreen(final Rect r) {
             return getOnscreenList(0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
         }
 
         public
-        iSceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+        ISceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
             return getOnscreenList(0, r, offset, mul, genMip);
         }
 
         @HiddenInAutocomplete
         public
-        iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+        ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
             final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
@@ -3645,12 +3645,12 @@ class BasicFrameBuffers {
         }
 
         public
-        iSceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
+        ISceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
             return getOnscreenList(onscreenProgram, 0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
         }
 
         public
-        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+        ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
                                           final Rect r,
                                           Vector4 offset,
                                           Vector4 mul,
@@ -3660,7 +3660,7 @@ class BasicFrameBuffers {
 
         @HiddenInAutocomplete
         public
-        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+        ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
                                           int output,
                                           final Rect r,
                                           Vector4 offset,
@@ -4025,7 +4025,7 @@ class BasicFrameBuffers {
         }
 
         public
-        NodeImpl<iSceneListElement> getRootSceneList() {
+        NodeImpl<ISceneListElement> getRootSceneList() {
             return rootSceneList;
         }
 
@@ -4205,18 +4205,18 @@ class BasicFrameBuffers {
         }
 
         public
-        iSceneListElement placeOnscreen(final Rect r) {
+        ISceneListElement placeOnscreen(final Rect r) {
             return getOnscreenList(0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
         }
 
         public
-        iSceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+        ISceneListElement getOnscreenList(final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
             return getOnscreenList(0, r, offset, mul, genMip);
         }
 
         @HiddenInAutocomplete
         public
-        iSceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+        ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
             final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
@@ -4286,12 +4286,12 @@ class BasicFrameBuffers {
         }
 
         public
-        iSceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
+        ISceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
             return getOnscreenList(onscreenProgram, 0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
         }
 
         public
-        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+        ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
                                           final Rect r,
                                           Vector4 offset,
                                           Vector4 mul,
@@ -4301,7 +4301,7 @@ class BasicFrameBuffers {
 
         @HiddenInAutocomplete
         public
-        iSceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+        ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
                                           int output,
                                           final Rect r,
                                           Vector4 offset,
@@ -4386,7 +4386,7 @@ class BasicFrameBuffers {
     }
 
     public static
-    class Switcher extends BasicSceneList implements iSceneListElement {
+    class Switcher extends BasicSceneList implements ISceneListElement {
 
         public static final Method method_performPass =
                 ReflectionTools.methodOf("performPass", OnePassListElement.class);
@@ -4397,7 +4397,7 @@ class BasicFrameBuffers {
 
         protected Set renderPass = new HashSet();
 
-        protected iPass ourRenderPass;
+        protected IPass ourRenderPass;
 
         protected boolean preCalled = false;
 
@@ -4432,7 +4432,7 @@ class BasicFrameBuffers {
 
         @Override
         public
-        void addChild(iSceneListElement newChild) {
+        void addChild(ISceneListElement newChild) {
 
             HashSet<OnePassListElement> ex = new HashSet<OnePassListElement>();
 
@@ -4446,9 +4446,9 @@ class BasicFrameBuffers {
 
         @Override
         public
-        void notifyAddParent(IMutable<iSceneListElement> newParent) {
+        void notifyAddParent(IMutable<ISceneListElement> newParent) {
             super.notifyAddParent(newParent);
-            renderPass.add(((iSceneListElement) newParent).requestPass(requestPass));
+            renderPass.add(((ISceneListElement) newParent).requestPass(requestPass));
         }
 
         public
@@ -4463,7 +4463,7 @@ class BasicFrameBuffers {
 
         @Override
         public
-        void performPass(iPass p) {
+        void performPass(IPass p) {
 
             if ((p == null) || (renderPass.contains(p))) {
 

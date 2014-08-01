@@ -2,10 +2,10 @@ package field.core.plugins.constrain;
 
 import field.bytecode.mirror.impl.*;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElementOverrides.Ref;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.constrain.ComplexConstraints.LocalVisualElement;
 import field.core.plugins.constrain.ComplexConstraints.Overrides;
 import field.core.plugins.constrain.ComplexConstraints.VariablesForRect;
@@ -27,10 +27,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 public class ComplexConstraints_m {
-  public static final Method addEditFor_m = ReflectionTools.methodOf("addEditFor",field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.IVisualElement.Rect.class);
-  public static final Method addSuggestionFor_m = ReflectionTools.methodOf("addSuggestionFor",field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.IVisualElement.Rect.class);
+  public static final Method addEditFor_m = ReflectionTools.methodOf("addEditFor",field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.Rect.class);
+  public static final Method addSuggestionFor_m = ReflectionTools.methodOf("addSuggestionFor",field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.Rect.class);
   public static final Method updateFrameFromVariables_m = ReflectionTools.methodOf("updateFrameFromVariables",field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class);
-  public static final Method updateVariablesFromFrame_m = ReflectionTools.methodOf("updateVariablesFromFrame",field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.IVisualElement.Rect.class);
+  public static final Method updateVariablesFromFrame_m = ReflectionTools.methodOf("updateVariablesFromFrame",field.core.plugins.constrain.ComplexConstraints.class, field.core.plugins.constrain.ComplexConstraints.VariablesForRect.class, field.core.dispatch.Rect.class);
   // --------------------------------------------------------------------------------
   public static final MirrorMethod<ComplexConstraints,Object[],Void> addEditFor_s = new MirrorMethod<field.core.plugins.constrain.ComplexConstraints,Object[],java.lang.Void>(addEditFor_m);
   public static final MirrorMethod<ComplexConstraints,Object[],Void> addSuggestionFor_s = new MirrorMethod<field.core.plugins.constrain.ComplexConstraints,Object[],java.lang.Void>(addSuggestionFor_m);

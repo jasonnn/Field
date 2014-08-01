@@ -1,8 +1,10 @@
 package field.core.plugins.drawing;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.drawing.opengl.*;
 import field.core.plugins.drawing.opengl.OnCanvasLines.DirectLayer;
 import field.core.plugins.drawing.threed.ArcBall;

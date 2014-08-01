@@ -5,6 +5,7 @@ import field.bytecode.mirror.impl.MirrorMethod;
 import field.bytecode.mirror.impl.MirrorNoArgsMethod;
 import field.bytecode.mirror.impl.MirrorNoReturnMethod;
 import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
 import field.core.windowing.GLComponentWindow;
 import field.launch.IUpdateable;
 import field.math.abstraction.IAcceptor;
@@ -67,29 +68,29 @@ class iComponent_m {
 
     public static final Method getBounds_m =
             ReflectionTools.methodOf("getBounds", field.core.windowing.components.iComponent.class);
-    public static final MirrorNoArgsMethod<iComponent, IVisualElement.Rect>
+    public static final MirrorNoArgsMethod<iComponent, Rect>
             getBounds_s =
-            new MirrorNoArgsMethod<iComponent, IVisualElement.Rect>(field.core.windowing.components.iComponent.class,
+            new MirrorNoArgsMethod<iComponent, Rect>(field.core.windowing.components.iComponent.class,
                                                                                                                                   "getBounds");
 
-    public final IBoundNoArgsMethod<IVisualElement.Rect> getBounds;
+    public final IBoundNoArgsMethod<Rect> getBounds;
     public static final Method setBounds_m = ReflectionTools.methodOf("setBounds",
                                                                       field.core.windowing.components.iComponent.class,
-                                                                      IVisualElement.Rect.class);
-    public static final MirrorNoReturnMethod<iComponent, IVisualElement.Rect>
+                                                                      Rect.class);
+    public static final MirrorNoReturnMethod<iComponent, Rect>
             setBounds_s =
-            new MirrorNoReturnMethod<iComponent, IVisualElement.Rect>(field.core.windowing.components.iComponent.class,
+            new MirrorNoReturnMethod<iComponent, Rect>(field.core.windowing.components.iComponent.class,
                                                                                                                                     "setBounds",
-                                                                                                                                    new Class[]{IVisualElement.Rect.class});
+                                                                                                                                    new Class[]{Rect.class});
 
     public
-    interface setBounds_interface extends IAcceptor<IVisualElement.Rect>,
-                                          IFunction<IVisualElement.Rect, Object> {
+    interface setBounds_interface extends IAcceptor<Rect>,
+                                          IFunction<Rect, Object> {
         public
-        void setBounds(final IVisualElement.Rect p0);
+        void setBounds(final Rect p0);
 
         public
-        IUpdateable updateable(final IVisualElement.Rect p0);
+        IUpdateable updateable(final Rect p0);
     }
 
     public final setBounds_interface setBounds;
@@ -559,23 +560,23 @@ class iComponent_m {
 
 
             public
-            void setBounds(final IVisualElement.Rect p0) {
+            void setBounds(final Rect p0) {
                 x.setBounds(p0);
             }
 
             public
-            IAcceptor<IVisualElement.Rect> set(IVisualElement.Rect p) {
+            IAcceptor<Rect> set(Rect p) {
                 a.set(p);
                 return this;
             }
 
             public
-            Object apply(IVisualElement.Rect p) {
+            Object apply(Rect p) {
                 return f.apply(p);
             }
 
             public
-            IUpdateable updateable(final IVisualElement.Rect p0) {
+            IUpdateable updateable(final Rect p0) {
                 return new IUpdateable() {
                     public
                     void update() {

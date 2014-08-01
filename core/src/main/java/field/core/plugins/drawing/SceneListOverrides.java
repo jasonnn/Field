@@ -1,10 +1,11 @@
 package field.core.plugins.drawing;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.IVisualElementOverrides;
-import field.core.dispatch.IVisualElement.Rect;
-import field.core.dispatch.IVisualElement.VisualElementProperty;
-import field.core.dispatch.IVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.drawing.threed.ArcBall;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.SelectionGroup;
@@ -144,7 +145,7 @@ class SceneListOverrides extends DefaultOverride {
     boolean isSelected() {
         try {
             final Ref<SelectionGroup<iComponent>> group = new Ref<SelectionGroup<iComponent>>(null);
-            new IVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement)
+            IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement)
                                                            .getProperty(forElement,
                                                                         IVisualElement.selectionGroup,
                                                                         group);
