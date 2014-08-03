@@ -5,10 +5,10 @@ import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.DrawingResult;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.DrawingResultCode;
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.iDrawingAcceptor;
 import field.core.plugins.drawing.opengl.CachedLine.Event;
-import field.graphics.core.Base;
-import field.graphics.core.Base.StandardPass;
 import field.graphics.core.BasicGeometry.TriangleMesh;
-import field.graphics.core.BasicUtilities.EnableDepthTestWrap;
+import field.graphics.core.GLConstants;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.EnableDepthTestWrap;
 import field.graphics.dynamic.*;
 import field.launch.IUpdateable;
 import field.math.abstraction.IMetric;
@@ -82,7 +82,7 @@ class SimpleLineDrawing {
                     if (started) outputLine.endLine();
                     int cursorEnd = outputLine.getVertexCursor();
                     for (int i = cursorStart; i < cursorEnd; i++) {
-                        outputLine.setAux(i, Base.color0_id, 0, 0, 0, 0.1f);
+                        outputLine.setAux(i, GLConstants.color0_id, 0, 0, 0, 0.1f);
                     }
                     outputLine.close();
                 }
@@ -139,8 +139,7 @@ class SimpleLineDrawing {
                                                                       ((float[]) color)[2],
                                                                       ((float[]) color)[3]);
 
-                    mesh.setAux(v1,
-                                Base.color0_id,
+                    mesh.setAux(v1, GLConstants.color0_id,
                                 ((Vector4) color).x,
                                 ((Vector4) color).y,
                                 ((Vector4) color).z,
@@ -261,8 +260,7 @@ class SimpleLineDrawing {
                                                                       ((float[]) color)[2],
                                                                       ((float[]) color)[3]);
 
-                    mesh.setAux(v1,
-                                Base.color0_id,
+                    mesh.setAux(v1, GLConstants.color0_id,
                                 ((Vector4) color).x,
                                 ((Vector4) color).y,
                                 ((Vector4) color).z,
@@ -416,8 +414,7 @@ class SimpleLineDrawing {
                 if (color == null) color = properties.get(iLinearGraphicsContext.color);
                 if (color == null) color = black;
 
-                outputLine.setAux(v1,
-                                  Base.color0_id,
+                outputLine.setAux(v1, GLConstants.color0_id,
                                   ((Vector4) color).x,
                                   ((Vector4) color).y,
                                   ((Vector4) color).z,
@@ -556,7 +553,7 @@ class SimpleLineDrawing {
 
                         int v = outputLine.nextVertex(maybeTransform(transform, v2.toVector3()));
                         Vector4 color = colorFor(cursor.getCurrent());
-                        outputLine.setAux(v, Base.color0_id, color.x, color.y, color.z, color.w * fopacityMul);
+                        outputLine.setAux(v, GLConstants.color0_id, color.x, color.y, color.z, color.w * fopacityMul);
                         Vector4 point = pointSizeFor(cursor.getCurrent());
                         outputLine.setAux(v, 13, point.x, point.y, point.z, point.w);
                     }
@@ -658,7 +655,7 @@ class SimpleLineDrawing {
 
                         int v = outputLine.nextVertex(maybeTransform(transform, v2));
                         Vector4 color = colorFor(cursor.getCurrent());
-                        outputLine.setAux(v, Base.color0_id, color.x, color.y, color.z, color.w * fopacityMul);
+                        outputLine.setAux(v, GLConstants.color0_id, color.x, color.y, color.z, color.w * fopacityMul);
                         Vector4 point = pointSizeFor(cursor.getCurrent());
                         outputLine.setAux(v, 13, point.x, point.y, point.z, point.w);
                     }
@@ -770,8 +767,7 @@ class SimpleLineDrawing {
                                                                       ((float[]) color)[2],
                                                                       ((float[]) color)[3]);
 
-                    mesh.setAux(v1,
-                                Base.color0_id,
+                    mesh.setAux(v1, GLConstants.color0_id,
                                 ((Vector4) color).x,
                                 ((Vector4) color).y,
                                 ((Vector4) color).z,
@@ -953,8 +949,7 @@ class SimpleLineDrawing {
                 if (color == null) color = black;
 
                 try {
-                    outputLine.setAux(v1,
-                                      Base.color0_id,
+                    outputLine.setAux(v1, GLConstants.color0_id,
                                       ((Vector4) color).x,
                                       ((Vector4) color).y,
                                       ((Vector4) color).z,

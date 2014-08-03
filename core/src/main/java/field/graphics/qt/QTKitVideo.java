@@ -1,8 +1,8 @@
 package field.graphics.qt;
 
-import field.graphics.core.Base;
 import field.graphics.core.BasicContextManager;
-import field.graphics.core.BasicUtilities;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.TwoPassElement;
 
 import java.nio.Buffer;
 
@@ -86,10 +86,10 @@ class QTKitVideo {
     void cleanUp(long handle);
 
     public
-    class Element extends BasicUtilities.TwoPassElement {
+    class Element extends TwoPassElement {
         public
         Element(String name) {
-            super(name, Base.StandardPass.preRender, Base.StandardPass.postRender);
+            super(name, StandardPass.preRender, StandardPass.postRender);
         }
 
         @Override

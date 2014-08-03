@@ -5,8 +5,8 @@ import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.Rect;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.plugins.drawing.ThreedComputingOverride;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
@@ -16,9 +16,9 @@ import field.graph.FLineInterpolator;
 import field.graphics.ci.CoreImageCanvasUtils;
 import field.graphics.ci.DeferredImageDrawing;
 import field.graphics.ci.SimpleImageDrawing;
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.BasicGLSLangProgram;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.IAcceptsSceneListElement;
 import field.graphics.dynamic.DynamicLine_long;
 import field.graphics.dynamic.DynamicMesh_long;
 import field.graphics.dynamic.DynamicPointlist;
@@ -59,7 +59,7 @@ class OnCanvasLines {
     @HiddenInAutocomplete
     public Map<String, DirectLayer> directLayer = new LinkedHashMap<String, DirectLayer>();
     @HiddenInAutocomplete
-    private final iAcceptsSceneListElement on;
+    private final IAcceptsSceneListElement on;
 
     public
     OnCanvasLines(IVisualElement element) {
@@ -69,7 +69,7 @@ class OnCanvasLines {
     TaskQueue animationQueue = new TaskQueue();
 
     public
-    OnCanvasLines(iAcceptsSceneListElement on, final IVisualElement element) {
+    OnCanvasLines(IAcceptsSceneListElement on, final IVisualElement element) {
 
         IVisualElementOverrides o = IVisualElement.overrides.get(element);
         final ThreedComputingOverride canvas;
@@ -289,7 +289,7 @@ class OnCanvasLines {
     }
 
     public
-    OnCanvasLines(iAcceptsSceneListElement on, FullScreenCanvasSWT canvas) {
+    OnCanvasLines(IAcceptsSceneListElement on, FullScreenCanvasSWT canvas) {
         this.on = on;
         context = new BaseGLGraphicsContext(on, false);
 

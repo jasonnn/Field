@@ -1,8 +1,8 @@
 package field.graphics.dynamic;
 
 import field.graphics.core.BasicGeometry.LineList_long;
-import field.graphics.core.BasicUtilities;
 import field.graphics.core.ResourceMonitor;
+import field.graphics.core.scene.Position;
 import field.math.linalg.Vector3;
 
 public
@@ -11,7 +11,7 @@ class SubLine_long extends SubMesh_long implements iLineOutput {
     public
     SubLine_long() {
         super(false);
-        dummyMesh = new LineList_long(new BasicUtilities.Position());
+        dummyMesh = new LineList_long(new Position());
         dummyMesh.setNative(false);
         dummyMesh.rebuildTriangle(0);
         dummyMesh.rebuildVertex(0);

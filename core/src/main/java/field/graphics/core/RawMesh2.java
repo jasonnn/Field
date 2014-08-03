@@ -2,6 +2,8 @@ package field.graphics.core;
 
 import field.graphics.core.MeshBlast.Frame;
 import field.graphics.core.MeshBlast.Header;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.OnePassListElement;
 import field.math.abstraction.IProvider;
 import field.math.linalg.*;
 import field.util.PythonUtils;
@@ -29,7 +31,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
  * doesn't implement iGeometry. Renders BuildMeshVisitor.Mesh's
  */
 public
-class RawMesh2 extends BasicUtilities.OnePassListElement {
+class RawMesh2 extends OnePassListElement {
 
     protected final Matrix4 tmpStorage = new Matrix4();
 
@@ -57,7 +59,7 @@ class RawMesh2 extends BasicUtilities.OnePassListElement {
 
     public
     RawMesh2(String filename) throws IOException {
-        super(Base.StandardPass.render, Base.StandardPass.render);
+        super(StandardPass.render, StandardPass.render);
         header = (Header) PythonUtils.loadAsXML(filename + ".xmlHeader");
         file = new RandomAccessFile(filename, "r");
         source = file.getChannel().map(MapMode.READ_ONLY, 0, file.length());
@@ -67,7 +69,7 @@ class RawMesh2 extends BasicUtilities.OnePassListElement {
 
     public
     RawMesh2(String filename, MappedByteBuffer source) throws IOException {
-        super(Base.StandardPass.render, Base.StandardPass.render);
+        super(StandardPass.render, StandardPass.render);
         header = (Header) PythonUtils.loadAsXML(filename + ".xmlHeader");
         this.source = source;
         setFrame(0);

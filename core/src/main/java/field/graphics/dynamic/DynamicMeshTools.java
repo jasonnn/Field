@@ -1,10 +1,11 @@
 package field.graphics.dynamic;
 
 import field.core.dispatch.Rect;
-import field.graphics.core.Base;
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iGeometry;
-import field.graphics.core.BasicUtilities;
+import field.graphics.core.GLConstants;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.IGeometry;
+import field.graphics.core.scene.ISceneListElement;
+import field.graphics.core.scene.OnePassElement;
 import field.math.abstraction.IFilter;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
@@ -27,7 +28,7 @@ class DynamicMeshTools {
     public static
     class AuxCopier {
 
-        Base.iGeometry target;
+        IGeometry target;
 
         int numLastV = 0;
 
@@ -36,7 +37,7 @@ class DynamicMeshTools {
         int id;
 
         public
-        AuxCopier(Base.iGeometry target, int id) {
+        AuxCopier(IGeometry target, int id) {
             this.id = id;
             this.target = target;
             target.addChild(onPre());
@@ -44,8 +45,8 @@ class DynamicMeshTools {
         }
 
         public
-        Base.ISceneListElement onPost() {
-            return new BasicUtilities.OnePassElement(StandardPass.postRender) {
+        ISceneListElement onPost() {
+            return new OnePassElement(StandardPass.postRender) {
 
                 @Override
                 public
@@ -58,8 +59,8 @@ class DynamicMeshTools {
         }
 
         public
-        Base.ISceneListElement onPre() {
-            return new BasicUtilities.OnePassElement(StandardPass.preRender) {
+        ISceneListElement onPre() {
+            return new OnePassElement(StandardPass.preRender) {
 
                 @Override
                 public
@@ -77,7 +78,7 @@ class DynamicMeshTools {
 
         FloatBuffer[] buffers;
 
-        iGeometry target;
+        IGeometry target;
 
         int id;
 
@@ -86,7 +87,7 @@ class DynamicMeshTools {
         int capacity;
 
         public
-        ShapedNoiseBuffer(Base.iGeometry target, int id, int num, int initialSize) {
+        ShapedNoiseBuffer(IGeometry target, int id, int num, int initialSize) {
             this.id = id;
             this.target = target;
             at = 0;
@@ -100,8 +101,8 @@ class DynamicMeshTools {
         }
 
         public
-        Base.ISceneListElement onPre() {
-            return new BasicUtilities.OnePassElement(StandardPass.preRender) {
+        ISceneListElement onPre() {
+            return new OnePassElement(StandardPass.preRender) {
 
                 @Override
                 public
@@ -193,13 +194,13 @@ class DynamicMeshTools {
         noise(to);
 
         line.beginSpline(new LineIdentifier(splineName));
-        line.setAuxOnSpline(Base.color0_id, r, g, b, a);
+        line.setAuxOnSpline(GLConstants.color0_id, r, g, b, a);
         for (int i = 0; i < Math.max(samples * fractionDrawn, 2); i++) {
             float al = i / (float) (samples - 1);
             CubicTools.cubic(al, t1, from, to, t2, t3);
             if (i == 0) line.moveTo(t3);
             else line.lineTo(t3);
-            line.setAuxOnSpline(Base.color0_id, r, g, b, a);
+            line.setAuxOnSpline(GLConstants.color0_id, r, g, b, a);
         }
         line.endSpline();
     }
@@ -256,10 +257,10 @@ class DynamicMeshTools {
             mesh.nextFace(v1, v2, v3);
             mesh.nextFace(v1, v3, v4);
 
-            mesh.setAux(v1, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v2, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v3, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v4, Base.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v1, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v2, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v3, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v4, GLConstants.color0_id, fr, fg, fb, fa);
         }
         if (line != null) {
             int v1 = line.nextVertex(noise(warp == null ? tile.topLeft() : warp.filter(tile.topLeft())));
@@ -272,10 +273,10 @@ class DynamicMeshTools {
             line.nextFace(v3, v4);
             line.nextFace(v4, v1);
 
-            line.setAux(v1, Base.color0_id, or, og, ob, oa);
-            line.setAux(v2, Base.color0_id, or, og, ob, oa);
-            line.setAux(v3, Base.color0_id, or, og, ob, oa);
-            line.setAux(v4, Base.color0_id, or, og, ob, oa);
+            line.setAux(v1, GLConstants.color0_id, or, og, ob, oa);
+            line.setAux(v2, GLConstants.color0_id, or, og, ob, oa);
+            line.setAux(v3, GLConstants.color0_id, or, og, ob, oa);
+            line.setAux(v4, GLConstants.color0_id, or, og, ob, oa);
         }
     }
 
@@ -304,23 +305,23 @@ class DynamicMeshTools {
             mesh.nextFace(v1, v2, v3);
             mesh.nextFace(v1, v3, v4);
 
-            mesh.setAux(v1, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v2, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v3, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v4, Base.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v1, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v2, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v3, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v4, GLConstants.color0_id, fr, fg, fb, fa);
             mesh.close();
         }
         if (line != null) {
             line.open();
             line.beginSpline(new LineIdentifier(""));
-            line.setAuxOnSpline(Base.color0_id, or, og, ob, oa);
+            line.setAuxOnSpline(GLConstants.color0_id, or, og, ob, oa);
 
             line.moveTo(noise(warp == null ? tile.topLeft() : warp.filter(tile.topLeft())));
             line.lineTo(noise(warp == null ? tile.bottomLeft() : warp.filter(tile.bottomLeft())));
             line.lineTo(noise(warp == null ? tile.bottomRight() : warp.filter(tile.bottomRight())));
             line.lineTo(noise(warp == null ? tile.topRight() : warp.filter(tile.topRight())));
             line.lineTo(noise(warp == null ? tile.topLeft() : warp.filter(tile.topLeft())));
-            line.setAuxOnSpline(Base.color0_id, or, og, ob, oa);
+            line.setAuxOnSpline(GLConstants.color0_id, or, og, ob, oa);
 
             line.endSpline();
             line.close();
@@ -353,16 +354,16 @@ class DynamicMeshTools {
             mesh.nextFace(v1, v2, v3);
             mesh.nextFace(v1, v3, v4);
 
-            mesh.setAux(v1, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v2, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v3, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v4, Base.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v1, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v2, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v3, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v4, GLConstants.color0_id, fr, fg, fb, fa);
             mesh.close();
         }
         if (line != null) {
             line.open();
             line.beginSpline(new LineIdentifier(""));
-            line.setAuxOnSpline(Base.color0_id, or, og, ob, oa);
+            line.setAuxOnSpline(GLConstants.color0_id, or, og, ob, oa);
             line.setAuxOnSpline(11, noise.x, noise.y, noise.z, noise.w);
 
             line.moveTo(noise(warp == null ? tile.topLeft() : warp.filter(tile.topLeft())));
@@ -371,7 +372,7 @@ class DynamicMeshTools {
             line.lineTo(noise(warp == null ? tile.topRight() : warp.filter(tile.topRight())));
             line.lineTo(noise(warp == null ? tile.topLeft() : warp.filter(tile.topLeft())));
             line.setAuxOnSpline(11, noise.x, noise.y, noise.z, noise.w);
-            line.setAuxOnSpline(Base.color0_id, or, og, ob, oa);
+            line.setAuxOnSpline(GLConstants.color0_id, or, og, ob, oa);
 
             line.endSpline();
             line.close();
@@ -421,10 +422,10 @@ class DynamicMeshTools {
             mesh.nextFace(v1, v2, v3);
             mesh.nextFace(v1, v3, v4);
 
-            mesh.setAux(v1, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v2, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v3, Base.color0_id, fr, fg, fb, fa);
-            mesh.setAux(v4, Base.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v1, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v2, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v3, GLConstants.color0_id, fr, fg, fb, fa);
+            mesh.setAux(v4, GLConstants.color0_id, fr, fg, fb, fa);
         }
         if (line != null) {
             int v1 = line.nextVertex(noise(p1));
@@ -439,10 +440,10 @@ class DynamicMeshTools {
             line.nextFace(v3, v4);
             line.nextFace(v4, v1);
 
-            line.setAux(v1, Base.color0_id, or, og, ob, oa);
-            line.setAux(v2, Base.color0_id, or, og, ob, oa);
-            line.setAux(v3, Base.color0_id, or, og, ob, oa);
-            line.setAux(v4, Base.color0_id, or, og, ob, oa);
+            line.setAux(v1, GLConstants.color0_id, or, og, ob, oa);
+            line.setAux(v2, GLConstants.color0_id, or, og, ob, oa);
+            line.setAux(v3, GLConstants.color0_id, or, og, ob, oa);
+            line.setAux(v4, GLConstants.color0_id, or, og, ob, oa);
         }
     }
 
@@ -462,7 +463,7 @@ class DynamicMeshTools {
     }
 
     public static
-    void setAll(iGeometry geometry, int attribute, Vector4 to) {
+    void setAll(IGeometry geometry, int attribute, Vector4 to) {
         float[] zz = {to.x, to.y, to.z, to.w};
         FloatBuffer buffer = geometry.aux(attribute, 4);
         for (int z = 0; z < buffer.limit() / 4; z++) {

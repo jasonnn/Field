@@ -1,8 +1,9 @@
 package field.core.plugins.drawing.opengl;
 
 import field.core.plugins.drawing.opengl.CachedLine.Event;
-import field.graphics.core.Base;
-import field.graphics.core.BasicUtilities;
+import field.graphics.core.GLConstants;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.OnePassElement;
 import field.graphics.dynamic.DynamicMesh_long;
 import field.graphics.dynamic.SubMesh_long;
 import field.math.linalg.Vector2;
@@ -18,13 +19,13 @@ class DirectMesh {
     public static int fixedCurveSampling = 50;
 
     public
-    class MeshCache extends BasicUtilities.OnePassElement {
+    class MeshCache extends OnePassElement {
 
         private final DynamicMesh_long inside;
 
         public
         MeshCache(DynamicMesh_long inside) {
-            super(Base.StandardPass.transform);
+            super(StandardPass.transform);
             this.inside = inside;
         }
 
@@ -207,7 +208,7 @@ class DirectMesh {
             }
         }
 
-        trackedProperties.put(iLinearGraphicsContext.fillColor_v, Base.color0_id);
+        trackedProperties.put(iLinearGraphicsContext.fillColor_v, GLConstants.color0_id);
         defaults.put(iLinearGraphicsContext.fillColor_v, defaultColor);
 
         List<Prop> propertiesInOrder = new ArrayList<Prop>(trackedProperties.keySet());
@@ -689,7 +690,9 @@ class DirectMesh {
             cache.setAux(cache.getVertexCursor() - 1, value, ((Vector2) a).x, ((Vector2) a).y);
         else if (a instanceof Vector3)
             cache.setAux(cache.getVertexCursor() - 1, value, ((Vector3) a).x, ((Vector3) a).y, ((Vector3) a).z);
-        else if (a instanceof Vector4) if (value == Base.color0_id) cache.setAux(cache.getVertexCursor() - 1,
+        else if (a instanceof Vector4)
+            if (value == GLConstants.color0_id)
+                cache.setAux(cache.getVertexCursor() - 1,
                                                                                  value,
                                                                                  ((Vector4) a).x,
                                                                                  ((Vector4) a).y,

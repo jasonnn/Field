@@ -1,6 +1,6 @@
 package field.core.plugins.drawing.opengl;
 
-import field.graphics.core.Base.iAcceptsSceneListElement;
+import field.graphics.core.scene.IAcceptsSceneListElement;
 import field.graphics.windowing.FullScreenCanvasSWT;
 
 /**
@@ -10,7 +10,7 @@ public
 class OnCanvasPLines extends OnCanvasLines {
 
     public
-    OnCanvasPLines(iAcceptsSceneListElement on, FullScreenCanvasSWT canvas) {
+    OnCanvasPLines(IAcceptsSceneListElement on, FullScreenCanvasSWT canvas) {
         super(on, canvas);
     }
 

@@ -1,7 +1,7 @@
 package field.graphics.dynamic;
 
-import field.graphics.core.BasicUtilities;
 import field.graphics.core.PointList;
+import field.graphics.core.scene.Position;
 import field.math.linalg.Vector3;
 
 public
@@ -11,7 +11,7 @@ class SubPoint extends SubMesh {
     SubPoint() {
         super(false);
 
-        dummyMesh = new PointList(new BasicUtilities.Position());
+        dummyMesh = new PointList(new Position());
         dummyMesh.rebuildTriangle(0);
         dummyMesh.rebuildVertex(0);
         delegate = new DynamicPointlist(dummyMesh);

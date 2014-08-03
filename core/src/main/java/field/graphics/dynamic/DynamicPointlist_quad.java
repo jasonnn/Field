@@ -1,13 +1,13 @@
 package field.graphics.dynamic;
 
-import field.graphics.core.Base;
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGeometry.QuadMesh_long;
-import field.graphics.core.BasicUtilities;
-import field.graphics.core.BasicUtilities.DisableDepthTestWrap;
-import field.graphics.core.BasicUtilities.SetBlendMode;
+import field.graphics.core.GLConstants;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.DisableDepthTestWrap;
+import field.graphics.core.scene.IAcceptsSceneListElement;
+import field.graphics.core.scene.Position;
+import field.graphics.core.scene.SetBlendMode;
 import field.math.linalg.Vector3;
 import org.lwjgl.opengl.GL11;
 
@@ -33,10 +33,10 @@ class DynamicPointlist_quad extends DynamicQuad_long implements iDynamicMesh {
         int c = super.nextVertex(v1);
         int d = super.nextVertex(v1);
 
-        super.setAux(a, Base.texture0_id, 0, 0);
-        super.setAux(b, Base.texture0_id, 1, 0);
-        super.setAux(c, Base.texture0_id, 1, 1);
-        super.setAux(d, Base.texture0_id, 0, 1);
+        super.setAux(a, GLConstants.texture0_id, 0, 0);
+        super.setAux(b, GLConstants.texture0_id, 1, 0);
+        super.setAux(c, GLConstants.texture0_id, 1, 1);
+        super.setAux(d, GLConstants.texture0_id, 0, 1);
 
         super.nextFace(a, b, c, d);
 
@@ -56,10 +56,10 @@ class DynamicPointlist_quad extends DynamicQuad_long implements iDynamicMesh {
         int c = super.nextVertex(x, y, z);
         int d = super.nextVertex(x, y, z);
 
-        super.setAux(a, Base.texture0_id, 0, 0);
-        super.setAux(b, Base.texture0_id, 1, 0);
-        super.setAux(c, Base.texture0_id, 1, 1);
-        super.setAux(d, Base.texture0_id, 0, 1);
+        super.setAux(a, GLConstants.texture0_id, 0, 0);
+        super.setAux(b, GLConstants.texture0_id, 1, 0);
+        super.setAux(c, GLConstants.texture0_id, 1, 1);
+        super.setAux(d, GLConstants.texture0_id, 0, 1);
 
         super.nextFace(a, b, c, d);
 
@@ -117,13 +117,13 @@ class DynamicPointlist_quad extends DynamicQuad_long implements iDynamicMesh {
 
 
     public static
-    DynamicPointlist_quad texturedColoredPoints(iAcceptsSceneListElement acceptsSceneListElement, float width) {
+    DynamicPointlist_quad texturedColoredPoints(IAcceptsSceneListElement acceptsSceneListElement, float width) {
 
         BasicGLSLangProgram program = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex_fakePoints.glslang",
                                                               "content/shaders/Texture2DForFakePoints.glslang");
         program.new SetIntegerUniform("texture", 0);
 
-        QuadMesh_long lines = new QuadMesh_long(new BasicUtilities.Position());
+        QuadMesh_long lines = new QuadMesh_long(new Position());
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
         lines.addChild(program);

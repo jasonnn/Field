@@ -5,10 +5,10 @@ import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.DrawingResultCode
 import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.iDrawingAcceptor;
 import field.core.plugins.drawing.opengl.LineInteraction.EventHandler;
 import field.graphics.core.AdvancedTextures.BaseSlowRawTexture;
-import field.graphics.core.Base;
-import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicGLSLangProgram;
+import field.graphics.core.GLConstants;
+import field.graphics.core.scene.IAcceptsSceneListElement;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.iDynamicMesh;
 import field.launch.IUpdateable;
@@ -225,7 +225,7 @@ class SimpleWebpageDrawing {
                     line.getProperties().put(SimpleWebpageDrawing.browser, browser[0]);
                     line.getProperties().put(browser_pageToSpace, newPageToSpace(v, right, down, dim));
 
-                    iAcceptsSceneListElement p = context.getVertexProgram();
+                    IAcceptsSceneListElement p = context.getVertexProgram();
                     BasicGLSLangProgram was = null;
                     //System.out.println(" -- drawing mesh for texture backed webpage -- ");
 
@@ -251,10 +251,10 @@ class SimpleWebpageDrawing {
                     mesh.nextFace(a, b, c);
                     mesh.nextFace(a, c, d);
 
-                    mesh.setAux(a, Base.color0_id, color.x, color.y, color.z, color.w);
-                    mesh.setAux(b, Base.color0_id, color.x, color.y, color.z, color.w);
-                    mesh.setAux(c, Base.color0_id, color.x, color.y, color.z, color.w);
-                    mesh.setAux(d, Base.color0_id, color.x, color.y, color.z, color.w);
+                    mesh.setAux(a, GLConstants.color0_id, color.x, color.y, color.z, color.w);
+                    mesh.setAux(b, GLConstants.color0_id, color.x, color.y, color.z, color.w);
+                    mesh.setAux(c, GLConstants.color0_id, color.x, color.y, color.z, color.w);
+                    mesh.setAux(d, GLConstants.color0_id, color.x, color.y, color.z, color.w);
 
                     mesh.setAux(a, 4, 0);
                     mesh.setAux(b, 4, 0);
@@ -268,17 +268,17 @@ class SimpleWebpageDrawing {
 //						mesh.setAux(d, Base.texture0_id, 0, dim.y);
 
 
-                        mesh.setAux(a, Base.texture0_id, 0, 0);
-                        mesh.setAux(b, Base.texture0_id, 1, 0);
-                        mesh.setAux(c, Base.texture0_id, 1, 1);
-                        mesh.setAux(d, Base.texture0_id, 0, 1);
+                        mesh.setAux(a, GLConstants.texture0_id, 0, 0);
+                        mesh.setAux(b, GLConstants.texture0_id, 1, 0);
+                        mesh.setAux(c, GLConstants.texture0_id, 1, 1);
+                        mesh.setAux(d, GLConstants.texture0_id, 0, 1);
 
                     }
                     else {
-                        mesh.setAux(a, Base.texture0_id, 0, 0);
-                        mesh.setAux(b, Base.texture0_id, 1, 0);
-                        mesh.setAux(c, Base.texture0_id, 1, 1);
-                        mesh.setAux(d, Base.texture0_id, 0, 1);
+                        mesh.setAux(a, GLConstants.texture0_id, 0, 0);
+                        mesh.setAux(b, GLConstants.texture0_id, 1, 0);
+                        mesh.setAux(c, GLConstants.texture0_id, 1, 1);
+                        mesh.setAux(d, GLConstants.texture0_id, 0, 1);
                     }
                     mesh.close();
 

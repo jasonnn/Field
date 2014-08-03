@@ -1,9 +1,10 @@
 package field.graphics.dynamic;
 
-import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.BasicGeometry;
 import field.graphics.core.BasicGeometry.QuadMesh_long;
-import field.graphics.core.BasicUtilities;
+import field.graphics.core.scene.IAcceptsSceneListElement;
+import field.graphics.core.scene.Position;
+import field.graphics.core.scene.Smooth;
 
 import java.util.Stack;
 
@@ -14,11 +15,11 @@ public
 class DynamicQuad_long extends DynamicMesh_long {
 
     public static
-    DynamicQuad_long unshadedQuad(iAcceptsSceneListElement into) {
-        BasicGeometry.QuadMesh_long lines = new BasicGeometry.QuadMesh_long(new BasicUtilities.Position());
+    DynamicQuad_long unshadedQuad(IAcceptsSceneListElement into) {
+        BasicGeometry.QuadMesh_long lines = new BasicGeometry.QuadMesh_long(new Position());
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
-        lines.addChild(new BasicUtilities.Smooth());
+        lines.addChild(new Smooth());
 
         if (into != null) into.addChild(lines);
 

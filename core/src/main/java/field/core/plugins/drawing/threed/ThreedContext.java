@@ -7,12 +7,12 @@ import field.core.plugins.drawing.opengl.CachedLine.Event;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext.iTransformingContext;
 import field.core.windowing.GLComponentWindow;
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.State;
-import field.graphics.core.BasicUtilities;
 import field.graphics.core.CoreHelpers;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.IAcceptsSceneListElement;
+import field.graphics.core.scene.TwoPassElement;
 import field.launch.IUpdateable;
 import field.math.linalg.SingularMatrixException;
 import field.math.linalg.Vector2;
@@ -65,7 +65,7 @@ class ThreedContext extends BaseGLGraphicsContext implements iTransformingContex
     protected int windowHeight;
 
     public
-    ThreedContext(iAcceptsSceneListElement inside, final iThreedDrawingSurface p, Rect viewportRectangle) {
+    ThreedContext(IAcceptsSceneListElement inside, final iThreedDrawingSurface p, Rect viewportRectangle) {
         super(inside, false);
         this.parent = p;
         this.viewportRectangle = viewportRectangle;
@@ -73,7 +73,7 @@ class ThreedContext extends BaseGLGraphicsContext implements iTransformingContex
         subCamera = new BasicCamera();
         subCamera.setViewport(0, 0, parent.getFrame().getSize().x, parent.getFrame().getSize().y);
 
-        vertexProgram.addChild(new BasicUtilities.TwoPassElement("subCamera",
+        vertexProgram.addChild(new TwoPassElement("subCamera",
                                                                  StandardPass.preTransform,
                                                                  StandardPass.preDisplay) {
 

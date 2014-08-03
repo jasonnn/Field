@@ -4,10 +4,10 @@ import field.core.dispatch.Rect;
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
 import field.core.util.FieldPyObjectAdaptor2;
 import field.core.windowing.GLComponentWindow;
-import field.graphics.core.Base;
 import field.graphics.core.BasicFrameBuffers.SingleFrameBuffer;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.CoreHelpers;
+import field.graphics.core.GLConstants;
 import field.graphics.core.ResourceMonitor;
 import field.graphics.dynamic.DynamicMesh;
 import field.math.linalg.Vector2;
@@ -77,20 +77,20 @@ class CoreImageCanvasUtils {
             int v3 = mesh.nextVertex(c);
             int v4 = mesh.nextVertex(d);
 
-            mesh.setAux(v1, Base.color0_id, tint.x, tint.y, tint.z, tint.w);
-            mesh.setAux(v2, Base.color0_id, tint.x, tint.y, tint.z, tint.w);
-            mesh.setAux(v3, Base.color0_id, tint.x, tint.y, tint.z, tint.w);
-            mesh.setAux(v4, Base.color0_id, tint.x, tint.y, tint.z, tint.w);
+            mesh.setAux(v1, GLConstants.color0_id, tint.x, tint.y, tint.z, tint.w);
+            mesh.setAux(v2, GLConstants.color0_id, tint.x, tint.y, tint.z, tint.w);
+            mesh.setAux(v3, GLConstants.color0_id, tint.x, tint.y, tint.z, tint.w);
+            mesh.setAux(v4, GLConstants.color0_id, tint.x, tint.y, tint.z, tint.w);
 
             mesh.setAux(v1, 4, 1, 1, 1, 1);
             mesh.setAux(v2, 4, 1, 1, 1, 1);
             mesh.setAux(v3, 4, 1, 1, 1, 1);
             mesh.setAux(v4, 4, 1, 1, 1, 1);
 
-            mesh.setAux(v1, Base.texture0_id, 0, 0);
-            mesh.setAux(v2, Base.texture0_id, 1, 0);
-            mesh.setAux(v3, Base.texture0_id, 1, 1);
-            mesh.setAux(v4, Base.texture0_id, 0, 1);
+            mesh.setAux(v1, GLConstants.texture0_id, 0, 0);
+            mesh.setAux(v2, GLConstants.texture0_id, 1, 0);
+            mesh.setAux(v3, GLConstants.texture0_id, 1, 1);
+            mesh.setAux(v4, GLConstants.texture0_id, 0, 1);
 
             mesh.nextFace(v1, v2, v3);
             mesh.nextFace(v1, v3, v4);

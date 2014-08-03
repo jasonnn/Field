@@ -1,29 +1,13 @@
 package field.online;
 
-import java.io.StringReader;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
+import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Mixins;
 import field.core.dispatch.Rect;
 import field.core.dispatch.VisualElementProperty;
 import field.core.dispatch.override.DefaultOverride;
 import field.core.dispatch.override.Ref;
 import field.core.execution.IExecutesPromise;
-import field.launch.IUpdateable;
-import field.math.abstraction.IFloatProvider;
-import field.math.graph.visitors.hint.TraversalHint;
-import org.java_websocket.WebSocket;
-
-import field.core.StandardFluidSheet;
-import field.core.dispatch.Mixins;
-
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.plugins.BaseSimplePlugin;
@@ -41,15 +25,22 @@ import field.core.ui.text.PythonTextEditor.EditorExecutionInterface;
 import field.core.ui.text.PythonTextEditor.PickledCompletionInformation;
 import field.core.util.LocalFuture;
 import field.core.windowing.GLComponentWindow;
-import field.graphics.core.Base.iGeometry;
 import field.graphics.core.BasicGeometry.VertexBuffer;
+import field.graphics.core.scene.IGeometry;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-
+import field.math.abstraction.IFloatProvider;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector4;
 import field.online.EmbeddedServer.Handler;
 import field.online.org.json.JSONArray;
 import field.online.org.json.JSONException;
 import field.online.org.json.JSONObject;
+import org.java_websocket.WebSocket;
+
+import java.io.StringReader;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 // this (and all subelements) of the node that this is installed on will become "in a web browser"
 
@@ -387,8 +378,9 @@ public class OnlinePlugin extends BaseSimplePlugin {
 		server.addContent(b);
 	}
 
-	public void sendBuffer(WebSocket arg0, iGeometry b, int a) {
-		VertexBuffer vb = (VertexBuffer) b.auxBuffers().get(a);
+    public
+    void sendBuffer(WebSocket arg0, IGeometry b, int a) {
+        VertexBuffer vb = (VertexBuffer) b.auxBuffers().get(a);
 		server.addContent(vb.bBuffer);
 	}
 

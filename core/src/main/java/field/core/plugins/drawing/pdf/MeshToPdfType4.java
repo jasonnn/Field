@@ -2,9 +2,9 @@ package field.core.plugins.drawing.pdf;
 
 import com.lowagie.text.pdf.*;
 import field.core.plugins.drawing.opengl.CachedLine;
-import field.graphics.core.Base;
-import field.graphics.core.Base.iGeometry;
 import field.graphics.core.BasicGeometry.TriangleMesh;
+import field.graphics.core.GLConstants;
+import field.graphics.core.scene.IGeometry;
 import field.graphics.dynamic.CompleteEdgeRep2;
 import field.graphics.dynamic.CompleteEdgeRep2.Edge;
 import field.graphics.dynamic.CompleteEdgeRep2.Face;
@@ -178,21 +178,21 @@ class MeshToPdfType4 {
                 bos.write(0);
                 bos.write(toByte(xmin, xmax, mesh.vertex().get(3 * va + 0)));
                 bos.write(toByte(ymin, ymax, mesh.vertex().get(3 * va + 1)));
-                Vector3 c = getColorFor(mesh.aux(Base.color0_id, 4), va);
+                Vector3 c = getColorFor(mesh.aux(GLConstants.color0_id, 4), va);
                 bos.write(toByte(0, 1f, c.x));
                 bos.write(toByte(0, 1f, c.y));
                 bos.write(toByte(0, 1f, c.z));
                 bos.write(0);
                 bos.write(toByte(xmin, xmax, mesh.vertex().get(3 * vb + 0)));
                 bos.write(toByte(ymin, ymax, mesh.vertex().get(3 * vb + 1)));
-                c = getColorFor(mesh.aux(Base.color0_id, 4), vb);
+                c = getColorFor(mesh.aux(GLConstants.color0_id, 4), vb);
                 bos.write(toByte(0, 1f, c.x));
                 bos.write(toByte(0, 1f, c.y));
                 bos.write(toByte(0, 1f, c.z));
                 bos.write(0);
                 bos.write(toByte(xmin, xmax, mesh.vertex().get(3 * vc + 0)));
                 bos.write(toByte(ymin, ymax, mesh.vertex().get(3 * vc + 1)));
-                c = getColorFor(mesh.aux(Base.color0_id, 4), vc);
+                c = getColorFor(mesh.aux(GLConstants.color0_id, 4), vc);
                 bos.write(toByte(0, 1f, c.x));
                 bos.write(toByte(0, 1f, c.y));
                 bos.write(toByte(0, 1f, c.z));
@@ -219,21 +219,21 @@ class MeshToPdfType4 {
                 bos.write(0);
                 bos.write(toByte(xmin, xmax, mesh.vertex().get(3 * va + 0)));
                 bos.write(toByte(ymin, ymax, mesh.vertex().get(3 * va + 1)));
-                Vector3 c = getColorFor(mesh.aux(Base.color0_id, 4), va);
+                Vector3 c = getColorFor(mesh.aux(GLConstants.color0_id, 4), va);
                 bos.write(toByte(0, 1f, c.x));
                 bos.write(toByte(0, 1f, c.y));
                 bos.write(toByte(0, 1f, c.z));
                 bos.write(0);
                 bos.write(toByte(xmin, xmax, mesh.vertex().get(3 * vb + 0)));
                 bos.write(toByte(ymin, ymax, mesh.vertex().get(3 * vb + 1)));
-                c = getColorFor(mesh.aux(Base.color0_id, 4), vb);
+                c = getColorFor(mesh.aux(GLConstants.color0_id, 4), vb);
                 bos.write(toByte(0, 1f, c.x));
                 bos.write(toByte(0, 1f, c.y));
                 bos.write(toByte(0, 1f, c.z));
                 bos.write(0);
                 bos.write(toByte(xmin, xmax, mesh.vertex().get(3 * vc + 0)));
                 bos.write(toByte(ymin, ymax, mesh.vertex().get(3 * vc + 1)));
-                c = getColorFor(mesh.aux(Base.color0_id, 4), vc);
+                c = getColorFor(mesh.aux(GLConstants.color0_id, 4), vc);
                 bos.write(toByte(0, 1f, c.x));
                 bos.write(toByte(0, 1f, c.y));
                 bos.write(toByte(0, 1f, c.z));
@@ -256,7 +256,7 @@ class MeshToPdfType4 {
             bos.write(code);
             bos.write(toByte(xmin, xmax, mesh.vertex().get(3 * newVertex + 0)));
             bos.write(toByte(ymin, ymax, mesh.vertex().get(3 * newVertex + 1)));
-            Vector3 c = getColorFor(mesh.aux(Base.color0_id, 4), newVertex);
+            Vector3 c = getColorFor(mesh.aux(GLConstants.color0_id, 4), newVertex);
             bos.write(toByte(0, 1f, c.x));
             bos.write(toByte(0, 1f, c.y));
             bos.write(toByte(0, 1f, c.z));
@@ -306,7 +306,7 @@ class MeshToPdfType4 {
             bos.write(code);
             bos.write(toByte(xmin, xmax, mesh.vertex().get(3 * newVertex + 0)));
             bos.write(toByte(ymin, ymax, mesh.vertex().get(3 * newVertex + 1)));
-            Vector3 c = getColorFor(mesh.aux(Base.color0_id, 4), newVertex);
+            Vector3 c = getColorFor(mesh.aux(GLConstants.color0_id, 4), newVertex);
             bos.write(toByte(0, 1f, c.x));
             bos.write(toByte(0, 1f, c.y));
             bos.write(toByte(0, 1f, c.z));
@@ -401,7 +401,7 @@ class MeshToPdfType4 {
     }
 
     public static
-    void dilateMesh(iGeometry underlyingGeometry, CachedLine line) {
+    void dilateMesh(IGeometry underlyingGeometry, CachedLine line) {
 
         // this is going to be unplesant
 
@@ -453,14 +453,14 @@ class MeshToPdfType4 {
     }
 
     private static
-    void setPosition(Vertex vertex, Vector2 vector2, iGeometry underlyingGeometry) {
+    void setPosition(Vertex vertex, Vector2 vector2, IGeometry underlyingGeometry) {
         FloatBuffer v = underlyingGeometry.vertex();
         v.put(3 * vertex.vertexNumber + 0, vector2.x);
         v.put(3 * vertex.vertexNumber + 1, vector2.y);
     }
 
     private static
-    Vector2 positionFor(Vertex vertex, iGeometry underlyingGeometry) {
+    Vector2 positionFor(Vertex vertex, IGeometry underlyingGeometry) {
         FloatBuffer v = underlyingGeometry.vertex();
         return new Vector2(v.get(3 * vertex.vertexNumber + 0), v.get(3 * vertex.vertexNumber + 1));
     }

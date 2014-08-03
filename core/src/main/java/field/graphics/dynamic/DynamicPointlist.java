@@ -1,7 +1,11 @@
 package field.graphics.dynamic;
 
-import field.graphics.core.*;
-import field.graphics.core.Base.iAcceptsSceneListElement;
+import field.graphics.core.BasicGLSLangProgram;
+import field.graphics.core.PointList;
+import field.graphics.core.scene.BasicSceneList;
+import field.graphics.core.scene.IAcceptsSceneListElement;
+import field.graphics.core.scene.IGeometry;
+import field.graphics.core.scene.Position;
 import field.math.linalg.Vector3;
 
 /**
@@ -16,7 +20,7 @@ class DynamicPointlist extends DynamicMesh implements iDynamicMesh {
      * @param from
      */
     public
-    DynamicPointlist(Base.iGeometry from) {
+    DynamicPointlist(IGeometry from) {
         super(from);
     }
 
@@ -57,7 +61,7 @@ class DynamicPointlist extends DynamicMesh implements iDynamicMesh {
 
         BasicGLSLangProgram program = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex.glslang",
                                                               "content/shaders/VertexColorFragment.glslang");
-        PointList lines = new PointList(new BasicUtilities.Position()).setSize(width);
+        PointList lines = new PointList(new Position()).setSize(width);
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
         lines.addChild(program);
@@ -69,7 +73,7 @@ class DynamicPointlist extends DynamicMesh implements iDynamicMesh {
     public static
     DynamicPointlist unshadedPoints(BasicSceneList sceneList, float width) {
 
-        PointList lines = new PointList(new BasicUtilities.Position()).setSize(width);
+        PointList lines = new PointList(new Position()).setSize(width);
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
         if (sceneList != null) sceneList.addChild(lines);
@@ -78,14 +82,14 @@ class DynamicPointlist extends DynamicMesh implements iDynamicMesh {
     }
 
     public static
-    DynamicPointlist texturedColoredPoints(iAcceptsSceneListElement acceptsSceneListElement, float width) {
+    DynamicPointlist texturedColoredPoints(IAcceptsSceneListElement acceptsSceneListElement, float width) {
 
         BasicGLSLangProgram program = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex_withPointsize.glslang",
                                                               "content/shaders/Texture2DForPointSprites.glslang");
 //		BasicGLSLangProgram program = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex_withPointsize.glslang", "content/shaders/WhiteFragment.glslang");
         program.new SetIntegerUniform("texture", 0);
         program.setDoPointSize();
-        PointList lines = new PointList(new BasicUtilities.Position()).setSize(width);
+        PointList lines = new PointList(new Position()).setSize(width);
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
         lines.addChild(program);
@@ -95,13 +99,13 @@ class DynamicPointlist extends DynamicMesh implements iDynamicMesh {
     }
 
     public static
-    DynamicPointlist texturedColoredPoints2(iAcceptsSceneListElement acceptsSceneListElement, float width) {
+    DynamicPointlist texturedColoredPoints2(IAcceptsSceneListElement acceptsSceneListElement, float width) {
 
         BasicGLSLangProgram program = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex_withPointsize.glslang",
                                                               "content/shaders/Texture2DForPointSprites2.glslang");
         program.new SetIntegerUniform("texture", 0);
         program.setDoPointSize();
-        PointList lines = new PointList(new BasicUtilities.Position()).setSize(width);
+        PointList lines = new PointList(new Position()).setSize(width);
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
         lines.addChild(program);

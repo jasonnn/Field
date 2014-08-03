@@ -1,9 +1,10 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.StandardPass;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.OnePassListElement;
 
 public
-class DerivedStereoCamera extends BasicUtilities.OnePassListElement {
+class DerivedStereoCamera extends OnePassListElement {
 
     private final StereoCamera derivedFrom;
     private final StereoCamera target;

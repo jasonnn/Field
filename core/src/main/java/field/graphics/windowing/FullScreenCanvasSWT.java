@@ -14,8 +14,8 @@ import field.core.util.PythonCallableMap;
 import field.core.windowing.LinuxCanvasInterface;
 import field.core.windowing.iCanvasInterface;
 import field.graphics.core.*;
-import field.graphics.core.Base.iAcceptsSceneListElement;
-import field.graphics.core.BasicUtilities.Clear;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.*;
 import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
@@ -63,9 +63,11 @@ import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
+import java.util.List;
+
 @Woven
 public
-class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAcceptsSceneListElement {
+class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, IAcceptsSceneListElement {
 
     @HiddenInAutocomplete
     public static final Method method_beforeFlush = ReflectionTools.methodOf("beforeFlush", FullScreenCanvasSWT.class);
@@ -715,13 +717,13 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
                 return "resource monitor for fullscreen canvas";
             }
         });
-        rootSceneList.addChild(new BasicUtilities.Standard());
+        rootSceneList.addChild(new Standard());
         if (doClear) {
-            clear = new BasicUtilities.Clear(new Vector3(r, g, b), (float) a);
+            clear = new Clear(new Vector3(r, g, b), (float) a);
             rootSceneList.addChild(clear);
         }
         else {
-            rootSceneList.addChild(new BasicUtilities.ClearOnce(new Vector3(0, 0, 0), 1));
+            rootSceneList.addChild(new ClearOnce(new Vector3(0, 0, 0), 1));
         }
         rootSceneList.addChild(camera);
         sceneList = leftSceneList = new BasicSceneList();
@@ -771,21 +773,21 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
      * in a stereo canvas
      */
     public
-    iAcceptsSceneListElement getBothEyes() {
-        return new iAcceptsSceneListElement() {
+    IAcceptsSceneListElement getBothEyes() {
+        return new IAcceptsSceneListElement() {
             public
-            void addChild(Base.ISceneListElement e) {
+            void addChild(ISceneListElement e) {
                 leftSceneList.addChild(e);
                 rightSceneList.addChild(e);
             }
 
             public
-            boolean isChild(Base.ISceneListElement e) {
+            boolean isChild(ISceneListElement e) {
                 return leftSceneList.getChildren().contains(e) || rightSceneList.getChildren().contains(e);
             }
 
             public
-            void removeChild(Base.ISceneListElement e) {
+            void removeChild(ISceneListElement e) {
                 leftSceneList.removeChild(e);
                 rightSceneList.removeChild(e);
 
@@ -799,7 +801,7 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
      * the << operator
      */
     public
-    void addChild(Base.ISceneListElement e) {
+    void addChild(ISceneListElement e) {
         getSceneList().addChild(e);
     }
 
@@ -807,7 +809,7 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
      * returns true if this is already in the list of things to be drawn
      */
     public
-    boolean isChild(Base.ISceneListElement e) {
+    boolean isChild(ISceneListElement e) {
         return getSceneList().isChild(e);
     }
 
@@ -816,7 +818,7 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
      * use the | operator
      */
     public
-    void removeChild(Base.ISceneListElement e) {
+    void removeChild(ISceneListElement e) {
         getSceneList().removeChild(e);
     }
 
@@ -960,7 +962,7 @@ class FullScreenCanvasSWT implements IUpdateable, iThreedDrawingSurface, iAccept
      * installs a function at the start of the rendering cycle.
      */
     public
-    PythonCallableMap add(Base.StandardPass pass) {
+    PythonCallableMap add(StandardPass pass) {
         return getWhen().getMap(pass);
     }
 

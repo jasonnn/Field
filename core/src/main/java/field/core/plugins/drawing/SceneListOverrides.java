@@ -1,10 +1,10 @@
 package field.core.plugins.drawing;
 
 import field.core.dispatch.IVisualElement;
-import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.Rect;
 import field.core.dispatch.VisualElementProperty;
 import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.dispatch.override.Ref;
 import field.core.plugins.drawing.threed.ArcBall;
 import field.core.windowing.GLComponentWindow;
@@ -13,8 +13,8 @@ import field.core.windowing.components.iComponent;
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.State;
 import field.graphics.core.BasicGLSLangProgram;
-import field.graphics.core.BasicSceneList;
 import field.graphics.core.CoreHelpers;
+import field.graphics.core.scene.BasicSceneList;
 import field.math.graph.visitors.hint.StandardTraversalHint;
 import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector2;

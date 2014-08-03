@@ -6,12 +6,14 @@ import field.bytecode.protect.annotations.GenerateMethods;
 import field.bytecode.protect.annotations.Mirror;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.overlay.OverlayAnimationManager;
-import field.graphics.core.Base;
-import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGeometry.LineList_long;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
-import field.graphics.core.BasicUtilities;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.IAcceptsSceneListElement;
+import field.graphics.core.scene.ISceneListElement;
+import field.graphics.core.scene.SetBlendMode;
+import field.graphics.core.scene.Smooth;
 import field.graphics.dynamic.DynamicLine;
 import field.graphics.dynamic.DynamicLine_long;
 import field.graphics.dynamic.iDynamicMesh;
@@ -19,9 +21,9 @@ import field.launch.IUpdateable;
 import field.math.abstraction.IProvider;
 import field.math.linalg.Vector4;
 import field.namespace.generic.ReflectionTools;
-import field.util.collect.tuple.Pair;
 import field.util.Dict;
 import field.util.TaskQueue;
+import field.util.collect.tuple.Pair;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -92,9 +94,9 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
 
     protected List<iDrawingAcceptor<CachedLine>> lineAcceptors = new ArrayList<iDrawingAcceptor<CachedLine>>();
 
-    protected final iAcceptsSceneListElement inside;
+    protected final IAcceptsSceneListElement inside;
 
-    protected iAcceptsSceneListElement vertexProgram;
+    protected IAcceptsSceneListElement vertexProgram;
 
     protected Dict globalProperties = new Dict();
 
@@ -117,13 +119,13 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
     private TaskQueue preswapQueue;
 
     public
-    BaseGLGraphicsContext(iAcceptsSceneListElement inside) {
+    BaseGLGraphicsContext(IAcceptsSceneListElement inside) {
         this.inside = inside;
         vertexProgram = inside;
     }
 
     public
-    BaseGLGraphicsContext(iAcceptsSceneListElement inside, boolean saturate) {
+    BaseGLGraphicsContext(IAcceptsSceneListElement inside, boolean saturate) {
         this.inside = inside;
 
         if (inside instanceof BasicGLSLangProgram) {
@@ -138,8 +140,8 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
             // "content/shaders/WhiteFragment.glslang");//.setDoPointSize();
             inside.addChild((BasicGLSLangProgram) vertexProgram);
             if (saturate) {
-                vertexProgram.addChild(new BasicUtilities.Smooth());
-                vertexProgram.addChild(new BasicUtilities.SetBlendMode(Base.StandardPass.preRender,
+                vertexProgram.addChild(new Smooth());
+                vertexProgram.addChild(new SetBlendMode(StandardPass.preRender,
                                                                        GL_SRC_ALPHA_SATURATE,
                                                                        GL_ONE));
 
@@ -152,8 +154,8 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
 
             }
             else {
-                vertexProgram.addChild(new BasicUtilities.Smooth());
-                vertexProgram.addChild(new BasicUtilities.SetBlendMode(Base.StandardPass.preRender,
+                vertexProgram.addChild(new Smooth());
+                vertexProgram.addChild(new SetBlendMode(StandardPass.preRender,
                                                                        GL_SRC_ALPHA,
                                                                        GL_ONE_MINUS_SRC_ALPHA));
 
@@ -203,20 +205,20 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
     }
 
     public
-    iAcceptsSceneListElement getVertexProgram() {
+    IAcceptsSceneListElement getVertexProgram() {
         return vertexProgram;
     }
 
     public
-    iAcceptsSceneListElement getTextureProgram() {
+    IAcceptsSceneListElement getTextureProgram() {
         return textureProgram;
     }
 
     public
     void setVertexProgram(BasicGLSLangProgram program) {
         inside.addChild(program);
-        List<Base.ISceneListElement> c = new ArrayList<Base.ISceneListElement>(program.getChildren());
-        for (Base.ISceneListElement cc : c) {
+        List<ISceneListElement> c = new ArrayList<ISceneListElement>(program.getChildren());
+        for (ISceneListElement cc : c) {
             // if (cc instanceof BasicMesh)
             {
                 program.addChild(cc);
@@ -225,7 +227,7 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
         }
 
         vertexProgram = program;
-        inside.removeChild((Base.ISceneListElement) vertexProgram);
+        inside.removeChild((ISceneListElement) vertexProgram);
     }
 
     public
@@ -425,15 +427,15 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
             }
             else GLComponentWindow.fastContext = wasContext;
 
-            List<Base.ISceneListElement> c = ((BasicGLSLangProgram) vertexProgram).getChildren();
+            List<ISceneListElement> c = ((BasicGLSLangProgram) vertexProgram).getChildren();
 
             final List<InternalLine> indexer = new ArrayList<InternalLine>(cache.values());
 
-            Collections.sort(c, new Comparator<Base.ISceneListElement>() {
+            Collections.sort(c, new Comparator<ISceneListElement>() {
 
                 @Override
                 public
-                int compare(Base.ISceneListElement arg0, Base.ISceneListElement arg1) {
+                int compare(ISceneListElement arg0, ISceneListElement arg1) {
 
                     int a = arg0 instanceof LineList_long ? 2 : (arg0 instanceof TriangleMesh_long ? 1 : 0);
                     int b = arg1 instanceof LineList_long ? 2 : (arg1 instanceof TriangleMesh_long ? 1 : 0);
@@ -513,8 +515,8 @@ class BaseGLGraphicsContext extends iLinearGraphicsContext {
             probation.put(o, 0);
 
             // vertexProgram.removeChild(o.getUnderlyingGeometry());
-            List<Base.ISceneListElement> p = (List<Base.ISceneListElement>) o.getUnderlyingGeometry().getParents();
-            for (Base.ISceneListElement pp : new ArrayList<Base.ISceneListElement>(p))
+            List<ISceneListElement> p = (List<ISceneListElement>) o.getUnderlyingGeometry().getParents();
+            for (ISceneListElement pp : new ArrayList<ISceneListElement>(p))
                 pp.removeChild(o.getUnderlyingGeometry());
 
         }

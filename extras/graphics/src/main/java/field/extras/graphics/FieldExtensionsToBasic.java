@@ -1,99 +1,55 @@
 package field.extras.graphics;
 
-import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform1i;
-import static org.lwjgl.opengl.GL20.glUniform2f;
-import static org.lwjgl.opengl.GL20.glUniform3f;
-import static org.lwjgl.opengl.GL20.glUniform4f;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Stack;
-import java.util.WeakHashMap;
-
+import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
+import field.bytecode.protect.iInside;
 import field.core.dispatch.IVisualElement;
 import field.core.dispatch.VisualElementProperty;
-import field.graphics.core.*;
-import field.launch.IUpdateable;
-import field.math.abstraction.IProvider;
-import field.util.collect.tuple.Pair;
-import org.lwjgl.opengl.GL20;
-import org.python.core.Py;
-import org.python.core.PyBuiltinMethodNarrow;
-import org.python.core.PyDictionary;
-import org.python.core.PyException;
-import org.python.core.PyFunction;
-import org.python.core.PyInteger;
-import org.python.core.PyList;
-import org.python.core.PyObject;
-import org.python.core.PySlice;
-import org.python.core.PyString;
-import org.python.core.PyType;
-
-import field.bytecode.protect.iInside;
-import field.bytecode.protect.dispatch.Cont;
-
 import field.core.execution.PythonInterface;
-import field.core.plugins.drawing.opengl.CachedLine;
-import field.core.plugins.drawing.opengl.CachedLineLayer;
-import field.core.plugins.drawing.opengl.DirectLine;
-import field.core.plugins.drawing.opengl.DirectMesh;
-import field.core.plugins.drawing.opengl.DirectPoint;
+import field.core.plugins.drawing.opengl.*;
 import field.core.plugins.python.PythonPluginEditor;
 import field.graphics.ci.Destination2;
 import field.graphics.core.AdvancedTextures.Base4FloatTexture;
 import field.graphics.core.AdvancedTextures.BaseFloatTexture;
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iAcceptsSceneListElement;
-import field.graphics.core.Base.iBuildable;
 import field.graphics.core.BasicFrameBuffers.iDisplayable;
+import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGLSLangProgram.BasicGLSLangElement;
 import field.graphics.core.BasicGLSLangProgram.SetIntegerUniform;
 import field.graphics.core.BasicGLSLangProgram.SetMatrixUniform;
 import field.graphics.core.BasicGLSLangProgram.SetUniform;
-import field.graphics.core.BasicGeometry.BasicMesh;
-import field.graphics.core.BasicGeometry.Instance;
-import field.graphics.core.BasicGeometry.QuadMesh_long;
-import field.graphics.core.BasicGeometry.TriangleMesh;
-import field.graphics.core.BasicGeometry.TriangleMesh_long;
+import field.graphics.core.BasicGeometry.*;
 import field.graphics.core.BasicTextures.TextureUnit;
+import field.graphics.core.CoreHelpers;
+import field.graphics.core.IBuildable;
+import field.graphics.core.RawMesh2;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.BasicSceneList;
+import field.graphics.core.scene.IAcceptsSceneListElement;
+import field.graphics.core.scene.ISceneListElement;
 import field.graphics.dynamic.DynamicLine_long;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.DynamicMesh_long;
 import field.graphics.dynamic.DynamicPointlist;
-import field.graphics.imageprocessing.ImageProcessing;
-import field.graphics.imageprocessing.ImageProcessingTwoOutput;
-import field.graphics.imageprocessing.ImageProcessingTwoOutputMultisampled;
-import field.graphics.imageprocessing.TwoPassImageProcessing;
-import field.graphics.imageprocessing.TwoPassImageProcessingTwoOutput;
-import field.graphics.imageprocessing.TwoPassImageProcessingTwoOutputMultisampled;
+import field.graphics.imageprocessing.*;
 import field.graphics.windowing.FullScreenCanvasSWT;
-
-import field.math.linalg.CoordinateFrame;
-import field.math.linalg.Matrix4;
-import field.math.linalg.Quaternion;
-import field.math.linalg.Vector2;
-import field.math.linalg.Vector3;
-import field.math.linalg.Vector4;
-import field.math.linalg.iToFloatArray;
+import field.launch.IUpdateable;
+import field.math.abstraction.IProvider;
+import field.math.linalg.*;
 import field.util.PythonUtils;
 import field.util.TaskQueue;
 import field.util.TaskQueue.Task;
+import field.util.collect.tuple.Pair;
+import org.lwjgl.opengl.GL20;
+import org.python.core.*;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.*;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static org.lwjgl.opengl.GL20.*;
 
 public class FieldExtensionsToBasic {
 	static final public int _vertex = 0;
@@ -113,37 +69,37 @@ public class FieldExtensionsToBasic {
 				@Override
 				public PyObject __call__(PyObject composeWith) {
 
-					iAcceptsSceneListElement s = Py.tojava(self, iAcceptsSceneListElement.class);
-					Object w = Py.tojava(composeWith, Object.class);
+                    IAcceptsSceneListElement s = Py.tojava(self, IAcceptsSceneListElement.class);
+                    Object w = Py.tojava(composeWith, Object.class);
 					wire(s, w);
 
 					return self;
 				}
 			};
-			PyType.fromClass(iAcceptsSceneListElement.class).addMethod(meth);
-		}
+            PyType.fromClass(IAcceptsSceneListElement.class).addMethod(meth);
+        }
 		{
 			PyBuiltinMethodNarrow meth = new PyBuiltinMethodNarrow("__lshift__", 1) {
 				@Override
 				public PyObject __call__(PyObject composeWith) {
 
-					iAcceptsSceneListElement s = Py.tojava(self, iAcceptsSceneListElement.class);
-					Object w = Py.tojava(composeWith, Object.class);
+                    IAcceptsSceneListElement s = Py.tojava(self, IAcceptsSceneListElement.class);
+                    Object w = Py.tojava(composeWith, Object.class);
 					wire(s, w);
 
 					return composeWith;
 				}
 
 			};
-			PyType.fromClass(iAcceptsSceneListElement.class).addMethod(meth);
-		}
+            PyType.fromClass(IAcceptsSceneListElement.class).addMethod(meth);
+        }
 
 		{
 			PyBuiltinMethodNarrow meth = new PyBuiltinMethodNarrow("__or__", 1) {
 				@Override
 				public PyObject __call__(PyObject composeWith) {
 
-					iAcceptsSceneListElement s = Py.tojava(self, iAcceptsSceneListElement.class);
+                    IAcceptsSceneListElement s = Py.tojava(self, IAcceptsSceneListElement.class);
 
 					Object w = Py.tojava(composeWith, Object.class);
 
@@ -153,8 +109,8 @@ public class FieldExtensionsToBasic {
 				}
 
 			};
-			PyType.fromClass(iAcceptsSceneListElement.class).addMethod(meth);
-		}
+            PyType.fromClass(IAcceptsSceneListElement.class).addMethod(meth);
+        }
 
 		// {
 		// PyBuiltinMethodNarrow meth = new
@@ -256,8 +212,8 @@ public class FieldExtensionsToBasic {
 				public PyObject __call__(PyObject composeWith) {
 
 					ImageProcessing s = Py.tojava(self, ImageProcessing.class);
-					Base.ISceneListElement e = toSceneListElement(Py.tojava(composeWith, Object.class));
-					s.addChild(e);
+                    ISceneListElement e = toSceneListElement(Py.tojava(composeWith, Object.class));
+                    s.addChild(e);
 
 					return self;
 				}
@@ -270,8 +226,8 @@ public class FieldExtensionsToBasic {
 				public PyObject __call__(PyObject composeWith) {
 
 					ImageProcessing s = Py.tojava(self, ImageProcessing.class);
-					Base.ISceneListElement e = toSceneListElement(Py.tojava(composeWith, Object.class));
-					s.addChild(e);
+                    ISceneListElement e = toSceneListElement(Py.tojava(composeWith, Object.class));
+                    s.addChild(e);
 
 					return composeWith;
 				}
@@ -284,8 +240,8 @@ public class FieldExtensionsToBasic {
 				@Override
 				public PyObject __call__(PyObject composeWith) {
 
-					iBuildable s = Py.tojava(self, iBuildable.class);
-					Object e = Py.tojava(composeWith, Object.class);
+                    IBuildable s = Py.tojava(self, IBuildable.class);
+                    Object e = Py.tojava(composeWith, Object.class);
 
 					if (!s.attach(e)) {
 						throw Py.AttributeError("cannot attach <" + e + "> to <" + s + ">");
@@ -294,8 +250,8 @@ public class FieldExtensionsToBasic {
 					return composeWith;
 				}
 			};
-			PyType.fromClass(iBuildable.class).addMethod(meth);
-		}
+            PyType.fromClass(IBuildable.class).addMethod(meth);
+        }
 
 		{
 			PyBuiltinMethodNarrow meth = new PyBuiltinMethodNarrow("__pow__", 1) {
@@ -1711,10 +1667,11 @@ public class FieldExtensionsToBasic {
 		}
 	}
 
-	static public Base.ISceneListElement toSceneListElement(Object o) {
-		if (o instanceof Base.ISceneListElement)
-			return (Base.ISceneListElement) o;
-		if (o instanceof DynamicMesh)
+    static public
+    ISceneListElement toSceneListElement(Object o) {
+        if (o instanceof ISceneListElement)
+            return (ISceneListElement) o;
+        if (o instanceof DynamicMesh)
 			return ((DynamicMesh) o).getUnderlyingGeometry();
 		if (o instanceof DynamicMesh_long)
 			return ((DynamicMesh_long) o).getUnderlyingGeometry();
@@ -2097,7 +2054,8 @@ public class FieldExtensionsToBasic {
 	DirectLine directLine = new DirectLine();
 	DirectPoint directPoint = new DirectPoint();
 
-	protected void wire(iAcceptsSceneListElement s, Object w) {
+    protected
+    void wire(IAcceptsSceneListElement s, Object w) {
 
 		if (s instanceof DynamicLine_long && w instanceof CachedLine) {
 			wireLine(((DynamicLine_long) s), ((CachedLine) w));
@@ -2113,8 +2071,8 @@ public class FieldExtensionsToBasic {
 				wire(s, ((CachedLineLayer) w).new UpdateMesh((DynamicMesh_long) s, directMesh));
 
 		} else {
-			Base.ISceneListElement e = toSceneListElement(w);
-			s.addChild(e);
+            ISceneListElement e = toSceneListElement(w);
+            s.addChild(e);
 		}
 	}
 
@@ -2142,8 +2100,9 @@ public class FieldExtensionsToBasic {
 		directPoint.unwire(dynamicLine_long, cachedLine);
 	}
 
-	protected void unwire(iAcceptsSceneListElement s, Object w) {
-		if (s instanceof DynamicLine_long && w instanceof CachedLine) {
+    protected
+    void unwire(IAcceptsSceneListElement s, Object w) {
+        if (s instanceof DynamicLine_long && w instanceof CachedLine) {
 			unwireLine(((DynamicLine_long) s), ((CachedLine) w));
 		} else if (s instanceof DynamicPointlist && w instanceof CachedLine) {
 			unwirePoint(((DynamicPointlist) s), ((CachedLine) w));
@@ -2151,8 +2110,8 @@ public class FieldExtensionsToBasic {
 			unwireLine_mesh(((DynamicMesh_long) s), ((CachedLine) w));
 		} else if (s instanceof CachedLineLayer) {
 		} else {
-			Base.ISceneListElement e = toSceneListElement(w);
-			s.removeChild(e);
+            ISceneListElement e = toSceneListElement(w);
+            s.removeChild(e);
 		}
 	}
 

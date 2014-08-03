@@ -1,6 +1,6 @@
 package field.math.graph;
 
-import field.graphics.core.Base;
+import field.graphics.core.scene.IGeometry;
 import field.math.linalg.Vector3;
 import field.namespace.change.IModCount;
 import field.namespace.change.IRecompute;
@@ -403,7 +403,7 @@ class CompleteEdgeRep2 implements Serializable {
     }
 
     public
-    CompleteEdgeRep2(Base.iGeometry from) {
+    CompleteEdgeRep2(IGeometry from) {
         this();
         add(from);
     }
@@ -525,7 +525,7 @@ class CompleteEdgeRep2 implements Serializable {
     }
 
     public
-    CompleteEdgeRep2 add(Base.iGeometry from) {
+    CompleteEdgeRep2 add(IGeometry from) {
         ShortBuffer triangles = from.triangle();
         Edge tmpEdge = new Edge();
         HashMap alreadySeenEdges = new HashMap();

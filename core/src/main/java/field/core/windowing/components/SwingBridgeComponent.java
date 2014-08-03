@@ -11,9 +11,9 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.graphics.core.BasicGeometry;
 import field.graphics.core.BasicGeometry.TriangleMesh;
-import field.graphics.core.BasicUtilities;
 import field.graphics.core.TextSystem;
 import field.graphics.core.TextSystem.AribitraryComponent;
+import field.graphics.core.scene.Position;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.iDynamicMesh;
 import field.math.linalg.Vector4;
@@ -119,7 +119,7 @@ class SwingBridgeComponent extends PlainDraggableComponent {
     public
     SwingBridgeComponent(Rect bounds) {
         super(bounds);
-        triangles = new BasicGeometry.TriangleMesh(new BasicUtilities.Position());
+        triangles = new BasicGeometry.TriangleMesh(new Position());
         triangles.rebuildTriangle(0).rebuildVertex(0);
         labelTriangle = new DynamicMesh(triangles);
 

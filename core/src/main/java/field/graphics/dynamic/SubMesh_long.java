@@ -1,10 +1,10 @@
 package field.graphics.dynamic;
 
 import field.core.plugins.drawing.opengl.HashedCopy;
-import field.graphics.core.Base.iGeometry;
 import field.graphics.core.BasicGeometry;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
 import field.graphics.core.ResourceMonitor;
+import field.graphics.core.scene.IGeometry;
 import field.math.linalg.Vector3;
 
 import java.nio.FloatBuffer;
@@ -75,7 +75,7 @@ class SubMesh_long implements iDynamicMesh {
     }
 
     public
-    iGeometry getUnderlyingGeometry() {
+    IGeometry getUnderlyingGeometry() {
         return delegate.getUnderlyingGeometry();
     }
 

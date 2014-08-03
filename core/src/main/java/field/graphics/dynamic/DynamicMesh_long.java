@@ -3,14 +3,13 @@ package field.graphics.dynamic;
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.bytecode.protect.iInside;
 import field.core.plugins.drawing.opengl.HashedCopy;
-import field.graphics.core.Base;
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.BasicGeometry;
 import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
-import field.graphics.core.BasicUtilities;
+import field.graphics.core.GLConstants;
 import field.graphics.core.ResourceMonitor;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.*;
 import field.launch.SystemProperties;
 import field.math.graph.IMutable;
 import field.math.linalg.Vector3;
@@ -25,12 +24,12 @@ import java.util.List;
  * @author marc Created on Oct 21, 2003
  */
 public
-class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSceneListElement {
+class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, IAcceptsSceneListElement {
 
     @HiddenInAutocomplete
     public static
     DynamicMesh_long unshadedMesh() {
-        BasicGeometry.TriangleMesh_long lines = new BasicGeometry.TriangleMesh_long(new BasicUtilities.Position());
+        BasicGeometry.TriangleMesh_long lines = new BasicGeometry.TriangleMesh_long(new Position());
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
         // lines.addChild(new BasicUtilities.Smooth());
@@ -45,7 +44,7 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
     public static
     DynamicMesh_long unshadedMesh(StandardPass pass) {
         BasicGeometry.TriangleMesh_long lines = new BasicGeometry.TriangleMesh_long(pass);
-        lines.setCoordindateFrameProvider(new BasicUtilities.Position());
+        lines.setCoordindateFrameProvider(new Position());
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
         // lines.addChild(new BasicUtilities.Smooth());
@@ -62,7 +61,7 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
 
     protected int elementSize = 3; // triangles
 
-    protected Base.iLongGeometry basis;
+    protected ILongGeometry basis;
 
     public int vertexCursor;
 
@@ -95,7 +94,7 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
     int closeCount = 0;
 
     public
-    DynamicMesh_long(Base.iLongGeometry from) {
+    DynamicMesh_long(ILongGeometry from) {
         this.basis = from;
         this.basis.rebuildTriangle(0);
         this.basis.rebuildVertex(0);
@@ -305,7 +304,7 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
      * @return
      */
     public
-    Base.iGeometry getUnderlyingGeometry() {
+    IGeometry getUnderlyingGeometry() {
         return basis;
     }
 
@@ -578,11 +577,11 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
 
         if (this.getUnderlyingGeometry().getParents().size() != 0) {
 
-            List<? extends IMutable<Base.ISceneListElement>> p =
-                    new ArrayList<IMutable<Base.ISceneListElement>>(this.getUnderlyingGeometry().getParents());
-            Iterator<? extends IMutable<Base.ISceneListElement>> n = p.iterator();
+            List<? extends IMutable<ISceneListElement>> p =
+                    new ArrayList<IMutable<ISceneListElement>>(this.getUnderlyingGeometry().getParents());
+            Iterator<? extends IMutable<ISceneListElement>> n = p.iterator();
             while (n.hasNext()) {
-                IMutable<Base.ISceneListElement> nn = n.next();
+                IMutable<ISceneListElement> nn = n.next();
                 nn.removeChild(this.getUnderlyingGeometry());
             }
 
@@ -715,14 +714,14 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
         }
     }
 
-    private List<IMutable<Base.ISceneListElement>> oldParents;
+    private List<IMutable<ISceneListElement>> oldParents;
 
     public
     void off() {
         if (oldParents != null) return;
 
-        oldParents = new ArrayList<IMutable<Base.ISceneListElement>>(getUnderlyingGeometry().getParents());
-        for (IMutable<Base.ISceneListElement> m : oldParents) {
+        oldParents = new ArrayList<IMutable<ISceneListElement>>(getUnderlyingGeometry().getParents());
+        for (IMutable<ISceneListElement> m : oldParents) {
             m.removeChild(getUnderlyingGeometry());
         }
     }
@@ -730,7 +729,7 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
     public
     void on() {
         if (oldParents == null) return;
-        for (IMutable<Base.ISceneListElement> m : oldParents) {
+        for (IMutable<ISceneListElement> m : oldParents) {
             m.addChild(getUnderlyingGeometry());
         }
         oldParents = null;
@@ -751,17 +750,17 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
     }
 
     public
-    void addChild(Base.ISceneListElement e) {
+    void addChild(ISceneListElement e) {
         this.getUnderlyingGeometry().addChild(e);
     }
 
     public
-    boolean isChild(Base.ISceneListElement e) {
+    boolean isChild(ISceneListElement e) {
         return this.getUnderlyingGeometry().getChildren().contains(e);
     }
 
     public
-    void removeChild(Base.ISceneListElement e) {
+    void removeChild(ISceneListElement e) {
         this.getUnderlyingGeometry().removeChild(e);
     }
 
@@ -784,10 +783,10 @@ class DynamicMesh_long implements iDynamicMesh, iInside, iRemoveable, iAcceptsSc
         nextFace(a, b, c);
         nextFace(a, c, d);
 
-        setAux(a, Base.texture0_id, 0, 0);
-        setAux(b, Base.texture0_id, tw, 0);
-        setAux(c, Base.texture0_id, tw, th);
-        setAux(d, Base.texture0_id, 0, th);
+        setAux(a, GLConstants.texture0_id, 0, 0);
+        setAux(b, GLConstants.texture0_id, tw, 0);
+        setAux(c, GLConstants.texture0_id, tw, th);
+        setAux(d, GLConstants.texture0_id, 0, th);
     }
 
 }

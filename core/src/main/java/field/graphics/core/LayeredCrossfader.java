@@ -1,7 +1,7 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.StandardPass;
 import field.graphics.core.BasicFrameBuffers.iDisplayable;
+import field.graphics.core.pass.StandardPass;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.launch.IUpdateable;
 import org.lwjgl.opengl.GL11;

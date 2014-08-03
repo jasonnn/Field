@@ -1,11 +1,12 @@
 package field.graphics.dynamic;
 
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
-import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGeometry;
 import field.graphics.core.BasicGeometry.LineList_long;
-import field.graphics.core.BasicUtilities;
+import field.graphics.core.scene.IAcceptsSceneListElement;
+import field.graphics.core.scene.Position;
+import field.graphics.core.scene.Smooth;
 import field.math.linalg.Vector3;
 import field.math.util.CubicTools;
 import field.util.ANSIColorUtils;
@@ -21,12 +22,11 @@ class DynamicLine_long extends DynamicMesh_long implements iLineOutput {
 
     @HiddenInAutocomplete
     public static
-    DynamicLine_long unshadedLine(iAcceptsSceneListElement into, float width) {
-        BasicGeometry.LineList_long lines =
-                new BasicGeometry.LineList_long(new BasicUtilities.Position()).setWidth(width);
+    DynamicLine_long unshadedLine(IAcceptsSceneListElement into, float width) {
+        BasicGeometry.LineList_long lines = new BasicGeometry.LineList_long(new Position()).setWidth(width);
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
-        lines.addChild(new BasicUtilities.Smooth());
+        lines.addChild(new Smooth());
 
         if (into != null) into.addChild(lines);
 
@@ -36,12 +36,11 @@ class DynamicLine_long extends DynamicMesh_long implements iLineOutput {
 
     @HiddenInAutocomplete
     public static
-    DynamicLine_long coloredLine(iAcceptsSceneListElement sceneList, float width) {
+    DynamicLine_long coloredLine(IAcceptsSceneListElement sceneList, float width) {
 
         BasicGLSLangProgram program = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex.glslang",
                                                               "content/shaders/VertexColorFragment.glslang");
-        BasicGeometry.LineList_long lines =
-                new BasicGeometry.LineList_long(new BasicUtilities.Position()).setWidth(width);
+        BasicGeometry.LineList_long lines = new BasicGeometry.LineList_long(new Position()).setWidth(width);
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
         lines.addChild(program);

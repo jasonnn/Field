@@ -3,8 +3,8 @@
  */
 package field.graphics.core;
 
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.BasicUtilities.OnePassElement;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.OnePassElement;
 import field.math.linalg.Vector3;
 import org.lwjgl.opengl.NVTextureBarrier;
 
@@ -110,7 +110,7 @@ class AdvancedUtilities {
 
 
     public static
-    class DeProjectionMatrixFast extends BasicUtilities.OnePassElement {
+    class DeProjectionMatrixFast extends OnePassElement {
         BasicCamera realCamera;
 
         BasicCamera textureCamera;

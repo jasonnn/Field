@@ -3,8 +3,9 @@ package field.graphics.core;
 import field.core.Platform.OS;
 import field.core.util.PythonCallableMap;
 import field.core.windowing.GLComponentWindow;
-import field.graphics.core.Base.iGeometry;
 import field.graphics.core.BasicGeometry.VertexBuffer;
+import field.graphics.core.scene.IGeometry;
+import field.graphics.core.scene.Position;
 import field.launch.SystemProperties;
 import field.math.abstraction.IInplaceProvider;
 import field.math.linalg.iCoordinateFrame.iMutable;
@@ -30,7 +31,7 @@ import static org.lwjgl.opengl.GL20.*;
  * programmatically change point sizes (still, no change of textures)
  */
 public
-class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
+class PointList extends BasicGeometry.TriangleMesh implements IGeometry {
 
     public static final boolean useATIPointSpriteWorkaround =
             SystemProperties.getIntProperty("useATIPointSpriteWorkaround", 0) == 1;
@@ -48,7 +49,7 @@ class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
 
     public
     PointList() {
-        super(new BasicUtilities.Position());
+        super(new Position());
         rebuildTriangle(0);
         rebuildVertex(0);
     }
@@ -93,7 +94,7 @@ class PointList extends BasicGeometry.TriangleMesh implements iGeometry {
             int p = BasicGLSLangProgram.currentProgram.getShader();
             glUseProgramObjectARB(0);
             FloatBuffer v = vertex();
-            FloatBuffer a = aux(Base.color0_id, 0);
+            FloatBuffer a = aux(GLConstants.color0_id, 0);
             FloatBuffer ps = aux(13, 0);
 
             // System.out.println(" dawing <" + numVertex() +

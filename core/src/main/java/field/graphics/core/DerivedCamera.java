@@ -1,9 +1,10 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.StandardPass;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.OnePassListElement;
 
 public
-class DerivedCamera extends BasicUtilities.OnePassListElement {
+class DerivedCamera extends OnePassListElement {
 
     private final BasicCamera derivedFrom;
     private final BasicCamera target;

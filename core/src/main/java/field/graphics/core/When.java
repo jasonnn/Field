@@ -2,8 +2,9 @@ package field.graphics.core;
 
 import field.core.plugins.PythonOverridden.Callable;
 import field.core.util.PythonCallableMap;
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.BasicUtilities.OnePassElement;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.BasicSceneList;
+import field.graphics.core.scene.OnePassElement;
 import field.launch.IUpdateable;
 import field.util.Dict.Prop;
 
@@ -32,7 +33,7 @@ class When {
         this.list = list;
     }
 
-    Base.StandardPass pass;
+    StandardPass pass;
 
     PythonCallableMap map = new PythonCallableMap() {
         protected
@@ -52,12 +53,12 @@ class When {
         }
     };
 
-    Map<Base.StandardPass, BasicUtilities.OnePassElement> shims =
+    Map<StandardPass, OnePassElement> shims =
             new EnumMap<StandardPass, OnePassElement>(StandardPass.class);
 //new LinkedHashMap<StandardPass, OnePassElement>();
 
     public
-    PythonCallableMap getMap(Base.StandardPass pass) {
+    PythonCallableMap getMap(StandardPass pass) {
         this.pass = pass;
         return map;
     }
@@ -65,8 +66,9 @@ class When {
     public
     PythonCallableMap getMap(int pass) {
         if (pass < 0) pass = 0;
-        if (pass >= Base.StandardPass.values().length) pass = Base.StandardPass.values().length - 1;
-        this.pass = Base.StandardPass.values()[pass];
+        if (pass >= StandardPass.values().length)
+            pass = StandardPass.values().length - 1;
+        this.pass = StandardPass.values()[pass];
         return map;
     }
 

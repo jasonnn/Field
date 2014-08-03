@@ -1,10 +1,12 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.StandardPass;
 import field.graphics.core.BasicFrameBuffers.SingleFrameBuffer;
 import field.graphics.core.BasicGLSLangProgram.ElementType;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
 import field.graphics.core.BasicTextures.BaseTexture;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.OnePassElement;
+import field.graphics.core.scene.TwoPassElement;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.math.abstraction.IFloatProvider;
 import field.math.linalg.Vector2;
@@ -50,7 +52,7 @@ class Occlusion {
 
             dest = new SingleFrameBuffer(width, height, true, false, false);
             dest.join(surface);
-            dest.getSceneList().addChild(new BasicUtilities.OnePassElement(StandardPass.render) {
+            dest.getSceneList().addChild(new OnePassElement(StandardPass.render) {
 
                 @Override
                 public
@@ -169,7 +171,7 @@ class Occlusion {
      * @author marc
      */
     static public
-    class AsynchronousQuery extends BasicUtilities.TwoPassElement implements IFloatProvider {
+    class AsynchronousQuery extends TwoPassElement implements IFloatProvider {
 
         static public AsynchronousQuery active = null;
 

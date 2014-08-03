@@ -10,8 +10,8 @@ import field.core.plugins.drawing.pdf.BasePDFGraphicsContext.DrawingResultCode;
 import field.core.plugins.drawing.pdf.BasePDFGraphicsContext.iDrawingAcceptor;
 import field.core.plugins.drawing.pdf.MeshToPdfType4.PdfShading_type4;
 import field.core.util.PythonCallableMap;
-import field.graphics.core.Base;
 import field.graphics.core.BasicGeometry.TriangleMesh;
+import field.graphics.core.GLConstants;
 import field.graphics.dynamic.DynamicLine;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.SubLine;
@@ -20,9 +20,9 @@ import field.launch.IUpdateable;
 import field.math.abstraction.IMetric;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.util.collect.tuple.Pair;
 import field.util.Dict;
 import field.util.Dict.Prop;
+import field.util.collect.tuple.Pair;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -476,8 +476,7 @@ class SimplePDFLineDrawing {
 
                     remapProperties(null, (Vector4) (color = new Vector4((Vector4) color)), 0);
 
-                    mesh.setAux(v1,
-                                Base.color0_id,
+                    mesh.setAux(v1, GLConstants.color0_id,
                                 ((Vector4) color).x,
                                 ((Vector4) color).y,
                                 ((Vector4) color).z,
@@ -1024,8 +1023,7 @@ class SimplePDFLineDrawing {
 
                     remapProperties(null, (Vector4) (color = new Vector4((Vector4) color)), 0);
 
-                    mesh.setAux(v1,
-                                Base.color0_id,
+                    mesh.setAux(v1, GLConstants.color0_id,
                                 ((Vector4) color).x,
                                 ((Vector4) color).y,
                                 ((Vector4) color).z,

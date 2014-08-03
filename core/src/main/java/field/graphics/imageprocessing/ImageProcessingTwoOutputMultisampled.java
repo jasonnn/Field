@@ -5,17 +5,21 @@ import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
 import field.core.dispatch.Rect;
-import field.graphics.core.*;
-import field.graphics.core.Base.StandardPass;
+import field.graphics.core.BasicContextManager;
 import field.graphics.core.BasicFrameBuffers.iHasFBO;
+import field.graphics.core.BasicGLSLangProgram;
+import field.graphics.core.BasicGeometry;
 import field.graphics.core.BasicGeometry.QuadMesh;
 import field.graphics.core.BasicGeometry.TriangleMesh;
+import field.graphics.core.GLConstants;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.*;
 import field.graphics.imageprocessing.ImageProcessing.TextureWrapper;
 import field.graphics.imageprocessing.ImageProcessing.iProcessesMesh;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.graphics.windowing.FullScreenCanvasSWT.StereoSide;
-import field.math.abstraction.IProvider;
 import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IProvider;
 import field.math.linalg.Vector4;
 import field.util.TaskQueue;
 
@@ -106,7 +110,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
     void initializeGeometry() {
 
         // geometry ------------------------------------
-        mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.preRender);
+        mesh = new BasicGeometry.TriangleMesh(StandardPass.preRender);
         mesh.rebuildTriangle(2);
         mesh.rebuildVertex(4);
 
@@ -125,8 +129,17 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
         if (useRect)
-            mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(height).put(width).put(height).put(width).put(0);
-        else mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(1).put(1).put(1).put(1).put(0);
+            mesh.aux(GLConstants.texture0_id, 2)
+                .put(0)
+                .put(0)
+                .put(0)
+                .put(height)
+                .put(width)
+                .put(height)
+                .put(width)
+                .put(0);
+        else
+            mesh.aux(GLConstants.texture0_id, 2).put(0).put(0).put(0).put(1).put(1).put(1).put(1).put(0);
     }
 
     boolean initialized = false;
@@ -225,7 +238,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
     }
 
     public
-    void addChild(final Base.ISceneListElement e) {
+    void addChild(final ISceneListElement e) {
         mesh.addChild(e);
         if (e instanceof iProcessesMesh) {
             queue.new Task() {
@@ -420,8 +433,8 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
     }
 
     public
-    BasicUtilities.TwoPassElement getOutputElement(final int num) {
-        return new BasicUtilities.TwoPassElement("", StandardPass.preRender, StandardPass.postRender) {
+    TwoPassElement getOutputElement(final int num) {
+        return new TwoPassElement("", StandardPass.preRender, StandardPass.postRender) {
 
             @Override
             protected
@@ -466,13 +479,13 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
 
     public
     void useHighResolutionMesh(int devision) {
-        mesh = new BasicGeometry.QuadMesh(Base.StandardPass.preRender);
+        mesh = new BasicGeometry.QuadMesh(StandardPass.preRender);
         mesh.rebuildTriangle(devision * devision);
         mesh.rebuildVertex((1 + devision) * (1 + devision));
 
         FloatBuffer v = mesh.vertex();
 
-        FloatBuffer tex = mesh.aux(Base.texture0_id, 2);
+        FloatBuffer tex = mesh.aux(GLConstants.texture0_id, 2);
 
         for (int x = 0; x < (devision + 1); x++) {
             for (int y = 0; y < (devision + 1); y++) {
@@ -497,12 +510,12 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
 
 
     public
-    Base.ISceneListElement getOnscreenList(final Rect r, int n) {
+    ISceneListElement getOnscreenList(final Rect r, int n) {
         return getOnscreenList(n, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
     }
 
     public
-    Base.ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+    ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
         final TriangleMesh mesh = new BasicGeometry.QuadMesh(StandardPass.render);
         mesh.rebuildTriangle(1);
         mesh.rebuildVertex(4);
@@ -521,7 +534,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
             .put((float) (r.y))
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 3);
-        mesh.aux(Base.texture0_id, 2)
+        mesh.aux(GLConstants.texture0_id, 2)
             .put(useRect ? width : 1)
             .put(0)
             .put(useRect ? width : 1)
@@ -530,7 +543,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
             .put(useRect ? height : 1)
             .put(0)
             .put(0);
-        mesh.aux(Base.color0_id, 4)
+        mesh.aux(GLConstants.color0_id, 4)
             .put(1)
             .put(1)
             .put(1)
@@ -559,7 +572,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
         onscreenProgram.new SetUniform("mul", mul);
         onscreenProgram.addChild(mesh);
         onscreenProgram.addChild(new TextureWrapper(genMip, useRect, getOutput(output), 0));
-        onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+        onscreenProgram.addChild(new DisableDepthTest(true));
 
         return onscreenProgram;
     }
@@ -567,7 +580,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
 
     public
     IAcceptor<Vector4[]> addFadePlane() {
-        fadeMesh = new BasicGeometry.QuadMesh(Base.StandardPass.render);
+        fadeMesh = new BasicGeometry.QuadMesh(StandardPass.render);
         fadeMesh.rebuildTriangle(1);
         fadeMesh.rebuildVertex(4);
 
@@ -587,13 +600,13 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
         fadeMesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 3);
         fadeMesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
                                                   "content/shaders/VertexColor2Fragment.glslang"));
-        fadeMesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
+        fadeMesh.addChild(new DepthMask(StandardPass.transform, StandardPass.postRender));
 
         float colorAlpha = 0.1f;
         float alphaAlpha = 0.5f;
-        fadeMesh.aux(Base.color0_id, 4)
+        fadeMesh.aux(GLConstants.color0_id, 4)
                 .put(new float[]{0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha});
-        fadeMesh.aux(Base.color0_id + 1, 4)
+        fadeMesh.aux(GLConstants.color0_id + 1, 4)
                 .put(new float[]{0.5f,
                                  0.5f,
                                  0.5f,
@@ -616,7 +629,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
 
         // driver bug. Horrible seam
         // down middle of trianglulation
-        fadeMesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
+        fadeMesh.addChild(new OnePassElement(StandardPass.preRender) {
             boolean first = true;
 
             @Override
@@ -626,7 +639,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
                 glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ZERO);
             }
         });
-        fadeMesh.addChild(new BasicUtilities.OnePassElement(StandardPass.postRender) {
+        fadeMesh.addChild(new OnePassElement(StandardPass.postRender) {
             boolean first = true;
 
             @Override
@@ -641,7 +654,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
             @Override
             public
             IAcceptor<Vector4[]> set(Vector4[] to) {
-                fadeMesh.aux(Base.color0_id, 4)
+                fadeMesh.aux(GLConstants.color0_id, 4)
                         .put(new float[]{to[0].x,
                                          to[0].y,
                                          to[0].z,
@@ -658,7 +671,7 @@ class ImageProcessingTwoOutputMultisampled implements iImageProcessor {
                                          to[0].y,
                                          to[0].z,
                                          to[0].w});
-                fadeMesh.aux(Base.color0_id + 1, 4)
+                fadeMesh.aux(GLConstants.color0_id + 1, 4)
                         .put(new float[]{to[1].x,
                                          to[1].y,
                                          to[1].z,

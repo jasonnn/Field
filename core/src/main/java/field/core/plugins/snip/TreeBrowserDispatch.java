@@ -7,7 +7,7 @@ import field.core.util.PythonCallableMap;
 import field.core.windowing.GLComponentWindow;
 import field.graphics.core.BasicFrameBuffers.DoubleFrameBuffer;
 import field.graphics.core.BasicFrameBuffers.SingleFrameBuffer;
-import field.graphics.core.BasicSceneList;
+import field.graphics.core.scene.BasicSceneList;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.namespace.generic.IFunction;
 import field.util.HashMapOfLists;

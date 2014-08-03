@@ -1,42 +1,26 @@
 package field.online;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.NotYetConnectedException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-
+import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
 import field.core.dispatch.VisualElementProperty;
+import field.core.plugins.help.NanoHTTPD;
+import field.core.plugins.help.NanoHTTPD.Response;
+import field.core.util.PythonCallableMap;
+import field.graphics.core.BasicGeometry.VertexBuffer;
+import field.graphics.core.scene.IGeometry;
 import field.launch.IUpdateable;
 import field.namespace.generic.IFunction;
+import field.util.HashMapOfLists;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.python.google.common.io.CharStreams;
 
-import field.core.StandardFluidSheet;
-
-import field.core.plugins.help.NanoHTTPD;
-import field.core.plugins.help.NanoHTTPD.Response;
-import field.core.plugins.log.Logging.iLoggingEvent;
-import field.core.util.PythonCallableMap;
-import field.graphics.core.Base.iGeometry;
-import field.graphics.core.Base.iLongGeometry;
-import field.graphics.core.BasicGeometry.VertexBuffer;
-
-import field.util.HashMapOfLists;
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.NotYetConnectedException;
+import java.util.*;
 
 public class EmbeddedServer implements IUpdateable {
 
@@ -387,8 +371,9 @@ public class EmbeddedServer implements IUpdateable {
 		}
     }
 
-	public void sendBuffer(WebSocket arg0, iGeometry b, int a) {
-		try {
+    public
+    void sendBuffer(WebSocket arg0, IGeometry b, int a) {
+        try {
 			VertexBuffer vb = (VertexBuffer) b.auxBuffers().get(a);
 			arg0.send(vb.bBuffer);
 		} catch (NotYetConnectedException e) {

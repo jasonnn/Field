@@ -1,9 +1,14 @@
 package field.graphics.dynamic;
 
 import field.bytecode.protect.iInside;
-import field.graphics.core.*;
-import field.graphics.core.Base.iAcceptsSceneListElement;
+import field.graphics.core.BasicGLSLangProgram;
+import field.graphics.core.BasicGeometry;
 import field.graphics.core.BasicGeometry.TriangleMesh;
+import field.graphics.core.PointList;
+import field.graphics.core.ResourceMonitor;
+import field.graphics.core.scene.IAcceptsSceneListElement;
+import field.graphics.core.scene.IGeometry;
+import field.graphics.core.scene.ISceneListElement;
 import field.math.graph.IMutable;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector3;
@@ -18,7 +23,7 @@ import java.util.List;
  * @author marc Created on Oct 21, 2003
  */
 public
-class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.core.Base.iAcceptsSceneListElement {
+class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, IAcceptsSceneListElement {
 
     public static
     DynamicMesh unshadedMesh() {
@@ -34,7 +39,7 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
     }
 
     public static
-    DynamicMesh coloredMesh(iAcceptsSceneListElement acceptsSceneListElement) {
+    DynamicMesh coloredMesh(IAcceptsSceneListElement acceptsSceneListElement) {
         BasicGLSLangProgram program = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex.glslang",
                                                               "content/shaders/VertexColorFragment.glslang");
         BasicGeometry.TriangleMesh lines = new BasicGeometry.TriangleMesh(new CoordinateFrame());
@@ -47,7 +52,7 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
     }
 
     public static
-    DynamicMesh coloredTexturedMesh(iAcceptsSceneListElement basicSceneList) {
+    DynamicMesh coloredTexturedMesh(IAcceptsSceneListElement basicSceneList) {
         BasicGLSLangProgram program = new BasicGLSLangProgram("content/shaders/TestGLSLangVertex.glslang",
                                                               "content/shaders/Texture2DSquareTimesDiffuseFragment.glslang");
         BasicGeometry.TriangleMesh lines = new BasicGeometry.TriangleMesh(new CoordinateFrame());
@@ -60,7 +65,7 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
     }
 
     public static
-    DynamicPointlist unshadedPoints(iAcceptsSceneListElement acceptsSceneListElement) {
+    DynamicPointlist unshadedPoints(IAcceptsSceneListElement acceptsSceneListElement) {
         BasicGeometry.TriangleMesh lines = new PointList(new CoordinateFrame());
         lines.rebuildTriangle(0);
         lines.rebuildVertex(0);
@@ -76,7 +81,7 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
 
     protected int elementSize = 3; // triangles
 
-    protected Base.iGeometry basis;
+    protected IGeometry basis;
 
     public int vertexCursor;
 
@@ -109,7 +114,7 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
     int closeCount = 0;
 
     public
-    DynamicMesh(Base.iGeometry from) {
+    DynamicMesh(IGeometry from) {
         this.basis = from;
         this.underlayingMaxStorageVertex = from.numVertex();
         this.underlayingMaxStorageTriangle = from.numTriangle();
@@ -199,7 +204,7 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
      * @return
      */
     public
-    Base.iGeometry getUnderlyingGeometry() {
+    IGeometry getUnderlyingGeometry() {
         return basis;
     }
 
@@ -431,11 +436,11 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
 
         if (this.getUnderlyingGeometry().getParents().size() != 0) {
 
-            List<? extends IMutable<Base.ISceneListElement>> p =
-                    new ArrayList<IMutable<Base.ISceneListElement>>(this.getUnderlyingGeometry().getParents());
-            Iterator<? extends IMutable<Base.ISceneListElement>> n = p.iterator();
+            List<? extends IMutable<ISceneListElement>> p =
+                    new ArrayList<IMutable<ISceneListElement>>(this.getUnderlyingGeometry().getParents());
+            Iterator<? extends IMutable<ISceneListElement>> n = p.iterator();
             while (n.hasNext()) {
-                IMutable<Base.ISceneListElement> nn = n.next();
+                IMutable<ISceneListElement> nn = n.next();
                 nn.removeChild(this.getUnderlyingGeometry());
             }
 
@@ -547,14 +552,14 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
         }
     }
 
-    private List<IMutable<Base.ISceneListElement>> oldParents;
+    private List<IMutable<ISceneListElement>> oldParents;
 
     public
     void off() {
         if (oldParents != null) return;
 
-        oldParents = new ArrayList<IMutable<Base.ISceneListElement>>(getUnderlyingGeometry().getParents());
-        for (IMutable<Base.ISceneListElement> m : oldParents) {
+        oldParents = new ArrayList<IMutable<ISceneListElement>>(getUnderlyingGeometry().getParents());
+        for (IMutable<ISceneListElement> m : oldParents) {
             m.removeChild(getUnderlyingGeometry());
         }
     }
@@ -562,24 +567,24 @@ class DynamicMesh implements iDynamicMesh, iInside, iRemoveable, field.graphics.
     public
     void on() {
         if (oldParents == null) return;
-        for (IMutable<Base.ISceneListElement> m : oldParents) {
+        for (IMutable<ISceneListElement> m : oldParents) {
             m.addChild(getUnderlyingGeometry());
         }
         oldParents = null;
     }
 
     public
-    void addChild(Base.ISceneListElement e) {
+    void addChild(ISceneListElement e) {
         this.getUnderlyingGeometry().addChild(e);
     }
 
     public
-    boolean isChild(Base.ISceneListElement e) {
+    boolean isChild(ISceneListElement e) {
         return this.getUnderlyingGeometry().getChildren().contains(e);
     }
 
     public
-    void removeChild(Base.ISceneListElement e) {
+    void removeChild(ISceneListElement e) {
         this.getUnderlyingGeometry().removeChild(e);
     }
 }

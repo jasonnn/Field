@@ -119,23 +119,23 @@ class TextSystem {
             triangle.nextFace(v0, v1, v2);
             triangle.nextFace(v0, v2, v3);
 
-            triangle.setAux(v0, Base.color0_id, r, g, b, a);
-            triangle.setAux(v1, Base.color0_id, r, g, b, a);
-            triangle.setAux(v2, Base.color0_id, r, g, b, a);
-            triangle.setAux(v3, Base.color0_id, r, g, b, a);
+            triangle.setAux(v0, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v1, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v2, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v3, GLConstants.color0_id, r, g, b, a);
 
             float scaling = 1;
 
-            triangle.setAux(v0, Base.texture0_id, 0, 0);
-            triangle.setAux(v1, Base.texture0_id, (scaling * hw), 0);
-            triangle.setAux(v2, Base.texture0_id, scaling * hw, scaling * hh);
-            triangle.setAux(v3, Base.texture0_id, 0, scaling * hh);
+            triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+            triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw), 0);
+            triangle.setAux(v2, GLConstants.texture0_id, scaling * hw, scaling * hh);
+            triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh);
 
             if (slow.textureTarget == GL_TEXTURE_2D) {
-                triangle.setAux(v0, Base.texture0_id, 0, 0);
-                triangle.setAux(v1, Base.texture0_id, (scaling * hw) / w, 0);
-                triangle.setAux(v2, Base.texture0_id, scaling * hw / w, scaling * hh / h);
-                triangle.setAux(v3, Base.texture0_id, 0, scaling * hh / h);
+                triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+                triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw) / w, 0);
+                triangle.setAux(v2, GLConstants.texture0_id, scaling * hw / w, scaling * hh / h);
+                triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh / h);
             }
 
             // triangle.setAux(v0, Base.texture0_id, 0,0);
@@ -174,17 +174,17 @@ class TextSystem {
             triangle.nextFace(v0, v1, v2);
             triangle.nextFace(v0, v2, v3);
 
-            triangle.setAux(v0, Base.color0_id, r, g, b, a);
-            triangle.setAux(v1, Base.color0_id, r, g, b, a);
-            triangle.setAux(v2, Base.color0_id, r, g, b, a);
-            triangle.setAux(v3, Base.color0_id, r, g, b, a);
+            triangle.setAux(v0, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v1, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v2, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v3, GLConstants.color0_id, r, g, b, a);
 
             float scaling = 1;
 
-            triangle.setAux(v0, Base.texture0_id, (scaling * hw), 0);
-            triangle.setAux(v1, Base.texture0_id, 0, 0);
-            triangle.setAux(v2, Base.texture0_id, 0, scaling * hh);
-            triangle.setAux(v3, Base.texture0_id, scaling * hw, scaling * hh);
+            triangle.setAux(v0, GLConstants.texture0_id, (scaling * hw), 0);
+            triangle.setAux(v1, GLConstants.texture0_id, 0, 0);
+            triangle.setAux(v2, GLConstants.texture0_id, 0, scaling * hh);
+            triangle.setAux(v3, GLConstants.texture0_id, scaling * hw, scaling * hh);
 
             // triangle.setAux(v0, Base.texture0_id, 0,0);
             // triangle.setAux(v1, Base.texture0_id, 1,0);
@@ -427,10 +427,10 @@ class TextSystem {
             triangle.nextFace(v0, v1, v2);
             triangle.nextFace(v0, v2, v3);
 
-            triangle.setAux(v0, Base.color0_id, r, g, b, a);
-            triangle.setAux(v1, Base.color0_id, r, g, b, a);
-            triangle.setAux(v2, Base.color0_id, r, g, b, a);
-            triangle.setAux(v3, Base.color0_id, r, g, b, a);
+            triangle.setAux(v0, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v1, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v2, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v3, GLConstants.color0_id, r, g, b, a);
 
             // triangle.setAux(v0, Base.texture0_id, x/w, y/h);
             // triangle.setAux(v1, Base.texture0_id, (x+hw)/w, y/h);
@@ -438,10 +438,10 @@ class TextSystem {
             // (y+hh)/h);
             // triangle.setAux(v3, Base.texture0_id, x/w, (y+hh)/h);
 
-            triangle.setAux(v0, Base.texture0_id, 0, 0);
-            triangle.setAux(v1, Base.texture0_id, (scaling * hw) / w, 0);
-            triangle.setAux(v2, Base.texture0_id, scaling * hw / w, scaling * hh / h);
-            triangle.setAux(v3, Base.texture0_id, 0, scaling * hh / h);
+            triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+            triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw) / w, 0);
+            triangle.setAux(v2, GLConstants.texture0_id, scaling * hw / w, scaling * hh / h);
+            triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh / h);
 
             // triangle.setAux(v0, Base.texture0_id, 0,0);
             // triangle.setAux(v1, Base.texture0_id, 1,0);
@@ -737,10 +737,10 @@ class TextSystem {
             triangle.nextFace(v0, v1, v2);
             triangle.nextFace(v0, v2, v3);
 
-            triangle.setAux(v0, Base.color0_id, r, g, b, a);
-            triangle.setAux(v1, Base.color0_id, r, g, b, a);
-            triangle.setAux(v2, Base.color0_id, r, g, b, a);
-            triangle.setAux(v3, Base.color0_id, r, g, b, a);
+            triangle.setAux(v0, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v1, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v2, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v3, GLConstants.color0_id, r, g, b, a);
 
             // triangle.setAux(v0, Base.texture0_id, x/w, y/h);
             // triangle.setAux(v1, Base.texture0_id, (x+hw)/w, y/h);
@@ -748,16 +748,16 @@ class TextSystem {
             // (y+hh)/h);
             // triangle.setAux(v3, Base.texture0_id, x/w, (y+hh)/h);
 
-            triangle.setAux(v0, Base.texture0_id, 0, 0);
-            triangle.setAux(v1, Base.texture0_id, (scaling * hw), 0);
-            triangle.setAux(v2, Base.texture0_id, scaling * hw, scaling * hh);
-            triangle.setAux(v3, Base.texture0_id, 0, scaling * hh);
+            triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+            triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw), 0);
+            triangle.setAux(v2, GLConstants.texture0_id, scaling * hw, scaling * hh);
+            triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh);
 
             if (textFlipped) {
-                triangle.setAux(v3, Base.texture0_id, 0, 0);
-                triangle.setAux(v2, Base.texture0_id, (scaling * hw), 0);
-                triangle.setAux(v1, Base.texture0_id, scaling * hw, scaling * hh);
-                triangle.setAux(v0, Base.texture0_id, 0, scaling * hh);
+                triangle.setAux(v3, GLConstants.texture0_id, 0, 0);
+                triangle.setAux(v2, GLConstants.texture0_id, (scaling * hw), 0);
+                triangle.setAux(v1, GLConstants.texture0_id, scaling * hw, scaling * hh);
+                triangle.setAux(v0, GLConstants.texture0_id, 0, scaling * hh);
             }
 
             // triangle.setAux(v0, Base.texture0_id, 0,0);
@@ -808,23 +808,23 @@ class TextSystem {
             triangle.nextFace(v0, v1, v2);
             triangle.nextFace(v0, v2, v3);
 
-            triangle.setAux(v0, Base.color0_id, r, g, b, a);
-            triangle.setAux(v1, Base.color0_id, r, g, b, a);
-            triangle.setAux(v2, Base.color0_id, r, g, b, a);
-            triangle.setAux(v3, Base.color0_id, r, g, b, a);
+            triangle.setAux(v0, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v1, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v2, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v3, GLConstants.color0_id, r, g, b, a);
 
-            triangle.setAux(v0, Base.texture0_id, 0, 0);
-            triangle.setAux(v1, Base.texture0_id, (scaling * hw), 0);
-            triangle.setAux(v2, Base.texture0_id, scaling * hw, scaling * hh);
-            triangle.setAux(v3, Base.texture0_id, 0, scaling * hh);
+            triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+            triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw), 0);
+            triangle.setAux(v2, GLConstants.texture0_id, scaling * hw, scaling * hh);
+            triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh);
 
             //System.out.println(" text target is :"+slow.textureTarget +" "+GL_TEXTURE_2D);
             if (slow.textureTarget == GL_TEXTURE_2D) {
                 //System.out.println(" rectangular text is actually 2d texture");
-                triangle.setAux(v0, Base.texture0_id, 0, 0);
-                triangle.setAux(v1, Base.texture0_id, (scaling * hw) / w, 0);
-                triangle.setAux(v2, Base.texture0_id, scaling * hw / w, scaling * hh / h);
-                triangle.setAux(v3, Base.texture0_id, 0, scaling * hh / h);
+                triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+                triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw) / w, 0);
+                triangle.setAux(v2, GLConstants.texture0_id, scaling * hw / w, scaling * hh / h);
+                triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh / h);
             }
 
             triangle.close();
@@ -862,24 +862,24 @@ class TextSystem {
             triangle.nextFace(v0, v1, v2);
             triangle.nextFace(v0, v2, v3);
 
-            triangle.setAux(v0, Base.color0_id, r, g, b, a);
-            triangle.setAux(v1, Base.color0_id, r, g, b, a);
-            triangle.setAux(v2, Base.color0_id, r, g, b, a);
-            triangle.setAux(v3, Base.color0_id, r, g, b, a);
+            triangle.setAux(v0, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v1, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v2, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v3, GLConstants.color0_id, r, g, b, a);
 
 
-            triangle.setAux(v0, Base.texture0_id, 0, 0);
-            triangle.setAux(v1, Base.texture0_id, (hw), 0);
-            triangle.setAux(v2, Base.texture0_id, hw, hh);
-            triangle.setAux(v3, Base.texture0_id, 0, hh);
+            triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+            triangle.setAux(v1, GLConstants.texture0_id, (hw), 0);
+            triangle.setAux(v2, GLConstants.texture0_id, hw, hh);
+            triangle.setAux(v3, GLConstants.texture0_id, 0, hh);
 
             //System.out.println(" text target is :"+slow.textureTarget +" "+GL_TEXTURE_2D);
             if (slow.textureTarget == GL_TEXTURE_2D) {
                 //System.out.println(" rectangular text is actually 2d texture");
-                triangle.setAux(v0, Base.texture0_id, 0, 0);
-                triangle.setAux(v1, Base.texture0_id, (scaling * hw) / w, 0);
-                triangle.setAux(v2, Base.texture0_id, scaling * hw / w, scaling * hh / h);
-                triangle.setAux(v3, Base.texture0_id, 0, scaling * hh / h);
+                triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+                triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw) / w, 0);
+                triangle.setAux(v2, GLConstants.texture0_id, scaling * hw / w, scaling * hh / h);
+                triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh / h);
             }
 
             triangle.close();
@@ -960,10 +960,10 @@ class TextSystem {
             triangle.nextFace(v0, v1, v2);
             triangle.nextFace(v0, v2, v3);
 
-            triangle.setAux(v0, Base.color0_id, r, g, b, a);
-            triangle.setAux(v1, Base.color0_id, r, g, b, a);
-            triangle.setAux(v2, Base.color0_id, r, g, b, a);
-            triangle.setAux(v3, Base.color0_id, r, g, b, a);
+            triangle.setAux(v0, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v1, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v2, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v3, GLConstants.color0_id, r, g, b, a);
 
             // triangle.setAux(v0, Base.texture0_id, x/w, y/h);
             // triangle.setAux(v1, Base.texture0_id, (x+hw)/w, y/h);
@@ -971,23 +971,23 @@ class TextSystem {
             // (y+hh)/h);
             // triangle.setAux(v3, Base.texture0_id, x/w, (y+hh)/h);
 
-            triangle.setAux(v0, Base.texture0_id, 0, 0);
-            triangle.setAux(v1, Base.texture0_id, (scaling * hw), 0);
-            triangle.setAux(v2, Base.texture0_id, scaling * hw, scaling * hh);
-            triangle.setAux(v3, Base.texture0_id, 0, scaling * hh);
+            triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+            triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw), 0);
+            triangle.setAux(v2, GLConstants.texture0_id, scaling * hw, scaling * hh);
+            triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh);
 
             if (textFlipped) {
-                triangle.setAux(v3, Base.texture0_id, 0, 0);
-                triangle.setAux(v2, Base.texture0_id, (scaling * hw), 0);
-                triangle.setAux(v1, Base.texture0_id, scaling * hw, scaling * hh);
-                triangle.setAux(v0, Base.texture0_id, 0, scaling * hh);
+                triangle.setAux(v3, GLConstants.texture0_id, 0, 0);
+                triangle.setAux(v2, GLConstants.texture0_id, (scaling * hw), 0);
+                triangle.setAux(v1, GLConstants.texture0_id, scaling * hw, scaling * hh);
+                triangle.setAux(v0, GLConstants.texture0_id, 0, scaling * hh);
             }
 
             if (slow.textureTarget == GL_TEXTURE_2D) {
-                triangle.setAux(v0, Base.texture0_id, 0, 0);
-                triangle.setAux(v1, Base.texture0_id, (scaling * hw) / w, 0);
-                triangle.setAux(v2, Base.texture0_id, scaling * hw / w, scaling * hh / h);
-                triangle.setAux(v3, Base.texture0_id, 0, scaling * hh / h);
+                triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+                triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw) / w, 0);
+                triangle.setAux(v2, GLConstants.texture0_id, scaling * hw / w, scaling * hh / h);
+                triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh / h);
             }
 
             // triangle.setAux(v0, Base.texture0_id, 0,0);
@@ -1062,10 +1062,10 @@ class TextSystem {
             triangle.nextFace(v0, v1, v2);
             triangle.nextFace(v0, v2, v3);
 
-            triangle.setAux(v0, Base.color0_id, r, g, b, a);
-            triangle.setAux(v1, Base.color0_id, r, g, b, a);
-            triangle.setAux(v2, Base.color0_id, r, g, b, a);
-            triangle.setAux(v3, Base.color0_id, r, g, b, a);
+            triangle.setAux(v0, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v1, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v2, GLConstants.color0_id, r, g, b, a);
+            triangle.setAux(v3, GLConstants.color0_id, r, g, b, a);
 
             // triangle.setAux(v0, Base.texture0_id, x/w, y/h);
             // triangle.setAux(v1, Base.texture0_id, (x+hw)/w, y/h);
@@ -1073,23 +1073,23 @@ class TextSystem {
             // (y+hh)/h);
             // triangle.setAux(v3, Base.texture0_id, x/w, (y+hh)/h);
 
-            triangle.setAux(v0, Base.texture0_id, 0, 0);
-            triangle.setAux(v1, Base.texture0_id, (scaling * hw), 0);
-            triangle.setAux(v2, Base.texture0_id, scaling * hw, scaling * hh);
-            triangle.setAux(v3, Base.texture0_id, 0, scaling * hh);
+            triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+            triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw), 0);
+            triangle.setAux(v2, GLConstants.texture0_id, scaling * hw, scaling * hh);
+            triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh);
 
             if (textFlipped) {
-                triangle.setAux(v3, Base.texture0_id, 0, 0);
-                triangle.setAux(v2, Base.texture0_id, (scaling * hw), 0);
-                triangle.setAux(v1, Base.texture0_id, scaling * hw, scaling * hh);
-                triangle.setAux(v0, Base.texture0_id, 0, scaling * hh);
+                triangle.setAux(v3, GLConstants.texture0_id, 0, 0);
+                triangle.setAux(v2, GLConstants.texture0_id, (scaling * hw), 0);
+                triangle.setAux(v1, GLConstants.texture0_id, scaling * hw, scaling * hh);
+                triangle.setAux(v0, GLConstants.texture0_id, 0, scaling * hh);
             }
 
             if (slow.textureTarget == GL_TEXTURE_2D) {
-                triangle.setAux(v0, Base.texture0_id, 0, 0);
-                triangle.setAux(v1, Base.texture0_id, (scaling * hw) / w, 0);
-                triangle.setAux(v2, Base.texture0_id, scaling * hw / w, scaling * hh / h);
-                triangle.setAux(v3, Base.texture0_id, 0, scaling * hh / h);
+                triangle.setAux(v0, GLConstants.texture0_id, 0, 0);
+                triangle.setAux(v1, GLConstants.texture0_id, (scaling * hw) / w, 0);
+                triangle.setAux(v2, GLConstants.texture0_id, scaling * hw / w, scaling * hh / h);
+                triangle.setAux(v3, GLConstants.texture0_id, 0, scaling * hh / h);
             }
 
             // triangle.setAux(v0, Base.texture0_id, 0,0);

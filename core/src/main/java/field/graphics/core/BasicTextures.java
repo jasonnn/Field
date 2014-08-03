@@ -1,7 +1,8 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.BasicUtilities.TwoPassElement;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.ISceneListElement;
+import field.graphics.core.scene.TwoPassElement;
 import field.graphics.qt.ByteImage;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import org.lwjgl.opengl.GL12;
@@ -23,7 +24,7 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
 public
 class BasicTextures {
     public abstract static
-    class BaseTexture extends BasicUtilities.TwoPassElement implements Base.ISceneListElement {
+    class BaseTexture extends TwoPassElement implements ISceneListElement {
         public static boolean enableTextures = true;
 
         public int gl_texture_min_filter = GL_NEAREST;
@@ -132,7 +133,7 @@ class BasicTextures {
     }
 
     public static
-    class DisableTextures extends BasicUtilities.TwoPassElement implements Base.ISceneListElement {
+    class DisableTextures extends TwoPassElement implements ISceneListElement {
         boolean texturesEnabled;
 
         public
@@ -163,7 +164,7 @@ class BasicTextures {
     }
 
     public static
-    class ModifyUnit extends BasicUtilities.TwoPassElement {
+    class ModifyUnit extends TwoPassElement {
         int unit;
 
         public
@@ -202,7 +203,7 @@ class BasicTextures {
      */
 
     public static
-    class TextureFromQTImage extends BaseTexture implements Base.ISceneListElement {
+    class TextureFromQTImage extends BaseTexture implements ISceneListElement {
 
         private boolean deallocated = false;
 
@@ -443,7 +444,7 @@ class BasicTextures {
     }
 
     public static
-    class ExplicitMipTexture extends BaseTexture implements Base.ISceneListElement {
+    class ExplicitMipTexture extends BaseTexture implements ISceneListElement {
 
         private boolean deallocated = false;
 

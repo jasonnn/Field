@@ -6,8 +6,11 @@ import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.InheritWeave;
 import field.bytecode.protect.dispatch.Cont;
 import field.core.plugins.drawing.opengl.OnCanvasLines;
-import field.graphics.core.Base.StandardPass;
 import field.graphics.core.ShaderPreprocessor.PreprocessorException;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.ISceneListElement;
+import field.graphics.core.scene.OnePassElement;
+import field.graphics.core.scene.OnePassListElement;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.math.abstraction.IProvider;
 import field.math.linalg.Matrix4;
@@ -35,7 +38,7 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 @Woven
 public
-class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements Base.ISceneListElement {
+class BasicGLSLangProgram extends OnePassListElement implements ISceneListElement {
 
     public
     interface iErrorHandler {
@@ -275,7 +278,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements B
     // }
 
     public static
-    class None extends BasicUtilities.OnePassElement {
+    class None extends OnePassElement {
         public
         None() {
             super(StandardPass.postRender);
@@ -371,7 +374,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements B
     }
 
     static public
-    class SetIntegerUniformElement extends BasicUtilities.OnePassListElement {
+    class SetIntegerUniformElement extends OnePassListElement {
 
         private final IProvider<Integer> to;
 
@@ -527,7 +530,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements B
     }
 
     static public
-    class SetMatrixUniformElement extends BasicUtilities.OnePassListElement {
+    class SetMatrixUniformElement extends OnePassListElement {
 
         private final IProvider<Matrix4> to;
 
@@ -645,7 +648,7 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements B
      * to be added to individual pieces of geometry
      */
     static public
-    class SetUniformElement extends BasicUtilities.OnePassListElement {
+    class SetUniformElement extends OnePassListElement {
 
         private final iToFloatArray to;
 
@@ -1101,13 +1104,13 @@ class BasicGLSLangProgram extends BasicUtilities.OnePassListElement implements B
         assert glGetError() == 0 : getLog(getProgram());
 
         glBindAttribLocation(getProgram(), 0, "position");
-        glBindAttribLocation(getProgram(), Base.color0_id, "s_Color");
-        glBindAttribLocation(getProgram(), Base.color0_id, "color");
-        glBindAttribLocation(getProgram(), Base.normal_id, "s_Normal");
-        glBindAttribLocation(getProgram(), Base.normal_id, "normal");
-        glBindAttribLocation(getProgram(), Base.texture0_id, "s_Texture");
-        glBindAttribLocation(getProgram(), Base.texture0_id, "texture0");
-        glBindAttribLocation(getProgram(), Base.texture0_id + 1, "s_Texture1");
+        glBindAttribLocation(getProgram(), GLConstants.color0_id, "s_Color");
+        glBindAttribLocation(getProgram(), GLConstants.color0_id, "color");
+        glBindAttribLocation(getProgram(), GLConstants.normal_id, "s_Normal");
+        glBindAttribLocation(getProgram(), GLConstants.normal_id, "normal");
+        glBindAttribLocation(getProgram(), GLConstants.texture0_id, "s_Texture");
+        glBindAttribLocation(getProgram(), GLConstants.texture0_id, "texture0");
+        glBindAttribLocation(getProgram(), GLConstants.texture0_id + 1, "s_Texture1");
         glBindAttribLocation(getProgram(), 11, "s_Noise");
         glBindAttribLocation(getProgram(), 10, "s_Last");
         glBindAttribLocation(getProgram(), 4, "s_Four");

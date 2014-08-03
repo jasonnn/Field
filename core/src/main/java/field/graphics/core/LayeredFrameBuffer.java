@@ -5,12 +5,13 @@ import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
 import field.core.dispatch.Rect;
-import field.graphics.core.Base.StandardPass;
 import field.graphics.core.BasicFrameBuffers.NullTexture;
 import field.graphics.core.BasicFrameBuffers.iDisplayable;
 import field.graphics.core.BasicFrameBuffers.iHasFBO;
 import field.graphics.core.BasicFrameBuffers.iHasTexture;
 import field.graphics.core.BasicGeometry.TriangleMesh;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.*;
 import field.graphics.imageprocessing.ImageProcessing.TextureWrapper;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.launch.IUpdateable;
@@ -132,7 +133,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
 
     public
     IAcceptor<Number> addFadePlane() {
-        final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.transform);
+        final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.transform);
         mesh.rebuildTriangle(2);
         mesh.rebuildVertex(4);
 
@@ -152,14 +153,14 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
         mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
                                               "content/shaders/VertexColor2Fragment.glslang",
-                                              Base.StandardPass.preTransform));
-        mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.preTransform, Base.StandardPass.postRender));
+                                              StandardPass.preTransform));
+        mesh.addChild(new DepthMask(StandardPass.preTransform, StandardPass.postRender));
 
         float colorAlpha = 0.1f;
         float alphaAlpha = 0.5f;
-        mesh.aux(Base.color0_id, 4)
+        mesh.aux(GLConstants.color0_id, 4)
             .put(new float[]{0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha});
-        mesh.aux(Base.color0_id + 1, 4)
+        mesh.aux(GLConstants.color0_id + 1, 4)
             .put(new float[]{0.5f,
                              0.5f,
                              0.5f,
@@ -190,7 +191,8 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
             @Override
             public
             IAcceptor<Number> set(Number to) {
-                if (to.floatValue() != last) mesh.aux(Base.color0_id, 4)
+                if (to.floatValue() != last)
+                    mesh.aux(GLConstants.color0_id, 4)
                                                  .put(new float[]{0,
                                                                   0,
                                                                   0,
@@ -311,7 +313,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     }
 
     public
-    NodeImpl<Base.ISceneListElement> getRootSceneList() {
+    NodeImpl<ISceneListElement> getRootSceneList() {
         return rootSceneList;
     }
 
@@ -345,7 +347,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
         // camera = new BasicCamera();
 
         rootSceneList = new BasicSceneList();
-        rootSceneList.addChild(new BasicUtilities.Standard());
+        rootSceneList.addChild(new Standard());
         // BasicUtilities.Clear clear = new
         // BasicUtilities.Clear(new Vector3(0, 0, 0), 1);
         // rootSceneList.addChild(clear);
@@ -439,13 +441,13 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
     }
 
     public
-    Base.ISceneListElement placeOnscreen(int output, final Rect r) {
+    ISceneListElement placeOnscreen(int output, final Rect r) {
         return getOnscreenList(output, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
     }
 
     @HiddenInAutocomplete
     public
-    Base.ISceneListElement getOnscreenList(final int output,
+    ISceneListElement getOnscreenList(final int output,
                                       final Rect r,
                                       Vector4 offset,
                                       Vector4 mul,
@@ -468,8 +470,8 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
             .put((float) (r.y))
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-        mesh.aux(Base.texture0_id, 2).put(1).put(0).put(1).put(1).put(0).put(1).put(0).put(0);
-        mesh.aux(Base.color0_id, 4)
+        mesh.aux(GLConstants.texture0_id, 2).put(1).put(0).put(1).put(1).put(0).put(1).put(0).put(0);
+        mesh.aux(GLConstants.color0_id, 4)
             .put(1)
             .put(1)
             .put(1)
@@ -502,18 +504,18 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
 
         onscreenProgram.addChild(mesh);
         onscreenProgram.addChild(new TextureWrapper(genMip, false, this.getOutput(), 0).setTarget(GL_TEXTURE_2D_ARRAY));
-        onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+        onscreenProgram.addChild(new DisableDepthTest(true));
 
         return onscreenProgram;
     }
 
     public
-    Base.ISceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
+    ISceneListElement placeOnscreen(BasicGLSLangProgram onscreenProgram, final Rect r) {
         return getOnscreenList(onscreenProgram, 0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
     }
 
     public
-    Base.ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+    ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
                                       final Rect r,
                                       Vector4 offset,
                                       Vector4 mul,
@@ -523,7 +525,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
 
     @HiddenInAutocomplete
     public
-    Base.ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
+    ISceneListElement getOnscreenList(BasicGLSLangProgram onscreenProgram,
                                       int output,
                                       final Rect r,
                                       Vector4 offset,
@@ -547,8 +549,8 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
             .put((float) (r.y))
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-        mesh.aux(Base.texture0_id, 2).put(1).put(0).put(1).put(1).put(0).put(1).put(0).put(0);
-        mesh.aux(Base.color0_id, 4)
+        mesh.aux(GLConstants.texture0_id, 2).put(1).put(0).put(1).put(1).put(0).put(1).put(0).put(0);
+        mesh.aux(GLConstants.color0_id, 4)
             .put(1)
             .put(1)
             .put(1)
@@ -571,7 +573,7 @@ class LayeredFrameBuffer extends BasicTextures.BaseTexture implements iDisplayab
         onscreenProgram.new SetUniform("mul", mul);
         onscreenProgram.addChild(mesh);
         onscreenProgram.addChild(new TextureWrapper(genMip, false, this.getOutput(), 0).setTarget(GL_TEXTURE_2D_ARRAY));
-        onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+        onscreenProgram.addChild(new DisableDepthTest(true));
 
         return onscreenProgram;
     }

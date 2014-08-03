@@ -1,7 +1,7 @@
 package field.graphics.dynamic;
 
 import field.bytecode.protect.iInside;
-import field.graphics.core.Base.iGeometry;
+import field.graphics.core.scene.IGeometry;
 import field.math.linalg.Vector3;
 
 /**
@@ -50,5 +50,5 @@ interface iDynamicMesh extends iInside, iRemoveable {
 
 
     public
-    iGeometry getUnderlyingGeometry();
+    IGeometry getUnderlyingGeometry();
 }

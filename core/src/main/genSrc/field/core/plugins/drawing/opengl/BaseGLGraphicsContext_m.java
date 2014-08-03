@@ -1,34 +1,14 @@
 package field.core.plugins.drawing.opengl;
 
-import com.google.common.collect.BiMap;
-import field.bytecode.mirror.impl.*;
-import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.DrawingResult;
-import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.DrawingResultCode;
-import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.InternalLine;
-import field.core.plugins.drawing.opengl.BaseGLGraphicsContext.iDrawingAcceptor;
-import field.core.plugins.drawing.opengl.CachedLine;
-import field.core.plugins.drawing.opengl.LateExecutingDrawing;
-import field.core.plugins.drawing.opengl.LineInteraction;
-import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
-import field.core.windowing.GLComponentWindow;
-import field.core.windowing.overlay.OverlayAnimationManager;
-import field.graphics.core.Base.iAcceptsSceneListElement;
-import field.graphics.core.BasicGLSLangProgram;
-import field.graphics.dynamic.iDynamicMesh;
+import field.bytecode.mirror.impl.MirrorMethod;
 import field.launch.IUpdateable;
 import field.math.abstraction.IAcceptor;
 import field.math.abstraction.IProvider;
 import field.namespace.generic.IFunction;
 import field.namespace.generic.ReflectionTools;
-import field.util.Dict;
-import field.util.TaskQueue;
-import field.util.collect.tuple.Pair;
+
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+
 public class BaseGLGraphicsContext_m {
   public static final Method windowDisplayEnter_m = ReflectionTools.methodOf("windowDisplayEnter",field.core.plugins.drawing.opengl.BaseGLGraphicsContext.class);
   public static final Method windowDisplayExit_m = ReflectionTools.methodOf("windowDisplayExit",field.core.plugins.drawing.opengl.BaseGLGraphicsContext.class);

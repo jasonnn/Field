@@ -1,19 +1,19 @@
 package field.core.plugins.drawing.threed;
 
-import field.graphics.core.Base;
-import field.graphics.core.Base.iGeometry;
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.Projector;
 import field.graphics.core.BasicCamera.State;
-import field.graphics.core.BasicSceneList;
+import field.graphics.core.scene.BasicSceneList;
+import field.graphics.core.scene.IGeometry;
+import field.graphics.core.scene.ISceneListElement;
 import field.launch.IUpdateable;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.IntersectionPrimatives;
 import field.math.linalg.IntersectionPrimatives.LinePointIntersectionInfo;
 import field.math.linalg.Vector3;
 import field.math.util.CubicTools;
-import field.util.collect.tuple.Pair;
 import field.util.TaskQueue;
+import field.util.collect.tuple.Pair;
 
 import java.nio.FloatBuffer;
 import java.util.Collection;
@@ -171,11 +171,11 @@ class BetterCameraControl implements IUpdateable {
         view.normalize();
         Vector3 p = in.position;
 
-        Collection<iGeometry> allMeshes = allMeshes();
+        Collection<IGeometry> allMeshes = allMeshes();
 
         float dMin = Float.POSITIVE_INFINITY;
 
-        for (iGeometry g : allMeshes) {
+        for (IGeometry g : allMeshes) {
             FloatBuffer v = g.vertex();
             int n = g.numVertex();
             CoordinateFrame ff = new CoordinateFrame();
@@ -237,10 +237,10 @@ class BetterCameraControl implements IUpdateable {
         Vector3 min = new Vector3(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
         Vector3 max = new Vector3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
 
-        Collection<iGeometry> allMeshes = allMeshes();
+        Collection<IGeometry> allMeshes = allMeshes();
 
         boolean set = false;
-        for (iGeometry g : allMeshes) {
+        for (IGeometry g : allMeshes) {
             FloatBuffer v = g.vertex();
             int n = g.numVertex();
             CoordinateFrame ff = new CoordinateFrame();
@@ -270,10 +270,10 @@ class BetterCameraControl implements IUpdateable {
         Vector3 max = new Vector3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
 
         Projector p = in.getProjector();
-        Collection<iGeometry> allMeshes = allMeshes();
+        Collection<IGeometry> allMeshes = allMeshes();
 
         boolean set = false;
-        for (iGeometry g : allMeshes) {
+        for (IGeometry g : allMeshes) {
             FloatBuffer v = g.vertex();
             int n = g.numVertex();
             CoordinateFrame ff = new CoordinateFrame();
@@ -306,11 +306,11 @@ class BetterCameraControl implements IUpdateable {
         Vector3 c = new Vector3();
 
         Projector p = in.getProjector();
-        Collection<iGeometry> allMeshes = allMeshes();
+        Collection<IGeometry> allMeshes = allMeshes();
 
         int num = 0;
         boolean set = false;
-        for (iGeometry g : allMeshes) {
+        for (IGeometry g : allMeshes) {
             FloatBuffer v = g.vertex();
             int n = g.numVertex();
             CoordinateFrame ff = new CoordinateFrame();
@@ -338,19 +338,20 @@ class BetterCameraControl implements IUpdateable {
     }
 
     private
-    Collection<iGeometry> allMeshes() {
+    Collection<IGeometry> allMeshes() {
 
-        LinkedHashSet<iGeometry> g = new LinkedHashSet<iGeometry>();
+        LinkedHashSet<IGeometry> g = new LinkedHashSet<IGeometry>();
         addMeshes(list, g);
 
         return g;
     }
 
     private static
-    void addMeshes(BasicSceneList s, LinkedHashSet<iGeometry> g) {
-        List<Base.ISceneListElement> e = s.getChildren();
-        for (Base.ISceneListElement ee : e) {
-            if (ee instanceof iGeometry) g.add((iGeometry) ee);
+    void addMeshes(BasicSceneList s, LinkedHashSet<IGeometry> g) {
+        List<ISceneListElement> e = s.getChildren();
+        for (ISceneListElement ee : e) {
+            if (ee instanceof IGeometry)
+                g.add((IGeometry) ee);
             if (ee instanceof BasicSceneList) addMeshes(((BasicSceneList) ee), g);
         }
     }

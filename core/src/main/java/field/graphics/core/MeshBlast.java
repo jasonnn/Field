@@ -1,9 +1,9 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.iLongGeometry;
 import field.graphics.core.BasicGeometry.LineList_long;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
 import field.graphics.core.BasicGeometry.VertexBuffer;
+import field.graphics.core.scene.ILongGeometry;
 import field.util.HashMapOfLists;
 import field.util.PythonUtils;
 
@@ -85,7 +85,7 @@ class MeshBlast {
     }
 
     public
-    void configureChannel(iLongGeometry from, int numVertex, int numTriangle, int primativeSize) {
+    void configureChannel(ILongGeometry from, int numVertex, int numTriangle, int primativeSize) {
         configureChannel(0, 3, numVertex * 3);
         configureChannel(-1, primativeSize, numTriangle * primativeSize);
 
@@ -97,7 +97,7 @@ class MeshBlast {
     }
 
     public
-    void configureChannel(iLongGeometry from) {
+    void configureChannel(ILongGeometry from) {
         configureChannel(0, 3, from.numVertex() * 3);
         configureChannel(-1, from.longTriangle().limit() / from.numTriangle(), from.longTriangle().limit());
 

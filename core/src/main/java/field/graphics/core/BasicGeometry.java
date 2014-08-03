@@ -5,9 +5,11 @@ import field.bytecode.protect.annotations.ConstantContext;
 import field.bytecode.protect.annotations.DispatchOverTopology;
 import field.bytecode.protect.annotations.InheritWeave;
 import field.bytecode.protect.dispatch.Cont;
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iGeometry;
-import field.graphics.core.Base.iLongGeometry;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.IGeometry;
+import field.graphics.core.scene.ILongGeometry;
+import field.graphics.core.scene.OnePassListElement;
+import field.graphics.core.scene.Position;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.launch.SystemProperties;
 import field.math.abstraction.IInplaceProvider;
@@ -60,7 +62,7 @@ class BasicGeometry {
      */
     @Woven
     public abstract static
-    class BasicMesh extends BasicUtilities.OnePassListElement {
+    class BasicMesh extends OnePassListElement {
 
         public static Method method_doPerformPass = ReflectionTools.methodOf("doPerformPass", BasicMesh.class);
 
@@ -85,7 +87,7 @@ class BasicGeometry {
         }
 
         public
-        BasicMesh(IInplaceProvider<iMutable> coordinateFrame, Base.StandardPass pass) {
+        BasicMesh(IInplaceProvider<iMutable> coordinateFrame, StandardPass pass) {
             super(pass, pass);
             this.transform = coordinateFrame;
         }
@@ -271,7 +273,7 @@ class BasicGeometry {
 
     @Woven
     public static
-    class LineList extends TriangleMesh implements iGeometry {
+    class LineList extends TriangleMesh implements IGeometry {
 
         float width = 3;
 
@@ -304,7 +306,7 @@ class BasicGeometry {
          */
         @Override
         public
-        iGeometry rebuildTriangle(int numTriangles) {
+        IGeometry rebuildTriangle(int numTriangles) {
             triangleBuffer = new VertexBuffer((triangleLimit = triangleCount = numTriangles) * 2, isNative);
             triangleBuffer.elementSize = 2;
             markAsInvalidInAllContexts();
@@ -435,7 +437,7 @@ class BasicGeometry {
 
     @Woven
     public static
-    class LineList_long extends TriangleMesh_long implements iGeometry {
+    class LineList_long extends TriangleMesh_long implements IGeometry {
 
         float width = 3;
         private boolean fakeAa;
@@ -485,7 +487,7 @@ class BasicGeometry {
          */
         @Override
         public
-        iGeometry rebuildTriangle(int numTriangles) {
+        IGeometry rebuildTriangle(int numTriangles) {
             triangleBuffer = new VertexBuffer((triangleLimit = triangleCount = numTriangles) * 2, true, isNative);
             triangleBuffer.elementSize = 2;
             markAsInvalidInAllContexts();
@@ -635,7 +637,7 @@ class BasicGeometry {
 
     @Woven
     public static
-    class QuadMesh extends TriangleMesh implements iGeometry {
+    class QuadMesh extends TriangleMesh implements IGeometry {
 
         boolean ff = true;
 
@@ -658,7 +660,7 @@ class BasicGeometry {
          */
         @Override
         public
-        iGeometry rebuildTriangle(int numTriangles) {
+        IGeometry rebuildTriangle(int numTriangles) {
             triangleBuffer = new VertexBuffer((triangleLimit = triangleCount = numTriangles) * 4, isNative);
             triangleBuffer.elementSize = 4;
             markAsInvalidInAllContexts();
@@ -732,7 +734,7 @@ class BasicGeometry {
     }
 
     public static
-    class Instance extends BasicUtilities.OnePassListElement {
+    class Instance extends OnePassListElement {
 
         CoordinateFrame frame = new CoordinateFrame();
         private final List<BasicMesh> m;
@@ -830,7 +832,7 @@ class BasicGeometry {
 
     @Woven
     public static
-    class TriangleMesh extends BasicMesh implements iGeometry {
+    class TriangleMesh extends BasicMesh implements IGeometry {
 
         public Map<Integer, VertexBuffer> auxBuffers = new LinkedHashMap<Integer, VertexBuffer>();
 
@@ -861,12 +863,12 @@ class BasicGeometry {
 
         public
         TriangleMesh() {
-            super(new BasicUtilities.Position());
+            super(new Position());
         }
 
         public
-        TriangleMesh(Base.StandardPass pass) {
-            super(new BasicUtilities.Position(), pass);
+        TriangleMesh(StandardPass pass) {
+            super(new Position(), pass);
         }
 
         public
@@ -993,7 +995,7 @@ class BasicGeometry {
          * todo: release vertex object
          */
         public
-        iGeometry rebuildTriangle(int numTriangles) {
+        IGeometry rebuildTriangle(int numTriangles) {
             triangleBuffer = new VertexBuffer((triangleLimit = triangleCount = numTriangles) * 3, isNative);
             triangleBuffer.elementSize = 3;
             markAsInvalidInAllContexts();
@@ -1006,11 +1008,13 @@ class BasicGeometry {
          * and aux information
          */
         public
-        iGeometry rebuildVertex(int numVertex) {
+        IGeometry rebuildVertex(int numVertex) {
 
             if (vertexBuffer != null) vertexBuffer.free();
-            vertexBuffer =
-                    new VertexBuffer(Base.vertex_id, (vertexLimit = vertexCount = numVertex), vertexStride, isNative);
+            vertexBuffer = new VertexBuffer(GLConstants.vertex_id,
+                                            (vertexLimit = vertexCount = numVertex),
+                                            vertexStride,
+                                            isNative);
 
             Iterator it = auxBuffers.entrySet().iterator();
             while (it.hasNext()) {
@@ -1667,7 +1671,7 @@ class BasicGeometry {
     }
 
     static public
-    class TriangleMesh_long extends TriangleMesh implements iLongGeometry {
+    class TriangleMesh_long extends TriangleMesh implements ILongGeometry {
 
         public
         TriangleMesh_long() {
@@ -1695,7 +1699,7 @@ class BasicGeometry {
 
         @Override
         public
-        iGeometry rebuildTriangle(int numTriangles) {
+        IGeometry rebuildTriangle(int numTriangles) {
             triangleBuffer = new VertexBuffer((triangleLimit = triangleCount = numTriangles) * 3, true, isNative);
             triangleBuffer.elementSize = 3;
             markAsInvalidInAllContexts();
@@ -1732,7 +1736,7 @@ class BasicGeometry {
     }
 
     static public
-    class QuadMesh_long extends TriangleMesh implements iGeometry, iLongGeometry {
+    class QuadMesh_long extends TriangleMesh implements IGeometry, ILongGeometry {
 
         boolean ff = true;
 
@@ -1759,7 +1763,7 @@ class BasicGeometry {
          */
         @Override
         public
-        iGeometry rebuildTriangle(int numTriangles) {
+        IGeometry rebuildTriangle(int numTriangles) {
             triangleBuffer = new VertexBuffer((triangleLimit = triangleCount = numTriangles) * 4, true, isNative);
             triangleBuffer.elementSize = 4;
             markAsInvalidInAllContexts();

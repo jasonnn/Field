@@ -12,7 +12,7 @@ import field.core.windowing.components.RootComponent.iMousePeer;
 import field.core.windowing.components.RootComponent.iPaintPeer;
 import field.graphics.core.BasicCamera;
 import field.graphics.core.BasicCamera.State;
-import field.graphics.core.BasicSceneList;
+import field.graphics.core.scene.BasicSceneList;
 import field.launch.IUpdateable;
 import field.math.linalg.*;
 import field.util.Dict.Prop;

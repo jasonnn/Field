@@ -1,7 +1,7 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.BasicUtilities.TwoPassElement;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.TwoPassElement;
 import org.lwjgl.opengl.ARBShaderAtomicCounters;
 import org.lwjgl.opengl.GL15;
 

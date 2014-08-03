@@ -1,63 +1,12 @@
 package field.graphics.opencl;
 
-import static org.lwjgl.opencl.CL10.CL_BUILD_PROGRAM_FAILURE;
-import static org.lwjgl.opencl.CL10.CL_MEM_COPY_HOST_PTR;
-import static org.lwjgl.opencl.CL10.CL_MEM_READ_WRITE;
-import static org.lwjgl.opencl.CL10.CL_MEM_WRITE_ONLY;
-import static org.lwjgl.opencl.CL10.CL_PROGRAM_BUILD_LOG;
-import static org.lwjgl.opencl.CL10.clBuildProgram;
-import static org.lwjgl.opencl.CL10.clCreateBuffer;
-import static org.lwjgl.opencl.CL10.clCreateCommandQueue;
-import static org.lwjgl.opencl.CL10.clCreateKernel;
-import static org.lwjgl.opencl.CL10.clCreateProgramWithSource;
-import static org.lwjgl.opencl.CL10.clEnqueueNDRangeKernel;
-import static org.lwjgl.opencl.CL10.clEnqueueReadBuffer;
-import static org.lwjgl.opencl.CL10.clEnqueueWriteBuffer;
-import static org.lwjgl.opencl.CL10.clFinish;
-import static org.lwjgl.opencl.CL10.clSetKernelArg;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.lang.reflect.Method;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-
-import field.bytecode.protect.iProvidesQueue;
-import field.bytecode.protect.iRegistersUpdateable;
-import field.core.dispatch.IVisualElement;
-import field.core.dispatch.VisualElement;
-import field.core.dispatch.VisualElementProperty;
-import field.launch.IUpdateable;
-import field.util.collect.tuple.Pair;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.opencl.CL;
-import org.lwjgl.opencl.CL10;
-import org.lwjgl.opencl.CL10GL;
-import org.lwjgl.opencl.CLBuildProgramCallback;
-import org.lwjgl.opencl.CLCommandQueue;
-import org.lwjgl.opencl.CLContext;
-import org.lwjgl.opencl.CLDevice;
-import org.lwjgl.opencl.CLKernel;
-import org.lwjgl.opencl.CLMem;
-import org.lwjgl.opencl.CLPlatform;
-import org.lwjgl.opencl.CLProgram;
-import org.lwjgl.opengl.Drawable;
-import org.lwjgl.opengl.GL11;
-
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.InQueue;
 import field.bytecode.protect.annotations.InQueueThrough;
-
+import field.bytecode.protect.iProvidesQueue;
+import field.bytecode.protect.iRegistersUpdateable;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.plugins.python.PythonPluginEditor;
 import field.graphics.core.AdvancedTextures.BaseFastNoStorageTexture;
@@ -65,9 +14,26 @@ import field.graphics.core.BasicFrameBuffers.iHasTexture;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGLSLangProgram.iErrorHandler;
 import field.graphics.core.BasicGeometry.TriangleMesh;
+import field.graphics.core.scene.IAcceptsSceneListElement;
+import field.launch.IUpdateable;
 import field.math.linalg.Vector4;
 import field.util.MiscNative;
 import field.util.TaskQueue;
+import field.util.collect.tuple.Pair;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.opencl.*;
+import org.lwjgl.opengl.Drawable;
+import org.lwjgl.opengl.GL11;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Method;
+import java.nio.*;
+import java.util.*;
+
+import static org.lwjgl.opencl.CL10.*;
 
 @Woven
 public class OpenCLSystem implements iProvidesQueue {
@@ -767,8 +733,9 @@ public class OpenCLSystem implements iProvidesQueue {
 		return new Memory(sizeInBytes);
 	}
 
-	public GLTexture addTextureOutput(int unit, field.graphics.core.Base.iAcceptsSceneListElement e, final int width, final int height) {
-		final BaseFastNoStorageTexture texture = new BaseFastNoStorageTexture(width, height);
+    public
+    GLTexture addTextureOutput(int unit, IAcceptsSceneListElement e, final int width, final int height) {
+        final BaseFastNoStorageTexture texture = new BaseFastNoStorageTexture(width, height);
 		texture.use_gl_texture_rectangle_ext(false);
 		e.addChild(new field.graphics.core.BasicTextures.TextureUnit(unit, texture));
 		return new GLTexture(texture) {

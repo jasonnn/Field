@@ -1,7 +1,7 @@
 package field.core.windowing.components;
 
 import field.core.dispatch.Rect;
-import field.graphics.core.Base;
+import field.graphics.core.GLConstants;
 import field.graphics.dynamic.DynamicLine;
 import field.graphics.dynamic.DynamicPointlist;
 import field.graphics.dynamic.iDynamicMesh;
@@ -54,22 +54,22 @@ class ComponentDrawingUtils {
 
             line.beginSpline(null);
 
-            line.setAuxOnSpline(Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
+            line.setAuxOnSpline(GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
             line.setAuxOnSpline(4, 1, 1, 1, 1);
             line.moveTo(new Vector3(x, y - 0f, 0));
-            line.setAuxOnSpline(Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
+            line.setAuxOnSpline(GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
             line.setAuxOnSpline(4, 1, 1, 1, 1);
             line.lineTo(new Vector3(x + w + 0f, y - 0f, 0));
-            line.setAuxOnSpline(Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
+            line.setAuxOnSpline(GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
             line.setAuxOnSpline(4, 1, 1, 1, 1);
             line.lineTo(new Vector3(x + w + 0f, y + h, 0));
-            line.setAuxOnSpline(Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
+            line.setAuxOnSpline(GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
             line.setAuxOnSpline(4, 1, 1, 1, 1);
             line.lineTo(new Vector3(x, y + h, 0));
-            line.setAuxOnSpline(Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
+            line.setAuxOnSpline(GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
             line.setAuxOnSpline(4, 1, 1, 1, 1);
             line.lineTo(new Vector3(x, y - 0f, 0));
-            line.setAuxOnSpline(Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
+            line.setAuxOnSpline(GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w);
             line.setAuxOnSpline(4, 1, 1, 1, 1);
             line.endSpline();
 
@@ -87,21 +87,23 @@ class ComponentDrawingUtils {
             triangle.nextFace(v0, v1, v2);
             triangle.nextFace(v0, v2, v3);
 
-            triangle.setAux(v0, Base.color0_id, triangleColor.x, triangleColor.y, triangleColor.z, triangleColor.w * 2);
-            triangle.setAux(v1,
-                            Base.color0_id,
+            triangle.setAux(v0,
+                            GLConstants.color0_id,
+                            triangleColor.x,
+                            triangleColor.y,
+                            triangleColor.z,
+                            triangleColor.w * 2);
+            triangle.setAux(v1, GLConstants.color0_id,
                             triangleColor.x,
                             triangleColor.y,
                             triangleColor.z,
                             triangleColor.w * 1.5f);
-            triangle.setAux(v2,
-                            Base.color0_id,
+            triangle.setAux(v2, GLConstants.color0_id,
                             triangleColor.x,
                             triangleColor.y,
                             triangleColor.z,
                             triangleColor.w * 0.2f);
-            triangle.setAux(v3,
-                            Base.color0_id,
+            triangle.setAux(v3, GLConstants.color0_id,
                             triangleColor.x,
                             triangleColor.y,
                             triangleColor.z,
@@ -121,10 +123,10 @@ class ComponentDrawingUtils {
             int v2 = point.nextVertex(new Vector3(x + w, y + h, 0));
             int v3 = point.nextVertex(new Vector3(x, y + h, 0));
 
-            point.setAux(v0, Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w / 2);
-            point.setAux(v1, Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w / 2);
-            point.setAux(v2, Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w / 2);
-            point.setAux(v3, Base.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w / 2);
+            point.setAux(v0, GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w / 2);
+            point.setAux(v1, GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w / 2);
+            point.setAux(v2, GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w / 2);
+            point.setAux(v3, GLConstants.color0_id, lineColor.x, lineColor.y, lineColor.z, lineColor.w / 2);
 
             point.setAux(v0, 4, 1.0f, 1.0f, 1.0f, 1.0f);
             point.setAux(v1, 4, 1.0f, 1.0f, 1.0f, 1.0f);
@@ -141,8 +143,8 @@ class ComponentDrawingUtils {
         int v1 = line.nextVertex(new Vector3(sx + l1 * mx, sy + l1 * my, 0));
         int v2 = line.nextVertex(new Vector3(sx + l2 * mx, sy + l2 * my, 0));
         line.nextFace(v1, v2);
-        line.setAux(v1, Base.color0_id, color.x, color.y, color.z, color.w);
-        line.setAux(v2, Base.color0_id, color.x, color.y, color.z, color.w);
+        line.setAux(v1, GLConstants.color0_id, color.x, color.y, color.z, color.w);
+        line.setAux(v2, GLConstants.color0_id, color.x, color.y, color.z, color.w);
 
     }
 

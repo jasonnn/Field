@@ -1,9 +1,11 @@
-package field.graphics.core;
+package field.graphics.core.scene;
 
 import field.bytecode.protect.annotations.HiddenInAutocomplete;
 import field.core.util.PythonCallableMap;
-import field.graphics.core.Base.LocalPass;
-import field.graphics.core.Base.iAcceptsSceneListElement;
+import field.graphics.core.When;
+import field.graphics.core.pass.IPass;
+import field.graphics.core.pass.LocalPass;
+import field.graphics.core.pass.StandardPass;
 import field.launch.IUpdateable;
 import field.math.graph.NodeImpl;
 
@@ -14,11 +16,12 @@ import java.util.*;
  * to this class
  */
 public
-class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.ISceneListElement, IUpdateable,
-                                                                    iAcceptsSceneListElement {
+class BasicSceneList extends NodeImpl<ISceneListElement> implements ISceneListElement,
+                                                                    IUpdateable,
+                                                                    IAcceptsSceneListElement {
 
 
-    public
+    public static
     interface iGlobalEarly {
         public
         void early();
@@ -27,7 +30,7 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
     private static final long serialVersionUID = 1L;
 
     /* implementation of scenelist */
-    protected List<Base.IPass> passList = new ArrayList<Base.IPass>();
+    protected List<IPass> passList = new ArrayList<IPass>();
 
     /**
      * use the addChild(...) etc to add things to this class
@@ -37,27 +40,27 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
 
     protected Map standards = new HashMap();
 
-    protected Comparator<Base.IPass> passComparator = new Comparator<Base.IPass>() {
+    protected Comparator<IPass> passComparator = new Comparator<IPass>() {
         public
-        int compare(Base.IPass o1, Base.IPass o2) {
+        int compare(IPass o1, IPass o2) {
             if (o1.getValue() > o2.getValue()) return 1;
             return -1;
         }
     };
 
     public
-    void addChildOnce(Base.ISceneListElement newChild) {
+    void addChildOnce(ISceneListElement newChild) {
         if (!isChild(newChild)) super.addChild(newChild);
     }
 
     public
-    void addChild(Base.ISceneListElement newChild) {
+    void addChild(ISceneListElement newChild) {
         super.addChild(newChild);
     }
 
 
     public
-    void removeChild(Base.ISceneListElement newChild) {
+    void removeChild(ISceneListElement newChild) {
         super.removeChild(newChild);
     }
 
@@ -70,17 +73,17 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
     @HiddenInAutocomplete
     public
     void listElements(String xx) {
-        int i;
-        for (Base.ISceneListElement element : getChildren()) {
-            String nn = element.getClass().toString();
-            nn = nn.substring(nn.lastIndexOf('.'));
+
+        for (ISceneListElement element : getChildren()) {
+//            String nn = element.getClass().toString();
+//            nn = nn.substring(nn.lastIndexOf('.'));
             if (element instanceof BasicSceneList) ((BasicSceneList) element).listElements(xx + xx);
         }
     }
 
     @HiddenInAutocomplete
     public
-    void performPass(Base.IPass p) {
+    void performPass(IPass p) {
         // update();
 
         // if (passList.contains(p)) for (iSceneListElement element :
@@ -90,7 +93,7 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
 
     @HiddenInAutocomplete
     public
-    Base.IPass requestPass(Base.IPass pass) {
+    IPass requestPass(IPass pass) {
         if (!passList.contains(pass)) passList.add(pass);
         Collections.sort(passList, passComparator);
         return pass;
@@ -98,7 +101,7 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
 
     @HiddenInAutocomplete
     public
-    Base.IPass requestPassAfter(Base.IPass pass) {
+    IPass requestPassAfter(IPass pass) {
         // bracket this pass
         int index = passList.indexOf(pass);
         if (index == -1) throw new IllegalArgumentException(" ( couldn't find pass <" + pass + "> ) ");
@@ -116,13 +119,13 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
 
     @HiddenInAutocomplete
     public
-    Base.IPass requestPassAfterAndBefore(Base.IPass after, Base.IPass before) {
+    IPass requestPassAfterAndBefore(IPass after, IPass before) {
         return requestPassBefore(before);
     }
 
     @HiddenInAutocomplete
     public
-    Base.IPass requestPassBefore(Base.IPass pass) {
+    IPass requestPassBefore(IPass pass) {
         // bracket this pass
         int index = passList.indexOf(pass);
         if (index == -1) throw new IllegalArgumentException(" ( couldn't find pass <" + pass + "> ) ");
@@ -144,8 +147,8 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
     @HiddenInAutocomplete
     public
     void update() {
-        for (Base.IPass pass : passList) {
-            for (Base.ISceneListElement element : getChildren()) {
+        for (IPass pass : passList) {
+            for (ISceneListElement element : getChildren()) {
                 element.performPass(pass);
             }
         }
@@ -153,13 +156,13 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
 
     @HiddenInAutocomplete
     public
-    void updateFromButNotIncluding(Base.IPass from) {
-        for (Base.IPass pass : passList) {
+    void updateFromButNotIncluding(IPass from) {
+        for (IPass pass : passList) {
             if (pass.isLaterThan(from)) {
                 // System.err.println("from pass <" + pass +
                 // "> <" + System.identityHashCode(this) + "> <"
                 // + this.getClass() + ">");
-                for (Base.ISceneListElement element : new ArrayList<Base.ISceneListElement>(getChildren())) {
+                for (ISceneListElement element : new ArrayList<ISceneListElement>(getChildren())) {
                     element.performPass(pass);
                 }
             }
@@ -168,8 +171,8 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
 
     @HiddenInAutocomplete
     public
-    void updateFromButNotIncluding(Base.IPass from, Base.IPass upToAndIncluding) {
-        for (Base.IPass pass : passList) {
+    void updateFromButNotIncluding(IPass from, IPass upToAndIncluding) {
+        for (IPass pass : passList) {
             if (pass.isLaterThan(from)) {
                 if (!pass.isEarlierThan(upToAndIncluding) && !pass.equals(upToAndIncluding)) return;
 
@@ -177,7 +180,7 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
                 // "> to <"+upToAndIncluding+"> <" +
                 // System.identityHashCode(this) + "> <" +
                 // this.getClass() + ">");
-                for (Base.ISceneListElement element : getChildren())
+                for (ISceneListElement element : getChildren())
                     element.performPass(pass);
             }
             if (!pass.isEarlierThan(upToAndIncluding)) return;
@@ -188,15 +191,15 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
     // something cleaver
     @HiddenInAutocomplete
     public
-    void updateUpToAndIncluding(Base.IPass to) {
+    void updateUpToAndIncluding(IPass to) {
         // System.err.println(" ordered pass list is <"+passList+">");
-        for (Base.IPass pass : passList) {
+        for (IPass pass : passList) {
             if (!pass.isEarlierThan(to) && !pass.equals(to)) return;
 
             // System.err.println("upto pass <" + pass + "> <" +
             // System.identityHashCode(this) + "> <" +
             // this.getClass() + ">");
-            for (Base.ISceneListElement element : new ArrayList<Base.ISceneListElement>(getChildren())) {
+            for (ISceneListElement element : new ArrayList<ISceneListElement>(getChildren())) {
                 // System.err.println("       on <" + element +
                 // "> <" + element.getClass() + "> in ....");
                 element.performPass(pass);
@@ -208,14 +211,14 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
     }
 
     public
-    boolean isChild(Base.ISceneListElement e) {
+    boolean isChild(ISceneListElement e) {
         return getChildren().contains(e);
     }
 
     When when;
 
     public
-    PythonCallableMap add(Base.StandardPass pass) {
+    PythonCallableMap add(StandardPass pass) {
         return getWhen().getMap(pass);
     }
 
@@ -235,7 +238,7 @@ class BasicSceneList extends NodeImpl<Base.ISceneListElement> implements Base.IS
     @HiddenInAutocomplete
     public
     void performGlobalEarly() {
-        for (Base.ISceneListElement e : getChildren()) {
+        for (ISceneListElement e : getChildren()) {
             if (e instanceof iGlobalEarly) {
                 ((iGlobalEarly) e).early();
             }

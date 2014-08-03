@@ -1,8 +1,8 @@
 package field.graphics.dynamic;
 
 import field.graphics.core.BasicGeometry.LineList;
-import field.graphics.core.BasicUtilities;
 import field.graphics.core.ResourceMonitor;
+import field.graphics.core.scene.Position;
 import field.math.linalg.Vector3;
 
 public
@@ -11,7 +11,7 @@ class SubLine extends SubMesh implements iLineOutput {
     public
     SubLine() {
         super(false);
-        dummyMesh = new LineList(new BasicUtilities.Position());
+        dummyMesh = new LineList(new Position());
         dummyMesh.rebuildTriangle(0);
         dummyMesh.rebuildVertex(0);
         delegate = new DynamicLine((LineList) dummyMesh);

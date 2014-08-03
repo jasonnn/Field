@@ -1,8 +1,12 @@
 package field.graphics.imageprocessing;
 
 import field.graphics.core.AdvancedTextures.OneDTexture;
-import field.graphics.core.*;
-import field.graphics.core.Base.iGeometry;
+import field.graphics.core.BasicGLSLangProgram;
+import field.graphics.core.BasicTextures;
+import field.graphics.core.GLConstants;
+import field.graphics.core.StereoCamera;
+import field.graphics.core.scene.DisableBlending;
+import field.graphics.core.scene.IGeometry;
 import field.graphics.imageprocessing.ImageProcessing.iProcessesMesh;
 import field.math.abstraction.IFloatProvider;
 import field.math.abstraction.IProvider;
@@ -49,7 +53,7 @@ class Processors {
         }
 
         public
-        void process(iGeometry process) {
+        void process(IGeometry process) {
 
             grainer.updateGrain(process);
         }
@@ -102,8 +106,8 @@ class Processors {
         }
 
         public
-        void updateGrain(Base.iGeometry g) {
-            FloatBuffer t0 = g.aux(Base.texture0_id + 1, 4);
+        void updateGrain(IGeometry g) {
+            FloatBuffer t0 = g.aux(GLConstants.texture0_id + 1, 4);
 
             for (int i = 0; i < t0.capacity(); i++)
                 t0.put((float) (2147483647 * 50000.0 * StereoCamera.getRandomNumber()));
@@ -259,9 +263,9 @@ class Processors {
 
         @Override
         public
-        void process(iGeometry process) {
+        void process(IGeometry process) {
             // add texture offsets
-            FloatBuffer oTexture = process.aux(Base.texture0_id, 2);
+            FloatBuffer oTexture = process.aux(GLConstants.texture0_id, 2);
 
             FloatBuffer[] o = new FloatBuffer[5];
             for (int i = 0; i < o.length; i++)
@@ -408,11 +412,11 @@ class Processors {
         int num = 0;
 
         public
-        void process(iGeometry process) {
+        void process(IGeometry process) {
             if (num++ > 5) return;
 
             // add texture offsets
-            FloatBuffer oTexture = process.aux(Base.texture0_id, 2);
+            FloatBuffer oTexture = process.aux(GLConstants.texture0_id, 2);
 
             FloatBuffer[] o = new FloatBuffer[offsets.length];
             for (int i = 0; i < o.length; i++)
@@ -442,7 +446,7 @@ class Processors {
             }
 
             if (attachNoBlending) {
-                process.addChild(new BasicUtilities.DisableBlending());
+                process.addChild(new DisableBlending());
                 attachNoBlending = false;
             }
         }
@@ -469,10 +473,10 @@ class Processors {
 
         @Override
         public
-        void process(iGeometry process) {
+        void process(IGeometry process) {
 
             // add texture offsets
-            FloatBuffer oTexture = process.aux(Base.texture0_id, 2);
+            FloatBuffer oTexture = process.aux(GLConstants.texture0_id, 2);
 
             FloatBuffer[] o = new FloatBuffer[5];
             for (int i = 0; i < o.length; i++)

@@ -1,6 +1,7 @@
 package field.graphics.core;
 
 import field.graphics.core.BasicGeometry.VertexBuffer;
+import field.graphics.core.scene.Position;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -15,7 +16,7 @@ class LineList_longPartial extends BasicGeometry.LineList_long {
 
     public
     LineList_longPartial() {
-        super(new BasicUtilities.Position());
+        super(new Position());
     }
 
     public static int vertexPerFrame = 5000;

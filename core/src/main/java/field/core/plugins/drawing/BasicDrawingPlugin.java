@@ -4,11 +4,11 @@ import field.core.Platform;
 import field.core.Platform.OS;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElement;
+import field.core.dispatch.VisualElementProperty;
 import field.core.dispatch.override.DefaultOverride;
 import field.core.dispatch.override.IVisualElementOverrides;
-import field.core.dispatch.VisualElement;
-import field.core.dispatch.Rect;
-import field.core.dispatch.VisualElementProperty;
 import field.core.dispatch.override.Ref;
 import field.core.execution.PythonInterface;
 import field.core.plugins.PluginList;
@@ -28,8 +28,8 @@ import field.core.windowing.components.*;
 import field.core.windowing.components.RootComponent.iPaintPeer;
 import field.core.windowing.components.SelectionGroup.iSelectionChanged;
 import field.launch.IUpdateable;
-import field.math.graph.NodeImpl;
 import field.math.graph.IMutableContainer;
+import field.math.graph.NodeImpl;
 import field.math.graph.visitors.hint.StandardTraversalHint;
 import field.math.graph.visitors.hint.TraversalHint;
 import field.namespace.generic.IFunction;
@@ -52,6 +52,7 @@ class BasicDrawingPlugin implements iPlugin {
 
     public static final VisualElementProperty<PythonCallableMap> selectionStateCallback =
             new VisualElementProperty<PythonCallableMap>("selectionStateCallback_");
+
     public static final VisualElementProperty<Number> allwaysConstrain =
             new VisualElementProperty<Number>("allwaysConstrain");
 
@@ -70,7 +71,8 @@ class BasicDrawingPlugin implements iPlugin {
                     in.right.addText(forms, "svg file", new String[]{"filename", "load & extract PLines"}, "operation");
                     return true;
                 }
-                else return false;
+                else
+                    return false;
             }
         });
 
@@ -87,7 +89,8 @@ class BasicDrawingPlugin implements iPlugin {
                         in.right.addText(forms, "image file", new String[]{"filename", "load"}, "operation");
                         return true;
                     }
-                    else return false;
+                    else
+                        return false;
                 }
             });
         }
@@ -164,7 +167,8 @@ class BasicDrawingPlugin implements iPlugin {
 
         public
         <T> T getProperty(VisualElementProperty<T> p) {
-            if (p == overrides) return (T) elementOverride;
+            if (p == overrides)
+                return (T) elementOverride;
             Object o = properties.get(p);
             return (T) o;
         }
@@ -215,7 +219,8 @@ class BasicDrawingPlugin implements iPlugin {
 
             // TODO swt
 
-            if (event == null) return StandardTraversalHint.CONTINUE;
+            if (event == null)
+                return StandardTraversalHint.CONTINUE;
             if (event.character == '0' && event.type == SWT.KeyDown && event.doit) {
                 if (tick) {
                     tick = false;
@@ -453,12 +458,14 @@ class BasicDrawingPlugin implements iPlugin {
     Object getPersistanceInformation() {
         // return new Pair<String, Set<SelectionSet>>(pluginId +
         // "version_1", selectionSets.getSavedSelectionSets());
-        if (selectionSets != null) return new Triple<String, Set<SelectionSet>, Set<SavedView>>(pluginId + "version_2",
-                                                                                                selectionSets.getSavedSelectionSets(),
-                                                                                                selectionSets.getSavedViews());
-        else return new Triple<String, Set<SelectionSet>, Set<SavedView>>(pluginId + "version_2",
-                                                                          new HashSet<SelectionSet>(),
-                                                                          new HashSet<SavedView>());
+        if (selectionSets != null)
+            return new Triple<String, Set<SelectionSet>, Set<SavedView>>(pluginId + "version_2",
+                                                                         selectionSets.getSavedSelectionSets(),
+                                                                         selectionSets.getSavedViews());
+        else
+            return new Triple<String, Set<SelectionSet>, Set<SavedView>>(pluginId + "version_2",
+                                                                         new HashSet<SelectionSet>(),
+                                                                         new HashSet<SavedView>());
     }
 
     public
@@ -468,7 +475,8 @@ class BasicDrawingPlugin implements iPlugin {
 
     public
     IVisualElement getWellKnownVisualElement(String id) {
-        if (id.equals(pluginId)) return lve;
+        if (id.equals(pluginId))
+            return lve;
         return null;
     }
 
@@ -521,8 +529,8 @@ class BasicDrawingPlugin implements iPlugin {
                     for (Control qqq : qq)
                         qqq.redraw();
                 }
-
-                recur();
+                installedContext.getPreSwapQueue().addTask(this);
+                //recur();
             }
         };
 
@@ -628,7 +636,8 @@ class BasicDrawingPlugin implements iPlugin {
 
                 try {
                     PythonCallableMap callback = selectionStateCallback.get(n);
-                    if (callback != null) callback.invoke(n, false);
+                    if (callback != null)
+                        callback.invoke(n, false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -638,7 +647,8 @@ class BasicDrawingPlugin implements iPlugin {
             void selected(IVisualElement n) {
                 try {
                     PythonCallableMap callback = selectionStateCallback.get(n);
-                    if (callback != null) callback.invoke(n, true);
+                    if (callback != null)
+                        callback.invoke(n, true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -661,11 +671,13 @@ class BasicDrawingPlugin implements iPlugin {
 
     public
     void setPersistanceInformation(Object o) {
-        if (selectionSets == null) return;
+        if (selectionSets == null)
+            return;
 
         if (o instanceof Pair) {
             Pair<String, Set<SelectionSet>> p = (Pair<String, Set<SelectionSet>>) o;
-            if (p.left.equals(pluginId + "version_1")) selectionSets.addSavedSelectionSets(p.right);
+            if (p.left.equals(pluginId + "version_1"))
+                selectionSets.addSavedSelectionSets(p.right);
         }
         if (o instanceof Triple) {
             Triple<String, Set<SelectionSet>, Set<SavedView>> p = (Triple<String, Set<SelectionSet>, Set<SavedView>>) o;

@@ -1,7 +1,7 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.BasicUtilities.OnePassElement;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.OnePassElement;
 import org.lwjgl.opengl.NVPathRendering;
 
 import java.nio.ByteBuffer;

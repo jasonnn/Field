@@ -1,8 +1,8 @@
 package field.graphics.iosurface;
 
-import field.graphics.core.Base;
 import field.graphics.core.BasicContextManager;
-import field.graphics.core.BasicUtilities.TwoPassElement;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.TwoPassElement;
 import field.launch.SystemProperties;
 import field.util.MiscNative;
 
@@ -192,7 +192,7 @@ class IOSurfaceRunner {
 
         public
         IOSurfaceElement() {
-            super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
+            super("", StandardPass.preRender, StandardPass.postRender);
         }
 
         @Override

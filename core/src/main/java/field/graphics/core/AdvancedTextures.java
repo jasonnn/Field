@@ -5,7 +5,9 @@ import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
 import field.core.Platform;
 import field.core.Platform.OS;
-import field.graphics.core.Base.StandardPass;
+import field.graphics.core.pass.IPass;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.TwoPassElement;
 import field.graphics.qt.ByteImage;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.math.linalg.Vector4;
@@ -1611,7 +1613,7 @@ class AdvancedTextures extends BasicTextures {
 
         @Override
         public
-        void performPass(Base.IPass p) {
+        void performPass(IPass p) {
             super.performPass(p);
         }
 
@@ -2261,7 +2263,7 @@ class AdvancedTextures extends BasicTextures {
     }
 
     public static
-    class Stack3dTexture extends BasicUtilities.TwoPassElement {
+    class Stack3dTexture extends TwoPassElement {
         private final int width;
 
         private final ByteImage[] images;
@@ -2337,7 +2339,7 @@ class AdvancedTextures extends BasicTextures {
     }
 
     static public
-    class FloatCube extends BasicUtilities.TwoPassElement {
+    class FloatCube extends TwoPassElement {
         private final int width;
 
         private final ByteBuffer buffer;

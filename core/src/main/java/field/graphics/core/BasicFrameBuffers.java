@@ -7,13 +7,13 @@ import field.bytecode.protect.dispatch.Cont;
 import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
 import field.core.dispatch.Rect;
-import field.graphics.core.Base.*;
 import field.graphics.core.BasicGeometry.Instance;
 import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.core.BasicTextures.BaseTexture;
 import field.graphics.core.BasicTextures.TextureUnit;
-import field.graphics.core.BasicUtilities.OnePassElement;
-import field.graphics.core.BasicUtilities.OnePassListElement;
+import field.graphics.core.pass.IPass;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.*;
 import field.graphics.imageprocessing.ImageProcessing.TextureWrapper;
 import field.graphics.imageprocessing.ImageProcessing.iReposition;
 import field.graphics.windowing.FullScreenCanvasSWT;
@@ -23,8 +23,8 @@ import field.math.BaseMath;
 import field.math.abstraction.IAcceptor;
 import field.math.abstraction.IFloatProvider;
 import field.math.abstraction.IProvider;
-import field.math.graph.NodeImpl;
 import field.math.graph.IMutable;
+import field.math.graph.NodeImpl;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Matrix4;
 import field.math.linalg.Vector3;
@@ -308,7 +308,7 @@ class BasicFrameBuffers {
             // camera = new BasicCamera();
 
             rootSceneList = new BasicSceneList();
-            rootSceneList.addChild(new BasicUtilities.Standard());
+            rootSceneList.addChild(new Standard());
             if (doClear) {
                 // BasicUtilities.Clear
                 // clear = new
@@ -316,7 +316,7 @@ class BasicFrameBuffers {
                 // Vector3(0,0,0),
                 // (float) 1);
                 if (!isFloat) {
-                    BasicUtilities.Clear clear = new BasicUtilities.Clear(new Vector3(r, g, b), a);
+                    Clear clear = new Clear(new Vector3(r, g, b), a);
                     rootSceneList.addChild(clear);
                 }
 
@@ -327,7 +327,7 @@ class BasicFrameBuffers {
             }
             else {
                 if (!isFloat) {
-                    rootSceneList.addChild(new BasicUtilities.ClearOnce(new Vector3(0, 0, 0), 1));
+                    rootSceneList.addChild(new ClearOnce(new Vector3(0, 0, 0), 1));
                 }
             }
             // rootSceneList.addChild(camera);
@@ -1017,7 +1017,7 @@ class BasicFrameBuffers {
 
         public
         IAcceptor<Number> addFadePlane(final Vector4 color1, final Vector4 color2) {
-            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
 
@@ -1037,11 +1037,11 @@ class BasicFrameBuffers {
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
             mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
                                                   "content/shaders/VertexColor2Fragment.glslang"));
-            mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
+            mesh.addChild(new DepthMask(StandardPass.transform, StandardPass.postRender));
 
             float colorAlpha = 0.1f;
             float alphaAlpha = 0.5f;
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(new float[]{color1.x,
                                  color1.y,
                                  color1.z,
@@ -1058,7 +1058,7 @@ class BasicFrameBuffers {
                                  color1.y,
                                  color1.z,
                                  color1.w,});
-            mesh.aux(Base.color0_id + 1, 4)
+            mesh.aux(GLConstants.color0_id + 1, 4)
                 .put(new float[]{color2.x,
                                  color2.y,
                                  color2.z,
@@ -1080,7 +1080,7 @@ class BasicFrameBuffers {
 
             // driver bug. Horrible seam
             // down middle of trianglulation
-            mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
+            mesh.addChild(new OnePassElement(StandardPass.preRender) {
                 boolean first = true;
 
                 @Override
@@ -1111,7 +1111,7 @@ class BasicFrameBuffers {
                 public
                 IAcceptor<Number> set(Number to) {
                     if (to.floatValue() != last) {
-                        mesh.aux(Base.color0_id, 4)
+                        mesh.aux(GLConstants.color0_id, 4)
                             .put(new float[]{color1.x,
                                              color1.y,
                                              color1.z,
@@ -1128,7 +1128,7 @@ class BasicFrameBuffers {
                                              color1.y,
                                              color1.z,
                                              to.floatValue(),});
-                        mesh.aux(Base.color0_id + 1, 4)
+                        mesh.aux(GLConstants.color0_id + 1, 4)
                             .put(new float[]{color2.x,
                                              color2.y,
                                              color2.z,
@@ -1154,7 +1154,7 @@ class BasicFrameBuffers {
 
         public
         void addFadePlane(IFloatProvider amount1, Vector4 color1, IFloatProvider amount2, Vector4 color2) {
-            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
 
@@ -1174,13 +1174,13 @@ class BasicFrameBuffers {
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
             mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
                                                   "content/shaders/VertexColor2Fragment.glslang"));
-            mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
+            mesh.addChild(new DepthMask(StandardPass.transform, StandardPass.postRender));
 
             float colorAlpha = 0.1f;
             float alphaAlpha = 0.5f;
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(new float[]{0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha});
-            mesh.aux(Base.color0_id + 1, 4)
+            mesh.aux(GLConstants.color0_id + 1, 4)
                 .put(new float[]{0.5f,
                                  0.5f,
                                  0.5f,
@@ -1202,7 +1202,7 @@ class BasicFrameBuffers {
 
             // driver bug. Horrible seam
             // down middle of trianglulation
-            mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
+            mesh.addChild(new OnePassElement(StandardPass.preRender) {
                 boolean first = true;
 
                 @Override
@@ -1435,7 +1435,7 @@ class BasicFrameBuffers {
             // camera = new BasicCamera();
 
             rootSceneList = new BasicSceneList();
-            rootSceneList.addChild(new BasicUtilities.Standard());
+            rootSceneList.addChild(new Standard());
             if (sceneList == null) sceneList = new BasicSceneList();
         }
 
@@ -1616,7 +1616,7 @@ class BasicFrameBuffers {
                 .put((float) (r.y))
                 .put(0.5f);
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-            mesh.aux(Base.texture0_id, 2)
+            mesh.aux(GLConstants.texture0_id, 2)
                 .put(useRect ? width : 1)
                 .put(0)
                 .put(useRect ? width : 1)
@@ -1625,7 +1625,7 @@ class BasicFrameBuffers {
                 .put(useRect ? height : 1)
                 .put(0)
                 .put(0);
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(1)
                 .put(1)
                 .put(1)
@@ -1648,7 +1648,7 @@ class BasicFrameBuffers {
             onscreenProgram.new SetUniform("mul", mul);
             onscreenProgram.addChild(mesh);
             onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(output), 0));
-            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.addChild(new DisableDepthTest(true));
 
             return onscreenProgram;
         }
@@ -1674,7 +1674,7 @@ class BasicFrameBuffers {
                 .put((float) (r.y))
                 .put(0.5f);
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-            mesh.aux(Base.texture0_id, 2)
+            mesh.aux(GLConstants.texture0_id, 2)
                 .put(useRect ? width : 1)
                 .put(0)
                 .put(useRect ? width : 1)
@@ -1683,7 +1683,7 @@ class BasicFrameBuffers {
                 .put(useRect ? height : 1)
                 .put(0)
                 .put(0);
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(1)
                 .put(1)
                 .put(1)
@@ -1719,7 +1719,7 @@ class BasicFrameBuffers {
             onscreenProgram.new SetUniform("mul", mul);
             onscreenProgram.addChild(mesh);
             onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(output), 0));
-            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.addChild(new DisableDepthTest(true));
 
             return onscreenProgram;
         }
@@ -1775,7 +1775,7 @@ class BasicFrameBuffers {
 
         public
         void addFadePlane(IFloatProvider amount1, Vector4 color1, IFloatProvider amount2, Vector4 color2) {
-            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.render);
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.render);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
 
@@ -1795,13 +1795,13 @@ class BasicFrameBuffers {
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
             mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
                                                   "content/shaders/VertexColor2Fragment.glslang"));
-            mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
+            mesh.addChild(new DepthMask(StandardPass.transform, StandardPass.postRender));
 
             float colorAlpha = 0.1f;
             float alphaAlpha = 0.95f;
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(new float[]{0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha});
-            mesh.aux(Base.color0_id + 1, 4)
+            mesh.aux(GLConstants.color0_id + 1, 4)
                 .put(new float[]{0.5f,
                                  0.5f,
                                  0.5f,
@@ -1823,7 +1823,7 @@ class BasicFrameBuffers {
 
             // driver bug. Horrible seam
             // down middle of trianglulation
-            mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
+            mesh.addChild(new OnePassElement(StandardPass.preRender) {
                 @Override
                 public
                 void performPass() {
@@ -1996,7 +1996,7 @@ class BasicFrameBuffers {
             // camera = new BasicCamera();
 
             rootSceneList = new BasicSceneList();
-            rootSceneList.addChild(new BasicUtilities.Standard());
+            rootSceneList.addChild(new Standard());
             if (sceneList == null) sceneList = new BasicSceneList();
         }
 
@@ -2178,8 +2178,16 @@ class BasicFrameBuffers {
                 .put((float) (r.y))
                 .put(0.5f);
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-            mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.texture0_id, 2)
+                .put(width)
+                .put(0)
+                .put(width)
+                .put(height)
+                .put(0)
+                .put(height)
+                .put(0)
+                .put(0);
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(1)
                 .put(1)
                 .put(1)
@@ -2216,7 +2224,7 @@ class BasicFrameBuffers {
                     return tex[layer];
                 }
             }, 0));
-            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.addChild(new DisableDepthTest(true));
             into.addChild(onscreenProgram);
 
             return new iReposition() {
@@ -2524,9 +2532,9 @@ class BasicFrameBuffers {
          * you still need to add a program (or two) to the mesh
          */
         public
-        Base.iGeometry constructDefaultDrawingPlane() {
+        IGeometry constructDefaultDrawingPlane() {
             assert !deallocated;
-            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.preRender);
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.preRender);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
 
@@ -2545,8 +2553,17 @@ class BasicFrameBuffers {
                 .put(0.5f);
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
             if (useRect)
-                mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(height).put(width).put(height).put(width).put(0);
-            else mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(1).put(1).put(1).put(1).put(0);
+                mesh.aux(GLConstants.texture0_id, 2)
+                    .put(0)
+                    .put(0)
+                    .put(0)
+                    .put(height)
+                    .put(width)
+                    .put(height)
+                    .put(width)
+                    .put(0);
+            else
+                mesh.aux(GLConstants.texture0_id, 2).put(0).put(0).put(0).put(1).put(1).put(1).put(1).put(0);
 
             addOtherTexture(mesh);
 
@@ -2789,11 +2806,11 @@ class BasicFrameBuffers {
             // rootSceneList.addChild(new
             // BasicUtilities.Standard());
             if (doClear) {
-                BasicUtilities.Clear clear = new BasicUtilities.Clear(new Vector3(r, g, b), a);
+                Clear clear = new Clear(new Vector3(r, g, b), a);
                 rootSceneList.addChild(clear);
             }
             else {
-                rootSceneList.addChild(new BasicUtilities.ClearOnce(new Vector3(0, 0, 0), 1));
+                rootSceneList.addChild(new ClearOnce(new Vector3(0, 0, 0), 1));
             }
             // rootSceneList.addChild(camera);
             if (sceneList == null) sceneList = new BasicSceneList();
@@ -3020,8 +3037,16 @@ class BasicFrameBuffers {
                 .put((float) (r.y))
                 .put(0.5f);
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-            mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.texture0_id, 2)
+                .put(width)
+                .put(0)
+                .put(width)
+                .put(height)
+                .put(0)
+                .put(height)
+                .put(0)
+                .put(0);
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(1)
                 .put(1)
                 .put(1)
@@ -3067,7 +3092,7 @@ class BasicFrameBuffers {
                     return ff;
                 }
             }, 0));
-            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.addChild(new DisableDepthTest(true));
             into.addChild(onscreenProgram);
 
             return new iReposition() {
@@ -3134,7 +3159,7 @@ class BasicFrameBuffers {
 
     // untested (but likely to work, needs a driver)
     public static
-    class NTextureCrossfader extends BasicUtilities.TwoPassElement {
+    class NTextureCrossfader extends TwoPassElement {
         private final MultiPasser source;
 
         private final OnePassElement bug;
@@ -3151,7 +3176,7 @@ class BasicFrameBuffers {
 
         public
         NTextureCrossfader(MultiPasser source, int[] unitA) {
-            super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
+            super("", StandardPass.preRender, StandardPass.postRender);
             this.source = source;
 
             textureA = new NullTexture[unitA.length];
@@ -3164,7 +3189,7 @@ class BasicFrameBuffers {
             for (int i = 0; i < copyToA.length; i++)
                 copyToA[i] = true;
 
-            bug = new BasicUtilities.OnePassElement(StandardPass.preDisplay) {
+            bug = new OnePassElement(StandardPass.preDisplay) {
                 @Override
                 public
                 void performPass() {
@@ -3594,7 +3619,7 @@ class BasicFrameBuffers {
                 .put((float) (r.y))
                 .put(0.5f);
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-            mesh.aux(Base.texture0_id, 2)
+            mesh.aux(GLConstants.texture0_id, 2)
                 .put(a.useRect ? a.width : 1)
                 .put(0)
                 .put(a.useRect ? a.width : 1)
@@ -3603,7 +3628,7 @@ class BasicFrameBuffers {
                 .put(a.useRect ? a.height : 1)
                 .put(0)
                 .put(0);
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(1)
                 .put(1)
                 .put(1)
@@ -3639,7 +3664,7 @@ class BasicFrameBuffers {
             onscreenProgram.new SetUniform("mul", mul);
             onscreenProgram.addChild(mesh);
             onscreenProgram.addChild(new TextureWrapper(genMip, a.useRect, this.getOutput(), 0));
-            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.addChild(new DisableDepthTest(true));
 
             return onscreenProgram;
         }
@@ -3684,7 +3709,7 @@ class BasicFrameBuffers {
                 .put((float) (r.y))
                 .put(0.5f);
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-            mesh.aux(Base.texture0_id, 2)
+            mesh.aux(GLConstants.texture0_id, 2)
                 .put(a.useRect ? a.width : 1)
                 .put(0)
                 .put(a.useRect ? a.width : 1)
@@ -3693,7 +3718,7 @@ class BasicFrameBuffers {
                 .put(a.useRect ? a.height : 1)
                 .put(0)
                 .put(0);
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(1)
                 .put(1)
                 .put(1)
@@ -3716,7 +3741,7 @@ class BasicFrameBuffers {
             onscreenProgram.new SetUniform("mul", mul);
             onscreenProgram.addChild(mesh);
             onscreenProgram.addChild(new TextureWrapper(genMip, a.useRect, this.getOutput(), 0));
-            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.addChild(new DisableDepthTest(true));
 
             return onscreenProgram;
         }
@@ -3839,7 +3864,7 @@ class BasicFrameBuffers {
 
         public
         IAcceptor<Number> addFadePlane() {
-            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.transform);
+            final TriangleMesh mesh = new BasicGeometry.TriangleMesh(StandardPass.transform);
             mesh.rebuildTriangle(2);
             mesh.rebuildVertex(4);
 
@@ -3859,14 +3884,14 @@ class BasicFrameBuffers {
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
             mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
                                                   "content/shaders/VertexColor2Fragment.glslang",
-                                                  Base.StandardPass.preTransform));
-            mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.preTransform, Base.StandardPass.postRender));
+                                                  StandardPass.preTransform));
+            mesh.addChild(new DepthMask(StandardPass.preTransform, StandardPass.postRender));
 
             float colorAlpha = 0.1f;
             float alphaAlpha = 0.5f;
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(new float[]{0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha, 0, 0, 0, colorAlpha});
-            mesh.aux(Base.color0_id + 1, 4)
+            mesh.aux(GLConstants.color0_id + 1, 4)
                 .put(new float[]{0.5f,
                                  0.5f,
                                  0.5f,
@@ -3897,7 +3922,8 @@ class BasicFrameBuffers {
                 @Override
                 public
                 IAcceptor<Number> set(Number to) {
-                    if (to.floatValue() != last) mesh.aux(Base.color0_id, 4)
+                    if (to.floatValue() != last)
+                        mesh.aux(GLConstants.color0_id, 4)
                                                      .put(new float[]{0,
                                                                       0,
                                                                       0,
@@ -4059,7 +4085,7 @@ class BasicFrameBuffers {
             // camera = new BasicCamera();
 
             rootSceneList = new BasicSceneList();
-            rootSceneList.addChild(new BasicUtilities.Standard());
+            rootSceneList.addChild(new Standard());
             // BasicUtilities.Clear clear = new
             // BasicUtilities.Clear(new Vector3(0, 0, 0), 1);
             // rootSceneList.addChild(clear);
@@ -4235,7 +4261,7 @@ class BasicFrameBuffers {
                 .put((float) (r.y))
                 .put(0.5f);
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-            mesh.aux(Base.texture0_id, 2)
+            mesh.aux(GLConstants.texture0_id, 2)
                 .put(useRect ? width : 1)
                 .put(0)
                 .put(useRect ? width : 1)
@@ -4244,7 +4270,7 @@ class BasicFrameBuffers {
                 .put(useRect ? height : 1)
                 .put(0)
                 .put(0);
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(1)
                 .put(1)
                 .put(1)
@@ -4280,7 +4306,7 @@ class BasicFrameBuffers {
             onscreenProgram.new SetUniform("mul", mul);
             onscreenProgram.addChild(mesh);
             onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(), 0));
-            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.addChild(new DisableDepthTest(true));
 
             return onscreenProgram;
         }
@@ -4325,7 +4351,7 @@ class BasicFrameBuffers {
                 .put((float) (r.y))
                 .put(0.5f);
             mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
-            mesh.aux(Base.texture0_id, 2)
+            mesh.aux(GLConstants.texture0_id, 2)
                 .put(useRect ? width : 1)
                 .put(0)
                 .put(useRect ? width : 1)
@@ -4334,7 +4360,7 @@ class BasicFrameBuffers {
                 .put(useRect ? height : 1)
                 .put(0)
                 .put(0);
-            mesh.aux(Base.color0_id, 4)
+            mesh.aux(GLConstants.color0_id, 4)
                 .put(1)
                 .put(1)
                 .put(1)
@@ -4357,7 +4383,7 @@ class BasicFrameBuffers {
             onscreenProgram.new SetUniform("mul", mul);
             onscreenProgram.addChild(mesh);
             onscreenProgram.addChild(new TextureWrapper(genMip, useRect, this.getOutput(), 0));
-            onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+            onscreenProgram.addChild(new DisableDepthTest(true));
 
             return onscreenProgram;
         }
@@ -4393,7 +4419,7 @@ class BasicFrameBuffers {
 
         private final StandardPass ourPass;
 
-        protected Base.StandardPass requestPass;
+        protected StandardPass requestPass;
 
         protected Set renderPass = new HashSet();
 
@@ -4418,7 +4444,7 @@ class BasicFrameBuffers {
         }
 
         public
-        Switcher(Base.StandardPass parentPass, Base.StandardPass ourPass) {
+        Switcher(StandardPass parentPass, StandardPass ourPass) {
             this.ourPass = ourPass;
             this.ourRenderPass = this.requestPass(ourPass);
             this.requestPass = parentPass;
@@ -4510,7 +4536,7 @@ class BasicFrameBuffers {
     }
 
     public static
-    class TextureCrossfader extends BasicUtilities.TwoPassElement {
+    class TextureCrossfader extends TwoPassElement {
         private final MultiPasser source;
 
         NullTexture textureA;
@@ -4531,7 +4557,7 @@ class BasicFrameBuffers {
 
         public
         TextureCrossfader(MultiPasser source, int unitA, int unitB) {
-            super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
+            super("", StandardPass.preRender, StandardPass.postRender);
             this.source = source;
 
             textureA = new NullTexture(source.width, source.height);
@@ -4539,7 +4565,7 @@ class BasicFrameBuffers {
             textureB = new NullTexture(source.width, source.height);
             textureBWrapped = new TextureUnit(unitB, textureB);
 
-            source.getSceneList().addChild(new BasicUtilities.OnePassElement(StandardPass.preDisplay) {
+            source.getSceneList().addChild(new OnePassElement(StandardPass.preDisplay) {
                 @Override
                 public
                 void performPass() {
@@ -4655,8 +4681,8 @@ class BasicFrameBuffers {
     }
 
     public static
-    class TextureCrossfader2 extends BasicUtilities.TwoPassElement {
-        private final iAcceptsSceneListElement source;
+    class TextureCrossfader2 extends TwoPassElement {
+        private final IAcceptsSceneListElement source;
 
         NullTexture textureA;
 
@@ -4680,8 +4706,8 @@ class BasicFrameBuffers {
         private final int height;
 
         public
-        TextureCrossfader2(iAcceptsSceneListElement source, int unitA, int unitB, int width, int height) {
-            super("", Base.StandardPass.preRender, Base.StandardPass.postRender);
+        TextureCrossfader2(IAcceptsSceneListElement source, int unitA, int unitB, int width, int height) {
+            super("", StandardPass.preRender, StandardPass.postRender);
             this.source = source;
 
             this.width = width;
@@ -4692,7 +4718,7 @@ class BasicFrameBuffers {
             textureB = new NullTexture(width, height);
             textureBWrapped = new TextureUnit(unitB, textureB);
 
-            source.addChild(new BasicUtilities.OnePassElement(StandardPass.preDisplay) {
+            source.addChild(new OnePassElement(StandardPass.preDisplay) {
                 @Override
                 public
                 void performPass() {
@@ -4811,16 +4837,16 @@ class BasicFrameBuffers {
     static public final Stack<Object> currentFBOContext = new Stack<Object>();
 
     static public
-    class Wrap extends BasicUtilities.OnePassElement {
+    class Wrap extends OnePassElement {
 
-        private final iGeometry geometry;
+        private final IGeometry geometry;
 
         private final Method doPerformPass;
 
         private final Method doSetup;
 
         public
-        Wrap(iGeometry geometry) {
+        Wrap(IGeometry geometry) {
             super(StandardPass.render);
             this.geometry = geometry;
             doPerformPass = ReflectionTools.findFirstMethodCalled(geometry.getClass(), "doPerformPass");
@@ -4875,14 +4901,14 @@ class BasicFrameBuffers {
         }
 
         public
-        iGeometry getGeometry() {
+        IGeometry getGeometry() {
             return geometry;
         }
 
     }
 
     static public
-    class WrapInstance extends BasicUtilities.OnePassElement {
+    class WrapInstance extends OnePassElement {
 
         private final Instance geometry;
 

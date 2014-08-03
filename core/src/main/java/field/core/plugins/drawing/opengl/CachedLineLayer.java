@@ -1,7 +1,7 @@
 package field.core.plugins.drawing.opengl;
 
-import field.graphics.core.Base;
-import field.graphics.core.BasicUtilities;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.OnePassElement;
 import field.graphics.dynamic.DynamicLine_long;
 import field.graphics.dynamic.DynamicMesh_long;
 import field.graphics.dynamic.DynamicPointlist;
@@ -27,14 +27,14 @@ class CachedLineLayer {
     }
 
     public
-    class UpdateMesh extends BasicUtilities.OnePassElement {
+    class UpdateMesh extends OnePassElement {
 
         private final DynamicMesh_long target;
         private final DirectMesh m;
 
         public
         UpdateMesh(DynamicMesh_long target, DirectMesh m) {
-            super(Base.StandardPass.transform);
+            super(StandardPass.transform);
             this.target = target;
             this.m = m;
         }
@@ -53,14 +53,14 @@ class CachedLineLayer {
     }
 
     public
-    class UpdatePoint extends BasicUtilities.OnePassElement {
+    class UpdatePoint extends OnePassElement {
 
         private final DynamicPointlist target;
         private final DirectPoint m;
 
         public
         UpdatePoint(DynamicPointlist target, DirectPoint m) {
-            super(Base.StandardPass.transform);
+            super(StandardPass.transform);
             this.target = target;
             this.m = m;
         }
@@ -79,14 +79,14 @@ class CachedLineLayer {
     }
 
     public
-    class UpdateLine extends BasicUtilities.OnePassElement {
+    class UpdateLine extends OnePassElement {
 
         private final DynamicLine_long target;
         private final DirectLine m;
 
         public
         UpdateLine(DynamicLine_long target, DirectLine m) {
-            super(Base.StandardPass.transform);
+            super(StandardPass.transform);
             this.target = target;
             this.m = m;
         }

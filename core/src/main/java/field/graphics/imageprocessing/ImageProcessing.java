@@ -6,12 +6,12 @@ import field.bytecode.protect.dispatch.ReturnCode;
 import field.bytecode.protect.dispatch.aRun;
 import field.core.dispatch.Rect;
 import field.graphics.core.*;
-import field.graphics.core.Base.StandardPass;
-import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.BasicFrameBuffers.iHasFBO;
 import field.graphics.core.BasicGeometry.QuadMesh;
 import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.core.BasicTextures.TextureUnit;
+import field.graphics.core.pass.StandardPass;
+import field.graphics.core.scene.*;
 import field.graphics.windowing.FullScreenCanvasSWT;
 import field.graphics.windowing.FullScreenCanvasSWT.StereoSide;
 import field.launch.IUpdateable;
@@ -46,12 +46,12 @@ import static org.lwjgl.opengl.GL31.GL_TEXTURE_RECTANGLE;
  */
 @Woven
 public
-class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
+class ImageProcessing implements iImageProcessor, IAcceptsSceneListElement {
 
     public
     interface iProcessesMesh {
         public
-        void process(Base.iGeometry process);
+        void process(IGeometry process);
     }
 
     public
@@ -73,7 +73,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    interface iRepositionAndSceneList extends Base.ISceneListElement {
+    interface iRepositionAndSceneList extends ISceneListElement {
         public
         Rect getRect();
 
@@ -106,7 +106,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
 
     public static
-    class TextureWrapper extends BasicUtilities.TwoPassElement {
+    class TextureWrapper extends TwoPassElement {
         private final boolean mip;
 
         private final boolean rect;
@@ -168,7 +168,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public static
-    class StereoTextureWrapper extends BasicUtilities.TwoPassElement {
+    class StereoTextureWrapper extends TwoPassElement {
         private final boolean mip;
 
         private final boolean rect;
@@ -252,8 +252,8 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
             .put((float) (r.y))
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 3);
-        mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
-        mesh.aux(Base.color0_id, 4)
+        mesh.aux(GLConstants.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
+        mesh.aux(GLConstants.color0_id, 4)
             .put(1)
             .put(1)
             .put(1)
@@ -283,7 +283,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
         onscreenProgram.new SetIntegerUniform("depthTexture", 0);
         onscreenProgram.addChild(mesh);
         onscreenProgram.addChild(from.getOutputElement(output));
-        onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+        onscreenProgram.addChild(new DisableDepthTest(true));
 
         into.addChild(onscreenProgram);
 
@@ -331,8 +331,8 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
             .put((float) (r.y))
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 3);
-        mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
-        mesh.aux(Base.color0_id, 4)
+        mesh.aux(GLConstants.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
+        mesh.aux(GLConstants.color0_id, 4)
             .put(1)
             .put(1)
             .put(1)
@@ -370,8 +370,8 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
         onscreenProgram.new SetUniform("mul", mul);
         onscreenProgram.addChild(mesh);
         onscreenProgram.addChild(new TextureWrapper(genMip, useRect, from, 0));
-        onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
-        onscreenProgram.addChild(new BasicUtilities.DepthMask());
+        onscreenProgram.addChild(new DisableDepthTest(true));
+        onscreenProgram.addChild(new DepthMask());
 
         into.addChild(onscreenProgram);
 
@@ -460,8 +460,8 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
             .put((float) (r.y))
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 3);
-        mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
-        mesh.aux(Base.color0_id, 4)
+        mesh.aux(GLConstants.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
+        mesh.aux(GLConstants.color0_id, 4)
             .put(1)
             .put(1)
             .put(1)
@@ -485,8 +485,8 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
         onscreenProgram.new SetIntegerUniform("depthTexture", 0);
         onscreenProgram.addChild(mesh);
         onscreenProgram.addChild(new TextureWrapper(false, useRect, from, 0));
-        onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
-        onscreenProgram.addChild(new BasicUtilities.DepthMask());
+        onscreenProgram.addChild(new DisableDepthTest(true));
+        onscreenProgram.addChild(new DepthMask());
 
         into.addChild(onscreenProgram);
 
@@ -579,8 +579,16 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
             .put((float) (r.y))
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 3);
-        mesh.aux(Base.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
-        mesh.aux(Base.texture0_id + 1, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
+        mesh.aux(GLConstants.texture0_id, 2).put(width).put(0).put(width).put(height).put(0).put(height).put(0).put(0);
+        mesh.aux(GLConstants.texture0_id + 1, 2)
+            .put(width)
+            .put(0)
+            .put(width)
+            .put(height)
+            .put(0)
+            .put(height)
+            .put(0)
+            .put(0);
 
         final IUpdateable u = new IUpdateable() {
 
@@ -588,7 +596,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
             void update() {
                 float r = (float) Math.random();
                 float t = (float) Math.random();
-                mesh.aux(Base.texture0_id + 1, 2)
+                mesh.aux(GLConstants.texture0_id + 1, 2)
                     .put(width + r)
                     .put(t)
                     .put(width + r)
@@ -601,7 +609,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
         };
         Launcher.getLauncher().registerUpdateable(u);
 
-        mesh.aux(Base.color0_id, 4)
+        mesh.aux(GLConstants.color0_id, 4)
             .put(1)
             .put(1)
             .put(1)
@@ -639,7 +647,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
         onscreenProgram.new SetUniform("mul", mul);
         onscreenProgram.addChild(mesh);
         onscreenProgram.addChild(new TextureWrapper(genMip, useRect, from, 0));
-        onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+        onscreenProgram.addChild(new DisableDepthTest(true));
         final Vector4 op = new Vector4(1, 1, 1, 1);
         onscreenProgram.new SetUniform("opacity", op);
         into.addChild(onscreenProgram);
@@ -712,12 +720,12 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    Base.ISceneListElement getOnscreenList(final Rect r) {
+    ISceneListElement getOnscreenList(final Rect r) {
         return getOnscreenList(0, r, new Vector4(0, 0, 0, 0), new Vector4(1, 1, 1, 1), false);
     }
 
     public
-    Base.ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
+    ISceneListElement getOnscreenList(int output, final Rect r, Vector4 offset, Vector4 mul, final boolean genMip) {
         final TriangleMesh mesh = new BasicGeometry.QuadMesh(StandardPass.render);
         mesh.rebuildTriangle(1);
         mesh.rebuildVertex(4);
@@ -736,7 +744,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
             .put((float) (r.y))
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 3);
-        mesh.aux(Base.texture0_id, 2)
+        mesh.aux(GLConstants.texture0_id, 2)
             .put(useRect ? width : 1)
             .put(0)
             .put(useRect ? width : 1)
@@ -745,7 +753,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
             .put(useRect ? height : 1)
             .put(0)
             .put(0);
-        mesh.aux(Base.color0_id, 4)
+        mesh.aux(GLConstants.color0_id, 4)
             .put(1)
             .put(1)
             .put(1)
@@ -774,7 +782,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
         onscreenProgram.new SetUniform("mul", mul);
         onscreenProgram.addChild(mesh);
         onscreenProgram.addChild(new TextureWrapper(genMip, useRect, getOutput(0), 0));
-        onscreenProgram.addChild(new BasicUtilities.DisableDepthTest(true));
+        onscreenProgram.addChild(new DisableDepthTest(true));
 
         return onscreenProgram;
     }
@@ -805,7 +813,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     int[] available = new int[1];
 
-    List<Base.ISceneListElement> children = new ArrayList<Base.ISceneListElement>();
+    List<ISceneListElement> children = new ArrayList<ISceneListElement>();
 
     TaskQueue queue = new TaskQueue();
 
@@ -883,7 +891,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    void addChild(final Base.ISceneListElement e) {
+    void addChild(final ISceneListElement e) {
         mesh.addChild(e);
         children.add(e);
         if (e instanceof iProcessesMesh) {
@@ -902,19 +910,19 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     @Override
     public
-    void removeChild(Base.ISceneListElement e) {
+    void removeChild(ISceneListElement e) {
         mesh.removeChild(e);
         children.remove(e);
     }
 
     public
-    boolean isChild(Base.ISceneListElement e) {
+    boolean isChild(ISceneListElement e) {
         return mesh.isChild(e);
     }
 
     public
     void addFadePlane(final IFloatProvider amount1, Vector4 color1, final IFloatProvider amount2, Vector4 color2) {
-        final QuadMesh mesh = new BasicGeometry.QuadMesh(Base.StandardPass.render);
+        final QuadMesh mesh = new BasicGeometry.QuadMesh(StandardPass.render);
         mesh.rebuildTriangle(1);
         mesh.rebuildVertex(4);
 
@@ -934,12 +942,12 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 3);
         mesh.addChild(new BasicGLSLangProgram("content/shaders/NDC2ColorVertex.glslang",
                                               "content/shaders/VertexColor2Fragment.glslang"));
-        mesh.addChild(new BasicUtilities.DepthMask(Base.StandardPass.transform, Base.StandardPass.postRender));
+        mesh.addChild(new DepthMask(StandardPass.transform, StandardPass.postRender));
 
         final FloatBuffer root = ByteBuffer.allocate(mesh.vertex().limit() * 4).asFloatBuffer().put(mesh.vertex());
 
         // driver bug. Horrible seam down middle of trianglulation
-        mesh.addChild(new BasicUtilities.OnePassElement(StandardPass.preRender) {
+        mesh.addChild(new OnePassElement(StandardPass.preRender) {
             @Override
             public
             void performPass() {
@@ -983,7 +991,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
                 c++;
                 if (c < 5) {
-                    mesh.aux(Base.color0_id, 4)
+                    mesh.aux(GLConstants.color0_id, 4)
                         .put(new float[]{0,
                                          0,
                                          0,
@@ -1006,7 +1014,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
                     // alphaAlpha, 0.5f, 0.5f, 0.5f,
                     // alphaAlpha, 0.5f, 0.5f, 0.5f,
                     // alphaAlpha });
-                    mesh.aux(Base.color0_id + 1, 4)
+                    mesh.aux(GLConstants.color0_id + 1, 4)
                         .put(new float[]{0.5f,
                                          0.5f,
                                          0.0f,
@@ -1062,14 +1070,15 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
         };
     }
 
-    BasicUtilities.TwoPassElement element = null;
-    BasicUtilities.TwoPassElement elementWrapped = null;
+    TwoPassElement element = null;
+
+    TwoPassElement elementWrapped = null;
 
     public
-    BasicUtilities.TwoPassElement getOutputElement(int num) {
+    TwoPassElement getOutputElement(int num) {
 
         if (element == null)
-            element = new BasicUtilities.TwoPassElement("", StandardPass.preRender, StandardPass.postRender) {
+            element = new TwoPassElement("", StandardPass.preRender, StandardPass.postRender) {
 
                 @Override
                 protected
@@ -1098,10 +1107,9 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     }
 
     public
-    BasicUtilities.TwoPassElement getOutputElementWrapped(int num) {
+    TwoPassElement getOutputElementWrapped(int num) {
 
-        if (elementWrapped == null) elementWrapped = new TextureUnit(0,
-                                                                     new BasicUtilities.TwoPassElement("",
+        if (elementWrapped == null) elementWrapped = new TextureUnit(0, new TwoPassElement("",
                                                                                                        StandardPass.preRender,
                                                                                                        StandardPass.postRender) {
 
@@ -1384,13 +1392,13 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
 
     public
     void useHighResolutionMesh(int devision) {
-        mesh = new BasicGeometry.QuadMesh(Base.StandardPass.preRender);
+        mesh = new BasicGeometry.QuadMesh(StandardPass.preRender);
         mesh.rebuildTriangle(devision * devision);
         mesh.rebuildVertex((1 + devision) * (1 + devision));
 
         FloatBuffer v = mesh.vertex();
 
-        FloatBuffer tex = mesh.aux(Base.texture0_id, 2);
+        FloatBuffer tex = mesh.aux(GLConstants.texture0_id, 2);
 
         for (int x = 0; x < devision + 1; x++) {
             for (int y = 0; y < devision + 1; y++) {
@@ -1434,7 +1442,7 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
     protected
     void initializeMesh() {
         // geometry ------------------------------------
-        mesh = new BasicGeometry.TriangleMesh(Base.StandardPass.preRender);
+        mesh = new BasicGeometry.TriangleMesh(StandardPass.preRender);
         mesh.rebuildTriangle(2);
         mesh.rebuildVertex(4);
 
@@ -1453,8 +1461,17 @@ class ImageProcessing implements iImageProcessor, iAcceptsSceneListElement {
             .put(0.5f);
         mesh.triangle().put((short) 0).put((short) 1).put((short) 2).put((short) 0).put((short) 2).put((short) 3);
         if (useRect)
-            mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(height).put(width).put(height).put(width).put(0);
-        else mesh.aux(Base.texture0_id, 2).put(0).put(0).put(0).put(1).put(1).put(1).put(1).put(0);
+            mesh.aux(GLConstants.texture0_id, 2)
+                .put(0)
+                .put(0)
+                .put(0)
+                .put(height)
+                .put(width)
+                .put(height)
+                .put(width)
+                .put(0);
+        else
+            mesh.aux(GLConstants.texture0_id, 2).put(0).put(0).put(0).put(1).put(1).put(1).put(1).put(0);
     }
 
     protected

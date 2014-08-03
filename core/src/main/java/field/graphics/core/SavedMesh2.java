@@ -1,10 +1,11 @@
 package field.graphics.core;
 
-import field.graphics.core.Base.iLongGeometry;
 import field.graphics.core.BasicGeometry.LineList_long;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
 import field.graphics.core.MeshBlast.Frame;
 import field.graphics.core.MeshBlast.Header;
+import field.graphics.core.scene.ILongGeometry;
+import field.graphics.core.scene.Position;
 import field.util.PythonUtils;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public
 class SavedMesh2 {
 
     public static
-    void save(iLongGeometry mesh, String name) throws IOException {
+    void save(ILongGeometry mesh, String name) throws IOException {
         MeshBlast b = new MeshBlast(name);
         b.configureChannel(mesh, mesh.numVertex(), mesh.numTriangle(), mesh instanceof LineList_long ? 2 : 3);
         if (mesh instanceof LineList_long) b.addGeometry(((LineList_long) mesh));
@@ -117,7 +118,7 @@ class SavedMesh2 {
         MappedByteBuffer source = file.getChannel().map(MapMode.READ_ONLY, 0, file.length());
         source.order(ByteOrder.nativeOrder());
 
-        LineList_long mesh = new LineList_long(new BasicUtilities.Position());
+        LineList_long mesh = new LineList_long(new Position());
 
         HashMap<Integer, Frame> frame = new HashMap<Integer, Frame>();
 
