@@ -4,40 +4,41 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElement;
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.connection.LineDrawingOverride;
+import field.math.graph.IMutableContainer;
+import field.math.graph.ITopology;
 import field.math.graph.NodeImpl;
-import field.math.graph.TopologySearching;
-import field.math.graph.iMutableContainer;
-import field.math.graph.iTopology;
-import field.math.graph.TopologySearching.AStarMetric;
-import field.namespace.generic.Bind.iFunction;
+import field.math.graph.visitors.TopologySearching;
+import field.namespace.generic.IFunction;
+
 
 public class TopologyOverElements {
 
-	private final iVisualElement root;
+	private final IVisualElement root;
 
-	private final iFunction<Boolean, iVisualElement> f;
+	private final IFunction<IVisualElement,Boolean> f;
 
-	public TopologyOverElements(iVisualElement root, iFunction<Boolean, iVisualElement> f) {
+	public TopologyOverElements(IVisualElement root, IFunction<IVisualElement,Boolean> f) {
 		this.root = root;
 		this.f = f;
 
 		reconstruct();
 	}
 
-	public class Node extends NodeImpl<Node> implements iMutableContainer<iVisualElement, Node> {
+	public class Node extends NodeImpl<Node> implements IMutableContainer<IVisualElement, Node> {
 
-		iVisualElement p;
+		IVisualElement p;
 
-		public Node setPayload(iVisualElement t) {
+		public Node setPayload(IVisualElement t) {
 			p = t;
 			return this;
 		}
 
-		public iVisualElement payload() {
+		public IVisualElement payload() {
 			return p;
 		}
 
@@ -47,21 +48,21 @@ public class TopologyOverElements {
 		}
 	}
 
-	LinkedHashMap<iVisualElement, Node> all = new LinkedHashMap<iVisualElement, Node>();
+	LinkedHashMap<IVisualElement, Node> all = new LinkedHashMap<IVisualElement, Node>();
 
 	protected void reconstruct() {
 		all.clear();
 
-		List<iVisualElement> e = StandardFluidSheet.allVisualElements(root);
-		for (iVisualElement ee : e) {
+		List<IVisualElement> e = StandardFluidSheet.allVisualElements(root);
+		for (IVisualElement ee : e) {
 			VisualElementReference a = ee.getProperty(LineDrawingOverride.lineDrawing_to);
 			VisualElementReference b = ee.getProperty(LineDrawingOverride.lineDrawing_from);
 			if (a != null && b != null) {
-				iVisualElement ae = a.get(root);
-				iVisualElement be = b.get(root);
+				IVisualElement ae = a.get(root);
+				IVisualElement be = b.get(root);
 
 				if (ae != null && be != null) {
-					Boolean m = f == null ? true : interpret(f.f(ee));
+					Boolean m = f == null ? true : interpret(f.apply(ee));
 					if (m) {
 						Node nae = getNode(ae, true);
 						Node nbe = getNode(be, true);
@@ -82,19 +83,20 @@ public class TopologyOverElements {
 		return true;
 	}
 
-	public LinkedHashMap<iVisualElement, Node> getAll() {
+	public LinkedHashMap<IVisualElement, Node> getAll() {
 		return all;
 	}
 
-	public iTopology<iVisualElement> getTopology() {
+	public
+    ITopology<IVisualElement> getTopology() {
 		return new TopologyImpl(this);
 	}
 	
-	public iTopology<iVisualElement> getTopology(iVisualElement d) {
+	public ITopology<IVisualElement> getTopology(IVisualElement d) {
 		return new TopologyImpl(this, d);
 	}
 
-	Node getNode(iVisualElement ae, boolean create) {
+	Node getNode(IVisualElement ae, boolean create) {
 		Node n = all.get(ae);
 		if (n == null && create) {
 			all.put(ae, n = new Node().setPayload(ae));
@@ -102,13 +104,13 @@ public class TopologyOverElements {
 		return n;
 	}
 
-	public List<iVisualElement> findPath(iVisualElement from, iVisualElement to) {
-		return new TopologySearching.TopologyAStarSearch<iVisualElement>(getTopology(), new AStarMetric<iVisualElement>() {
+	public List<IVisualElement> findPath(IVisualElement from, IVisualElement to) {
+		return new TopologySearching.TopologyAStarSearch<IVisualElement>(getTopology(), new TopologySearching.AStarMetric<IVisualElement>() {
 
 			Rect r1 = new Rect(0, 0, 0, 0);
 			Rect r2 = new Rect(0, 0, 0, 0);
 
-			public double distance(iVisualElement from, iVisualElement to) {
+			public double distance(IVisualElement from, IVisualElement to) {
 				from.getFrame(r1);
 				to.getFrame(r2);
 				return r1.midpoint2().distanceFrom(r2.midpoint2());

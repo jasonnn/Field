@@ -1,12 +1,16 @@
 package field.extras.osc;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.util.PythonCallableMap;
 import field.launch.SystemProperties;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 
 public class OSCPlugin extends BaseSimplePlugin {
 
@@ -36,16 +40,17 @@ public class OSCPlugin extends BaseSimplePlugin {
 	}
 
 	@Override
-	protected DefaultOverride newVisualElementOverrides() {
+	protected
+    DefaultOverride newVisualElementOverrides() {
 		return new DefaultOverride() {
 			@Override
-			public <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+			public <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
 				if (prop.equals(OSCIn.handleOsc)) {
 					T p = source.getProperty(prop);
 					if (p == null)
 						source.setProperty(prop, p = (T) new PythonCallableMap());
 					ref.set((T) p);
-					return VisitCode.stop;
+					return StandardTraversalHint.CONTINUE;
 				}
 				return super.getProperty(source, prop, ref);
 			}
@@ -57,7 +62,7 @@ public class OSCPlugin extends BaseSimplePlugin {
 
 	
 	@Override
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 		super.registeredWith(root);
 
 		if (theOut==null)

@@ -20,7 +20,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.basic.AbstractBasicConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -34,9 +33,9 @@ import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Quaternion;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Pair;
 import field.util.HashMapOfLists;
 import field.util.PythonUtils;
+import field.util.collect.tuple.Pair;
 
 public class Persistence {
 
@@ -62,7 +61,7 @@ public class Persistence {
 		public Map<Long, SimpleNode<Transform>> transforms = new HashMap<Long, SimpleNode<Transform>>();
 		public Map<String, BuildMeshVisitor.Mesh> meshes = new HashMap<String, Mesh>();
 
-		public HashMapOfLists<String, Pair<Double, BuildMeshVisitor.Mesh>> meshAnimations = new HashMapOfLists<String, Pair<Double, Mesh>>();
+		public HashMapOfLists<String, Pair<Double, Mesh>> meshAnimations = new HashMapOfLists<String, Pair<Double, Mesh>>();
 
 		public Map<String, BuildSkinningVisitor.SkinningInfo> skinningInfo = new HashMap<String, SkinningInfo>();
 
@@ -116,7 +115,7 @@ public class Persistence {
 		stream = new XStream();
 		stream.setMode(XStream.ID_REFERENCES);
 
-		stream.registerConverter(new AbstractBasicConverter() {
+		stream.registerConverter(new Converter() {
 			@Override
 			public boolean canConvert(Class type) {
 				return Quaternion.class.isAssignableFrom(type);
@@ -137,7 +136,7 @@ public class Persistence {
 			}
 		});
 
-		stream.registerConverter(new AbstractBasicConverter() {
+		stream.registerConverter(new Converter() {
 			@Override
 			public boolean canConvert(Class type) {
 				return Vector4.class.isAssignableFrom(type);

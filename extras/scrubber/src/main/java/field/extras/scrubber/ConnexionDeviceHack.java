@@ -6,19 +6,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.persistance.VisualElementReference;
+import field.core.plugins.python.PythonPlugin;
+import field.extras.scrubber.ScrubberPlugin.Connection;
+import field.launch.IUpdateable;
+import field.namespace.generic.IFunction;
+import field.util.HashMapOfLists;
 import org.python.core.PyObject;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.persistance.VisualElementReference;
-import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
-import field.extras.scrubber.ScrubberPlugin.Connection;
-import field.launch.iUpdateable;
-import field.namespace.generic.Bind.iFunction;
-import field.util.HashMapOfLists;
 
 @Woven
 public class ConnexionDeviceHack implements iConnexionSource {
@@ -83,41 +83,44 @@ public class ConnexionDeviceHack implements iConnexionSource {
 
 	protected void registerFactories(ScrubberPlugin registerWith) {
 
-		registerWith.addFactory("scrub <b>horizontally</b> based on <b>z-axis</b> rotation", new iFunction<Connection, iVisualElement>() {
-			public Connection f(iVisualElement in) {
-				return new GeneralConnection(in, "horizontal(" + in.getProperty(iVisualElement.name) + ")", 5, 10, 0);
+		registerWith.addFactory("scrub <b>horizontally</b> based on <b>z-axis</b> rotation", new IFunction<IVisualElement,Connection>() {
+			public
+            Connection apply(IVisualElement in) {
+				return new GeneralConnection(in, "horizontal(" + in.getProperty(IVisualElement.name) + ")", 5, 10, 0);
 			}
 		});
-		registerWith.addFactory("scrub <b>horizontally</b> based on <b>z-axis</b> translation", new iFunction<Connection, iVisualElement>() {
-			public Connection f(iVisualElement in) {
-				return new GeneralConnection(in, "horizontal(" + in.getProperty(iVisualElement.name) + ")", 2, 10, 0);
+		registerWith.addFactory("scrub <b>horizontally</b> based on <b>z-axis</b> translation", new IFunction<IVisualElement,Connection>() {
+			public Connection apply(IVisualElement in) {
+				return new GeneralConnection(in, "horizontal(" + in.getProperty(IVisualElement.name) + ")", 2, 10, 0);
 			}
 		});
-		registerWith.addFactory("<b> execute <i>while</i></b> left button down", new iFunction<Connection, iVisualElement>() {
-			public Connection f(iVisualElement in) {
-				return new PressExecution(in, "pressLeft(" + in.getProperty(iVisualElement.name) + ")", 1);
+		registerWith.addFactory("<b> execute <i>while</i></b> left button down", new IFunction<IVisualElement,Connection>() {
+			public Connection apply(IVisualElement in) {
+				return new PressExecution(in, "pressLeft(" + in.getProperty(IVisualElement.name) + ")", 1);
 			}
 		});
-		registerWith.addFactory("<b> <i>toggle</i> execution</b> with left button", new iFunction<Connection, iVisualElement>() {
-			public Connection f(iVisualElement in) {
-				return new ToggleExecution(in, "toggleLeft(" + in.getProperty(iVisualElement.name) + ")", 1);
+		registerWith.addFactory("<b> <i>toggle</i> execution</b> with left button", new IFunction<IVisualElement,Connection>() {
+			public Connection apply(IVisualElement in) {
+				return new ToggleExecution(in, "toggleLeft(" + in.getProperty(IVisualElement.name) + ")", 1);
 			}
 		});
-		registerWith.addFactory("<b> execute <i>while</i></b> right button down", new iFunction<Connection, iVisualElement>() {
-			public Connection f(iVisualElement in) {
-				return new PressExecution(in, "pressRight(" + in.getProperty(iVisualElement.name) + ")", 2);
+		registerWith.addFactory("<b> execute <i>while</i></b> right button down", new IFunction<IVisualElement,Connection>() {
+			public
+            Connection apply(IVisualElement in) {
+				return new PressExecution(in, "pressRight(" + in.getProperty(IVisualElement.name) + ")", 2);
 			}
 		});
-		registerWith.addFactory("<b> <i>toggle</i> execution</b> with right button", new iFunction<Connection, iVisualElement>() {
-			public Connection f(iVisualElement in) {
-				return new ToggleExecution(in, "toggleRight(" + in.getProperty(iVisualElement.name) + ")", 2);
+		registerWith.addFactory("<b> <i>toggle</i> execution</b> with right button", new IFunction<IVisualElement,Connection>() {
+			public
+            Connection apply(IVisualElement in) {
+				return new ToggleExecution(in, "toggleRight(" + in.getProperty(IVisualElement.name) + ")", 2);
 			}
 		});
 	}
 
 	static public class GeneralConnection extends Connection {
 
-		public GeneralConnection(iVisualElement to, String name, int axis, float scale, int aspect) {
+		public GeneralConnection(IVisualElement to, String name, int axis, float scale, int aspect) {
 			this.outputTo = new VisualElementReference(to);
 			this.name = name;
 			this.axis = axis;
@@ -131,7 +134,7 @@ public class ConnexionDeviceHack implements iConnexionSource {
 		float scale = 0;
 
 		@Override
-		public void update(iVisualElement root) {
+		public void update(IVisualElement root) {
 
 			;//;//System.out.println(" update generale conncetion");
 
@@ -148,17 +151,17 @@ public class ConnexionDeviceHack implements iConnexionSource {
 				fr.y += f;
 
 			;//;//System.out.println("updating frame to <" + fr + ">");
-			iVisualElement old = iVisualElementOverrides.topology.setAt(outputTo.get(root));
-			iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(outputTo.get(root), fr, outputTo.get(root).getFrame(null), true);
-			outputTo.get(root).setProperty(iVisualElement.dirty, true);
-			iVisualElementOverrides.topology.setAt(old);
+			IVisualElement old = IVisualElementOverrides.topology.setAt(outputTo.get(root));
+			IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(outputTo.get(root), fr, outputTo.get(root).getFrame(null), true);
+			outputTo.get(root).setProperty(IVisualElement.dirty, true);
+			IVisualElementOverrides.topology.setAt(old);
 		}
 	}
 
 	static public class ToggleExecution extends Connection {
 		private final int button;
 
-		public ToggleExecution(iVisualElement to, String name, int button) {
+		public ToggleExecution(IVisualElement to, String name, int button) {
 			this.outputTo = new VisualElementReference(to);
 			this.name = name;
 			this.button = button;
@@ -168,7 +171,7 @@ public class ConnexionDeviceHack implements iConnexionSource {
 		boolean on = false;
 
 		@Override
-		public void update(iVisualElement root) {
+		public void update(IVisualElement root) {
 			if (ConnexionDeviceHack.globalDevice == null)
 				return;
 			int b = ConnexionDeviceHack.globalDevice.buttons;
@@ -180,16 +183,16 @@ public class ConnexionDeviceHack implements iConnexionSource {
 			lastWasDown = stat;
 		}
 
-		private void toggle(iVisualElement root) {
+		private void toggle(IVisualElement root) {
 			if (on) {
-				iVisualElement old = iVisualElementOverrides.topology.setAt(outputTo.get(root));
-				iVisualElementOverrides.forward.endExecution.endExecution(outputTo.get(root));
-				iVisualElementOverrides.topology.setAt(old);
+				IVisualElement old = IVisualElementOverrides.topology.setAt(outputTo.get(root));
+				IVisualElementOverrides.forward.endExecution.endExecution(outputTo.get(root));
+				IVisualElementOverrides.topology.setAt(old);
 				on = false;
 			} else {
-				iVisualElement old = iVisualElementOverrides.topology.setAt(outputTo.get(root));
-				iVisualElementOverrides.forward.beginExecution.beginExecution(outputTo.get(root));
-				iVisualElementOverrides.topology.setAt(old);
+				IVisualElement old = IVisualElementOverrides.topology.setAt(outputTo.get(root));
+				IVisualElementOverrides.forward.beginExecution.beginExecution(outputTo.get(root));
+				IVisualElementOverrides.topology.setAt(old);
 				on = true;
 			}
 		}
@@ -198,7 +201,7 @@ public class ConnexionDeviceHack implements iConnexionSource {
 	static public class PressExecution extends Connection {
 		private final int button;
 
-		public PressExecution(iVisualElement to, String name, int button) {
+		public PressExecution(IVisualElement to, String name, int button) {
 			this.outputTo = new VisualElementReference(to);
 			this.name = name;
 			this.button = button;
@@ -207,7 +210,7 @@ public class ConnexionDeviceHack implements iConnexionSource {
 		boolean lastWasDown = false;
 
 		@Override
-		public void update(iVisualElement root) {
+		public void update(IVisualElement root) {
 			if (ConnexionDeviceHack.globalDevice == null)
 				return;
 			int b = ConnexionDeviceHack.globalDevice.buttons;
@@ -221,16 +224,16 @@ public class ConnexionDeviceHack implements iConnexionSource {
 			lastWasDown = stat;
 		}
 
-		private void toggle(boolean on, iVisualElement root) {
+		private void toggle(boolean on, IVisualElement root) {
 			if (!on) {
-				iVisualElement old = iVisualElementOverrides.topology.setAt(outputTo.get(root));
-				iVisualElementOverrides.forward.endExecution.endExecution(outputTo.get(root));
-				iVisualElementOverrides.topology.setAt(old);
+				IVisualElement old = IVisualElementOverrides.topology.setAt(outputTo.get(root));
+				IVisualElementOverrides.forward.endExecution.endExecution(outputTo.get(root));
+				IVisualElementOverrides.topology.setAt(old);
 
 			} else {
-				iVisualElement old = iVisualElementOverrides.topology.setAt(outputTo.get(root));
-				iVisualElementOverrides.forward.beginExecution.beginExecution(outputTo.get(root));
-				iVisualElementOverrides.topology.setAt(old);
+				IVisualElement old = IVisualElementOverrides.topology.setAt(outputTo.get(root));
+				IVisualElementOverrides.forward.beginExecution.beginExecution(outputTo.get(root));
+				IVisualElementOverrides.topology.setAt(old);
 			}
 		}
 	}
@@ -243,23 +246,23 @@ public class ConnexionDeviceHack implements iConnexionSource {
 			;//;//System.out.println(newButtons+" "+oldButtons+" "+m);
 
 			if ((newButtons & m) !=0 && (oldButtons & m) == 0) {
-				Collection<iUpdateable> c = buttonToggles.get(i);
+				Collection<IUpdateable> c = buttonToggles.get(i);
 				if (c != null)
-					for (iUpdateable u : c)
+					for (IUpdateable u : c)
 						u.update();
 			}
 			m <<= 1;
 		}
 	}
 
-	HashMapOfLists<Integer, iUpdateable> buttonToggles = new HashMapOfLists<Integer, iUpdateable>();
+	HashMapOfLists<Integer, IUpdateable> buttonToggles = new HashMapOfLists<Integer, IUpdateable>();
 
-	public void addToogle(int button, iUpdateable u) {
+	public void addToogle(int button, IUpdateable u) {
 		buttonToggles.addToList(button, u);
 	}
 
-	public void addToogle(int button, final PyObject u, final CapturedEnvironment env) {
-		buttonToggles.addToList(button, new iUpdateable() {
+	public void addToogle(int button, final PyObject u, final PythonPlugin.CapturedEnvironment env) {
+		buttonToggles.addToList(button, new IUpdateable() {
 
 			public void update() {
 				env.enter();

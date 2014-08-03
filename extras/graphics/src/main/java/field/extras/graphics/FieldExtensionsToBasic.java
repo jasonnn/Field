@@ -24,6 +24,14 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.WeakHashMap;
 
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElementProperty;
+import field.graphics.core.*;
+import field.launch.IUpdateable;
+import field.math.abstraction.IProvider;
+import field.util.collect.tuple.Pair;
 import org.lwjgl.opengl.GL20;
 import org.python.core.Py;
 import org.python.core.PyBuiltinMethodNarrow;
@@ -39,10 +47,7 @@ import org.python.core.PyType;
 
 import field.bytecode.protect.iInside;
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+
 import field.core.execution.PythonInterface;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.CachedLineLayer;
@@ -56,9 +61,7 @@ import field.graphics.core.AdvancedTextures.BaseFloatTexture;
 import field.graphics.core.Base.StandardPass;
 import field.graphics.core.Base.iAcceptsSceneListElement;
 import field.graphics.core.Base.iBuildable;
-import field.graphics.core.Base.iSceneListElement;
 import field.graphics.core.BasicFrameBuffers.iDisplayable;
-import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGLSLangProgram.BasicGLSLangElement;
 import field.graphics.core.BasicGLSLangProgram.SetIntegerUniform;
 import field.graphics.core.BasicGLSLangProgram.SetMatrixUniform;
@@ -68,10 +71,7 @@ import field.graphics.core.BasicGeometry.Instance;
 import field.graphics.core.BasicGeometry.QuadMesh_long;
 import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
-import field.graphics.core.BasicSceneList;
 import field.graphics.core.BasicTextures.TextureUnit;
-import field.graphics.core.CoreHelpers;
-import field.graphics.core.RawMesh2;
 import field.graphics.dynamic.DynamicLine_long;
 import field.graphics.dynamic.DynamicMesh;
 import field.graphics.dynamic.DynamicMesh_long;
@@ -83,8 +83,7 @@ import field.graphics.imageprocessing.TwoPassImageProcessing;
 import field.graphics.imageprocessing.TwoPassImageProcessingTwoOutput;
 import field.graphics.imageprocessing.TwoPassImageProcessingTwoOutputMultisampled;
 import field.graphics.windowing.FullScreenCanvasSWT;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
+
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Matrix4;
 import field.math.linalg.Quaternion;
@@ -92,7 +91,6 @@ import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
 import field.math.linalg.iToFloatArray;
-import field.namespace.generic.Generics.Pair;
 import field.util.PythonUtils;
 import field.util.TaskQueue;
 import field.util.TaskQueue.Task;
@@ -104,7 +102,7 @@ public class FieldExtensionsToBasic {
 	static final public int _texture0 = 8;
 
 	static public WeakHashMap<Object, Map<String, Object>> perGeometryShaderValues = new WeakHashMap<Object, Map<String, Object>>();
-	static public WeakHashMap<Object, iUpdateable> perGeometryShaderUpdators = new WeakHashMap<Object, iUpdateable>();
+	static public WeakHashMap<Object, IUpdateable> perGeometryShaderUpdators = new WeakHashMap<Object, IUpdateable>();
 
 	// iAcceptsSceneListElement
 
@@ -222,9 +220,10 @@ public class FieldExtensionsToBasic {
 					} else if (o instanceof TwoPassImageProcessingTwoOutputMultisampled) {
 						((TwoPassImageProcessingTwoOutputMultisampled) o).join(c);
 					} else if (o instanceof iDisplayable) {
-						aRun arun = new Cont.aRun() {
+						aRun arun = new aRun() {
 							@Override
-							public ReturnCode head(Object calledOn, Object[] args) {
+							public
+                            ReturnCode head(Object calledOn, Object[] args) {
 
 								((iDisplayable) o).display();
 								return super.head(calledOn, args);
@@ -232,12 +231,12 @@ public class FieldExtensionsToBasic {
 						};
 						Cont.linkWith(c, c.getCurrentFlushMethod(), arun);
 					} 
-					else if (o instanceof iUpdateable) {
-						aRun arun = new Cont.aRun() {
+					else if (o instanceof IUpdateable) {
+						aRun arun = new aRun() {
 							@Override
 							public ReturnCode head(Object calledOn, Object[] args) {
 
-								((iUpdateable) o).update();
+								((IUpdateable) o).update();
 								return super.head(calledOn, args);
 							}
 						};
@@ -257,7 +256,7 @@ public class FieldExtensionsToBasic {
 				public PyObject __call__(PyObject composeWith) {
 
 					ImageProcessing s = Py.tojava(self, ImageProcessing.class);
-					iSceneListElement e = toSceneListElement(Py.tojava(composeWith, Object.class));
+					Base.ISceneListElement e = toSceneListElement(Py.tojava(composeWith, Object.class));
 					s.addChild(e);
 
 					return self;
@@ -271,7 +270,7 @@ public class FieldExtensionsToBasic {
 				public PyObject __call__(PyObject composeWith) {
 
 					ImageProcessing s = Py.tojava(self, ImageProcessing.class);
-					iSceneListElement e = toSceneListElement(Py.tojava(composeWith, Object.class));
+					Base.ISceneListElement e = toSceneListElement(Py.tojava(composeWith, Object.class));
 					s.addChild(e);
 
 					return composeWith;
@@ -1218,7 +1217,7 @@ public class FieldExtensionsToBasic {
 
 	static public void installUniformUpdator(final BasicSceneList underlyingGeometry, final Map<String, Object> lookupIn) {
 
-		iUpdateable u = perGeometryShaderUpdators.get(underlyingGeometry);
+		IUpdateable u = perGeometryShaderUpdators.get(underlyingGeometry);
 
 		if (u == null) {
 			;//;//System.out.println(" installing per shader updator for <" + underlyingGeometry + ">");
@@ -1227,8 +1226,8 @@ public class FieldExtensionsToBasic {
 
 				LinkedHashMap<String, Object> was = new LinkedHashMap<String, Object>();
 
-				public iUpdateable getPush() {
-					return new iUpdateable() {
+				public IUpdateable getPush() {
+					return new IUpdateable() {
 
 						Task t = null;
 
@@ -1252,8 +1251,8 @@ public class FieldExtensionsToBasic {
 					};
 				}
 
-				public iUpdateable getPop() {
-					return new iUpdateable() {
+				public IUpdateable getPop() {
+					return new IUpdateable() {
 
 						Task t = null;
 
@@ -1312,8 +1311,8 @@ public class FieldExtensionsToBasic {
 			glUniform1f(id, ((Double) value).floatValue());
 		} else if (value instanceof Integer) {
 			glUniform1i(id, ((Integer) value).intValue());
-		} else if (value instanceof iProvider) {
-			Object nvalue = ((iProvider) value).get();
+		} else if (value instanceof IProvider) {
+			Object nvalue = ((IProvider) value).get();
 			if (nvalue != value) {
 				setUniformNow(gl, id, nvalue);
 			}
@@ -1362,10 +1361,10 @@ public class FieldExtensionsToBasic {
 
 					;//;//System.out.println(" found integer uniform ");
 
-					if ((((SetIntegerUniform) t).value instanceof iProvider.Constant)) {
-						((iProvider.Constant) ((SetIntegerUniform) t).value).set(o);
+					if ((((SetIntegerUniform) t).value instanceof IProvider.Constant)) {
+						((IProvider.Constant) ((SetIntegerUniform) t).value).set(o);
 					} else {
-						((SetIntegerUniform) t).value = new iProvider.Constant<Integer>((Integer) o);
+						((SetIntegerUniform) t).value = new IProvider.Constant<Integer>((Integer) o);
 					}
 					found = true;
 					rt = t;
@@ -1374,10 +1373,10 @@ public class FieldExtensionsToBasic {
 			}
 			if (t instanceof SetMatrixUniform) {
 				if (((SetMatrixUniform) t).name.equals(k)) {
-					if ((((SetMatrixUniform) t).value instanceof iProvider.Constant)) {
-						((iProvider.Constant) ((SetMatrixUniform) t).value).set(o);
+					if ((((SetMatrixUniform) t).value instanceof IProvider.Constant)) {
+						((IProvider.Constant) ((SetMatrixUniform) t).value).set(o);
 					} else {
-						((SetMatrixUniform) t).value = new iProvider.Constant<Matrix4>((Matrix4) o);
+						((SetMatrixUniform) t).value = new IProvider.Constant<Matrix4>((Matrix4) o);
 					}
 					found = true;
 					rt = t;
@@ -1399,7 +1398,7 @@ public class FieldExtensionsToBasic {
 					}
 				});
 			} else if (o instanceof Matrix4) {
-				rt = program.new SetMatrixUniform(k, new iProvider.Constant<Matrix4>().set((Matrix4) o));
+				rt = program.new SetMatrixUniform(k, new IProvider.Constant<Matrix4>().set((Matrix4) o));
 			}
 		}
 		
@@ -1712,9 +1711,9 @@ public class FieldExtensionsToBasic {
 		}
 	}
 
-	static public iSceneListElement toSceneListElement(Object o) {
-		if (o instanceof iSceneListElement)
-			return (iSceneListElement) o;
+	static public Base.ISceneListElement toSceneListElement(Object o) {
+		if (o instanceof Base.ISceneListElement)
+			return (Base.ISceneListElement) o;
 		if (o instanceof DynamicMesh)
 			return ((DynamicMesh) o).getUnderlyingGeometry();
 		if (o instanceof DynamicMesh_long)
@@ -1743,7 +1742,7 @@ public class FieldExtensionsToBasic {
 	}
 
 	@SuppressWarnings("unchecked")
-	static public BasicGLSLangProgram makeComputeShaderFromElement(final iVisualElement element) {
+	static public BasicGLSLangProgram makeComputeShaderFromElement(final IVisualElement element) {
 		final BasicGLSLangProgram program = new BasicGLSLangProgram();
 
 		String vs = computeShader.get(element);
@@ -1759,7 +1758,7 @@ public class FieldExtensionsToBasic {
 		reodir.addAll(PythonInterface.getPythonInterface().getOutputRedirects());
 		final BasicGLSLangElement e1 = program.new BasicGLSLangElement(computeShader.get(element), BasicGLSLangProgram.ElementType.compute);
 
-		PythonPluginEditor.python_customToolbar.addToList(ArrayList.class, element, new Pair<String, iUpdateable>("Refresh shader", new iUpdateable() {
+		PythonPluginEditor.python_customToolbar.addToList(ArrayList.class, element, new Pair<String, IUpdateable>("Refresh shader", new IUpdateable() {
 			public void update() {
 				program.deferReload();
 				e1.reload(computeShader.get(element), new BasicGLSLangProgram.iErrorHandler() {
@@ -1806,7 +1805,7 @@ public class FieldExtensionsToBasic {
 				});
 				
 
-				iVisualElement.dirty.set(element, element, true);
+				IVisualElement.dirty.set(element, element, true);
 			}
 		}));
 
@@ -1815,7 +1814,7 @@ public class FieldExtensionsToBasic {
 	}
 	
 	@SuppressWarnings("unchecked")
-	static public BasicGLSLangProgram makeShaderFromElement(final iVisualElement element) {
+	static public BasicGLSLangProgram makeShaderFromElement(final IVisualElement element) {
 
 		final BasicGLSLangProgram program = new BasicGLSLangProgram();
 
@@ -1855,7 +1854,7 @@ public class FieldExtensionsToBasic {
 		final BasicGLSLangElement e4 = program.new BasicGLSLangElement(tessControlShader.get(element), BasicGLSLangProgram.ElementType.tessControl);
 		final BasicGLSLangElement e5 = program.new BasicGLSLangElement(tessEvalShader.get(element), BasicGLSLangProgram.ElementType.tessEval);
 
-		PythonPluginEditor.python_customToolbar.addToList(ArrayList.class, element, new Pair<String, iUpdateable>("Refresh shader", new iUpdateable() {
+		PythonPluginEditor.python_customToolbar.addToList(ArrayList.class, element, new Pair<String, IUpdateable>("Refresh shader", new IUpdateable() {
 			public void update() {
 				;//;//System.out.println(" refreshing shader ");
 
@@ -2075,7 +2074,7 @@ public class FieldExtensionsToBasic {
 
 				});
 
-				iVisualElement.dirty.set(element, element, true);
+				IVisualElement.dirty.set(element, element, true);
 			}
 		}));
 
@@ -2114,7 +2113,7 @@ public class FieldExtensionsToBasic {
 				wire(s, ((CachedLineLayer) w).new UpdateMesh((DynamicMesh_long) s, directMesh));
 
 		} else {
-			iSceneListElement e = toSceneListElement(w);
+			Base.ISceneListElement e = toSceneListElement(w);
 			s.addChild(e);
 		}
 	}
@@ -2152,7 +2151,7 @@ public class FieldExtensionsToBasic {
 			unwireLine_mesh(((DynamicMesh_long) s), ((CachedLine) w));
 		} else if (s instanceof CachedLineLayer) {
 		} else {
-			iSceneListElement e = toSceneListElement(w);
+			Base.ISceneListElement e = toSceneListElement(w);
 			s.removeChild(e);
 		}
 	}

@@ -7,10 +7,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import field.math.abstraction.iAcceptor;
-import field.math.abstraction.iInplaceProvider;
-import field.math.graph.iTopology;
-import field.math.graph.iTopology.iHasTopology;
+
+import field.math.abstraction.IAcceptor;
+import field.math.abstraction.IInplaceProvider;
+import field.math.graph.ITopology;
 import field.math.linalg.CoordinateFrame;
 
 public class HierarchyOfCoordinateFrames {
@@ -18,7 +18,8 @@ public class HierarchyOfCoordinateFrames {
 	/**
 	 * this is supposed to be the fast and dumb version
 	 */
-	public class Element implements iInplaceProvider<CoordinateFrame>, iHasTopology, iAcceptor<CoordinateFrame> {
+	public class Element implements IInplaceProvider<CoordinateFrame>,
+                                    ITopology.iHasTopology, IAcceptor<CoordinateFrame> {
 		public CoordinateFrame localFrame = new CoordinateFrame();
 
 		public CoordinateFrame worldFrame = new CoordinateFrame();
@@ -44,7 +45,7 @@ public class HierarchyOfCoordinateFrames {
 			return o;
 		}
 
-		public iTopology getTopology() {
+		public ITopology getTopology() {
 			return HierarchyOfCoordinateFrames.this.getTopology();
 		}
 
@@ -115,7 +116,7 @@ public class HierarchyOfCoordinateFrames {
 			return "element:" + name;
 		}
 
-		public iAcceptor<CoordinateFrame> set(CoordinateFrame to) {
+		public IAcceptor<CoordinateFrame> set(CoordinateFrame to) {
 			setLocal(to);
 			return this;
 		}
@@ -160,8 +161,8 @@ public class HierarchyOfCoordinateFrames {
 		return ret;
 	}
 
-	public iTopology<Element> getTopology() {
-		return new iTopology<Element>() {
+	public ITopology<Element> getTopology() {
+		return new ITopology<Element>() {
 
 			public List<Element> getChildrenOf(Element of) {
 				return of.children;

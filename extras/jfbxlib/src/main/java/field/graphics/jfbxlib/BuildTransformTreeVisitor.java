@@ -10,10 +10,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Stack;
 
-import field.math.graph.GraphNodeSearching;
-import field.math.graph.GraphNodeSearching.GraphNodeVisitor_depthFirst;
-import field.math.graph.GraphNodeSearching.VisitCode;
+
 import field.math.graph.SimpleNode;
+import field.math.graph.visitors.GraphNodeSearching;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Matrix3;
 import field.math.linalg.Matrix4;
@@ -77,9 +78,10 @@ public class BuildTransformTreeVisitor extends AbstractVisitor {
 	}
 
 	public void computeLocals() {
-		GraphNodeVisitor_depthFirst<SimpleNode<Transform>> print = new GraphNodeSearching.GraphNodeVisitor_depthFirst<SimpleNode<Transform>>(false) {
+		GraphNodeSearching.GraphNodeVisitor_depthFirst<SimpleNode<Transform>> print = new GraphNodeSearching.GraphNodeVisitor_depthFirst<SimpleNode<Transform>>(false) {
 			@Override
-			protected VisitCode visit(SimpleNode<Transform> n) {
+			protected
+            TraversalHint visit(SimpleNode<Transform> n) {
 
 				//if (true) return VisitCode.cont;
 				
@@ -146,7 +148,7 @@ public class BuildTransformTreeVisitor extends AbstractVisitor {
 					}
 
 				}
-				return VisitCode.cont;
+				return StandardTraversalHint.CONTINUE;
 			}
 		};
 		for (SimpleNode<Transform> t : roots)
@@ -176,11 +178,11 @@ public class BuildTransformTreeVisitor extends AbstractVisitor {
 	}
 
 	public void printAllNodes(final PrintStream output) {
-		GraphNodeVisitor_depthFirst<SimpleNode<Transform>> print = new GraphNodeSearching.GraphNodeVisitor_depthFirst<SimpleNode<Transform>>(false) {
+		GraphNodeSearching.GraphNodeVisitor_depthFirst<SimpleNode<Transform>> print = new GraphNodeSearching.GraphNodeVisitor_depthFirst<SimpleNode<Transform>>(false) {
 			@Override
-			protected VisitCode visit(SimpleNode<Transform> n) {
+			protected TraversalHint visit(SimpleNode<Transform> n) {
 				output.println(spaces(this.stack.size()) + n);
-				return VisitCode.cont;
+				return StandardTraversalHint.CONTINUE;
 			}
 		};
 		for (SimpleNode<Transform> t : roots)

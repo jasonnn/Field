@@ -11,17 +11,24 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.override.Ref;
+import field.launch.IUpdateable;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
+import field.namespace.generic.IFunction;
+import field.util.collect.tuple.Pair;
 import org.eclipse.swt.widgets.Event;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Constants;
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.connection.Connections;
 import field.core.plugins.connection.LineDrawingOverride;
@@ -39,19 +46,15 @@ import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.SwingBridgeComponent;
 import field.core.windowing.components.iComponent;
-import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 import field.namespace.generic.Bind;
-import field.namespace.generic.Bind.iFunction;
-import field.namespace.generic.Generics.Pair;
 
 public class HierarchyHandler2 extends HierarchyHandler {
 
 	private Connections connections;
 
-	public HierarchyHandler2(iVisualElement root) {
+	public HierarchyHandler2(IVisualElement root) {
 		super(root);
 		connections = Connections.connections_plugin.get(root);
 
@@ -62,9 +65,9 @@ public class HierarchyHandler2 extends HierarchyHandler {
 	}
 
 	@Override
-	public void finalizeConnection(iVisualElement origin, iVisualElement target, int buttons) {
+	public void finalizeConnection(IVisualElement origin, IVisualElement target, int buttons) {
 		if (buttons == 1) {
-			iVisualElement c = connections.connect(origin, target, DispatchConnective.class, false);
+			IVisualElement c = connections.connect(origin, target, DispatchConnective.class, false);
 			PresentationParameters pp = new PresentationParameters();
 			pp.hidden = true;
 			PresentationMode.present.set(c, c, pp);
@@ -77,32 +80,32 @@ public class HierarchyHandler2 extends HierarchyHandler {
 	}
 
 	@Override
-	public iVisualElement over(Vector2 at) {
-		iVisualElement o = super.over(at);
+	public IVisualElement over(Vector2 at) {
+		IVisualElement o = super.over(at);
 
 		if (o==null) return null;
-		if (o.getProperty(iVisualElement.overrides) instanceof DispatchConnective) return null;
+		if (o.getProperty(IVisualElement.overrides) instanceof DispatchConnective) return null;
 		
 		return o;
 	}
 	
 	public void verify() {
 		
-		List<iVisualElement> all = new ArrayList<iVisualElement>(StandardFluidSheet.allVisualElements(root));
+		List<IVisualElement> all = new ArrayList<IVisualElement>(StandardFluidSheet.allVisualElements(root));
 
-		for (iVisualElement e : all) {
-			if (iVisualElement.localView.get(e) == null)
+		for (IVisualElement e : all) {
+			if (IVisualElement.localView.get(e) == null)
 				continue;
-			List<iVisualElement> m = (List<iVisualElement>) e.getParents();
-			for (iVisualElement p : m) {
+			List<IVisualElement> m = (List<IVisualElement>) e.getParents();
+			for (IVisualElement p : m) {
 
-				if (iVisualElement.localView.get(p) == null)
+				if (IVisualElement.localView.get(p) == null)
 					continue;
 
 				if (isConnected(e, p) == null) {
 					if (p != root && e != root && !filter(p) && !filter(e)) {
 						;//;//System.out.println(" connecting :" + e + " " + p);
-						iVisualElement c = connections.connect(e, p, DispatchConnective.class, false);
+						IVisualElement c = connections.connect(e, p, DispatchConnective.class, false);
 						PresentationParameters pp = new PresentationParameters();
 						pp.hidden = true;
 						PresentationMode.present.set(c, c, pp);
@@ -115,11 +118,11 @@ public class HierarchyHandler2 extends HierarchyHandler {
 	}
 
 	@Override
-	public String getMessage(iVisualElement origin, iVisualElement target, int buttons) {
-		String no = iVisualElement.name.get(origin);
-		String nt = iVisualElement.name.get(target);
+	public String getMessage(IVisualElement origin, IVisualElement target, int buttons) {
+		String no = IVisualElement.name.get(origin);
+		String nt = IVisualElement.name.get(target);
 		if (buttons == 1) {
-			final iVisualElement c1 = isConnected(origin, target);
+			final IVisualElement c1 = isConnected(origin, target);
 			if (c1 != null) {
 				return "\u2014\u2014 do nothing \u2014\u2014";
 			} else
@@ -128,15 +131,15 @@ public class HierarchyHandler2 extends HierarchyHandler {
 		return "\u2014\u2014 do nothing \u2014\u2014";
 	}
 
-	public iVisualElement isConnected(iVisualElement from, iVisualElement to) {
+	public IVisualElement isConnected(IVisualElement from, IVisualElement to) {
 
 		;//;//System.out.println(" connections <" + connections + "> <" + (connections != null ? connections.connections : null) + ">");
 
 		;//;//System.out.println(" checking to see if <" + from + " and " + to + "> are connected");
 
-		Set<Entry<String, iVisualElement>> cc = connections.connections.entrySet();
-		for (Entry<String, iVisualElement> e : cc) {
-			iVisualElement v = e.getValue();
+		Set<Entry<String, IVisualElement>> cc = connections.connections.entrySet();
+		for (Entry<String, IVisualElement> e : cc) {
+			IVisualElement v = e.getValue();
 			VisualElementReference f = LineDrawingOverride.lineDrawing_from.get(v);
 			VisualElementReference t = LineDrawingOverride.lineDrawing_to.get(v);
 
@@ -150,8 +153,8 @@ public class HierarchyHandler2 extends HierarchyHandler {
 		return null;
 	}
 
-	private boolean filter(iVisualElement to) {
-		return (to.getProperty(iVisualElement.localView) instanceof SwingBridgeComponent);
+	private boolean filter(IVisualElement to) {
+		return (to.getProperty(IVisualElement.localView) instanceof SwingBridgeComponent);
 	}
 
 	@Woven
@@ -161,21 +164,22 @@ public class HierarchyHandler2 extends HierarchyHandler {
 		static public final VisualElementProperty<VisualElementReference> lineDrawing_to = new VisualElementProperty<VisualElementReference>("lineDrawing_to");
 
 		@Override
-		public DefaultOverride setVisualElement(iVisualElement ve) {
-			iVisualElement.doNotSave.set(ve, ve, true);			
+		public DefaultOverride setVisualElement(IVisualElement ve) {
+			IVisualElement.doNotSave.set(ve, ve, true);			
 			return super.setVisualElement(ve);
 		}
 		
-		public VisitCode deleted(iVisualElement source) {
+		public
+        TraversalHint deleted(IVisualElement source) {
 
 			if (source == from() || source == to()) {
-				new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(forElement).deleted(forElement);
-				for (iVisualElement ve : new ArrayList<iVisualElement>((Collection<iVisualElement>) forElement.getParents())) {
+				 IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(forElement).deleted(forElement);
+				for (IVisualElement ve : new ArrayList<IVisualElement>((Collection<IVisualElement>) forElement.getParents())) {
 					ve.removeChild(forElement);
 				}
 			} else if (source == forElement) {
-				iVisualElement f = from();
-				iVisualElement t = to();
+				IVisualElement f = from();
+				IVisualElement t = to();
 
 				if (f != null && t != null) {
 					Subelements s = (Subelements) PseudoPropertiesPlugin.subelements.get(f);
@@ -185,16 +189,16 @@ public class HierarchyHandler2 extends HierarchyHandler {
 			return super.deleted(source);
 		}
 
-		protected iVisualElement from() {
+		protected IVisualElement from() {
 			VisualElementReference p = this.forElement.getProperty(lineDrawing_from);
 			if (p == null) {
 				return null;
 			}
-			iVisualElement r = p.get(forElement);
+			IVisualElement r = p.get(forElement);
 			return r;
 		}
 
-		protected iVisualElement to() {
+		protected IVisualElement to() {
 			VisualElementReference p = this.forElement.getProperty(lineDrawing_to);
 			if (p == null) {
 				return null;
@@ -203,13 +207,13 @@ public class HierarchyHandler2 extends HierarchyHandler {
 		}
 
 		@Override
-		public VisitCode isHit(iVisualElement source, Event event, Ref<Boolean> is) {
+		public TraversalHint isHit(IVisualElement source, Event event, Ref<Boolean> is) {
 			if (source == forElement) {
-				iVisualElement f = from();
-				iVisualElement t = to();
+				IVisualElement f = from();
+				IVisualElement t = to();
 				if (f == null || t == null) {
 					needsDeletion();
-					return VisitCode.cont;
+					return StandardTraversalHint.CONTINUE;
 				}
 
 				Rect fr = f.getFrame(null);
@@ -217,7 +221,7 @@ public class HierarchyHandler2 extends HierarchyHandler {
 
 				if (fr == null || tr == null) {
 					needsDeletion();
-					return VisitCode.cont;
+					return StandardTraversalHint.CONTINUE;
 				}
 
 				final Vector2 tm = tr.midpoint2();
@@ -267,10 +271,10 @@ public class HierarchyHandler2 extends HierarchyHandler {
 																			 * )
 																			 */};
 
-				Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new iFunction<Double, Vector2>() {
+				Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new IFunction<Vector2,Double>() {
 
 					@Override
-					public Double f(Vector2 in) {
+					public Double apply(Vector2 in) {
 						return (double) in.distanceFrom(tm);
 					}
 				});
@@ -278,8 +282,8 @@ public class HierarchyHandler2 extends HierarchyHandler {
 				CachedLine c = new CachedLine();
 				c.getInput().moveTo(fromPosition.x, fromPosition.y);
 
-				SelectionGroup<iComponent> selected = iVisualElement.selectionGroup.get(source);
-				boolean isSelected = selected.getSelection().contains(iVisualElement.localView.get(source)) || selected.getSelection().contains(iVisualElement.localView.get(t)) || selected.getSelection().contains(iVisualElement.localView.get(f));
+				SelectionGroup<iComponent> selected = IVisualElement.selectionGroup.get(source);
+				boolean isSelected = selected.getSelection().contains(IVisualElement.localView.get(source)) || selected.getSelection().contains(IVisualElement.localView.get(t)) || selected.getSelection().contains(IVisualElement.localView.get(f));
 
 				Vector2 tm2 = lineToRect(fromPosition, tm, tr);
 
@@ -292,7 +296,7 @@ public class HierarchyHandler2 extends HierarchyHandler {
 				int w = 4;
 				if (new LineUtils().isIntersecting(c, new Rect(event.x - w, event.y - w, w * 2, w * 2))) {
 					is.set(true);
-					return VisitCode.stop;
+					return StandardTraversalHint.STOP;
 				}
 
 			}
@@ -300,23 +304,23 @@ public class HierarchyHandler2 extends HierarchyHandler {
 		}
 
 		@Override
-		public VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+		public TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
 			return super.menuItemsFor(source, items);
 		}
 
 		@Override
-		public VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+		public TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
 			if (source == forElement) {
 
 				PresentationParameters pp = new PresentationParameters();
 				pp.hidden = true;
 				PresentationMode.present.set(source, source, pp);
 
-				iVisualElement f = from();
-				iVisualElement t = to();
+				IVisualElement f = from();
+				IVisualElement t = to();
 				if (f == null || t == null) {
 					needsDeletion();
-					return VisitCode.cont;
+					return StandardTraversalHint.CONTINUE;
 				}
 
 				Rect fr = f.getFrame(null);
@@ -324,7 +328,7 @@ public class HierarchyHandler2 extends HierarchyHandler {
 
 				if (fr == null || tr == null) {
 					needsDeletion();
-					return VisitCode.cont;
+                    return StandardTraversalHint.CONTINUE;
 				}
 
 				final Vector2 tm = tr.midpoint2();
@@ -374,10 +378,10 @@ public class HierarchyHandler2 extends HierarchyHandler {
 																			 * )
 																			 */};
 
-				Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new iFunction<Double, Vector2>() {
+				Vector2 fromPosition = Bind.argMin(Arrays.asList(fPositions), new IFunction<Vector2,Double>() {
 
 					@Override
-					public Double f(Vector2 in) {
+					public Double apply(Vector2 in) {
 						return (double) in.distanceFrom(tm);
 					}
 				});
@@ -385,8 +389,8 @@ public class HierarchyHandler2 extends HierarchyHandler {
 				CachedLine c = new CachedLine();
 				c.getInput().moveTo(fromPosition.x, fromPosition.y);
 
-				SelectionGroup<iComponent> selected = iVisualElement.selectionGroup.get(source);
-				boolean isSelected = selected.getSelection().contains(iVisualElement.localView.get(source)) || selected.getSelection().contains(iVisualElement.localView.get(t)) || selected.getSelection().contains(iVisualElement.localView.get(f));
+				SelectionGroup<iComponent> selected = IVisualElement.selectionGroup.get(source);
+				boolean isSelected = selected.getSelection().contains(IVisualElement.localView.get(source)) || selected.getSelection().contains(IVisualElement.localView.get(t)) || selected.getSelection().contains(IVisualElement.localView.get(f));
 
 				Vector2 tm2 = lineToRect(fromPosition, tm, tr);
 
@@ -429,7 +433,7 @@ public class HierarchyHandler2 extends HierarchyHandler {
 				c2.getProperties().put(iLinearGraphicsContext.color, isSelected ? new Vector4(0, 0, 0.0, 0.5f) : new Vector4(0, 0, 0.0, 0.05f));
 				GLComponentWindow.currentContext.submitLine(c2, c2.getProperties());
 
-				if (selected.getSelection().contains(iVisualElement.localView.get(source))) {
+				if (selected.getSelection().contains(IVisualElement.localView.get(source))) {
 					CachedLine r = new CachedLine();
 					r.getInput().moveTo(fromPosition.x, fromPosition.y);
 					r.getInput().lineTo(fromPosition.x, tm2.y);
@@ -444,7 +448,7 @@ public class HierarchyHandler2 extends HierarchyHandler {
 					text.getProperties().put(iLinearGraphicsContext.containsText, true);
 					Vector2 m = new Cursor(c2).forwardT(0.5f).position();
 					text.getInput().moveTo(m.x + 0, m.y + 5);
-					text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, forElement.getProperty(iVisualElement.name));
+					text.getInput().setPointAttribute(iLinearGraphicsContext.text_v, forElement.getProperty(IVisualElement.name));
 					text.getInput().setPointAttribute(iLinearGraphicsContext.alignment_v, 0f);
 					text.getInput().setPointAttribute(iLinearGraphicsContext.font_v, new Font(Constants.defaultFont, 0, 11));
 					text.getInput().setPointAttribute(iLinearGraphicsContext.fillColor_v, new Vector4(0.0, 0, 0, 1f));
@@ -464,7 +468,7 @@ public class HierarchyHandler2 extends HierarchyHandler {
 	}
 
 	public void install(HierarchyPlugin h) {
-		h.addTool("icons/fork_16x16.png", new Hover(), new iUpdateable() {
+		h.addTool("icons/fork_16x16.png", new Hover(), new IUpdateable() {
 
 			public void update() {
 				all = StandardFluidSheet.allVisualElements(root);

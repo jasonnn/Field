@@ -12,14 +12,15 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import field.bytecode.protect.dispatch.ReturnCode;
+import field.bytecode.protect.dispatch.aRun;
+import field.math.abstraction.IProvider;
 import org.lwjgl.opengl.GL11;
 
 import field.bytecode.protect.dispatch.Cont;
-import field.bytecode.protect.dispatch.Cont.ReturnCode;
-import field.bytecode.protect.dispatch.Cont.aRun;
+
 import field.graphics.core.BasicContextManager;
 import field.graphics.windowing.FullScreenCanvasSWT;
-import field.math.abstraction.iProvider;
 
 /**
  * readback for 2d array of 1-floats
@@ -28,12 +29,12 @@ import field.math.abstraction.iProvider;
  */
 public class Readback_float1_2d {
 
-	private final iProvider<Integer> from;
+	private final IProvider<Integer> from;
 	private final int width;
 	private final int height;
 	private ByteBuffer storage;
 
-	public Readback_float1_2d(iProvider<Integer> from, int width, int height)
+	public Readback_float1_2d(IProvider<Integer> from, int width, int height)
 	{
 		this.from = from;
 		this.width = width;
@@ -44,9 +45,10 @@ public class Readback_float1_2d {
 	
 	public void join(FullScreenCanvasSWT canvas)
 	{
-		aRun arun = new Cont.aRun() {
+		aRun arun = new aRun() {
 			@Override
-			public ReturnCode head(Object calledOn, Object[] args) {
+			public
+            ReturnCode head(Object calledOn, Object[] args) {
 				readbackNow(BasicContextManager.getGl());
 				return super.head(calledOn, args);
 			}

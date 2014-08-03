@@ -1,5 +1,6 @@
 package field.extras.graphics;
 
+import field.math.abstraction.IInplaceProvider;
 import org.python.core.Py;
 import org.python.core.PyBuiltinMethodNarrow;
 import org.python.core.PyException;
@@ -14,7 +15,6 @@ import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.core.BasicGeometry.TriangleMesh_long;
 import field.graphics.jfbxlib.HierarchyOfCoordinateFrames.Element;
 import field.graphics.jfbxlib.Loader2;
-import field.math.abstraction.iInplaceProvider;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.iCoordinateFrame;
 import field.math.linalg.iCoordinateFrame.iMutable;
@@ -47,13 +47,13 @@ public class FieldJFBXExtensions {
 
 						iGeometry s = Py.tojava(self, iGeometry.class);
 
-						iInplaceProvider<iMutable> p = s.getCoordinateProvider();
+						IInplaceProvider<iMutable> p = s.getCoordinateProvider();
 
 						return Py.java2py(p);
 					} else if (n.equals("worldTransform")) {
 						iGeometry s = Py.tojava(self, iGeometry.class);
 
-						iInplaceProvider p = s.getCoordinateProvider();
+						IInplaceProvider p = s.getCoordinateProvider();
 
 						if (p instanceof Element) {
 							return Py.java2py(((Element) p).get(null));
@@ -64,7 +64,7 @@ public class FieldJFBXExtensions {
 					} else if (n.equals("localTransform")) {
 						iGeometry s = Py.tojava(self, iGeometry.class);
 
-						iInplaceProvider p = s.getCoordinateProvider();
+						IInplaceProvider p = s.getCoordinateProvider();
 
 						if (p instanceof Element) {
 							return Py.java2py(((Element) p).getLocal());
@@ -97,13 +97,13 @@ public class FieldJFBXExtensions {
 
 						iGeometry s = Py.tojava(self, iLongGeometry.class);
 
-						iInplaceProvider<iMutable> p = s.getCoordinateProvider();
+						IInplaceProvider<iMutable> p = s.getCoordinateProvider();
 
 						return Py.java2py(p);
 					} else if (n.equals("worldTransform")) {
 						iGeometry s = Py.tojava(self, iLongGeometry.class);
 
-						iInplaceProvider p = s.getCoordinateProvider();
+						IInplaceProvider p = s.getCoordinateProvider();
 
 						if (p instanceof Element) {
 							return Py.java2py(((Element) p).get(null));
@@ -114,7 +114,7 @@ public class FieldJFBXExtensions {
 					} else if (n.equals("localTransform")) {
 						iGeometry s = Py.tojava(self, iLongGeometry.class);
 
-						iInplaceProvider p = s.getCoordinateProvider();
+						IInplaceProvider p = s.getCoordinateProvider();
 
 						if (p instanceof Element) {
 							return Py.java2py(((Element) p).getLocal());
@@ -150,7 +150,7 @@ public class FieldJFBXExtensions {
 					if (n.equals("localTransform")) {
 						iGeometry s = Py.tojava(self, iLongGeometry.class);
 
-						iInplaceProvider p = s.getCoordinateProvider();
+						IInplaceProvider p = s.getCoordinateProvider();
 
 						if (p instanceof Element) {
 							((Element) p).setLocal((CoordinateFrame) f);

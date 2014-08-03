@@ -6,15 +6,21 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.launch.IUpdateable;
+import field.math.graph.visitors.GraphNodeSearching;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
+import field.util.collect.tuple.Pair;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 
 import field.core.Constants;
 import field.core.StandardFluidSheet;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides;
+
 import field.core.plugins.drawing.SimpleArrows;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -26,13 +32,11 @@ import field.core.windowing.overlay.OverlayAnimationManager;
 import field.extras.plugins.hierarchy.HierarchyPlugin.Mode;
 import field.extras.plugins.hierarchy.HierarchyPlugin.iEventHandler;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching;
-import field.math.graph.GraphNodeSearching.VisitCode;
+
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Pair;
+
 
 public class HierarchyHandler {
 
@@ -75,7 +79,7 @@ public class HierarchyHandler {
 		}
 
 		public iEventHandler mouse(Vector2 at, int buttons) {
-			iVisualElement over = over(at);
+			IVisualElement over = over(at);
 			;//;//System.out.println(" hover mouse <" + over + ">");
 			if (over != null) {
 
@@ -120,13 +124,13 @@ public class HierarchyHandler {
 
 	public class Start implements iEventHandler {
 
-		private final iVisualElement origin;
+		private final IVisualElement origin;
 		private Vector2 mouseAt;
 		private int buttons;
 		// Arrows a = new Arrows();
 		int arrowSize = 35;
 
-		public Start(iVisualElement wasOver) {
+		public Start(IVisualElement wasOver) {
 			origin = wasOver;
 			// TODO: 64 \u2014\u2014confront cusor setting in pure
 			// java
@@ -250,7 +254,7 @@ public class HierarchyHandler {
 		}
 
 		public iEventHandler mouse(Vector2 at, int buttons) {
-			iVisualElement over = over(at);
+			IVisualElement over = over(at);
 			this.buttons = buttons;
 			;//;//System.out.println(" start mouse <" + at + "> <" + over + "> <" + origin + ">");
 			if (over != null && over != origin) {
@@ -298,90 +302,90 @@ public class HierarchyHandler {
 
 	}
 
-	public List<iVisualElement> all;
+	public List<IVisualElement> all;
 
-	public iVisualElement target;
+	public IVisualElement target;
 
-	protected final iVisualElement root;
+	protected final IVisualElement root;
 
-	iVisualElement wasOver = null;
+	IVisualElement wasOver = null;
 
 	protected HierarchyPlugin plugin;
 
-	public HierarchyHandler(iVisualElement root) {
+	public HierarchyHandler(IVisualElement root) {
 		this.root = root;
 	}
 
-	public void finalizeConnection(iVisualElement origin, iVisualElement target, int buttons) {
+	public void finalizeConnection(IVisualElement origin, IVisualElement target, int buttons) {
 
 		;//;//System.out.println(" finalizing conection <" + origin + " " + target + " " + buttons + ">");
 
-		List<iVisualElement> c1 = origin.getChildren();
-		List<iVisualElement> c2 = target.getChildren();
+		List<IVisualElement> c1 = origin.getChildren();
+		List<IVisualElement> c2 = target.getChildren();
 
 		if (buttons == MouseEvent.BUTTON1) {
 			if (c1.contains(target)) {
-				OverlayAnimationManager.notifyAsText(root, iVisualElement.name.get(origin) + " already connected to " + iVisualElement.name.get(target), null);
+				OverlayAnimationManager.notifyAsText(root, IVisualElement.name.get(origin) + " already connected to " + IVisualElement.name.get(target), null);
 			} else {
 				((VisualElement) origin).addChild(target);
-				OverlayAnimationManager.notifyAsText(root, iVisualElement.name.get(origin) + " will now delegate to " + iVisualElement.name.get(target), null);
+				OverlayAnimationManager.notifyAsText(root, IVisualElement.name.get(origin) + " will now delegate to " + IVisualElement.name.get(target), null);
 			}
 		} else if (buttons == MouseEvent.BUTTON3) {
 			if (c1.contains(target)) {
 				if (canDisconnect(origin, target)) {
 					((VisualElement) origin).removeChild(target);
-					OverlayAnimationManager.notifyAsText(root, iVisualElement.name.get(origin) + " already connected to " + iVisualElement.name.get(target), null);
+					OverlayAnimationManager.notifyAsText(root, IVisualElement.name.get(origin) + " already connected to " + IVisualElement.name.get(target), null);
 				} else {
 					((VisualElement) origin).removeChild(target);
 					((VisualElement) origin).addChild(root);
-					OverlayAnimationManager.notifyAsText(root, iVisualElement.name.get(origin) + " will now delegate to root directly", null);
+					OverlayAnimationManager.notifyAsText(root, IVisualElement.name.get(origin) + " will now delegate to root directly", null);
 				}
 			} else {
-				OverlayAnimationManager.notifyAsText(root, iVisualElement.name.get(origin) + " will no longer delegate to " + iVisualElement.name.get(target), null);
+				OverlayAnimationManager.notifyAsText(root, IVisualElement.name.get(origin) + " will no longer delegate to " + IVisualElement.name.get(target), null);
 			}
 		} else if (buttons == MouseEvent.BUTTON2) {
 			if (c1.contains(target)) {
 				if (c1.size() > 1) {
-					for (iVisualElement cc : new ArrayList<iVisualElement>(c1)) {
+					for (IVisualElement cc : new ArrayList<IVisualElement>(c1)) {
 						if (cc != target)
 							((VisualElement) origin).removeChild(cc);
 					}
-					OverlayAnimationManager.notifyAsText(root, iVisualElement.name.get(origin) + " will now only delegates to " + iVisualElement.name.get(target), null);
+					OverlayAnimationManager.notifyAsText(root, IVisualElement.name.get(origin) + " will now only delegates to " + IVisualElement.name.get(target), null);
 				} else {
-					OverlayAnimationManager.notifyAsText(root, iVisualElement.name.get(origin) + " already only delegates to " + iVisualElement.name.get(target), null);
+					OverlayAnimationManager.notifyAsText(root, IVisualElement.name.get(origin) + " already only delegates to " + IVisualElement.name.get(target), null);
 				}
 			} else {
-				for (iVisualElement cc : new ArrayList<iVisualElement>(c1)) {
+				for (IVisualElement cc : new ArrayList<IVisualElement>(c1)) {
 					((VisualElement) origin).removeChild(cc);
 				}
 				((VisualElement) origin).addChild(target);
 
-				OverlayAnimationManager.notifyAsText(root, iVisualElement.name.get(origin) + " will now only delegates to " + iVisualElement.name.get(target), null);
+				OverlayAnimationManager.notifyAsText(root, IVisualElement.name.get(origin) + " will now only delegates to " + IVisualElement.name.get(target), null);
 			}
 		}
 
-		iVisualElementOverrides.topology.begin(target);
+		IVisualElementOverrides.topology.begin(target);
 		Rect tf = target.getFrame(null);
 		tf.x += 1;
-		iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(target, tf, target.getFrame(null), true);
-		iVisualElementOverrides.topology.end(target);
+		IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(target, tf, target.getFrame(null), true);
+		IVisualElementOverrides.topology.end(target);
 
-		iVisualElementOverrides.topology.begin(origin);
+		IVisualElementOverrides.topology.begin(origin);
 		Rect of = origin.getFrame(null);
 		of.x += 1;
-		iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(origin, of, origin.getFrame(null), true);
-		iVisualElementOverrides.topology.end(origin);
+		IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(origin, of, origin.getFrame(null), true);
+		IVisualElementOverrides.topology.end(origin);
 
 		GLComponentWindow.getCurrentWindow(null).requestRepaint();
 
 	}
 
-	public String getMessage(iVisualElement origin, iVisualElement target, int buttons) {
-		List<iVisualElement> c1 = origin.getChildren();
-		List<iVisualElement> c2 = target.getChildren();
+	public String getMessage(IVisualElement origin, IVisualElement target, int buttons) {
+		List<IVisualElement> c1 = origin.getChildren();
+		List<IVisualElement> c2 = target.getChildren();
 
-		String no = iVisualElement.name.get(origin);
-		String nt = iVisualElement.name.get(target);
+		String no = IVisualElement.name.get(origin);
+		String nt = IVisualElement.name.get(target);
 		if (buttons == MouseEvent.BUTTON1) {
 			if (c1.contains(target)) {
 				return "\u2014\u2014 already connected \u2014\u2014";
@@ -413,7 +417,7 @@ public class HierarchyHandler {
 	}
 
 	public void install(String icon, HierarchyPlugin h, String info, String name, String description) {
-		h.addTool(icon, new Hover(), new iUpdateable() {
+		h.addTool(icon, new Hover(), new IUpdateable() {
 
 			public void update() {
 				all = StandardFluidSheet.allVisualElements(root);
@@ -423,7 +427,7 @@ public class HierarchyHandler {
 	}
 
 	public void install(HierarchyPlugin h) {
-		h.addTool("icons/fork_16x16.png", new Hover(), new iUpdateable() {
+		h.addTool("icons/fork_16x16.png", new Hover(), new IUpdateable() {
 
 			public void update() {
 				all = StandardFluidSheet.allVisualElements(root);
@@ -438,13 +442,13 @@ public class HierarchyHandler {
 		h.setCurrentHandler(new Hover());
 	}
 
-	public iVisualElement over(Vector2 at) {
+	public IVisualElement over(Vector2 at) {
 
 		Rect f = new Rect(0, 0, 0, 0);
 		float d = Float.NEGATIVE_INFINITY;
-		iVisualElement best = null;
+		IVisualElement best = null;
 
-		GLComponentWindow r = iVisualElement.enclosingFrame.get(root);
+		GLComponentWindow r = IVisualElement.enclosingFrame.get(root);
 
 		// MouseEvent ev = new MouseEvent(r.getFrame(),
 		// MouseEvent.MOUSE_MOVED, 0, 0, (int)at.x, (int)at.y,
@@ -458,7 +462,7 @@ public class HierarchyHandler {
 		ev.button = 1;
 		ev.stateMask = 0;
 
-		for (iVisualElement e : all) {
+		for (IVisualElement e : all) {
 			// e.getFrame(f);
 			// if (f.isInside(at)) {
 			// float dd = (float) (at.distanceFrom(f.midpoint2()) *
@@ -468,7 +472,7 @@ public class HierarchyHandler {
 			// d = dd;
 			// }
 			// }
-			iComponent v = e.getProperty(iVisualElement.localView);
+			iComponent v = e.getProperty(IVisualElement.localView);
 			if (v != null) {
 				float dd = v.isHit(ev);
 				if (dd > d) {
@@ -480,15 +484,16 @@ public class HierarchyHandler {
 		return best;
 	}
 
-	private boolean canDisconnect(iVisualElement p, iVisualElement c) {
+	private boolean canDisconnect(IVisualElement p, IVisualElement c) {
 		((VisualElement) p).removeChild(c);
 		{
-			final HashSet<iVisualElement> visited = new HashSet<iVisualElement>();
-			new GraphNodeSearching.GraphNodeVisitor_depthFirst<iVisualElement>(true) {
+			final HashSet<IVisualElement> visited = new HashSet<IVisualElement>();
+			new GraphNodeSearching.GraphNodeVisitor_depthFirst<IVisualElement>(true) {
 				@Override
-				protected VisitCode visit(iVisualElement n) {
+				protected
+                TraversalHint visit(IVisualElement n) {
 					visited.add(n);
-					return VisitCode.cont;
+					return StandardTraversalHint.CONTINUE;
 				}
 
 			}.apply(p);
@@ -498,12 +503,12 @@ public class HierarchyHandler {
 			}
 		}
 		{
-			final HashSet<iVisualElement> visited = new HashSet<iVisualElement>();
-			new GraphNodeSearching.GraphNodeVisitor_depthFirst<iVisualElement>(true) {
+			final HashSet<IVisualElement> visited = new HashSet<IVisualElement>();
+			new GraphNodeSearching.GraphNodeVisitor_depthFirst<IVisualElement>(true) {
 				@Override
-				protected VisitCode visit(iVisualElement n) {
+				protected TraversalHint visit(IVisualElement n) {
 					visited.add(n);
-					return VisitCode.cont;
+					return StandardTraversalHint.CONTINUE;
 				}
 
 			}.apply(c);

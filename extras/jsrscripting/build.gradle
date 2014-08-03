@@ -1,0 +1,4 @@
+dependencies{
+    compile 'org.jruby:jruby:1.7.13'
+    compile 'org.clojure:clojure:1.6.0'
+}

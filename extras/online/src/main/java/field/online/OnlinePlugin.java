@@ -10,17 +10,22 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
+import field.core.execution.IExecutesPromise;
+import field.launch.IUpdateable;
+import field.math.abstraction.IFloatProvider;
+import field.math.graph.visitors.hint.TraversalHint;
 import org.java_websocket.WebSocket;
 
 import field.core.StandardFluidSheet;
 import field.core.dispatch.Mixins;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.core.execution.iExecutesPromise;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.drawing.opengl.CachedLine;
@@ -39,9 +44,7 @@ import field.core.windowing.GLComponentWindow;
 import field.graphics.core.Base.iGeometry;
 import field.graphics.core.BasicGeometry.VertexBuffer;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFloatProvider;
-import field.math.graph.GraphNodeSearching.VisitCode;
+
 import field.math.linalg.Vector4;
 import field.online.EmbeddedServer.Handler;
 import field.online.org.json.JSONArray;
@@ -58,7 +61,7 @@ public class OnlinePlugin extends BaseSimplePlugin {
 
 	static public EmbeddedServer server = new EmbeddedServer(8080) {
 		protected java.io.InputStream findAndRun(String replace, Properties parms) {
-			iVisualElement found = StandardFluidSheet.findVisualElementWithName(root, replace);
+			IVisualElement found = StandardFluidSheet.findVisualElementWithName(root, replace);
 			if (found != null) {
 
 				Iterator<String> ss = ((Set) parms.keySet()).iterator();
@@ -115,7 +118,7 @@ public class OnlinePlugin extends BaseSimplePlugin {
 
 		PythonPluginEditor.knownPythonProperties.put("javascript", javascript);
 
-		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+		Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
 			@Override
 			public void update() {
@@ -131,7 +134,7 @@ public class OnlinePlugin extends BaseSimplePlugin {
 	}
 
 	@Override
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 		super.registeredWith(root);
 		this.root = root;
 
@@ -143,10 +146,10 @@ public class OnlinePlugin extends BaseSimplePlugin {
 
 	public class BrowserHosted extends DefaultOverride {
 
-		public <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
-			if (prop.equals(iExecutesPromise.promiseExecution)) {
+		public <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+			if (prop.equals(IExecutesPromise.promiseExecution)) {
 				if (needsOnline(source))
-					ref.set((T) getExecutesPromise(source, (iExecutesPromise) ref.get()));
+					ref.set((T) getExecutesPromise(source, (IExecutesPromise) ref.get()));
 			} else if (prop.equals(PythonPluginEditor.editorExecutionInterface)) {
 				if (needsOnline(source))
 					ref.set((T) getEditorExecutionInterface(source, (EditorExecutionInterface) ref.get()));
@@ -155,7 +158,7 @@ public class OnlinePlugin extends BaseSimplePlugin {
 			return super.getProperty(source, prop, ref);
 		}
 
-		private EditorExecutionInterface getEditorExecutionInterface(iVisualElement source, EditorExecutionInterface editorExecutionInterface) {
+		private EditorExecutionInterface getEditorExecutionInterface(IVisualElement source, EditorExecutionInterface editorExecutionInterface) {
 			return new EditorExecutionInterface() {
 
 				@Override
@@ -205,7 +208,7 @@ public class OnlinePlugin extends BaseSimplePlugin {
 								e.printStackTrace();
 							}
 
-							return server.server.new Response(NanoHTTPD.HTTP_OK, null, "");
+							return new Response(NanoHTTPD.HTTP_OK, null, "");
 						}
 
 						@Override
@@ -224,7 +227,7 @@ public class OnlinePlugin extends BaseSimplePlugin {
 		}
 
 		@Override
-		public VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+		public TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
 			if (needsOnline(source)) {
 				if (GLComponentWindow.currentContext != null && GLComponentWindow.draft) {
 					CachedLine l = new CachedLine();
@@ -241,22 +244,23 @@ public class OnlinePlugin extends BaseSimplePlugin {
 		}
 
 		@Override
-		public VisitCode menuItemsFor(final iVisualElement source, Map<String, iUpdateable> items) {
+		public
+        TraversalHint menuItemsFor(final IVisualElement source, Map<String, IUpdateable> items) {
 			if (source != null) {
 				if (needsOnline(source)) {
 					items.put("Online / Javascript", null);
-					items.put("\u24c4 <b>Remove bridge</b> to Online environment", new iUpdateable() {
+					items.put("\u24c4 <b>Remove bridge</b> to Online environment", new IUpdateable() {
 						public void update() {
 							needsOnline.set(source, source, false);
-							iVisualElement.dirty.set(source, source, true);
+							IVisualElement.dirty.set(source, source, true);
 						}
 					});
 				} else {
 					items.put("Online / Javascript", null);
-					items.put("\u24c4 Bridge element to <b>Online environment</b>", new iUpdateable() {
+					items.put("\u24c4 Bridge element to <b>Online environment</b>", new IUpdateable() {
 						public void update() {
 							needsOnline.set(source, source, true);
-							iVisualElement.dirty.set(source, source, true);
+							IVisualElement.dirty.set(source, source, true);
 						}
 					});
 				}
@@ -264,9 +268,10 @@ public class OnlinePlugin extends BaseSimplePlugin {
 			return super.menuItemsFor(source, items);
 		}
 
-		private iExecutesPromise getExecutesPromise(iVisualElement source, iExecutesPromise iExecutesPromise) {
+		private
+        IExecutesPromise getExecutesPromise(IVisualElement source, IExecutesPromise iExecutesPromise) {
 
-			return new iExecutesPromise() {
+			return new IExecutesPromise() {
 
 				@Override
 				public void stopAll(float t) {
@@ -281,7 +286,7 @@ public class OnlinePlugin extends BaseSimplePlugin {
 				}
 
 				@Override
-				public void addActive(iFloatProvider timeProvider, Promise p) {
+				public void addActive(IFloatProvider timeProvider, Promise p) {
 					String text = p.getText();
 
 					int code = System.identityHashCode(p);
@@ -315,7 +320,7 @@ public class OnlinePlugin extends BaseSimplePlugin {
 		server.addContent(string);
 	}
 
-	static public void upgrade(iVisualElement root) {
+	static public void upgrade(IVisualElement root) {
 		new Mixins().mixInOverride(BrowserHosted.class, root);
 	}
 
@@ -361,7 +366,7 @@ public class OnlinePlugin extends BaseSimplePlugin {
 		return new BrowserHosted();
 	}
 
-	static public boolean needsOnline(iVisualElement source) {
+	static public boolean needsOnline(IVisualElement source) {
 		Object o = needsOnline.get(source);
 		if (o == null)
 			return false;

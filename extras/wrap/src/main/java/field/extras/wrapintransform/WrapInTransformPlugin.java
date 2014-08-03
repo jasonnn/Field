@@ -5,6 +5,11 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
+import field.math.graph.visitors.hint.TraversalHint;
+import field.namespace.generic.IFunction;
+import field.util.collect.tuple.Pair;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 import org.python.core.Py;
@@ -13,12 +18,11 @@ import org.python.core.PyList;
 import org.python.core.PyModule;
 import org.python.core.PyObject;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElementProperty;
 import field.core.execution.BasicRunner;
 import field.core.execution.PythonInterface;
-import field.core.execution.iExecutesPromise;
+import field.core.execution.IExecutesPromise;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.python.PythonPlugin;
 import field.core.plugins.python.PythonPluginEditor;
@@ -29,10 +33,8 @@ import field.core.ui.text.PythonTextEditor;
 import field.core.ui.text.PythonTextEditor.EditorExecutionInterface;
 import field.core.ui.text.embedded.MinimalTextField_blockMenu;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
-import field.namespace.generic.Bind.iFunction;
-import field.namespace.generic.Generics.Pair;
+import field.launch.IUpdateable;
+
 
 public class WrapInTransformPlugin extends BaseSimplePlugin {
 
@@ -41,11 +43,11 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 	public class LocalOver extends DefaultOverride {
 
 		@Override
-		public <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+		public <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
 			if (prop.equals(PythonPluginEditor.python_customToolbar)) {
-				ArrayList<Pair<String, iUpdateable>> r = (ArrayList<Pair<String, iUpdateable>>) ref.get();
+				ArrayList<Pair<String, IUpdateable>> r = (ArrayList<Pair<String, IUpdateable>>) ref.get();
 				if (r == null) {
-					r = new ArrayList<Pair<String, iUpdateable>>();
+					r = new ArrayList<Pair<String, IUpdateable>>();
 				}
 				addElementsTo(source, r);
 				ref.set((T) r);
@@ -69,10 +71,11 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 		return "wrapintransformplugin";
 	}
 
-	public iFunction<String, String> sourceFilter(final iVisualElement source) {
-		return new iFunction<String, String>() {
+	public
+    IFunction<String, String> sourceFilter(final IVisualElement source) {
+		return new IFunction<String, String>() {
 
-			public String f(String in) {
+			public String apply(String in) {
 
 				String wrap = source.getProperty(wrapInTransform);
 				if (wrap == null)
@@ -90,10 +93,10 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 		};
 	}
 
-	public iFunction<Collection<Completion>, String> completionHook(final iVisualElement source, final BaseTextEditor2 inside) {
-		return new iFunction<Collection<Completion>, String>() {
+	public IFunction<String,Collection<Completion>> completionHook(final IVisualElement source, final BaseTextEditor2 inside) {
+		return new IFunction<String,Collection<Completion>>() {
 
-			public Collection<Completion> f(final String in) {
+			public Collection<Completion> apply(final String in) {
 
 				String wrap = source.getProperty(wrapInTransform);
 				if (wrap == null)
@@ -116,7 +119,7 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 							for (int i = 0; i < ((PyList) c2).size(); i++) {
 								final String m = ((PyList) c2).get(i).toString();
 
-								Completion comp = inside.new Completion() {
+								Completion comp =new BaseTextEditor2.Completion() {
 									@Override
 									public void update() {
 										System.out.println(" inserting <" + m + ">");
@@ -156,13 +159,13 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 		};
 	}
 
-	public boolean needsWrap(iVisualElement source) {
+	public boolean needsWrap(IVisualElement source) {
 		return source.getProperty(wrapInTransform) != null;
 	}
 
-	private iExecutesPromise ep;
+	private IExecutesPromise ep;
 
-	public void addElementsTo(final iVisualElement source, ArrayList<Pair<String, iUpdateable>> r) {
+	public void addElementsTo(final IVisualElement source, ArrayList<Pair<String, IUpdateable>> r) {
 		String wrapIn = wrapInTransform.get(source);
 		if (wrapIn == null) {
 			wrapIn = "No transformation";
@@ -171,10 +174,10 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 			wrapIn = "No transformation";
 
 		wrapIn = "Transform '" + wrapIn + "'";
-		r.add(new Pair<String, iUpdateable>(wrapIn, new iUpdateable() {
+		r.add(new Pair<String, IUpdateable>(wrapIn, new IUpdateable() {
 			public void update() {
 
-				LinkedHashMap<String, iUpdateable> items = new LinkedHashMap<String, iUpdateable>();
+				LinkedHashMap<String, IUpdateable> items = new LinkedHashMap<String, IUpdateable>();
 				items.put("Available transforms, from TextTransforms.*", null);
 
 				PyModule q = (PyModule) PythonInterface.getPythonInterface().getVariable("TextTransforms");
@@ -193,7 +196,7 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 
 							String trimmed = d.replace("\n", "").replace("\t", " ").trim();
 							if (trimmed.length() > 0 && !trimmed.equals("The most base type"))
-								items.put("\u223d <b>" + name + "</b> \u2014 <font size=-2>" + trimmed + "</font>", new iUpdateable() {
+								items.put("\u223d <b>" + name + "</b> \u2014 <font size=-2>" + trimmed + "</font>", new IUpdateable() {
 
 									public void update() {
 										setTransformation(source, name.equals("defaultTransform") ? null : name);
@@ -207,7 +210,7 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 				if (MinimalTextField_blockMenu.knownTextTransforms.size() > 0) {
 					items.put("Available transforms, from knownTextTransforms", null);
 					for (final Pair<String, String> s : MinimalTextField_blockMenu.knownTextTransforms) {
-						items.put("\u223d <b>" + s.left + "</b> \u2014 <i>" + s.right + "</i>", new iUpdateable() {
+						items.put("\u223d <b>" + s.left + "</b> \u2014 <i>" + s.right + "</i>", new IUpdateable() {
 
 							public void update() {
 								setTransformation(source, s.left);
@@ -226,26 +229,26 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 	}
 
 	@Override
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 		super.registeredWith(root);
 	}
 
-	public EditorExecutionInterface getEditorExecutionInterface(final iVisualElement source, final EditorExecutionInterface delegateTo) {
+	public EditorExecutionInterface getEditorExecutionInterface(final IVisualElement source, final EditorExecutionInterface delegateTo) {
 		return new EditorExecutionInterface() {
 			public void executeFragment(String fragment) {
 
 				EditorExecutionInterface delegateTo2 = delegateTo;
 				if (delegateTo == null) {
-					fragment = sourceFilter(source).f(fragment);
+					fragment = sourceFilter(source).apply(fragment);
 					PythonInterface.getPythonInterface().execString(fragment);
 				} else {
-					fragment = sourceFilter(source).f(fragment);
+					fragment = sourceFilter(source).apply(fragment);
 					delegateTo2.executeFragment(fragment);
 				}
 			}
 
 			public Object executeReturningValue(String fragment) {
-				fragment = sourceFilter(source).f(fragment);
+				fragment = sourceFilter(source).apply(fragment);
 
 				EditorExecutionInterface delegateTo2 = delegateTo;
 				if (delegateTo == null) {
@@ -258,9 +261,9 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 			@Override
 			public boolean globalCompletionHook(String leftText, boolean publicOnly, ArrayList<Completion> comp, BaseTextEditor2 inside) {
 
-				iFunction<Collection<Completion>, String> h = completionHook(source, inside);
+				IFunction<String,Collection<Completion>> h = completionHook(source, inside);
 				if (h != null) {
-					Collection<Completion> coll = h.f(leftText);
+					Collection<Completion> coll = h.apply(leftText);
 					if (coll != null) {
 						System.out.println(" completion hook returns <" + coll + ">");
 						comp.addAll(coll);
@@ -283,7 +286,7 @@ public class WrapInTransformPlugin extends BaseSimplePlugin {
 		return new LocalOver();
 	}
 
-	public void setTransformation(iVisualElement source, String left) {
+	public void setTransformation(IVisualElement source, String left) {
 		if (left == null)
 			wrapInTransform.delete(source, source);
 		else

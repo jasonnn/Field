@@ -1,27 +1,27 @@
 package field.extras.osc;
 
+import field.core.dispatch.IVisualElement;
+import field.core.network.OSCOutput;
+import field.core.network.UDPNIOSender;
+import field.core.util.FieldPyObjectAdaptor.iCallable;
+import field.util.collect.tuple.Pair;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import field.core.dispatch.iVisualElement;
-import field.core.network.OSCOutput;
-import field.core.network.UDPNIOSender;
-import field.core.util.FieldPyObjectAdaptor.iCallable;
-import field.namespace.generic.Generics.Pair;
-
 public class OSCOut implements iCallable {
 
 	static public HashMap<Pair<Integer, String>, OSCOut> knownInterfaces = new LinkedHashMap<Pair<Integer, String>, OSCOut>();
 
-	private final iVisualElement root;
+	private final IVisualElement root;
 
 	private OSCOutput out;
 
 	Set<OSCOut> children = new LinkedHashSet<OSCOut>();
 	
-	public OSCOut(iVisualElement root, int port, String address) {
+	public OSCOut(IVisualElement root, int port, String address) {
 		this.root = root;
 		
 		out = new OSCOutput(20000, new UDPNIOSender(port, address));

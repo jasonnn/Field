@@ -1,46 +1,38 @@
 package field.extras.scrubber;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Event;
-
-import field.bytecode.protect.Trampoline2;
-import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.bytecode.protect.trampoline.Trampoline2;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.execution.DisposableTimeSliderOverrides;
 import field.core.execution.TemporalSliderOverrides;
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.BaseSimplePlugin;
-import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.ui.ExtendedMenuMap;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.GlassComponent;
-import field.core.windowing.components.PlainDraggableComponent;
 import field.core.windowing.components.RootComponent.iMousePeer;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
 import field.core.windowing.overlay.OverlayAnimationManager;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Bind.iFunction;
-import field.namespace.generic.Generics.Pair;
-import field.namespace.generic.Generics.Triple;
+import field.namespace.generic.IFunction;
 import field.util.TaskQueue;
+import field.util.collect.tuple.Pair;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+
+import java.lang.reflect.Constructor;
+import java.util.*;
+
 
 /**
  * a plugin for scrubbing timelines with devices (in this case, the Connexion
@@ -58,21 +50,22 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 		String name;
 		VisualElementReference outputTo;
 
-		abstract public void update(iVisualElement root);
+		abstract public void update(IVisualElement root);
 
-		public void addMenuItems(Map<String, iUpdateable> to) {
+		public void addMenuItems(Map<String, IUpdateable> to) {
 		}
 	}
 
-	List<Pair<String, iFunction<Connection, iVisualElement>>> factory = new ArrayList<Pair<String, iFunction<Connection, iVisualElement>>>();
+	List<Pair<String, IFunction<IVisualElement,Connection>>> factory = new ArrayList<Pair<String, IFunction<IVisualElement,Connection>>>();
 
 	public class ScrubberOverrides extends DefaultOverride {
 		@Override
-		public VisitCode menuItemsFor(final iVisualElement source, Map<String, iUpdateable> items) {
+		public
+        TraversalHint menuItemsFor(final IVisualElement source, Map<String, IUpdateable> items) {
 
 			boolean section = false;
 			if (source != null) {
-				iVisualElementOverrides o = source.getProperty(iVisualElement.overrides);
+				IVisualElementOverrides o = source.getProperty(IVisualElement.overrides);
 				if (o instanceof TemporalSliderOverrides || o instanceof DisposableTimeSliderOverrides && false) {
 
 					if (items instanceof ExtendedMenuMap)
@@ -81,10 +74,10 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 					if (factory.size() > 0) {
 						items.put("Scrubber", null);
 						section = true;
-						for (final Pair<String, iFunction<Connection, iVisualElement>> f : factory) {
-							items.put(f.left, new iUpdateable() {
+						for (final Pair<String, IFunction<IVisualElement,Connection>> f : factory) {
+							items.put(f.left, new IUpdateable() {
 								public void update() {
-									connections.add(f.right.f(source));
+									connections.add(f.right.apply(source));
 								}
 							});
 						}
@@ -95,21 +88,21 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 								section = true;
 								items.put("Scrubber", null);
 							}
-							items.put(" remove <b>" + c.name + "</b>", new iUpdateable() {
+							items.put(" remove <b>" + c.name + "</b>", new IUpdateable() {
 
 								public void update() {
 									connections.remove(c);
 								}
 							});
 							if (c.enabled)
-								items.put(" disable <b>" + c.name + "</b>", new iUpdateable() {
+								items.put(" disable <b>" + c.name + "</b>", new IUpdateable() {
 
 									public void update() {
 										connections.remove(c);
 									}
 								});
 							else
-								items.put(" enable <b>" + c.name + "</b>", new iUpdateable() {
+								items.put(" enable <b>" + c.name + "</b>", new IUpdateable() {
 
 									public void update() {
 										c.enabled = true;
@@ -120,11 +113,11 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 				}
 			} else {
 //				items.put("Scrubber", null);
-//				items.put(" \u21ad <b>New time warp group</b> here <i>(experimental)</i> ", new iUpdateable() {
+//				items.put(" \u21ad <b>New time warp group</b> here <i>(experimental)</i> ", new IUpdateable() {
 //
 //					public void update() {
 //
-//						GLComponentWindow frame = iVisualElement.enclosingFrame.get(root);
+//						GLComponentWindow frame = IVisualElement.enclosingFrame.get(root);
 //
 //						Rect bounds = new Rect(30, 30, 50, 50);
 //						if (frame != null) {
@@ -134,19 +127,19 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 //
 //						Triple<VisualElement, PlainDraggableComponent, TimeWarpGroup> c = VisualElement.createAddAndName(bounds, root, "untitled warp group", VisualElement.class, PlainDraggableComponent.class, TimeWarpGroup.class, null);
 //
-//						c.left.setProperty(SplineComputingOverride.computed_drawingInstructions, new ArrayList<iUpdateable>(Collections.singletonList(c.right)));
+//						c.left.setProperty(SplineComputingOverride.computed_drawingInstructions, new ArrayList<IUpdateable>(Collections.singletonList(c.right)));
 //
 //					}
 //				});
 			}
 
-			return VisitCode.cont;
+			return StandardTraversalHint.CONTINUE;
 		}
 
 		int once = 0;
 
 		@Override
-		public VisitCode handleKeyboardEvent(iVisualElement newSource, Event event) {
+		public TraversalHint handleKeyboardEvent(IVisualElement newSource, Event event) {
 			if (event == null)
 				return super.handleKeyboardEvent(newSource, event);
 
@@ -180,12 +173,12 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 				once = tick;
 			} else if (event.type == SWT.KeyDown && event.character == '[' && once < tick) {
 				if (local) {
-					((DisposableTimeSliderOverrides) localwas.getProperty(iVisualElement.overrides)).skipBack();
+					((DisposableTimeSliderOverrides) localwas.getProperty(IVisualElement.overrides)).skipBack();
 				}
 				once = tick;
 			} else if (event.type == SWT.KeyDown && event.character == ']' && once < tick) {
 				if (local) {
-					((DisposableTimeSliderOverrides) localwas.getProperty(iVisualElement.overrides)).skipForward();
+					((DisposableTimeSliderOverrides) localwas.getProperty(IVisualElement.overrides)).skipForward();
 				}
 				once = tick;
 			} else if (event.type == SWT.KeyDown && bookmarks.contains(event.keyCode) && once < tick) {
@@ -267,10 +260,10 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 	};
 
 	private Vector2 mouseAt;
-	private iVisualElement localwas;
+	private IVisualElement localwas;
 
 	protected void install() {
-		GlassComponent glass = iVisualElement.glassComponent.get(root);
+		GlassComponent glass = IVisualElement.glassComponent.get(root);
 		glass.addMousePeer(peer);
 		installed = true;
 
@@ -281,7 +274,7 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 	protected void uninstall() {
 		;//;//System.out.println(" uninstalling ");
 
-		GlassComponent glass = iVisualElement.glassComponent.get(root);
+		GlassComponent glass = IVisualElement.glassComponent.get(root);
 		glass.removeMousePeer(peer);
 		installed = false;
 
@@ -296,7 +289,7 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 
 			// todo, need to stop everything
 			// VisualElement.delete(localwas);
-			((DisposableTimeSliderOverrides) iVisualElement.overrides.get(localwas)).stopAndDelete();
+			((DisposableTimeSliderOverrides) IVisualElement.overrides.get(localwas)).stopAndDelete();
 
 			local = false;
 			GLComponentWindow.getCurrentWindow(null).extraTextStatusbarDescriptions.remove(this);
@@ -310,7 +303,7 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 
 			// todo, need to stop everything
 			// VisualElement.delete(localwas);
-			((DisposableTimeSliderOverrides) iVisualElement.overrides.get(localwas)).stop();
+			((DisposableTimeSliderOverrides) IVisualElement.overrides.get(localwas)).stop();
 
 			local = false;
 			GLComponentWindow.getCurrentWindow(null).extraTextStatusbarDescriptions.remove(this);
@@ -322,8 +315,8 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 
 		GLComponentWindow.getCurrentWindow(null).extraTextStatusbarDescriptions.put(this, "<b>(local time slider)</b>");
 
-		SelectionGroup<iComponent> components = iVisualElement.selectionGroup.get(root);
-		LinkedHashSet ve = new LinkedHashSet<iVisualElement>();
+		SelectionGroup<iComponent> components = IVisualElement.selectionGroup.get(root);
+		LinkedHashSet ve = new LinkedHashSet<IVisualElement>();
 		for (iComponent c : components.getSelection())
 			if (c.getVisualElement() != null)
 				ve.add(c.getVisualElement());
@@ -331,10 +324,10 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 		if (ve.size() > 0) {
 			Vector2 pos = GLComponentWindow.getCurrentWindow(null).getCurrentMouseInWindowCoordinates();
 
-			localwas = DisposableTimeSliderOverrides.createDTSO2(new ArrayList<iVisualElement>(ve), root, pos.x);
+			localwas = DisposableTimeSliderOverrides.createDTSO2(new ArrayList<IVisualElement>(ve), root, pos.x);
 			local = true;
 			components.deselectAll();
-			localwas.getProperty(iVisualElement.localView).setSelected(true);
+			localwas.getProperty(IVisualElement.localView).setSelected(true);
 		}
 
 	}
@@ -351,7 +344,7 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 			return;
 
 		// / first mode, move default temporal slider to this point
-		iVisualElement target = localwas != null ? localwas : iVisualElement.timeSlider.get(root);
+		IVisualElement target = localwas != null ? localwas : IVisualElement.timeSlider.get(root);
 
 		Rect oldFrame = target.getFrame(null);
 		Rect newFrame = new Rect(oldFrame);
@@ -361,16 +354,16 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 			newFrame.x = pos.x;
 		}
 
-		iVisualElement old = iVisualElementOverrides.topology.setAt(target);
-		iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(target, newFrame, oldFrame, true);
-		target.setProperty(iVisualElement.dirty, true);
-		iVisualElementOverrides.topology.setAt(old);
+		IVisualElement old = IVisualElementOverrides.topology.setAt(target);
+		IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(target, newFrame, oldFrame, true);
+		target.setProperty(IVisualElement.dirty, true);
+		IVisualElementOverrides.topology.setAt(old);
 
 		mouseAt = pos;
 	}
 
 	@Override
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 		super.registeredWith(root);
 		String devices = SystemProperties.getProperty("scrubber.devices", null);
 		;//;//System.out.println(" property is <" + devices + ">");
@@ -403,8 +396,8 @@ public class ScrubberPlugin extends BaseSimplePlugin {
 		tick++;
 	}
 
-	public void addFactory(String displayedName, iFunction<Connection, iVisualElement> factory) {
-		this.factory.add(new Pair<String, iFunction<Connection, iVisualElement>>(displayedName, factory));
+	public void addFactory(String displayedName, IFunction<IVisualElement,Connection> factory) {
+		this.factory.add(new Pair<String, IFunction<IVisualElement,Connection>>(displayedName, factory));
 	}
 
 	@Override

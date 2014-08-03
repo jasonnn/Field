@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Set;
 
 import field.core.StandardFluidSheet;
+import field.core.dispatch.Rect;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
 import field.extras.plugins.hierarchy.HierarchyPlugin.Mode;
 import field.extras.plugins.hierarchy.HierarchyPlugin.iEventHandler;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
 
@@ -23,13 +23,13 @@ public class MarqueeTool2 implements iEventHandler {
 	private Mode mode;
 	private Vector2 transitionAt;
 	private final HierarchyPlugin plugin;
-	private final iVisualElement root;
+	private final IVisualElement root;
 
-	public MarqueeTool2(HierarchyPlugin plugin, iVisualElement root) {
+	public MarqueeTool2(HierarchyPlugin plugin, IVisualElement root) {
 		this.plugin = plugin;
 		this.root = root;
 
-		plugin.addTool("icons/marq_16x16.png", this, new iUpdateable() {
+		plugin.addTool("icons/marq_16x16.png", this, new IUpdateable() {
 			public void update() {
 			}
 		}, "Marquee Tool", "Marquee Tool", "The Marquee tool allows you to select multiple elements with a single drag");
@@ -39,7 +39,7 @@ public class MarqueeTool2 implements iEventHandler {
 		if (marque != null) {
 			plugin.fastContext.submitLine(marque, marque.getProperties());
 
-			//iVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
+			//IVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
 		}
 		return this;
 	}
@@ -48,8 +48,8 @@ public class MarqueeTool2 implements iEventHandler {
 		return this;
 	}
 
-	Set<iVisualElement> currentSelectedSet = new HashSet<iVisualElement>();
-	private List<iVisualElement> allElements;
+	Set<IVisualElement> currentSelectedSet = new HashSet<IVisualElement>();
+	private List<IVisualElement> allElements;
 	private CachedLine marque;
 
 	public iEventHandler mouse(Vector2 at, int buttons) {
@@ -58,7 +58,7 @@ public class MarqueeTool2 implements iEventHandler {
 
 			Rect r2 = new Rect();
 
-			for (iVisualElement e : allElements) {
+			for (IVisualElement e : allElements) {
 				e.getFrame(r2);
 
 				if (r2.overlaps(r)) {
@@ -106,7 +106,7 @@ public class MarqueeTool2 implements iEventHandler {
 		else
 			marque = null;
 		
-		iVisualElement.enclosingFrame.get(root).requestRepaint();
+		IVisualElement.enclosingFrame.get(root).requestRepaint();
 		
 		return this;
 	}
@@ -121,7 +121,7 @@ public class MarqueeTool2 implements iEventHandler {
 		if (mode == Mode.up)
 		{
 			marque = null;
-			iVisualElement.enclosingFrame.get(root).requestRepaint();
+			IVisualElement.enclosingFrame.get(root).requestRepaint();
 		}
 		
 		return this;

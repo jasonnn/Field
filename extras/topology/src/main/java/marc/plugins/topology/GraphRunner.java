@@ -6,28 +6,28 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 
-import field.bytecode.protect.DeferedInQueue.iProvidesQueue;
-import field.bytecode.protect.DeferedInQueue.iRegistersUpdateable;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.InQueue;
 import field.bytecode.protect.annotations.Yield;
+import field.bytecode.protect.iProvidesQueue;
+import field.bytecode.protect.iRegistersUpdateable;
 import field.bytecode.protect.yield.YieldUtilities;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
 import field.core.execution.BasicRunner.Delegate;
 import field.core.execution.InterpretPythonAsDelegate;
 import field.core.execution.PythonScriptingSystem;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.util.TaskQueue;
 
 @Woven
-public abstract class GraphRunner implements iUpdateable, iProvidesQueue {
+public abstract class GraphRunner implements IUpdateable, iProvidesQueue {
 
 	public class At {
 
-		public iVisualElement from;
-		public iVisualElement to;
+		public IVisualElement from;
+		public IVisualElement to;
 
 		public int ticks;
 		public int duration;
@@ -54,7 +54,7 @@ public abstract class GraphRunner implements iUpdateable, iProvidesQueue {
 	TaskQueue q = new TaskQueue();
 
 	@InQueue
-	public void begin(iVisualElement e) {
+	public void begin(IVisualElement e) {
 		;//;//System.out.println(" inside begin <" + e + "> <" + current + ">");
 		if (current != null) {
 			current.ongoing.stop(convertTime(current.ticks / (float) current.duration, current.to), current.promiseTo, false);
@@ -88,7 +88,8 @@ public abstract class GraphRunner implements iUpdateable, iProvidesQueue {
 		current = a;
 	}
 
-	public iRegistersUpdateable getQueueFor(Method m) {
+	public
+    iRegistersUpdateable getQueueFor(Method m) {
 		return q;
 	}
 
@@ -108,7 +109,7 @@ public abstract class GraphRunner implements iUpdateable, iProvidesQueue {
 
 	}
 
-	private float convertTime(float fraction, iVisualElement next) {
+	private float convertTime(float fraction, IVisualElement next) {
 		Rect f = next.getFrame(null);
 		return (float) (f.x + f.w * fraction);
 	}
@@ -129,7 +130,7 @@ public abstract class GraphRunner implements iUpdateable, iProvidesQueue {
 
 		out.println(this + " updating ticks <" + current.ticks + "> / <" + current.duration + ">");
 		if (_t >= 1) {
-			iVisualElement next = getNext(current);
+			IVisualElement next = getNext(current);
 			if (next != null) {
 				out.println(this+" next will be <"+next+"> while current is <"+current.to+">");
 				consumeNext(current);
@@ -197,9 +198,9 @@ public abstract class GraphRunner implements iUpdateable, iProvidesQueue {
 
 	abstract protected void finished();
 
-	abstract protected iVisualElement getNext(At current2);
+	abstract protected IVisualElement getNext(At current2);
 
-	abstract protected Object ongoingObject(At last, iVisualElement next);
+	abstract protected Object ongoingObject(At last, IVisualElement next);
 
 	abstract protected void updateDuration(At of);
 

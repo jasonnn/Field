@@ -1,9 +1,10 @@
 package field.graphics.jfbxlib;
 
+import field.bytecode.protect.trampoline.Trampoline2;
+
 import java.nio.ByteBuffer;
 import java.util.Map;
 
-import field.bytecode.protect.Trampoline2;
 
 
 public class AbstractVisitor implements JFBXVisitor {

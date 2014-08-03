@@ -2,18 +2,19 @@ package field.extras.typing;
 
 import java.util.Set;
 
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
+import field.core.dispatch.IVisualElement;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.GLComponentWindow.ComponentContainer;
 import field.core.windowing.components.DraggableComponent.Resize;
 import field.core.windowing.components.iComponent;
-import field.math.abstraction.iAcceptor;
+import field.math.abstraction.IAcceptor;
 import field.math.linalg.iCoordinateFrame;
 
 public class TypingPlugin extends BaseSimplePlugin {
@@ -25,10 +26,10 @@ public class TypingPlugin extends BaseSimplePlugin {
 	String text = "";
 
 	@Override
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 		super.registeredWith(root);
 
-		window = iVisualElement.enclosingFrame.get(root);
+		window = IVisualElement.enclosingFrame.get(root);
 		typingOverlay = new TypingOverlay(window, window.textSystem) {
 			@Override
 			protected String getText() {
@@ -45,7 +46,7 @@ public class TypingPlugin extends BaseSimplePlugin {
 
 		window.getRoot().addAsAllEventHandler(new iComponent() {
 
-			public iComponent setVisualElement(iVisualElement ve) {
+			public iComponent setVisualElement(IVisualElement ve) {
 				return null;
 			}
 
@@ -92,9 +93,9 @@ public class TypingPlugin extends BaseSimplePlugin {
 					TypingExecution.beginCompletion(TypingPlugin.this.root,
 							text, this, (int) typingOverlay.popupPoint.x,
 							(int) typingOverlay.popupPoint.y,
-							new iAcceptor<String>() {
+							new IAcceptor<String>() {
 
-								public iAcceptor<String> set(String to) {
+								public IAcceptor<String> set(String to) {
 									text = text + to;
 									inside.requestRedisplay();
 									return this;
@@ -181,7 +182,7 @@ public class TypingPlugin extends BaseSimplePlugin {
 					float dy) {
 			}
 
-			public iVisualElement getVisualElement() {
+			public IVisualElement getVisualElement() {
 				return null;
 			}
 

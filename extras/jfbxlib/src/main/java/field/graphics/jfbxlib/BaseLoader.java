@@ -11,7 +11,7 @@ import field.graphics.core.Base;
 import field.graphics.core.BasicUtilities;
 import field.graphics.jfbxlib.BuildMeshVisitor.Mesh;
 import field.graphics.jfbxlib.BuildTransformTreeVisitor.Transform;
-import field.math.abstraction.iInplaceProvider;
+import field.math.abstraction.IInplaceProvider;
 import field.math.graph.SimpleNode;
 import field.math.linalg.iCoordinateFrame;
 
@@ -48,7 +48,7 @@ public class BaseLoader {
 		return out;
 	}
 
-	public <T extends Base.iLongGeometry> Map<String, T> createGeometryForMeshes(Map<String, iInplaceProvider<iCoordinateFrame.iMutable>> toTransforms, Persistence.Storage storage, Class<T> createClass, boolean doAux) {
+	public <T extends Base.iLongGeometry> Map<String, T> createGeometryForMeshes(Map<String, IInplaceProvider<iCoordinateFrame.iMutable>> toTransforms, Persistence.Storage storage, Class<T> createClass, boolean doAux) {
 		if (storage.meshes== null) return new HashMap<String, T>();
 
 		Map<String, T> out = new HashMap<String, T>();
@@ -59,14 +59,14 @@ public class BaseLoader {
 			String id = e.getKey();
 			Mesh mesh = e.getValue();
 
-			iInplaceProvider<iCoordinateFrame.iMutable> cf = null;
+			IInplaceProvider<iCoordinateFrame.iMutable> cf = null;
 			if (toTransforms != null) {
 				cf = toTransforms.get(id);
 			}
 			if (cf == null) cf = new BasicUtilities.Position();
 
 			try {
-				T geometry = createClass.getDeclaredConstructor(new Class[] { iInplaceProvider.class}).newInstance(cf);
+				T geometry = createClass.getDeclaredConstructor(new Class[] { IInplaceProvider.class}).newInstance(cf);
 
 				geometry.rebuildVertex(mesh.numVertex).rebuildTriangle(mesh.numTriangle);
 

@@ -17,11 +17,11 @@ import javax.script.ScriptException;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
 import field.core.execution.PythonInterface;
 import field.core.execution.ScriptingInterface;
 import field.core.ui.text.embedded.MinimalTextField_blockMenu;
-import field.namespace.generic.Generics.Pair;
+import field.util.collect.tuple.Pair;
 
 @Woven
 public abstract class JSRInterface implements ScriptingInterface {
@@ -307,7 +307,7 @@ public abstract class JSRInterface implements ScriptingInterface {
 		}
 	}
 
-	public void setRoot(iVisualElement root) {
+	public void setRoot(IVisualElement root) {
 	}
 
 	@Override

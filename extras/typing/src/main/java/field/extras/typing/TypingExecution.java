@@ -5,13 +5,16 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
+import field.core.dispatch.VisualElementProperty;
+import field.launch.IUpdateable;
+import field.math.abstraction.IAcceptor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem;
 import field.core.execution.PythonScriptingSystem.Promise;
@@ -28,16 +31,14 @@ import field.core.ui.text.PythonTextEditor.EditorExecutionInterface;
 import field.core.util.PythonCallableMap;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.iComponent;
-import field.launch.iUpdateable;
-import field.math.abstraction.iAcceptor;
 
 public class TypingExecution {
 
 	static public final VisualElementProperty<PythonCallableMap> executesTyping = new VisualElementProperty<PythonCallableMap>("executesTyping_");
 	private static BetterPopup menu;
 
-	static public void execute(iVisualElement root, String text) {
-		Set<iVisualElement> marked = getSelected(root);
+	static public void execute(IVisualElement root, String text) {
+		Set<IVisualElement> marked = getSelected(root);
 
 		// three cases, no selection, single selection, multiple
 		// selection. Right now the latter two are identical.
@@ -53,7 +54,7 @@ public class TypingExecution {
 				text = "_self" + text;
 			}
 
-			for (iVisualElement e : marked) {
+			for (IVisualElement e : marked) {
 				PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(e);
 				Promise promise = pss.promiseForKey(e);
 				EditorExecutionInterface eei = PythonPluginEditor.editorExecutionInterface.get(e);
@@ -77,17 +78,17 @@ public class TypingExecution {
 		}
 	}
 
-	private static Set<iVisualElement> getSelected(iVisualElement root) {
-		Set<iVisualElement> marked = new LinkedHashSet<iVisualElement>();
+	private static Set<IVisualElement> getSelected(IVisualElement root) {
+		Set<IVisualElement> marked = new LinkedHashSet<IVisualElement>();
 		Set<iComponent> sel;
-		sel = iVisualElement.selectionGroup.get(root).getSelection();
+		sel = IVisualElement.selectionGroup.get(root).getSelection();
 		for (iComponent c : sel)
 			if (c.getVisualElement() != null)
 				marked.add(c.getVisualElement());
 		return marked;
 	}
 
-	public static void beginCompletion(final iVisualElement root, final String text, final iComponent iComponent, final int x, final int y, final iAcceptor<String> insertor) {
+	public static void beginCompletion(final IVisualElement root, final String text, final iComponent iComponent, final int x, final int y, final IAcceptor<String> insertor) {
 
 		if (text.length() < 1)
 			return;
@@ -97,12 +98,12 @@ public class TypingExecution {
 
 		String text2 = text;
 
-		Set<iVisualElement> sel = getSelected(root);
+		Set<IVisualElement> sel = getSelected(root);
 		if (sel.size() > 0) {
 			if (text.startsWith(".")) {
 				text2 = "_self" + text;
 			}
-			iVisualElement first = sel.iterator().next();
+			IVisualElement first = sel.iterator().next();
 
 			PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(first);
 			Promise promise = pss.promiseForKey(first);
@@ -131,7 +132,7 @@ public class TypingExecution {
 
 		List<Completion> completions = e.getCompletions(text2, true, null);
 		if (sel.size() > 0) {
-			iVisualElement first = sel.iterator().next();
+			IVisualElement first = sel.iterator().next();
 
 			PythonScriptingSystem pss = PythonScriptingSystem.pythonScriptingSystem.get(first);
 			Promise promise = pss.promiseForKey(first);
@@ -142,7 +143,7 @@ public class TypingExecution {
 		if (completions.size() == 0)
 			return;
 
-		LinkedHashMap<String, iUpdateable> insert = new LinkedHashMap<String, iUpdateable>();
+		LinkedHashMap<String, IUpdateable> insert = new LinkedHashMap<String, IUpdateable>();
 
 		boolean optionalYes = completions.size() < 4;
 
@@ -156,7 +157,7 @@ public class TypingExecution {
 			if (c.isDocumentation) {
 				insert.put("" + c, new Documentation(c.text));
 			} else if (c.enabled) {
-				insert.put(c.text, new iUpdateable() {
+				insert.put(c.text, new IUpdateable() {
 
 					public void update() {
 						insertor.set(c.optionalPlainText);
@@ -171,7 +172,7 @@ public class TypingExecution {
 		menu.show(new Point(x, y));
 		menu.selectFirst();
 		
-		menu.doneHook = new iUpdateable() {
+		menu.doneHook = new IUpdateable() {
 			
 			@Woven
 			@NextUpdate(delay=2)

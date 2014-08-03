@@ -7,10 +7,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import field.core.dispatch.VisualElementOverrides;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
+
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.drawing.SplineComputingOverride;
 import field.core.plugins.drawing.ThreedComputingOverride;
@@ -28,8 +28,8 @@ import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
 import field.extras.plugins.hierarchy.HierarchyPlugin.Mode;
 import field.extras.plugins.hierarchy.HierarchyPlugin.iEventHandler;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector3;
 import field.math.linalg.Vector4;
@@ -66,14 +66,14 @@ public class FreehandTool3d extends BaseSimplePlugin {
 	private CachedLine currentLine2;
 
 	@Override
-	public void registeredWith(final iVisualElement root) {
+	public void registeredWith(final IVisualElement root) {
 		super.registeredWith(root);
 
-		field.launch.Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+		field.launch.Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 
 			public void update() {
 				hp = HierarchyPlugin.hierarchyPlugin.get(root);
-				hp.addTool("icons/pen3_16x16.png", getEventHandler(), new iUpdateable() {
+				hp.addTool("icons/pen3_16x16.png", getEventHandler(), new IUpdateable() {
 					public void update() {
 					}
 				}, "Freehand spline drawer tool", "Freehand spline", description);
@@ -86,7 +86,7 @@ public class FreehandTool3d extends BaseSimplePlugin {
 	public class Hover implements iEventHandler {
 
 		public iEventHandler idle() {
-			// iVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
+			// IVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
 			return this;
 		}
 
@@ -120,9 +120,9 @@ public class FreehandTool3d extends BaseSimplePlugin {
 
 		public void paintNow() {
 
-			Set<iVisualElement> ss = getSelection();
-			for (iVisualElement s : ss) {
-				iVisualElementOverrides o = iVisualElement.overrides.get(s);
+			Set<IVisualElement> ss = getSelection();
+			for (IVisualElement s : ss) {
+				IVisualElementOverrides o = IVisualElement.overrides.get(s);
 				if (o instanceof ThreedComputingOverride) {
 					Freehand3dUtils u = new Freehand3dUtils(s);
 					u.paintGuidePlaneNow(SplineComputingOverride.computed_linesToDraw.get(s), ((ThreedComputingOverride) o).defaultContext);
@@ -157,7 +157,7 @@ public class FreehandTool3d extends BaseSimplePlugin {
 					hp.fastContext.submitLine(currentLine2, currentLine2.getProperties());
 
 					;//;//System.out.println(" requesting draw");
-					// iVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
+					// IVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
 				}
 			}
 			return this;
@@ -172,11 +172,11 @@ public class FreehandTool3d extends BaseSimplePlugin {
 			creating.pressureData.add(getPressureDataNow());
 			creating.timestamps.add(System.currentTimeMillis());
 
-			Iterator<iVisualElement> vi = e.iterator();
+			Iterator<IVisualElement> vi = e.iterator();
 			while (vi.hasNext()) {
-				iVisualElement v = vi.next();
+				IVisualElement v = vi.next();
 
-				iVisualElementOverrides over = v.getProperty(iVisualElement.overrides);
+				IVisualElementOverrides over = v.getProperty(IVisualElement.overrides);
 				if (over instanceof ThreedComputingOverride) {
 					ThreedContext targetContext = ((ThreedComputingOverride) over).defaultContext;
 					creating.transformStates.add(targetContext.getTransformState());
@@ -189,7 +189,7 @@ public class FreehandTool3d extends BaseSimplePlugin {
 			// update the drawing?
 
 			updateOngoing(creating);
-			// iVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
+			// IVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
 
 			return this;
 		}
@@ -201,7 +201,7 @@ public class FreehandTool3d extends BaseSimplePlugin {
 			if (to == Mode.up) {
 				handleNewRawSplineData(creating);
 
-				// iVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
+				// IVisualElement.enclosingFrame.get(root).getOverlayAnimationManager().requestRepaint();
 
 				return new Hover();
 			}
@@ -210,9 +210,9 @@ public class FreehandTool3d extends BaseSimplePlugin {
 
 		public void paintNow() {
 
-			Set<iVisualElement> ss = getSelection();
-			for (iVisualElement s : ss) {
-				iVisualElementOverrides o = iVisualElement.overrides.get(s);
+			Set<IVisualElement> ss = getSelection();
+			for (IVisualElement s : ss) {
+				IVisualElementOverrides o = IVisualElement.overrides.get(s);
 				if (o instanceof ThreedComputingOverride) {
 					Freehand3dUtils u = new Freehand3dUtils(s);
 					u.paintGuidePlaneNow(SplineComputingOverride.computed_linesToDraw.get(s), ((ThreedComputingOverride) o).defaultContext);
@@ -253,37 +253,37 @@ public class FreehandTool3d extends BaseSimplePlugin {
 
 	}
 
-	Set<iVisualElement> e = new HashSet<iVisualElement>();
+	Set<IVisualElement> e = new HashSet<IVisualElement>();
 
 	protected void handleNewRawSplineData(RawSplineData data) {
 
-		Iterator<iVisualElement> vi = e.iterator();
+		Iterator<IVisualElement> vi = e.iterator();
 		while (vi.hasNext()) {
-			iVisualElement v = vi.next();
+			IVisualElement v = vi.next();
 			handleNewRawSplineData(v, data);
 			if (vi.hasNext())
 				data = data.copy();
 		}
 	}
 
-	private Set<iVisualElement> getSelection() {
-		SelectionGroup<iComponent> selectionGroup = iVisualElement.selectionGroup.get(root);
+	private Set<IVisualElement> getSelection() {
+		SelectionGroup<iComponent> selectionGroup = IVisualElement.selectionGroup.get(root);
 		Set<iComponent> s = selectionGroup.getSelection();
-		Set<iVisualElement> e = new LinkedHashSet<iVisualElement>();
+		Set<IVisualElement> e = new LinkedHashSet<IVisualElement>();
 		for (iComponent c : s) {
-			iVisualElement ve = c.getVisualElement();
+			IVisualElement ve = c.getVisualElement();
 			if (ve != null)
 				e.add(ve);
 		}
 		return e;
 	}
 
-	protected void handleNewRawSplineData(iVisualElement v, RawSplineData data) {
+	protected void handleNewRawSplineData(IVisualElement v, RawSplineData data) {
 		rawSplineData.addToList(ArrayList.class, v, data);
 
 		data.elementFrameAtDrawTime = v.getFrame(null);
 
-		iVisualElementOverrides over = v.getProperty(iVisualElement.overrides);
+		IVisualElementOverrides over = v.getProperty(IVisualElement.overrides);
 		if (over instanceof ThreedComputingOverride) {
 			ThreedContext targetContext = ((ThreedComputingOverride) over).defaultContext;
 			data.transformState = targetContext.getTransformState();

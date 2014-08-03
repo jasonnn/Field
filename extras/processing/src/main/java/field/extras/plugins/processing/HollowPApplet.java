@@ -66,6 +66,8 @@ import java.util.Set;
 
 import javax.accessibility.AccessibleContext;
 
+import field.bytecode.protect.iProvidesWrapping;
+import field.bytecode.protect.iWrappedExit;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
@@ -76,8 +78,7 @@ import processing.core.PMatrix2D;
 import processing.core.PMatrix3D;
 import processing.core.PShape;
 import processing.core.PStyle;
-import field.bytecode.protect.SimplyWrappedInQueue.iProvidesWrapping;
-import field.bytecode.protect.SimplyWrappedInQueue.iWrappedExit;
+
 
 public class HollowPApplet implements PConstants, iProvidesWrapping {
 
@@ -2459,7 +2460,8 @@ public class HollowPApplet implements PConstants, iProvidesWrapping {
 		this.focused = delegateTo.focused;
 	}
 
-	public iWrappedExit enter(Method m) {
+	public
+    iWrappedExit enter(Method m) {
 		updateState();
 		return null;
 	}

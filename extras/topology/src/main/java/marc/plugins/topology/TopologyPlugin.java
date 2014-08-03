@@ -1,35 +1,19 @@
 package marc.plugins.topology;
 
-import java.awt.Font;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import field.core.Constants;
+import field.core.dispatch.Rect;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+import field.core.dispatch.IVisualElement;
+
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.IVisualElementOverrides;
+import field.core.dispatch.override.Ref;
 import field.core.persistance.VisualElementReference;
 import field.core.plugins.PluginList;
-import field.core.plugins.iPlugin;
 import field.core.plugins.connection.Connections;
 import field.core.plugins.connection.LineDrawingOverride;
 import field.core.plugins.drawing.BasicDrawingPlugin;
-import field.core.plugins.drawing.opengl.CachedLine;
-import field.core.plugins.drawing.opengl.CachedLine.Event;
-import field.core.plugins.drawing.opengl.Cursor;
-import field.core.plugins.drawing.opengl.Intersections;
-import field.core.plugins.drawing.opengl.LineUtils;
-import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
+import field.core.plugins.iPlugin;
 import field.core.plugins.python.PythonPlugin;
 import field.core.plugins.selection.SelectionSetDriver;
 import field.core.windowing.components.DraggableComponent;
@@ -38,18 +22,17 @@ import field.core.windowing.components.SelectionGroup;
 import field.core.windowing.components.iComponent;
 import field.extras.plugins.hierarchy.HierarchyHandler;
 import field.extras.plugins.hierarchy.HierarchyPlugin;
-import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.launch.IUpdateable;
+import field.math.graph.ITopology;
 import field.math.graph.NodeImpl;
-import field.math.graph.iMutableContainer;
-import field.math.graph.iTopology;
-import field.math.linalg.Vector2;
-import field.math.linalg.Vector3;
-import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Pair;
-import field.namespace.generic.Generics.Triple;
-import field.util.NPermuteMIterator;
-import field.util.PythonUtils;
+import field.math.graph.visitors.hint.StandardTraversalHint;
+import field.math.graph.visitors.hint.TraversalHint;
+import field.util.collect.tuple.Pair;
+import field.util.collect.tuple.Triple;
+
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * uses connections to draw a topology or two over visual elements
@@ -59,7 +42,7 @@ import field.util.PythonUtils;
  */
 public class TopologyPlugin implements iPlugin {
 
-	public class LocalVisualElement extends NodeImpl<iVisualElement> implements iVisualElement {
+	public class LocalVisualElement extends NodeImpl<IVisualElement> implements IVisualElement {
 
 		public <T> void deleteProperty(VisualElementProperty<T> p) {
 		}
@@ -71,13 +54,13 @@ public class TopologyPlugin implements iPlugin {
 			return null;
 		}
 
-		public <T> T getProperty(iVisualElement.VisualElementProperty<T> p) {
+		public <T> T getProperty(VisualElementProperty<T> p) {
 
 			if (p == overrides)
 				return (T) TopologyPlugin.this.overrides;
 			Object o = properties.get(p);
 
-			if (p.equals(iVisualElement.name)) {
+			if (p.equals(IVisualElement.name)) {
 				return (T) "topology plugin";
 			}
 
@@ -95,12 +78,13 @@ public class TopologyPlugin implements iPlugin {
 		public void setFrame(Rect out) {
 		}
 
-		public iMutableContainer<Map<Object, Object>, iVisualElement> setPayload(Map<Object, Object> t) {
+		public
+        field.math.graph.IMutableContainer<Map<Object, Object>, IVisualElement> setPayload(Map<Object, Object> t) {
 			properties = t;
 			return this;
 		}
 
-		public <T> iVisualElement setProperty(iVisualElement.VisualElementProperty<T> p, T to) {
+		public <T> IVisualElement setProperty(VisualElementProperty<T> p, T to) {
 			properties.put(p, to);
 			return this;
 		}
@@ -109,43 +93,44 @@ public class TopologyPlugin implements iPlugin {
 		}
 	}
 
-	public class Overrides extends iVisualElementOverrides.DefaultOverride {
+	public class Overrides extends DefaultOverride {
 
 		@Override
-		public VisitCode menuItemsFor(final iVisualElement source, Map<String, iUpdateable> items) {
+		public
+        TraversalHint menuItemsFor(final IVisualElement source, Map<String, IUpdateable> items) {
 			if (source == null)
 				return super.menuItemsFor(source, items);
 
-			SelectionGroup<iComponent> markingGroup = iVisualElement.markingGroup.get(source);
+			SelectionGroup<iComponent> markingGroup = IVisualElement.markingGroup.get(source);
 			Set<iComponent> marked = markingGroup.getSelection();
-			HashSet<iVisualElement> markedElements = new HashSet<iVisualElement>();
+			HashSet<IVisualElement> markedElements = new HashSet<IVisualElement>();
 			for (iComponent c : marked) {
-				iVisualElement v = c.getVisualElement();
+				IVisualElement v = c.getVisualElement();
 				if (v != null && v != source)
 					markedElements.add(v);
 			}
 
 			if (markedElements.size() == 1) {
-				final iVisualElement v = markedElements.iterator().next();
+				final IVisualElement v = markedElements.iterator().next();
 
 				items.put("Topology", null);
 
-				final iVisualElement c1 = isConnected(source, v);
-				final iVisualElement c2 = isConnected(v, source);
+				final IVisualElement c1 = isConnected(source, v);
+				final IVisualElement c2 = isConnected(v, source);
 
-				items.put("         \u2194 <b>" + connectText(c1) + "</b> <i>from</i> '" + describe(source) + "' <i>to</i> '" + describe(v) + "'", new iUpdateable() {
+				items.put("         \u2194 <b>" + connectText(c1) + "</b> <i>from</i> '" + describe(source) + "' <i>to</i> '" + describe(v) + "'", new IUpdateable() {
 
 					public void update() {
 						connections.connect(source, v, TopologyConnective.class, false);
 					}
 				});
-				items.put("         \u2194 <b>" + connectText(c2) + "</b> <i>from</i> '" + describe(v) + "' <i>to</i> '" + describe(source) + "'", new iUpdateable() {
+				items.put("         \u2194 <b>" + connectText(c2) + "</b> <i>from</i> '" + describe(v) + "' <i>to</i> '" + describe(source) + "'", new IUpdateable() {
 
 					public void update() {
 						connections.connect(v, source, TopologyConnective.class, false);
 					}
 				});
-				items.put("         \u2194 <b>Connect both ways</b> '" + describe(v) + "' <i>and</i> '" + describe(source) + "'", new iUpdateable() {
+				items.put("         \u2194 <b>Connect both ways</b> '" + describe(v) + "' <i>and</i> '" + describe(source) + "'", new IUpdateable() {
 
 					public void update() {
 						if (c2 == null)
@@ -155,32 +140,32 @@ public class TopologyPlugin implements iPlugin {
 					}
 				});
 
-				items.put("         \u2194 <b>Interpose 1, bi-connected </b> element between '" + describe(v) + "' <i>and</i> '" + describe(source) + "'", new iUpdateable() {
+				items.put("         \u2194 <b>Interpose 1, bi-connected </b> element between '" + describe(v) + "' <i>and</i> '" + describe(source) + "'", new IUpdateable() {
 
 					public void update() {
 
 						Rect rr = v.getFrame(null).blendTowards(0.5f, source.getFrame(null));
 						rr.w /= 2;
 						rr.h /= 2;
-						iVisualElement newElement = makeNewElement(rr);
+						IVisualElement newElement = makeNewElement(rr);
 						connections.connect(v, newElement, TopologyConnective.class, false);
 						connections.connect(newElement, v, TopologyConnective.class, false);
 						connections.connect(source, newElement, TopologyConnective.class, false);
 						connections.connect(newElement, source, TopologyConnective.class, false);
 					}
 				});
-				items.put("         \u2194 <b>Interpose 2, bi-connected</b> elements between '" + describe(v) + "' <i>and</i> '" + describe(source) + "'", new iUpdateable() {
+				items.put("         \u2194 <b>Interpose 2, bi-connected</b> elements between '" + describe(v) + "' <i>and</i> '" + describe(source) + "'", new IUpdateable() {
 
 					public void update() {
 
 						Rect rr1 = v.getFrame(null).blendTowards(0.3f, source.getFrame(null));
 						rr1.w /= 2;
 						rr1.h /= 2;
-						iVisualElement newElement1 = makeNewElement(rr1);
+						IVisualElement newElement1 = makeNewElement(rr1);
 						Rect rr2 = v.getFrame(null).blendTowards(0.6f, source.getFrame(null));
 						rr2.w /= 2;
 						rr2.h /= 2;
-						iVisualElement newElement2 = makeNewElement(rr2);
+						IVisualElement newElement2 = makeNewElement(rr2);
 						connections.connect(v, newElement1, TopologyConnective.class, false);
 						connections.connect(newElement1, v, TopologyConnective.class, false);
 						connections.connect(newElement2, newElement1, TopologyConnective.class, false);
@@ -190,15 +175,15 @@ public class TopologyPlugin implements iPlugin {
 					}
 				});
 
-				List<iVisualElement> existing = getExistingConnections(v, source);
-				for (final iVisualElement ex : existing) {
-					items.put("         \u2194 <b>Interpose</b> inside '" + describe(ex) + "' new element from '" + describe(source) + "' <i>to</i> '" + describe(v) + "'", new iUpdateable() {
+				List<IVisualElement> existing = getExistingConnections(v, source);
+				for (final IVisualElement ex : existing) {
+					items.put("         \u2194 <b>Interpose</b> inside '" + describe(ex) + "' new element from '" + describe(source) + "' <i>to</i> '" + describe(v) + "'", new IUpdateable() {
 
 						public void update() {
 							interpose(ex, source, v, false);
 						}
 					});
-					items.put("         \u2194 <b>Add Interposing</b> inside '" + describe(ex) + "' new element from '" + describe(source) + "' <i>to</i> '" + describe(v) + "'", new iUpdateable() {
+					items.put("         \u2194 <b>Add Interposing</b> inside '" + describe(ex) + "' new element from '" + describe(source) + "' <i>to</i> '" + describe(v) + "'", new IUpdateable() {
 
 						public void update() {
 							interpose(ex, source, v, true);
@@ -210,16 +195,16 @@ public class TopologyPlugin implements iPlugin {
 		}
 
 		@Override
-		public <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+		public <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
 			if (prop.equals(defaultTopology)) {
 				ref.set((T) new TopologyOverElements(root, null).getTopology(source));
-				return VisitCode.stop;
+				return StandardTraversalHint.STOP;
 			} else
 
 				return super.getProperty(source, prop, ref);
 		}
 
-		private String connectText(iVisualElement c1) {
+		private String connectText(IVisualElement c1) {
 			if (c1 == null)
 				return "Connect";
 			return "Add another connection";
@@ -232,7 +217,7 @@ public class TopologyPlugin implements iPlugin {
 		
 	}
 
-	static public final VisualElementProperty<iTopology<iVisualElement>> defaultTopology = new VisualElementProperty<iTopology<iVisualElement>>("topology_");
+	static public final VisualElementProperty<ITopology<IVisualElement>> defaultTopology = new VisualElementProperty<ITopology<IVisualElement>>("topology_");
 
 	static public final VisualElementProperty<TopologyPlugin> topology_plugin = new VisualElementProperty<TopologyPlugin>("topology_plugin");
 
@@ -246,7 +231,7 @@ public class TopologyPlugin implements iPlugin {
 
 	private Connections connections;
 
-	private iVisualElement root;
+	private IVisualElement root;
 
 	protected Overrides overrides;
 
@@ -255,18 +240,18 @@ public class TopologyPlugin implements iPlugin {
 	public void close() {
 	}
 
-	public String describe(iVisualElement source) {
-		String n = source.getProperty(iVisualElement.name);
+	public String describe(IVisualElement source) {
+		String n = source.getProperty(IVisualElement.name);
 		if (n == null)
 			return "no name";
 		return n;
 	}
 
-	public List<iVisualElement> getExistingConnections(iVisualElement from, iVisualElement to) {
+	public List<IVisualElement> getExistingConnections(IVisualElement from, IVisualElement to) {
 
-		List<iVisualElement> r = new ArrayList<iVisualElement>();
-		Collection<iVisualElement> v = connections.connections.values();
-		for (iVisualElement e : v) {
+		List<IVisualElement> r = new ArrayList<IVisualElement>();
+		Collection<IVisualElement> v = connections.connections.values();
+		for (IVisualElement e : v) {
 			VisualElementReference e1 = LineDrawingOverride.lineDrawing_from.get(e);
 			VisualElementReference e2 = LineDrawingOverride.lineDrawing_to.get(e);
 			if (e1.get(root) == from && e2.get(root) == to) {
@@ -280,19 +265,19 @@ public class TopologyPlugin implements iPlugin {
 		return new Pair<String, Object>("version_1", null);
 	}
 
-	public iVisualElement getWellKnownVisualElement(String id) {
+	public IVisualElement getWellKnownVisualElement(String id) {
 		if (id.equals(pluginId))
 			return lve;
 		return null;
 	}
 
-	public iVisualElement isConnected(iVisualElement from, iVisualElement to) {
+	public IVisualElement isConnected(IVisualElement from, IVisualElement to) {
 
 		;//;//System.out.println(" connections <" + connections + "> <" + (connections != null ? connections.connections : null) + ">");
 
-		Set<Entry<String, iVisualElement>> cc = connections.connections.entrySet();
-		for (Entry<String, iVisualElement> e : cc) {
-			iVisualElement v = e.getValue();
+		Set<Entry<String, IVisualElement>> cc = connections.connections.entrySet();
+		for (Entry<String, IVisualElement> e : cc) {
+			IVisualElement v = e.getValue();
 			VisualElementReference f = LineDrawingOverride.lineDrawing_from.get(v);
 			VisualElementReference t = LineDrawingOverride.lineDrawing_to.get(v);
 			if (f.get(root) == from && t.get(root) == to) {
@@ -302,7 +287,7 @@ public class TopologyPlugin implements iPlugin {
 		return null;
 	}
 
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 
 		this.root = root;
 
@@ -315,7 +300,7 @@ public class TopologyPlugin implements iPlugin {
 
 		if (connections == null) {
 			System.err.println(" warning: couldn't find connections (needed for topologyPlugin)");
-			List<iVisualElement> c = root.getChildren();
+			List<IVisualElement> c = root.getChildren();
 			System.err.println("              children are <" + c + ">");
 		} else
 			root.addChild(lve);
@@ -332,12 +317,12 @@ public class TopologyPlugin implements iPlugin {
 		if (hp != null) {
 			HierarchyHandler hh = new HierarchyHandler(root) {
 				@Override
-				public void finalizeConnection(iVisualElement origin, iVisualElement target, int buttons) {
+				public void finalizeConnection(IVisualElement origin, IVisualElement target, int buttons) {
 					if (buttons == 1) {
 						connections.connect(origin, target, TopologyConnective.class, false);
 					} else if (buttons == 3) {
-						final iVisualElement c1 = isConnected(origin, target);
-						final iVisualElement c2 = isConnected(target, origin);
+						final IVisualElement c1 = isConnected(origin, target);
+						final IVisualElement c2 = isConnected(target, origin);
 						if (c1 == null)
 							connections.connect(origin, target, TopologyConnective.class, false);
 						if (c2 == null)
@@ -346,18 +331,18 @@ public class TopologyPlugin implements iPlugin {
 				}
 
 				@Override
-				public String getMessage(iVisualElement origin, iVisualElement target, int buttons) {
-					String no = iVisualElement.name.get(origin);
-					String nt = iVisualElement.name.get(target);
+				public String getMessage(IVisualElement origin, IVisualElement target, int buttons) {
+					String no = IVisualElement.name.get(origin);
+					String nt = IVisualElement.name.get(target);
 					if (buttons == 1) {
-						final iVisualElement c1 = isConnected(origin, target);
+						final IVisualElement c1 = isConnected(origin, target);
 						if (c1 != null) {
 							return "will connect '" + no + "' to '" + nt + "' again";
 						} else
 							return "will connect '" + no + "' to '" + nt+"'";
 					} else if (buttons == 3) {
-						final iVisualElement c1 = isConnected(origin, target);
-						final iVisualElement c2 = isConnected(target, origin);
+						final IVisualElement c1 = isConnected(origin, target);
+						final IVisualElement c2 = isConnected(target, origin);
 						if (c1 == null)
 							if (c2 == null)
 								return "will connect '" + no + "' and '" + nt + "' together, both ways";
@@ -385,12 +370,12 @@ public class TopologyPlugin implements iPlugin {
 	public void update() {
 	}
 
-	private iVisualElement makeNewConnection(iVisualElement exampleConnection) {
+	private IVisualElement makeNewConnection(IVisualElement exampleConnection) {
 		Triple<VisualElement, PlainComponent, TopologyConnective> c1 = VisualElement.create(new Rect(30, 30, 30, 30), VisualElement.class, PlainComponent.class, TopologyConnective.class);
 
 		c1.left.addChild(root);
-		new iVisualElementOverrides.MakeDispatchProxy().getBackwardsOverrideProxyFor(c1.left).added(c1.left);
-		new iVisualElementOverrides.MakeDispatchProxy().getOverrideProxyFor(c1.left).added(c1.left);
+		IVisualElementOverrides.MakeDispatchProxy.getBackwardsOverrideProxyFor(c1.left).added(c1.left);
+		 IVisualElementOverrides.MakeDispatchProxy.getOverrideProxyFor(c1.left).added(c1.left);
 
 		connections.connections.put(c1.left.getUniqueID(), c1.left);
 
@@ -402,23 +387,23 @@ public class TopologyPlugin implements iPlugin {
 		return c1.left;
 	}
 
-	protected void interpose(iVisualElement exampleConnection, iVisualElement from, iVisualElement to, boolean keepOriginal) {
+	protected void interpose(IVisualElement exampleConnection, IVisualElement from, IVisualElement to, boolean keepOriginal) {
 
-		iVisualElement newElement = makeNewElement(from.getFrame(null).blendTowards(0.5f, to.getFrame(null)));
+		IVisualElement newElement = makeNewElement(from.getFrame(null).blendTowards(0.5f, to.getFrame(null)));
 
-		iVisualElement e1 = keepOriginal ? makeNewConnection(exampleConnection) : exampleConnection;
+		IVisualElement e1 = keepOriginal ? makeNewConnection(exampleConnection) : exampleConnection;
 
 		LineDrawingOverride.lineDrawing_from.set(e1, e1, new VisualElementReference(from));
 		LineDrawingOverride.lineDrawing_to.set(e1, e1, new VisualElementReference(newElement));
 
-		iVisualElement e2 = makeNewConnection(exampleConnection);
+		IVisualElement e2 = makeNewConnection(exampleConnection);
 
 		LineDrawingOverride.lineDrawing_from.set(e2, e2, new VisualElementReference(newElement));
 		LineDrawingOverride.lineDrawing_to.set(e2, e2, new VisualElementReference(to));
 
 	}
 
-	protected iVisualElement makeNewElement(Rect bounds) {
+	protected IVisualElement makeNewElement(Rect bounds) {
 		Triple<VisualElement, DraggableComponent, DefaultOverride> created = VisualElement.createAddAndName(bounds, root, "untitled", VisualElement.class, DraggableComponent.class, DefaultOverride.class, null);
 		return created.left;
 	};

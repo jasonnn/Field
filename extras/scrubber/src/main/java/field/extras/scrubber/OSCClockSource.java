@@ -6,7 +6,7 @@ import java.util.List;
 
 import field.core.network.OSCInput;
 import field.core.network.OSCInput.Handler;
-import field.namespace.generic.Generics.Pair;
+import field.util.collect.tuple.Pair;
 
 public class OSCClockSource {
 

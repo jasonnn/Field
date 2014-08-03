@@ -4,17 +4,19 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import field.bytecode.protect.trampoline.Trampoline2;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
+import field.util.collect.tuple.Pair;
 import org.jruby.RubyInstanceConfig.CompileMode;
 import org.jruby.embed.EmbedRubyObjectAdapter;
 import org.jruby.embed.LocalVariableBehavior;
 import org.jruby.embed.ScriptingContainer;
 
-import field.bytecode.protect.Trampoline2;
-import field.core.dispatch.iVisualElement;
+
 import field.core.execution.PythonInterface;
 import field.core.execution.ScriptingInterface;
 import field.core.ui.text.embedded.MinimalTextField_blockMenu;
-import field.namespace.generic.Generics.Pair;
 
 public class JRubyScriptingInterface implements ScriptingInterface {
 
@@ -166,7 +168,7 @@ public class JRubyScriptingInterface implements ScriptingInterface {
 	public void addSharedScriptingInterface(ScriptingInterface s) {
 	}
 
-	public void setRoot(iVisualElement e) {
+	public void setRoot(IVisualElement e) {
 
 	}
 }

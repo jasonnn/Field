@@ -5,20 +5,21 @@ package field.extras.osc;
 
 import field.core.network.OSCOutput;
 import field.core.network.UDPNIOSender;
+import field.launch.ILaunchable;
+import field.launch.IUpdateable;
 import field.launch.Launcher;
-import field.launch.iLaunchable;
-import field.launch.iUpdateable;
+
 
 /**
  * @author marc
  */
-public class T_OSCOutput implements iLaunchable {
+public class T_OSCOutput implements ILaunchable {
 	private OSCOutput output;
 
 	public void launch() {
 		output = new OSCOutput(1000, new UDPNIOSender(5500, "255.255.255.255"));
 //		Launcher.getLauncher().registerUpdateable(this);
-		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+		Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 			int tt = 0;
 			
 			public void update() {

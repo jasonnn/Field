@@ -7,10 +7,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
 import field.core.dispatch.VisualElement;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
 import field.core.plugins.LightweightGroup;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLine;
@@ -18,16 +21,16 @@ import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
 import field.core.util.PythonCallableMap;
 import field.core.windowing.GLComponentWindow;
 import field.core.windowing.components.DraggableComponent;
-import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+import field.launch.IUpdateable;
+import field.math.graph.visitors.hint.TraversalHint;
 import field.math.linalg.Vector2;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Triple;
+import field.util.collect.tuple.Triple;
 
-public class TimeWarpGroup extends LightweightGroup implements iUpdateable {
+public class TimeWarpGroup extends LightweightGroup implements IUpdateable {
 
 	public interface iRemapTime {
-		public float map(iVisualElement in, float _t);
+		public float map(IVisualElement in, float _t);
 	}
 
 	static public VisualElementProperty<Warp> warp = new VisualElementProperty<Warp>("warp");
@@ -97,7 +100,7 @@ public class TimeWarpGroup extends LightweightGroup implements iUpdateable {
 			}
 		}
 
-		public float map(iVisualElement in, float t) {
+		public float map(IVisualElement in, float t) {
 			Vector2 ex = in.getProperty(originalExtension);
 			if (ex == null)
 				return t;
@@ -182,11 +185,11 @@ public class TimeWarpGroup extends LightweightGroup implements iUpdateable {
 
 	private void recomputeWarp(Warp warp) {
 
-		List<iVisualElement> contents = new ArrayList<iVisualElement>((List<iVisualElement>) forElement.getParents());
+		List<IVisualElement> contents = new ArrayList<IVisualElement>((List<IVisualElement>) forElement.getParents());
 		
-		Collections.sort(contents, new Comparator<iVisualElement>() {
+		Collections.sort(contents, new Comparator<IVisualElement>() {
 
-			public int compare(iVisualElement o1, iVisualElement o2) {
+			public int compare(IVisualElement o1, IVisualElement o2) {
 				Rect r1 = o1.getFrame(new Rect());
 				Rect r2 = o2.getFrame(new Rect());
 				int c = Double.compare(r1.y, r2.y);
@@ -196,7 +199,7 @@ public class TimeWarpGroup extends LightweightGroup implements iUpdateable {
 
 		warp.clear();
 		boolean dirty = false;
-		for (iVisualElement v : contents) {
+		for (IVisualElement v : contents) {
 			if (shouldBound(v))
 				continue;
 			
@@ -230,10 +233,10 @@ public class TimeWarpGroup extends LightweightGroup implements iUpdateable {
 
 	private void recomputeContents(Warp warp) {
 
-		List<iVisualElement> contents = (List<iVisualElement>) forElement.getParents();
+		List<IVisualElement> contents = (List<IVisualElement>) forElement.getParents();
 
 		boolean dirty = false;
-		for (iVisualElement v : contents) {
+		for (IVisualElement v : contents) {
 			if (!shouldBound(v))
 				continue;
 
@@ -266,20 +269,21 @@ public class TimeWarpGroup extends LightweightGroup implements iUpdateable {
 	}
 
 	@Override
-	public VisitCode menuItemsFor(iVisualElement source, Map<String, iUpdateable> items) {
+	public
+    TraversalHint menuItemsFor(IVisualElement source, Map<String, IUpdateable> items) {
 		if (source == forElement) {
 			items.put(" Warp ", null);
-			items.put(" New computing warp element ", new iUpdateable() {
+			items.put(" New computing warp element ", new IUpdateable() {
 				public void update() {
 
 					float min = forElement.getFrame(null).bottomRight().y + 10;
-					for (iVisualElement v : (List<iVisualElement>) forElement.getParents()) {
+					for (IVisualElement v : (List<IVisualElement>) forElement.getParents()) {
 						if (!shouldBound(v)) {
 							min = Math.max(min, v.getFrame(null).bottomRight().y + 10);
 						}
 					}
 
-					GLComponentWindow frame = iVisualElement.enclosingFrame.get(forElement);
+					GLComponentWindow frame = IVisualElement.enclosingFrame.get(forElement);
 
 					Rect bounds = new Rect(30, min, 100, 15);
 					if (frame != null) {
@@ -296,7 +300,7 @@ public class TimeWarpGroup extends LightweightGroup implements iUpdateable {
 	}
 
 	@Override
-	public <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+	public <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
 		if (prop.equals(computesWarp) && forElement.getParents().contains(source)) {
 			if (ref.get() == null) {
 				PythonCallableMap pythonCallableMap = new PythonCallableMap();
@@ -313,7 +317,7 @@ public class TimeWarpGroup extends LightweightGroup implements iUpdateable {
 	}
 	
 	@Override
-	protected boolean shouldBound(iVisualElement ve) {
+	protected boolean shouldBound(IVisualElement ve) {
 		Boolean m = ve.getProperty(isWarper);
 		return !(m != null && m);
 	}

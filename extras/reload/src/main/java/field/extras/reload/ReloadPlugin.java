@@ -12,6 +12,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import field.bytecode.protect.trampoline.Trampoline2;
+import field.bytecode.protect.trampoline.TrampolineClassLoader;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
+import field.launch.IUpdateable;
+import field.namespace.generic.IFunction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -30,11 +36,9 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.sun.tools.doclets.formats.html.AllClassesFrameWriter;
 
 import field.bytecode.protect.ReloadingSupport.ReloadingDomain;
-import field.bytecode.protect.Trampoline2;
-import field.bytecode.protect.Trampoline2.MyClassLoader;
+
 import field.core.Platform;
 import field.core.Platform.OS;
-import field.core.dispatch.iVisualElement;
 import field.core.execution.PythonInterface;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.selection.ToolBarFolder;
@@ -42,8 +46,7 @@ import field.core.ui.GraphNodeToTreeFancy;
 import field.core.ui.SmallMenu;
 import field.core.windowing.overlay.OverlayAnimationManager;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.namespace.generic.Bind.iFunction;
+
 import field.util.AutoPersist;
 
 public class ReloadPlugin extends BaseSimplePlugin {
@@ -57,7 +60,7 @@ public class ReloadPlugin extends BaseSimplePlugin {
 	LinkedHashSet<String> reloadDomains = new AutoPersist().persist("reloadDomans", new LinkedHashSet<String>());
 
 	@Override
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 		super.registeredWith(root);
 		this.root = root;
 
@@ -188,7 +191,7 @@ public class ReloadPlugin extends BaseSimplePlugin {
 			populateCaught(i, d);
 		}
 
-		Set<Class> allClasses = ((MyClassLoader) Trampoline2.trampoline.getClassLoader()).getAllLoadedClasses();
+		Set<Class> allClasses = ((TrampolineClassLoader) Trampoline2.trampoline.getClassLoader()).getAllLoadedClasses();
 
 		// ;//;//System.out.println(" we have <" + allClasses.size() +
 		// "> classes");
@@ -277,7 +280,7 @@ public class ReloadPlugin extends BaseSimplePlugin {
 
 		tick++;
 		if (tick == 2) {
-			internal = new LinkedHashSet<Class>(((MyClassLoader) Trampoline2.trampoline.getClassLoader()).getAllLoadedClasses());
+			internal = new LinkedHashSet<Class>(((TrampolineClassLoader) Trampoline2.trampoline.getClassLoader()).getAllLoadedClasses());
 			;//;//System.out.println(" ----------- reload plugin ----------");
 			populateTree();
 		} else if (tick > 2) {
@@ -289,7 +292,7 @@ public class ReloadPlugin extends BaseSimplePlugin {
 			if (s.getText().trim().length() == 0)
 				return;
 
-			Set<Class> allClass = ((MyClassLoader) Trampoline2.trampoline.getClassLoader()).getAllLoadedClasses();
+			Set<Class> allClass = ((TrampolineClassLoader) Trampoline2.trampoline.getClassLoader()).getAllLoadedClasses();
 			int hashNow = allClass.hashCode();
 			if (hashNow != hashWas && willRep < 0) {
 				willRep = 5;
@@ -307,9 +310,9 @@ public class ReloadPlugin extends BaseSimplePlugin {
 		final Object d = s.getData();
 		if (d instanceof ReloadingDomain) {
 			try {
-				((ReloadingDomain) d).reload(new iFunction<Object, Class>() {
+				((ReloadingDomain) d).reload(new IFunction<Class,Object>() {
 					@Override
-					public Object f(Class in) {
+					public Object apply(Class in) {
 
 						// def
 						// doReload(c):
@@ -345,17 +348,17 @@ public class ReloadPlugin extends BaseSimplePlugin {
 		;//;//System.out.println(" popup for :" + s);
 		final Object d = s.getData();
 
-		LinkedHashMap<String, iUpdateable> up = new LinkedHashMap<String, iUpdateable>();
+		LinkedHashMap<String, IUpdateable> up = new LinkedHashMap<String, IUpdateable>();
 
 		if (d instanceof String) {
 			up.put("Java package or class", null);
-			up.put("<b>Hotswap now</b> <i>(experimental)</i> double-click", new iUpdateable() {
+			up.put("<b>Hotswap now</b> <i>(experimental)</i> double-click", new IUpdateable() {
 
 				@Override
 				public void update() {
 					hotswapNow(d);
 				}
-			});up.put("<b>Make reloadable</b> <i>(restart required)</i>", new iUpdateable() {
+			});up.put("<b>Make reloadable</b> <i>(restart required)</i>", new IUpdateable() {
 
 				@Override
 				public void update() {
@@ -368,15 +371,15 @@ public class ReloadPlugin extends BaseSimplePlugin {
 			
 		} else if (d instanceof ReloadingDomain) {
 			up.put("Reloadable domain", null);
-			up.put("<b>Reload</b> now", new iUpdateable() {
+			up.put("<b>Reload</b> now", new IUpdateable() {
 
 				@Override
 				public void update() {
 
 					try {
-						((ReloadingDomain) d).reload(new iFunction<Object, Class>() {
+						((ReloadingDomain) d).reload(new IFunction<Class,Object>() {
 							@Override
-							public Object f(Class in) {
+							public Object apply(Class in) {
 
 								// def
 								// doReload(c):
@@ -402,7 +405,7 @@ public class ReloadPlugin extends BaseSimplePlugin {
 				}
 			});
 
-			up.put("<b>Remove</b> <i>(restart required)</i>", new iUpdateable() {
+			up.put("<b>Remove</b> <i>(restart required)</i>", new IUpdateable() {
 
 				@Override
 				public void update() {
@@ -500,7 +503,7 @@ public class ReloadPlugin extends BaseSimplePlugin {
 	private void hotswapNow(final Object d) {
 		ArrayList<Class> a = new ArrayList();
 
-		Set<Class> allClasses = ((MyClassLoader) Trampoline2.trampoline.getClassLoader()).getAllLoadedClasses();
+		Set<Class> allClasses = ((TrampolineClassLoader) Trampoline2.trampoline.getClassLoader()).getAllLoadedClasses();
 		String sd = ""+d;
 		for(Class cc : allClasses)
 		{

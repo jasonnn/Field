@@ -17,14 +17,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElementProperty;
+import field.launch.IUpdateable;
+import field.namespace.generic.IFunction;
 import org.java_websocket.WebSocket;
-import org.java_websocket.WebSocketServer;
 import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.WebSocketServer;
 import org.python.google.common.io.CharStreams;
 
 import field.core.StandardFluidSheet;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+
 import field.core.plugins.help.NanoHTTPD;
 import field.core.plugins.help.NanoHTTPD.Response;
 import field.core.plugins.log.Logging.iLoggingEvent;
@@ -32,11 +35,10 @@ import field.core.util.PythonCallableMap;
 import field.graphics.core.Base.iGeometry;
 import field.graphics.core.Base.iLongGeometry;
 import field.graphics.core.BasicGeometry.VertexBuffer;
-import field.launch.iUpdateable;
-import field.namespace.generic.Bind.iFunction;
+
 import field.util.HashMapOfLists;
 
-public class EmbeddedServer implements iUpdateable {
+public class EmbeddedServer implements IUpdateable {
 
 	String page = "";
 
@@ -230,9 +232,9 @@ public class EmbeddedServer implements iUpdateable {
 						respond(arg0, start.replace("///ID///", "" + id));
 					if (uri.equals("/field/update")) {
 
-						getUpdateForIDContinuation(Integer.parseInt((String) id), new iFunction<Object, Object>() {
+						getUpdateForIDContinuation(Integer.parseInt((String) id), new IFunction<Object, Object>() {
 							@Override
-							public Object f(Object in) {
+							public Object apply(Object in) {
 								if (in instanceof String)
 									respond(arg0, (String) in);
 								else if (in instanceof ByteBuffer)
@@ -372,10 +374,8 @@ public class EmbeddedServer implements iUpdateable {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
-	}
+    }
 
 	public void sendBuffer(WebSocket arg0, ByteBuffer b) {
 		try {
@@ -384,10 +384,8 @@ public class EmbeddedServer implements iUpdateable {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
-	}
+    }
 
 	public void sendBuffer(WebSocket arg0, iGeometry b, int a) {
 		try {
@@ -397,17 +395,15 @@ public class EmbeddedServer implements iUpdateable {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
-	}
+    }
 
 	protected InputStream findAndRun(String replace, Properties parms) {
 		;//;//System.out.println(" find and run <" + replace + "> <" + parms + ">");
 		return null;
 	}
 
-	public iVisualElement root;
+	public IVisualElement root;
 
 	protected String findElementAndProperty(String nam, String prop) {
 
@@ -415,7 +411,7 @@ public class EmbeddedServer implements iUpdateable {
 
 		if (root == null)
 			return null;
-		iVisualElement e = StandardFluidSheet.findVisualElementWithName(root, nam);
+		IVisualElement e = StandardFluidSheet.findVisualElementWithName(root, nam);
 		if (e == null)
 			return null;
 		Object mm = new VisualElementProperty<Object>(prop).get(e);
@@ -488,7 +484,7 @@ public class EmbeddedServer implements iUpdateable {
 		}
 	}
 
-	protected void getUpdateForIDContinuation(final Integer id, final iFunction<Object, Object> continuation) {
+	protected void getUpdateForIDContinuation(final Integer id, final IFunction<Object, Object> continuation) {
 
 		new Thread() {
 			@Override
@@ -497,11 +493,11 @@ public class EmbeddedServer implements iUpdateable {
 				if (r instanceof String) {
 					String rr = (String) r;
 					if (rr.trim().length() > 0)
-						continuation.f(rr.trim());
+						continuation.apply(rr.trim());
 				}
 				else if (r instanceof ByteBuffer)
 				{
-					continuation.f((ByteBuffer)r);
+					continuation.apply((ByteBuffer)r);
 				}
 			}
 		}.start();

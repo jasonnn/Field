@@ -7,6 +7,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import field.bytecode.protect.trampoline.Trampoline2;
+import field.core.Platform;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.core.dispatch.override.Ref;
+import field.core.execution.IExecutesPromise;
+import field.launch.IUpdateable;
+import field.math.graph.visitors.hint.TraversalHint;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Font;
@@ -16,13 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
 import org.python.core.PySystemState;
 
-import field.bytecode.protect.Trampoline2;
-import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
-import field.core.execution.iExecutesPromise;
+
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.drawing.opengl.CachedLine;
 import field.core.plugins.drawing.opengl.iLinearGraphicsContext;
@@ -37,8 +41,7 @@ import field.core.ui.text.PythonTextEditor.EditorExecutionInterface;
 import field.core.windowing.GLComponentWindow;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
-import field.math.graph.GraphNodeSearching.VisitCode;
+
 import field.math.linalg.Vector4;
 import field.util.AutoPersist;
 
@@ -46,11 +49,11 @@ public class ProcessingPlugin extends BaseSimplePlugin {
 
 	public class LocalOverride extends DefaultOverride {
 		@Override
-		public <T> VisitCode getProperty(iVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
+		public <T> TraversalHint getProperty(IVisualElement source, VisualElementProperty<T> prop, Ref<T> ref) {
 
-			if (prop.equals(iExecutesPromise.promiseExecution)) {
+			if (prop.equals(IExecutesPromise.promiseExecution)) {
 				if (needsProcessing(source)) {
-					ref.set((T) shim.getExecutesPromise((iExecutesPromise) ref.get()));
+					ref.set((T) shim.getExecutesPromise((IExecutesPromise) ref.get()));
 				}
 			} else if (prop.equals(PythonPluginEditor.editorExecutionInterface)) {
 				if (needsProcessing(source)) {
@@ -61,22 +64,23 @@ public class ProcessingPlugin extends BaseSimplePlugin {
 		}
 
 		@Override
-		public VisitCode menuItemsFor(final iVisualElement source, Map<String, iUpdateable> items) {
+		public
+        TraversalHint menuItemsFor(final IVisualElement source, Map<String, IUpdateable> items) {
 			if (source != null) {
 				if (needsProcessing(source)) {
 					items.put("Processing", null);
-					items.put("\u24c5 <b>Remove bridge</b> to Processing", new iUpdateable() {
+					items.put("\u24c5 <b>Remove bridge</b> to Processing", new IUpdateable() {
 						public void update() {
 							needsProcessing.set(source, source, false);
-							iVisualElement.dirty.set(source, source, true);
+							IVisualElement.dirty.set(source, source, true);
 						}
 					});
 				} else {
 					items.put("Processing", null);
-					items.put("\u24c5 Bridge element to <b>Processing</b>", new iUpdateable() {
+					items.put("\u24c5 Bridge element to <b>Processing</b>", new IUpdateable() {
 						public void update() {
 							needsProcessing.set(source, source, true);
-							iVisualElement.dirty.set(source, source, true);
+							IVisualElement.dirty.set(source, source, true);
 						}
 					});
 				}
@@ -85,7 +89,7 @@ public class ProcessingPlugin extends BaseSimplePlugin {
 		}
 
 		@Override
-		public VisitCode paintNow(iVisualElement source, Rect bounds, boolean visible) {
+		public TraversalHint paintNow(IVisualElement source, Rect bounds, boolean visible) {
 			Boolean n = source.getProperty(needsProcessing);
 			if (n != null && n) {
 				if (GLComponentWindow.currentContext != null && GLComponentWindow.draft) {
@@ -129,7 +133,7 @@ public class ProcessingPlugin extends BaseSimplePlugin {
 
 	}
 
-	public boolean needsProcessing(iVisualElement source) {
+	public boolean needsProcessing(IVisualElement source) {
 		Object o = needsProcessing.get(source);
 		if (o == null)
 			return false;
@@ -159,7 +163,7 @@ public class ProcessingPlugin extends BaseSimplePlugin {
 	public boolean ontop = false;
 
 	@Override
-	public void registeredWith(final iVisualElement root) {
+	public void registeredWith(final IVisualElement root) {
 		if (alreadyLoaded) {
 		} else {
 		}
@@ -205,7 +209,7 @@ public class ProcessingPlugin extends BaseSimplePlugin {
 			error = true;
 
 			try {
-				shim = (iProcessingLoader) Trampoline2.trampoline.getClassLoader().loadClass(processingShim).getConstructor(iVisualElement.class).newInstance(root);
+				shim = (iProcessingLoader) Trampoline2.trampoline.getClassLoader().loadClass(processingShim).getConstructor(IVisualElement.class).newInstance(root);
 				error = false;
 
 			} catch (ClassNotFoundException e) {

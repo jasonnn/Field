@@ -19,7 +19,7 @@ import field.graphics.core.BasicGeometry.TriangleMesh;
 import field.graphics.core.TextSystem;
 import field.graphics.core.TextSystem.AribitraryComponent;
 import field.graphics.dynamic.DynamicMesh;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 import field.math.linalg.CoordinateFrame;
 import field.math.linalg.Vector2;
 import field.math.linalg.iCoordinateFrame.iMutable;
@@ -44,7 +44,7 @@ public class TypingOverlay {
 
 	public TypingOverlay(final GLComponentWindow inside, TextSystem text) {
 		this.inside = inside;
-		inside.getPostQueue().addUpdateable(new iUpdateable() {
+		inside.getPostQueue().addUpdateable(new IUpdateable() {
 			public void update() {
 				TypingOverlay.this.paintNow();
 			}
@@ -52,7 +52,7 @@ public class TypingOverlay {
 
 		component = text.new AribitraryComponent(width, height);
 
-		labelTriangles = new BasicGeometry.TriangleMesh(new field.math.abstraction.iInplaceProvider<iMutable>() {
+		labelTriangles = new BasicGeometry.TriangleMesh(new field.math.abstraction.IInplaceProvider<iMutable>() {
 			public iMutable get(iMutable o) {
 				return new CoordinateFrame();
 			}

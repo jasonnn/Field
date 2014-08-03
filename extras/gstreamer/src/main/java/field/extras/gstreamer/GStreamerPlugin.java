@@ -2,20 +2,20 @@ package field.extras.gstreamer;
 
 import java.io.File;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
 import org.gstreamer.Gst;
 import org.gstreamer.Registry;
 
-import com.ochafik.lang.jnaerator.runtime.JNAeratorRuntime;
 import com.sun.jna.NativeLibrary;
 
-import field.core.dispatch.iVisualElement;
 import field.core.plugins.BaseSimplePlugin;
 import field.launch.SystemProperties;
 
 public class GStreamerPlugin extends BaseSimplePlugin {
 
 	@Override
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 		super.registeredWith(root);
 
 		String extensionsDir = "";

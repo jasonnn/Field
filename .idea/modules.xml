@@ -24,7 +24,6 @@
       <module fileurl="file://$PROJECT_DIR$/instrumentation-aspectj/instrumentation-aspectj.iml" filepath="$PROJECT_DIR$/instrumentation-aspectj/instrumentation-aspectj.iml" />
       <module fileurl="file://$PROJECT_DIR$/instrumentation-rt/instrumentation-rt.iml" filepath="$PROJECT_DIR$/instrumentation-rt/instrumentation-rt.iml" />
       <module fileurl="file://$PROJECT_DIR$/instrumentation-rt/instrumentation-rt.iml" filepath="$PROJECT_DIR$/instrumentation-rt/instrumentation-rt.iml" />
-      <module fileurl="file://$PROJECT_DIR$/extras/jfbxlib/jfbxlib.iml" filepath="$PROJECT_DIR$/extras/jfbxlib/jfbxlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/extras/jsrscripting/jsrscripting.iml" filepath="$PROJECT_DIR$/extras/jsrscripting/jsrscripting.iml" />
       <module fileurl="file://$PROJECT_DIR$/extras/modal/modal.iml" filepath="$PROJECT_DIR$/extras/modal/modal.iml" />
       <module fileurl="file://$PROJECT_DIR$/extras/online/online.iml" filepath="$PROJECT_DIR$/extras/online/online.iml" />

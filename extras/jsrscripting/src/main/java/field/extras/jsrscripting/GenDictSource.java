@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import field.core.util.FieldPyObjectAdaptor.iHandlesAttributes;
-import field.math.abstraction.iProvider;
+import field.math.abstraction.IProvider;
+
+import javax.xml.ws.Provider;
 
 public class GenDictSource {
 
@@ -55,8 +57,8 @@ public class GenDictSource {
 		return "GenDictSource.provider(" + ref + ", " + value.getClass().getName() + ".class, \"" + key + "\")";
 	}
 
-	static public <T> iProvider<T> provider(final long r, Class<T> t, final String name) {
-		return new iProvider<T>() {
+	static public <T> IProvider<T> provider(final long r, Class<T> t, final String name) {
+		return new IProvider<T>() {
 
 			public T get() {
 				return (T) refMap.get(r).map.get(name);

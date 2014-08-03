@@ -1,22 +1,15 @@
 package field.extras.osc;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.Stack;
-import java.util.regex.Pattern;
-
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElementProperty;
 import field.core.execution.PythonInterface;
 import field.core.network.OSCInput;
 import field.core.network.OSCInput.DispatchableHandler;
 import field.core.util.FieldPyObjectAdaptor.iCallable;
 import field.core.util.PythonCallableMap;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class OSCIn implements iCallable {
 
@@ -24,13 +17,13 @@ public class OSCIn implements iCallable {
 
 	static public HashMap<Integer, OSCIn> knownInterfaces = new LinkedHashMap<Integer, OSCIn>();
 
-	private final iVisualElement root;
+	private final IVisualElement root;
 
 	private OSCInput in;
 
 	Set<OSCIn> children = new LinkedHashSet<OSCIn>();
 
-	public OSCIn(iVisualElement root, int port) {
+	public OSCIn(IVisualElement root, int port) {
 		this.root = root;
 
 		;//;//System.out.println(" opening input for <" + root + " : " + port + ">");
@@ -46,11 +39,11 @@ public class OSCIn implements iCallable {
 		});
 	}
 
-	public void dispatchOver(iVisualElement r) {
+	public void dispatchOver(IVisualElement r) {
 		dispatchOver.add(r);
 	}
 
-	Set<iVisualElement> dispatchOver = new LinkedHashSet<iVisualElement>();
+	Set<IVisualElement> dispatchOver = new LinkedHashSet<IVisualElement>();
 
 	protected void defaultHandle(String s, Object[] args) {
 		String[] split = s.split("/");
@@ -60,9 +53,9 @@ public class OSCIn implements iCallable {
 
 		;//;//System.out.println(" looking at default handle for <" + s + "> starting with <" + dispatchOver + ">");
 
-		Set<iVisualElement> fringe = new LinkedHashSet<iVisualElement>(dispatchOver);
-		Set<iVisualElement> nextFringe = new LinkedHashSet<iVisualElement>();
-		Set<iVisualElement> success = new LinkedHashSet<iVisualElement>(dispatchOver);
+		Set<IVisualElement> fringe = new LinkedHashSet<IVisualElement>(dispatchOver);
+		Set<IVisualElement> nextFringe = new LinkedHashSet<IVisualElement>();
+		Set<IVisualElement> success = new LinkedHashSet<IVisualElement>(dispatchOver);
 
 		while (elements.size() > 0) {
 			if (elements.peek().trim().length() == 0) {
@@ -72,8 +65,8 @@ public class OSCIn implements iCallable {
 
 			nextFringe.clear();
 
-			for (iVisualElement e : fringe) {
-				for (iVisualElement p : ((Collection<iVisualElement>) e.getParents())) {
+			for (IVisualElement e : fringe) {
+				for (IVisualElement p : ((Collection<IVisualElement>) e.getParents())) {
 
 					;//;//System.out.println(" checking <" + elements.peek() + ">");
 
@@ -92,12 +85,12 @@ public class OSCIn implements iCallable {
 		if (success.size() == 0) {
 			noMatch(s, args);
 		} else
-			for (iVisualElement e : success) {
+			for (IVisualElement e : success) {
 				match(e, s, args);
 			}
 	}
 
-	private void match(iVisualElement e, String s, Object[] args) {
+	private void match(IVisualElement e, String s, Object[] args) {
 		PythonCallableMap map = handleOsc.get(e, e);
 		;//;//System.out.println(" does <" + e + "> have a map ? " + map + " " + e.payload());
 		if (map != null) {
@@ -110,11 +103,11 @@ public class OSCIn implements iCallable {
 		}
 	}
 
-	protected boolean matches(String peek, iVisualElement e) {
+	protected boolean matches(String peek, IVisualElement e) {
 		peek = peek.replace(".", "\\.");
 		peek = peek.replace("*", ".*");
 		peek = peek.replace("?", ".");
-		String name = iVisualElement.name.get(e);
+		String name = IVisualElement.name.get(e);
 
 		;//;//System.out.println(" checking <" + peek + "> against <" + name + ">");
 
@@ -131,7 +124,7 @@ public class OSCIn implements iCallable {
 	void update() {
 
 //		;//;//System.out.println(" -- update of OSCIn --");
-		iVisualElement e = (iVisualElement) PythonInterface.getPythonInterface().getVariable("_self");
+		IVisualElement e = (IVisualElement) PythonInterface.getPythonInterface().getVariable("_self");
 		if (e != null)
 			dispatchOver.add(e);
 		in.update();

@@ -1,6 +1,7 @@
 package field.extras.graphics;
 
-import field.core.dispatch.iVisualElement;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
 import field.core.execution.PythonInterface;
 import field.core.plugins.BaseSimplePlugin;
 
@@ -12,7 +13,7 @@ public class FieldGraphicsPlugin extends BaseSimplePlugin {
 	}
 
 	@Override
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 		super.registeredWith(root);
 
 		;//;//System.out.println(" -- field graphics plugin initializing --");

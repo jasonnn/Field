@@ -1,5 +1,12 @@
 package field.extras.plugins.hierarchy;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
+import field.core.dispatch.VisualElementProperty;
+import field.core.dispatch.override.DefaultOverride;
+import field.launch.IUpdateable;
+import field.math.abstraction.IProvider;
+import field.math.graph.visitors.hint.TraversalHint;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Image;
@@ -13,9 +20,7 @@ import org.python.core.PyObject;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.NextUpdate;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
-import field.core.dispatch.iVisualElementOverrides.DefaultOverride;
+
 import field.core.execution.PythonInterface;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.drawing.MarqueeTool;
@@ -31,9 +36,7 @@ import field.core.windowing.components.RootComponent;
 import field.core.windowing.components.RootComponent.iMousePeer;
 import field.core.windowing.components.RootComponent.iPaintPeer;
 import field.launch.Launcher;
-import field.launch.iUpdateable;
-import field.math.abstraction.iProvider;
-import field.math.graph.GraphNodeSearching.VisitCode;
+
 import field.math.linalg.Vector2;
 
 /*
@@ -84,7 +87,7 @@ public class HierarchyPlugin extends BaseSimplePlugin {
 		addTool(icon, h, null, null, "unnamed modal mouse tool", "unnamed modal mouse tool");
 	}
 
-	public void addTool(final String icon, final iEventHandler h, final iUpdateable onSelect, final String toolTip, final String name, final String description) {
+	public void addTool(final String icon, final iEventHandler h, final IUpdateable onSelect, final String toolTip, final String name, final String description) {
 		// final Icon i = SmallMenu.makeIconFromCharacterShadowed(icon,
 		// 40, 37, 0.5f, null, null);
 		// final Icon i2 =
@@ -145,7 +148,7 @@ public class HierarchyPlugin extends BaseSimplePlugin {
 			;//;//System.out.println(" -- adding contextual help for <"+icon+"> --"+a.getControl());
 			
 			HelpBrowser helpbrowser = HelpBrowser.helpBrowser.get(root);
-			helpbrowser.getContextualHelp().addContextualHelpForToolItem(icon, a, new iProvider<String>() {
+			helpbrowser.getContextualHelp().addContextualHelpForToolItem(icon, a, new IProvider<String>() {
 
 				@Override
 				public String get() {
@@ -264,16 +267,16 @@ public class HierarchyPlugin extends BaseSimplePlugin {
 	}
 
 	@Override
-	public void registeredWith(iVisualElement root) {
+	public void registeredWith(IVisualElement root) {
 		super.registeredWith(root);
 
-		glassComponent = iVisualElement.glassComponent.get(root);
-		rootComponent = iVisualElement.rootComponent.get(root);
-		frame = iVisualElement.enclosingFrame.get(root);
+		glassComponent = IVisualElement.glassComponent.get(root);
+		rootComponent = IVisualElement.rootComponent.get(root);
+		frame = IVisualElement.enclosingFrame.get(root);
 
-		// fastContext = iVisualElement.fastContext.get(root);
+		// fastContext = IVisualElement.fastContext.get(root);
 
-		iVisualElement.rootComponent.get(root).addPaintPeer(new iPaintPeer() {
+		IVisualElement.rootComponent.get(root).addPaintPeer(new iPaintPeer() {
 
 			public void paint(RootComponent inside) {
 				fastContext = GLComponentWindow.currentContext;
@@ -463,7 +466,7 @@ public class HierarchyPlugin extends BaseSimplePlugin {
 		PythonInterface.getPythonInterface().setVariable("_key", "key");
 
 		// basic drawing tools
-		palette2 = iVisualElement.toolPalette2.get(root);
+		palette2 = IVisualElement.toolPalette2.get(root);
 		marqueeTool = new MarqueeTool(root);
 
 		addTool("icons/cursor_16x16.png", null, null, "Normal mouse processing", "Normal mouse", "'Normal' mouse processing\n" + 
@@ -529,16 +532,18 @@ public class HierarchyPlugin extends BaseSimplePlugin {
 	}
 
 	@Override
-	protected DefaultOverride newVisualElementOverrides() {
+	protected
+    DefaultOverride newVisualElementOverrides() {
 		return new DefaultOverride() {
 			@Override
-			public VisitCode added(iVisualElement newSource) {
+			public
+            TraversalHint added(IVisualElement newSource) {
 				topologyChanged();
 				return super.added(newSource);
 			}
 
 			@Override
-			public VisitCode deleted(iVisualElement source) {
+			public TraversalHint deleted(IVisualElement source) {
 				topologyChanged();
 				return super.deleted(source);
 			}

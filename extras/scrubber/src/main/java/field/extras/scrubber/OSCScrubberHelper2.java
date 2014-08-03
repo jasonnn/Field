@@ -1,16 +1,18 @@
 package field.extras.scrubber;
 
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.Rect;
-import field.core.dispatch.iVisualElementOverrides;
+
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.Rect;
+import field.core.dispatch.VisualElement;
+import field.core.dispatch.override.IVisualElementOverrides;
 import field.core.network.OSCInput;
 import field.core.network.OSCInput.Handler;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
-public class OSCScrubberHelper2 implements iUpdateable {
+public class OSCScrubberHelper2 implements IUpdateable {
 
 	private final OSCInput input;
-	private iVisualElement target;
+	private IVisualElement target;
 
 	float start = 0;
 	float stop = 1000;
@@ -32,7 +34,7 @@ public class OSCScrubberHelper2 implements iUpdateable {
 		});
 	}
 
-	public OSCScrubberHelper2 setTarget(iVisualElement target) {
+	public OSCScrubberHelper2 setTarget(IVisualElement target) {
 		this.target = target;
 		return this;
 	}
@@ -119,15 +121,15 @@ public class OSCScrubberHelper2 implements iUpdateable {
 		
 	}
 
-	protected void setFrame(iVisualElement target, Rect m) {
+	protected void setFrame(IVisualElement target, Rect m) {
 
 		System.err.println("\n{{{{{{{{{{{{{{{{{{{{{{{{{{ set frame to be <"+m+"> (from <"+target.getFrame(null)+">)\n");
 
 		// todo \u2014 filter output here, let's just use a Unit<T> thingy
 		
-		iVisualElementOverrides.topology.begin(target);
-		iVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(target, m, target.getFrame(null), true);
-		iVisualElementOverrides.topology.end(target);
+		IVisualElementOverrides.topology.begin(target);
+		IVisualElementOverrides.forward.shouldChangeFrame.shouldChangeFrame(target, m, target.getFrame(null), true);
+		IVisualElementOverrides.topology.end(target);
 	}
 
 	public void stopTracking() {

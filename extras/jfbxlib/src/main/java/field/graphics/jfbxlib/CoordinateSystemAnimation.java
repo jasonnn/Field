@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import field.graphics.jfbxlib.BuildTransformTreeVisitor.Transform;
+import field.math.graph.IMutable;
 import field.math.graph.NodeImpl;
 import field.math.graph.SimpleNode;
-import field.math.graph.iMutable;
 import field.math.linalg.CoordinateFrame;
 import field.math.util.CubicInterpolatorDynamic;
 
@@ -50,7 +50,7 @@ public class CoordinateSystemAnimation {
 			while (i.hasNext()) {
 				Entry<Long, SimpleNode<Transform>> e = i.next();
 				AnimatedCoordinateSystem animation = animationFor(e.getKey(), e.getValue());
-				animation.animation.new Sample(e.getValue().payload().createLocalCoordinateFrame(), (float) time);
+				new CubicInterpolatorDynamic.Sample(e.getValue().payload().createLocalCoordinateFrame(), (float) time);
 			}
 		}
 	}
@@ -81,7 +81,7 @@ public class CoordinateSystemAnimation {
 					animation.addChild(c);
 				}
 			}
-			for (iMutable<SimpleNode<Transform>> z : value.getParents()) {
+			for (IMutable<SimpleNode<Transform>> z : value.getParents()) {
 				AnimatedCoordinateSystem c = animationFor(((SimpleNode<Transform>) z).payload().uid, ((SimpleNode<Transform>) z));
 				if (!c.getChildren().contains(animation)) {
 					c.addChild(animation);

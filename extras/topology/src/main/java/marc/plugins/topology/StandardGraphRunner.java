@@ -5,13 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElementProperty;
 import org.python.core.PyObject;
 
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.Yield;
 import field.bytecode.protect.yield.YieldUtilities;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+
 import field.core.execution.PythonInterface;
 import field.core.execution.PythonScriptingSystem.Promise;
 import field.core.plugins.python.PythonPlugin.CapturedEnvironment;
@@ -28,17 +29,17 @@ public class StandardGraphRunner extends GraphRunner {
 	public int defaultDuration = 100;
 
 	public boolean hasFinished = true;
-	Stack<iVisualElement> path = new Stack<iVisualElement>();
+	Stack<IVisualElement> path = new Stack<IVisualElement>();
 
-	iVisualElement lastTarget;
+	IVisualElement lastTarget;
 
-	public void beginPath(List<iVisualElement> element) {
+	public void beginPath(List<IVisualElement> element) {
 		beginPath(element, true);
 	}
 
-	public void beginPath(List<iVisualElement> element, boolean trim) {
+	public void beginPath(List<IVisualElement> element, boolean trim) {
 		if (element.size() > 0) {
-			ArrayList<iVisualElement> r = new ArrayList<iVisualElement>(element);
+			ArrayList<IVisualElement> r = new ArrayList<IVisualElement>(element);
 			if (trim && lastTarget != null && element.get(0).equals(lastTarget)) {
 				r.remove(0);
 			}
@@ -69,7 +70,7 @@ public class StandardGraphRunner extends GraphRunner {
 						out.println("\n\n" + this + " restart required\n\n");
 
 						if (hasFinished) {
-							iVisualElement nn = getNext(null);
+							IVisualElement nn = getNext(null);
 							consumeNext(null);
 							begin(nn);
 							hasFinished = false;
@@ -82,13 +83,13 @@ public class StandardGraphRunner extends GraphRunner {
 		}
 	}
 
-	public iVisualElement getLastTarget() {
+	public IVisualElement getLastTarget() {
 		return lastTarget;
 	}
 
 	@Override
 	protected void consumeNext(At current2) {
-		iVisualElement popped = path.pop();
+		IVisualElement popped = path.pop();
 		lastTarget = popped;
 	}
 
@@ -98,7 +99,7 @@ public class StandardGraphRunner extends GraphRunner {
 	}
 
 	@Override
-	protected iVisualElement getNext(At current2) {
+	protected IVisualElement getNext(At current2) {
 		if (path.isEmpty())
 			return null;
 		return path.peek();
@@ -109,7 +110,7 @@ public class StandardGraphRunner extends GraphRunner {
 	}
 
 	@Override
-	protected Object ongoingObject(At last, iVisualElement next) {
+	protected Object ongoingObject(At last, IVisualElement next) {
 		return rGraph.get(next);
 	}
 

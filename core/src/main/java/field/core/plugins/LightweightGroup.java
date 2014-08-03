@@ -86,7 +86,7 @@ class LightweightGroup extends SplineComputingOverride {
         return StandardTraversalHint.CONTINUE;
     }
 
-    protected static
+    protected
     boolean subElementHasChangedWillChangeBounds() {
         return true;
     }
@@ -107,7 +107,7 @@ class LightweightGroup extends SplineComputingOverride {
         return new Rect(x1, y1, x2 - x1, y2 - y1);
     }
 
-    protected static
+    protected
     Rect computeNewBoundingFrame(List<IVisualElement> c, Rect oldParentFrame, int out) {
         if (c.isEmpty()) return oldParentFrame;
         float mx = Float.POSITIVE_INFINITY;
@@ -129,7 +129,7 @@ class LightweightGroup extends SplineComputingOverride {
         return new Rect(mx - out, my - out, ((out * 2) + xx) - mx, ((out * 2) + yy) - my);
     }
 
-    protected static
+    protected
     boolean shouldBound(IVisualElement ve) {
         return true;
     }

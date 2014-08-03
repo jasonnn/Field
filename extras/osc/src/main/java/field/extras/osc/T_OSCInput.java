@@ -1,15 +1,13 @@
 package field.extras.osc;
 
-import java.util.Arrays;
-
 import field.core.network.OSCInput;
+import field.launch.ILaunchable;
 import field.launch.Launcher;
-import field.launch.iLaunchable;
 
 /**
  * @author marc Created on Oct 11, 2003
  */
-public class T_OSCInput implements iLaunchable {
+public class T_OSCInput implements ILaunchable {
 	public void launch() {	
 		OSCInput input = new OSCInput(7001);
 		input.setDefaultHandler(new OSCInput.DispatchableHandler() {

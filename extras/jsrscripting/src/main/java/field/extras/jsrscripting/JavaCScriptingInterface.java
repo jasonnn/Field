@@ -15,17 +15,20 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 
+import field.bytecode.protect.trampoline.Trampoline2;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
+import field.core.dispatch.VisualElementProperty;
+import field.launch.ILaunchable;
+import field.util.collect.tuple.Pair;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
-import field.bytecode.protect.Trampoline2;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+
 import field.core.execution.PythonInterface;
 import field.core.ui.UbiquitousLinks;
 import field.core.ui.text.embedded.MinimalTextField_blockMenu;
-import field.launch.iLaunchable;
-import field.namespace.generic.Generics.Pair;
+
 
 
 /**
@@ -38,8 +41,8 @@ public class JavaCScriptingInterface extends JSRInterface {
 	static HashMap<String, Field> knownGlobals = new LinkedHashMap<String, Field>();
 
 	static public class Globals {
-		public static iLaunchable T;
-		public static iVisualElement _self;
+		public static ILaunchable T;
+		public static IVisualElement _self;
 		public static PrintStream out;
 		public static PrintStream err;
 	}
@@ -222,7 +225,7 @@ public class JavaCScriptingInterface extends JSRInterface {
 	}
 
 	@Override
-	public void setRoot(iVisualElement root) {
+	public void setRoot(IVisualElement root) {
 		super.setRoot(root);
 		root.setProperty(java, bound);
 		PythonInterface.getPythonInterface().setVariable("_java", bound);

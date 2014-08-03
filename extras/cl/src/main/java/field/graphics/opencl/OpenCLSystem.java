@@ -30,6 +30,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import field.bytecode.protect.iProvidesQueue;
+import field.bytecode.protect.iRegistersUpdateable;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
+import field.core.dispatch.VisualElementProperty;
+import field.launch.IUpdateable;
+import field.util.collect.tuple.Pair;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.PointerBuffer;
@@ -47,13 +54,10 @@ import org.lwjgl.opencl.CLProgram;
 import org.lwjgl.opengl.Drawable;
 import org.lwjgl.opengl.GL11;
 
-import field.bytecode.protect.DeferedInQueue.iProvidesQueue;
-import field.bytecode.protect.DeferedInQueue.iRegistersUpdateable;
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.InQueue;
 import field.bytecode.protect.annotations.InQueueThrough;
-import field.core.dispatch.iVisualElement;
-import field.core.dispatch.iVisualElement.VisualElementProperty;
+
 import field.core.execution.PythonInterface;
 import field.core.plugins.python.PythonPluginEditor;
 import field.graphics.core.AdvancedTextures.BaseFastNoStorageTexture;
@@ -61,9 +65,7 @@ import field.graphics.core.BasicFrameBuffers.iHasTexture;
 import field.graphics.core.BasicGLSLangProgram;
 import field.graphics.core.BasicGLSLangProgram.iErrorHandler;
 import field.graphics.core.BasicGeometry.TriangleMesh;
-import field.launch.iUpdateable;
 import field.math.linalg.Vector4;
-import field.namespace.generic.Generics.Pair;
 import field.util.MiscNative;
 import field.util.TaskQueue;
 
@@ -80,7 +82,8 @@ public class OpenCLSystem implements iProvidesQueue {
 		init();
 	}
 
-	public iRegistersUpdateable getQueueFor(Method m) {
+	public
+    iRegistersUpdateable getQueueFor(Method m) {
 		return renderQueue;
 	}
 
@@ -747,7 +750,7 @@ public class OpenCLSystem implements iProvidesQueue {
 	}
 
 	@InQueue
-	public void then(iUpdateable u) {
+	public void then(IUpdateable u) {
 		u.update();
 	}
 
@@ -790,7 +793,7 @@ public class OpenCLSystem implements iProvidesQueue {
 		PythonPluginEditor.knownPythonProperties.put("<b>OpenCL</b> - <font size=-2>opencl_v</font>", opencl_v);
 	}
 
-	static public ExecutableKernel makeKernelFromElement(OpenCLSystem s, final iVisualElement element) {
+	static public ExecutableKernel makeKernelFromElement(OpenCLSystem s, final IVisualElement element) {
 
 		final Stack<Writer> redir = new Stack<Writer>();
 		redir.addAll(PythonInterface.getPythonInterface().getErrorRedirects());
@@ -850,7 +853,7 @@ public class OpenCLSystem implements iProvidesQueue {
 			}
 		});
 
-		PythonPluginEditor.python_customToolbar.addToList(ArrayList.class, element, new Pair<String, iUpdateable>("Refresh kernel", new iUpdateable() {
+		PythonPluginEditor.python_customToolbar.addToList(ArrayList.class, element, new Pair<String, IUpdateable>("Refresh kernel", new IUpdateable() {
 			public void update() {
 				ex.reload(opencl_v.get(element));
 			}

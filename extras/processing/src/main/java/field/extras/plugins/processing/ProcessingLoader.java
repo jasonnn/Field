@@ -26,26 +26,26 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import field.bytecode.protect.iProvidesQueue;
+import field.bytecode.protect.iRegistersUpdateable;
+import field.bytecode.protect.trampoline.Trampoline2;
+import field.core.dispatch.IVisualElement;
+import field.core.dispatch.VisualElement;
+import field.core.execution.*;
+import field.launch.IUpdateable;
+import field.math.abstraction.IFloatProvider;
+import field.util.MiscNative;
+import field.util.collect.tuple.Pair;
 import processing.core.PApplet;
 import processing.core.PConstants;
-import field.bytecode.protect.DeferedInQueue.iProvidesQueue;
-import field.bytecode.protect.DeferedInQueue.iRegistersUpdateable;
-import field.bytecode.protect.Trampoline2;
+
 import field.bytecode.protect.Woven;
 import field.bytecode.protect.annotations.InQueue;
 import field.bytecode.protect.annotations.NextUpdate;
 import field.core.Platform;
-import field.core.dispatch.iVisualElement;
-import field.core.execution.BasicRunner;
 import field.core.execution.BasicRunner.Delegate;
-import field.core.execution.InterpretPythonAsDelegate;
 import field.core.execution.InterpretPythonAsDelegate.iDelegateForReturnValue;
-import field.core.execution.PythonInterface;
-import field.core.execution.PythonScriptingSystem;
 import field.core.execution.PythonScriptingSystem.Promise;
-import field.core.execution.TemporalSliderOverrides;
-import field.core.execution.TimeSystem;
-import field.core.execution.iExecutesPromise;
 import field.core.plugins.pseudo.PseudoPropertiesPlugin;
 import field.core.ui.text.BaseTextEditor2;
 import field.core.ui.text.BaseTextEditor2.Completion;
@@ -56,10 +56,7 @@ import field.core.util.LocalFuture;
 import field.core.util.PythonCallableMap;
 import field.launch.Launcher;
 import field.launch.SystemProperties;
-import field.launch.iUpdateable;
-import field.math.abstraction.iFloatProvider;
-import field.namespace.generic.Generics.Pair;
-import field.util.MiscNative;
+
 import field.util.TaskQueue;
 
 /*
@@ -69,9 +66,9 @@ public class ProcessingLoader implements iProcessingLoader, iProvidesQueue {
 
 	static public Frame frame;
 	public PApplet applet;
-	public final iVisualElement root;
+	public final IVisualElement root;
 
-	private final iExecutesPromise ep;
+	private final IExecutesPromise ep;
 
 	TaskQueue drawQueue = new TaskQueue();
 	BasicRunner runner;
@@ -86,7 +83,7 @@ public class ProcessingLoader implements iProcessingLoader, iProvidesQueue {
 	public int appletWidth = SystemProperties.getIntProperty("processingWidth", 500);
 	public int appletHeight = SystemProperties.getIntProperty("processingHeight", 500);
 
-	public ProcessingLoader(final iVisualElement root) {
+	public ProcessingLoader(final IVisualElement root) {
 		this.root = root;
 
 		installDelegateInterpretations();
@@ -94,8 +91,8 @@ public class ProcessingLoader implements iProcessingLoader, iProvidesQueue {
 		runner = new BasicRunner(PythonScriptingSystem.pythonScriptingSystem.get(root), 0) {
 			@Override
 			protected boolean filter(Promise p) {
-				iVisualElement v = (iVisualElement) system.keyForPromise(p);
-				iExecutesPromise ep = iExecutesPromise.promiseExecution.get(v);
+				IVisualElement v = (IVisualElement) system.keyForPromise(p);
+				IExecutesPromise ep = IExecutesPromise.promiseExecution.get(v);
 				return ep == ProcessingLoader.this.ep;
 			}
 		};
@@ -527,7 +524,7 @@ public class ProcessingLoader implements iProcessingLoader, iProvidesQueue {
 		// frame.setBounds(50, 50, 500, 500);
 		// frame.setVisible(true);
 
-		Launcher.getLauncher().registerUpdateable(new iUpdateable() {
+		Launcher.getLauncher().registerUpdateable(new IUpdateable() {
 			public void update() {
 
 				applet.init();
@@ -537,9 +534,9 @@ public class ProcessingLoader implements iProcessingLoader, iProvidesQueue {
 			}
 		});
 
-		ep = new iExecutesPromise() {
+		ep = new IExecutesPromise() {
 
-			public void addActive(iFloatProvider timeProvider, Promise p) {
+			public void addActive(IFloatProvider timeProvider, Promise p) {
 				ProcessingLoader.this.addActive(timeProvider, p, null);
 			}
 
@@ -695,11 +692,12 @@ public class ProcessingLoader implements iProcessingLoader, iProvidesQueue {
 		};
 	}
 
-	public iExecutesPromise getExecutesPromise(final iExecutesPromise delegateTo) {
+	public IExecutesPromise getExecutesPromise(final IExecutesPromise delegateTo) {
 		return ep;
 	}
 
-	public iRegistersUpdateable getQueueFor(Method m) {
+	public
+    iRegistersUpdateable getQueueFor(Method m) {
 
 		return drawQueue;
 	}
@@ -783,7 +781,7 @@ public class ProcessingLoader implements iProcessingLoader, iProvidesQueue {
 	}
 
 	@InQueue
-	protected void addActive(iFloatProvider timeProvider, final Promise p, iExecutesPromise delegateTo) {
+	protected void addActive(IFloatProvider timeProvider, final Promise p, IExecutesPromise delegateTo) {
 
 		try {
 			runner.addActive(timeProvider, p);
@@ -818,12 +816,12 @@ public class ProcessingLoader implements iProcessingLoader, iProvidesQueue {
 	}
 
 	@InQueue
-	protected void removeActive(Promise p, iExecutesPromise delegateTo) {
+	protected void removeActive(Promise p, IExecutesPromise delegateTo) {
 		runner.removeActive(p);
 	}
 
 	@InQueue
-	protected void stopAll(float t, iExecutesPromise delegateTo) {
+	protected void stopAll(float t, IExecutesPromise delegateTo) {
 		runner.stopAll(t);
 	}
 

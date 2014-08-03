@@ -1,14 +1,15 @@
 package field.extras.plugins.processing;
 
-import field.core.execution.iExecutesPromise;
+import field.core.execution.IExecutesPromise;
 import field.core.ui.text.PythonTextEditor.EditorExecutionInterface;
-import field.launch.iUpdateable;
+import field.launch.IUpdateable;
 
-public interface iProcessingLoader extends  iUpdateable{
+public interface iProcessingLoader extends IUpdateable {
 
 	public void close();
 	public EditorExecutionInterface getEditorExecutionInterface(EditorExecutionInterface delegateTo);
-	public iExecutesPromise getExecutesPromise(iExecutesPromise delegateTo);
+	public
+    IExecutesPromise getExecutesPromise(IExecutesPromise delegateTo);
 
 	public void init();
 	public void injectIntoGlobalNamespace();

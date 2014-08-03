@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
+import field.core.dispatch.IVisualElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -20,7 +21,6 @@ import org.eclipse.swt.widgets.Listener;
 
 import field.core.Platform;
 import field.core.Platform.OS;
-import field.core.dispatch.iVisualElement;
 import field.core.plugins.BaseSimplePlugin;
 import field.core.plugins.selection.ToolBarFolder;
 import field.core.ui.GraphNodeToTreeFancy;
@@ -61,7 +61,7 @@ public class JSRPlugin extends BaseSimplePlugin {
 	}
 
 	@Override
-	public void registeredWith(final iVisualElement root) {
+	public void registeredWith(final IVisualElement root) {
 		super.registeredWith(root);
 
 		;// ;//System.out.println(" ??? -- clojure -- ???");
